@@ -1,0 +1,83 @@
+﻿@using SilentNotes.ViewModels
+@model NoteRepositoryViewModel
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <base href="@Model.HtmlBase">
+    <title>SilentNotes</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no">
+
+    <link href="bootstrap.min.css" rel="stylesheet" />
+    <link href="silentnotes.css" rel="stylesheet" />
+
+    <script src="jquery-3.2.1.min.js"></script>
+    <script src="bootstrap.bundle.min.js"></script>
+    <script src="silentnotes.js"></script>
+    <script src="Sortable.min.js"></script>
+    <script src="jquery.longpress.js"></script>
+
+    <style type="text/css">
+        body { background: url(@Model.BackgroundTexture); }
+
+        .nav-filter {
+            margin: 0 1em 0 0;
+            width: 200px;
+            height: 28px;
+            background-color: #FFFFFF;
+            border-radius: 14px;
+        }
+        .nav-filter:hover {
+            background-color: #FFFFFF;
+        }
+        .nav-filter input {
+            margin: auto;
+            width: 154px;
+            left: 14px;
+            border: none;
+            border-width: 0;
+            outline: none;
+            background-color: transparent;
+            color: #666666;
+            font-size: 1.1em;
+        }
+    </style>
+    <script>
+    </script>
+</head>
+<body style="background-color: @Model.BackgroundColor">
+    <nav id="navigation" class="d-flex">
+        <div class="nav-item nav-filter ml-auto d-inline-flex align-self-center">
+            <input oninput="bind(event)" data-binding="TxtFilter" autocomplete="off" />
+            <svg width='24' height='24' viewBox='0 0 24 24' data-binding="FilterButtonMagnifier" style="fill:#a8a8a8">@{WriteLiteral(Model.Icon.LoadIconSvgPath("magnify"));}</svg>
+            <svg width='24' height='24' viewBox='0 0 24 24' class="hidden-at-startup" onclick="bind(event)" data-binding="FilterButtonCancel" style="fill:#666666">@{WriteLiteral(Model.Icon.LoadIconSvgPath("close-circle-outline"));}</svg>
+        </div>
+
+        <button class="nav-item show-only-on-wide-browser" onclick="bind(event);" data-binding="AddNote" title="@Model.Language["note_create_new"]">@{WriteLiteral(Model.Icon["plus"]);}</button>
+        <button class="nav-item show-only-on-wide-browser" onclick="bind(event);" data-binding="ShowNote" title="@Model.Language["note_view_or_edit"]">@{WriteLiteral(Model.Icon["lead-pencil"]);}</button>
+        <button class="nav-item" onclick="bind(event);" data-binding="DeleteNote" title="@Model.Language["note_to_recyclebin"]">@{WriteLiteral(Model.Icon["delete"]);}</button>
+        <button class="nav-item" onclick="bind(event);" data-binding="Synchronize" title="@Model.Language["sync_notes"]">@{WriteLiteral(Model.Icon["cloud-sync"]);}</button>
+
+        <div class="dropdown">
+            <button class="nav-item" id="navOverflowMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                @{WriteLiteral(Model.Icon["dots-vertical"]);}
+            </button>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navOverflowMenu">
+                <div class="dropdown-item show-only-on-narrow-browser" onclick="bind(event);" data-binding="AddNote">@{WriteLiteral(Model.Icon["plus"]);} @Model.Language["note_create_new"]</div>
+                <div class="dropdown-item show-only-on-narrow-browser" onclick="bind(event);" data-binding="ShowNote">@{WriteLiteral(Model.Icon["lead-pencil"]);} @Model.Language["note_view_or_edit"]</div>
+                <div class="dropdown-item" onclick="bind(event);" data-binding="ShowTransferCode">@{WriteLiteral(Model.Icon["key"]);} @Model.Language["show_transfer_code"]</div>
+                <div class="dropdown-item" onclick="bind(event);" data-binding="ShowRecycleBin">@{WriteLiteral(Model.Icon["delete-empty"]);} @Model.Language["show_recyclebin"]</div>
+                <div class="dropdown-item" onclick="bind(event);" data-binding="ShowSettings">@{WriteLiteral(Model.Icon["settings"]);} @Model.Language["show_settings"]</div>
+                <div class="dropdown-item" onclick="bind(event);" data-binding="ShowInfo">@{WriteLiteral(Model.Icon["information"]);} @Model.Language["show_info"]</div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="fab"><a onclick="bind(event);" data-binding="Fab" href="#">@{WriteLiteral(Model.Icon["plus"]);}</a></div>
+
+    <div id="content" class="p-2">
+        <ul id="note-repository"></ul>
+    </div>
+</body>
+</html>

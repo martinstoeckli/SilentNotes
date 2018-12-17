@@ -1,0 +1,12 @@
+﻿@using SilentNotes.ViewModels
+@model NoteRepositoryViewModel
+<ul id="note-repository" class="wraplist selectable sortable">
+    @foreach (var note in @Model.FilteredNotes)
+    {
+        <li class="wraplist-item selectable-item sortable-item @if(@Model.SelectedNote == @note) { <text>selected</text> }" data-note="@note.Id.ToString()">
+            <div class="note-card" style="background-color:@note.BackgroundColorHex">
+                <div class="note-viewer">@{WriteLiteral(note.HtmlContent);}</div>
+            </div>
+        </li>
+    }
+</ul>

@@ -1,0 +1,73 @@
+﻿@using SilentNotes.ViewModels
+@model TransferCodeHistoryViewModel
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <base href="@Model.HtmlBase">
+    <title>SilentNotes</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no">
+
+    <link href="bootstrap.min.css" rel="stylesheet" />
+    <link href="silentnotes.css" rel="stylesheet" />
+
+    <script src="jquery-3.2.1.min.js"></script>
+    <script src="bootstrap.bundle.min.js"></script>
+    <script src="silentnotes.js"></script>
+
+    <style type="text/css">
+        #content {
+            background-image: url("key-background.svg");
+            background-repeat: no-repeat;
+            background-position: right -32px top -164px;
+            background-size: 480px;
+        }
+
+        .code {
+            display: inline-block;
+            padding: 0.1em 1em;
+            background-color: steelblue;
+            color: white;
+            font-family: Consolas;
+            font-size: 28px;
+            text-align: center;
+        }
+    </style>
+    <script>
+    </script>
+</head>
+<body style="background-color: #f0f0f0">
+    <nav id="navigation" class="d-flex">
+        <button class="nav-item mr-auto" onclick="bind(event);" data-binding="GoBack" title="@Model.Language["back"]">@{WriteLiteral(Model.Icon["arrow-left"]);}</button>
+    </nav>
+
+    <div id="content" class="container-fluid p-4">
+        <h1>@Model.Language["transfer_code"]</h1>
+
+        @if (@Model.TransferCodeFmt == "")
+        {
+            <div class="alert alert-success my-4">@Model.Language["transfer_not_existing"]</div>
+        }
+        else
+        {
+            <div class="my-1">@Model.Language["transfer_code_usage"]</div>
+
+            <div class="text-center">
+                <div class="code my-4">@Model.TransferCodeFmt</div>
+            </div>
+
+            <div class="my-1">@Model.Language["transfer_code_writedown"]</div>
+
+            <button type="button" class="btn btn-secondary my-4" onclick="bind(event)" data-binding="ShowTransfercodeHistoryCommand">@Model.Language["transfer_code_show_history"]</button>
+
+            <ul class="list-group col-9" data-binding="TransfercodeHistory">
+                @foreach (var historyEntry in @Model.TransferCodeHistory)
+                {
+                    <li class="list-group-item list-group-item-secondary">@historyEntry</li>
+                }
+            </ul>
+        }
+    </div>
+</body>
+</html>
