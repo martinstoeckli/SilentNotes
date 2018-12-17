@@ -1,0 +1,325 @@
+a { text-decoration: none; }
+ol, ul { list-style: none; margin:0; padding:0;}
+a, img, li, input { -webkit-tap-highlight-color: transparent; }
+input::-ms-clear { display: none; }
+
+html {
+	font-size: 14px;
+}
+
+h1 {
+	font-size: 1.7em;
+	font-weight: bold;
+	color: steelblue;
+}
+h2 {
+	font-size: 1.3em;
+	font-weight: bold;
+	color: steelblue;
+}
+h3 {
+	font-size: 1.1em;
+	font-weight: bold;
+	color: steelblue;
+}
+
+.a { text-decoration: underline; color: #007bff; }
+
+#navigation {
+	margin: 0;
+	padding: 2px 6px 2px 6px;
+	position: fixed;
+	top: 0;
+	right: 0;
+	left: 0;
+	z-index: 1030;
+	height: 42px;
+	border-style: none;
+	border-width: 0;
+	background-color: #323232;
+	color: #FFFFFF;
+}
+
+#content {
+	margin: 0;
+	padding: 0;
+	position: fixed;
+	top: 42px;
+	right: 0;
+	left: 0;
+	height: calc(100% - 42px);
+	overflow: auto;
+}
+
+.nav-item {
+	margin: 0;
+	padding: 0;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
+	min-width: 38px;
+	border-style: none;
+	border-width: 0;
+	color: #fff;
+	background-color: #323232;
+	border-color: #323232;
+	text-align: center;
+}
+.nav-item:hover {
+	background-color: #5a6268;
+	border-color: #545b62;
+}
+.nav-item:focus {
+	outline: 0; /* removes pressed dots */
+}
+.nav-item img {
+	height: 28px;
+}
+.nav-item svg {
+	height: 28px;
+	width: 28px;
+	fill: white;
+}
+
+.dropdown {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
+}
+.dropdown-item {
+	cursor: default;
+	display: inline-flex;
+	align-items: center;
+	padding: 0.28rem 1.2rem;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+.dropdown-item img {
+	margin-right: 0.6em;
+}
+.dropdown-item svg {
+	margin-right: 0.6em;
+	height: 26px;
+	width: 26px;
+	fill: #666666;
+}
+
+.wraplist {
+	display: block;
+	margin: 0;
+	padding: 0;
+}
+.wraplist-item {
+	display: block;
+	padding: 6px 5px 6px 5px;
+	width: auto;
+	vertical-align: top;
+}
+
+.sortable-ghost {
+	background-color: rgba(38, 160, 218, 0.3);
+}
+
+.selected {
+	background-color: rgba(38, 160, 218, 0.2);
+	border: 1px solid #26a0da;
+}
+
+
+.fab {
+	position: fixed;
+	display: inline-block;
+	right: 2em;
+	bottom: 2em;
+	z-index: 1030;
+	width: 56px;
+	height: 56px;
+	background-color: #259000;
+	border-radius: 50%;
+	box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+.fab a {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	margin: 0;
+	padding: 0;
+	width: 56px;
+	height: 56px;
+}
+.fab img {
+	width: 36px;
+	height: 36px;
+}
+.fab svg {
+	width: 36px;
+	height: 36px;
+	fill: white;
+}
+
+.note-card {
+	padding: 12px;
+	min-height: 115px;
+	max-height: 160px;
+	overflow: hidden;
+	background-color: #fbf4c1;
+	box-shadow: 2px 1px 4px rgba(0, 0, 0, 0.4);
+	font-size: 0.9em;
+}
+
+/* narrow browser */
+@media screen and (max-width: 540px) {
+	.show-only-on-wide-browser {
+		display: none;
+	}
+}
+/* wide browser */
+@media screen and (min-width: 540.1px) {
+	.show-only-on-narrow-browser {
+		display: none;
+	}
+	.wraplist-item {
+		display: inline-block;
+		width: 240px;
+	}
+}
+/* narrow device - phone */
+@media screen and (max-device-width: 540px) {
+	html {
+		font-size: 17px;
+	}
+	#navigation {
+		height: 48px;
+	}
+	#content {
+		height: calc(100% - 48px);
+	}
+}
+/* wide device - desktop */
+@media screen and (min-device-width: 540.1px) {
+}
+
+/* tooltip */
+a[data-tooltip] {
+	position: relative;
+}
+a[data-tooltip]:hover:after {
+	content: attr(data-tooltip);
+	margin: 8px 10px 0 0;
+	padding: 4px 6px;
+	position: absolute;
+	right: 0;
+	top: 100%;
+	color: #575757;
+	background: #f1f2f7;
+	border: 1px #b4b4b7 solid;
+	white-space: nowrap;
+	z-index: 2;
+	font-family: Arial;
+	font-size: 0.8em;
+}
+
+.invisible {
+	visibility: collapse;
+}
+
+.hidden-at-startup {
+	display: none;
+}
+
+/* Text formatting */
+
+.note-viewer .note-viewer-edit {
+	font-size: 14px !important; /* set absolute base */
+}
+.note-viewer .note-viewer-overview {
+	font-size: 12px !important; /* set absolute base */
+}
+
+.note-viewer h1 {
+	margin: 0.1em 0 0.4em 0 !important;
+	color: rgba(70, 130, 180, 1) !important;
+	font: normal bold 1.35em/1.1 "Segoe UI",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol" !important;
+}
+
+.note-viewer h2 {
+	margin: 0.4em 0 0.2em 0 !important;
+	color: rgba(70, 130, 180, 0.85) !important;
+	font: normal bold 1.2em/1.1 "Segoe UI",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol" !important;
+}
+
+.note-viewer h3 {
+	margin: 0.4em 0 0.2em 0 !important;
+	color: rgba(70, 130, 180, 0.7) !important;
+	font: normal bold 1.1em/1.1 "Segoe UI",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol" !important;
+}
+
+.note-viewer p {
+	margin: 0 0 0.2em 0 !important;
+	font: normal normal 1em/1.4 "Segoe UI",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol" !important;
+}
+
+.note-viewer ol {
+	margin: 0.5em 0 0.5em 0 !important;
+	padding: 0 !important;
+	font: normal normal 1em/1.4 "Segoe UI",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol" !important;
+	list-style: none;
+	counter-reset: sn-counter;
+}
+.note-viewer ol > li {
+	margin-left: 1.8em !important;
+	padding: 0 !important;
+	counter-increment: sn-counter;
+}
+.note-viewer ol > li::before {
+	display: inline-block;
+	margin: 0 0 0 -1.8em !important;
+	padding: 0 0.3em 0 0 !important;
+	width: 1.8em !important;
+	content: counter(sn-counter) ".";
+	color: steelblue;
+	text-align: right !important;
+}
+
+.note-viewer ul {
+	margin: 0.5em 0 0.5em 0 !important;
+	padding: 0 !important;
+	font: normal normal 1em/1.4 "Segoe UI",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol" !important;
+	/* list-style-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='-32 -32 64 64' fill='blue' ><circle r='16' /></svg>"); */
+}
+.note-viewer ul > li {
+	margin-left: 1.8em !important;
+	padding: 0 !important;
+}
+.note-viewer ul > li::before {
+	display: inline-block;
+	margin: 0 0 0 -1.8em !important;
+	padding: 0 0.3em 0 0 !important;
+	width: 1.8em !important;
+	white-space: nowrap;
+	content: '•';
+	color: steelblue !important;
+	text-align: right !important;
+}
+
+.note-viewer pre {
+	margin: 0.5em 0 0.5em 0 !important;
+	padding: 1em !important;
+	font: normal normal 0.9em/1.2 Consolas,monospace,"Courier New" !important;
+	color: black !important;
+	overflow: auto !important;
+	white-space: pre !important;
+	text-wrap: none !important;
+	background-color: rgba(128, 128, 128, 0.2) !important;
+}
+
+.note-viewer blockquote {
+	margin: 0.5em 0 0.5em 0 !important;
+	padding: 0 0 0 1em !important;
+	font: normal normal 1em/1.5 "Segoe UI",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol" !important;
+	border-left: 3px solid rgba(128, 128, 128, 0.4) !important;
+}

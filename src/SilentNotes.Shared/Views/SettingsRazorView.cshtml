@@ -1,0 +1,64 @@
+﻿@using SilentNotes.ViewModels
+@model SettingsViewModel
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <base href="@Model.HtmlBase">
+    <title>SilentNotes</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no">
+
+    <link href="bootstrap.min.css" rel="stylesheet" />
+    <link href="silentnotes.css" rel="stylesheet" />
+
+    <script src="jquery-3.2.1.min.js"></script>
+    <script src="bootstrap.bundle.min.js"></script>
+    <script src="silentnotes.js"></script>
+
+    <style type="text/css">
+        #content {
+            background-image: url("settings-background.svg");
+            background-repeat: no-repeat;
+            background-position: right -128px top -196px;
+            background-size: 480px;
+        }
+    </style>
+    <script>
+    </script>
+</head>
+<body style="background-color: #f0f0f0">
+    <nav id="navigation" class="d-flex">
+        <button class="nav-item mr-auto" onclick="bind(event);" data-binding="GoBack" title="@Model.Language["back"]">@{WriteLiteral(Model.Icon["arrow-left"]);}</button>
+    </nav>
+
+    <div id="content" class="container-fluid p-4">
+        <h2>@Model.Language["encryption"]</h2>
+        <form class="mb-4 col-md-9 col-lg-6">
+            <div class="form-row form-group">
+                <label class="col-form-label" for="SelectedEncryptionAlgorithm">@Model.Language["encryption_algorithm"]</label>
+                <select class="form-control" onchange="bind(event)" data-binding="SelectedEncryptionAlgorithm">
+                    @foreach (var algorithm in @Model.EncryptionAlgorithms)
+                    {
+                        <option value="@algorithm.AlgorithmName" @(Model.SelectedEncryptionAlgorithm == algorithm ? "selected" : "")>@algorithm.Description</option>
+                    }
+                </select>
+            </div>
+            <div class="form-row form-group form-check">
+                <input class="form-check-input" type="checkbox" onclick="bind(event)" data-binding="AdoptCloudEncryptionAlgorithm" @(Model.AdoptCloudEncryptionAlgorithm ? "checked" : "")>
+                <label class="form-check-label" for="AdoptCloudEncryptionAlgorithm">@Model.Language["encryption_adopt_cloud_desc"]</label>
+            </div>
+        </form>
+
+        <h2>@Model.Language["sync"]</h2>
+        <form class="mb-4 col-md-9 col-lg-6">
+            <div class="form-row form-group">
+                <label class="col-form-label" for="CloudStorageSettings">@Model.Language["cloud_service"]</label>
+                <textarea class="form-control" id="CloudStorageSettings" data-binding="CloudStorageSettings" rows="4" readonly>@Model.AccountSummary</textarea>
+            </div>
+            <button type="button" class="btn btn-secondary mb-2" onclick="bind(event)" data-binding="ChangeCloudSettingsCommand" title="@Model.Language["cloud_change_settings_desc"]">@Model.Language["cloud_change_settings"]</button>
+            <button type="button" class="btn btn-secondary mb-2" onclick="bind(event)" data-binding="ClearCloudSettingsCommand" title="@Model.Language["cloud_clear_settings_desc"]">@Model.Language["cloud_clear_settings"]</button>
+        </form>
+    </div>
+</body>
+</html>

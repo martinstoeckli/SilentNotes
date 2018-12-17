@@ -1,0 +1,54 @@
+﻿@using SilentNotes.ViewModels
+@model TransferCodeViewModel
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <base href="@Model.HtmlBase">
+    <title>SilentNotes</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no">
+
+    <link href="bootstrap.min.css" rel="stylesheet" />
+    <link href="silentnotes.css" rel="stylesheet" />
+
+    <script src="jquery-3.2.1.min.js"></script>
+    <script src="bootstrap.bundle.min.js"></script>
+    <script src="silentnotes.js"></script>
+
+    <style type="text/css">
+        #content {
+            background-image: url("key-background.svg");
+            background-repeat: no-repeat;
+            background-position: right -32px top -164px;
+            background-size: 480px;
+        }
+
+        .code {
+            font-family: Consolas;
+            font-size: 24px;
+        }
+    </style>
+    <script>
+    </script>
+</head>
+<body style="background-color: #f0f0f0">
+    <nav id="navigation" class="d-flex">
+        <button class="nav-item mr-auto" onclick="bind(event);" data-binding="GoBack" title="@Model.Language["back"]">@{WriteLiteral(Model.Icon["arrow-left"]);}</button>
+    </nav>
+
+    <div id="content" class="container-fluid p-4">
+        <h1>@Model.Language["transfer_code"]</h1>
+
+        <p>@Model.Language["transfer_code_required"]</p>
+
+        <form class="mb-4 col-md-9">
+            <div class="form-row form-group">
+                <input type="text" class="form-control code" oninput="bind(event)" data-binding="Code" id="Code" value="@Model.Code">
+            </div>
+            <button type="button" class="btn btn-primary mb-2" onclick="bind(event)" data-binding="OkCommand">@Model.Language["continue"]</button>
+            <button type="button" class="btn btn-secondary mb-2" onclick="bind(event)" data-binding="CancelCommand">@Model.Language["cancel"]</button>
+        </form>
+    </div>
+</body>
+</html>

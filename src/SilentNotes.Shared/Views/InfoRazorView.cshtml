@@ -1,0 +1,63 @@
+﻿@using SilentNotes.ViewModels
+@model InfoViewModel
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <base href="@Model.HtmlBase">
+    <title>SilentNotes</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no">
+
+    <link href="bootstrap.min.css" rel="stylesheet" />
+    <link href="silentnotes.css" rel="stylesheet" />
+
+    <script src="jquery-3.2.1.min.js"></script>
+    <script src="bootstrap.bundle.min.js"></script>
+    <script src="silentnotes.js"></script>
+
+    <style type="text/css">
+        body { background: url(@Model.BackgroundTexture); }
+    </style>
+    <script>
+    </script>
+</head>
+<body style="background-color: @Model.BackgroundColor">
+    <nav id="navigation" class="d-flex">
+        <button class="nav-item mr-auto" onclick="bind(event);" data-binding="GoBack" title="@Model.Language["back"]">@{WriteLiteral(Model.Icon["arrow-left"]);}</button>
+    </nav>
+
+    <div id="content" class="container-fluid p-4">
+        <div class="row">
+            <div class="col-sm-4">
+                <img src="SilentNotes256.png" class="pb-3 img-fluid" />
+            </div>
+
+            <div class="col-sm-8">
+                <h1>SilentNotes</h1>
+
+                <table class="my-3 table table-sm">
+                    <tr>
+                        <th class="">@Model.Language["version"]</th>
+                        <td>@Model.VersionFmt</td>
+                    </tr>
+                    <tr>
+                        <th class="">@Model.Language["copyright"]</th>
+                        <td>Martin Stoeckli - 2017</td>
+                    </tr>
+                    <tr>
+                        <th class="">@Model.Language["website"]</th>
+                        <td><a onclick="bind(event)" data-binding="OpenHomepage" class="a" href="#">https://www.martinstoeckli.ch/silentnotes</a></td>
+                    </tr>
+                    <tr>
+                        <th class="">@Model.Language["opensource"]</th>
+                        <td>@Model.Language["opensource_desc"]</td>
+                    </tr>
+                </table>
+
+                <p>@Model.Language["license"]</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

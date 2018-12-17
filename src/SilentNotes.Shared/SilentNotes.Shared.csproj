@@ -1,0 +1,191 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>SilentNotes</RootNamespace>
+    <Authors>Martin Stoeckli</Authors>
+    <Company>www.martinstoeckli.ch</Company>
+    <Product>SilentNotes</Product>
+    <Description>Dotnet standard library which is shared among the platform depending projects.</Description>
+    <Copyright>Martin Stoeckli</Copyright>
+    <PackageProjectUrl>http://www.martinstoeckli.ch/silentnotes</PackageProjectUrl>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>..\..\bin\Shared</OutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>..\..\bin\Shared</OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="StoryBoards\SynchronizationStory\diagram-draw.io.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dropbox.Api" Version="4.9.2" />
+    <PackageReference Include="MvvmLightLibsStd10" Version="5.4.1.1" />
+    <PackageReference Include="Portable.BouncyCastle" Version="1.8.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="ViewModels\CloudStorageChoiceViewModel.cs">
+      <ExcludeFromSourceAnalysis>True</ExcludeFromSourceAnalysis>
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Update="Views\CloudStorageChoiceRazorView.cs">
+      <DependentUpon>CloudStorageChoiceRazorView.cshtml</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Views\CloudStorageOauthWaitingRazorView.cs">
+      <DependentUpon>CloudStorageOauthWaitingRazorView.cshtml</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Views\CloudStorageAccountRazorView.cs">
+      <DependentUpon>CloudStorageAccountRazorView.cshtml</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Views\FirstTimeSyncRazorView.cs">
+      <DependentUpon>FirstTimeSyncRazorView.cshtml</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Views\InfoRazorView.cs">
+      <DependentUpon>InfoRazorView.cshtml</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Views\MergeChoiceRazorView.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>MergeChoiceRazorView.cshtml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\NoteRazorView.cs">
+      <DependentUpon>NoteRazorView.cshtml</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Views\NoteRepositoryContentRazorView.cs">
+      <DependentUpon>NoteRepositoryContentRazorView.cshtml</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Views\NoteRepositoryRazorView.cs">
+      <DependentUpon>NoteRepositoryRazorView.cshtml</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Views\RecycleBinContentRazorView.cs">
+      <DependentUpon>RecycleBinContentRazorView.cshtml</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Views\RecycleBinRazorView.cs">
+      <DependentUpon>RecycleBinRazorView.cshtml</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Views\SettingsRazorView.cs">
+      <DependentUpon>SettingsRazorView.cshtml</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Views\StopRazorView.cs">
+      <DependentUpon>StopRazorView.cshtml</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Views\TransferCodeHistoryRazorView - Copy.cs">
+      <DependentUpon>TransferCodeHistoryRazorView.cshtml</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Views\TransferCodeHistoryRazorView - Copy.cs">
+      <DependentUpon>TransferCodeHistoryRazorView.cshtml</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Views\TransferCodeHistoryRazorView.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>TransferCodeHistoryRazorView.cshtml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\TransferCodeRazorView.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>TransferCodeRazorView.cshtml</DependentUpon>
+    </Compile>
+    <Compile Update="Workers\NoteRepositoryMerger.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+      <ExcludeFromSourceAnalysis>True</ExcludeFromSourceAnalysis>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Views\CloudStorageChoiceRazorView.cshtml">
+      <LastGenOutput>CloudStorageChoiceRazorView.cs</LastGenOutput>
+      <Generator>RazorTemplatePreprocessor</Generator>
+    </None>
+    <None Update="Views\CloudStorageOauthWaitingRazorView.cshtml">
+      <LastGenOutput>CloudStorageOauthWaitingRazorView.cs</LastGenOutput>
+      <Generator>RazorTemplatePreprocessor</Generator>
+    </None>
+    <None Update="Views\CloudStorageAccountRazorView.cshtml">
+      <LastGenOutput>CloudStorageAccountRazorView.cs</LastGenOutput>
+      <Generator>RazorTemplatePreprocessor</Generator>
+    </None>
+    <None Update="Views\FirstTimeSyncRazorView.cshtml">
+      <LastGenOutput>FirstTimeSyncRazorView.cs</LastGenOutput>
+      <Generator>RazorTemplatePreprocessor</Generator>
+    </None>
+    <None Update="Views\InfoRazorView.cshtml">
+      <LastGenOutput>InfoRazorView.cs</LastGenOutput>
+      <Generator>RazorTemplatePreprocessor</Generator>
+    </None>
+    <None Update="Views\MergeChoiceRazorView.cshtml">
+      <Generator>RazorTemplatePreprocessor</Generator>
+      <LastGenOutput>MergeChoiceRazorView.cs</LastGenOutput>
+    </None>
+    <None Update="Views\NoteRazorView.cshtml">
+      <LastGenOutput>NoteRazorView.cs</LastGenOutput>
+      <Generator>RazorTemplatePreprocessor</Generator>
+    </None>
+    <None Update="Views\NoteRepositoryContentRazorView.cshtml">
+      <LastGenOutput>NoteRepositoryContentRazorView.cs</LastGenOutput>
+      <Generator>RazorTemplatePreprocessor</Generator>
+    </None>
+    <None Update="Views\NoteRepositoryRazorView.cshtml">
+      <LastGenOutput>NoteRepositoryRazorView.cs</LastGenOutput>
+      <Generator>RazorTemplatePreprocessor</Generator>
+    </None>
+    <None Update="Views\RecycleBinContentRazorView.cshtml">
+      <LastGenOutput>RecycleBinContentRazorView.cs</LastGenOutput>
+      <Generator>RazorTemplatePreprocessor</Generator>
+    </None>
+    <None Update="Views\RecycleBinRazorView.cshtml">
+      <LastGenOutput>RecycleBinRazorView.cs</LastGenOutput>
+      <Generator>RazorTemplatePreprocessor</Generator>
+    </None>
+    <None Update="Views\SettingsRazorView.cshtml">
+      <LastGenOutput>SettingsRazorView.cs</LastGenOutput>
+      <Generator>RazorTemplatePreprocessor</Generator>
+    </None>
+    <None Update="Views\StopRazorView.cshtml">
+      <LastGenOutput>StopRazorView.cs</LastGenOutput>
+      <Generator>RazorTemplatePreprocessor</Generator>
+    </None>
+    <None Update="Views\TransferCodeHistoryRazorView.cshtml">
+      <Generator>RazorTemplatePreprocessor</Generator>
+      <LastGenOutput>TransferCodeHistoryRazorView.cs</LastGenOutput>
+    </None>
+    <None Update="Views\TransferCodeRazorView.cshtml">
+      <Generator>RazorTemplatePreprocessor</Generator>
+      <LastGenOutput>TransferCodeRazorView.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+</Project>
