@@ -16,7 +16,7 @@ namespace SilentNotes
     public static class Config
     {
         /// <summary>
-        /// Gets the mode or the application.
+        /// Gets the mode of the application.
         /// Make sure this value is set to <see cref="RunningModes.Production"/> to deploy the application.
         /// </summary>
         public static RunningModes RunningMode { get; internal set; } = RunningModes.Demo;
