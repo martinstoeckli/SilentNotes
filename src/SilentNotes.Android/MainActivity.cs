@@ -30,6 +30,12 @@ namespace SilentNotes.Android
         /// <inheritdoc/>
         protected override void OnCreate(Bundle bundle)
         {
+#if DEBUG
+            // Allow debugging of JavaScript inside of the WebView.
+            // Debugging can be activated in Chrome by calling "chrome://inspect"
+            WebView.SetWebContentsDebuggingEnabled(true);
+#endif
+
             // Clear the splash screen theme, which is declared as attribute of the activity.
             SetTheme(Resource.Style.MainTheme);
 
@@ -42,9 +48,13 @@ namespace SilentNotes.Android
             _webView.SetWebViewClient(new HybridWebViewClient(
                 (url) => OnNavigating(url),
                 () => OnNavigationCompleted()));
-            _webView.Settings.JavaScriptEnabled = true;
-            _webView.Settings.BlockNetworkLoads = true; // only local content allowed
-            _webView.Settings.CacheMode = CacheModes.NoCache; // is already local content
+
+            WebSettings settings = _webView.Settings;
+            settings.JavaScriptEnabled = true;
+            settings.BlockNetworkLoads = true; // only local content allowed
+            settings.AllowFileAccess = false; // no local files but from the asset directory
+            settings.SetPluginState(WebSettings.PluginState.Off); // no plugins allowed
+            settings.CacheMode = CacheModes.NoCache; // is already local content
 
             Ioc.Reset(); // Theoretically the OnCreate can be called repeatedly without an OnDestroy between
             Startup.InitializeApplication(this);

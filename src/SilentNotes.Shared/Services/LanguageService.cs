@@ -3,6 +3,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using System;
 using System.Collections.Generic;
 
 namespace SilentNotes.Services
@@ -208,6 +209,22 @@ namespace SilentNotes.Services
         /// <inheritdoc/>
         protected override void LoadTextResources(Dictionary<string, string> textResources, string languageCode)
         {
+#if DEBUG
+            switch (Config.LanguageMode)
+            {
+                case Config.LanguageModes.Auto:
+                    break;
+                case Config.LanguageModes.English:
+                    languageCode = "en";
+                    break;
+                case Config.LanguageModes.German:
+                    languageCode = "de";
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException("Unknown Config.LanguageMode");
+            }
+#endif
+
             switch (languageCode.ToLowerInvariant())
             {
                 case "de":

@@ -18,6 +18,18 @@ namespace SilentNotes.HtmlView
     /// It doesn't make use of reflection, so the applications "Linking" options can be set to
     /// optimize the code.
     /// </summary>
+    /// <remarks>
+    /// This class requires the JavaScript functions bind(), htmlViewBindingsSetValue(),
+    /// htmlViewBindingsSetVisibility() and htmlViewBindingsSetCss() which are defined in
+    /// "silentnotes.js".
+    /// The function bind() can be called from HTML elements to trigger a binding:
+    /// <example><code>
+    /// onclick='bind(event);'
+    /// </code></example>
+    /// The JavaScript function collects the id of the HTML element, its value and all
+    /// data-* attributes and passes them to the binding. The data-binding attribute has a
+    /// special meaning and should be set to identify the binding.
+    /// </remarks>
     public class HtmlViewBindings : IDisposable
     {
         private const string JsNamespace = "HtmlViewBinding";
@@ -75,7 +87,16 @@ namespace SilentNotes.HtmlView
                 {
                     // Raise event to let the controller handle the request
                     if (UnhandledViewBindingEvent != null)
-                        UnhandledViewBindingEvent(this, eventArgs);
+                    {
+                        try
+                        {
+                            UnhandledViewBindingEvent(this, eventArgs);
+                        }
+                        catch (Exception)
+                        {
+                            // Todo: We catch the exception because this can freeze the GUI completely. Log it as soon as a log is available.
+                        }
+                    }
                 }
             }
         }
@@ -97,8 +118,6 @@ namespace SilentNotes.HtmlView
 
         private void NavigationCompletedEventHandler(object sender, EventArgs e)
         {
-            InjectJavaScriptBindingFunctions();
-
             // Activate all notifiers, so they start listening to events in the Html view.
             foreach (IHtmlViewBinding binding in _bindings)
             {
@@ -338,78 +357,6 @@ namespace SilentNotes.HtmlView
         {
             string script = string.Format(
                 "htmlViewBindingsSetVisibility('{0}', {1});", bindingName, visible.ToString().ToLowerInvariant());
-            _htmlView.ExecuteJavaScript(script);
-        }
-
-        /// <summary>
-        /// Adds a JavaScript function to the html view, which can be called from HTML events to
-        /// trigger a binding. The function can be called from an HTML element like this:
-        /// <example><code>
-        /// onclick='bind(event);'
-        /// </code></example>
-        /// The JavaScript function collects the id of the HTML element, its value and all
-        /// data-* attributes and passes them to the binding. The data-binding attribute has a
-        /// special meaning and should be set to identify the binding.
-        /// </summary>
-        private void InjectJavaScriptBindingFunctions()
-        {
-            const string JsBindFunction = @"
-function bind(event)
-{
-    event = event || window.event;
-    //event.preventDefault();
-
-    var params = [];
-    params['{2}'] = event.type;
-    params['id'] = event.currentTarget.id;
-    params['value'] = event.currentTarget.value;
-    params['checked'] = event.currentTarget.checked;
-    [].forEach.call(event.currentTarget.attributes, function(attr) {
-        if (/^data-/.test(attr.name))
-            params[attr.name] = attr.value;
-    });
-
-    var parts = [];
-    for (var key in params) {
-        var value = params[key];
-        if (value)
-            parts.push(key + '=' + encodeURIComponent(value));
-    }
-
-    var url = '{0}?' + parts.join('&');
-    location.href = url;
-}
-
-function htmlViewBindingsSetValue(bindingName, value)
-{
-    var selector = '[{1}=""' + bindingName + '""]';
-    $(selector).each(function()
-    {
-        var oldValue = $(this).val();
-        if (value != oldValue)
-            $(this).val(value);
-    });
-}
-
-function htmlViewBindingsSetVisibility(bindingName, visible)
-{
-    var selector = '[{1}=""' + bindingName + '""]';
-    if (visible)
-        $(selector).show();
-    else
-        $(selector).hide();
-}
-
-function htmlViewBindingsSetCss(bindingName, cssAttributeName, cssAttributeValue)
-{
-    var selector = '[{1}=""' + bindingName + '""]';
-    $(selector).css(cssAttributeName, cssAttributeValue);
-}
-";
-            string script = JsBindFunction
-                .Replace("{0}", JsNamespace)
-                .Replace("{1}", BindingAttribute)
-                .Replace("{2}", EventTypeAttribute);
             _htmlView.ExecuteJavaScript(script);
         }
     }

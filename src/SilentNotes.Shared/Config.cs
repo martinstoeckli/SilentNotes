@@ -16,10 +16,16 @@ namespace SilentNotes
     public static class Config
     {
         /// <summary>
-        /// Gets or sets the mode the application. Make sure this value is set to <see cref="RunningModes.Production"/>
-        /// to deploy the application.
+        /// Gets the mode of the application.
+        /// Make sure this value is set to <see cref="RunningModes.Production"/> to deploy the application.
         /// </summary>
-        public static RunningModes RunningMode { get; set; } = RunningModes.Development;
+        public static RunningModes RunningMode { get; internal set; } = RunningModes.Demo;
+
+        /// <summary>
+        /// Gets the enforced language of the GUI. Use this setting when a language should be
+        /// explicitely set for debugging/testing, it works only when compiled in DEBUG mode.
+        /// </summary>
+        public static LanguageModes LanguageMode { get; internal set; } = LanguageModes.Auto;
 
         /// <summary>
         /// Gets the filename without path, used to store the note repository
@@ -76,6 +82,16 @@ namespace SilentNotes
             Demo,
             Development,
             UnitTest,
+        }
+
+        /// <summary>
+        /// Enumeration of all known language modes.
+        /// </summary>
+        public enum LanguageModes
+        {
+            Auto,
+            English,
+            German,
         }
     }
 }
