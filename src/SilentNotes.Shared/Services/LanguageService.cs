@@ -161,7 +161,7 @@ namespace SilentNotes.Services
             resources["copyright"] = "Copyright";
             resources["website"] = "Webseite";
             resources["opensource"] = "Lizenzierung";
-            resources["opensource_desc"] = "SilentNotes ist ein Open Source Projekt, veröffentlicht gemäss den Bedingunen der Mozilla Public License v. 2.0.";
+            resources["opensource_desc"] = "SilentNotes ist ein Open Source Projekt, veröffentlicht gemäss den Bedingungen der Mozilla Public License v. 2.0.";
             resources["license"] = "SilentNotes respektiert Ihre Privatsphäre, es sammelt keine Benutzerinformationen und benötigt keine unnötigen Rechte. Die Notizen verlassen das Gerät nie unverschlüsselt.";
             resources["newer_version"] = "Eine neuere Version {0} von SilentNotes ist verfügbar, bitten installieren Sie das Update.";
 
