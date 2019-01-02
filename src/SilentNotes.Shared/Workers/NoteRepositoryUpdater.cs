@@ -63,12 +63,15 @@ namespace SilentNotes.Workers
 
                 if (!string.IsNullOrWhiteSpace(title))
                 {
+                    title = System.Net.WebUtility.HtmlEncode(title);
                     sb.Append("<h1>");
                     sb.Append(title);
                     sb.Append("</h1>");
                 }
                 if (!string.IsNullOrWhiteSpace(content))
                 {
+                    content = System.Net.WebUtility.HtmlEncode(content);
+                    content = content.Replace("\n", "</p><p>");
                     sb.Append("<p>");
                     sb.Append(content);
                     sb.Append("</p>");
