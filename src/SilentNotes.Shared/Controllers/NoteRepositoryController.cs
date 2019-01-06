@@ -134,7 +134,7 @@ namespace SilentNotes.Controllers
         private void UnhandledViewBindingEventHandler(object sender, HtmlViewBindingNotifiedEventArgs e)
         {
             Guid noteId;
-            switch (e.EventType.ToLowerInvariant())
+            switch (e.EventType?.ToLowerInvariant())
             {
                 case "list-open":
                     noteId = new Guid(e.Parameters["data-note"]);

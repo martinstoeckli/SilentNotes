@@ -31,7 +31,7 @@ namespace SilentNotes.Android
         public override bool ShouldOverrideUrlLoading(WebView view, IWebResourceRequest request)
         {
             // Intercept all links and never do the default loading.
-            OnNavigating(request.Url?.ToString());
+            OnNavigating(request?.Url?.ToString());
             return true;
         }
 
