@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.IO;
 using System.Web;
 using System.Windows.Input;
 
@@ -37,6 +36,7 @@ namespace SilentNotes.HtmlView
         private const string EventTypeAttribute = "event-type";
         private readonly List<IHtmlViewBinding> _bindings;
         private IHtmlView _htmlView;
+        private bool _disposed = false;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HtmlViewBindings"/> class.
@@ -58,44 +58,38 @@ namespace SilentNotes.HtmlView
         /// <param name="uri">The navigation Uri.</param>
         private void NavigatingEventHandler(object sender, string uri)
         {
+            if (_disposed || string.IsNullOrEmpty(uri) || !uri.Contains(JsNamespace))
+                return;
+
             // Read parameters from requested url
-            Uri requestUrl = new Uri(uri);
-            string page = Path.GetFileName(requestUrl.LocalPath);
             string queryPart = GetUriQueryPart(uri);
             NameValueCollection queryArguments = HttpUtility.ParseQueryString(queryPart);
             var arguments = new KeyValueList<string, string>(StringComparer.InvariantCultureIgnoreCase);
             foreach (string item in queryArguments)
                 arguments[item] = queryArguments[item];
 
-            // We intercept all navigations triggered by our own namespace, because they indicate
-            // user clicks instead of real navigation requests to other pages.
-            if (string.IsNullOrEmpty(page))
-            {
-                // Ignore links with href="#", because they are meant to be handled by a binding.
-            }
-            else if (page == JsNamespace)
-            {
-                var eventArgs = new HtmlViewBindingNotifiedEventArgs(arguments[BindingAttribute], arguments[EventTypeAttribute], arguments);
+            var eventArgs = new HtmlViewBindingNotifiedEventArgs(arguments[BindingAttribute], arguments[EventTypeAttribute], arguments);
+            if (string.IsNullOrEmpty(eventArgs.EventType))
+                return;
 
-                HtmlViewBindingViewNotifier notifier = FindViewNotifier(eventArgs);
-                if (notifier != null)
+            HtmlViewBindingViewNotifier notifier = FindViewNotifier(eventArgs);
+            if (notifier != null)
+            {
+                // Matching notifier found, trigger the notifier
+                notifier.OnNotified(eventArgs.Parameters);
+            }
+            else
+            {
+                // Raise event to let the controller handle the request
+                if (UnhandledViewBindingEvent != null)
                 {
-                    // Matching notifier found, trigger the notifier
-                    notifier.OnNotified(eventArgs.Parameters);
-                }
-                else
-                {
-                    // Raise event to let the controller handle the request
-                    if (UnhandledViewBindingEvent != null)
+                    try
                     {
-                        try
-                        {
-                            UnhandledViewBindingEvent(this, eventArgs);
-                        }
-                        catch (Exception)
-                        {
-                            // Todo: We catch the exception because this can freeze the GUI completely. Log it as soon as a log is available.
-                        }
+                        UnhandledViewBindingEvent(this, eventArgs);
+                    }
+                    catch (Exception)
+                    {
+                        // Todo: We catch the exception because this can freeze the GUI completely. Log it as soon as a log is available.
                     }
                 }
             }
@@ -312,6 +306,10 @@ namespace SilentNotes.HtmlView
         /// <inheritdoc/>
         public void Dispose()
         {
+            if (_disposed)
+                return;
+            _disposed = true;
+
             _htmlView.Navigating -= NavigatingEventHandler;
             _bindings.Clear();
         }

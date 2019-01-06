@@ -122,6 +122,9 @@ namespace SilentNotes.Android
 
         private void OnNavigating(string url)
         {
+            if (string.IsNullOrEmpty(url))
+                return;
+
             // Intercept the javascript signal for the BackPressed event raised in OnBackPressed.
             if (url.EndsWith("BackPressed"))
             {

@@ -63,7 +63,7 @@ namespace SilentNotes.Controllers
 
         private async void UnhandledViewBindingEventHandler(object sender, HtmlViewBindingNotifiedEventArgs e)
         {
-            switch (e.BindingName.ToLowerInvariant())
+            switch (e.BindingName?.ToLowerInvariant())
             {
                 case "backgroundcolorhex":
                     _viewModel.BackgroundColorHex = e.Parameters["data-backgroundcolorhex"];
