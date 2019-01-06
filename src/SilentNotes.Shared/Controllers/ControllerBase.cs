@@ -15,7 +15,7 @@ namespace SilentNotes.Controllers
     /// </summary>
     public abstract class ControllerBase : IController
     {
-        private bool disposed = false;
+        private bool _disposed = false;
 
         /// <summary>Gets the injected view service.</summary>
         protected readonly IRazorViewService _viewService;
@@ -52,7 +52,7 @@ namespace SilentNotes.Controllers
         /// unmanaged resources; false to release only unmanaged resources.</param>
         protected virtual void Dispose(bool itIsSafeToAlsoFreeManagedObjects)
         {
-            if (disposed)
+            if (_disposed)
                 return;
 
             // Always release unmanaged resources
@@ -68,7 +68,7 @@ namespace SilentNotes.Controllers
                 GetViewModel()?.OnClosing();
             }
 
-            disposed = true;
+            _disposed = true;
         }
 
         /// <summary>

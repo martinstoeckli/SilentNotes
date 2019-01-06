@@ -71,7 +71,7 @@ namespace SilentNotes.UWP.Services
         private class BusyIndicatorHolder : IDisposable
         {
             private static int _busyIndicatorLevel = 0;
-            private bool disposed = false;
+            private bool _disposed = false;
             private ProgressRing _busyIndicator;
 
             /// <summary>
@@ -90,9 +90,9 @@ namespace SilentNotes.UWP.Services
             /// </summary>
             public void Dispose()
             {
-                if (disposed)
+                if (_disposed)
                     return;
-                disposed = true;
+                _disposed = true;
 
                 _busyIndicatorLevel--;
                 if (_busyIndicatorLevel <= 0)

@@ -4,6 +4,7 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Xml.Serialization;
 
@@ -50,6 +51,7 @@ namespace SilentNotes
         /// <summary>
         /// A serializable key-value pair for the <see cref="KeyValueList{TKey,TValue}"/>.
         /// </summary>
+        [DebuggerDisplay("{Key} = {Value}")]
         public class Pair
         {
             /// <summary>
