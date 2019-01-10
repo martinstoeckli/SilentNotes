@@ -310,6 +310,7 @@ namespace SilentNotes.HtmlView
                 return;
             _disposed = true;
 
+            _htmlView.NavigationCompleted -= NavigationCompletedEventHandler;
             _htmlView.Navigating -= NavigatingEventHandler;
             _bindings.Clear();
         }

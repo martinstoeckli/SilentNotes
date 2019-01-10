@@ -183,7 +183,7 @@
     <Content Include="..\SilentNotes.Shared\Assets\Html\SilentNotes256.png">
       <Link>Assets\Html\SilentNotes256.png</Link>
     </Content>
-    <Content Include="..\SilentNotes.Shared\Assets\Html\Sortable.min.js">
+    <Content Include="..\SilentNotes.Shared\Assets\Html\sortable\Sortable.min.js">
       <Link>Assets\Html\Sortable.min.js</Link>
     </Content>
     <Content Include="Assets\LargeTile.scale-100.png" />
@@ -237,6 +237,7 @@
       <Name>SilentNotes.Shared</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

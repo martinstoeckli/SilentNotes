@@ -144,47 +144,52 @@ function isMobile()
  * Functions required by the HtmlViewBindings.cs class
  */
 function bind(event) {
-    event = event || window.event;
+	event = event || window.event;
 
-    var params = [];
-    params['event-type'] = event.type;
-    params['id'] = event.currentTarget.id;
-    params['value'] = event.currentTarget.value;
-    params['checked'] = event.currentTarget.checked;
-    [].forEach.call(event.currentTarget.attributes, function (attr) {
-        if (/^data-/.test(attr.name))
-            params[attr.name] = attr.value;
-    });
+	var params = [];
+	params['event-type'] = event.type;
+	params['id'] = event.currentTarget.id;
+	params['value'] = event.currentTarget.value;
+	params['checked'] = event.currentTarget.checked;
 
-    var parts = [];
-    for (var key in params) {
-        var value = params[key];
-        if (value)
-            parts.push(key + '=' + encodeURIComponent(value));
-    }
+	var eventAttributes = event.currentTarget.attributes;
+	if (eventAttributes) {
+		for (let i = 0; i < eventAttributes.length; i++) {
+			var attr = eventAttributes[i];
+			if (/^data-/.test(attr.name))
+				params[attr.name] = attr.value;
+		}
+	}
 
-    var url = 'HtmlViewBinding?' + parts.join('&');
-    location.href = url;
+	var parts = [];
+	for (var key in params) {
+		var value = params[key];
+		if (value)
+			parts.push(key + '=' + encodeURIComponent(value));
+	}
+
+	var url = 'HtmlViewBinding?' + parts.join('&');
+	location.href = url;
 }
 
 function htmlViewBindingsSetValue(bindingName, value) {
-    var selector = '[data-binding="' + bindingName + '"]';
-    $(selector).each(function () {
-        var oldValue = $(this).val();
-        if (value != oldValue)
-            $(this).val(value);
-    });
+	var selector = '[data-binding="' + bindingName + '"]';
+	$(selector).each(function () {
+		var oldValue = $(this).val();
+		if (value != oldValue)
+			$(this).val(value);
+	});
 }
 
 function htmlViewBindingsSetVisibility(bindingName, visible) {
-    var selector = '[data-binding="' + bindingName + '"]';
-    if (visible)
-        $(selector).show();
-    else
-        $(selector).hide();
+	var selector = '[data-binding="' + bindingName + '"]';
+	if (visible)
+		$(selector).show();
+	else
+		$(selector).hide();
 }
 
 function htmlViewBindingsSetCss(bindingName, cssAttributeName, cssAttributeValue) {
-    var selector = '[data-binding="' + bindingName + '"]';
-    $(selector).css(cssAttributeName, cssAttributeValue);
+	var selector = '[data-binding="' + bindingName + '"]';
+	$(selector).css(cssAttributeName, cssAttributeValue);
 }

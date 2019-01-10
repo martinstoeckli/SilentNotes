@@ -38,6 +38,13 @@ namespace SilentNotes.Controllers
         }
 
         /// <inheritdoc/>
+        protected override void OverrideableDispose()
+        {
+            View.NavigationCompleted -= NavigationCompletedEventHandler;
+            base.OverrideableDispose();
+        }
+
+        /// <inheritdoc/>
         protected override IViewModel GetViewModel()
         {
             if (_viewModel != null)
@@ -50,6 +57,7 @@ namespace SilentNotes.Controllers
         public override void ShowInView(IHtmlView htmlView, KeyValueList<string, string> variables)
         {
             base.ShowInView(htmlView, variables);
+            View.NavigationCompleted += NavigationCompletedEventHandler;
             IRepositoryStorageService repositoryService = Ioc.GetOrCreate<IRepositoryStorageService>();
 
             RepositoryStorageLoadResult loadResult = repositoryService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepository);
@@ -90,10 +98,13 @@ namespace SilentNotes.Controllers
                     null,
                     null,
                     new HtmlViewBindingViewmodelNotifier(_viewModel, "Notes"),
-                    HtmlViewBindingMode.OneWayToViewPlusOneTimeToView);
+                    HtmlViewBindingMode.OneWayToView);
                 Bindings.UnhandledViewBindingEvent += UnhandledViewBindingEventHandler;
 
+                // Load html page and content (notes)
                 string html = _viewService.GenerateHtml(_viewModel);
+                string htmlNotes = _viewContentService.GenerateHtml(_viewModel);
+                html = html.Replace("<ul id=\"note-repository\"></ul>", htmlNotes); // Replace node "note-repository" with content
                 View.LoadHtml(html);
             }
             else
@@ -107,6 +118,11 @@ namespace SilentNotes.Controllers
                 string html = _viewStop.GenerateHtml(_stopViewModel);
                 View.LoadHtml(html);
             }
+        }
+
+        private void NavigationCompletedEventHandler(object sender, EventArgs e)
+        {
+            View.ExecuteJavaScript("makeSelectable(); makeSortable();");
         }
 
         private void NotesChangedEventHandler(object obj)
