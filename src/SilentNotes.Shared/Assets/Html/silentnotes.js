@@ -79,7 +79,8 @@ function makeSelectableListMobile()
 				bind(evt);
 			},
 			function (evt) {
-				var ignoreUntil = lastLongPressTime + 720; // longpress + some milliseconds
+				// Android 4.4 will send a press event after the long press, we suppress it
+				var ignoreUntil = lastLongPressTime + 720;
 				var tooShortAfterLongPress = new Date().getTime() < ignoreUntil;
 				if (!tooShortAfterLongPress) {
 					// short press triggers action
@@ -164,4 +165,18 @@ function htmlViewBindingsSetVisibility(bindingName, visible) {
 function htmlViewBindingsSetCss(bindingName, cssAttributeName, cssAttributeValue) {
 	var selector = '[data-binding="' + bindingName + '"]';
 	$(selector).css(cssAttributeName, cssAttributeValue);
+}
+
+function selectNote(noteId) {
+	$('#note-repository').find('.selectable-item').each(function () {
+		var item = $(this);
+		if (item.data('note') === noteId) {
+			if (!item.hasClass('selected'))
+				item.addClass('selected');
+		}
+		else {
+			if (item.hasClass('selected'))
+				item.removeClass('selected');
+		}
+	});
 }

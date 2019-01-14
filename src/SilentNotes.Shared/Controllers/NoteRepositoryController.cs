@@ -135,15 +135,7 @@ namespace SilentNotes.Controllers
 
         private void SelectedNoteChangedEventHandler(NoteViewModel selectedNote)
         {
-            // remove "selected" from all notes
-            string script = "$('#note-repository').find('.selectable-item').removeClass('selected');";
-            if (selectedNote != null)
-            {
-                // add "selected" to currently selected note
-                script += string.Format(
-                    "$('#note-repository').find('[data-note=\"{0}\"]').addClass('selected');",
-                    selectedNote.Id.ToString());
-            }
+            string script = string.Format("selectNote('{0}');", selectedNote?.Id.ToString());
             View.ExecuteJavaScript(script);
         }
 
