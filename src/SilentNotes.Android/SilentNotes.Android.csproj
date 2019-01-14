@@ -117,11 +117,6 @@
     </AndroidAsset>
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\jquery-3.2.1.min.js">
-      <Link>Assets\Html\jquery-3.2.1.min.js</Link>
-    </AndroidAsset>
-  </ItemGroup>
-  <ItemGroup>
     <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\silentnotes.css">
       <Link>Assets\Html\silentnotes.css</Link>
     </AndroidAsset>
@@ -217,6 +212,11 @@
   <ItemGroup>
     <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\sortable\Sortable.min.js">
       <Link>Assets\Html\Sortable.min.js</Link>
+    </AndroidAsset>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\jquery-3.3.1.min.js">
+      <Link>Assets\Html\jquery-3.3.1.min.js</Link>
     </AndroidAsset>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />

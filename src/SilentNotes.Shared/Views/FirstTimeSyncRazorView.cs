@@ -23,7 +23,7 @@ using SilentNotes.ViewModels;
 #line hidden
 
 
-[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "4.12.3.73")]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "4.12.3.77")]
 public partial class FirstTimeSyncRazorView : FirstTimeSyncRazorViewBase
 {
 
@@ -80,7 +80,7 @@ WriteLiteral(" rel=\"stylesheet\"");
 
 WriteLiteral(" />\r\n\r\n    <script");
 
-WriteLiteral(" src=\"jquery-3.2.1.min.js\"");
+WriteLiteral(" src=\"jquery-3.3.1.min.js\"");
 
 WriteLiteral("></script>\r\n    <script");
 

@@ -1,6 +1,7 @@
 /**
  * Longpress is a jQuery plugin that makes it easy to support long press
  * events on mobile devices and desktop borwsers.
+ * Modified by Martin Stoeckli to suppress short press events after dragging.
  *
  * @name longpress
  * @version 0.1.2
@@ -26,9 +27,11 @@
             // to keep track of how long something was pressed
             var mouse_down_time;
             var timeout;
+            var dragging = false;
 
             // mousedown or touchstart callback
             function mousedown_callback(e) {
+                dragging = false;
                 mouse_down_time = new Date().getTime();
                 var context = $(this);
 
@@ -45,12 +48,14 @@
             // mouseup or touchend callback
             function mouseup_callback(e) {
                 var press_time = new Date().getTime() - mouse_down_time;
+                var wasDragged = dragging;
+                dragging = false;
                 if (press_time < duration) {
                     // cancel the timeout
                     clearTimeout(timeout);
 
                     // call the shortCallback if provided
-                    if (typeof shortCallback === "function") {
+                    if (!wasDragged && typeof shortCallback === "function") {
                         shortCallback.call($(this), e);
                     } else if (typeof shortCallback === "undefined") {
                         ;
@@ -63,6 +68,7 @@
             // cancel long press event if the finger or mouse was moved
             function move_callback(e) {
                 clearTimeout(timeout);
+                dragging = true;
             }
 
             // Browser Support

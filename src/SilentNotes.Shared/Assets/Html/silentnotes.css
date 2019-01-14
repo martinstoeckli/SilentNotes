@@ -123,6 +123,20 @@ h3 {
 .sortable-ghost {
 	background-color: rgba(38, 160, 218, 0.3);
 }
+.sortable-item {
+	position: relative;
+}
+.sortable-handle {
+	position: absolute;
+	display: inline-block;
+	padding: 1px;
+	top: 14px;
+	right: 18px;
+	width: 26px;
+	height: 26px;
+	fill: rgba(0, 0, 0, 0.4);
+	background-color: rgba(0, 0, 0, 0.1);
+}
 
 .selected {
 	background-color: rgba(38, 160, 218, 0.2);
@@ -169,6 +183,7 @@ h3 {
 	background-color: #fbf4c1;
 	box-shadow: 2px 1px 4px rgba(0, 0, 0, 0.4);
 	font-size: 0.9em;
+	user-select: none;
 }
 
 /* narrow browser */

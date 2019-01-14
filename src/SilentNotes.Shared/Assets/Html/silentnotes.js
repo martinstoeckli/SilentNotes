@@ -15,9 +15,10 @@ function makeSortableDesktop()
 		Sortable.create(
 			this,
 			{
+				handle: '.sortable-handle',
 				onEnd: function (evt) {
 					onSortableOrderChanged(evt.oldIndex, evt.newIndex);
-				},
+				}
 			});
 	});
 }
@@ -28,11 +29,10 @@ function makeSortableMobile()
 		Sortable.create(
 			this,
 			{
-				ghostClass: "sortable-ghost",
-				delay: 360, // on touch screen, sorting should not prevent scrolling
+				handle: '.sortable-handle',
 				onEnd: function (evt) {
 					onSortableOrderChanged(evt.oldIndex, evt.newIndex);
-				},
+				}
 			});
 	});
 }
@@ -68,48 +68,26 @@ function makeSelectableListDesktop()
 
 function makeSelectableListMobile()
 {
-	var startX = 0;
-	var startY = 0;
-	var lastX = 0;
-	var lastY = 0;
-	var moveThreshold = 10;
 	var lastLongPressTime = new Date().getTime();
 	$('.selectable').find('.selectable-item').each(function () {
-		$(this).mousedown(function (evt) {
-			startX = evt.pageX;
-			startY = evt.pageY;
-			lastX = evt.pageX;
-			lastY = evt.pageY;
-		});
-		$(this).mousemove(function (evt) {
-			lastX = evt.pageX;
-			lastY = evt.pageY;
-		});
-
 		$(this).longpress(
 			function (evt) {
 				lastLongPressTime = new Date().getTime();
 
 				// long press selects item
-				var dragged = Math.pow(startX - lastX, 2) + Math.pow(startY - lastY, 2) >= Math.pow(moveThreshold, 2);
-				dragged = false;
-				if (!dragged) {
-					evt.type = 'list-select';
+				evt.type = 'list-select';
+				bind(evt);
+			},
+			function (evt) {
+				var ignoreUntil = lastLongPressTime + 720; // longpress + some milliseconds
+				var tooShortAfterLongPress = new Date().getTime() < ignoreUntil;
+				if (!tooShortAfterLongPress) {
+					// short press triggers action
+					evt.type = 'list-open';
 					bind(evt);
 				}
 			},
-			function (evt) {
-				var tooShortAfterLongPress = new Date().getTime() < lastLongPressTime + 640;
-				if (!tooShortAfterLongPress) {
-					// short press triggers action
-					var dragged = Math.pow(startX - lastX, 2) + Math.pow(startY - lastY, 2) >= Math.pow(moveThreshold, 2);
-					if (!dragged) {
-						evt.type = 'list-open';
-						bind(evt);
-					}
-				}
-			},
-			360);
+			350);
 	});
 }
 
@@ -146,27 +124,21 @@ function isMobile()
 function bind(event) {
 	event = event || window.event;
 
-	var params = [];
+	var params = new Object();
 	params['event-type'] = event.type;
 	params['id'] = event.currentTarget.id;
 	params['value'] = event.currentTarget.value;
 	params['checked'] = event.currentTarget.checked;
-
-	var eventAttributes = event.currentTarget.attributes;
-	if (eventAttributes) {
-		for (let i = 0; i < eventAttributes.length; i++) {
-			var attr = eventAttributes[i];
-			if (/^data-/.test(attr.name))
-				params[attr.name] = attr.value;
-		}
-	}
+	$.each(event.currentTarget.attributes, function(index, attr) {
+		if (/^data-/.test(attr.name))
+			params[attr.name] = attr.value;
+	});
 
 	var parts = [];
-	for (var key in params) {
-		var value = params[key];
+	$.each(params, function(key, value) {
 		if (value)
 			parts.push(key + '=' + encodeURIComponent(value));
-	}
+	});
 
 	var url = 'HtmlViewBinding?' + parts.join('&');
 	location.href = url;

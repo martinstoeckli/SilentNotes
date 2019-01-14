@@ -150,8 +150,8 @@
     <Content Include="..\SilentNotes.Shared\Assets\Html\cork.jpg">
       <Link>Assets\Html\cork.jpg</Link>
     </Content>
-    <Content Include="..\SilentNotes.Shared\Assets\Html\jquery-3.2.1.min.js">
-      <Link>Assets\Html\jquery-3.2.1.min.js</Link>
+    <Content Include="..\SilentNotes.Shared\Assets\Html\jquery-3.3.1.min.js">
+      <Link>Assets\Html\jquery-3.3.1.min.js</Link>
     </Content>
     <Content Include="..\SilentNotes.Shared\Assets\Html\jquery.longpress.js">
       <Link>Assets\Html\jquery.longpress.js</Link>
