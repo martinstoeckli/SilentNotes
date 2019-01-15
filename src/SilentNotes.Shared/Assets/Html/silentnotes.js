@@ -79,14 +79,9 @@ function makeSelectableListMobile()
 				bind(evt);
 			},
 			function (evt) {
-				// Android 4.4 will send a press event after the long press, we suppress it
-				var ignoreUntil = lastLongPressTime + 720;
-				var tooShortAfterLongPress = new Date().getTime() < ignoreUntil;
-				if (!tooShortAfterLongPress) {
-					// short press triggers action
-					evt.type = 'list-open';
-					bind(evt);
-				}
+				// short press triggers action
+				evt.type = 'list-open';
+				bind(evt);
 			},
 			350);
 	});

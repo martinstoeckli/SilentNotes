@@ -84,8 +84,8 @@
             }
 
             // Browser Support
-            $this.on('mousedown', mousedown_callback);
-            $this.on('mouseup', mouseup_callback);
+            //$this.on('mousedown', mousedown_callback);
+            //$this.on('mouseup', mouseup_callback);
 
             // Mobile Support
             $this.on('touchstart', mousedown_callback);
