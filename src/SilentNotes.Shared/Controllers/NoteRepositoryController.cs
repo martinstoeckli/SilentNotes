@@ -38,6 +38,13 @@ namespace SilentNotes.Controllers
         }
 
         /// <inheritdoc/>
+        protected override void OverrideableDispose()
+        {
+            View.NavigationCompleted -= NavigationCompletedEventHandler;
+            base.OverrideableDispose();
+        }
+
+        /// <inheritdoc/>
         protected override IViewModel GetViewModel()
         {
             if (_viewModel != null)
@@ -50,6 +57,7 @@ namespace SilentNotes.Controllers
         public override void ShowInView(IHtmlView htmlView, KeyValueList<string, string> variables)
         {
             base.ShowInView(htmlView, variables);
+            View.NavigationCompleted += NavigationCompletedEventHandler;
             IRepositoryStorageService repositoryService = Ioc.GetOrCreate<IRepositoryStorageService>();
 
             RepositoryStorageLoadResult loadResult = repositoryService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepository);
@@ -90,10 +98,13 @@ namespace SilentNotes.Controllers
                     null,
                     null,
                     new HtmlViewBindingViewmodelNotifier(_viewModel, "Notes"),
-                    HtmlViewBindingMode.OneWayToViewPlusOneTimeToView);
+                    HtmlViewBindingMode.OneWayToView);
                 Bindings.UnhandledViewBindingEvent += UnhandledViewBindingEventHandler;
 
+                // Load html page and content (notes)
                 string html = _viewService.GenerateHtml(_viewModel);
+                string htmlNotes = _viewContentService.GenerateHtml(_viewModel);
+                html = html.Replace("<ul id=\"note-repository\"></ul>", htmlNotes); // Replace node "note-repository" with content
                 View.LoadHtml(html);
             }
             else
@@ -109,6 +120,11 @@ namespace SilentNotes.Controllers
             }
         }
 
+        private void NavigationCompletedEventHandler(object sender, EventArgs e)
+        {
+            View.ExecuteJavaScript("makeSelectable(); makeSortable();");
+        }
+
         private void NotesChangedEventHandler(object obj)
         {
             // Update the note list in the (HTML) view.
@@ -119,15 +135,7 @@ namespace SilentNotes.Controllers
 
         private void SelectedNoteChangedEventHandler(NoteViewModel selectedNote)
         {
-            // remove "selected" from all notes
-            string script = "$('#note-repository').find('.selectable-item').removeClass('selected');";
-            if (selectedNote != null)
-            {
-                // add "selected" to currently selected note
-                script += string.Format(
-                    "$('#note-repository').find('[data-note=\"{0}\"]').addClass('selected');",
-                    selectedNote.Id.ToString());
-            }
+            string script = string.Format("selectNote('{0}');", selectedNote?.Id.ToString());
             View.ExecuteJavaScript(script);
         }
 

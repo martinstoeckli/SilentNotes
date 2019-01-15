@@ -34,41 +34,30 @@ namespace SilentNotes.Controllers
         /// </summary>
         ~ControllerBase()
         {
-            Dispose(false);
+            if (!_disposed)
+                OverrideableDispose();
+            _disposed = true;
         }
 
         /// <inheritdoc/>
         public void Dispose()
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
+            if (!_disposed)
+                OverrideableDispose();
+            _disposed = true;
         }
 
         /// <summary>
-        /// Releases the unmanaged resources used by this class and optionally releases the managed
-        /// resources.
+        /// Release unused resources and unsubscribe from events. This method must work correctly,
+        /// even if called multiple times.
         /// </summary>
-        /// <param name="itIsSafeToAlsoFreeManagedObjects">True to release both managed and
-        /// unmanaged resources; false to release only unmanaged resources.</param>
-        protected virtual void Dispose(bool itIsSafeToAlsoFreeManagedObjects)
+        protected virtual void OverrideableDispose()
         {
-            if (_disposed)
-                return;
+            // This unsubscribes events form the view.
+            Bindings?.Dispose();
+            Bindings = null;
 
-            // Always release unmanaged resources
-            // ...
-
-            // Release managed resources
-            if (itIsSafeToAlsoFreeManagedObjects)
-            {
-                // This unsubscribes events form the view.
-                Bindings?.Dispose();
-                Bindings = null;
-
-                GetViewModel()?.OnClosing();
-            }
-
-            _disposed = true;
+            GetViewModel()?.OnClosing();
         }
 
         /// <summary>

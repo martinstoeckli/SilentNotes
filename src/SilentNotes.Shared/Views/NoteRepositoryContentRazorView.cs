@@ -23,7 +23,7 @@ using SilentNotes.ViewModels;
 #line hidden
 
 
-[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "4.11.0.756")]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "4.12.3.77")]
 public partial class NoteRepositoryContentRazorView : NoteRepositoryContentRazorViewBase
 {
 
@@ -124,10 +124,22 @@ WriteLiteral(">");
 
 #line default
 #line hidden
-WriteLiteral("</div>\r\n            </div>\r\n        </li>\r\n");
+WriteLiteral("</div>\r\n            </div>\r\n            <div");
+
+WriteLiteral(" class=\"sortable-handle\"");
+
+WriteLiteral(">");
 
 
-#line 11 "NoteRepositoryContentRazorView.cshtml"
+#line 10 "NoteRepositoryContentRazorView.cshtml"
+                                           WriteLiteral(Model.Icon["arrow-all"]);
+
+#line default
+#line hidden
+WriteLiteral("</div>\r\n        </li>\r\n");
+
+
+#line 12 "NoteRepositoryContentRazorView.cshtml"
     }
 
 

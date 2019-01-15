@@ -15,9 +15,10 @@ function makeSortableDesktop()
 		Sortable.create(
 			this,
 			{
+				handle: '.sortable-handle',
 				onEnd: function (evt) {
 					onSortableOrderChanged(evt.oldIndex, evt.newIndex);
-				},
+				}
 			});
 	});
 }
@@ -28,11 +29,10 @@ function makeSortableMobile()
 		Sortable.create(
 			this,
 			{
-				ghostClass: "sortable-ghost",
-				delay: 360, // on touch screen, sorting should not prevent scrolling
+				handle: '.sortable-handle',
 				onEnd: function (evt) {
 					onSortableOrderChanged(evt.oldIndex, evt.newIndex);
-				},
+				}
 			});
 	});
 }
@@ -68,48 +68,22 @@ function makeSelectableListDesktop()
 
 function makeSelectableListMobile()
 {
-	var startX = 0;
-	var startY = 0;
-	var lastX = 0;
-	var lastY = 0;
-	var moveThreshold = 10;
 	var lastLongPressTime = new Date().getTime();
 	$('.selectable').find('.selectable-item').each(function () {
-		$(this).mousedown(function (evt) {
-			startX = evt.pageX;
-			startY = evt.pageY;
-			lastX = evt.pageX;
-			lastY = evt.pageY;
-		});
-		$(this).mousemove(function (evt) {
-			lastX = evt.pageX;
-			lastY = evt.pageY;
-		});
-
 		$(this).longpress(
 			function (evt) {
 				lastLongPressTime = new Date().getTime();
 
 				// long press selects item
-				var dragged = Math.pow(startX - lastX, 2) + Math.pow(startY - lastY, 2) >= Math.pow(moveThreshold, 2);
-				dragged = false;
-				if (!dragged) {
-					evt.type = 'list-select';
-					bind(evt);
-				}
+				evt.type = 'list-select';
+				bind(evt);
 			},
 			function (evt) {
-				var tooShortAfterLongPress = new Date().getTime() < lastLongPressTime + 640;
-				if (!tooShortAfterLongPress) {
-					// short press triggers action
-					var dragged = Math.pow(startX - lastX, 2) + Math.pow(startY - lastY, 2) >= Math.pow(moveThreshold, 2);
-					if (!dragged) {
-						evt.type = 'list-open';
-						bind(evt);
-					}
-				}
+				// short press triggers action
+				evt.type = 'list-open';
+				bind(evt);
 			},
-			360);
+			350);
 	});
 }
 
@@ -144,47 +118,60 @@ function isMobile()
  * Functions required by the HtmlViewBindings.cs class
  */
 function bind(event) {
-    event = event || window.event;
+	event = event || window.event;
 
-    var params = [];
-    params['event-type'] = event.type;
-    params['id'] = event.currentTarget.id;
-    params['value'] = event.currentTarget.value;
-    params['checked'] = event.currentTarget.checked;
-    [].forEach.call(event.currentTarget.attributes, function (attr) {
-        if (/^data-/.test(attr.name))
-            params[attr.name] = attr.value;
-    });
+	var params = new Object();
+	params['event-type'] = event.type;
+	params['id'] = event.currentTarget.id;
+	params['value'] = event.currentTarget.value;
+	params['checked'] = event.currentTarget.checked;
+	$.each(event.currentTarget.attributes, function(index, attr) {
+		if (/^data-/.test(attr.name))
+			params[attr.name] = attr.value;
+	});
 
-    var parts = [];
-    for (var key in params) {
-        var value = params[key];
-        if (value)
-            parts.push(key + '=' + encodeURIComponent(value));
-    }
+	var parts = [];
+	$.each(params, function(key, value) {
+		if (value)
+			parts.push(key + '=' + encodeURIComponent(value));
+	});
 
-    var url = 'HtmlViewBinding?' + parts.join('&');
-    location.href = url;
+	var url = 'HtmlViewBinding?' + parts.join('&');
+	location.href = url;
 }
 
 function htmlViewBindingsSetValue(bindingName, value) {
-    var selector = '[data-binding="' + bindingName + '"]';
-    $(selector).each(function () {
-        var oldValue = $(this).val();
-        if (value != oldValue)
-            $(this).val(value);
-    });
+	var selector = '[data-binding="' + bindingName + '"]';
+	$(selector).each(function () {
+		var oldValue = $(this).val();
+		if (value != oldValue)
+			$(this).val(value);
+	});
 }
 
 function htmlViewBindingsSetVisibility(bindingName, visible) {
-    var selector = '[data-binding="' + bindingName + '"]';
-    if (visible)
-        $(selector).show();
-    else
-        $(selector).hide();
+	var selector = '[data-binding="' + bindingName + '"]';
+	if (visible)
+		$(selector).show();
+	else
+		$(selector).hide();
 }
 
 function htmlViewBindingsSetCss(bindingName, cssAttributeName, cssAttributeValue) {
-    var selector = '[data-binding="' + bindingName + '"]';
-    $(selector).css(cssAttributeName, cssAttributeValue);
+	var selector = '[data-binding="' + bindingName + '"]';
+	$(selector).css(cssAttributeName, cssAttributeValue);
+}
+
+function selectNote(noteId) {
+	$('#note-repository').find('.selectable-item').each(function () {
+		var item = $(this);
+		if (item.data('note') === noteId) {
+			if (!item.hasClass('selected'))
+				item.addClass('selected');
+		}
+		else {
+			if (item.hasClass('selected'))
+				item.removeClass('selected');
+		}
+	});
 }
