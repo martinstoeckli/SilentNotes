@@ -258,19 +258,19 @@ a[data-tooltip]:hover:after {
 }
 
 .note-viewer h1 {
-	margin: 0.1em 0 0.4em 0 !important;
+	margin: 0.7em 0 0.3em 0 !important;
 	color: rgba(70, 130, 180, 1) !important;
 	font: normal bold 1.35em/1.1 "Segoe UI",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol" !important;
 }
 
 .note-viewer h2 {
-	margin: 0.4em 0 0.2em 0 !important;
+	margin: 0.8em 0 0.2em 0 !important;
 	color: rgba(70, 130, 180, 0.85) !important;
 	font: normal bold 1.2em/1.1 "Segoe UI",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol" !important;
 }
 
 .note-viewer h3 {
-	margin: 0.4em 0 0.2em 0 !important;
+	margin: 0.8em 0 0.2em 0 !important;
 	color: rgba(70, 130, 180, 0.7) !important;
 	font: normal bold 1.1em/1.1 "Segoe UI",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol" !important;
 }
