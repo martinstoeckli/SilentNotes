@@ -14,7 +14,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
     /// This step belongs to the <see cref="SynchronizationStoryBoard"/>. It checks whether the
     /// downloaded repository is the same repository as the one stored locally (has the same id).
     /// </summary>
-    public class IsSameRepositoryStep : StoryBoardStepBase
+    public class IsSameRepositoryStep : SynchronizationStoryBoardStepBase
     {
         private readonly IRepositoryStorageService _repositoryStorageService;
 

@@ -14,7 +14,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
     /// This step belongs to the <see cref="SynchronizationStoryBoard"/>. It shows the dialog to
     /// choose the merge method.
     /// </summary>
-    public class ShowMergeChoiceStep : StoryBoardStepBase
+    public class ShowMergeChoiceStep : SynchronizationStoryBoardStepBase
     {
         private readonly INavigationService _navigationService;
 
@@ -31,7 +31,8 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         /// <inheritdoc/>
         public override Task Run()
         {
-            _navigationService.Navigate(ControllerNames.MergeChoice);
+            if (!IsRunningInSilentMode)
+                _navigationService.Navigate(ControllerNames.MergeChoice);
             return GetCompletedDummyTask();
         }
     }

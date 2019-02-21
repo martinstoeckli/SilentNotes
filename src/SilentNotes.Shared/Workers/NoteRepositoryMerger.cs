@@ -36,6 +36,7 @@ namespace SilentNotes.Workers
 
             // Create new merge repository
             NoteRepositoryModel result = new NoteRepositoryModel();
+            result.Revision = NoteRepositoryModel.NewestSupportedRevision;
             result.Id = remoteRepository.Id;
             result.DeletedNotes = deletedNotes;
 

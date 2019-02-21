@@ -139,7 +139,7 @@ namespace SilentNotes.ViewModels
         {
             try
             {
-                _storyBoardService.ActiveStory = new SynchronizationStoryBoard();
+                _storyBoardService.ActiveStory = new SynchronizationStoryBoard(false);
                 await _storyBoardService.ActiveStory.ContinueWith(SynchronizationStoryStepId.ShowCloudStorageChoice.ToInt());
             }
             catch (Exception)

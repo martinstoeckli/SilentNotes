@@ -23,11 +23,16 @@ namespace SilentNotes.StoryBoards
         /// Derrived classes should register their steps in the constructor with
         /// method <see cref="RegisterStep(IStoryBoardStep, bool)"/>.
         /// </summary>
-        public StoryBoardBase()
+        /// <param name="silentMode">Sets the property <see cref="SilentMode"/>.</param>
+        public StoryBoardBase(bool silentMode = false)
         {
+            SilentMode = silentMode;
             _session = new Dictionary<int, object>();
             _steps = new List<IStoryBoardStep>();
         }
+
+        /// <inheritdoc/>
+        public bool SilentMode { get; private set; }
 
         /// <inheritdoc/>
         public void RegisterStep(IStoryBoardStep step)

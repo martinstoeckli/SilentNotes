@@ -88,5 +88,35 @@ namespace SilentNotes.Models
             get { return LazyCreator.GetOrCreate(ref _deletedNotes); }
             set { _deletedNotes = value; }
         }
+
+        /// <summary>
+        /// Gets a fingerprint of the current repository, which can be used to determine, whether
+        /// two repositories are different, or if a repository was modified in the meantime.
+        /// Equal fingerprints mean unchanged repositories, different fingerprints indicate
+        /// modifications in the repository.
+        /// </summary>
+        /// <remarks>
+        /// This method is optimized for speed, so it does not consider the whole content of the
+        /// repository, instead it uses the timestamps which would be used when merging.
+        /// </remarks>
+        /// <returns>A fingerprint representing the modification state.</returns>
+        public long GetModificationFingerprint()
+        {
+            unchecked
+            {
+                long hashCode = Id.GetHashCode();
+                hashCode = (hashCode * 397) ^ Revision;
+                hashCode = (hashCode * 397) ^ (OrderModifiedAt != null ? OrderModifiedAt.GetHashCode() : 0);
+                foreach (NoteModel note in Notes)
+                {
+                    hashCode = (hashCode * 397) ^ note.ModifiedAt.GetHashCode();
+                }
+                foreach (Guid deletedNote in DeletedNotes)
+                {
+                    hashCode = (hashCode * 397) ^ deletedNote.GetHashCode();
+                }
+                return hashCode;
+            }
+        }
     }
 }

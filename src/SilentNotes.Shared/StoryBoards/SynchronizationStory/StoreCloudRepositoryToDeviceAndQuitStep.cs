@@ -10,7 +10,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
     /// This step is an end point of the <see cref="SynchronizationStoryBoard"/>. It keeps the
     /// cloud repository and stores it to the local device.
     /// </summary>
-    public class StoreCloudRepositoryToDeviceAndQuitStep : StoryBoardStepBase
+    public class StoreCloudRepositoryToDeviceAndQuitStep : SynchronizationStoryBoardStepBase
     {
         private readonly ILanguageService _languageService;
         private readonly IFeedbackService _feedbackService;
@@ -46,7 +46,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
             catch (Exception ex)
             {
                 // Keep the current page open and show the error message
-                SynchronizationStoryBoard.ShowExceptionMessage(ex, _feedbackService, _languageService);
+                ShowExceptionMessage(ex, _feedbackService, _languageService);
             }
         }
     }

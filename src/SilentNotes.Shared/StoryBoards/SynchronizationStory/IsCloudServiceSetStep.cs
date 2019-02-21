@@ -15,7 +15,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
     /// This step is a possible entry point of the <see cref="SynchronizationStoryBoard"/>. It
     /// checks whether the cloud service is already defined in the settings.
     /// </summary>
-    public class IsCloudServiceSetStep : StoryBoardStepBase
+    public class IsCloudServiceSetStep : SynchronizationStoryBoardStepBase
     {
         private readonly ISettingsService _settingsService;
 
@@ -42,7 +42,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
             }
             else
             {
-                await StoryBoard.ContinueWith(SynchronizationStoryStepId.ShowFirstTimeDialog.ToInt());
+                    await StoryBoard.ContinueWith(SynchronizationStoryStepId.ShowFirstTimeDialog.ToInt());
             }
         }
     }

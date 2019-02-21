@@ -9,6 +9,7 @@ using SilentNotes.Services.CloudStorageServices;
 using SilentNotes.StoryBoards.SynchronizationStory;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.ApplicationModel.ExtendedExecution;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -71,6 +72,9 @@ namespace SilentNotes.UWP
                 // Ensure the current window is active
                 Window.Current.Activate();
             }
+
+            IAutoSynchronizationService syncService = Ioc.GetOrCreate<IAutoSynchronizationService>();
+            syncService.SynchronizeAtStartup();
         }
 
         /// <summary>
@@ -90,14 +94,33 @@ namespace SilentNotes.UWP
         /// </summary>
         /// <param name="sender">The source of the suspend request.</param>
         /// <param name="e">Details about the suspend request.</param>
-        private void OnSuspending(object sender, SuspendingEventArgs e)
+        private async void OnSuspending(object sender, SuspendingEventArgs e)
         {
             var deferral = e.SuspendingOperation.GetDeferral();
+            try
+            {
+                // The synchronisation with the online storage needs possibly more time than
+                // granted with e.SuspendingOperation.Deadline, so we request an extended session
+                using (var extendedSession = new ExtendedExecutionSession())
+                {
+                    extendedSession.Reason = ExtendedExecutionReason.Unspecified;
+                    extendedSession.Description = "Synchronization with the online storage.";
+                    bool gotExtendedSession = await extendedSession.RequestExtensionAsync() == ExtendedExecutionResult.Allowed;
 
-            // Save application state and stop any background activity
-            INavigationService navigationService = Ioc.GetOrCreate<INavigationService>();
-            navigationService.CurrentController?.StoreUnsavedData();
+                    // Save application state and stop any background activity
+                    INavigationService navigationService = Ioc.GetOrCreate<INavigationService>();
+                    navigationService.CurrentController?.StoreUnsavedData();
 
+                    if (gotExtendedSession)
+                    {
+                        IAutoSynchronizationService syncService = Ioc.GetOrCreate<IAutoSynchronizationService>();
+                        syncService.SynchronizeAtShutdown();
+                    }
+                }
+            }
+            catch
+            {
+            }
             deferral.Complete();
         }
 

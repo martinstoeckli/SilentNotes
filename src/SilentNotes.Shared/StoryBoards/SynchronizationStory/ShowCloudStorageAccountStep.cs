@@ -16,7 +16,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
     /// enter credentials for the cloud storage. In case of an OAuth2 login, it opens the external
     /// browser and waits for the confirmation of the open auth login.
     /// </summary>
-    public class ShowCloudStorageAccountStep : StoryBoardStepBase
+    public class ShowCloudStorageAccountStep : SynchronizationStoryBoardStepBase
     {
         private readonly INavigationService _navigationService;
         private readonly ILanguageService _languageService;
@@ -45,20 +45,23 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         /// <inheritdoc/>
         public override Task Run()
         {
-            CloudStorageAccount account = StoryBoard.LoadFromSession<CloudStorageAccount>(SynchronizationStorySessionKey.CloudStorageAccount.ToInt());
-            ICloudStorageService cloudStorageService = _cloudStorageServiceFactory.Create(account);
-            if (cloudStorageService is IOauth2CloudStorageService oauthStorageService)
+            if (!IsRunningInSilentMode)
             {
-                // show waiting page
-                _navigationService.Navigate(ControllerNames.CloudStorageOauthWaiting);
+                CloudStorageAccount account = StoryBoard.LoadFromSession<CloudStorageAccount>(SynchronizationStorySessionKey.CloudStorageAccount.ToInt());
+                ICloudStorageService cloudStorageService = _cloudStorageServiceFactory.Create(account);
+                if (cloudStorageService is IOauth2CloudStorageService oauthStorageService)
+                {
+                    // show waiting page
+                    _navigationService.Navigate(ControllerNames.CloudStorageOauthWaiting);
 
-                StoryBoard.StoreToSession(SynchronizationStorySessionKey.OauthCloudStorageService.ToInt(), oauthStorageService);
-                oauthStorageService.Redirected += OauthStorageRedirectedEventHandler;
-                oauthStorageService.ShowOauth2LoginPage();
-            }
-            else
-            {
-                _navigationService.Navigate(ControllerNames.CloudStorageAccount);
+                    StoryBoard.StoreToSession(SynchronizationStorySessionKey.OauthCloudStorageService.ToInt(), oauthStorageService);
+                    oauthStorageService.Redirected += OauthStorageRedirectedEventHandler;
+                    oauthStorageService.ShowOauth2LoginPage();
+                }
+                else
+                {
+                    _navigationService.Navigate(ControllerNames.CloudStorageAccount);
+                }
             }
             return GetCompletedDummyTask();
         }

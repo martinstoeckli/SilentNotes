@@ -14,7 +14,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
     /// This step is an end point of the <see cref="SynchronizationStoryBoard"/>. It aborts the
     /// story and goes back to the repository overview.
     /// </summary>
-    public class StopAndShowRepositoryStep : StoryBoardStepBase
+    public class StopAndShowRepositoryStep : SynchronizationStoryBoardStepBase
     {
         private readonly INavigationService _navigationService;
         private readonly IStoryBoardService _storyBoardService;
@@ -34,8 +34,11 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         public override Task Run()
         {
             StoryBoard.ClearSession();
-            _storyBoardService.ActiveStory = null;
-            _navigationService.Navigate(ControllerNames.NoteRepository);
+            if (!IsRunningInSilentMode)
+            {
+                _storyBoardService.ActiveStory = null;
+                _navigationService.Navigate(ControllerNames.NoteRepository);
+            }
             return GetCompletedDummyTask();
         }
     }

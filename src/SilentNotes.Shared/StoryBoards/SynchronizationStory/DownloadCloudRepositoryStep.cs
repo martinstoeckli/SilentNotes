@@ -15,7 +15,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
     /// This step belongs to the <see cref="SynchronizationStoryBoard"/>. It downloads the
     /// repository from the cloud storage.
     /// </summary>
-    public class DownloadCloudRepositoryStep : StoryBoardStepBase
+    public class DownloadCloudRepositoryStep : SynchronizationStoryBoardStepBase
     {
         private readonly ILanguageService _languageService;
         private readonly IFeedbackService _feedbackService;
@@ -60,7 +60,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
             catch (Exception ex)
             {
                 // Keep the current page open and show the error message
-                SynchronizationStoryBoard.ShowExceptionMessage(ex, _feedbackService, _languageService);
+                ShowExceptionMessage(ex, _feedbackService, _languageService);
             }
         }
     }

@@ -12,7 +12,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
     /// This step is an end point of the <see cref="SynchronizationStoryBoard"/>. It keeps the
     /// local repository and stores it to the cloud.
     /// </summary>
-    public class StoreLocalRepositoryToCloudAndQuitStep : StoryBoardStepBase
+    public class StoreLocalRepositoryToCloudAndQuitStep : SynchronizationStoryBoardStepBase
     {
         private readonly ILanguageService _languageService;
         private readonly IFeedbackService _feedbackService;
@@ -58,7 +58,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
                 if (needsNewTransferCode)
                     transferCode = TransferCode.GenerateCode(_cryptoRandomService);
 
-                byte[] encryptedRepository = SynchronizationStoryBoard.EncryptRepository(
+                byte[] encryptedRepository = EncryptRepository(
                     localRepository, transferCode, _cryptoRandomService, settings.SelectedEncryptionAlgorithm);
 
                 ICloudStorageService cloudStorageService = _cloudStorageServiceFactory.Create(account);
@@ -82,7 +82,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
             catch (Exception ex)
             {
                 // Keep the current page open and show the error message
-                SynchronizationStoryBoard.ShowExceptionMessage(ex, _feedbackService, _languageService);
+                ShowExceptionMessage(ex, _feedbackService, _languageService);
             }
         }
     }
