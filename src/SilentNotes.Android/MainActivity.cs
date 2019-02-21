@@ -71,10 +71,23 @@ namespace SilentNotes.Android
         }
 
         /// <inheritdoc/>
+        protected override void OnStart()
+        {
+            base.OnStart();
+
+            IAutoSynchronizationService syncService = Ioc.GetOrCreate<IAutoSynchronizationService>();
+            syncService.SynchronizeAtStartup();
+        }
+
+        /// <inheritdoc/>
         protected override void OnStop()
         {
             INavigationService navigationService = Ioc.GetOrCreate<INavigationService>();
             navigationService.CurrentController?.StoreUnsavedData();
+
+            IAutoSynchronizationService syncService = Ioc.GetOrCreate<IAutoSynchronizationService>();
+            syncService.SynchronizeAtShutdown();
+
             base.OnStop();
         }
 
