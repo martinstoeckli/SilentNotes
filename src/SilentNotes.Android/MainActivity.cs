@@ -76,7 +76,7 @@ namespace SilentNotes.Android
             base.OnStart();
 
             IAutoSynchronizationService syncService = Ioc.GetOrCreate<IAutoSynchronizationService>();
-            syncService.SynchronizeAtStartup();
+            syncService.SynchronizeAtStartup(); // no awaiting, run in background
         }
 
         /// <inheritdoc/>
@@ -85,6 +85,10 @@ namespace SilentNotes.Android
             INavigationService navigationService = Ioc.GetOrCreate<INavigationService>();
             navigationService.CurrentController?.StoreUnsavedData();
 
+            // The synchronization continues when we do not await it, even if another app became
+            // active in the meantime. As long as the user doesn't swipe away the app from the
+            // "recent apps", it can finish the job, that's exactly what we need.
+            // Tested with Android 5.0, 8.1
             IAutoSynchronizationService syncService = Ioc.GetOrCreate<IAutoSynchronizationService>();
             syncService.SynchronizeAtShutdown();
 

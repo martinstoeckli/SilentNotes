@@ -30,7 +30,7 @@ namespace SilentNotes.Services
         }
 
         /// <inheritdoc/>
-        public async void SynchronizeAtStartup()
+        public async Task SynchronizeAtStartup()
         {
             _repositoryStorageService.LoadRepositoryOrDefault(out NoteRepositoryModel localRepository);
             long oldFingerprint = localRepository.GetModificationFingerprint();
@@ -57,7 +57,7 @@ namespace SilentNotes.Services
         }
 
         /// <inheritdoc/>
-        public async void SynchronizeAtShutdown()
+        public async Task SynchronizeAtShutdown()
         {
             // If there are no modifications since the last synchronization, we can spare this step
             _repositoryStorageService.LoadRepositoryOrDefault(out NoteRepositoryModel localRepository);

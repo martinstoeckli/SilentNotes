@@ -4,6 +4,7 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
+using System.Threading.Tasks;
 
 namespace SilentNotes.Services
 {
@@ -17,12 +18,12 @@ namespace SilentNotes.Services
         /// Synchronize at applications startup time in the background. After a successful
         /// synchronization, the GUI must be updated.
         /// </summary>
-        void SynchronizeAtStartup();
+        Task SynchronizeAtStartup();
 
         /// <summary>
         /// Synchronize at applications shutdown time.
         /// </summary>
-        void SynchronizeAtShutdown();
+        Task SynchronizeAtShutdown();
 
         /// <summary>
         /// Keeping this fingerprint of the last synchronization allows to detect a read-only

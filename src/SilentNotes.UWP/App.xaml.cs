@@ -74,7 +74,7 @@ namespace SilentNotes.UWP
             }
 
             IAutoSynchronizationService syncService = Ioc.GetOrCreate<IAutoSynchronizationService>();
-            syncService.SynchronizeAtStartup();
+            syncService.SynchronizeAtStartup(); // no awaiting, run in background
         }
 
         /// <summary>
@@ -103,9 +103,11 @@ namespace SilentNotes.UWP
                 // granted with e.SuspendingOperation.Deadline, so we request an extended session
                 using (var extendedSession = new ExtendedExecutionSession())
                 {
-                    extendedSession.Reason = ExtendedExecutionReason.Unspecified;
+                    bool gotExtendedSession;
+                    extendedSession.Reason = ExtendedExecutionReason.SavingData;
                     extendedSession.Description = "Synchronization with the online storage.";
-                    bool gotExtendedSession = await extendedSession.RequestExtensionAsync() == ExtendedExecutionResult.Allowed;
+                    extendedSession.Revoked += (object s, ExtendedExecutionRevokedEventArgs a) => gotExtendedSession = false;
+                    gotExtendedSession = await extendedSession.RequestExtensionAsync() == ExtendedExecutionResult.Allowed;
 
                     // Save application state and stop any background activity
                     INavigationService navigationService = Ioc.GetOrCreate<INavigationService>();
@@ -114,7 +116,7 @@ namespace SilentNotes.UWP
                     if (gotExtendedSession)
                     {
                         IAutoSynchronizationService syncService = Ioc.GetOrCreate<IAutoSynchronizationService>();
-                        syncService.SynchronizeAtShutdown();
+                        await syncService.SynchronizeAtShutdown();
                     }
                 }
             }

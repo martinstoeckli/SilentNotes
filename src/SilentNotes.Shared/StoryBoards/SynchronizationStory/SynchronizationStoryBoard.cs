@@ -58,6 +58,10 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         public SynchronizationStoryBoard(bool silentMode)
             : base(silentMode)
         {
+            IFeedbackService feedbackService = silentMode
+                ? new DummyFeedbackService()
+                : Ioc.GetOrCreate<IFeedbackService>();
+
             RegisterStep(new IsCloudServiceSetStep(
                 SynchronizationStoryStepId.IsCloudServiceSet.ToInt(), this, Ioc.GetOrCreate<ISettingsService>()));
             RegisterStep(new ShowFirstTimeDialogStep(
@@ -69,20 +73,20 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
                 this,
                 Ioc.GetOrCreate<INavigationService>(),
                 Ioc.GetOrCreate<ILanguageService>(),
-                Ioc.GetOrCreate<IFeedbackService>(),
+                feedbackService,
                 Ioc.GetOrCreate<ICloudStorageServiceFactory>()));
             RegisterStep(new ExistsCloudRepositoryStep(
                 SynchronizationStoryStepId.ExistsCloudRepository.ToInt(),
                 this,
                 Ioc.GetOrCreate<ILanguageService>(),
-                Ioc.GetOrCreate<IFeedbackService>(),
+                feedbackService,
                 Ioc.GetOrCreate<ISettingsService>(),
                 Ioc.GetOrCreate<ICloudStorageServiceFactory>()));
             RegisterStep(new DownloadCloudRepositoryStep(
                 SynchronizationStoryStepId.DownloadCloudRepository.ToInt(),
                 this,
                 Ioc.GetOrCreate<ILanguageService>(),
-                Ioc.GetOrCreate<IFeedbackService>(),
+                feedbackService,
                 Ioc.GetOrCreate<ICloudStorageServiceFactory>()));
             RegisterStep(new ExistsTransferCodeStep(
                 SynchronizationStoryStepId.ExistsTransferCode.ToInt(), this, Ioc.GetOrCreate<ISettingsService>()));
@@ -92,7 +96,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
                 SynchronizationStoryStepId.DecryptCloudRepository.ToInt(),
                 this,
                 Ioc.GetOrCreate<ILanguageService>(),
-                Ioc.GetOrCreate<IFeedbackService>(),
+                feedbackService,
                 Ioc.GetOrCreate<ISettingsService>(),
                 Ioc.GetOrCreate<INoteRepositoryUpdater>()));
             RegisterStep(new IsSameRepositoryStep(
@@ -103,7 +107,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
                 SynchronizationStoryStepId.StoreMergedRepositoryAndQuit.ToInt(),
                 this,
                 Ioc.GetOrCreate<ILanguageService>(),
-                Ioc.GetOrCreate<IFeedbackService>(),
+                feedbackService,
                 Ioc.GetOrCreate<ISettingsService>(),
                 Ioc.GetOrCreate<ICryptoRandomService>(),
                 Ioc.GetOrCreate<IRepositoryStorageService>(),
@@ -112,7 +116,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
                 SynchronizationStoryStepId.StoreLocalRepositoryToCloudAndQuit.ToInt(),
                 this,
                 Ioc.GetOrCreate<ILanguageService>(),
-                Ioc.GetOrCreate<IFeedbackService>(),
+                feedbackService,
                 Ioc.GetOrCreate<ISettingsService>(),
                 Ioc.GetOrCreate<ICryptoRandomService>(),
                 Ioc.GetOrCreate<IRepositoryStorageService>(),
@@ -121,7 +125,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
                 SynchronizationStoryStepId.StoreCloudRepositoryToDeviceAndQuit.ToInt(),
                 this,
                 Ioc.GetOrCreate<ILanguageService>(),
-                Ioc.GetOrCreate<IFeedbackService>(),
+                feedbackService,
                 Ioc.GetOrCreate<IRepositoryStorageService>()));
             RegisterStep(new StopAndShowRepositoryStep(
                 SynchronizationStoryStepId.StopAndShowRepository.ToInt(), this, Ioc.GetOrCreate<INavigationService>(), Ioc.GetOrCreate<IStoryBoardService>()));
