@@ -40,8 +40,7 @@ namespace SilentNotes.Services
             {
                 SynchronizationStoryBoard syncStory = new SynchronizationStoryBoard(true);
                 await syncStory.Start();
-            }
-            ).ConfigureAwait(true); // Come back to the UI thread
+            }).ConfigureAwait(true); // Come back to the UI thread
 
             // Memorize fingerprint of the synchronized respository
             _repositoryStorageService.LoadRepositoryOrDefault(out localRepository);
