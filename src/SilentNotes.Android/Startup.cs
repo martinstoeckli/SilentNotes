@@ -67,7 +67,9 @@ namespace SilentNotes.Android
             Ioc.RegisterFactory<IDataProtectionService>(() => new DataProtectionService(
                 rootActivity,
                 Ioc.GetOrCreate<ICryptoRandomService>()));
+            Ioc.RegisterFactory<IInternetStateService>(() => new InternetStateService(rootActivity));
             Ioc.RegisterFactory<IAutoSynchronizationService>(() => new AutoSynchronizationService(
+                Ioc.GetOrCreate<IInternetStateService>(),
                 Ioc.GetOrCreate<IRepositoryStorageService>(),
                 Ioc.GetOrCreate<INavigationService>()));
         }

@@ -15,16 +15,22 @@ namespace SilentNotes.Services
     /// </summary>
     public class AutoSynchronizationService : IAutoSynchronizationService
     {
+        private readonly IInternetStateService _internetStateService;
         private readonly IRepositoryStorageService _repositoryStorageService;
         private readonly INavigationService _navigationService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AutoSynchronizationService"/> class.
         /// </summary>
+        /// <param name="internetStateService">Service to check the internet connection.</param>
         /// <param name="repositoryStorageService">Service to get the current repository.</param>
         /// <param name="navigationService">The navigation service.</param>
-        public AutoSynchronizationService(IRepositoryStorageService repositoryStorageService, INavigationService navigationService)
+        public AutoSynchronizationService(
+            IInternetStateService internetStateService,
+            IRepositoryStorageService repositoryStorageService,
+            INavigationService navigationService)
         {
+            _internetStateService = internetStateService;
             _repositoryStorageService = repositoryStorageService;
             _navigationService = navigationService;
         }
@@ -32,6 +38,10 @@ namespace SilentNotes.Services
         /// <inheritdoc/>
         public async Task SynchronizeAtStartup()
         {
+            if (!_internetStateService.IsInternetConnected())
+                return;
+            bool costFreeInternet = _internetStateService.IsInternetCostFree();
+
             _repositoryStorageService.LoadRepositoryOrDefault(out NoteRepositoryModel localRepository);
             long oldFingerprint = localRepository.GetModificationFingerprint();
 
@@ -58,6 +68,10 @@ namespace SilentNotes.Services
         /// <inheritdoc/>
         public async Task SynchronizeAtShutdown()
         {
+            if (!_internetStateService.IsInternetConnected())
+                return;
+            bool costFreeInternet = _internetStateService.IsInternetCostFree();
+
             // If there are no modifications since the last synchronization, we can spare this step
             _repositoryStorageService.LoadRepositoryOrDefault(out NoteRepositoryModel localRepository);
             long currentFingerprint = localRepository.GetModificationFingerprint();

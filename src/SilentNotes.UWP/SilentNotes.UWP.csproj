@@ -112,6 +112,7 @@
     <Compile Include="Services\FeedbackService.cs" />
     <Compile Include="Services\LanguageCodeService.cs" />
     <Compile Include="Services\NativeBrowserService.cs" />
+    <Compile Include="Services\InternetStateService.cs" />
     <Compile Include="Services\RepositoryStorageService.cs" />
     <Compile Include="Services\SettingsService.cs" />
     <Compile Include="Services\VersionService.cs" />

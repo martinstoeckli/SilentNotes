@@ -13,7 +13,7 @@ namespace SilentNotes.Android.Services
     /// </summary>
     public class VersionService : IVersionService
     {
-        private Context _applicationContext;
+        private readonly Context _applicationContext;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VersionService"/> class.

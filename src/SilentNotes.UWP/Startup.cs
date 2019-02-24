@@ -62,7 +62,9 @@ namespace SilentNotes.UWP
             Ioc.RegisterFactory<IFeedbackService>(() => new FeedbackService(
                 mainPage, Ioc.GetOrCreate<ILanguageService>()));
             Ioc.RegisterFactory<IDataProtectionService>(() => new DataProtectionService());
+            Ioc.RegisterFactory<IInternetStateService>(() => new InternetStateService());
             Ioc.RegisterFactory<IAutoSynchronizationService>(() => new AutoSynchronizationService(
+                Ioc.GetOrCreate<IInternetStateService>(),
                 Ioc.GetOrCreate<IRepositoryStorageService>(),
                 Ioc.GetOrCreate<INavigationService>()));
         }
