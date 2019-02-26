@@ -29,6 +29,7 @@ namespace SilentNotes.Models
         {
             Revision = NewestSupportedRevision;
             AdoptCloudEncryptionAlgorithm = true;
+            AutoSyncMode = AutoSynchronizationMode.CostFreeInternetOnly;
         }
 
         /// <summary>
@@ -67,6 +68,13 @@ namespace SilentNotes.Models
         /// </summary>
         [XmlElement("adopt_cloud_encryption_algorithm")]
         public bool AdoptCloudEncryptionAlgorithm { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value describing whether auto synchronization with the online storage
+        /// shoudl be done or not.
+        /// </summary>
+        [XmlElement("auto_sync_mode")]
+        public AutoSynchronizationMode AutoSyncMode { get; set; }
 
         /// <summary>
         /// Gets or sets the transfer code corresponding with the current repository.

@@ -93,6 +93,10 @@ namespace SilentNotes.Services
             resources["cloud_webdav_example"] = "https://webdav.example.org/";
 
             resources["sync"] = "Synchronization";
+            resources["sync_auto"] = "Automatic synchronization";
+            resources["sync_auto_never"] = "Never, only manual synchronization";
+            resources["sync_auto_costfree"] = "Only if internet is free of cost";
+            resources["sync_auto_always"] = "Always";
             resources["sync_notes"] = "Synchronizes notes with the cloud";
             resources["sync_success"] = "Successfully synchronized notes.";
             resources["sync_reject"] = "The synchronization with the cloud was aborted.";
@@ -185,6 +189,10 @@ namespace SilentNotes.Services
             resources["cloud_webdav_example"] = "https://webdav.example.org/";
 
             resources["sync"] = "Synchronisation";
+            resources["sync_auto"] = "Automatische Synchronisation";
+            resources["sync_auto_never"] = "Nie, nur manuell synchronisieren";
+            resources["sync_auto_costfree"] = "Nur über kostenfreie Internetverbindung";
+            resources["sync_auto_always"] = "Immer";
             resources["sync_notes"] = "Synchronisiert Notizen mit dem Online-Speicher";
             resources["sync_success"] = "Notizen wurden erfolgreich synchronisiert.";
             resources["sync_reject"] = "Die Synchronisation mit dem Online-Speicher wurde abgebrochen.";

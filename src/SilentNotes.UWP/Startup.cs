@@ -65,6 +65,7 @@ namespace SilentNotes.UWP
             Ioc.RegisterFactory<IInternetStateService>(() => new InternetStateService());
             Ioc.RegisterFactory<IAutoSynchronizationService>(() => new AutoSynchronizationService(
                 Ioc.GetOrCreate<IInternetStateService>(),
+                Ioc.GetOrCreate<ISettingsService>(),
                 Ioc.GetOrCreate<IRepositoryStorageService>(),
                 Ioc.GetOrCreate<INavigationService>()));
         }

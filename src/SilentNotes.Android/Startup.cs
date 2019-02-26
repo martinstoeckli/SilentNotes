@@ -70,6 +70,7 @@ namespace SilentNotes.Android
             Ioc.RegisterFactory<IInternetStateService>(() => new InternetStateService(rootActivity));
             Ioc.RegisterFactory<IAutoSynchronizationService>(() => new AutoSynchronizationService(
                 Ioc.GetOrCreate<IInternetStateService>(),
+                Ioc.GetOrCreate<ISettingsService>(),
                 Ioc.GetOrCreate<IRepositoryStorageService>(),
                 Ioc.GetOrCreate<INavigationService>()));
         }

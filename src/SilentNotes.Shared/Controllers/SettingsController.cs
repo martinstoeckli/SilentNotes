@@ -48,6 +48,7 @@ namespace SilentNotes.Controllers
             Bindings.BindCommand("ClearCloudSettingsCommand", _viewModel.ClearCloudSettingsCommand);
             Bindings.BindDropdown("SelectedEncryptionAlgorithm", null, SetEncryptionAlgorithmToViewmodel, null, null, HtmlViewBindingMode.OneWayToViewmodel);
             Bindings.BindCheckbox("AdoptCloudEncryptionAlgorithm", null, (value) => _viewModel.AdoptCloudEncryptionAlgorithm = value, null, null, HtmlViewBindingMode.OneWayToViewmodel);
+            Bindings.BindDropdown("SelectedAutoSyncMode", null, (string value) => _viewModel.SelectedAutoSyncMode = value, null, null, HtmlViewBindingMode.OneWayToViewmodel);
             Bindings.BindText("CloudStorageSettings", () => _viewModel.AccountSummary, null, _viewModel, nameof(_viewModel.AccountSummary), HtmlViewBindingMode.OneWayToView);
 
             string html = _viewService.GenerateHtml(_viewModel);
@@ -57,7 +58,7 @@ namespace SilentNotes.Controllers
         private void SetEncryptionAlgorithmToViewmodel(string value)
         {
             _viewModel.SelectedEncryptionAlgorithm = _viewModel.EncryptionAlgorithms.Find(
-                (item) => item.AlgorithmName == value);
+                (item) => item.Value == value);
         }
     }
 }

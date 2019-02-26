@@ -41,7 +41,7 @@ namespace SilentNotes.ViewModels
             _storyBoardService = storyBoardService;
             Model = _settingsService.LoadSettingsOrDefault();
 
-            EncryptionAlgorithms = new List<EncryptionAlgorithmItemViewModel>();
+            EncryptionAlgorithms = new List<DropdownItemViewModel>();
             FillAlgorithmList(EncryptionAlgorithms);
 
             // Initialize commands
@@ -54,33 +54,33 @@ namespace SilentNotes.ViewModels
         /// Initializes the list of available cloud storage services.
         /// </summary>
         /// <param name="algorithms">List to fill.</param>
-        private void FillAlgorithmList(List<EncryptionAlgorithmItemViewModel> algorithms)
+        private void FillAlgorithmList(List<DropdownItemViewModel> algorithms)
         {
-            algorithms.Add(new EncryptionAlgorithmItemViewModel { AlgorithmName = BouncyCastleAesGcm.CryptoAlgorithmName, Description = Language["encryption_algo_aesgcm"] });
-            algorithms.Add(new EncryptionAlgorithmItemViewModel { AlgorithmName = BouncyCastleTwofishGcm.CryptoAlgorithmName, Description = Language["encryption_algo_twofishgcm"] });
+            algorithms.Add(new DropdownItemViewModel { Value = BouncyCastleAesGcm.CryptoAlgorithmName, Description = Language["encryption_algo_aesgcm"] });
+            algorithms.Add(new DropdownItemViewModel { Value = BouncyCastleTwofishGcm.CryptoAlgorithmName, Description = Language["encryption_algo_twofishgcm"] });
         }
 
         /// <summary>
         /// Gets a list of all available encryption algorithms.
         /// </summary>
-        public List<EncryptionAlgorithmItemViewModel> EncryptionAlgorithms { get; private set; }
+        public List<DropdownItemViewModel> EncryptionAlgorithms { get; private set; }
 
         /// <summary>
         /// Gets or sets the encryption algorithm selected by the user.
         /// </summary>
-        public EncryptionAlgorithmItemViewModel SelectedEncryptionAlgorithm
+        public DropdownItemViewModel SelectedEncryptionAlgorithm
         {
             get
             {
-                EncryptionAlgorithmItemViewModel result = EncryptionAlgorithms.Find(item => item.AlgorithmName == Model.SelectedEncryptionAlgorithm);
+                DropdownItemViewModel result = EncryptionAlgorithms.Find(item => item.Value == Model.SelectedEncryptionAlgorithm);
 
                 // Search for the default algorithm, if no matching algorithm could be found.
                 if (result == null)
-                    result = EncryptionAlgorithms.Find(item => item.AlgorithmName == SettingsModel.GetDefaultEncryptionAlgorithmName());
+                    result = EncryptionAlgorithms.Find(item => item.Value == SettingsModel.GetDefaultEncryptionAlgorithmName());
                 return result;
             }
 
-            set { ChangePropertyIndirect(() => Model.SelectedEncryptionAlgorithm, (string v) => Model.SelectedEncryptionAlgorithm = v, value.AlgorithmName, true); }
+            set { ChangePropertyIndirect(() => Model.SelectedEncryptionAlgorithm, (string v) => Model.SelectedEncryptionAlgorithm = v, value.Value, true); }
         }
 
         /// <summary>
@@ -91,6 +91,16 @@ namespace SilentNotes.ViewModels
         {
             get { return Model.AdoptCloudEncryptionAlgorithm; }
             set { ChangePropertyIndirect<bool>(() => Model.AdoptCloudEncryptionAlgorithm, (v) => Model.AdoptCloudEncryptionAlgorithm = v, value, true); }
+        }
+
+        /// <summary>
+        /// Gets or sets the auto sync mode selected by the user.
+        /// </summary>
+        public string SelectedAutoSyncMode
+        {
+            get { return Model.AutoSyncMode.ToString(); }
+
+            set { ChangePropertyIndirect(() => Model.AutoSyncMode.ToString(), (string v) => Model.AutoSyncMode = (AutoSynchronizationMode)Enum.Parse(typeof(AutoSynchronizationMode), value), value, true); }
         }
 
         /// <inheritdoc/>
@@ -175,21 +185,5 @@ namespace SilentNotes.ViewModels
         /// Gets the wrapped model.
         /// </summary>
         internal SettingsModel Model { get; private set; }
-
-        /// <summary>
-        /// A single item of the <see cref="EncryptionAlgorithms"/> collection.
-        /// </summary>
-        public class EncryptionAlgorithmItemViewModel
-        {
-            /// <summary>
-            /// Gets or sets the encryption algorithm name.
-            /// </summary>
-            public string AlgorithmName { get; set; }
-
-            /// <summary>
-            /// Gets or sets a description of the encryption algorithm.
-            /// </summary>
-            public string Description { get; set; }
-        }
     }
 }

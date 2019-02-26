@@ -136,6 +136,9 @@ namespace SilentNotes.Workers
         /// <returns>Sanitized string.</returns>
         public static string SanitizeXmlString(string xml)
         {
+            if (xml == null)
+                return null;
+
             // Remove invalid utf-8 encoding
             Encoding sanitizerEncoding = Encoding.GetEncoding(
                 "utf-8",
