@@ -9,6 +9,7 @@ More information you can find on [SilentNote's homepage](https://www.martinstoec
 ## Features
 
 * ✔ Take your notes wherever you are on your Android and Windows devices.
+* ✔ Write the notes in an easily operated WYSIWYG editor.
 * ✔ Quickly find the right note with the full-text search, just by typing a few letters.
 * ✔ Store the notes to an online-storage of your choice, this allows to synchronize them between devices and offers an easy backup.
 * ✔ Currently supported are the `FTP` protocol, the `WebDav` protocol and `Dropbox`.
