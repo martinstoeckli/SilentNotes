@@ -89,6 +89,19 @@ namespace SilentNotesTest.Workers
         }
 
         [Test]
+        public void AlwaysCreateNewestRevision()
+        {
+            NoteRepositoryModel repo1 = new NoteRepositoryModel();
+            repo1.Revision = 0;
+            NoteRepositoryModel repo2 = new NoteRepositoryModel();
+            repo2.Revision = 1;
+
+            NoteRepositoryMerger merger = new NoteRepositoryMerger();
+            NoteRepositoryModel result = merger.Merge(repo1, repo2);
+            Assert.AreEqual(NoteRepositoryModel.NewestSupportedRevision, result.Revision);
+        }
+
+        [Test]
         public void UseOrderCorrectly()
         {
             NoteRepositoryModel clientRepo = new NoteRepositoryModel();

@@ -23,6 +23,13 @@ namespace SilentNotes.StoryBoards
         void RegisterStep(IStoryBoardStep step);
 
         /// <summary>
+        /// Gets a value indicating, whether the story runs silently in the background. If this
+        /// value is true, no GUI should be involved and missing information should stop the story.
+        /// An example for this mode could be a data synchronization at startup/shutdown.
+        /// </summary>
+        bool SilentMode { get; }
+
+        /// <summary>
         /// Starts the story at the first step, which was registered with <see cref="RegisterStep(IStoryBoardStep, bool)"/>.
         /// </summary>
         /// <returns>An asynchronous task.</returns>

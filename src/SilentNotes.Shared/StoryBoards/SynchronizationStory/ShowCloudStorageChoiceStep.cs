@@ -14,7 +14,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
     /// This step is a possible entry point to the <see cref="SynchronizationStoryBoard"/>. It
     /// shows the dialog to choose a cloud storage target.
     /// </summary>
-    public class ShowCloudStorageChoiceStep : StoryBoardStepBase
+    public class ShowCloudStorageChoiceStep : SynchronizationStoryBoardStepBase
     {
         private readonly INavigationService _navigationService;
 
@@ -31,7 +31,8 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         /// <inheritdoc/>
         public override Task Run()
         {
-            _navigationService.Navigate(ControllerNames.CloudStorageChoice);
+            if (!IsRunningInSilentMode)
+                _navigationService.Navigate(ControllerNames.CloudStorageChoice);
             return GetCompletedDummyTask();
         }
     }

@@ -14,7 +14,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
     /// This step belongs to the <see cref="SynchronizationStoryBoard"/>. It shows the dialog to
     /// enter the transfer code.
     /// </summary>
-    public class ShowTransferCodeStep : StoryBoardStepBase
+    public class ShowTransferCodeStep : SynchronizationStoryBoardStepBase
     {
         private readonly INavigationService _navigationService;
 
@@ -31,7 +31,8 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         /// <inheritdoc/>
         public override Task Run()
         {
-            _navigationService.Navigate(ControllerNames.TransferCode);
+            if (!IsRunningInSilentMode)
+                _navigationService.Navigate(ControllerNames.TransferCode);
             return GetCompletedDummyTask();
         }
     }

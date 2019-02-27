@@ -82,6 +82,7 @@
     <Compile Include="Services\CryptoRandomService.cs" />
     <Compile Include="Services\DataProtectionService.cs" />
     <Compile Include="Services\FeedbackService.cs" />
+    <Compile Include="Services\InternetStateService.cs" />
     <Compile Include="Services\LanguageCodeService.cs" />
     <Compile Include="Services\NativeBrowserService.cs" />
     <Compile Include="Services\RepositoryStorageService.cs" />

@@ -4,6 +4,8 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using SilentNotes.Controllers;
 using SilentNotes.HtmlView;
 
@@ -15,6 +17,8 @@ namespace SilentNotes.Services
     public class NavigationService : INavigationService
     {
         private IHtmlView _htmlView;
+        private string _currentControllerId;
+        private KeyValueList<string, string> _currentVariables;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NavigationService"/> class.
@@ -30,6 +34,8 @@ namespace SilentNotes.Services
         {
             IController oldController = CurrentController;
             CurrentController = null;
+            _currentControllerId = null;
+            _currentVariables = null;
 
             // Clean up old controller
             if (oldController != null)
@@ -40,6 +46,8 @@ namespace SilentNotes.Services
 
             IController newController = Ioc.CreateWithKey<IController>(controllerId);
             CurrentController = newController;
+            _currentControllerId = controllerId;
+            _currentVariables = variables;
 
             // Setup new controller
             newController.ShowInView(_htmlView, variables);
@@ -51,6 +59,15 @@ namespace SilentNotes.Services
             var variables = new KeyValueList<string, string>(StringComparer.InvariantCultureIgnoreCase);
             variables[variableName] = variableValue;
             Navigate(controllerId, variables);
+        }
+
+        /// <inheritdoc/>
+        public void RepeatNavigationIf(IEnumerable<string> ifAnyOfThisControllers)
+        {
+            if ((CurrentController != null) && ifAnyOfThisControllers.Contains(_currentControllerId))
+            {
+                Navigate(_currentControllerId, _currentVariables);
+            }
         }
 
         /// <inheritdoc/>

@@ -14,7 +14,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
     /// This step belongs to the <see cref="SynchronizationStoryBoard"/>. It shows the
     /// synchronization welcome dialog if no synchronisation was done before.
     /// </summary>
-    public class ShowFirstTimeDialogStep : StoryBoardStepBase
+    public class ShowFirstTimeDialogStep : SynchronizationStoryBoardStepBase
     {
         private readonly INavigationService _navigationService;
 
@@ -31,7 +31,8 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         /// <inheritdoc/>
         public override Task Run()
         {
-            _navigationService.Navigate(ControllerNames.FirstTimeSync);
+            if (!IsRunningInSilentMode)
+                _navigationService.Navigate(ControllerNames.FirstTimeSync);
             return GetCompletedDummyTask();
         }
     }

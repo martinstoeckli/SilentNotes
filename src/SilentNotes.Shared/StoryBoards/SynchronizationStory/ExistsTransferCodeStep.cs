@@ -14,7 +14,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
     /// This step belongs to the <see cref="SynchronizationStoryBoard"/>. It checks whether a
     /// transfer code is alredady stored in the settings.
     /// </summary>
-    public class ExistsTransferCodeStep : StoryBoardStepBase
+    public class ExistsTransferCodeStep : SynchronizationStoryBoardStepBase
     {
         private readonly ISettingsService _settingsService;
 

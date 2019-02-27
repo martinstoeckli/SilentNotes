@@ -36,11 +36,11 @@
         <h2>@Model.Language["encryption"]</h2>
         <form class="mb-4 col-md-9 col-lg-6">
             <div class="form-row form-group">
-                <label class="col-form-label" for="SelectedEncryptionAlgorithm">@Model.Language["encryption_algorithm"]</label>
-                <select class="form-control" onchange="bind(event)" data-binding="SelectedEncryptionAlgorithm">
+                <label class="col-form-label" for="EncryptionAlgorithm">@Model.Language["encryption_algorithm"]</label>
+                <select class="form-control" id="EncryptionAlgorithm" onchange="bind(event)" data-binding="SelectedEncryptionAlgorithm">
                     @foreach (var algorithm in @Model.EncryptionAlgorithms)
                     {
-                        <option value="@algorithm.AlgorithmName" @(Model.SelectedEncryptionAlgorithm == algorithm ? "selected" : "")>@algorithm.Description</option>
+                        <option value="@algorithm.Value" @(Model.SelectedEncryptionAlgorithm == algorithm ? "selected" : "")>@algorithm.Description</option>
                     }
                 </select>
             </div>
@@ -52,6 +52,14 @@
 
         <h2>@Model.Language["sync"]</h2>
         <form class="mb-4 col-md-9 col-lg-6">
+            <div class="form-row form-group">
+                <label class="col-form-label" for="AutoSyncMode">@Model.Language["sync_auto"]</label>
+                <select class="form-control" id="AutoSyncMode" onchange="bind(event)" data-binding="SelectedAutoSyncMode">
+                    <option value="Never" @(Model.SelectedAutoSyncMode == "Never" ? "selected" : "")>@Model.Language["sync_auto_never"]</option>
+                    <option value="CostFreeInternetOnly" @(Model.SelectedAutoSyncMode == "CostFreeInternetOnly" ? "selected" : "")>@Model.Language["sync_auto_costfree"]</option>
+                    <option value="Always" @(Model.SelectedAutoSyncMode == "Always" ? "selected" : "")>@Model.Language["sync_auto_always"]</option>
+                </select>
+            </div>
             <div class="form-row form-group">
                 <label class="col-form-label" for="CloudStorageSettings">@Model.Language["cloud_service"]</label>
                 <textarea class="form-control" id="CloudStorageSettings" data-binding="CloudStorageSettings" rows="4" readonly>@Model.AccountSummary</textarea>

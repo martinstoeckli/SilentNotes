@@ -19,7 +19,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
     /// This step belongs to the <see cref="SynchronizationStoryBoard"/>. It tries to decrypt an
     /// already downloaded cloud repository with the known transfer codes.
     /// </summary>
-    public class DecryptCloudRepositoryStep : StoryBoardStepBase
+    public class DecryptCloudRepositoryStep : SynchronizationStoryBoardStepBase
     {
         private readonly ILanguageService _languageService;
         private readonly IFeedbackService _feedbackService;
@@ -107,7 +107,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
             catch (Exception ex)
             {
                 // Keep the current page open and show the error message
-                SynchronizationStoryBoard.ShowExceptionMessage(ex, _feedbackService, _languageService);
+                ShowExceptionMessage(ex, _feedbackService, _languageService);
             }
         }
 

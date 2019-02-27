@@ -92,6 +92,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="HtmView\HtmlViewDuplicateEventFinderTest.cs" />
+    <Compile Include="Models\NoteRepositoryModelTest.cs" />
     <Compile Include="Services\CloudStorageServices\CloudStorageAccountTest.cs" />
     <Compile Include="Services\CloudStorageServices\DropboxCloudStorageServiceTest.cs" />
     <Compile Include="Services\CloudStorageServices\FtpCloudStorageServiceTest.cs" />

@@ -3,7 +3,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-using System;
+using System.Collections.Generic;
 using SilentNotes.Controllers;
 
 namespace SilentNotes.Services
@@ -32,6 +32,14 @@ namespace SilentNotes.Services
         /// <param name="variableValue">Value of the variable.</param>
         /// <exception cref="RoutingServiceRouteNotFoundException">Is thrown if no such route exists.</exception>
         void Navigate(string controllerId, string variableName, string variableValue);
+
+        /// <summary>
+        /// Reloads the current page by navigating to the currently open controller again, using
+        /// the same parameters as where used before.
+        /// </summary>
+        /// <param name="ifAnyOfThisControllers">The navigation is done if the <see cref="CurrentController"/>
+        /// is one of the listed controllers, otherwise no action is taken.</param>
+        void RepeatNavigationIf(IEnumerable<string> ifAnyOfThisControllers);
 
         /// <summary>
         /// Gets the currently active controller.

@@ -16,6 +16,7 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
         public void DoNotStoreAnythingWhenRepositoriesAreSame()
         {
             NoteRepositoryModel repositoryModel = new NoteRepositoryModel();
+            repositoryModel.Revision = NoteRepositoryModel.NewestSupportedRevision;
 
             Mock<IStoryBoard> storyBoard = new Mock<IStoryBoard>();
             storyBoard.

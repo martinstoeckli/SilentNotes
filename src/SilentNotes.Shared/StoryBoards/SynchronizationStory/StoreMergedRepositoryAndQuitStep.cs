@@ -17,7 +17,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
     /// This step is an end point of the <see cref="SynchronizationStoryBoard"/>. It merges the
     /// local repository with the downloaded repository and stores the merged repository.
     /// </summary>
-    public class StoreMergedRepositoryAndQuitStep : StoryBoardStepBase
+    public class StoreMergedRepositoryAndQuitStep : SynchronizationStoryBoardStepBase
     {
         private readonly ILanguageService _languageService;
         private readonly IFeedbackService _feedbackService;
@@ -72,7 +72,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
                 // Store merged repository to the cloud when different, otherwise spare the slow upload
                 if (!RepositoriesAreEqual(mergedRepository, cloudRepository))
                 {
-                    byte[] encryptedRepository = SynchronizationStoryBoard.EncryptRepository(
+                    byte[] encryptedRepository = EncryptRepository(
                         mergedRepository, settings.TransferCode, _cryptoRandomService, settings.SelectedEncryptionAlgorithm);
 
                     ICloudStorageService cloudStorageService = _cloudStorageServiceFactory.Create(account);
@@ -85,25 +85,13 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
             catch (Exception ex)
             {
                 // Keep the current page open and show the error message
-                SynchronizationStoryBoard.ShowExceptionMessage(ex, _feedbackService, _languageService);
+                ShowExceptionMessage(ex, _feedbackService, _languageService);
             }
         }
 
         private bool RepositoriesAreEqual(NoteRepositoryModel repository1, NoteRepositoryModel repository2)
         {
-            byte[] serialized1 = XmlUtils.SerializeToXmlBytes(repository1);
-            byte[] serialized2 = XmlUtils.SerializeToXmlBytes(repository2);
-
-            if (serialized1.Length != serialized2.Length)
-                return false;
-
-            int length = serialized1.Length;
-            for (int i = 0; i < length; i++)
-            {
-                if (serialized1[i] != serialized2[i])
-                    return false;
-            }
-            return true;
+            return repository1.GetModificationFingerprint() == repository2.GetModificationFingerprint();
         }
     }
 }
