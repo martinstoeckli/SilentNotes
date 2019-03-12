@@ -14,6 +14,35 @@
 	border: none;
 }
 
+.arrowkeys {
+	position: fixed;
+	display: inline-block;
+	right: 1.6em;
+	top: calc(42px + 1.5em);
+	z-index: 1020;
+	width: 64px;
+	height: 64px;
+	background-image: none;
+}
+
+.arrowkey {
+	position: absolute;
+	display: inline-block;
+	width: 32px;
+	height: 64px;
+	cursor: pointer;
+}
+
+#keyright {
+	left: 32px;
+	top: 0;
+}
+
+#keyleft {
+	left: 0;
+	top: 0;
+}
+
 /* Toolbar buttons */
 
 .ql-snow.ql-toolbar button,

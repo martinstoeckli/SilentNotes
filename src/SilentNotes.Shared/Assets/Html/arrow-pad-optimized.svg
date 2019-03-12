@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg id="svg2" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" fill="#ffffff" version="1.1" xmlns:cc="http://creativecommons.org/ns#" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 20 16" xmlns:dc="http://purl.org/dc/elements/1.1/">
+ <metadata id="metadata10">
+  <rdf:RDF>
+   <cc:Work rdf:about="">
+    <dc:format>image/svg+xml</dc:format>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:title/>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs id="defs8">
+  <radialGradient id="radialGradient4149" gradientUnits="userSpaceOnUse" cy="10.86" cx="6.0188" gradientTransform="matrix(1.5177 0 0 1.0348 -3.0181 2.3318)" r="10">
+   <stop id="stop4146" stop-color="#fff" stop-opacity=".32" offset="0"/>
+   <stop id="stop4164" stop-color="#8f8f8f" stop-opacity=".42" offset=".5"/>
+   <stop id="stop4148" stop-color="#202020" stop-opacity=".25098" offset="1"/>
+  </radialGradient>
+  <linearGradient id="linearGradient4199" y2="16" gradientUnits="userSpaceOnUse" x2="10.1" y1="16" x1="9.9">
+   <stop id="stop4203" stop-opacity=".64314" offset="0"/>
+   <stop id="stop4207" stop-color="#fff" stop-opacity=".75294" offset="1"/>
+  </linearGradient>
+ </defs>
+ <g id="layer2" opacity=".5" fill-opacity="0.86" transform="translate(0,-8)" fill="#000">
+  <path id="path4173" opacity="1" style="color-rendering:auto;color:#000000;isolation:auto;mix-blend-mode:normal;shape-rendering:auto;solid-color:#000000;image-rendering:auto" d="m0.39806 16s2.6659-1.9799 3.9988-2.8808c1.3329-0.90086 3.9988-2.5244 3.9988-2.5244s-0.64388 3.5604-0.64388 5.4052c0 1.8447 0.64388 5.4052 0.64388 5.4052s-2.7774-1.6309-4.1005-2.5244c-1.3461-0.909-3.8971-2.881-3.8971-2.881z"/>
+  <path id="path4149" opacity="1" style="color-rendering:auto;color:#000000;isolation:auto;mix-blend-mode:normal;shape-rendering:auto;solid-color:#000000;image-rendering:auto" d="m19.602 16s-2.6659-1.9799-3.9988-2.8808c-1.3329-0.90086-3.9988-2.5244-3.9988-2.5244s0.64388 3.5604 0.64388 5.4052c0 1.8447-0.64388 5.4052-0.64388 5.4052s2.7774-1.6309 4.1005-2.5244c1.3461-0.90907 3.8971-2.8808 3.8971-2.8808z"/>
+ </g>
+ <g id="layer3" opacity=".95" transform="translate(0,-8)">
+  <ellipse id="path4141" opacity="1" style="color-rendering:auto;color:#000000;isolation:auto;mix-blend-mode:normal;shape-rendering:auto;solid-color:#000000;image-rendering:auto" rx="10" ry="8" cy="16" cx="10" fill="url(#radialGradient4149)"/>
+  <rect id="rect4191" opacity="0.42" style="color-rendering:auto;color:#000000;isolation:auto;mix-blend-mode:normal;shape-rendering:auto;solid-color:#000000;image-rendering:auto" height="16" width=".2" y="8" x="9.9" fill="url(#linearGradient4199)"/>
+ </g>
+</svg>
