@@ -596,37 +596,36 @@ WriteLiteral(">");
 
 #line default
 #line hidden
-WriteLiteral("</div>\r\n    </div>\r\n\r\n    <div");
+WriteLiteral("</div>\r\n    </div>\r\n\r\n");
+
+
+#line 152 "NoteRazorView.cshtml"
+    
+
+#line default
+#line hidden
+
+#line 152 "NoteRazorView.cshtml"
+     if (Model.ShowCursorArrowKeys)
+    {
+
+
+#line default
+#line hidden
+WriteLiteral("    <div");
 
 WriteLiteral(" class=\"arrowkeys\"");
 
-WriteLiteral(">\r\n");
+WriteAttribute ("title", " title=\"", "\""
 
-
-#line 153 "NoteRazorView.cshtml"
-        
-
-#line default
-#line hidden
-
-#line 153 "NoteRazorView.cshtml"
-          WriteLiteral(Model.Icon["arrow-keys"]);
+#line 154 "NoteRazorView.cshtml"
+, Tuple.Create<string,object,bool> ("", Model.Language["gui_arrow_key"]
 
 #line default
 #line hidden
-WriteLiteral("\r\n\r\n        <div");
-
-WriteLiteral(" id=\"keyright\"");
-
-WriteLiteral(" class=\"arrowkey\"");
-
-WriteLiteral(" onmousedown=\"event.preventDefault();\"");
-
-WriteLiteral(" onclick=\"simulateArrowKey(39);\"");
-
-WriteLiteral("></div>\r\n        <div");
-
-WriteLiteral(" id=\"keyleft\"");
+, false)
+);
+WriteLiteral(">\r\n        <svg");
 
 WriteLiteral(" class=\"arrowkey\"");
 
@@ -634,7 +633,44 @@ WriteLiteral(" onmousedown=\"event.preventDefault();\"");
 
 WriteLiteral(" onclick=\"simulateArrowKey(37);\"");
 
-WriteLiteral("></div>\r\n    </div>\r\n</body>\r\n</html>\r\n");
+WriteLiteral(" viewBox=\'0 0 24 24\'");
+
+WriteLiteral(">");
+
+
+#line 155 "NoteRazorView.cshtml"
+                                                                                                                          WriteLiteral(Model.Icon.LoadIconSvgPath("arrow-left-bold-box-outline"));
+
+#line default
+#line hidden
+WriteLiteral("</svg>\r\n        <svg");
+
+WriteLiteral(" class=\"arrowkey\"");
+
+WriteLiteral(" onmousedown=\"event.preventDefault();\"");
+
+WriteLiteral(" onclick=\"simulateArrowKey(39);\"");
+
+WriteLiteral(" viewBox=\'0 0 24 24\'");
+
+WriteLiteral(">");
+
+
+#line 156 "NoteRazorView.cshtml"
+                                                                                                                          WriteLiteral(Model.Icon.LoadIconSvgPath("arrow-right-bold-box-outline"));
+
+#line default
+#line hidden
+WriteLiteral("</svg>\r\n    </div>\r\n");
+
+
+#line 158 "NoteRazorView.cshtml"
+    }
+
+
+#line default
+#line hidden
+WriteLiteral("</body>\r\n</html>\r\n");
 
 }
 }

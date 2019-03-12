@@ -16,31 +16,23 @@
 
 .arrowkeys {
 	position: fixed;
-	display: inline-block;
-	right: 1.6em;
-	top: calc(42px + 1.5em);
+	display: inline-flex;
+	align-items: center;
+	padding: 4px;
+	top: calc(42px + 14px);
+	right: 18px;
 	z-index: 1020;
-	width: 64px;
-	height: 64px;
-	background-image: none;
+	fill: #808080;
+	background-color: rgba(160, 160, 160, 0.3);
+	border-radius: 20px;
 }
 
 .arrowkey {
-	position: absolute;
-	display: inline-block;
+	margin: 0;
+	padding: 0;
 	width: 32px;
-	height: 64px;
+	height: 32px;
 	cursor: pointer;
-}
-
-#keyright {
-	left: 32px;
-	top: 0;
-}
-
-#keyleft {
-	left: 0;
-	top: 0;
 }
 
 /* Toolbar buttons */

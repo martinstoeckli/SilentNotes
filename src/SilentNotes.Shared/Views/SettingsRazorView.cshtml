@@ -33,6 +33,14 @@
     </nav>
 
     <div id="content" class="container-fluid p-4">
+        <h2>@Model.Language["gui"]</h2>
+        <form class="mb-4 col-md-9 col-lg-6">
+            <div class="form-row form-group form-check">
+                <input class="form-check-input" type="checkbox" id="ShowCursorArrowKeys" onclick="bind(event)" data-binding="ShowCursorArrowKeys" @(Model.ShowCursorArrowKeys ? "checked" : "")>
+                <label class="form-check-label" for="ShowCursorArrowKeys">@Model.Language["gui_show_arrow_keys"]</label>
+            </div>
+        </form>
+
         <h2>@Model.Language["encryption"]</h2>
         <form class="mb-4 col-md-9 col-lg-6">
             <div class="form-row form-group">
@@ -45,7 +53,7 @@
                 </select>
             </div>
             <div class="form-row form-group form-check">
-                <input class="form-check-input" type="checkbox" onclick="bind(event)" data-binding="AdoptCloudEncryptionAlgorithm" @(Model.AdoptCloudEncryptionAlgorithm ? "checked" : "")>
+                <input class="form-check-input" type="checkbox" id="AdoptCloudEncryptionAlgorithm" onclick="bind(event)" data-binding="AdoptCloudEncryptionAlgorithm" @(Model.AdoptCloudEncryptionAlgorithm ? "checked" : "")>
                 <label class="form-check-label" for="AdoptCloudEncryptionAlgorithm">@Model.Language["encryption_adopt_cloud_desc"]</label>
             </div>
         </form>

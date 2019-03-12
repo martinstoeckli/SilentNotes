@@ -53,27 +53,8 @@ namespace SilentNotes.Services
                 { "settings", "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z' /></svg>" },
                 { "wrap", "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M21,5H3V7H21V5M3,19H10V17H3V19M3,13H18C19,13 20,13.43 20,15C20,16.57 19,17 18,17H16V15L12,18L16,21V19H18C20.95,19 22,17.73 22,15C22,12.28 21,11 18,11H3V13Z' /></svg>" },
                 { "arrow-all", "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M13,11H18L16.5,9.5L17.92,8.08L21.84,12L17.92,15.92L16.5,14.5L18,13H13V18L14.5,16.5L15.92,17.92L12,21.84L8.08,17.92L9.5,16.5L11,18V13H6L7.5,14.5L6.08,15.92L2.16,12L6.08,8.08L7.5,9.5L6,11H11V6L9.5,7.5L8.08,6.08L12,2.16L15.92,6.08L14.5,7.5L13,6V11Z' /></svg>" },
-                { "arrow-keys", @"<svg fill='#ffffff' version='1.1' xmlns:xlink='http://www.w3.org/1999/xlink' viewBox='0 0 20 16' xmlns:dc='http://purl.org/dc/elements/1.1/'>
- <defs id='defs8'>
-  <radialGradient id='radialGradient4149' gradientUnits='userSpaceOnUse' cy='10.86' cx='6.0188' gradientTransform='matrix(1.5177 0 0 1.0348 -3.0181 2.3318)' r='10'>
-   <stop id='stop4146' stop-color='#fff' stop-opacity='.32' offset='0'/>
-   <stop id='stop4164' stop-color='#8f8f8f' stop-opacity='.42' offset='.5'/>
-   <stop id='stop4148' stop-color='#202020' stop-opacity='.25098' offset='1'/>
-  </radialGradient>
-  <linearGradient id='linearGradient4199' y2='16' gradientUnits='userSpaceOnUse' x2='10.1' y1='16' x1='9.9'>
-   <stop id='stop4203' stop-opacity='.64314' offset='0'/>
-   <stop id='stop4207' stop-color='#fff' stop-opacity='.75294' offset='1'/>
-  </linearGradient>
- </defs>
- <g id='layer2' opacity='.5' fill-opacity='0.86' transform='translate(0,-8)' fill='#000'>
-  <path id='path4173' opacity='1' style='color-rendering:auto;color:#000000;isolation:auto;mix-blend-mode:normal;shape-rendering:auto;solid-color:#000000;image-rendering:auto' d='m0.39806 16s2.6659-1.9799 3.9988-2.8808c1.3329-0.90086 3.9988-2.5244 3.9988-2.5244s-0.64388 3.5604-0.64388 5.4052c0 1.8447 0.64388 5.4052 0.64388 5.4052s-2.7774-1.6309-4.1005-2.5244c-1.3461-0.909-3.8971-2.881-3.8971-2.881z'/>
-  <path id='path4149' opacity='1' style='color-rendering:auto;color:#000000;isolation:auto;mix-blend-mode:normal;shape-rendering:auto;solid-color:#000000;image-rendering:auto' d='m19.602 16s-2.6659-1.9799-3.9988-2.8808c-1.3329-0.90086-3.9988-2.5244-3.9988-2.5244s0.64388 3.5604 0.64388 5.4052c0 1.8447-0.64388 5.4052-0.64388 5.4052s2.7774-1.6309 4.1005-2.5244c1.3461-0.90907 3.8971-2.8808 3.8971-2.8808z'/>
- </g>
- <g id='layer3' opacity='.95' transform='translate(0,-8)'>
-  <ellipse id='path4141' opacity='1' style='color-rendering:auto;color:#000000;isolation:auto;mix-blend-mode:normal;shape-rendering:auto;solid-color:#000000;image-rendering:auto' rx='10' ry='8' cy='16' cx='10' fill='url(#radialGradient4149)'/>
-  <rect id='rect4191' opacity='0.42' style='color-rendering:auto;color:#000000;isolation:auto;mix-blend-mode:normal;shape-rendering:auto;solid-color:#000000;image-rendering:auto' height='16' width='.2' y='8' x='9.9' fill='url(#linearGradient4199)'/>
- </g>
-</svg>" },
+                { "arrow-left-bold-box-outline", "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M7,12L12,7V10H16V14H12V17L7,12M21,5V19A2,2 0 0,1 19,21H5A2,2 0 0,1 3,19V5A2,2 0 0,1 5,3H19A2,2 0 0,1 21,5M19,5H5V19H19V5Z' /></svg>" },
+                { "arrow-right-bold-box-outline", "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M17,12L12,17V14H8V10H12V7L17,12M3,19V5A2,2 0 0,1 5,3H19A2,2 0 0,1 21,5V19A2,2 0 0,1 19,21H5A2,2 0 0,1 3,19M5,19H19V5H5V19Z' /></svg>" },
             };
         }
 

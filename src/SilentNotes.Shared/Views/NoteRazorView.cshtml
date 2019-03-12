@@ -149,11 +149,12 @@
         <div id="myeditor" class="note-viewer" data-binding="quill">@{WriteLiteral(Model.HtmlContent);}</div>
     </div>
 
-    <div class="arrowkeys">
-        @{WriteLiteral(Model.Icon["arrow-keys"]);}
-
-        <div id="keyright" class="arrowkey" onmousedown="event.preventDefault();" onclick="simulateArrowKey(39);"></div>
-        <div id="keyleft" class="arrowkey" onmousedown="event.preventDefault();" onclick="simulateArrowKey(37);"></div>
+    @if (Model.ShowCursorArrowKeys)
+    {
+    <div class="arrowkeys" title="@Model.Language["gui_arrow_key"]">
+        <svg class="arrowkey" onmousedown="event.preventDefault();" onclick="simulateArrowKey(37);" viewBox='0 0 24 24'>@{WriteLiteral(Model.Icon.LoadIconSvgPath("arrow-left-bold-box-outline"));}</svg>
+        <svg class="arrowkey" onmousedown="event.preventDefault();" onclick="simulateArrowKey(39);" viewBox='0 0 24 24'>@{WriteLiteral(Model.Icon.LoadIconSvgPath("arrow-right-bold-box-outline"));}</svg>
     </div>
+    }
 </body>
 </html>
