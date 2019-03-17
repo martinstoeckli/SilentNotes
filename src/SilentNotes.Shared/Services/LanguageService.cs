@@ -118,7 +118,7 @@ namespace SilentNotes.Services
             resources["encryption_adopt_cloud_desc"] = "Adopt encryption mode from the online-storage?";
 
             resources["gui"] = "User interface";
-            resources["gui_show_arrow_keys"] = "Show cursor arrow keys";
+            resources["gui_show_arrow_keys"] = "Show cursor arrow keys when editing";
             resources["gui_arrow_key"] = "Go one character to the left/right";
         }
 
@@ -218,7 +218,7 @@ namespace SilentNotes.Services
             resources["encryption_adopt_cloud_desc"] = "Verschlüsselungsverfahren vom Online-Speicher übernehmen?";
 
             resources["gui"] = "Benutzeroberfläche";
-            resources["gui_show_arrow_keys"] = "Cursor Pfeiltasten anzeigen";
+            resources["gui_show_arrow_keys"] = "Cursor Pfeiltasten beim Bearbeiten anzeigen";
             resources["gui_arrow_key"] = "Ein Zeichen nach links/rechts bewegen";
         }
 

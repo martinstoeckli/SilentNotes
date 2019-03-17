@@ -14,9 +14,9 @@
 	border: none;
 }
 
-.arrowkeys {
+#arrowkeys {
 	position: fixed;
-	display: inline-flex;
+	display: none; /* javascript will set it to inline-flex */
 	align-items: center;
 	padding: 4px;
 	top: calc(42px + 14px);

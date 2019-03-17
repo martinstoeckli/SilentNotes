@@ -46,16 +46,16 @@
             if (range) {
                 switch (key) {
                     case 37: // left
-                        var newIndex = range.index;
-                        if (range.length == 0)
-                            newIndex--;
-                        quill.setSelection(newIndex);
+                        if (range.length <= 0)
+                            quill.setSelection(range.index - 1, 0);
+                        else
+                            quill.setSelection(range.index, range.length - 1);
                         break;
                     case 39: // right
-                        var newIndex = range.index + range.length;
-                        if (range.length == 0)
-                            newIndex++;
-                        quill.setSelection(newIndex);
+                        if (range.length <= 0)
+                            quill.setSelection(range.index + 1, 0);
+                        else
+                            quill.setSelection(range.index, range.length + 1);
                         break;
                 }
             }
@@ -90,6 +90,10 @@
                     var url = 'HtmlViewBinding?' + parts.join('&');
                     location.href = url;
                 }
+            });
+
+            $(quill.root).one("focusin", function () {
+                $('#arrowkeys').css("display", "inline-flex");
             });
         });
     </script>
@@ -151,7 +155,7 @@
 
     @if (Model.ShowCursorArrowKeys)
     {
-    <div class="arrowkeys" title="@Model.Language["gui_arrow_key"]">
+    <div id="arrowkeys" title="@Model.Language["gui_arrow_key"]">
         <svg class="arrowkey" onmousedown="event.preventDefault();" onclick="simulateArrowKey(37);" viewBox='0 0 24 24'>@{WriteLiteral(Model.Icon.LoadIconSvgPath("arrow-left-bold-box-outline"));}</svg>
         <svg class="arrowkey" onmousedown="event.preventDefault();" onclick="simulateArrowKey(39);" viewBox='0 0 24 24'>@{WriteLiteral(Model.Icon.LoadIconSvgPath("arrow-right-bold-box-outline"));}</svg>
     </div>
