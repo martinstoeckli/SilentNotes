@@ -40,6 +40,27 @@
             quill.format(formatName, newSelectionFormat, 'user');
         }
 
+        function simulateArrowKey(key) {
+            quill.focus();
+            var range = quill.getSelection();
+            if (range) {
+                switch (key) {
+                    case 37: // left
+                        if (range.length <= 0)
+                            quill.setSelection(range.index - 1, 0);
+                        else
+                            quill.setSelection(range.index, range.length - 1);
+                        break;
+                    case 39: // right
+                        if (range.length <= 0)
+                            quill.setSelection(range.index + 1, 0);
+                        else
+                            quill.setSelection(range.index, range.length + 1);
+                        break;
+                }
+            }
+        }
+
         function getNoteHtmlContent() {
             return quill.root.innerHTML;
         }
@@ -69,6 +90,10 @@
                     var url = 'HtmlViewBinding?' + parts.join('&');
                     location.href = url;
                 }
+            });
+
+            $(quill.root).one("focusin", function () {
+                $('#arrowkeys').css("display", "inline-flex");
             });
         });
     </script>
@@ -127,5 +152,13 @@
     <div id="content" class="" data-binding="Content" style="background-color: @Model.BackgroundColorHex">
         <div id="myeditor" class="note-viewer" data-binding="quill">@{WriteLiteral(Model.HtmlContent);}</div>
     </div>
+
+    @if (Model.ShowCursorArrowKeys)
+    {
+    <div id="arrowkeys" title="@Model.Language["gui_arrow_key"]">
+        <svg class="arrowkey" onmousedown="event.preventDefault();" onclick="simulateArrowKey(37);" viewBox='0 0 24 24'>@{WriteLiteral(Model.Icon.LoadIconSvgPath("arrow-left-bold-box-outline"));}</svg>
+        <svg class="arrowkey" onmousedown="event.preventDefault();" onclick="simulateArrowKey(39);" viewBox='0 0 24 24'>@{WriteLiteral(Model.Icon.LoadIconSvgPath("arrow-right-bold-box-outline"));}</svg>
+    </div>
+    }
 </body>
 </html>

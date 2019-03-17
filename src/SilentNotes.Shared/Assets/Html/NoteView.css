@@ -14,6 +14,27 @@
 	border: none;
 }
 
+#arrowkeys {
+	position: fixed;
+	display: none; /* javascript will set it to inline-flex */
+	align-items: center;
+	padding: 4px;
+	top: calc(42px + 14px);
+	right: 18px;
+	z-index: 1020;
+	fill: #808080;
+	background-color: rgba(160, 160, 160, 0.3);
+	border-radius: 20px;
+}
+
+.arrowkey {
+	margin: 0;
+	padding: 0;
+	width: 32px;
+	height: 32px;
+	cursor: pointer;
+}
+
 /* Toolbar buttons */
 
 .ql-snow.ql-toolbar button,

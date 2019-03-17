@@ -30,6 +30,7 @@ namespace SilentNotes.Models
             Revision = NewestSupportedRevision;
             AdoptCloudEncryptionAlgorithm = true;
             AutoSyncMode = AutoSynchronizationMode.CostFreeInternetOnly;
+            ShowCursorArrowKeys = true;
         }
 
         /// <summary>
@@ -115,6 +116,12 @@ namespace SilentNotes.Models
             get { return LazyCreator.GetOrCreate(ref _transferCodeHistory); }
             set { _transferCodeHistory = value; }
         }
+
+        /// <summary>
+        /// Gets a value indicating whether the virtual arrow keys should be displayed.
+        /// </summary>
+        [XmlElement("show_cursor_keys")]
+        public bool ShowCursorArrowKeys { get; set; }
 
         /// <summary>
         /// Gets the name of the algorithm to use, if the selected algorithm is not yet stored.

@@ -52,6 +52,7 @@ namespace SilentNotes.Controllers
                 Ioc.GetOrCreate<IBaseUrlService>(),
                 null,
                 _repositoryService,
+                Ioc.GetOrCreate<ISettingsService>(),
                 note);
 
             Bindings.BindCommand("GoBack", _viewModel.GoBackCommand);

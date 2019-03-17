@@ -50,6 +50,7 @@ namespace SilentNotes.Controllers
             Bindings.BindCheckbox("AdoptCloudEncryptionAlgorithm", null, (value) => _viewModel.AdoptCloudEncryptionAlgorithm = value, null, null, HtmlViewBindingMode.OneWayToViewmodel);
             Bindings.BindDropdown("SelectedAutoSyncMode", null, (string value) => _viewModel.SelectedAutoSyncMode = value, null, null, HtmlViewBindingMode.OneWayToViewmodel);
             Bindings.BindText("CloudStorageSettings", () => _viewModel.AccountSummary, null, _viewModel, nameof(_viewModel.AccountSummary), HtmlViewBindingMode.OneWayToView);
+            Bindings.BindCheckbox("ShowCursorArrowKeys", null, (value) => _viewModel.ShowCursorArrowKeys = value, null, null, HtmlViewBindingMode.OneWayToViewmodel);
 
             string html = _viewService.GenerateHtml(_viewModel);
             View.LoadHtml(html);

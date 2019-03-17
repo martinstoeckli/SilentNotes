@@ -20,6 +20,7 @@ namespace SilentNotes.ViewModels
     public class NoteViewModel : ViewModelBase
     {
         private readonly IRepositoryStorageService _repositoryService;
+        private readonly ISettingsService _settingsService;
         private SearchableHtmlConverter _searchableTextConverter;
         private string _searchableContent;
 
@@ -34,10 +35,12 @@ namespace SilentNotes.ViewModels
             IBaseUrlService webviewBaseUrl,
             SearchableHtmlConverter searchableTextConverter,
             IRepositoryStorageService repositoryService,
+            ISettingsService settingsService,
             NoteModel noteFromRepository)
             : base(navigationService, languageService, svgIconService, webviewBaseUrl)
         {
             _repositoryService = repositoryService;
+            _settingsService = settingsService;
             _searchableTextConverter = searchableTextConverter;
             MarkSearchableContentAsDirty();
             BackgroundColor = "#c09e79";
@@ -171,6 +174,18 @@ namespace SilentNotes.ViewModels
         {
             handled = true;
             GoBack();
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the virtual arrow keys should be displayed.
+        /// </summary>
+        public bool ShowCursorArrowKeys
+        {
+            get
+            {
+                SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
+                return settings != null ? settings.ShowCursorArrowKeys : true;
+            }
         }
 
         /// <summary>
