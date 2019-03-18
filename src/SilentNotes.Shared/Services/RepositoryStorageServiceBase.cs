@@ -37,6 +37,10 @@ namespace SilentNotes.Services
             _xmlFileService = xmlFileService;
             _languageService = languageService;
             _updater = new NoteRepositoryUpdater();
+
+#if (DEMO && DEBUG)
+            _cachedRepository = new DemoNoteRepositoryModel();
+#endif
         }
 
         /// <inheritdoc/>
@@ -49,11 +53,6 @@ namespace SilentNotes.Services
         /// <inheritdoc/>
         public RepositoryStorageLoadResult LoadRepositoryOrDefault(out NoteRepositoryModel repositoryModel)
         {
-#if (ENV_DEMO && DEBUG)
-            if ((_cachedRepository == null) && (Config.RunningMode == Config.RunningModes.Demo))
-                _cachedRepository = new DemoNoteRepositoryModel();
-#endif
-
             if (_cachedRepository != null)
             {
                 repositoryModel = _cachedRepository;

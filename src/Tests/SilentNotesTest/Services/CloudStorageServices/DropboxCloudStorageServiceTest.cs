@@ -14,7 +14,6 @@ namespace SilentNotesTest.Services.CloudStorageServices
         [OneTimeSetUp]
         public void TestSetup()
         {
-            Config.RunningMode = Config.RunningModes.UnitTest;
             _randomSource = new RandomSource4UnitTest();
         }
 

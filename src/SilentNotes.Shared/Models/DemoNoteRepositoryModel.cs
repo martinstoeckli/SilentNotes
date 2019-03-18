@@ -4,13 +4,15 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
+using System.Xml.Serialization;
 
 namespace SilentNotes.Models
 {
-#if (ENV_DEMO && DEBUG)
+#if (DEMO && DEBUG)
     /// <summary>
     /// A <see cref="NoteRepositoryModel"/> filled with demo data to make screenshots.
     /// </summary>
+    [XmlRoot(ElementName = "silentnotes")]
     public class DemoNoteRepositoryModel : NoteRepositoryModel
     {
         /// <summary>

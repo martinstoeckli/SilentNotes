@@ -2,7 +2,6 @@
 using System.Xml.Linq;
 using Moq;
 using NUnit.Framework;
-using SilentNotes;
 using SilentNotes.Models;
 using SilentNotes.Services;
 using SilentNotes.Workers;
@@ -12,12 +11,6 @@ namespace SilentNotesTest.Services
     [TestFixture]
     public class RepositoryStorageServiceTest
     {
-        [OneTimeSetUp]
-        public void TestSetup()
-        {
-            Config.RunningMode = Config.RunningModes.UnitTest;
-        }
-
         [Test]
         public void LoadsSettingsReturnsStoredSettings()
         {
