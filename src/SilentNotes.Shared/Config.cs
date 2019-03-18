@@ -16,16 +16,21 @@ namespace SilentNotes
     public static class Config
     {
         /// <summary>
+        /// Initializes static members of the <see cref="Config"/> class.
+        /// </summary>
+        static Config()
+        {
+            RunningMode = RunningModes.Production;
+#if (ENV_DEMO && DEBUG)
+            RunningMode = RunningModes.Demo;
+#endif
+        }
+
+        /// <summary>
         /// Gets the mode of the application.
         /// Make sure this value is set to <see cref="RunningModes.Production"/> to deploy the application.
         /// </summary>
-        public static RunningModes RunningMode { get; internal set; } = RunningModes.Production;
-
-        /// <summary>
-        /// Gets the enforced language of the GUI. Use this setting when a language should be
-        /// explicitely set for debugging/testing, it works only when compiled in DEBUG mode.
-        /// </summary>
-        public static LanguageModes LanguageMode { get; internal set; } = LanguageModes.Auto;
+        public static RunningModes RunningMode { get; internal set; }
 
         /// <summary>
         /// Gets the filename without path, used to store the note repository
@@ -40,8 +45,6 @@ namespace SilentNotes
                         return "silentnotes_repository.silentnotes";
                     case RunningModes.Demo:
                         return "silentnotes_repository_demo.silentnotes";
-                    case RunningModes.Development:
-                        return "silentnotes_repository_dev.silentnotes";
                     case RunningModes.UnitTest:
                         return "silentnotes_repository_unittest.silentnotes";
                     default:
@@ -63,8 +66,6 @@ namespace SilentNotes
                         return "silentnotes_user_settings.config";
                     case RunningModes.Demo:
                         return "silentnotes_user_settings_demo.config";
-                    case RunningModes.Development:
-                        return "silentnotes_user_settings_dev.config";
                     case RunningModes.UnitTest:
                         return "silentnotes_user_settings_unittest.config";
                     default:
@@ -80,18 +81,7 @@ namespace SilentNotes
         {
             Production,
             Demo,
-            Development,
             UnitTest,
-        }
-
-        /// <summary>
-        /// Enumeration of all known language modes.
-        /// </summary>
-        public enum LanguageModes
-        {
-            Auto,
-            English,
-            German,
         }
     }
 }

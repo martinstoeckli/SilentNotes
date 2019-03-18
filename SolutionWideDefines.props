@@ -1,0 +1,19 @@
+﻿<Project>
+    <PropertyGroup>
+        <!--
+        Here we can define solution wide defines for conditional compiling. Write them semikolon
+        delimited after $(DefineConstants) like this...
+        
+          $(DefineConstants);ENV_DEMO;LANG_EN
+        
+        ...but don't forget to reset this file before building for production. After changing a
+        value, please rebuild the solution.
+        
+        Known defines are:
+        ENV_DEMO:  Loads hard coded demo data (works only in DEBUG mode)
+        LANG_EN:   Enforces an english localization (works only in DEBUG mode)
+        LANG_DE:   Enforces a german localization (works only in DEBUG mode)
+        -->
+        <DefineConstants>$(DefineConstants)</DefineConstants>
+    </PropertyGroup>
+</Project>

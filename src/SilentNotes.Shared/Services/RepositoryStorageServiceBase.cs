@@ -49,6 +49,11 @@ namespace SilentNotes.Services
         /// <inheritdoc/>
         public RepositoryStorageLoadResult LoadRepositoryOrDefault(out NoteRepositoryModel repositoryModel)
         {
+#if (ENV_DEMO && DEBUG)
+            if ((_cachedRepository == null) && (Config.RunningMode == Config.RunningModes.Demo))
+                _cachedRepository = new DemoNoteRepositoryModel();
+#endif
+
             if (_cachedRepository != null)
             {
                 repositoryModel = _cachedRepository;
