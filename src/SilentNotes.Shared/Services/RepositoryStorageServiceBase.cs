@@ -37,6 +37,10 @@ namespace SilentNotes.Services
             _xmlFileService = xmlFileService;
             _languageService = languageService;
             _updater = new NoteRepositoryUpdater();
+
+#if (DEMO && DEBUG)
+            _cachedRepository = new DemoNoteRepositoryModel();
+#endif
         }
 
         /// <inheritdoc/>

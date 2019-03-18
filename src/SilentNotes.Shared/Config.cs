@@ -3,7 +3,6 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-using System;
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("SilentNotesTest")]
@@ -16,82 +15,27 @@ namespace SilentNotes
     public static class Config
     {
         /// <summary>
-        /// Gets the mode of the application.
-        /// Make sure this value is set to <see cref="RunningModes.Production"/> to deploy the application.
+        /// Initializes static members of the <see cref="Config"/> class.
         /// </summary>
-        public static RunningModes RunningMode { get; internal set; } = RunningModes.Production;
+        static Config()
+        {
+            RepositoryFileName = "silentnotes_repository.silentnotes";
+            UserSettingsFileName = "silentnotes_user_settings.config";
 
-        /// <summary>
-        /// Gets the enforced language of the GUI. Use this setting when a language should be
-        /// explicitely set for debugging/testing, it works only when compiled in DEBUG mode.
-        /// </summary>
-        public static LanguageModes LanguageMode { get; internal set; } = LanguageModes.Auto;
+#if (ENV_DEVELOPMENT && DEBUG)
+            RepositoryFileName = "silentnotes_repository_dev.silentnotes";
+            UserSettingsFileName = "silentnotes_user_settings_dev.config";
+#endif
+        }
 
         /// <summary>
         /// Gets the filename without path, used to store the note repository
         /// </summary>
-        public static string RepositoryFileName
-        {
-            get
-            {
-                switch (RunningMode)
-                {
-                    case RunningModes.Production:
-                        return "silentnotes_repository.silentnotes";
-                    case RunningModes.Demo:
-                        return "silentnotes_repository_demo.silentnotes";
-                    case RunningModes.Development:
-                        return "silentnotes_repository_dev.silentnotes";
-                    case RunningModes.UnitTest:
-                        return "silentnotes_repository_unittest.silentnotes";
-                    default:
-                        throw new ArgumentOutOfRangeException("Config.RunningMode");
-                }
-            }
-        }
+        public static string RepositoryFileName { get; private set; }
 
         /// <summary>
         /// Gets the filename without path, used to store the user settings
         /// </summary>
-        public static string UserSettingsFileName
-        {
-            get
-            {
-                switch (RunningMode)
-                {
-                    case RunningModes.Production:
-                        return "silentnotes_user_settings.config";
-                    case RunningModes.Demo:
-                        return "silentnotes_user_settings_demo.config";
-                    case RunningModes.Development:
-                        return "silentnotes_user_settings_dev.config";
-                    case RunningModes.UnitTest:
-                        return "silentnotes_user_settings_unittest.config";
-                    default:
-                        throw new ArgumentOutOfRangeException("Config.RunningMode");
-                }
-            }
-        }
-
-        /// <summary>
-        /// Enumeration of all known running modes.
-        /// </summary>
-        public enum RunningModes
-        {
-            Production,
-            Demo,
-            Development,
-            UnitTest,
-        }
-
-        /// <summary>
-        /// Enumeration of all known language modes.
-        /// </summary>
-        public enum LanguageModes
-        {
-            Auto,
-            English,
-            German,
-        }
+        public static string UserSettingsFileName { get; private set; }
     }
 }
