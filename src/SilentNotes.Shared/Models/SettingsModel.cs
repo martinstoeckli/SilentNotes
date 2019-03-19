@@ -47,6 +47,12 @@ namespace SilentNotes.Models
         public CloudStorageAccount CloudStorageAccount { get; set; }
 
         /// <summary>
+        /// Gets or sets the id of the theme selected by the user.
+        /// </summary>
+        [XmlElement("selected_theme")]
+        public string SelectedTheme { get; set; }
+
+        /// <summary>
         /// Gets or sets the default encryption algorithm, used to encrypt the repository
         /// before sending it to the cloud.
         /// </summary>
@@ -118,7 +124,7 @@ namespace SilentNotes.Models
         }
 
         /// <summary>
-        /// Gets a value indicating whether the virtual arrow keys should be displayed.
+        /// Gets or sets a value indicating whether the virtual arrow keys should be displayed.
         /// </summary>
         [XmlElement("show_cursor_keys")]
         public bool ShowCursorArrowKeys { get; set; }

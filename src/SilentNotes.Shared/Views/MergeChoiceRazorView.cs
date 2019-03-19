@@ -23,7 +23,7 @@ using SilentNotes.ViewModels;
 #line hidden
 
 
-[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "4.12.3.77")]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "4.12.3.80")]
 public partial class MergeChoiceRazorView : MergeChoiceRazorViewBase
 {
 
@@ -94,16 +94,7 @@ WriteLiteral("></script>\r\n\r\n    <style");
 
 WriteLiteral(" type=\"text/css\"");
 
-WriteLiteral(">\r\n        body { background: url(");
-
-
-#line 20 "MergeChoiceRazorView.cshtml"
-                          Write(Model.BackgroundTexture);
-
-
-#line default
-#line hidden
-WriteLiteral(@"); }
+WriteLiteral(@">
         .list-group {
             max-width: 360px;
         }
@@ -120,19 +111,8 @@ WriteLiteral(@"); }
     <script>
     </script>
 </head>
-<body");
-
-WriteAttribute ("style", " style=\"", "\""
-, Tuple.Create<string,object,bool> ("", "background-color:", true)
-
-#line 37 "MergeChoiceRazorView.cshtml"
-, Tuple.Create<string,object,bool> (" ", Model.BackgroundColor
-
-#line default
-#line hidden
-, false)
-);
-WriteLiteral(">\r\n    <nav");
+<body>
+    <nav");
 
 WriteLiteral(" id=\"navigation\"");
 
@@ -148,7 +128,7 @@ WriteLiteral(" data-binding=\"GoBack\"");
 
 WriteAttribute ("title", " title=\"", "\""
 
-#line 39 "MergeChoiceRazorView.cshtml"
+#line 38 "MergeChoiceRazorView.cshtml"
                                                       , Tuple.Create<string,object,bool> ("", Model.Language["back"]
 
 #line default
@@ -158,7 +138,7 @@ WriteAttribute ("title", " title=\"", "\""
 WriteLiteral(">");
 
 
-#line 39 "MergeChoiceRazorView.cshtml"
+#line 38 "MergeChoiceRazorView.cshtml"
                                                                                                                         WriteLiteral(Model.Icon["arrow-left"]);
 
 #line default
@@ -172,7 +152,7 @@ WriteLiteral(" class=\"container-fluid p-4\"");
 WriteLiteral(">\r\n        <h1>");
 
 
-#line 43 "MergeChoiceRazorView.cshtml"
+#line 42 "MergeChoiceRazorView.cshtml"
        Write(Model.Language["cloud_service_choice"]);
 
 
@@ -203,7 +183,7 @@ WriteLiteral(" class=\"btn-text\"");
 WriteLiteral(">");
 
 
-#line 47 "MergeChoiceRazorView.cshtml"
+#line 46 "MergeChoiceRazorView.cshtml"
                                                                                       Write(Model.Language["sync_repository_merge"]);
 
 
@@ -230,7 +210,7 @@ WriteLiteral(" class=\"btn-text\"");
 WriteLiteral(">");
 
 
-#line 50 "MergeChoiceRazorView.cshtml"
+#line 49 "MergeChoiceRazorView.cshtml"
                                                                                       Write(Model.Language["sync_repository_cloud"]);
 
 
@@ -257,7 +237,7 @@ WriteLiteral(" class=\"btn-text\"");
 WriteLiteral(">");
 
 
-#line 53 "MergeChoiceRazorView.cshtml"
+#line 52 "MergeChoiceRazorView.cshtml"
                                                                                       Write(Model.Language["sync_repository_device"]);
 
 

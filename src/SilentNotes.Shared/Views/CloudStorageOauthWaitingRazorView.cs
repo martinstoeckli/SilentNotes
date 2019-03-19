@@ -23,7 +23,7 @@ using SilentNotes.ViewModels;
 #line hidden
 
 
-[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "4.12.3.77")]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "4.12.3.80")]
 public partial class CloudStorageOauthWaitingRazorView : CloudStorageOauthWaitingRazorViewBase
 {
 
@@ -94,11 +94,7 @@ WriteLiteral("></script>\r\n\r\n    <style");
 
 WriteLiteral(" type=\"text/css\"");
 
-WriteLiteral(">\r\n    </style>\r\n    <script>\r\n    </script>\r\n</head>\r\n<body");
-
-WriteLiteral(" style=\"background-color: #f0f0f0\"");
-
-WriteLiteral(">\r\n    <nav");
+WriteLiteral(">\r\n    </style>\r\n    <script>\r\n    </script>\r\n</head>\r\n<body>\r\n    <nav");
 
 WriteLiteral(" id=\"navigation\"");
 

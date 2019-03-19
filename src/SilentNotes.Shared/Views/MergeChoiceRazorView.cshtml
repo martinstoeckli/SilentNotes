@@ -17,7 +17,6 @@
     <script src="silentnotes.js"></script>
 
     <style type="text/css">
-        body { background: url(@Model.BackgroundTexture); }
         .list-group {
             max-width: 360px;
         }
@@ -34,7 +33,7 @@
     <script>
     </script>
 </head>
-<body style="background-color: @Model.BackgroundColor">
+<body>
     <nav id="navigation" class="d-flex">
         <button class="nav-item mr-auto" onclick="bind(event);" data-binding="GoBack" title="@Model.Language["back"]">@{WriteLiteral(Model.Icon["arrow-left"]);}</button>
     </nav>

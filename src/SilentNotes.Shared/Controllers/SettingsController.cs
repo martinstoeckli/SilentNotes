@@ -41,6 +41,7 @@ namespace SilentNotes.Controllers
                 Ioc.GetOrCreate<ISvgIconService>(),
                 Ioc.GetOrCreate<IBaseUrlService>(),
                 Ioc.GetOrCreate<ISettingsService>(),
+                Ioc.GetOrCreate<IThemeService>(),
                 Ioc.GetOrCreate<IStoryBoardService>());
 
             Bindings.BindCommand("GoBack", _viewModel.GoBackCommand);

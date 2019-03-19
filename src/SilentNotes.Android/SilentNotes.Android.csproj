@@ -140,11 +140,6 @@
     </AndroidAsset>
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\cork-grey.jpg">
-      <Link>Assets\Html\cork-grey.jpg</Link>
-    </AndroidAsset>
-  </ItemGroup>
-  <ItemGroup>
     <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\bootstrap.bundle.min.js">
       <Link>Assets\Html\bootstrap.bundle.min.js</Link>
     </AndroidAsset>
@@ -219,6 +214,16 @@
   <ItemGroup>
     <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\jquery-3.3.1.min.js">
       <Link>Assets\Html\jquery-3.3.1.min.js</Link>
+    </AndroidAsset>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\paper.jpg">
+      <Link>Assets\Html\paper.jpg</Link>
+    </AndroidAsset>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\sand.jpg">
+      <Link>Assets\Html\sand.jpg</Link>
     </AndroidAsset>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />

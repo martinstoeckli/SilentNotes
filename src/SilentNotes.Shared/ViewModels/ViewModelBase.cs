@@ -36,9 +36,6 @@ namespace SilentNotes.ViewModels
             Language = languageService;
             Icon = svgIconService;
             _webviewBaseUrl = webviewBaseUrl;
-
-            BackgroundColor = "#f0f0f0";
-            BackgroundTexture = string.Empty;
         }
 
         /// <inheritdoc/>
@@ -156,17 +153,5 @@ namespace SilentNotes.ViewModels
         /// </code>
         /// </summary>
         public ISvgIconService Icon { get; private set; }
-
-        /// <summary>
-        /// Gets or sets a background color, which is displayed as long as the background texture
-        /// is not yet loaded. When setting a color matching the current <see cref="BackgroundTexture"/>,
-        /// this avoids flickering with a white background.
-        /// </summary>
-        public string BackgroundColor { get; protected set; }
-
-        /// <summary>
-        /// Gets or sets the background texture or an empty string if no texture shall be displayed.
-        /// </summary>
-        public string BackgroundTexture { get; protected set; }
     }
 }

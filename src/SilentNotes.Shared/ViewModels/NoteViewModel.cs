@@ -43,8 +43,6 @@ namespace SilentNotes.ViewModels
             _settingsService = settingsService;
             _searchableTextConverter = searchableTextConverter;
             MarkSearchableContentAsDirty();
-            BackgroundColor = "#c09e79";
-            BackgroundTexture = "cork.jpg";
             GoBackCommand = new RelayCommand(GoBack);
             BackgroundColorsHex = new List<string> { "#fbf4c1", "#fdd8bb", "#facbc6", "#fcd5ef", "#d9d9fc", "#cee7fb", "#d0f8f9", "#d9f8c8" };
 

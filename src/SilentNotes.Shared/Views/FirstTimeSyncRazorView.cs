@@ -23,7 +23,7 @@ using SilentNotes.ViewModels;
 #line hidden
 
 
-[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "4.12.3.77")]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "4.12.3.80")]
 public partial class FirstTimeSyncRazorView : FirstTimeSyncRazorViewBase
 {
 
@@ -94,28 +94,7 @@ WriteLiteral("></script>\r\n\r\n    <style");
 
 WriteLiteral(" type=\"text/css\"");
 
-WriteLiteral(">\r\n        body { background: url(");
-
-
-#line 20 "FirstTimeSyncRazorView.cshtml"
-                          Write(Model.BackgroundTexture);
-
-
-#line default
-#line hidden
-WriteLiteral("); }\r\n    </style>\r\n    <script>\r\n    </script>\r\n</head>\r\n<body");
-
-WriteAttribute ("style", " style=\"", "\""
-, Tuple.Create<string,object,bool> ("", "background-color:", true)
-
-#line 25 "FirstTimeSyncRazorView.cshtml"
-, Tuple.Create<string,object,bool> (" ", Model.BackgroundColor
-
-#line default
-#line hidden
-, false)
-);
-WriteLiteral(">\r\n    <nav");
+WriteLiteral(">\r\n    </style>\r\n    <script>\r\n    </script>\r\n</head>\r\n<body>\r\n    <nav");
 
 WriteLiteral(" id=\"navigation\"");
 
@@ -131,7 +110,7 @@ WriteLiteral(" data-binding=\"GoBack\"");
 
 WriteAttribute ("title", " title=\"", "\""
 
-#line 27 "FirstTimeSyncRazorView.cshtml"
+#line 26 "FirstTimeSyncRazorView.cshtml"
                                                       , Tuple.Create<string,object,bool> ("", Model.Language["back"]
 
 #line default
@@ -141,7 +120,7 @@ WriteAttribute ("title", " title=\"", "\""
 WriteLiteral(">");
 
 
-#line 27 "FirstTimeSyncRazorView.cshtml"
+#line 26 "FirstTimeSyncRazorView.cshtml"
                                                                                                                         WriteLiteral(Model.Icon["arrow-left"]);
 
 #line default
@@ -155,7 +134,7 @@ WriteLiteral(" class=\"container-fluid p-4\"");
 WriteLiteral(">\r\n        <h1>");
 
 
-#line 31 "FirstTimeSyncRazorView.cshtml"
+#line 30 "FirstTimeSyncRazorView.cshtml"
        Write(Model.Language["cloud_first_synchronization_title"]);
 
 
@@ -164,7 +143,7 @@ WriteLiteral(">\r\n        <h1>");
 WriteLiteral("</h1>\r\n\r\n        <p>");
 
 
-#line 33 "FirstTimeSyncRazorView.cshtml"
+#line 32 "FirstTimeSyncRazorView.cshtml"
       Write(Model.Language["cloud_first_synchronization_text"]);
 
 
@@ -183,7 +162,7 @@ WriteLiteral(" data-binding=\"Continue\"");
 WriteLiteral(">");
 
 
-#line 35 "FirstTimeSyncRazorView.cshtml"
+#line 34 "FirstTimeSyncRazorView.cshtml"
                                                                                                     Write(Model.Language["continue"]);
 
 

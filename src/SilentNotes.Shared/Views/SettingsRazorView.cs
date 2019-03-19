@@ -105,11 +105,8 @@ WriteLiteral(@">
     <script>
     </script>
 </head>
-<body");
-
-WriteLiteral(" style=\"background-color: #f0f0f0\"");
-
-WriteLiteral(">\r\n    <nav");
+<body>
+    <nav");
 
 WriteLiteral(" id=\"navigation\"");
 
