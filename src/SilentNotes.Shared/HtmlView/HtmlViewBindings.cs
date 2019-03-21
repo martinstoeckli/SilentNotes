@@ -303,6 +303,33 @@ namespace SilentNotes.HtmlView
                 bindingMode);
         }
 
+        /// <summary>
+        /// Binds a string property of the viewmodel to the background image of a control in the
+        /// (HTML) view. This is a one way binding from the viewmodel to the view. The viewmodel
+        /// property should contain the url to an image file, e.g. "background.png"
+        /// </summary>
+        /// <param name="bindingName">The name of the binding. The name is declared as
+        /// "data-binding" attribute of the HTML element.</param>
+        /// <param name="viewmodelGetter">Can read the property from the viewmodel.</param>
+        /// <param name="viewmodelNotifier">Usually the viewmodel itself, supporting the
+        /// INotifyPropertyChanged interface.</param>
+        /// <param name="viewmodelPropertyName">Name of the property in the viewmodel, whose
+        /// changes should be listened for.</param>
+        /// <param name="bindingMode">The binding mode which defines the direction of the binding.</param>
+        public void BindBackgroundImage(string bindingName, Func<string> viewmodelGetter, INotifyPropertyChanged viewmodelNotifier, string viewmodelPropertyName, HtmlViewBindingMode bindingMode)
+        {
+            if (!bindingMode.In(new[] { HtmlViewBindingMode.OneWayToView, HtmlViewBindingMode.OneWayToViewPlusOneTimeToView }))
+                throw new Exception("BindBackgroundImage expects the bindingMode to be either OneWayToView or OneWayToViewPlusOneTimeToView.");
+
+            BindGeneric<string>(
+                (value) => ViewBackgroundImageSetter(bindingName, value),
+                null,
+                viewmodelGetter,
+                null,
+                CreateViewmodelNotifierOrNull(viewmodelNotifier, viewmodelPropertyName),
+                bindingMode);
+        }
+
         /// <inheritdoc/>
         public void Dispose()
         {
@@ -356,6 +383,13 @@ namespace SilentNotes.HtmlView
         {
             string script = string.Format(
                 "htmlViewBindingsSetVisibility('{0}', {1});", bindingName, visible.ToString().ToLowerInvariant());
+            _htmlView.ExecuteJavaScript(script);
+        }
+
+        private void ViewBackgroundImageSetter(string bindingName, string image)
+        {
+            string script = string.Format(
+                "htmlViewBindingsSetBackgroundImage('{0}', '{1}');", bindingName, image);
             _htmlView.ExecuteJavaScript(script);
         }
     }

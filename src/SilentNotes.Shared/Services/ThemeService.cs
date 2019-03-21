@@ -29,8 +29,8 @@ namespace SilentNotes.Services
         private void FillThemes(List<ThemeModel> themes)
         {
             themes.Add(new ThemeModel("sand", "sand.jpg", "#f3cb98"));
-            themes.Add(new ThemeModel("cork", "cork.jpg", "#e7c59f"));
             themes.Add(new ThemeModel("paper", "paper.jpg", "#fffcf9"));
+            themes.Add(new ThemeModel("cork", "cork.jpg", "#e7c59f"));
         }
 
         /// <inheritdoc/>

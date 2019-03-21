@@ -162,6 +162,11 @@ function htmlViewBindingsSetCss(bindingName, cssAttributeName, cssAttributeValue
 	$(selector).css(cssAttributeName, cssAttributeValue);
 }
 
+function htmlViewBindingsSetBackgroundImage(bindingName, image) {
+	var selector = '[data-binding="' + bindingName + '"]';
+	$(selector).css('background-image', 'url(' + image + ')');
+}
+
 function selectNote(noteId) {
 	$('#note-repository').find('.selectable-item').each(function () {
 		var item = $(this);
