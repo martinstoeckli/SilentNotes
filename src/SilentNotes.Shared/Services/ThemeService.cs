@@ -29,7 +29,12 @@ namespace SilentNotes.Services
         private void FillThemes(List<ThemeModel> themes)
         {
             themes.Add(new ThemeModel("sand", "sand.jpg", "#f3cb98"));
+            themes.Add(new ThemeModel("forest", "forest.jpg", "#497a2b"));
+            themes.Add(new ThemeModel("stone", "stone.jpg", "#948e97"));
+            themes.Add(new ThemeModel("grass", "grass.jpg", "#90d84c"));
             themes.Add(new ThemeModel("paper", "paper.jpg", "#fffcf9"));
+            themes.Add(new ThemeModel("sky", "sky.jpg", "#6fa7d6"));
+            themes.Add(new ThemeModel("meadow", "meadow.jpg", "#1f6002"));
             themes.Add(new ThemeModel("cork", "cork.jpg", "#e7c59f"));
         }
 
