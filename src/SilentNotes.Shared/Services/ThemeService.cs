@@ -65,7 +65,7 @@ namespace SilentNotes.Services
         /// </summary>
         private ThemeModel DefaultTheme
         {
-            get { return Themes[0]; }
+            get { return Themes[2]; }
         }
     }
 }
