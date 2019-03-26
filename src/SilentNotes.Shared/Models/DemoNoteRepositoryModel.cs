@@ -81,7 +81,7 @@ namespace SilentNotes.Models
             Notes.Add(new NoteModel
             {
                 Id = new Guid("8f9e539d-172c-41e8-99ab-60effec84284"),
-                BackgroundColorHex = "#fbf4c1",
+                BackgroundColorHex = "#d0f8f9",
                 InRecyclingBin = false,
                 CreatedAt = DateTime.Parse("2018-12-18T12:53:09.3660557Z"),
                 ModifiedAt = DateTime.Parse("2018-12-18T13:25:55.8335803Z"),
@@ -99,7 +99,7 @@ Temperature  4 out of 10
             Notes.Add(new NoteModel
             {
                 Id = new Guid("70a25de4-2141-4164-aefc-b9b2624a112c"),
-                BackgroundColorHex = "#d0f8f9",
+                BackgroundColorHex = "#fbf4c1",
                 InRecyclingBin = false,
                 CreatedAt = DateTime.Parse("2017-09-10T09:39:12.8056002Z"),
                 ModifiedAt = DateTime.Parse("2018-12-18T13:25:41.3363938Z"),
