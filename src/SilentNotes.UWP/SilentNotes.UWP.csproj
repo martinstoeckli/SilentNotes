@@ -203,8 +203,14 @@
     <Content Include="..\SilentNotes.Shared\Assets\Html\sortable\Sortable.min.js">
       <Link>Assets\Html\Sortable.min.js</Link>
     </Content>
+    <Content Include="..\SilentNotes.Shared\Assets\Html\stars.jpg">
+      <Link>Assets\Html\stars.jpg</Link>
+    </Content>
     <Content Include="..\SilentNotes.Shared\Assets\Html\stone.jpg">
       <Link>Assets\Html\stone.jpg</Link>
+    </Content>
+    <Content Include="..\SilentNotes.Shared\Assets\Html\water.jpg">
+      <Link>Assets\Html\water.jpg</Link>
     </Content>
     <Content Include="Assets\LargeTile.scale-100.png" />
     <Content Include="Assets\LargeTile.scale-200.png" />
