@@ -4,7 +4,6 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
-using System.Threading.Tasks;
 using SilentNotes.Services;
 using Windows.System;
 
@@ -18,7 +17,12 @@ namespace SilentNotes.UWP.Services
         /// <inheritdoc/>
         public void OpenWebsite(string url)
         {
-            Task.Run(async () => await Launcher.LaunchUriAsync(new Uri(url)));
+            OpenWebsiteAsync(url);
+        }
+
+        private async void OpenWebsiteAsync(string url)
+        {
+            await Launcher.LaunchUriAsync(new Uri(url));
         }
     }
 }

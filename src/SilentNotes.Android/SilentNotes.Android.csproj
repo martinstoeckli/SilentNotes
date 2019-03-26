@@ -140,11 +140,6 @@
     </AndroidAsset>
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\cork-grey.jpg">
-      <Link>Assets\Html\cork-grey.jpg</Link>
-    </AndroidAsset>
-  </ItemGroup>
-  <ItemGroup>
     <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\bootstrap.bundle.min.js">
       <Link>Assets\Html\bootstrap.bundle.min.js</Link>
     </AndroidAsset>
@@ -219,6 +214,51 @@
   <ItemGroup>
     <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\jquery-3.3.1.min.js">
       <Link>Assets\Html\jquery-3.3.1.min.js</Link>
+    </AndroidAsset>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\paper.jpg">
+      <Link>Assets\Html\paper.jpg</Link>
+    </AndroidAsset>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\sand.jpg">
+      <Link>Assets\Html\sand.jpg</Link>
+    </AndroidAsset>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\sky.jpg">
+      <Link>Assets\Html\sky.jpg</Link>
+    </AndroidAsset>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\meadow.jpg">
+      <Link>Assets\Html\meadow.jpg</Link>
+    </AndroidAsset>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\grass.jpg">
+      <Link>Assets\Html\grass.jpg</Link>
+    </AndroidAsset>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\stone.jpg">
+      <Link>Assets\Html\stone.jpg</Link>
+    </AndroidAsset>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\forest.jpg">
+      <Link>Assets\Html\forest.jpg</Link>
+    </AndroidAsset>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\stars.jpg">
+      <Link>Assets\Html\stars.jpg</Link>
+    </AndroidAsset>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\water.jpg">
+      <Link>Assets\Html\water.jpg</Link>
     </AndroidAsset>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />

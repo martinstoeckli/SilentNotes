@@ -22,6 +22,7 @@ namespace SilentNotes.ViewModels
     public class SettingsViewModel : ViewModelBase
     {
         private readonly ISettingsService _settingsService;
+        private readonly IThemeService _themeService;
         private readonly IStoryBoardService _storyBoardService;
 
         /// <summary>
@@ -34,10 +35,12 @@ namespace SilentNotes.ViewModels
             ISvgIconService svgIconService,
             IBaseUrlService webviewBaseUrl,
             ISettingsService settingsService,
+            IThemeService themeService,
             IStoryBoardService storyBoardService)
             : base(navigationService, languageService, svgIconService, webviewBaseUrl)
         {
             _settingsService = settingsService;
+            _themeService = themeService;
             _storyBoardService = storyBoardService;
             Model = _settingsService.LoadSettingsOrDefault();
 
@@ -58,6 +61,23 @@ namespace SilentNotes.ViewModels
         {
             algorithms.Add(new DropdownItemViewModel { Value = BouncyCastleAesGcm.CryptoAlgorithmName, Description = Language["encryption_algo_aesgcm"] });
             algorithms.Add(new DropdownItemViewModel { Value = BouncyCastleTwofishGcm.CryptoAlgorithmName, Description = Language["encryption_algo_twofishgcm"] });
+        }
+
+        /// <summary>
+        /// Gets a list of all available themes.
+        /// </summary>
+        public List<ThemeModel> Themes
+        {
+            get { return _themeService.Themes; }
+        }
+
+        /// <summary>
+        /// Gets or sets the theme selected by the user.
+        /// </summary>
+        public ThemeModel SelectedTheme
+        {
+            get { return _themeService.FindThemeOrDefault(Model.SelectedTheme); }
+            set { ChangePropertyIndirect(() => Model.SelectedTheme, (string v) => Model.SelectedTheme = v, value.Id, true); }
         }
 
         /// <summary>

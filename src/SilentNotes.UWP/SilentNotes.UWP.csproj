@@ -146,11 +146,14 @@
     <Content Include="..\SilentNotes.Shared\Assets\Html\cloud_service_webdav.png">
       <Link>Assets\Html\cloud_service_webdav.png</Link>
     </Content>
-    <Content Include="..\SilentNotes.Shared\Assets\Html\cork-grey.jpg">
-      <Link>Assets\Html\cork-grey.jpg</Link>
-    </Content>
     <Content Include="..\SilentNotes.Shared\Assets\Html\cork.jpg">
       <Link>Assets\Html\cork.jpg</Link>
+    </Content>
+    <Content Include="..\SilentNotes.Shared\Assets\Html\forest.jpg">
+      <Link>Assets\Html\forest.jpg</Link>
+    </Content>
+    <Content Include="..\SilentNotes.Shared\Assets\Html\grass.jpg">
+      <Link>Assets\Html\grass.jpg</Link>
     </Content>
     <Content Include="..\SilentNotes.Shared\Assets\Html\jquery-3.3.1.min.js">
       <Link>Assets\Html\jquery-3.3.1.min.js</Link>
@@ -164,14 +167,23 @@
     <Content Include="..\SilentNotes.Shared\Assets\Html\lock-outline.svg">
       <Link>Assets\Html\lock-outline.svg</Link>
     </Content>
+    <Content Include="..\SilentNotes.Shared\Assets\Html\meadow.jpg">
+      <Link>Assets\Html\meadow.jpg</Link>
+    </Content>
     <Content Include="..\SilentNotes.Shared\Assets\Html\NoteView.css">
       <Link>Assets\Html\NoteView.css</Link>
+    </Content>
+    <Content Include="..\SilentNotes.Shared\Assets\Html\paper.jpg">
+      <Link>Assets\Html\paper.jpg</Link>
     </Content>
     <Content Include="..\SilentNotes.Shared\Assets\Html\quill\quill.min.js">
       <Link>Assets\Html\quill\quill.min.js</Link>
     </Content>
     <Content Include="..\SilentNotes.Shared\Assets\Html\quill\quill.snow.css">
       <Link>Assets\Html\quill\quill.snow.css</Link>
+    </Content>
+    <Content Include="..\SilentNotes.Shared\Assets\Html\sand.jpg">
+      <Link>Assets\Html\sand.jpg</Link>
     </Content>
     <Content Include="..\SilentNotes.Shared\Assets\Html\settings-background.svg">
       <Link>Assets\Html\settings-background.svg</Link>
@@ -185,8 +197,20 @@
     <Content Include="..\SilentNotes.Shared\Assets\Html\SilentNotes256.png">
       <Link>Assets\Html\SilentNotes256.png</Link>
     </Content>
+    <Content Include="..\SilentNotes.Shared\Assets\Html\sky.jpg">
+      <Link>Assets\Html\sky.jpg</Link>
+    </Content>
     <Content Include="..\SilentNotes.Shared\Assets\Html\sortable\Sortable.min.js">
       <Link>Assets\Html\Sortable.min.js</Link>
+    </Content>
+    <Content Include="..\SilentNotes.Shared\Assets\Html\stars.jpg">
+      <Link>Assets\Html\stars.jpg</Link>
+    </Content>
+    <Content Include="..\SilentNotes.Shared\Assets\Html\stone.jpg">
+      <Link>Assets\Html\stone.jpg</Link>
+    </Content>
+    <Content Include="..\SilentNotes.Shared\Assets\Html\water.jpg">
+      <Link>Assets\Html\water.jpg</Link>
     </Content>
     <Content Include="Assets\LargeTile.scale-100.png" />
     <Content Include="Assets\LargeTile.scale-200.png" />

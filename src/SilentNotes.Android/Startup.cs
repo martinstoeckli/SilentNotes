@@ -73,6 +73,8 @@ namespace SilentNotes.Android
                 Ioc.GetOrCreate<ISettingsService>(),
                 Ioc.GetOrCreate<IRepositoryStorageService>(),
                 Ioc.GetOrCreate<INavigationService>()));
+            Ioc.RegisterFactory<IThemeService>(() => new ThemeService(
+                Ioc.GetOrCreate<ISettingsService>()));
         }
 
         private static void RegisterControllers()

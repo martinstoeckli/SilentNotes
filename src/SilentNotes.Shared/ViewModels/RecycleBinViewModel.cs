@@ -18,6 +18,7 @@ namespace SilentNotes.ViewModels
     /// </summary>
     public class RecycleBinViewModel : ViewModelBase
     {
+        private readonly IThemeService _themeService;
         private readonly IRepositoryStorageService _repositoryService;
         private NoteRepositoryModel _model;
 
@@ -30,12 +31,12 @@ namespace SilentNotes.ViewModels
             ILanguageService languageService,
             ISvgIconService svgIconService,
             IBaseUrlService webviewBaseUrl,
+            IThemeService themeService,
             IRepositoryStorageService repositoryService)
             : base(navigationService, languageService, svgIconService, webviewBaseUrl)
         {
+            _themeService = themeService;
             _repositoryService = repositoryService;
-            BackgroundColor = "#9e9e9e";
-            BackgroundTexture = "cork-grey.jpg";
             RecycledNotes = new List<NoteViewModel>();
 
             _repositoryService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepository);
@@ -51,6 +52,14 @@ namespace SilentNotes.ViewModels
         /// Gets a bindable list of the recycled notes.
         /// </summary>
         public List<NoteViewModel> RecycledNotes { get; private set; }
+
+        /// <summary>
+        /// Gets the active theme.
+        /// </summary>
+        public ThemeModel Theme
+        {
+            get { return _themeService.SelectedTheme; }
+        }
 
         /// <summary>
         /// Gets or sets the wrapped model.

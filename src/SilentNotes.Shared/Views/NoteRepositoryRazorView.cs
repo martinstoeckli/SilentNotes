@@ -23,7 +23,7 @@ using SilentNotes.ViewModels;
 #line hidden
 
 
-[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "4.12.3.77")]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "4.12.3.80")]
 public partial class NoteRepositoryRazorView : NoteRepositoryRazorViewBase
 {
 
@@ -106,7 +106,7 @@ WriteLiteral(">\r\n        body { background: url(");
 
 
 #line 22 "NoteRepositoryRazorView.cshtml"
-                          Write(Model.BackgroundTexture);
+                          Write(Model.Theme.Image);
 
 
 #line default
@@ -144,7 +144,7 @@ WriteAttribute ("style", " style=\"", "\""
 , Tuple.Create<string,object,bool> ("", "background-color:", true)
 
 #line 49 "NoteRepositoryRazorView.cshtml"
-, Tuple.Create<string,object,bool> (" ", Model.BackgroundColor
+, Tuple.Create<string,object,bool> (" ", Model.Theme.ImageTint
 
 #line default
 #line hidden

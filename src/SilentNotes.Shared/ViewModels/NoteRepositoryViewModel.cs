@@ -25,6 +25,7 @@ namespace SilentNotes.ViewModels
         private readonly IStoryBoardService _storyBoardService;
         private readonly IRepositoryStorageService _repositoryService;
         private readonly IFeedbackService _feedbackService;
+        private readonly IThemeService _themeService;
         private readonly SearchableHtmlConverter _searchableTextConverter;
         private NoteRepositoryModel _model;
         private NoteViewModel _selectedNote;
@@ -41,15 +42,15 @@ namespace SilentNotes.ViewModels
             IBaseUrlService webviewBaseUrl,
             IStoryBoardService storyBoardService,
             IFeedbackService feedbackService,
+            IThemeService themeService,
             IRepositoryStorageService repositoryService)
             : base(navigationService, languageService, svgIconService, webviewBaseUrl)
         {
             _storyBoardService = storyBoardService;
             _repositoryService = repositoryService;
             _feedbackService = feedbackService;
+            _themeService = themeService;
             _searchableTextConverter = new SearchableHtmlConverter();
-            BackgroundColor = "#c09e79";
-            BackgroundTexture = "cork.jpg";
             AllNotes = new List<NoteViewModel>();
             FilteredNotes = new ObservableCollection<NoteViewModel>();
 
@@ -91,6 +92,14 @@ namespace SilentNotes.ViewModels
         public override void OnGoBackPressed(out bool handled)
         {
             handled = false;
+        }
+
+        /// <summary>
+        /// Gets the active theme.
+        /// </summary>
+        public ThemeModel Theme
+        {
+            get { return _themeService.SelectedTheme; }
         }
 
         /// <summary>

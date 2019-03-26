@@ -19,7 +19,7 @@
     <script src="jquery.longpress.js"></script>
 
     <style type="text/css">
-        body { background: url(@Model.BackgroundTexture); }
+        body { background: url(@Model.Theme.Image); }
 
         .nav-filter {
             margin: 0 1em 0 0;
@@ -46,7 +46,7 @@
     <script>
     </script>
 </head>
-<body style="background-color: @Model.BackgroundColor">
+<body style="background-color: @Model.Theme.ImageTint">
     <nav id="navigation" class="d-flex">
         <div class="nav-item nav-filter ml-auto d-inline-flex align-self-center">
             <input oninput="bind(event)" data-binding="TxtFilter" autocomplete="off" />

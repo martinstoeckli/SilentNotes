@@ -23,7 +23,7 @@ using SilentNotes.ViewModels;
 #line hidden
 
 
-[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "4.12.3.77")]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "4.12.3.80")]
 public partial class CloudStorageAccountRazorView : CloudStorageAccountRazorViewBase
 {
 
@@ -105,11 +105,8 @@ WriteLiteral(@">
     <script>
     </script>
 </head>
-<body");
-
-WriteLiteral(" style=\"background-color: #f0f0f0\"");
-
-WriteLiteral(">\r\n    <nav");
+<body>
+    <nav");
 
 WriteLiteral(" id=\"navigation\"");
 

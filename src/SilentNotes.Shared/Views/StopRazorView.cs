@@ -23,7 +23,7 @@ using SilentNotes.ViewModels;
 #line hidden
 
 
-[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "4.12.3.77")]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "4.12.3.80")]
 public partial class StopRazorView : StopRazorViewBase
 {
 
@@ -95,19 +95,7 @@ WriteLiteral("></script>\r\n    <style");
 WriteLiteral(" type=\"text/css\"");
 
 WriteLiteral(">\r\n        #alert-icon {\r\n            fill: darkgray;\r\n        }\r\n    </style>\r\n " +
-"   <script>\r\n    </script>\r\n</head>\r\n<body");
-
-WriteAttribute ("style", " style=\"", "\""
-, Tuple.Create<string,object,bool> ("", "background-color:", true)
-
-#line 26 "StopRazorView.cshtml"
-, Tuple.Create<string,object,bool> (" ", Model.BackgroundColor
-
-#line default
-#line hidden
-, false)
-);
-WriteLiteral(">\r\n    <nav");
+"   <script>\r\n    </script>\r\n</head>\r\n<body>\r\n    <nav");
 
 WriteLiteral(" id=\"navigation\"");
 

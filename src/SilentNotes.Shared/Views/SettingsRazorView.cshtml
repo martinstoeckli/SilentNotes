@@ -23,11 +23,30 @@
             background-position: right -128px top -196px;
             background-size: 480px;
         }
+        #texture-chooser {
+        }
+        .theme-preview {
+            margin: 0;
+            width: 300px;
+            max-width: calc(100% - 36px);
+            height: 96px;
+        }
+
+        .theme-list {
+            max-height: 360px;
+            overflow-y: scroll;
+        }
+
+        .theme-item {
+            display: inline-block;
+            width: 90px;
+            height: 128px;
+        }
     </style>
     <script>
     </script>
 </head>
-<body style="background-color: #f0f0f0">
+<body>
     <nav id="navigation" class="d-flex">
         <button class="nav-item mr-auto" onclick="bind(event);" data-binding="GoBack" title="@Model.Language["back"]">@{WriteLiteral(Model.Icon["arrow-left"]);}</button>
     </nav>
@@ -38,6 +57,22 @@
             <div class="form-row form-group form-check">
                 <input class="form-check-input" type="checkbox" id="ShowCursorArrowKeys" onclick="bind(event)" data-binding="ShowCursorArrowKeys" @(Model.ShowCursorArrowKeys ? "checked" : "")>
                 <label class="form-check-label" for="ShowCursorArrowKeys">@Model.Language["gui_show_arrow_keys"]</label>
+            </div>
+            <div class="form-row form-group">
+                <label class="col-form-label" for="Theme">@Model.Language["gui_texture"]</label>
+                <div id="texture-chooser" class="form-control">
+                    <div id="Theme" class="dropdown">
+                        <div data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <div class="theme-preview row" data-binding="SelectedTheme" style="background: url(@Model.SelectedTheme.Image);"></div>
+                        </div>
+                        <div class="dropdown-menu theme-list" aria-labelledby="themeChooser">
+                            @foreach (var theme in @Model.Themes)
+                            {
+                                <div class="dropdown-item theme-item" onclick="bind(event)" data-binding="SelectedThemePreview" data-theme="@(theme.Id)" style="background: url(@(theme.Image));"></div>
+                            }
+                        </div>
+                    </div>
+                </div>
             </div>
         </form>
 

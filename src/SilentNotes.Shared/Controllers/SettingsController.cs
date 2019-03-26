@@ -41,6 +41,7 @@ namespace SilentNotes.Controllers
                 Ioc.GetOrCreate<ISvgIconService>(),
                 Ioc.GetOrCreate<IBaseUrlService>(),
                 Ioc.GetOrCreate<ISettingsService>(),
+                Ioc.GetOrCreate<IThemeService>(),
                 Ioc.GetOrCreate<IStoryBoardService>());
 
             Bindings.BindCommand("GoBack", _viewModel.GoBackCommand);
@@ -51,6 +52,8 @@ namespace SilentNotes.Controllers
             Bindings.BindDropdown("SelectedAutoSyncMode", null, (string value) => _viewModel.SelectedAutoSyncMode = value, null, null, HtmlViewBindingMode.OneWayToViewmodel);
             Bindings.BindText("CloudStorageSettings", () => _viewModel.AccountSummary, null, _viewModel, nameof(_viewModel.AccountSummary), HtmlViewBindingMode.OneWayToView);
             Bindings.BindCheckbox("ShowCursorArrowKeys", null, (value) => _viewModel.ShowCursorArrowKeys = value, null, null, HtmlViewBindingMode.OneWayToViewmodel);
+            Bindings.BindBackgroundImage("SelectedTheme", () => _viewModel.SelectedTheme.Image, _viewModel, nameof(_viewModel.SelectedTheme), HtmlViewBindingMode.OneWayToView);
+            Bindings.UnhandledViewBindingEvent += UnhandledViewBindingEventHandler;
 
             string html = _viewService.GenerateHtml(_viewModel);
             View.LoadHtml(html);
@@ -60,6 +63,17 @@ namespace SilentNotes.Controllers
         {
             _viewModel.SelectedEncryptionAlgorithm = _viewModel.EncryptionAlgorithms.Find(
                 (item) => item.Value == value);
+        }
+
+        private void UnhandledViewBindingEventHandler(object sender, HtmlViewBindingNotifiedEventArgs e)
+        {
+            switch (e.BindingName?.ToLowerInvariant())
+            {
+                case "selectedthemepreview":
+                    string themeId = e.Parameters["data-theme"];
+                    _viewModel.SelectedTheme = _viewModel.Themes.Find(item => item.Id == themeId);
+                    break;
+            }
         }
     }
 }
