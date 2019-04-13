@@ -132,7 +132,7 @@ WriteLiteral(">");
 
 
 #line 10 "NoteRepositoryContentRazorView.cshtml"
-                                           WriteLiteral(Model.Icon["arrow-all"]);
+                                           WriteLiteral(Model.Icon["swap-vertical-bold"]);
 
 #line default
 #line hidden
