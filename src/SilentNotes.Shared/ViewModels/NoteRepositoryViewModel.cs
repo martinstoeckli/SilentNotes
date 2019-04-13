@@ -25,6 +25,7 @@ namespace SilentNotes.ViewModels
         private readonly IStoryBoardService _storyBoardService;
         private readonly IRepositoryStorageService _repositoryService;
         private readonly IFeedbackService _feedbackService;
+        private readonly ISettingsService _settingsService;
         private readonly IThemeService _themeService;
         private readonly SearchableHtmlConverter _searchableTextConverter;
         private NoteRepositoryModel _model;
@@ -42,6 +43,7 @@ namespace SilentNotes.ViewModels
             IBaseUrlService webviewBaseUrl,
             IStoryBoardService storyBoardService,
             IFeedbackService feedbackService,
+            ISettingsService settingsService,
             IThemeService themeService,
             IRepositoryStorageService repositoryService)
             : base(navigationService, languageService, svgIconService, webviewBaseUrl)
@@ -49,6 +51,7 @@ namespace SilentNotes.ViewModels
             _storyBoardService = storyBoardService;
             _repositoryService = repositoryService;
             _feedbackService = feedbackService;
+            _settingsService = settingsService;
             _themeService = themeService;
             _searchableTextConverter = new SearchableHtmlConverter();
             AllNotes = new List<NoteViewModel>();
@@ -100,6 +103,20 @@ namespace SilentNotes.ViewModels
         public ThemeModel Theme
         {
             get { return _themeService.SelectedTheme; }
+        }
+
+        /// <summary>
+        /// Gets the base font size [px] of the notes, from which the relative sizes are derrived.
+        /// </summary>
+        public string NoteBaseFontSize
+        {
+            get
+            {
+                const double defaultBaseFontSize = 12.6; // Default size for scale 1.0
+                SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
+                double fontSize = settings != null ? defaultBaseFontSize * settings.FontScale : defaultBaseFontSize;
+                return FloatingPointUtils.FormatInvariant(fontSize);
+            }
         }
 
         /// <summary>

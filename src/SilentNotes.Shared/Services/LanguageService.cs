@@ -118,6 +118,7 @@ namespace SilentNotes.Services
 
             resources["gui"] = "User interface";
             resources["gui_show_arrow_keys"] = "Show cursor arrow keys when editing";
+            resources["gui_font_size"] = "Font size (smaller ‹ normal › larger)";
             resources["gui_texture"] = "Theme";
             resources["gui_arrow_key"] = "Go one character to the left/right";
         }
@@ -219,6 +220,7 @@ namespace SilentNotes.Services
 
             resources["gui"] = "Benutzeroberfläche";
             resources["gui_show_arrow_keys"] = "Cursor Pfeiltasten beim Bearbeiten anzeigen";
+            resources["gui_font_size"] = "Schriftgrösse (kleiner ‹ normal › grösser)";
             resources["gui_texture"] = "Design";
             resources["gui_arrow_key"] = "Ein Zeichen nach links/rechts bewegen";
         }

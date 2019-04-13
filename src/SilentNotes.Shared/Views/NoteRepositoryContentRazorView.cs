@@ -23,7 +23,7 @@ using SilentNotes.ViewModels;
 #line hidden
 
 
-[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "4.12.3.77")]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "4.12.3.80")]
 public partial class NoteRepositoryContentRazorView : NoteRepositoryContentRazorViewBase
 {
 
@@ -132,7 +132,7 @@ WriteLiteral(">");
 
 
 #line 10 "NoteRepositoryContentRazorView.cshtml"
-                                           WriteLiteral(Model.Icon["arrow-all"]);
+                                           WriteLiteral(Model.Icon["swap-vertical-bold"]);
 
 #line default
 #line hidden

@@ -21,6 +21,7 @@ namespace SilentNotes.ViewModels
     /// </summary>
     public class SettingsViewModel : ViewModelBase
     {
+        private const double ReferenceFontSize = 15.0; // Used as reference to calculate the font scale
         private readonly ISettingsService _settingsService;
         private readonly IThemeService _themeService;
         private readonly IStoryBoardService _storyBoardService;
@@ -87,6 +88,34 @@ namespace SilentNotes.ViewModels
         {
             get { return Model.ShowCursorArrowKeys; }
             set { ChangePropertyIndirect<bool>(() => Model.ShowCursorArrowKeys, (v) => Model.ShowCursorArrowKeys = v, value, true); }
+        }
+
+        /// <summary>
+        /// Gets or sets a factor to enlarge or reduce the font size of the notes.
+        /// </summary>
+        public double FontScale
+        {
+            get { return Model.FontScale; }
+            set { ChangePropertyIndirect<double>(() => Model.FontScale, (v) => Model.FontScale = v, value, true); }
+        }
+
+        /// <summary>
+        /// Gets or sets the <see cref="FontScale"/> expressed for the -3...+3 slider.
+        /// </summary>
+        public string FontSizeStep
+        {
+            get
+            {
+                double step = (ReferenceFontSize * FontScale) - ReferenceFontSize;
+                double roundedStep = Math.Round(step, MidpointRounding.AwayFromZero);
+                return roundedStep.ToString("0");
+            }
+
+            set
+            {
+                double step = double.Parse(value);
+                FontScale = (ReferenceFontSize + step) / ReferenceFontSize;
+            }
         }
 
         /// <summary>

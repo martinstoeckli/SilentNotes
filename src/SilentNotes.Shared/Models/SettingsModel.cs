@@ -31,6 +31,7 @@ namespace SilentNotes.Models
             AdoptCloudEncryptionAlgorithm = true;
             AutoSyncMode = AutoSynchronizationMode.CostFreeInternetOnly;
             ShowCursorArrowKeys = true;
+            FontScale = 1.0;
         }
 
         /// <summary>
@@ -128,6 +129,12 @@ namespace SilentNotes.Models
         /// </summary>
         [XmlElement("show_cursor_keys")]
         public bool ShowCursorArrowKeys { get; set; }
+
+        /// <summary>
+        /// Gets or sets a factor to enlarge or reduce the font size of the notes.
+        /// </summary>
+        [XmlElement("font-scale")]
+        public double FontScale { get; set; }
 
         /// <summary>
         /// Gets the name of the algorithm to use, if the selected algorithm is not yet stored.
