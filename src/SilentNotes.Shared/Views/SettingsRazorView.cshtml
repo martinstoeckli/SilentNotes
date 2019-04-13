@@ -59,6 +59,12 @@
                 <label class="form-check-label" for="ShowCursorArrowKeys">@Model.Language["gui_show_arrow_keys"]</label>
             </div>
             <div class="form-row form-group">
+                <label class="col-form-label" for="font-size">@Model.Language["gui_font_size"]</label>
+                <div class="form-control">
+                    <input class="custom-range col-sm-6" type="range" id="font-size" oninput="bind(event)" data-binding="FontSize" min="-3" max="3" step="1" value="@Model.FontSizeStep">
+                </div>
+            </div>
+            <div class="form-row form-group">
                 <label class="col-form-label" for="Theme">@Model.Language["gui_texture"]</label>
                 <div id="texture-chooser" class="form-control">
                     <div id="Theme" class="dropdown">

@@ -187,6 +187,20 @@ namespace SilentNotes.ViewModels
         }
 
         /// <summary>
+        /// Gets the base font size [px] of the notes, from which the relative sizes are derrived.
+        /// </summary>
+        public string NoteBaseFontSize
+        {
+            get
+            {
+                const double defaultBaseFontSize = 15.0; // Default size for scale 1.0
+                SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
+                double fontSize = settings != null ? defaultBaseFontSize * settings.FontScale : defaultBaseFontSize;
+                return FloatingPointUtils.FormatInvariant(fontSize);
+            }
+        }
+
+        /// <summary>
         /// Gets the wrapped model.
         /// </summary>
         internal NoteModel Model { get; private set; }

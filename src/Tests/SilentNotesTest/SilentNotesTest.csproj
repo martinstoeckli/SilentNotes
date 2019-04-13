@@ -106,6 +106,8 @@
     <Compile Include="StoryBoards\SynchronizationStory\DownloadCloudRepositoryStepTest.cs" />
     <Compile Include="StoryBoards\SynchronizationStory\ExistsCloudRepositoryStepTest.cs" />
     <Compile Include="StoryBoards\SynchronizationStory\StoreMergedRepositoryAndQuitStepTest.cs" />
+    <Compile Include="CultureSwitcher4UnitTest.cs" />
+    <Compile Include="Workers\FloatingPointUtilsTest.cs" />
     <Compile Include="Workers\SearchableHtmlConverterTest.cs" />
     <Compile Include="Workers\SecureStringExtensionsTest.cs" />
     <Compile Include="Models\SettingsModelTest.cs" />

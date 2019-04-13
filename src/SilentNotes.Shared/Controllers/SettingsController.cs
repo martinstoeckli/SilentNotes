@@ -73,6 +73,9 @@ namespace SilentNotes.Controllers
                     string themeId = e.Parameters["data-theme"];
                     _viewModel.SelectedTheme = _viewModel.Themes.Find(item => item.Id == themeId);
                     break;
+                case "fontsize":
+                    _viewModel.FontSizeStep = e.Parameters["value"];
+                    break;
             }
         }
     }

@@ -70,6 +70,7 @@ namespace SilentNotes.Controllers
                     Ioc.GetOrCreate<IBaseUrlService>(),
                     Ioc.GetOrCreate<IStoryBoardService>(),
                     Ioc.GetOrCreate<IFeedbackService>(),
+                    Ioc.GetOrCreate<ISettingsService>(),
                     Ioc.GetOrCreate<IThemeService>(),
                     repositoryService);
 
