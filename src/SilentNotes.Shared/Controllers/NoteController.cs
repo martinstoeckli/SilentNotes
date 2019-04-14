@@ -82,6 +82,11 @@ namespace SilentNotes.Controllers
             string script = string.Format(
                 "htmlViewBindingsSetCss('Content', 'background-color', '{0}');",
                 backgroundColorHex);
+            string darkClass = _viewModel.GetDarkClass();
+            if (!string.IsNullOrEmpty(darkClass))
+                script += "htmlViewBindingsAddClass('quill', 'dark');";
+            else
+                script += "htmlViewBindingsRemoveClass('quill', 'dark');";
             View.ExecuteJavaScript(script);
         }
     }

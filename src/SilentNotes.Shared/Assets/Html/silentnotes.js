@@ -157,6 +157,16 @@ function htmlViewBindingsSetVisibility(bindingName, visible) {
 		$(selector).hide();
 }
 
+function htmlViewBindingsAddClass(bindingName, className) {
+	var selector = '[data-binding="' + bindingName + '"]';
+	$(selector).addClass(className);
+}
+
+function htmlViewBindingsRemoveClass(bindingName, className) {
+	var selector = '[data-binding="' + bindingName + '"]';
+	$(selector).removeClass(className);
+}
+
 function htmlViewBindingsSetCss(bindingName, cssAttributeName, cssAttributeValue) {
 	var selector = '[data-binding="' + bindingName + '"]';
 	$(selector).css(cssAttributeName, cssAttributeValue);

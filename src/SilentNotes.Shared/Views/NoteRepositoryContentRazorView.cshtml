@@ -5,9 +5,9 @@
     {
         <li class="wraplist-item selectable-item sortable-item @if(@Model.SelectedNote == @note) { <text>selected</text> }" data-note="@note.Id.ToString()">
             <div class="note-card" style="background-color:@note.BackgroundColorHex">
-                <div class="note-viewer">@{WriteLiteral(note.HtmlContent);}</div>
+                <div class="note-viewer @note.GetDarkClass()">@{WriteLiteral(note.HtmlContent);}</div>
             </div>
-            <div class="sortable-handle">@{WriteLiteral(Model.Icon["swap-vertical-bold"]);}</div>
+            <div class="sortable-handle @note.GetDarkClass()">@{WriteLiteral(Model.Icon["swap-vertical-bold"]);}</div>
         </li>
     }
 </ul>

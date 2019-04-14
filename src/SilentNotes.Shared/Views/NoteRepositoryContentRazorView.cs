@@ -114,25 +114,41 @@ WriteAttribute ("style", " style=\"", "\""
 );
 WriteLiteral(">\r\n                <div");
 
-WriteLiteral(" class=\"note-viewer\"");
+WriteAttribute ("class", " class=\"", "\""
+, Tuple.Create<string,object,bool> ("", "note-viewer", true)
 
+#line 8 "NoteRepositoryContentRazorView.cshtml"
+, Tuple.Create<string,object,bool> (" ", note.GetDarkClass()
+
+#line default
+#line hidden
+, false)
+);
 WriteLiteral(">");
 
 
 #line 8 "NoteRepositoryContentRazorView.cshtml"
-                                           WriteLiteral(note.HtmlContent);
+                                                                WriteLiteral(note.HtmlContent);
 
 #line default
 #line hidden
 WriteLiteral("</div>\r\n            </div>\r\n            <div");
 
-WriteLiteral(" class=\"sortable-handle\"");
+WriteAttribute ("class", " class=\"", "\""
+, Tuple.Create<string,object,bool> ("", "sortable-handle", true)
 
+#line 10 "NoteRepositoryContentRazorView.cshtml"
+, Tuple.Create<string,object,bool> (" ", note.GetDarkClass()
+
+#line default
+#line hidden
+, false)
+);
 WriteLiteral(">");
 
 
 #line 10 "NoteRepositoryContentRazorView.cshtml"
-                                           WriteLiteral(Model.Icon["swap-vertical-bold"]);
+                                                                WriteLiteral(Model.Icon["swap-vertical-bold"]);
 
 #line default
 #line hidden
