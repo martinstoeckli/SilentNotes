@@ -143,12 +143,15 @@ h3 {
 	border-radius: 13px;
 	cursor: pointer;
 }
+.sortable-handle.dark {
+	fill: #505050;
+	background-color: rgba(204, 204, 204, 0.8);
+}
 
 .selected {
 	background-color: rgba(38, 160, 218, 0.2);
 	border: 1px solid #26a0da;
 }
-
 
 .fab {
 	position: fixed;
@@ -254,10 +257,20 @@ a[data-tooltip]:hover:after {
 
 /* Text formatting */
 
+.note-viewer {
+	color: black !important;
+}
+.note-viewer.dark {
+	color: white !important;
+}
+
 .note-viewer h1 {
 	margin: 0.7em 0 0.3em 0 !important;
 	color: rgba(70, 130, 180, 1) !important;
 	font: normal bold 1.35em/1.1 "Segoe UI",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol" !important;
+}
+.note-viewer.dark h1 {
+	color: rgba(173, 216, 230, 1) !important;
 }
 
 .note-viewer h2 {
@@ -265,11 +278,17 @@ a[data-tooltip]:hover:after {
 	color: rgba(70, 130, 180, 0.85) !important;
 	font: normal bold 1.2em/1.1 "Segoe UI",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol" !important;
 }
+.note-viewer.dark h2 {
+	color: rgba(173, 216, 230, 0.94) !important;
+}
 
 .note-viewer h3 {
 	margin: 0.8em 0 0.2em 0 !important;
 	color: rgba(70, 130, 180, 0.7) !important;
 	font: normal bold 1.1em/1.1 "Segoe UI",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol" !important;
+}
+.note-viewer.dark h3 {
+	color: rgba(173, 216, 230, 0.88) !important;
 }
 
 .note-viewer p {
@@ -298,6 +317,9 @@ a[data-tooltip]:hover:after {
 	color: steelblue;
 	text-align: right !important;
 }
+.note-viewer.dark ol > li::before {
+	color: lightblue;
+}
 
 .note-viewer ul {
 	margin: 0.5em 0 0.5em 0 !important;
@@ -319,6 +341,9 @@ a[data-tooltip]:hover:after {
 	color: steelblue !important;
 	text-align: right !important;
 }
+.note-viewer.dark ul > li::before {
+	color: lightblue !important;
+}
 
 .note-viewer pre {
 	margin: 0.5em 0 0.5em 0 !important;
@@ -330,10 +355,17 @@ a[data-tooltip]:hover:after {
 	text-wrap: none !important;
 	background-color: rgba(128, 128, 128, 0.2) !important;
 }
+.note-viewer.dark pre {
+	color: white !important;
+	background-color: rgba(211, 211, 211, 0.3) !important;
+}
 
 .note-viewer blockquote {
 	margin: 0.5em 0 0.5em 0 !important;
 	padding: 0 0 0 1em !important;
 	font: normal normal 1em/1.5 "Segoe UI",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol" !important;
 	border-left: 3px solid rgba(128, 128, 128, 0.4) !important;
+}
+.note-viewer.dark blockquote {
+	border-left: 3px solid rgba(211, 211, 211, 0.6) !important;
 }

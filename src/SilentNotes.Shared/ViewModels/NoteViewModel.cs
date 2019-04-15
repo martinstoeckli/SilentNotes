@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Drawing;
 using System.Windows.Input;
 using SilentNotes.Controllers;
 using SilentNotes.Models;
@@ -44,7 +45,10 @@ namespace SilentNotes.ViewModels
             _searchableTextConverter = searchableTextConverter;
             MarkSearchableContentAsDirty();
             GoBackCommand = new RelayCommand(GoBack);
-            BackgroundColorsHex = new List<string> { "#fbf4c1", "#fdd8bb", "#facbc6", "#fcd5ef", "#d9d9fc", "#cee7fb", "#d0f8f9", "#d9f8c8" };
+            BackgroundColorsHex = new List<string> {
+                "#fbf4c1", "#fdd8bb", "#facbc6", "#fcd5ef", "#d9d9fc", "#cee7fb", "#d0f8f9", "#d9f8c8",
+                "#ae7f0a", "#871908", "#800080", "#0d5696", "#007a7a", "#33750f", "#525252",
+            };
 
             Model = noteFromRepository;
         }
@@ -121,6 +125,24 @@ namespace SilentNotes.ViewModels
         /// Gets a list of available background colors.
         /// </summary>
         public List<string> BackgroundColorsHex { get; private set; }
+
+        /// <summary>
+        /// Gets the dark class for a given background color, depending of whether the background
+        /// color is a light or a dark color.
+        /// </summary>
+        /// <param name="backgroundColorHex">Background color of the note. If this parameter is
+        /// null, the <see cref="BackgroundColorHex"/> of the note itself is used.</param>
+        /// <returns>Html class "dark" if the background color is dark, otherwise an empty string.</returns>
+        public string GetDarkClass(string backgroundColorHex = null)
+        {
+            if (string.IsNullOrEmpty(backgroundColorHex))
+                backgroundColorHex = BackgroundColorHex;
+            Color backgroundColor = ColorExtensions.HexToColor(backgroundColorHex);
+            if (backgroundColor.IsDark())
+                return "dark";
+            else
+                return string.Empty;
+        }
 
         /// <summary>
         /// Gets or sets a value indicating whether the note is deleted and is part of the

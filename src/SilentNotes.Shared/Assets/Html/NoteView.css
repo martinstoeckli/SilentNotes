@@ -26,6 +26,10 @@
 	background-color: rgba(160, 160, 160, 0.3);
 	border-radius: 20px;
 }
+#arrowkeys.dark {
+	fill: #505050;
+	background-color: rgba(204, 204, 204, 0.8);
+}
 
 .arrowkey {
 	margin: 0;
