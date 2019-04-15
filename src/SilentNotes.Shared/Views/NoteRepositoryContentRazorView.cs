@@ -148,7 +148,7 @@ WriteLiteral(">");
 
 
 #line 10 "NoteRepositoryContentRazorView.cshtml"
-                                                                WriteLiteral(Model.Icon["swap-vertical-bold"]);
+                                                                WriteLiteral(Model.Icon["menu-swap"]);
 
 #line default
 #line hidden

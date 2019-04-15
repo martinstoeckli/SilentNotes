@@ -47,7 +47,7 @@ namespace SilentNotes.ViewModels
             GoBackCommand = new RelayCommand(GoBack);
             BackgroundColorsHex = new List<string> {
                 "#fbf4c1", "#fdd8bb", "#facbc6", "#fcd5ef", "#d9d9fc", "#cee7fb", "#d0f8f9", "#d9f8c8",
-                "#c0ab0c", "#cb5b06", "#bc2110", "#b00c7a", "#1b0fbd", "#0e5ca0", "#149fa3", "#3f9013"
+                "#ae7f0a", "#871908", "#800080", "#0d5696", "#007a7a", "#33750f", "#525252",
             };
 
             Model = noteFromRepository;

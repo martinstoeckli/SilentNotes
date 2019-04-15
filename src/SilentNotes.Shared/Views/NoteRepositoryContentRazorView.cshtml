@@ -7,7 +7,7 @@
             <div class="note-card" style="background-color:@note.BackgroundColorHex">
                 <div class="note-viewer @note.GetDarkClass()">@{WriteLiteral(note.HtmlContent);}</div>
             </div>
-            <div class="sortable-handle @note.GetDarkClass()">@{WriteLiteral(Model.Icon["swap-vertical-bold"]);}</div>
+            <div class="sortable-handle @note.GetDarkClass()">@{WriteLiteral(Model.Icon["menu-swap"]);}</div>
         </li>
     }
 </ul>
