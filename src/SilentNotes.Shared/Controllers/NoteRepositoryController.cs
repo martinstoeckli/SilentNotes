@@ -72,6 +72,7 @@ namespace SilentNotes.Controllers
                     Ioc.GetOrCreate<IFeedbackService>(),
                     Ioc.GetOrCreate<ISettingsService>(),
                     Ioc.GetOrCreate<IThemeService>(),
+                    Ioc.GetOrCreate<IEnvironmentService>(),
                     repositoryService);
 
                 Bindings.BindCommand("AddNote", _viewModel.AddNoteCommand);

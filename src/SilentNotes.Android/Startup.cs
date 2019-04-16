@@ -39,6 +39,7 @@ namespace SilentNotes.Android
 
         private static void RegisterServices(Activity rootActivity)
         {
+            Ioc.RegisterFactory<IEnvironmentService>(() => new EnvironmentService(OperatingSystem.Android));
             Ioc.RegisterFactory<IHtmlView>(() => rootActivity as IHtmlView);
             Ioc.RegisterFactory<IBaseUrlService>(() => new BaseUrlService());
             Ioc.RegisterFactory<ILanguageService>(() => new LanguageService(new LanguageCodeService().GetSystemLanguageCode()));

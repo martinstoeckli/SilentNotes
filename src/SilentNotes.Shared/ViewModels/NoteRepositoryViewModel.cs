@@ -27,6 +27,7 @@ namespace SilentNotes.ViewModels
         private readonly IFeedbackService _feedbackService;
         private readonly ISettingsService _settingsService;
         private readonly IThemeService _themeService;
+        private readonly IEnvironmentService _environmentService;
         private readonly SearchableHtmlConverter _searchableTextConverter;
         private NoteRepositoryModel _model;
         private NoteViewModel _selectedNote;
@@ -45,6 +46,7 @@ namespace SilentNotes.ViewModels
             IFeedbackService feedbackService,
             ISettingsService settingsService,
             IThemeService themeService,
+            IEnvironmentService environmentService,
             IRepositoryStorageService repositoryService)
             : base(navigationService, languageService, svgIconService, webviewBaseUrl)
         {
@@ -53,6 +55,7 @@ namespace SilentNotes.ViewModels
             _feedbackService = feedbackService;
             _settingsService = settingsService;
             _themeService = themeService;
+            _environmentService = environmentService;
             _searchableTextConverter = new SearchableHtmlConverter();
             AllNotes = new List<NoteViewModel>();
             FilteredNotes = new ObservableCollection<NoteViewModel>();
@@ -112,7 +115,13 @@ namespace SilentNotes.ViewModels
         {
             get
             {
-                const double defaultBaseFontSize = 12.6; // Default size for scale 1.0
+                double defaultBaseFontSize = 15.0; // Default size for scale 1.0
+                switch (_environmentService.Os)
+                {
+                    case Services.OperatingSystem.Windows:
+                        defaultBaseFontSize = 13.0;
+                        break;
+                }
                 SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
                 double fontSize = settings != null ? defaultBaseFontSize * settings.FontScale : defaultBaseFontSize;
                 return FloatingPointUtils.FormatInvariant(fontSize);
@@ -234,7 +243,7 @@ namespace SilentNotes.ViewModels
             _model.Notes.Insert(0, noteModel);
 
             // Update view model list
-            NoteViewModel noteViewModel = new NoteViewModel(_navigationService, Language, Icon, _webviewBaseUrl, _searchableTextConverter, _repositoryService, null, noteModel);
+            NoteViewModel noteViewModel = new NoteViewModel(_navigationService, Language, Icon, _webviewBaseUrl, _searchableTextConverter, _repositoryService, null, _environmentService, noteModel);
             AllNotes.Insert(0, noteViewModel);
             FilteredNotes.Insert(0, noteViewModel);
 
@@ -372,7 +381,7 @@ namespace SilentNotes.ViewModels
                 // Wrap models in view models
                 foreach (NoteModel note in _model.Notes)
                 {
-                    NoteViewModel noteViewModel = new NoteViewModel(_navigationService, Language, Icon, _webviewBaseUrl, _searchableTextConverter, _repositoryService, null, note);
+                    NoteViewModel noteViewModel = new NoteViewModel(_navigationService, Language, Icon, _webviewBaseUrl, _searchableTextConverter, _repositoryService, null, _environmentService,  note);
                     AllNotes.Add(noteViewModel);
                     if (!noteViewModel.InRecyclingBin)
                         FilteredNotes.Add(noteViewModel);

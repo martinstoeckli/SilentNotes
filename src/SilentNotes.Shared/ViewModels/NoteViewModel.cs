@@ -22,6 +22,7 @@ namespace SilentNotes.ViewModels
     {
         private readonly IRepositoryStorageService _repositoryService;
         private readonly ISettingsService _settingsService;
+        private readonly IEnvironmentService _environmentService;
         private SearchableHtmlConverter _searchableTextConverter;
         private string _searchableContent;
 
@@ -37,11 +38,13 @@ namespace SilentNotes.ViewModels
             SearchableHtmlConverter searchableTextConverter,
             IRepositoryStorageService repositoryService,
             ISettingsService settingsService,
+            IEnvironmentService environmentService,
             NoteModel noteFromRepository)
             : base(navigationService, languageService, svgIconService, webviewBaseUrl)
         {
             _repositoryService = repositoryService;
             _settingsService = settingsService;
+            _environmentService = environmentService;
             _searchableTextConverter = searchableTextConverter;
             MarkSearchableContentAsDirty();
             GoBackCommand = new RelayCommand(GoBack);
@@ -215,7 +218,7 @@ namespace SilentNotes.ViewModels
         {
             get
             {
-                const double defaultBaseFontSize = 15.0; // Default size for scale 1.0
+                double defaultBaseFontSize = 15.0; // Default size for scale 1.0
                 SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
                 double fontSize = settings != null ? defaultBaseFontSize * settings.FontScale : defaultBaseFontSize;
                 return FloatingPointUtils.FormatInvariant(fontSize);
