@@ -224,7 +224,7 @@ namespace SilentNotes.ViewModels
 
             if (note != null)
             {
-                _navigationService.Navigate(ControllerNames.Note, "id", note.Id.ToString());
+                _navigationService.Navigate(ControllerNames.Note, ControllerParameters.NoteId, note.Id.ToString());
             }
         }
 

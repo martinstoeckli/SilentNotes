@@ -7,6 +7,7 @@ using System;
 using System.Threading.Tasks;
 using System.Web;
 using Android.App;
+using Android.Content;
 using Android.Content.PM;
 using Android.OS;
 using Android.Util;
@@ -23,6 +24,10 @@ namespace SilentNotes.Android
     /// activity showing a window.
     /// </summary>
     [Activity(Label = "SilentNotes", Icon = "@drawable/icon", Theme = "@style/MainTheme.SplashScreen", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
+    [IntentFilter(
+        new[] { Intent.ActionSend },
+        Categories = new[] { Intent.CategoryDefault },
+        DataMimeType = @"text/plain")]
     public class MainActivity : Activity, IHtmlView
     {
         private WebView _webView;
@@ -55,19 +60,6 @@ namespace SilentNotes.Android
             settings.AllowFileAccess = false; // no local files but from the asset directory
             settings.SetPluginState(WebSettings.PluginState.Off); // no plugins allowed
             settings.CacheMode = CacheModes.NoCache; // is already local content
-
-            Ioc.Reset(); // Theoretically the OnCreate can be called repeatedly without an OnDestroy between
-            Startup.InitializeApplication(this);
-
-            INavigationService navigation = Ioc.GetOrCreate<INavigationService>();
-            navigation.Navigate(ControllerNames.NoteRepository);
-        }
-
-        /// <inheritdoc/>
-        protected override void OnDestroy()
-        {
-            Ioc.Reset();
-            base.OnDestroy();
         }
 
         /// <inheritdoc/>
@@ -75,8 +67,23 @@ namespace SilentNotes.Android
         {
             base.OnStart();
 
-            IAutoSynchronizationService syncService = Ioc.GetOrCreate<IAutoSynchronizationService>();
-            syncService.SynchronizeAtStartup(); // no awaiting, run in background
+            Ioc.Reset();
+            Startup.InitializeApplication(this);
+
+            INavigationService navigation = Ioc.GetOrCreate<INavigationService>();
+            if (IsStartedBySendIntent())
+            {
+                // Another app sent content to SilentNotes
+                navigation.Navigate(ControllerNames.Note, ControllerParameters.SendToSilentnotesText, GetSendIntentText());
+            }
+            else
+            {
+                // Normal startup
+                navigation.Navigate(ControllerNames.NoteRepository);
+
+                IAutoSynchronizationService syncService = Ioc.GetOrCreate<IAutoSynchronizationService>();
+                syncService.SynchronizeAtStartup(); // no awaiting, run in background
+            }
         }
 
         /// <inheritdoc/>
@@ -92,6 +99,9 @@ namespace SilentNotes.Android
             IAutoSynchronizationService syncService = Ioc.GetOrCreate<IAutoSynchronizationService>();
             syncService.SynchronizeAtShutdown();
 
+            // We can safely clear the Ioc, it will be rebuilt in the OnStart event. The still
+            // running syncService doesn't need Ioc, got its required services in the constructor.
+            Ioc.Reset();
             base.OnStop();
         }
 
@@ -167,6 +177,16 @@ namespace SilentNotes.Android
         {
             if (NavigationCompleted != null)
                 NavigationCompleted(_webView, new EventArgs());
+        }
+
+        private bool IsStartedBySendIntent()
+        {
+            return Intent.Action == Intent.ActionSend;
+        }
+
+        private string GetSendIntentText()
+        {
+            return Intent.GetStringExtra(Intent.ExtraText);
         }
 
         private class WebviewValueCallback : Java.Lang.Object, IValueCallback

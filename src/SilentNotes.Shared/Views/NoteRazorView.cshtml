@@ -71,6 +71,10 @@
             return quill.root.innerHTML;
         }
 
+        function setNoteHtmlContent(text) {
+            quill.setText(text, 'user');
+        }
+
         $(function () {
             quill = new Quill('#myeditor', {
                 formats: ['header', 'bold', 'italic', 'underline', 'strike', 'list', 'code', 'code-block', 'blockquote'],

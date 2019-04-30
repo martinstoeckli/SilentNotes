@@ -4,6 +4,7 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
+using System.Web;
 using SilentNotes.HtmlView;
 using SilentNotes.Models;
 using SilentNotes.Services;
@@ -18,6 +19,8 @@ namespace SilentNotes.Controllers
     {
         private readonly IRepositoryStorageService _repositoryService;
         private NoteViewModel _viewModel;
+        private bool _startedWithSendToSilentnotes;
+        private string _sendToSilentnotesText;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NoteController"/> class.
@@ -28,6 +31,7 @@ namespace SilentNotes.Controllers
             : base(viewService)
         {
             _repositoryService = repositoryService;
+            _startedWithSendToSilentnotes = false;
         }
 
         /// <inheritdoc/>
@@ -39,11 +43,25 @@ namespace SilentNotes.Controllers
         /// <inheritdoc/>
         public override void ShowInView(IHtmlView htmlView, KeyValueList<string, string> variables)
         {
-            Guid noteId = new Guid(variables["id"]);
             base.ShowInView(htmlView, variables);
-
+            View.NavigationCompleted += NavigationCompletedEventHandler;
             _repositoryService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepository);
-            NoteModel note = noteRepository.Notes.Find(item => noteId == item.Id);
+
+            NoteModel note;
+            _startedWithSendToSilentnotes = variables.ContainsKey(ControllerParameters.SendToSilentnotesText);
+            if (_startedWithSendToSilentnotes)
+            {
+                // Create new note and update repository
+                note = new NoteModel();
+                noteRepository.Notes.Insert(0, note);
+                _sendToSilentnotesText = variables[ControllerParameters.SendToSilentnotesText];
+            }
+            else
+            {
+                // Get the note from the repository
+                Guid noteId = new Guid(variables[ControllerParameters.NoteId]);
+                note = noteRepository.Notes.Find(item => noteId == item.Id);
+            }
 
             _viewModel = new NoteViewModel(
                 Ioc.GetOrCreate<INavigationService>(),
@@ -61,6 +79,18 @@ namespace SilentNotes.Controllers
 
             string html = _viewService.GenerateHtml(_viewModel);
             View.LoadHtml(html);
+        }
+
+        private void NavigationCompletedEventHandler(object sender, EventArgs e)
+        {
+            if (_startedWithSendToSilentnotes)
+            {
+                // Let quill do the text import, so it can convert it safely to HTML and trigger
+                // the "quill" event which eventually sets the modified property.
+                string encodedNewText = HttpUtility.JavaScriptStringEncode(_sendToSilentnotesText, false);
+                string script = string.Format("setNoteHtmlContent('{0}');", encodedNewText);
+                View.ExecuteJavaScript(script);
+            }
         }
 
         private async void UnhandledViewBindingEventHandler(object sender, HtmlViewBindingNotifiedEventArgs e)
