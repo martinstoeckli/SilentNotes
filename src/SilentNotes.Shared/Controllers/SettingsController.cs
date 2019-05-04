@@ -67,16 +67,27 @@ namespace SilentNotes.Controllers
 
         private void UnhandledViewBindingEventHandler(object sender, HtmlViewBindingNotifiedEventArgs e)
         {
-            switch (e.BindingName?.ToLowerInvariant())
+            switch (e.BindingName)
             {
-                case "selectedthemepreview":
+                case "SelectedThemePreview":
                     string themeId = e.Parameters["data-theme"];
                     _viewModel.SelectedTheme = _viewModel.Themes.Find(item => item.Id == themeId);
                     break;
-                case "fontsize":
+                case "DefaultNoteColorPreview":
+                    _viewModel.DefaultNoteColorHex = e.Parameters["data-notecolorhex"];
+                    SetDefaultNoteColorToView(_viewModel.DefaultNoteColorHex);
+                    break;
+                case "FontSize":
                     _viewModel.FontSizeStep = e.Parameters["value"];
                     break;
             }
+        }
+
+        private void SetDefaultNoteColorToView(string colorHex)
+        {
+            string script = string.Format(
+                "htmlViewBindingsSetCss('DefaultNoteColor', 'background-color', '{0}');", colorHex);
+            View.ExecuteJavaScript(script);
         }
     }
 }

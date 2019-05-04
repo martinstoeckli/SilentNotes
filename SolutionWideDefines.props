@@ -7,7 +7,7 @@
           $(DefineConstants);ENV_DEVELOPMENT;LANG_EN
         
         ...but don't forget to reset this file before building for production. After changing a
-        value, please rebuild the solution.
+        value, please rebuild the solution. Remove DEMO to run unit tests.
         
         Known defines are:
         ENV_PRODUCTION:  Has no effect (default)

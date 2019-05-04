@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Drawing;
 using System.Text;
 using System.Windows.Input;
 using SilentNotes.Controllers;
@@ -13,6 +14,7 @@ using SilentNotes.Crypto.SymmetricEncryption;
 using SilentNotes.Models;
 using SilentNotes.Services;
 using SilentNotes.StoryBoards.SynchronizationStory;
+using SilentNotes.Workers;
 
 namespace SilentNotes.ViewModels
 {
@@ -116,6 +118,39 @@ namespace SilentNotes.ViewModels
                 double step = double.Parse(value);
                 FontScale = (ReferenceFontSize + step) / ReferenceFontSize;
             }
+        }
+
+        /// <summary>
+        /// Gets a list of available background colors.
+        /// </summary>
+        public List<string> NoteColorsHex
+        {
+            get { return Model.NoteColorsHex; }
+        }
+
+        /// <summary>
+        /// Gets or sets the default background color as hex string, e.g. #ff0000
+        /// </summary>
+        public string DefaultNoteColorHex
+        {
+            get { return Model.DefaultNoteColorHex; }
+
+            set { ChangePropertyIndirect(() => Model.DefaultNoteColorHex, (string v) => Model.DefaultNoteColorHex = v, value, true); }
+        }
+
+        /// <summary>
+        /// Gets the dark class for a given background color, depending of whether the background
+        /// color is a light or a dark color.
+        /// </summary>
+        /// <param name="backgroundColorHex">Background color of the note.</param>
+        /// <returns>Html class "dark" if the background color is dark, otherwise an empty string.</returns>
+        public string GetDarkClass(string backgroundColorHex)
+        {
+            Color backgroundColor = ColorExtensions.HexToColor(backgroundColorHex);
+            if (backgroundColor.IsDark())
+                return "dark";
+            else
+                return string.Empty;
         }
 
         /// <summary>

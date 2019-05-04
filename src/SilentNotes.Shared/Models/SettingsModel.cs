@@ -18,8 +18,13 @@ namespace SilentNotes.Models
     {
         /// <summary>The highest revision of the settings which can be handled by this application.</summary>
         public const int NewestSupportedRevision = 2;
+
+        /// <summary>The default color for notes, when the application is started the first time.</summary>
+        public const string StartDefaultNoteColorHex = "#fbf4c1";
+
         private string _selectedEncryptionAlgorithm;
         private string _transferCode;
+        private List<string> _noteColorsHex;
         private List<string> _transferCodeHistory;
 
         /// <summary>
@@ -32,6 +37,7 @@ namespace SilentNotes.Models
             AutoSyncMode = AutoSynchronizationMode.CostFreeInternetOnly;
             ShowCursorArrowKeys = true;
             FontScale = 1.0;
+            DefaultNoteColorHex = StartDefaultNoteColorHex;
         }
 
         /// <summary>
@@ -120,7 +126,7 @@ namespace SilentNotes.Models
         [XmlArrayItem("transfer_code")]
         public List<string> TransferCodeHistory
         {
-            get { return LazyCreator.GetOrCreate(ref _transferCodeHistory); }
+            get { return _transferCodeHistory ?? (_transferCodeHistory = new List<string>()); }
             set { _transferCodeHistory = value; }
         }
 
@@ -135,6 +141,30 @@ namespace SilentNotes.Models
         /// </summary>
         [XmlElement("font-scale")]
         public double FontScale { get; set; }
+
+        /// <summary>
+        /// Gets a list of available background colors for the notes.
+        /// </summary>
+        [XmlIgnore]
+        public List<string> NoteColorsHex
+        {
+            get
+            {
+                return 
+                    _noteColorsHex ??
+                    (_noteColorsHex = new List<string>
+                    {
+                        "#fbf4c1", "#fdd8bb", "#facbc6", "#fcd5ef", "#d9d9fc", "#cee7fb", "#d0f8f9", "#d9f8c8",
+                        "#ae7f0a", "#871908", "#800080", "#0d5696", "#007a7a", "#33750f", "#333333",
+                    });
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the background color for new notes.
+        /// </summary>
+        [XmlElement("default_note_color")]
+        public string DefaultNoteColorHex { get; set; }
 
         /// <summary>
         /// Gets the name of the algorithm to use, if the selected algorithm is not yet stored.

@@ -13,7 +13,6 @@ namespace SilentNotes.Models
     /// </summary>
     public class NoteModel
     {
-        private const string DefaultBackgroundColor = "#fbf4c1";
         private Guid _id;
 
         /// <summary>
@@ -22,7 +21,7 @@ namespace SilentNotes.Models
         public NoteModel()
         {
             _id = Guid.Empty;
-            BackgroundColorHex = DefaultBackgroundColor;
+            BackgroundColorHex = SettingsModel.StartDefaultNoteColorHex;
             CreatedAt = DateTime.UtcNow;
             ModifiedAt = CreatedAt;
         }
