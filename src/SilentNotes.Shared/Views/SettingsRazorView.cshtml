@@ -23,24 +23,32 @@
             background-position: right -128px top -196px;
             background-size: 480px;
         }
-        #texture-chooser {
-        }
-        .theme-preview {
+        .theme-preview,
+        .color-preview {
             margin: 0;
             width: 300px;
             max-width: calc(100% - 36px);
             height: 96px;
         }
+        .color-preview {
+            height: 36px;
+        }
 
-        .theme-list {
+        .theme-list,
+        .color-list {
             max-height: 360px;
             overflow-y: scroll;
         }
 
-        .theme-item {
+        .theme-item,
+        .color-item {
             display: inline-block;
             width: 90px;
             height: 128px;
+        }
+
+        .color-btn.dark {
+            color: white;
         }
     </style>
     <script>
@@ -75,6 +83,22 @@
                             @foreach (var theme in @Model.Themes)
                             {
                                 <div class="dropdown-item theme-item" onclick="bind(event)" data-binding="SelectedThemePreview" data-theme="@(theme.Id)" style="background: url(@(theme.Image));"></div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row form-group">
+                <label class="col-form-label" for="Color">@Model.Language["gui_default_color"]</label>
+                <div id="color-chooser" class="form-control">
+                    <div id="DefaultNoteColor" class="dropdown">
+                        <div data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <div class="color-preview row" data-binding="DefaultNoteColor" style="background-color: @Model.DefaultNoteColorHex;"></div>
+                        </div>
+                        <div class="dropdown-menu color-list" aria-labelledby="colorChooser">
+                            @foreach (var backgroundColor in @Model.NoteColorsHex)
+                            {
+                                <div class="dropdown-item color-btn @Model.GetDarkClass(backgroundColor)" onclick="bind(event);" data-binding="DefaultNoteColorPreview" data-notecolorhex="@backgroundColor" style="background-color: @backgroundColor">Lorem ipsum</div>
                             }
                         </div>
                     </div>

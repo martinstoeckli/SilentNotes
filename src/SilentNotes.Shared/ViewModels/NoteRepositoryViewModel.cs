@@ -240,6 +240,7 @@ namespace SilentNotes.ViewModels
 
             // Create new note and update model list
             NoteModel noteModel = new NoteModel();
+            noteModel.BackgroundColorHex = _settingsService.LoadSettingsOrDefault().DefaultNoteColorHex;
             _model.Notes.Insert(0, noteModel);
 
             // Update view model list

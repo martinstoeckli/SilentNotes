@@ -44,6 +44,7 @@ namespace SilentNotes.Controllers
         public override void ShowInView(IHtmlView htmlView, KeyValueList<string, string> variables)
         {
             base.ShowInView(htmlView, variables);
+            ISettingsService settingsService = Ioc.GetOrCreate<ISettingsService>();
             View.NavigationCompleted += NavigationCompletedEventHandler;
             _repositoryService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepository);
 
@@ -53,6 +54,7 @@ namespace SilentNotes.Controllers
             {
                 // Create new note and update repository
                 note = new NoteModel();
+                note.BackgroundColorHex = settingsService.LoadSettingsOrDefault().DefaultNoteColorHex;
                 noteRepository.Notes.Insert(0, note);
                 _sendToSilentnotesText = variables[ControllerParameters.SendToSilentnotesText];
             }
@@ -70,7 +72,7 @@ namespace SilentNotes.Controllers
                 Ioc.GetOrCreate<IBaseUrlService>(),
                 null,
                 _repositoryService,
-                Ioc.GetOrCreate<ISettingsService>(),
+                settingsService,
                 Ioc.GetOrCreate<IEnvironmentService>(),
                 note);
 
@@ -108,11 +110,10 @@ namespace SilentNotes.Controllers
             }
         }
 
-        private void SetBackgroundColorToView(string backgroundColorHex)
+        private void SetBackgroundColorToView(string colorHex)
         {
             string script = string.Format(
-                "htmlViewBindingsSetCss('Content', 'background-color', '{0}');",
-                backgroundColorHex);
+                "htmlViewBindingsSetCss('Content', 'background-color', '{0}');", colorHex);
             string darkClass = _viewModel.GetDarkClass();
             if (!string.IsNullOrEmpty(darkClass))
                 script += "htmlViewBindingsAddClass('quill', 'dark');";
