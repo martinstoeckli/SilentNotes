@@ -71,7 +71,7 @@ namespace SilentNotes.ViewModels
                 bool searchableContentIsDirty = _searchableContent == null;
                 if (searchableContentIsDirty)
                 {
-                    SearchableHtmlConverter converter = LazyCreator.GetOrCreate(ref _searchableTextConverter);
+                    SearchableHtmlConverter converter = _searchableTextConverter ?? (_searchableTextConverter = new SearchableHtmlConverter());
                     converter.TryConvertHtml(HtmlContent, out _searchableContent);
                 }
                 return _searchableContent;

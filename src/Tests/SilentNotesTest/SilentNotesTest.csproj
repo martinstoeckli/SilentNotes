@@ -98,7 +98,6 @@
     <Compile Include="Services\CloudStorageServices\CloudStorageAccountTest.cs" />
     <Compile Include="Services\CloudStorageServices\DropboxCloudStorageServiceTest.cs" />
     <Compile Include="Services\CloudStorageServices\FtpCloudStorageServiceTest.cs" />
-    <Compile Include="LazyCreatorTest.cs" />
     <Compile Include="Services\CloudStorageServices\GmxCloudStorageServiceTest.cs" />
     <Compile Include="Services\RepositoryStorageServiceTest.cs" />
     <Compile Include="Services\SettingsServiceTest.cs" />

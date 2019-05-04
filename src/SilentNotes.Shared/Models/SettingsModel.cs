@@ -126,7 +126,7 @@ namespace SilentNotes.Models
         [XmlArrayItem("transfer_code")]
         public List<string> TransferCodeHistory
         {
-            get { return LazyCreator.GetOrCreate(ref _transferCodeHistory); }
+            get { return _transferCodeHistory ?? (_transferCodeHistory = new List<string>()); }
             set { _transferCodeHistory = value; }
         }
 

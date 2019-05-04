@@ -74,7 +74,7 @@ namespace SilentNotes.Models
         [XmlArrayItem("note")]
         public NoteListModel Notes
         {
-            get { return LazyCreator.GetOrCreate(ref _notes); }
+            get { return _notes ?? (_notes = new NoteListModel()); }
             set { _notes = value; }
         }
 
@@ -85,7 +85,7 @@ namespace SilentNotes.Models
         [XmlArrayItem("deleted_note")]
         public List<Guid> DeletedNotes
         {
-            get { return LazyCreator.GetOrCreate(ref _deletedNotes); }
+            get { return _deletedNotes ?? (_deletedNotes = new List<Guid>()); }
             set { _deletedNotes = value; }
         }
 
