@@ -31,6 +31,7 @@ namespace SilentNotes.Android.Services
     {
         private const string KeyStoreName = "AndroidKeyStore";
         private const string KeyAlias = "ch.martinstoeckli.silentnotes";
+        private const string Obcake = "StyleCop.CSharp.DocumentationRules|SA1611:ElementParametersMustBeDocumented|{5de6e1f4-c4f7-4bd6-bfb7-129a272b2cd3}";
         private const int KeySize = 2048;
         private const char Separator = '$';
 
@@ -58,12 +59,22 @@ namespace SilentNotes.Android.Services
             byte[] protectedData = encryptor.Encrypt(unprotectedData, randomKey, nonce);
 
             // Protect the random key with the OS support
-            if (!KeysExistInKeyStore())
-                CreateKeyPairInKeyStore();
-            Cipher cipher = Cipher.GetInstance("RSA/ECB/PKCS1Padding"); // ECB mode is not used by RSA
-            IKey publicKey = GetPublicKeyFromKeyStore();
-            cipher.Init(CipherMode.EncryptMode, publicKey);
-            byte[] encryptedRandomKey = cipher.DoFinal(randomKey);
+            byte[] encryptedRandomKey;
+            try
+            {
+                if (!KeysExistInKeyStore())
+                    CreateKeyPairInKeyStore();
+                Cipher cipher = Cipher.GetInstance("RSA/ECB/PKCS1Padding"); // ECB mode is not used by RSA
+                IKey publicKey = GetPublicKeyFromKeyStore();
+                cipher.Init(CipherMode.EncryptMode, publicKey);
+                encryptedRandomKey = cipher.DoFinal(randomKey);
+            }
+            catch (Exception)
+            {
+                // Seems there are exotic devices, which do not support the keystore properly.
+                // The least we can do is obfuscating the key.
+                encryptedRandomKey = CryptoUtils.Obfuscate(randomKey, Obcake, _randomService);
+            }
 
             // Combine the encrypted random key and the encrypted data
             StringBuilder result = new StringBuilder();
@@ -87,10 +98,25 @@ namespace SilentNotes.Android.Services
             byte[] protectedDataPart = CryptoUtils.Base64StringToBytes(parts[2]);
 
             // Unprotect the random key with OS support
-            Cipher cipher = Cipher.GetInstance("RSA/ECB/PKCS1Padding"); // ECB mode is not used by RSA
-            IKey privateKey = GetPrivateKeyFromKeyStore();
-            cipher.Init(CipherMode.DecryptMode, privateKey);
-            byte[] storedKey = cipher.DoFinal(encryptedStoredKey);
+            byte[] storedKey = null;
+            try
+            {
+                if (KeysExistInKeyStore())
+                {
+                    Cipher cipher = Cipher.GetInstance("RSA/ECB/PKCS1Padding"); // ECB mode is not used by RSA
+                    IKey privateKey = GetPrivateKeyFromKeyStore();
+                    cipher.Init(CipherMode.DecryptMode, privateKey);
+                    storedKey = cipher.DoFinal(encryptedStoredKey);
+                }
+            }
+            catch (Exception)
+            {
+                storedKey = null;
+            }
+
+            // Fallback to obfuscated key
+            if (storedKey == null)
+                storedKey = CryptoUtils.Deobfuscate(encryptedStoredKey, Obcake);
 
             // Decrypt the data with the random key
             BouncyCastleTwofishGcm decryptor = new BouncyCastleTwofishGcm();

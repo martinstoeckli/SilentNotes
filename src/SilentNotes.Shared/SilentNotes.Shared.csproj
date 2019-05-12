@@ -27,7 +27,7 @@
   <ItemGroup>
     <PackageReference Include="Dropbox.Api" Version="4.9.2" />
     <PackageReference Include="MvvmLightLibsStd10" Version="5.4.1.1" />
-    <PackageReference Include="Portable.BouncyCastle" Version="1.8.4" />
+    <PackageReference Include="Portable.BouncyCastle" Version="1.8.5" />
   </ItemGroup>
 
   <ItemGroup>
