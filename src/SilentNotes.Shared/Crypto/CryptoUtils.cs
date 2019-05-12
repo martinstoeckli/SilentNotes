@@ -108,6 +108,26 @@ namespace SilentNotes.Crypto
         /// This function can be used, if an API key must be stored inside the application code,
         /// so it doesn't show up in plain text.
         /// </summary>
+        /// <param name="plainMessage">The text to hide.</param>
+        /// <param name="obfuscationKey">Key to use for obfuscation, this key is usually hard coded
+        /// in the application.</param>
+        /// <param name="randomSource">A cryptographically random source.</param>
+        /// <returns>Obfuscated message.</returns>
+        public static byte[] Obfuscate(byte[] plainMessage, string obfuscationKey, ICryptoRandomSource randomSource)
+        {
+            EncryptorDecryptor encryptor = new EncryptorDecryptor("obfuscation");
+            return encryptor.Encrypt(
+                plainMessage,
+                obfuscationKey,
+                KeyDerivationCostType.Low,
+                randomSource,
+                "twofish_gcm");
+        }
+
+        /// <summary>
+        /// This function can be used, if an API key must be stored inside the application code,
+        /// so it doesn't show up in plain text.
+        /// </summary>
         /// <param name="plainText">The text to hide.</param>
         /// <param name="obfuscationKey">Key to use for obfuscation, this key is usually hard coded
         /// in the application.</param>
@@ -115,13 +135,21 @@ namespace SilentNotes.Crypto
         /// <returns>Obfuscated text.</returns>
         public static string Obfuscate(string plainText, string obfuscationKey, ICryptoRandomSource randomSource)
         {
+            return BytesToBase64String(Obfuscate(StringToBytes(plainText), obfuscationKey, randomSource));
+        }
+
+        /// <summary>
+        /// Reverses a key obfuscated with <see cref="Obfuscate(byte[], string, ICryptoRandomSource)"/>
+        /// to its original plain text.
+        /// </summary>
+        /// <param name="obfuscatedMessage">Obfuscated text.</param>
+        /// <param name="obfuscationKey">Key to use for obfuscation, this key is usually hard coded
+        /// in the application.</param>
+        /// <returns>Original plain message.</returns>
+        public static byte[] Deobfuscate(byte[] obfuscatedMessage, string obfuscationKey)
+        {
             EncryptorDecryptor encryptor = new EncryptorDecryptor("obfuscation");
-            return BytesToBase64String(encryptor.Encrypt(
-                StringToBytes(plainText),
-                obfuscationKey,
-                KeyDerivationCostType.Low,
-                randomSource,
-                "twofish_gcm"));
+            return encryptor.Decrypt(obfuscatedMessage, obfuscationKey);
         }
 
         /// <summary>
@@ -134,10 +162,7 @@ namespace SilentNotes.Crypto
         /// <returns>Original plain text.</returns>
         public static string Deobfuscate(string obfuscatedText, string obfuscationKey)
         {
-            EncryptorDecryptor encryptor = new EncryptorDecryptor("obfuscation");
-            return BytesToString(encryptor.Decrypt(
-                Base64StringToBytes(obfuscatedText),
-                obfuscationKey));
+            return BytesToString(Deobfuscate(Base64StringToBytes(obfuscatedText), obfuscationKey));
         }
     }
 }

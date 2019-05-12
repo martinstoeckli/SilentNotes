@@ -99,6 +99,7 @@
     <Compile Include="Services\CloudStorageServices\DropboxCloudStorageServiceTest.cs" />
     <Compile Include="Services\CloudStorageServices\FtpCloudStorageServiceTest.cs" />
     <Compile Include="Services\CloudStorageServices\GmxCloudStorageServiceTest.cs" />
+    <Compile Include="Logging\LoggerTest.cs" />
     <Compile Include="Services\RepositoryStorageServiceTest.cs" />
     <Compile Include="Services\SettingsServiceTest.cs" />
     <Compile Include="StoryBoards\SynchronizationStory\StoreCloudRepositoryToDeviceAndQuitStepTest.cs" />

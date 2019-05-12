@@ -120,6 +120,33 @@ namespace SilentNotesTest.Crypto
             }
         }
 
+        [Test]
+        public void ObfuscationCanBeReversed()
+        {
+            string obfuscationKey = "A very strong passphrase...";
+            ICryptoRandomService randomGenerator = new RandomSource4UnitTest();
+            byte[] binaryMessage = randomGenerator.GetRandomBytes(100);
+
+            var obfuscatedMessage = CryptoUtils.Obfuscate(binaryMessage, obfuscationKey, randomGenerator);
+            var deobfuscatedMessage = CryptoUtils.Deobfuscate(obfuscatedMessage, obfuscationKey);
+            Assert.AreEqual(binaryMessage, deobfuscatedMessage);
+
+            string plaintextMessage = "welcome home";
+            string obfuscatedMessageText = CryptoUtils.Obfuscate(plaintextMessage, obfuscationKey, randomGenerator);
+            string deobfuscatedMessageText = CryptoUtils.Deobfuscate(obfuscatedMessageText, obfuscationKey);
+            Assert.AreEqual(plaintextMessage, deobfuscatedMessageText);
+        }
+
+        [Test]
+        public void EnsureLongTimeDeobfuscation()
+        {
+            // Ensure that a once stored obfuscated text can always be deobfuscated even after changes in the liberary
+            string obfuscationKey = "A very strong passphrase...";
+            string obfuscatedMessage = "b2JmdXNjYXRpb24kdHdvZmlzaF9nY20kU1pmWWpzWWV6MUZ0S0xqZWhHM1FCUT09JHBia2RmMiR0emVXNU9PTWNucEkxaHhWbkt2Y0Z3PT0kMTAwMCQh9UPVY34fufBoywrqb0JjKU/BMqnTABoXfaTsmEudBRVMpMb+Yx+GZIBjNbrWpqMSmWMgiIwfNBlixP0vi7ohAiv9";
+            string deobfuscatedMessage = CryptoUtils.Deobfuscate(obfuscatedMessage, obfuscationKey);
+            Assert.AreEqual("The brown fox jumps over the lazy 🐢🖐🏿 doc.", deobfuscatedMessage);
+        }
+
         private bool IsInBase62Alphabet(string randomString)
         {
             foreach (char c in randomString)
