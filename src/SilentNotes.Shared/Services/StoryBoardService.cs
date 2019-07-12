@@ -12,7 +12,17 @@ namespace SilentNotes.Services
     /// </summary>
     public class StoryBoardService : IStoryBoardService
     {
+        /// <summary>
+        /// We store the <see cref="ActiveStory"/> property in this static member, so it remains
+        /// accessible even if the Android activity changes and the Ioc is rebuilt with new services.
+        /// </summary>
+        private static IStoryBoard _activeStory;
+
         /// <inheritdoc/>
-        public IStoryBoard ActiveStory { get; set; }
+        public IStoryBoard ActiveStory
+        {
+            get { return _activeStory; }
+            set { _activeStory = value; }
+        }
     }
 }

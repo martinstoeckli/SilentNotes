@@ -26,7 +26,7 @@ namespace SilentNotesTest.Services.CloudStorageServices
             service.ShowOauth2LoginPage();
 
             nativeBrowserService.Verify(
-                x => x.OpenWebsite(It.Is<string>(
+                x => x.OpenWebsiteInApp(It.Is<string>(
                     s => s.Contains("https://www.dropbox.com/oauth2/authorize") && s.Contains("client_id=2drl5n333") && s.Contains("redirect_uri=ch.martinstoeckli.silentnotes") && s.Contains("response_type=token"))),
                 Times.Once);
         }
