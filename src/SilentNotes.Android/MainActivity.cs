@@ -16,6 +16,8 @@ using Java.IO;
 using SilentNotes.Controllers;
 using SilentNotes.HtmlView;
 using SilentNotes.Services;
+using SilentNotes.Services.CloudStorageServices;
+using SilentNotes.StoryBoards.SynchronizationStory;
 
 namespace SilentNotes.Android
 {
@@ -71,10 +73,20 @@ namespace SilentNotes.Android
             Startup.InitializeApplication(this);
 
             INavigationService navigation = Ioc.GetOrCreate<INavigationService>();
+            IStoryBoardService storyBoardService = Ioc.GetOrCreate<IStoryBoardService>();
+
             if (IsStartedBySendIntent())
             {
                 // Another app sent content to SilentNotes
                 navigation.Navigate(ControllerNames.Note, ControllerParameters.SendToSilentnotesText, GetSendIntentText());
+            }
+            else if (IsStartedByOAuthRedirectIndent(storyBoardService))
+            {
+                IOauth2CloudStorageService oauthStorageService = storyBoardService.ActiveStory.LoadFromSession<IOauth2CloudStorageService>(SynchronizationStorySessionKey.OauthCloudStorageService.ToInt());
+                string redirectUrl = storyBoardService.ActiveStory.LoadFromSession<string>(SynchronizationStorySessionKey.OauthRedirectUrl.ToInt());
+                storyBoardService.ActiveStory.RemoveFromSession(SynchronizationStorySessionKey.OauthRedirectUrl.ToInt());
+
+                oauthStorageService?.HandleOauth2Redirect(new Uri(redirectUrl));
             }
             else
             {
@@ -187,6 +199,12 @@ namespace SilentNotes.Android
         private string GetSendIntentText()
         {
             return Intent.GetStringExtra(Intent.ExtraText);
+        }
+
+        private bool IsStartedByOAuthRedirectIndent(IStoryBoardService storyBoardService)
+        {
+            return (storyBoardService.ActiveStory != null) &&
+                storyBoardService.ActiveStory.TryLoadFromSession(SynchronizationStorySessionKey.OauthRedirectUrl.ToInt(), out string _);
         }
 
         private class WebviewValueCallback : Java.Lang.Object, IValueCallback

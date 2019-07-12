@@ -118,7 +118,7 @@ namespace SilentNotes.Services.CloudStorageServices
             _oauthState = CryptoUtils.GenerateRandomBase62String(16, _randomSource);
             Uri oauthUrl = DropboxOAuth2Helper.GetAuthorizeUri(
                 OAuthResponseType.Token, GetAppKey(), new Uri(_redirectUrl), _oauthState);
-            _nativeBrowserService.OpenWebsite(oauthUrl.AbsoluteUri);
+            _nativeBrowserService.OpenWebsiteInApp(oauthUrl.AbsoluteUri);
         }
 
         /// <inheritdoc/>

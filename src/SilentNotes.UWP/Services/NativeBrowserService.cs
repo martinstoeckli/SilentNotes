@@ -20,6 +20,12 @@ namespace SilentNotes.UWP.Services
             OpenWebsiteAsync(url);
         }
 
+        /// <inheritdoc/>
+        public void OpenWebsiteInApp(string url)
+        {
+            OpenWebsite(url);
+        }
+
         private async void OpenWebsiteAsync(string url)
         {
             await Launcher.LaunchUriAsync(new Uri(url));

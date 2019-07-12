@@ -9,7 +9,6 @@ using Android.Content;
 using Android.Content.PM;
 using Android.OS;
 using SilentNotes.Services;
-using SilentNotes.Services.CloudStorageServices;
 using SilentNotes.StoryBoards.SynchronizationStory;
 
 namespace SilentNotes.Android
@@ -21,27 +20,31 @@ namespace SilentNotes.Android
     /// <remarks>
     /// The flags NoHistory and LaunchMode are essential, for the app to appear at the top again.
     /// </remarks>
-    [Activity(Label = "CloudStorageRedirectActivity", NoHistory = true, LaunchMode = LaunchMode.SingleTask)]
+    [Activity(Label = "CloudStorageRedirectActivity", NoHistory = true, LaunchMode = LaunchMode.SingleTop)]
     [IntentFilter(
         new[] { Intent.ActionView },
         Categories = new[] { Intent.CategoryDefault, Intent.CategoryBrowsable },
-        DataScheme = "ch.martinstoeckli.silentnotes")]
+        DataScheme = "ch.martinstoeckli.silentnotes",
+        DataPath = "/oauth2redirect")]
     public class CloudStorageRedirectActivity : Activity
     {
         /// <inheritdoc/>
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-            System.Uri redirectUri = new Uri(Intent.Data.ToString()); // Convert Android.Net.Uri to System.Uri
 
-            // Call the storage service
-            IStoryBoardService storyBoardService = Ioc.GetOrCreate<IStoryBoardService>();
-            IOauth2CloudStorageService oauthStorageService = storyBoardService.ActiveStory?.LoadFromSession<IOauth2CloudStorageService>(
-                SynchronizationStorySessionKey.OauthCloudStorageService.ToInt());
-            oauthStorageService?.HandleOauth2Redirect(redirectUri);
+            string redirectUrl = Intent.Data.ToString();
+            IStoryBoardService storyBoardService = new StoryBoardService();
+            if (storyBoardService.ActiveStory != null)
+                storyBoardService.ActiveStory.StoreToSession(SynchronizationStorySessionKey.OauthRedirectUrl.ToInt(), redirectUrl);
 
-            // Stop the activity, its job is already done.
+            // Stop the redirect activity, its job is already done.
             Finish();
+
+            // Clear the activity holding the custom tab and return to already running main activity.
+            Intent intent = new Intent(this, typeof(MainActivity));
+            intent.SetFlags(ActivityFlags.ClearTop | ActivityFlags.SingleTop);
+            StartActivity(intent);
         }
     }
 }
