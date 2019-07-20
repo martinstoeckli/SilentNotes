@@ -3,7 +3,6 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Security;
@@ -88,30 +87,17 @@ namespace VanillaCloudStorageClient
             if (credentials == null)
                 throw new InvalidParameterException(nameof(CloudStorageCredentials));
 
-            switch (requirements)
-            {
-                case CloudStorageCredentialsRequirements.Token:
-                    if (credentials.Token == null)
-                        throw new InvalidParameterException(string.Format("{0}.{1}", nameof(CloudStorageCredentials), nameof(CloudStorageCredentials.Token)));
-                    break;
-                case CloudStorageCredentialsRequirements.UsernamePassword:
-                    if (string.IsNullOrWhiteSpace(credentials.Username))
-                        throw new InvalidParameterException(string.Format("{0}.{1}", nameof(CloudStorageCredentials), nameof(CloudStorageCredentials.Username)));
-                    if (credentials.Password == null)
-                        throw new InvalidParameterException(string.Format("{0}.{1}", nameof(CloudStorageCredentials), nameof(CloudStorageCredentials.Password)));
-                    break;
-                case CloudStorageCredentialsRequirements.UsernamePasswordUrl:
-                case CloudStorageCredentialsRequirements.UsernamePasswordUrlSecure:
-                    if (string.IsNullOrWhiteSpace(credentials.Username))
-                        throw new InvalidParameterException(string.Format("{0}.{1}", nameof(CloudStorageCredentials), nameof(CloudStorageCredentials.Username)));
-                    if (credentials.Password == null)
-                        throw new InvalidParameterException(string.Format("{0}.{1}", nameof(CloudStorageCredentials), nameof(CloudStorageCredentials.Password)));
-                    if (string.IsNullOrWhiteSpace(credentials.Url))
-                        throw new InvalidParameterException(string.Format("{0}.{1}", nameof(CloudStorageCredentials), nameof(CloudStorageCredentials.Url)));
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(requirements));
-            }
+            if (requirements.NeedsToken() && (credentials.Token == null))
+                throw new InvalidParameterException(string.Format("{0}.{1}", nameof(CloudStorageCredentials), nameof(CloudStorageCredentials.Token)));
+
+            if (requirements.NeedsUrl() && string.IsNullOrWhiteSpace(credentials.Url))
+                throw new InvalidParameterException(string.Format("{0}.{1}", nameof(CloudStorageCredentials), nameof(CloudStorageCredentials.Url)));
+
+            if (requirements.NeedsUsername() && string.IsNullOrWhiteSpace(credentials.Username))
+                throw new InvalidParameterException(string.Format("{0}.{1}", nameof(CloudStorageCredentials), nameof(CloudStorageCredentials.Username)));
+
+            if (requirements.NeedsPassword() && (credentials.Password == null))
+                throw new InvalidParameterException(string.Format("{0}.{1}", nameof(CloudStorageCredentials), nameof(CloudStorageCredentials.Password)));
         }
     }
 }
