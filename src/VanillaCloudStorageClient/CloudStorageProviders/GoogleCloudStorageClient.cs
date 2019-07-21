@@ -16,8 +16,9 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
 {
     /// <summary>
     /// Implementation of the <see cref="ICloudStorageClient"/> interface, which can handle cloud
-    /// storage with the Google Drive API. Files are stored in the predefined "appDataFolder", the
-    /// necessary privileges must be defined in the Goolge-developer-console for this client id.
+    /// storage with the Google Drive API. Files are stored in the predefined "appDataFolder"
+    /// directory, the necessary privileges must be defined in the Goolge-developer-console for
+    /// this client id.
     /// </summary>
     public class GoogleCloudStorageClient : OAuth2CloudStorageClient, ICloudStorageClient, IOAuth2CloudStorageClient
     {
