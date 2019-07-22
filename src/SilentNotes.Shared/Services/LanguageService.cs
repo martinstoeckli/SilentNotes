@@ -160,7 +160,7 @@ namespace SilentNotes.Services
             resources["show_transfer_code"] = "Transfercode anzeigen";
             resources["transfer_not_existing"] = "Der Transfercode ist erst verfügbar nach der ersten Synchronisation.";
             resources["transfer_code"] = "Transfercode";
-            resources["transfer_code_usage"] = "Mit diesem Transfercode können Sie die in der Cloud gespeicherten Notizen entschlüssen.";
+            resources["transfer_code_usage"] = "Mit diesem Transfercode können Sie die in der Cloud gespeicherten Notizen entschlüsseln.";
             resources["transfer_code_required"] = "Bitte geben Sie den Transfercode ein. Sie erhalten den Code von einem bereits synchronisierten Gerät, indem sie dort den Menupunkt «Transfercode anzeigen» benutzen.";
             resources["transfer_code_show_history"] = "Ältere Transfercodes anzeigen";
             resources["transfer_code_created"] = "Ein neuer Transfercode {0} wurde generiert, er kann jederzeit im Menu unter ‹Transfercode anzeigen› nachgeschaut werden.";
