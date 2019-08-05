@@ -43,7 +43,7 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
         }
 
         [Test]
-        //[Ignore("Opens the authorization page in the system browse, to get a real authorization-code")]
+        [Ignore("Opens the authorization page in the system browse, to get a real authorization-code")]
         public void ReallyDoOpenAuthorizationPageInBrowser()
         {
             IOAuth2CloudStorageClient client = new OnedriveCloudStorageClient(ClientId, RedirectUrl);
@@ -56,7 +56,7 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
         }
 
         [Test]
-        //[Ignore("Gets a real access-token")]
+        [Ignore("Gets a real access-token")]
         public void ReallyDoFetchToken()
         {
             if (!DoRealWebRequests)
@@ -78,7 +78,7 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
         }
 
         [Test]
-        //[Ignore("Refreshes a real token")]
+        [Ignore("Refreshes a real token")]
         public void ReallyDoRefreshToken()
         {
             if (!DoRealWebRequests)

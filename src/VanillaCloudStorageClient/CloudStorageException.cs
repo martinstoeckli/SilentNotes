@@ -35,6 +35,15 @@ namespace VanillaCloudStorageClient
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ConnectionFailedException"/> class.
+        /// Prefer the other constructors for production and keep this one for unittesting.
+        /// </summary>
+        public ConnectionFailedException()
+            : base("An error occured while connecting to the server", null)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ConnectionFailedException"/> class.
         /// </summary>
         /// <param name="message">Error message.</param>
         /// <param name="innerException">The inner exception if any, or null.</param>
@@ -60,6 +69,15 @@ namespace VanillaCloudStorageClient
     [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass", Justification = "Just a list of exceptions.")]
     public class AccessDeniedException : CloudStorageException
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AccessDeniedException"/> class.
+        /// Prefer the other constructors for production and keep this one for unittesting.
+        /// </summary>
+        public AccessDeniedException()
+            : base("Access to the requested resource was denied.", null)
+        {
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="AccessDeniedException"/> class.
         /// </summary>

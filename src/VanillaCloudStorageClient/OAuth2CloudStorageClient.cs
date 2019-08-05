@@ -34,13 +34,13 @@ namespace VanillaCloudStorageClient
         #region IOAuth2CloudStorageClient
 
         /// <inheritdoc/>
-        public string BuildAuthorizationRequestUrl(string state)
+        public virtual string BuildAuthorizationRequestUrl(string state)
         {
             return OAuth2Utils.BuildAuthorizationRequestUrl(Config, state);
         }
 
         /// <inheritdoc/>
-        public async Task<CloudStorageToken> FetchTokenAsync(string redirectedUrl, string state)
+        public virtual async Task<CloudStorageToken> FetchTokenAsync(string redirectedUrl, string state)
         {
             if (string.IsNullOrWhiteSpace(redirectedUrl))
                 throw new ArgumentNullException(nameof(redirectedUrl));
@@ -83,7 +83,7 @@ namespace VanillaCloudStorageClient
         }
 
         /// <inheritdoc/>
-        public async Task<CloudStorageToken> RefreshTokenAsync(CloudStorageToken token)
+        public virtual async Task<CloudStorageToken> RefreshTokenAsync(CloudStorageToken token)
         {
             if (token == null)
                 throw new ArgumentNullException(nameof(token));

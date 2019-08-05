@@ -39,6 +39,24 @@ namespace VanillaCloudStorageClient
     public static class CloudStorageTokenExtensions
     {
         /// <summary>
+        /// Checks whether the content of two <see cref="CloudStorageToken"/> instances are equal,
+        /// or if both are null.
+        /// </summary>
+        /// <param name="token1">First token.</param>
+        /// <param name="token2">Other token.</param>
+        /// <returns>Returns true if the tokens are equal, otherwise false.</returns>
+        public static bool AreEqualOrNull(this CloudStorageToken token1, CloudStorageToken token2)
+        {
+            if ((token1 == null) && (token2 == null))
+                return true;
+
+            return (token1 != null) && (token2 != null)
+                && token1.AccessToken == token2.AccessToken
+                && token1.RefreshToken == token2.RefreshToken
+                && token1.ExpiryDate == token2.ExpiryDate;
+        }
+
+        /// <summary>
         /// Sets the expiry date, by calculating the date with a number of seconds, as an OAuth2
         /// request returns.
         /// </summary>

@@ -43,6 +43,7 @@ namespace VanillaCloudStorageClientTest
         {
             CloudStorageCredentials credentials = new CloudStorageCredentials
             {
+                CloudStorageId = "Dropbox",
                 Token = new CloudStorageToken(),
                 Username = "user",
                 UnprotectedPassword = "pwd",
@@ -67,6 +68,41 @@ namespace VanillaCloudStorageClientTest
             credentials = null;
             Assert.Throws<InvalidParameterException>(() => credentials.ThrowIfInvalid(CloudStorageCredentialsRequirements.Token));
         }
+
+        [Test]
+        public void AreEqualWorksWithSameContent()
+        {
+            CloudStorageCredentials credentials = new CloudStorageCredentials
+            {
+                Token = new CloudStorageToken { AccessToken = "a" }
+            };
+            CloudStorageCredentials credentials2 = new CloudStorageCredentials
+            {
+                Token = new CloudStorageToken { AccessToken = "a" }
+            };
+
+            Assert.IsTrue(credentials.AreEqualOrNull(credentials2));
+
+            credentials = null;
+            credentials2 = null;
+            Assert.IsTrue(credentials.AreEqualOrNull(credentials2));
+        }
+
+        [Test]
+        public void AreEqualWorksWithDifferentPassword()
+        {
+            CloudStorageCredentials credentials = new CloudStorageCredentials
+            {
+                Password = SecureStringExtensions.StringToSecureString("abc")
+            };
+            CloudStorageCredentials credentials2 = new CloudStorageCredentials
+            {
+                Password = SecureStringExtensions.StringToSecureString("def")
+            };
+
+            Assert.IsFalse(credentials.AreEqualOrNull(credentials2));
+        }
+
 
         /// <summary>
         /// Converts a string to a SecureString. Keep the usage of this method to a minimum, try to

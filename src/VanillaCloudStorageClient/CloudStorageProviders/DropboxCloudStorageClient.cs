@@ -20,6 +20,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
     /// </summary>
     public class DropboxCloudStorageClient : OAuth2CloudStorageClient, ICloudStorageClient, IOAuth2CloudStorageClient
     {
+        private const string AuthorizeUrl = "https://www.dropbox.com/oauth2/authorize";
         private const string UploadUrl = "https://content.dropboxapi.com/2/files/upload";
         private const string DownloadUrl = "https://content.dropboxapi.com/2/files/download";
         private const string DeleteUrl = "https://api.dropboxapi.com/2/files/delete_v2";
@@ -34,7 +35,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
         public DropboxCloudStorageClient(string oauthClientId, string oauthRedirectUrl)
             : base(new OAuth2Config
             {
-                AuthorizeServiceEndpoint = "https://www.dropbox.com/oauth2/authorize",
+                AuthorizeServiceEndpoint = AuthorizeUrl,
                 TokenServiceEndpoint = null,
                 ClientId = oauthClientId,
                 RedirectUrl = oauthRedirectUrl,

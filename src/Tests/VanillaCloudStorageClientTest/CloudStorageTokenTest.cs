@@ -39,6 +39,49 @@ namespace VanillaCloudStorageClientTest
         }
 
         [Test]
+        public void AreEqualWorksWithSameContent()
+        {
+            CloudStorageToken token = new CloudStorageToken
+            {
+                AccessToken = "a", RefreshToken = null, ExpiryDate = new DateTime(1984, 11, 11)
+            };
+
+            CloudStorageToken token2 = new CloudStorageToken
+            {
+                AccessToken = "a", RefreshToken = null, ExpiryDate = new DateTime(1984, 11, 11)
+            };
+
+            Assert.IsTrue(token.AreEqualOrNull(token2));
+            Assert.IsFalse(token.AreEqualOrNull(null));
+
+            token = null;
+            Assert.IsTrue(token.AreEqualOrNull(null));
+        }
+
+        [Test]
+        public void AreEqualWorksWithNullDate()
+        {
+            CloudStorageToken token = new CloudStorageToken
+            {
+                AccessToken = "a",
+                RefreshToken = null,
+                ExpiryDate = null
+            };
+
+            CloudStorageToken token2 = new CloudStorageToken
+            {
+                AccessToken = "a",
+                RefreshToken = null,
+                ExpiryDate = null
+            };
+
+            Assert.IsTrue(token.AreEqualOrNull(token2));
+
+            token2.ExpiryDate = new DateTime(1984, 11, 11);
+            Assert.IsFalse(token.AreEqualOrNull(token2));
+        }
+
+        [Test]
         public void NeedsRefreshReturnsTrueIfExpired()
         {
             CloudStorageToken token = new CloudStorageToken { RefreshToken = "notempty" };
