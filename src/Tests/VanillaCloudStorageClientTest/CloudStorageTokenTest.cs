@@ -14,8 +14,8 @@ namespace VanillaCloudStorageClientTest
             token.SetExpiryDateBySecondsFromNow(375);
 
             Assert.IsNotNull(token.ExpiryDate);
-            Assert.IsTrue(token.ExpiryDate > DateTime.Now);
-            Assert.IsTrue(token.ExpiryDate < DateTime.Now.AddSeconds(375));
+            Assert.IsTrue(token.ExpiryDate > DateTime.UtcNow);
+            Assert.IsTrue(token.ExpiryDate < DateTime.UtcNow.AddSeconds(375));
         }
 
         [Test]
@@ -25,8 +25,8 @@ namespace VanillaCloudStorageClientTest
             token.SetExpiryDateBySecondsFromNow(8);
 
             Assert.IsNotNull(token.ExpiryDate);
-            Assert.IsTrue(token.ExpiryDate > DateTime.Now);
-            Assert.IsTrue(token.ExpiryDate < DateTime.Now.AddSeconds(8));
+            Assert.IsTrue(token.ExpiryDate > DateTime.UtcNow);
+            Assert.IsTrue(token.ExpiryDate < DateTime.UtcNow.AddSeconds(8));
         }
 
         [Test]
@@ -109,7 +109,7 @@ namespace VanillaCloudStorageClientTest
         {
             // The token flow has no refresh token
             CloudStorageToken token = new CloudStorageToken { RefreshToken = null };
-            token.ExpiryDate = DateTime.Now.AddSeconds(-8); // Would have been expired
+            token.ExpiryDate = DateTime.UtcNow.AddSeconds(-8); // Would have been expired
             Assert.IsFalse(token.NeedsRefresh());
         }
     }

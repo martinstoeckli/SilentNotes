@@ -63,7 +63,7 @@ namespace VanillaCloudStorageClientTest
             credentials.DecryptAfterDeserialization(PseudoDecrypt);
 
             Assert.AreEqual("atk", credentials.Token.AccessToken);
-            Assert.AreEqual(new DateTime(1999, 12, 24), credentials.Token.ExpiryDate);
+            Assert.AreEqual(new DateTime(1999, 12, 24, 0, 0, 0, DateTimeKind.Utc), credentials.Token.ExpiryDate);
             Assert.AreEqual("rtk", credentials.Token.RefreshToken);
             Assert.AreEqual("usr", credentials.Username);
             Assert.AreEqual("pwd", credentials.UnprotectedPassword);
@@ -215,7 +215,7 @@ namespace VanillaCloudStorageClientTest
                 Token = new CloudStorageToken
                 {
                     AccessToken = "atk",
-                    ExpiryDate = new DateTime(1999, 12, 24),
+                    ExpiryDate = new DateTime(1999, 12, 24, 0, 0, 0, DateTimeKind.Utc),
                     RefreshToken = "rtk",
                 },
                 Username = "usr",
@@ -225,14 +225,14 @@ namespace VanillaCloudStorageClientTest
             };
         }
 
-        private static byte[] PseudoEncrypt(string text)
+        private static string PseudoEncrypt(string text)
         {
-            return Encoding.UTF8.GetBytes(text);
+            return Convert.ToBase64String(Encoding.UTF8.GetBytes(text));
         }
 
-        private static string PseudoDecrypt(byte[] cipher)
+        private static string PseudoDecrypt(string cipher)
         {
-            return Encoding.UTF8.GetString(cipher);
+            return Encoding.UTF8.GetString(Convert.FromBase64String(cipher));
         }
 
         private static string SerializeWithXmlSerializer(object obj)

@@ -101,59 +101,68 @@ namespace VanillaCloudStorageClient
         }
 
         /// <summary>
-        /// Converts a byte array to a SecureString.
+        /// Converts a SecureString to to a encoded byte array. The function avoids the generation
+        /// of a string, which would depend on the garbage collector to be removed from memory.
         /// </summary>
-        /// <param name="bytes">Password as byte array. The password should be Unicode encoded,
-        /// means 2 bytes represent a single character.</param>
-        /// <returns>Password in a SecureString.</returns>
-        public static SecureString UnicodeBytesToSecureString(byte[] bytes)
+        /// <param name="secretString">Password as SecureString.</param>
+        /// <param name="encoding">The encoding which is used to convert the string to bytes.
+        /// If the parameter is null, it defaults to Encoding.UTF8.</param>
+        /// <returns>Array of bytes, or null if the password was null.</returns>
+        public static byte[] SecureStringToBytes(this SecureString secretString, Encoding encoding)
         {
-            if (bytes == null)
+            if (encoding == null)
+                encoding = Encoding.UTF8;
+            if (secretString == null)
                 return null;
+            if (secretString.Length == 0)
+                return new byte[0];
 
-            SecureString result = new SecureString();
-            char[] password = null;
+            IntPtr secretBstr = IntPtr.Zero;
+            char[] secretChars = null;
             try
             {
-                password = Encoding.Unicode.GetChars(bytes);
-                foreach (char c in password)
-                    result.AppendChar(c);
+                secretBstr = Marshal.SecureStringToBSTR(secretString);
+                secretChars = new char[secretString.Length];
+                Marshal.Copy(secretBstr, secretChars, 0, secretChars.Length);
+                return encoding.GetBytes(secretChars);
             }
             finally
             {
-                if (password != null)
-                    Array.Clear(password, 0, password.Length);
+                if (secretBstr != IntPtr.Zero)
+                    Marshal.ZeroFreeBSTR(secretBstr);
+                if (secretChars != null)
+                    Array.Clear(secretChars, 0, secretChars.Length);
             }
-            return result;
         }
 
         /// <summary>
-        /// Converts a SecureString to to a byte array.
+        /// Converts a UTF-8 encoded byte array to a SecureString. The function avoids the generation
+        /// of a string, which would depend on the garbage collector to be removed from memory.
         /// </summary>
-        /// <param name="password">Password as SecureString.</param>
-        /// <returns>Array of bytes, or null if the password was null.</returns>
-        public static byte[] SecureStringToUnicodeBytes(this SecureString password)
+        /// <param name="secretBytes">Password as byte array. The password should be UTF-8 encoded.</param>
+        /// <param name="encoding">The encoding which should be used to build the string from the
+        /// bytes. If the parameter is null, it defaults to Encoding.UTF8.</param>
+        /// <returns>Password in a SecureString.</returns>
+        public static SecureString BytesToSecureString(byte[] secretBytes, Encoding encoding)
         {
-            if (password == null)
+            if (encoding == null)
+                encoding = Encoding.UTF8;
+            if (secretBytes == null)
                 return null;
-            if (password.Length == 0)
-                return new byte[0];
 
-            IntPtr passwordBstr = IntPtr.Zero;
+            char[] secretChars = null;
             try
             {
-                passwordBstr = Marshal.SecureStringToBSTR(password);
-                int length = Marshal.ReadInt32(passwordBstr, -4);
-                byte[] result = new byte[length];
-
-                for (int i = 0; i < length; i++)
-                    result[i] = Marshal.ReadByte(passwordBstr, i);
+                SecureString result = new SecureString();
+                secretChars = encoding.GetChars(secretBytes);
+                foreach (char c in secretChars)
+                    result.AppendChar(c);
                 return result;
             }
             finally
             {
-                if (passwordBstr != IntPtr.Zero)
-                    Marshal.ZeroFreeBSTR(passwordBstr);
+                if (secretChars != null)
+                    Array.Clear(secretChars, 0, secretChars.Length);
             }
         }
     }

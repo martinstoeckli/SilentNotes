@@ -14,8 +14,8 @@ namespace VanillaCloudStorageClient
     /// <summary>
     /// Use this class instead of <see cref="CloudStorageCredentials"/>, if the credentials have
     /// to be stored on a local device and therefore must be serialized.
-    /// Call <see cref="EncryptBeforeSerialization(Func{string, byte[]})"/> before doing the
-    /// serialization, and <see cref="DecryptAfterDeserialization(Func{byte[], string})"/> after
+    /// Call <see cref="EncryptBeforeSerialization(Func{string, string})"/> before doing the
+    /// serialization, and <see cref="DecryptAfterDeserialization(Func{string, string})"/> after
     /// deserialization.
     /// </summary>
     [Serializable]
@@ -28,11 +28,14 @@ namespace VanillaCloudStorageClient
     {
         /// <summary>
         /// Call this method before doing the serialization, it encrypts all sensitive properties,
-        /// so they do not show up in the serialized text. The properties will be base64 encoded.
+        /// so they do not show up in the serialized text.
         /// </summary>
-        /// <param name="encrypt">A delegate used to do the encryption of the plain texts.</param>
-        public void EncryptBeforeSerialization(Func<string, byte[]> encrypt)
+        /// <param name="encrypt">A delegate used to do the encryption of the plain texts.
+        /// The resulting string should be Base64 encoded (no binary content), so it can be used
+        /// safely for serialization.</param>
+        public void EncryptBeforeSerialization(Func<string, string> encrypt)
         {
+            SerializeableCloudStorageId = CloudStorageId;
             SerializeableAccessToken = EncryptProperty(Token?.AccessToken, encrypt);
             SerializeableExpiryDate = Token?.ExpiryDate;
             SerializeableRefreshToken = EncryptProperty(Token?.RefreshToken, encrypt);
@@ -47,7 +50,7 @@ namespace VanillaCloudStorageClient
         /// can be used by the application.
         /// </summary>
         /// <param name="decrypt">A delegate used to do the decryption of the encrypted textes.</param>
-        public void DecryptAfterDeserialization(Func<byte[], string> decrypt)
+        public void DecryptAfterDeserialization(Func<string, string> decrypt)
         {
             CloudStorageToken token = new CloudStorageToken
             {
@@ -58,12 +61,21 @@ namespace VanillaCloudStorageClient
             if ((token.AccessToken == null) && (token.RefreshToken == null))
                 token = null;
 
+            CloudStorageId = SerializeableCloudStorageId;
             Token = token;
             Username = DecryptProperty(SerializeableUsername, decrypt);
             UnprotectedPassword = DecryptProperty(SerializeablePassword, decrypt);
             Url = SerializeableUrl;
             Secure = SerializeableSecure;
         }
+
+        /// <summary>
+        /// Gets or sets the serializable <see cref="CloudStorageCredentials.CloudStorageId"/>.
+        /// </summary>
+        [XmlElement("cloud_storage_id")]
+        [JsonProperty("cloud_storage_id")]
+        [DataMember(Name = "cloud_storage_id")]
+        public string SerializeableCloudStorageId { get; set; }
 
         /// <summary>
         /// Gets or sets the serializable <see cref="CloudStorageToken.AccessToken"/>.
@@ -136,20 +148,14 @@ namespace VanillaCloudStorageClient
         [JsonIgnore]
         public bool SerializeableSecureSpecified { get { return SerializeableSecure == true; } } // Do only serialize when set
 
-        private string EncryptProperty(string plainText, Func<string, byte[]> encrypt)
+        private string EncryptProperty(string plainText, Func<string, string> encrypt)
         {
-            if (plainText == null)
-                return null;
-            else
-                return Convert.ToBase64String(encrypt(plainText));
+            return (plainText == null) ? null : encrypt(plainText);
         }
 
-        private string DecryptProperty(string cipherText, Func<byte[], string> decrypt)
+        private string DecryptProperty(string cipherText, Func<string, string> decrypt)
         {
-            if (cipherText == null)
-                return null;
-            else
-                return decrypt(Convert.FromBase64String(cipherText));
+            return (cipherText == null) ? null : decrypt(cipherText);
         }
     }
 }

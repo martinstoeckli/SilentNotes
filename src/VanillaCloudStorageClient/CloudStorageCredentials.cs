@@ -28,9 +28,9 @@ namespace VanillaCloudStorageClient
         /// It is a developer generated id, which should allow to get/create the correct
         /// <see cref="ICloudStorageClient"/>, the credentials where made for.
         /// </summary>
-        [XmlElement("cloud_storage_id")]
-        [JsonProperty("cloud_storage_id")]
-        [DataMember(Name = "cloud_storage_id")]
+        [XmlIgnore]
+        [JsonIgnore]
+        [IgnoreDataMember]
         public string CloudStorageId { get; set; }
 
         /// <summary>

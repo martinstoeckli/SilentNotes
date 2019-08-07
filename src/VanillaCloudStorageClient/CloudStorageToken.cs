@@ -13,6 +13,8 @@ namespace VanillaCloudStorageClient
     /// </summary>
     public class CloudStorageToken
     {
+        private DateTime? _expiryDate;
+
         /// <summary>
         /// Gets or sets the access token, which can be passed along future calls to the OAuth2
         /// service, to use its API.
@@ -20,10 +22,22 @@ namespace VanillaCloudStorageClient
         public string AccessToken { get; set; }
 
         /// <summary>
-        /// Gets or sets the expiry time of the <see cref="AccessToken"/>. After this time, the
-        /// <see cref="RefreshToken"/> can be used to get a new access token.
+        /// Gets or sets the expiry time of the <see cref="AccessToken"/> in UTC. After this time,
+        /// the <see cref="RefreshToken"/> should be used to get a new access token. If an expiry
+        /// date of another time zone is set, it will be converted to UTC automatically.
         /// </summary>
-        public DateTime? ExpiryDate { get; set; }
+        public DateTime? ExpiryDate
+        {
+            get { return _expiryDate; }
+
+            set
+            {
+                if (value.HasValue)
+                    _expiryDate = value.Value.ToUniversalTime();
+                else
+                    _expiryDate = null;
+            }
+        }
 
         /// <summary>
         /// Gets or sets the refresh token, which can be used to get new access tokens after they
@@ -73,7 +87,7 @@ namespace VanillaCloudStorageClient
             {
                 // Decrease time by a tolerance (10%) but not more than one minute
                 double tolerance = Math.Min(60.0, seconds.Value / 10.0);
-                token.ExpiryDate = DateTime.Now.AddSeconds(seconds.Value - tolerance);
+                token.ExpiryDate = DateTime.UtcNow.AddSeconds(seconds.Value - tolerance);
             }
         }
 
@@ -88,7 +102,7 @@ namespace VanillaCloudStorageClient
                 return false;
 
             if (token.ExpiryDate != null)
-                return token.ExpiryDate < DateTime.Now;
+                return token.ExpiryDate < DateTime.UtcNow;
             else
                 return true;
         }
