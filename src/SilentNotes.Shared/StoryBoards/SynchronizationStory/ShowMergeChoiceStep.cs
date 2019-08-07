@@ -31,7 +31,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         /// <inheritdoc/>
         public override Task Run()
         {
-            if (!IsRunningInSilentMode)
+            if (StoryBoard.Mode.ShouldUseGui())
                 _navigationService.Navigate(ControllerNames.MergeChoice);
             return GetCompletedDummyTask();
         }

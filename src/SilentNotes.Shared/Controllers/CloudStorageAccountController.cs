@@ -5,10 +5,9 @@
 
 using SilentNotes.HtmlView;
 using SilentNotes.Services;
-using SilentNotes.Services.CloudStorageServices;
 using SilentNotes.StoryBoards.SynchronizationStory;
 using SilentNotes.ViewModels;
-using SilentNotes.Workers;
+using VanillaCloudStorageClient;
 
 namespace SilentNotes.Controllers
 {
@@ -39,7 +38,7 @@ namespace SilentNotes.Controllers
         {
             base.ShowInView(htmlView, variables);
             IStoryBoardService storyBoardService = Ioc.GetOrCreate<IStoryBoardService>();
-            CloudStorageAccount account = storyBoardService.ActiveStory.LoadFromSession<CloudStorageAccount>(SynchronizationStorySessionKey.CloudStorageAccount.ToInt());
+            SerializeableCloudStorageCredentials credentials = storyBoardService.ActiveStory.LoadFromSession<SerializeableCloudStorageCredentials>(SynchronizationStorySessionKey.CloudStorageCredentials.ToInt());
 
             _viewModel = new CloudStorageAccountViewModel(
                 Ioc.GetOrCreate<INavigationService>(),
@@ -48,7 +47,8 @@ namespace SilentNotes.Controllers
                 Ioc.GetOrCreate<IBaseUrlService>(),
                 storyBoardService,
                 Ioc.GetOrCreate<IFeedbackService>(),
-                account);
+                Ioc.GetOrCreate<ICloudStorageClientFactory>(),
+                credentials);
 
             Bindings.BindCommand("GoBack", _viewModel.GoBackCommand);
             Bindings.BindCommand("OkCommand", _viewModel.OkCommand);
@@ -56,6 +56,7 @@ namespace SilentNotes.Controllers
             Bindings.BindText("Url", null, (v) => _viewModel.Url = v, null, null, HtmlViewBindingMode.OneWayToViewmodel);
             Bindings.BindText("Username", null, (v) => _viewModel.Username = v, null, null, HtmlViewBindingMode.OneWayToViewmodel);
             Bindings.BindText("Password", () => SecureStringExtensions.SecureStringToString(_viewModel.Password), (v) => _viewModel.Password = SecureStringExtensions.StringToSecureString(v), _viewModel, nameof(_viewModel.Password), HtmlViewBindingMode.TwoWayPlusOneTimeToView);
+            Bindings.BindCheckbox("Secure", null, (v) => _viewModel.Secure = v, null, null, HtmlViewBindingMode.OneWayToViewmodel);
 
             string html = _viewService.GenerateHtml(_viewModel);
             View.LoadHtml(html);

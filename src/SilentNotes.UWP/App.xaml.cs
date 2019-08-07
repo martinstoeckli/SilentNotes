@@ -5,7 +5,6 @@
 
 using System;
 using SilentNotes.Services;
-using SilentNotes.Services.CloudStorageServices;
 using SilentNotes.StoryBoards.SynchronizationStory;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
@@ -146,18 +145,19 @@ namespace SilentNotes.UWP
 
             Uri redirectUri = (args as ProtocolActivatedEventArgs)?.Uri;
             string url = redirectUri?.AbsoluteUri;
-            if (string.IsNullOrEmpty(url) || (!url.Contains("ch.martinstoeckli.silentnotes://oauth2redirect/")))
+            if (string.IsNullOrEmpty(url) || (!url.Contains("ch.martinstoeckli.silentnotes:")))
                 return false;
 
             // Bring application back to front
             Window.Current.Activate();
 
-            // Call the storage service
+            // Reenter the synchronization story
             IStoryBoardService storyBoardService = Ioc.GetOrCreate<IStoryBoardService>();
-            IOauth2CloudStorageService oauthStorageService = storyBoardService.ActiveStory?.LoadFromSession<IOauth2CloudStorageService>(
-                SynchronizationStorySessionKey.OauthCloudStorageService.ToInt());
-            oauthStorageService?.HandleOauth2Redirect(redirectUri);
-
+            if (storyBoardService.ActiveStory is SynchronizationStoryBoard)
+            {
+                storyBoardService.ActiveStory.StoreToSession(SynchronizationStorySessionKey.OauthRedirectUrl.ToInt(), url);
+                storyBoardService.ActiveStory.ContinueWith(SynchronizationStoryStepId.HandleOAuthRedirect.ToInt());
+            }
             return true;
         }
     }

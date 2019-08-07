@@ -8,8 +8,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using SilentNotes.Models;
 using SilentNotes.Services;
-using SilentNotes.Services.CloudStorageServices;
 using SilentNotes.Workers;
+using VanillaCloudStorageClient;
 
 namespace SilentNotes.StoryBoards.SynchronizationStory
 {
@@ -24,7 +24,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         private readonly ISettingsService _settingsService;
         private readonly ICryptoRandomService _cryptoRandomService;
         private readonly IRepositoryStorageService _repositoryStorageService;
-        private readonly ICloudStorageServiceFactory _cloudStorageServiceFactory;
+        private readonly ICloudStorageClientFactory _cloudStorageClientFactory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StoreMergedRepositoryAndQuitStep"/> class.
@@ -38,7 +38,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
             ISettingsService settingsService,
             ICryptoRandomService randomService,
             IRepositoryStorageService repositoryStorageService,
-            ICloudStorageServiceFactory cloudStorageServiceFactory)
+            ICloudStorageClientFactory cloudStorageClientFactory)
             : base(stepId, storyBoard)
         {
             _languageService = languageService;
@@ -46,7 +46,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
             _settingsService = settingsService;
             _cryptoRandomService = randomService;
             _repositoryStorageService = repositoryStorageService;
-            _cloudStorageServiceFactory = cloudStorageServiceFactory;
+            _cloudStorageClientFactory = cloudStorageClientFactory;
         }
 
         /// <inheritdoc/>
@@ -55,7 +55,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
             try
             {
                 NoteRepositoryModel cloudRepository = StoryBoard.LoadFromSession<NoteRepositoryModel>(SynchronizationStorySessionKey.CloudRepository.ToInt());
-                CloudStorageAccount account = StoryBoard.LoadFromSession<CloudStorageAccount>(SynchronizationStorySessionKey.CloudStorageAccount.ToInt());
+                SerializeableCloudStorageCredentials credentials = StoryBoard.LoadFromSession<SerializeableCloudStorageCredentials>(SynchronizationStorySessionKey.CloudStorageCredentials.ToInt());
                 _repositoryStorageService.LoadRepositoryOrDefault(out NoteRepositoryModel localRepository);
                 SettingsModel settings = _settingsService.LoadSettingsOrDefault();
 
@@ -75,8 +75,8 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
                     byte[] encryptedRepository = EncryptRepository(
                         mergedRepository, settings.TransferCode, _cryptoRandomService, settings.SelectedEncryptionAlgorithm);
 
-                    ICloudStorageService cloudStorageService = _cloudStorageServiceFactory.Create(account);
-                    await cloudStorageService.UploadRepositoryAsync(encryptedRepository);
+                    ICloudStorageClient cloudStorageClient = _cloudStorageClientFactory.GetOrCreate(credentials.CloudStorageId);
+                    await cloudStorageClient.UploadFileAsync(Config.RepositoryFileName, encryptedRepository, credentials);
                 }
 
                 await StoryBoard.ContinueWith(SynchronizationStoryStepId.StopAndShowRepository.ToInt());

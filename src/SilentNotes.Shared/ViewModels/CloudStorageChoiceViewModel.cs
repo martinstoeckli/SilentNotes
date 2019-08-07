@@ -3,13 +3,12 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Input;
 using SilentNotes.Services;
-using SilentNotes.Services.CloudStorageServices;
 using SilentNotes.StoryBoards.SynchronizationStory;
+using VanillaCloudStorageClient;
 
 namespace SilentNotes.ViewModels
 {
@@ -19,7 +18,7 @@ namespace SilentNotes.ViewModels
     public class CloudStorageChoiceViewModel : ViewModelBase
     {
         private readonly IStoryBoardService _storyBoardService;
-        private readonly ICloudStorageServiceFactory _cloudStorageServiceFactory;
+        private readonly ICloudStorageClientFactory _cloudStorageClientFactory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CloudStorageChoiceViewModel"/> class.
@@ -31,15 +30,15 @@ namespace SilentNotes.ViewModels
             ISvgIconService svgIconService,
             IBaseUrlService webviewBaseUrl,
             IStoryBoardService storyBoardService,
-            ICloudStorageServiceFactory cloudStorageServiceFactory)
+            ICloudStorageClientFactory cloudStorageClientFactory)
             : base(navigationService, languageService, svgIconService, webviewBaseUrl)
         {
             _storyBoardService = storyBoardService;
-            _cloudStorageServiceFactory = cloudStorageServiceFactory;
+            _cloudStorageClientFactory = cloudStorageClientFactory;
 
             ServiceChoices = new List<CloudStorageChoiceItemViewModel>();
             GoBackCommand = new RelayCommand(GoBack);
-            ChooseCommand = new RelayCommand<CloudStorageType>(Choose);
+            ChooseCommand = new RelayCommand<string>(Choose);
 
             ListChoices(ServiceChoices);
         }
@@ -50,18 +49,16 @@ namespace SilentNotes.ViewModels
         /// <param name="choices">List to fill.</param>
         private void ListChoices(List<CloudStorageChoiceItemViewModel> choices)
         {
-            foreach (CloudStorageType storageType in Enum.GetValues(typeof(CloudStorageType)))
+            foreach (string cloudStorageId in _cloudStorageClientFactory.EnumerateCloudStorageIds())
             {
-                if (storageType != CloudStorageType.Unknown)
+                CloudStorageMetadata metadata = _cloudStorageClientFactory.GetCloudStorageMetadata(cloudStorageId);
+                choices.Add(new CloudStorageChoiceItemViewModel
                 {
-                    choices.Add(new CloudStorageChoiceItemViewModel 
-                        {
-                            Command = ChooseCommand,
-                            ServiceType = storageType,
-                            Title = CloudStorageTypeExtensions.StorageTypeToString(storageType),
-                            Icon = CloudStorageServiceFactory.GetAssetImageName(storageType)
-                        });
-                }
+                    Command = ChooseCommand,
+                    CloudStorageId = cloudStorageId,
+                    Title = metadata.Title,
+                    Icon = metadata.AssetImageName,
+                });
             }
         }
 
@@ -75,10 +72,10 @@ namespace SilentNotes.ViewModels
         /// </summary>
         public ICommand ChooseCommand { get; private set; }
 
-        private async void Choose(CloudStorageType storageType)
+        private async void Choose(string cloudStorageId)
         {
-            CloudStorageAccount account = _cloudStorageServiceFactory.CreateDefaultSettings(storageType);
-            _storyBoardService.ActiveStory?.StoreToSession(SynchronizationStorySessionKey.CloudStorageAccount.ToInt(), account);
+            SerializeableCloudStorageCredentials credentials = new SerializeableCloudStorageCredentials { CloudStorageId = cloudStorageId };
+            _storyBoardService.ActiveStory?.StoreToSession(SynchronizationStorySessionKey.CloudStorageCredentials.ToInt(), credentials);
             await _storyBoardService.ActiveStory?.ContinueWith(SynchronizationStoryStepId.ShowCloudStorageAccount.ToInt());
         }
 
@@ -110,9 +107,9 @@ namespace SilentNotes.ViewModels
             public ICommand Command { get; set; }
 
             /// <summary>
-            /// Gets or sets the service type of this item.
+            /// Gets or sets the id of the cloud storage client.
             /// </summary>
-            public CloudStorageType ServiceType { get; set; }
+            public string CloudStorageId { get; set; }
 
             /// <summary>
             /// Gets or sets the title to display.

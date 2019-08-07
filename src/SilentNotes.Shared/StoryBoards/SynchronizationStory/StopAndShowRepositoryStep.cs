@@ -34,9 +34,9 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         public override Task Run()
         {
             StoryBoard.ClearSession();
-            if (!IsRunningInSilentMode)
+            _storyBoardService.ActiveStory = null;
+            if (StoryBoard.Mode.ShouldUseGui())
             {
-                _storyBoardService.ActiveStory = null;
                 _navigationService.Navigate(ControllerNames.NoteRepository);
             }
             return GetCompletedDummyTask();

@@ -27,7 +27,7 @@ namespace SilentNotes.StoryBoards
         /// value is true, no GUI should be involved and missing information should stop the story.
         /// An example for this mode could be a data synchronization at startup/shutdown.
         /// </summary>
-        bool SilentMode { get; }
+        StoryBoardMode Mode { get; }
 
         /// <summary>
         /// Starts the story at the first step, which was registered with <see cref="RegisterStep(IStoryBoardStep, bool)"/>.

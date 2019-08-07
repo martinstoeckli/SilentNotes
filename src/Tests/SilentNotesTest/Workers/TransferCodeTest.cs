@@ -1,5 +1,4 @@
 ﻿using NUnit.Framework;
-using SilentNotes.Services;
 using SilentNotes.Workers;
 
 namespace SilentNotesTest.Workers
@@ -10,11 +9,9 @@ namespace SilentNotesTest.Workers
         [Test]
         public void TransferCodeIsOfCorrectLength()
         {
-            ICryptoRandomService randomSource = new RandomSource4UnitTest();
-
             for (int length = 0; length < 999; length++)
             {
-                string code = TransferCode.GenerateCode(length, randomSource);
+                string code = TransferCode.GenerateCode(length, CommonMocksAndStubs.CryptoRandomService());
                 Assert.AreEqual(length, code.Length);
             }
         }
@@ -22,11 +19,9 @@ namespace SilentNotesTest.Workers
         [Test]
         public void TransferCodeIsOfCorrectAlphabet()
         {
-            ICryptoRandomService randomSource = new RandomSource4UnitTest();
-
             for (int length = 0; length < 999; length++)
             {
-                string code = TransferCode.GenerateCode(length, randomSource);
+                string code = TransferCode.GenerateCode(length, CommonMocksAndStubs.CryptoRandomService());
                 Assert.IsTrue(IsOfCorrectAlphabet(code));
             }
         }

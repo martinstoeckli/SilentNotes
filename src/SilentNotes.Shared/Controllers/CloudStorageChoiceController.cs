@@ -5,7 +5,6 @@
 
 using SilentNotes.HtmlView;
 using SilentNotes.Services;
-using SilentNotes.Services.CloudStorageServices;
 using SilentNotes.ViewModels;
 
 namespace SilentNotes.Controllers
@@ -42,7 +41,7 @@ namespace SilentNotes.Controllers
                 Ioc.GetOrCreate<ISvgIconService>(),
                 Ioc.GetOrCreate<IBaseUrlService>(),
                 Ioc.GetOrCreate<IStoryBoardService>(),
-                Ioc.GetOrCreate<ICloudStorageServiceFactory>());
+                Ioc.GetOrCreate<ICloudStorageClientFactory>());
 
             Bindings.BindCommand("GoBack", _viewModel.GoBackCommand);
             Bindings.UnhandledViewBindingEvent += BindingsEventHandler;
@@ -56,10 +55,8 @@ namespace SilentNotes.Controllers
             switch (e.BindingName.ToLowerInvariant())
             {
                 case "choose":
-                    string serviceTypeString = e.Parameters["data-servicetype"];
-                    CloudStorageType storageType = CloudStorageTypeExtensions.StringToStorageType(serviceTypeString);
-                    if (storageType != CloudStorageType.Unknown)
-                        _viewModel.ChooseCommand.Execute(storageType);
+                    string cloudStorageId = e.Parameters["data-cloudstorageid"];
+                    _viewModel.ChooseCommand.Execute(cloudStorageId);
                     break;
             }
         }

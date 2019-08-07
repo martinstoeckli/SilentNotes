@@ -12,6 +12,7 @@ using System.Windows.Input;
 using SilentNotes.Controllers;
 using SilentNotes.Models;
 using SilentNotes.Services;
+using SilentNotes.StoryBoards;
 using SilentNotes.StoryBoards.SynchronizationStory;
 using SilentNotes.Workers;
 
@@ -290,7 +291,7 @@ namespace SilentNotes.ViewModels
             {
                 try
                 {
-                    _storyBoardService.ActiveStory = new SynchronizationStoryBoard(false);
+                    _storyBoardService.ActiveStory = new SynchronizationStoryBoard(StoryBoardMode.GuiAndToasts);
                     await _storyBoardService.ActiveStory.Start();
                 }
                 catch (Exception)

@@ -23,16 +23,16 @@ namespace SilentNotes.StoryBoards
         /// Derrived classes should register their steps in the constructor with
         /// method <see cref="RegisterStep(IStoryBoardStep, bool)"/>.
         /// </summary>
-        /// <param name="silentMode">Sets the property <see cref="SilentMode"/>.</param>
-        public StoryBoardBase(bool silentMode = false)
+        /// <param name="mode">Sets the property <see cref="Mode"/>.</param>
+        public StoryBoardBase(StoryBoardMode mode = StoryBoardMode.GuiAndToasts)
         {
-            SilentMode = silentMode;
+            Mode = mode;
             _session = new Dictionary<int, object>();
             _steps = new List<IStoryBoardStep>();
         }
 
         /// <inheritdoc/>
-        public bool SilentMode { get; private set; }
+        public StoryBoardMode Mode { get; private set; }
 
         /// <inheritdoc/>
         public void RegisterStep(IStoryBoardStep step)
@@ -51,8 +51,7 @@ namespace SilentNotes.StoryBoards
         public async Task ContinueWith(int stepId)
         {
             IStoryBoardStep step = FindRegisteredStep(stepId);
-            if (step != null)
-                await step.Run();
+            await step?.Run();
         }
 
         /// <inheritdoc/>
@@ -103,7 +102,6 @@ namespace SilentNotes.StoryBoards
         /// </summary>
         /// <param name="stepId">Id of the step to search for.</param>
         /// <returns>The found step, or null if no such step could be found.</returns>
-        [DebuggerStepThrough]
         protected IStoryBoardStep FindRegisteredStep(int stepId)
         {
             return _steps.Find(step => stepId == step.Id);

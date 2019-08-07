@@ -6,7 +6,7 @@
 using System.Collections.Generic;
 using System.Xml.Serialization;
 using SilentNotes.Crypto.SymmetricEncryption;
-using SilentNotes.Services.CloudStorageServices;
+using VanillaCloudStorageClient;
 
 namespace SilentNotes.Models
 {
@@ -17,7 +17,7 @@ namespace SilentNotes.Models
     public class SettingsModel
     {
         /// <summary>The highest revision of the settings which can be handled by this application.</summary>
-        public const int NewestSupportedRevision = 2;
+        public const int NewestSupportedRevision = 3;
 
         /// <summary>The default color for notes, when the application is started the first time.</summary>
         public const string StartDefaultNoteColorHex = "#fbf4c1";
@@ -47,11 +47,11 @@ namespace SilentNotes.Models
         public int Revision { get; set; }
 
         /// <summary>
-        /// Gets or sets the settings for the cloud storage account if available, otherwise this
+        /// Gets or sets the credentials for the online storage if available, otherwise this
         /// property is null.
         /// </summary>
-        [XmlElement("cloud_storage_account")]
-        public CloudStorageAccount CloudStorageAccount { get; set; }
+        [XmlElement("cloud_storage_credentials")]
+        public SerializeableCloudStorageCredentials Credentials { get; set; }
 
         /// <summary>
         /// Gets or sets the id of the theme selected by the user.

@@ -6,6 +6,7 @@
 using System;
 using System.Threading.Tasks;
 using SilentNotes.Services;
+using Windows.UI.Core;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 
@@ -33,13 +34,16 @@ namespace SilentNotes.UWP.Services
         /// <inheritdoc/>
         public void ShowToast(string message)
         {
-            // Set new text
-            TextBlock toastText = _mainPage.FindName("ToastText") as TextBlock;
-            toastText.Text = message;
+            Task.Run(async () => await _mainPage.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                // Set new text
+                TextBlock toastText = _mainPage.FindName("ToastText") as TextBlock;
+                toastText.Text = message;
 
-            // Start fade-in fade-out animation
-            Storyboard toastStoryboard = _mainPage.Resources["ToastFadeInOut"] as Storyboard;
-            toastStoryboard.Begin();
+                // Start fade-in fade-out animation
+                Storyboard toastStoryboard = _mainPage.Resources["ToastFadeInOut"] as Storyboard;
+                toastStoryboard.Begin();
+            }));
         }
 
         /// <inheritdoc/>

@@ -13,6 +13,7 @@ using SilentNotes.Controllers;
 using SilentNotes.Crypto.SymmetricEncryption;
 using SilentNotes.Models;
 using SilentNotes.Services;
+using SilentNotes.StoryBoards;
 using SilentNotes.StoryBoards.SynchronizationStory;
 using SilentNotes.Workers;
 
@@ -230,7 +231,7 @@ namespace SilentNotes.ViewModels
 
         private void ClearCloudSettings()
         {
-            ChangePropertyIndirect(() => Model.CloudStorageAccount, (v) => Model.CloudStorageAccount = v, null, true, nameof(AccountSummary));
+            ChangePropertyIndirect(() => Model.Credentials, (v) => Model.Credentials = v, null, true, nameof(AccountSummary));
         }
 
         /// <summary>
@@ -242,7 +243,7 @@ namespace SilentNotes.ViewModels
         {
             try
             {
-                _storyBoardService.ActiveStory = new SynchronizationStoryBoard(false);
+                _storyBoardService.ActiveStory = new SynchronizationStoryBoard(StoryBoardMode.GuiAndToasts);
                 await _storyBoardService.ActiveStory.ContinueWith(SynchronizationStoryStepId.ShowCloudStorageChoice.ToInt());
             }
             catch (Exception)
@@ -259,16 +260,15 @@ namespace SilentNotes.ViewModels
         {
             get
             {
-                if (Model.CloudStorageAccount == null)
+                if (Model.Credentials == null)
                 {
                     return Language["cloud_service_undefined"];
                 }
                 else
                 {
                     StringBuilder sb = new StringBuilder();
-                    sb.AppendLine(Model.CloudStorageAccount.CloudType.ToString());
-                    sb.AppendLine(Model.CloudStorageAccount.Url);
-                    sb.AppendLine(Model.CloudStorageAccount.Username);
+                    sb.AppendLine(Model.Credentials.CloudStorageId);
+                    sb.AppendLine(Model.Credentials.Url);
                     return sb.ToString();
                 }
             }

@@ -7,6 +7,7 @@ using System;
 using System.Threading.Tasks;
 using SilentNotes.Controllers;
 using SilentNotes.Models;
+using SilentNotes.StoryBoards;
 using SilentNotes.StoryBoards.SynchronizationStory;
 
 namespace SilentNotes.Services
@@ -53,7 +54,7 @@ namespace SilentNotes.Services
             // Do the synchronization with the cloud storage in a background thread
             await Task.Run(async () =>
             {
-                SynchronizationStoryBoard syncStory = new SynchronizationStoryBoard(true);
+                SynchronizationStoryBoard syncStory = new SynchronizationStoryBoard(StoryBoardMode.ToastsOnly);
                 await syncStory.Start();
             }).ConfigureAwait(true); // Come back to the UI thread
 
@@ -82,7 +83,7 @@ namespace SilentNotes.Services
             if (currentFingerprint == LastSynchronizationFingerprint)
                 return;
 
-            SynchronizationStoryBoard syncStory = new SynchronizationStoryBoard(true);
+            SynchronizationStoryBoard syncStory = new SynchronizationStoryBoard(StoryBoardMode.Silent);
             await syncStory.Start();
         }
 

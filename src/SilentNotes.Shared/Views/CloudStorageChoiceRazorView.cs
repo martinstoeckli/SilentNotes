@@ -96,7 +96,7 @@ WriteLiteral(" type=\"text/css\"");
 
 WriteLiteral(@">
         .list-group {
-            max-width: 256px;
+            max-width: 300px;
         }
         .list-group-item {
             font-weight: bold;
@@ -188,11 +188,11 @@ WriteLiteral(" onclick=\"bind(event)\"");
 
 WriteLiteral(" data-binding=\"choose\"");
 
-WriteLiteral(" data-servicetype=\"");
+WriteLiteral(" data-cloudstorageid=\"");
 
 
 #line 47 "CloudStorageChoiceRazorView.cshtml"
-                                                                                                                                              Write(serviceChoice.ServiceType);
+                                                                                                                                                 Write(serviceChoice.CloudStorageId);
 
 
 #line default
