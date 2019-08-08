@@ -4,6 +4,8 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
+using System.Security.Cryptography;
+using System.Text;
 using Flurl;
 
 namespace VanillaCloudStorageClient.OAuth2
@@ -26,12 +28,15 @@ namespace VanillaCloudStorageClient.OAuth2
         /// <param name="stateParam">A random string which will be passed to the OAuth2 web service,
         /// and is returned in the response. An application should persist this state so it can
         /// verify the response.</param>
+        /// <param name="codeVerifier">An optional random string [43-128 chars a-z,A-Z,0-9] which
+        /// will be passed to the OAuth2 web service. An application should persist this code
+        /// verifier, because it is required to fetch the token.</param>
         /// <returns>A url which can be used to show the authorization page.</returns>
-        public static string BuildAuthorizationRequestUrl(OAuth2Config config, string stateParam)
+        public static string BuildAuthorizationRequestUrl(OAuth2Config config, string stateParam, string codeVerifier)
         {
             config.ThrowIfInvalidForAuthorizationRequest();
 
-            return new Url(config.AuthorizeServiceEndpoint)
+            Url result = new Url(config.AuthorizeServiceEndpoint)
                 .SetQueryParams(new
                 {
                     response_type = config.Flow.ToString().ToLowerInvariant(),
@@ -40,6 +45,32 @@ namespace VanillaCloudStorageClient.OAuth2
                     scope = config.Scope,
                     state = stateParam
                 });
+
+            if (!string.IsNullOrWhiteSpace(codeVerifier))
+            {
+                result.SetQueryParams(new
+                {
+                    code_challenge = HashCodeVerifier(codeVerifier),
+                    code_challenge_method = "S256"
+                });
+
+            }
+            return result;
+        }
+
+        private static string HashCodeVerifier(string codeVerifier)
+        {
+            using (SHA256 hasher = SHA256.Create())
+            {
+                byte[] hash = hasher.ComputeHash(Encoding.UTF8.GetBytes(codeVerifier));
+                string result = Convert.ToBase64String(hash);
+
+                // Converts base64 to base64url
+                result = result.Replace("+", "-");
+                result = result.Replace("/", "_");
+                result = result.Replace("=", "");
+                return result;
+            }
         }
 
         /// <summary>

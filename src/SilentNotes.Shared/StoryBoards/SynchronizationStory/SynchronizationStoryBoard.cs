@@ -45,6 +45,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         CloudRepository,
         OauthCloudStorageService,
         OauthState,
+        OauthCodeVerifier,
         OauthRedirectUrl,
     }
 

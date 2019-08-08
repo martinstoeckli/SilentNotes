@@ -26,6 +26,7 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
         private const string RedirectUrl = "com.example.myapp://oauth2redirect/";
         private const string OnedriveAccessToken = "GetItWithTheReallyDoMethods";
         private const string State = "7ysv8L9s4LB9CZpA";
+        private const string CodeVerifier = "abcdefghijklmnopqrstuvwxyabcdefghijklmnopqrstuvwxy";
         private HttpTest _httpTest;
 
         [SetUp]
@@ -47,7 +48,7 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
         public void ReallyDoOpenAuthorizationPageInBrowser()
         {
             IOAuth2CloudStorageClient client = new OnedriveCloudStorageClient(ClientId, RedirectUrl);
-            string requestUrl = client.BuildAuthorizationRequestUrl(State);
+            string requestUrl = client.BuildAuthorizationRequestUrl(State, null);
 
             Process browserProcess = new Process();
             browserProcess.StartInfo.UseShellExecute = true;
@@ -74,7 +75,7 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
 
         private async Task<CloudStorageToken> FetchTokenAsync(IOAuth2CloudStorageClient client, string redirectedUrl)
         {
-            return await client.FetchTokenAsync(redirectedUrl, State);
+            return await client.FetchTokenAsync(redirectedUrl, State, CodeVerifier);
         }
 
         [Test]

@@ -44,16 +44,19 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
                     throw new ArgumentNullException(nameof(credentials));
                 if (!StoryBoard.TryLoadFromSession(SynchronizationStorySessionKey.OauthState.ToInt(), out string oauthState))
                     throw new ArgumentNullException(nameof(oauthState));
+                if (!StoryBoard.TryLoadFromSession(SynchronizationStorySessionKey.OauthCodeVerifier.ToInt(), out string oauthCodeVerifier))
+                    throw new ArgumentNullException(nameof(oauthState));
                 if (!StoryBoard.TryLoadFromSession(SynchronizationStorySessionKey.OauthRedirectUrl.ToInt(), out string redirectUrl))
                     throw new ArgumentNullException(nameof(redirectUrl));
 
                 StoryBoard.RemoveFromSession(SynchronizationStorySessionKey.OauthState.ToInt());
+                StoryBoard.RemoveFromSession(SynchronizationStorySessionKey.OauthCodeVerifier.ToInt());
                 StoryBoard.RemoveFromSession(SynchronizationStorySessionKey.OauthRedirectUrl.ToInt());
 
                 ICloudStorageClient cloudStorageClient = _cloudStorageClientFactory.GetOrCreate(credentials.CloudStorageId);
                 if (cloudStorageClient is IOAuth2CloudStorageClient oauthStorageClient)
                 {
-                    CloudStorageToken token = await oauthStorageClient.FetchTokenAsync(redirectUrl, oauthState);
+                    CloudStorageToken token = await oauthStorageClient.FetchTokenAsync(redirectUrl, oauthState, oauthCodeVerifier);
                     if (token != null)
                     {
                         // User has granted access.

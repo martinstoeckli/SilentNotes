@@ -49,7 +49,7 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
         public void ReallyDoOpenAuthorizationPageInBrowser()
         {
             IOAuth2CloudStorageClient client = new DropboxCloudStorageClient(ClientId, RedirectUrl);
-            string requestUrl = client.BuildAuthorizationRequestUrl(State);
+            string requestUrl = client.BuildAuthorizationRequestUrl(State, null);
 
             Process browserProcess = new Process();
             browserProcess.StartInfo.UseShellExecute = true;

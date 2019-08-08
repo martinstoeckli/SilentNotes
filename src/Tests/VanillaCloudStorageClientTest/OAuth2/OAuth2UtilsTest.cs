@@ -18,7 +18,7 @@ namespace VanillaCloudStorageClientTest.OAuth2
                 RedirectUrl = "com.example.myapp://oauth2redirect/",
             };
             string state = "7ysv8L9s4LB9CZpA";
-            string url = OAuth2Utils.BuildAuthorizationRequestUrl(config, state);
+            string url = OAuth2Utils.BuildAuthorizationRequestUrl(config, state, null);
 
             Assert.AreEqual(@"https://example.com/authorize?response_type=token&client_id=fwser2sewr689f7&redirect_uri=com.example.myapp%3A%2F%2Foauth2redirect%2F&state=7ysv8L9s4LB9CZpA", url);
         }
@@ -33,7 +33,7 @@ namespace VanillaCloudStorageClientTest.OAuth2
                 RedirectUrl = "b:b",
             };
             string state = "c:c";
-            string url = OAuth2Utils.BuildAuthorizationRequestUrl(config, state);
+            string url = OAuth2Utils.BuildAuthorizationRequestUrl(config, state, null);
 
             Assert.IsTrue(url.Contains("client_id=a%3Aa"));
             Assert.IsTrue(url.Contains("redirect_uri=b%3Ab"));
@@ -49,7 +49,7 @@ namespace VanillaCloudStorageClientTest.OAuth2
                 ClientId = "a",
                 RedirectUrl = null, // Must exist for token workflow
             };
-            Assert.Throws<InvalidParameterException>(() => OAuth2Utils.BuildAuthorizationRequestUrl(config, "state"));
+            Assert.Throws<InvalidParameterException>(() => OAuth2Utils.BuildAuthorizationRequestUrl(config, "state", null));
         }
 
         [Test]
@@ -65,8 +65,26 @@ namespace VanillaCloudStorageClientTest.OAuth2
             };
 
             // The scope paramter should not be part of the url
-            string url = OAuth2Utils.BuildAuthorizationRequestUrl(config, "c");
+            string url = OAuth2Utils.BuildAuthorizationRequestUrl(config, "c", null);
             Assert.IsTrue(!url.Contains("token", StringComparison.InvariantCultureIgnoreCase));
+        }
+
+        [Test]
+        public void BuildAuthorizationRequestUrlUsesCodeVerifier()
+        {
+            OAuth2Config config = new OAuth2Config
+            {
+                AuthorizeServiceEndpoint = @"https://example.com/authorize",
+                ClientId = "a",
+                RedirectUrl = "b",
+                Flow = AuthorizationFlow.Code,
+            };
+
+            // The scope paramter should not be part of the url
+            string codeVerifier = "ccc";
+            string url = OAuth2Utils.BuildAuthorizationRequestUrl(config, "c", codeVerifier);
+            Assert.IsTrue(url.Contains("code_challenge=", StringComparison.InvariantCultureIgnoreCase));
+            Assert.IsTrue(url.Contains("code_challenge_method=S256", StringComparison.InvariantCultureIgnoreCase));
         }
 
         [Test]

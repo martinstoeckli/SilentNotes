@@ -30,7 +30,7 @@ namespace VanillaCloudStorageClientTest
         public void BuildOAuth2AuthorizationRequestUrlWorks()
         {
             IOAuth2CloudStorageClient client = new TestClient(GetDropboxConfig());
-            string url = client.BuildAuthorizationRequestUrl(State);
+            string url = client.BuildAuthorizationRequestUrl(State, null);
             Assert.AreEqual("https://www.dropbox.com/oauth2/authorize?response_type=token&client_id=oaid&redirect_uri=com.example.myapp%3A%2F%2Foauth2redirect%2F&state=7ysv8L9s4LB9CZpA", url);
         }
 
@@ -80,7 +80,7 @@ namespace VanillaCloudStorageClientTest
 
         private async Task<CloudStorageToken> FetchTokenAsync(IOAuth2CloudStorageClient client, string redirectedUrl)
         {
-            return await client.FetchTokenAsync(redirectedUrl, State);
+            return await client.FetchTokenAsync(redirectedUrl, State, null);
         }
 
         [Test]

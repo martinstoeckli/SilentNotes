@@ -57,9 +57,11 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
 
                     // Open OAuth2 login page in external browser
                     string oauthState = CryptoUtils.GenerateRandomBase62String(16, _randomSource);
+                    string oauthCodeVerifier = CryptoUtils.GenerateRandomBase62String(64, _randomSource);
                     StoryBoard.StoreToSession(SynchronizationStorySessionKey.OauthState.ToInt(), oauthState);
+                    StoryBoard.StoreToSession(SynchronizationStorySessionKey.OauthCodeVerifier.ToInt(), oauthCodeVerifier);
 
-                    string url = oauthStorageClient.BuildAuthorizationRequestUrl(oauthState);
+                    string url = oauthStorageClient.BuildAuthorizationRequestUrl(oauthState, oauthCodeVerifier);
                     _nativeBrowserService.OpenWebsiteInApp(url);
                 }
                 else

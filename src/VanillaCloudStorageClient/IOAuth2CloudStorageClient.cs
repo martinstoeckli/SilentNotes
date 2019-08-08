@@ -28,8 +28,12 @@ namespace VanillaCloudStorageClient
         /// <param name="state">A random string which will be passed to the OAuth2 web service,
         /// and is returned in its response. An application should persist this state so it can
         /// verify the response.</param>
+        /// <param name="codeVerifier">An optional random string [43-128 chars a-z,A-Z,0-9] which
+        /// will be passed to the OAuth2 web service. An application should persist this code
+        /// verifier, because it is required for the <see cref="FetchTokenAsync(string, string, string)"/>
+        /// call.</param>
         /// <returns>A url which can be used to show the authorization page.</returns>
-        string BuildAuthorizationRequestUrl(string state);
+        string BuildAuthorizationRequestUrl(string state, string codeVerifier);
 
         /// <summary>
         /// Token-flow: The access-token is extracted from the redirect url and returned.
@@ -38,20 +42,23 @@ namespace VanillaCloudStorageClient
         /// </summary>
         /// <param name="redirectedUrl">The redirect url with parameters which was called by the
         /// OAuth2 service.</param>
-        /// <param name="state">Provide the same state which was passed to <see cref="BuildAuthorizationRequestUrl(string)"/>.</param>
+        /// <param name="state">Provide the same state which was passed to <see cref="BuildAuthorizationRequestUrl(string, string)"/>.</param>
+        /// <param name="codeVerifier">Provide the same verifier which was passed to <see cref="BuildAuthorizationRequestUrl(string, string)"/>.</param>
         /// <returns>Returns a token whose access-token can be used to access the service API, or
         /// null when the user denied access to the service.</returns>
-        Task<CloudStorageToken> FetchTokenAsync(string redirectedUrl, string state);
+        Task<CloudStorageToken> FetchTokenAsync(string redirectedUrl, string state, string codeVerifier);
 
         /// <summary>
         /// Makes a token refresh call to the OAuth2 service to get a new access token from the
-        /// refresh token. Before calling this method, first check whether this call is necessary
-        /// at all with <see cref="CloudStorageToken.NeedsRefresh()"/>.
+        /// refresh token. Call this method only if necessary, first check whether it is necessary
+        /// with token.NeedsRefresh()/>.
         /// </summary>
         /// <remarks>
         /// Clients which use the token-flow usually don't have to implement this method.
         /// </remarks>
         /// <param name="token">The token holding the access-token and the refresh-token.</param>
+        /// <exception cref="InvalidGrantException">Is thrown when the refresh token has expired
+        /// and the user has to do a new authorization.</exception>
         /// <returns>Returns a new refreshed token.</returns>
         Task<CloudStorageToken> RefreshTokenAsync(CloudStorageToken token);
     }

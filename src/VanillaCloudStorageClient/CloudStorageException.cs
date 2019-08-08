@@ -89,6 +89,33 @@ namespace VanillaCloudStorageClient
     }
 
     /// <summary>
+    /// Throw this exception if the token refresh was not granted by the OAuth2 server.
+    /// This happens when the refresh-token has expired and the user has to do a new login.
+    /// </summary>
+    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass", Justification = "Just a list of exceptions.")]
+    public class InvalidGrantException : CloudStorageException
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="InvalidGrantException"/> class.
+        /// Prefer the other constructors for production and keep this one for unittesting.
+        /// </summary>
+        public InvalidGrantException()
+            : base("The OAuth2 server answered with a 'invalid_grant error'.", null)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="InvalidGrantException"/> class.
+        /// Prefer the other constructors for production and keep this one for unittesting.
+        /// </summary>
+        /// <param name="innerException">The inner exception if any, or null.</param>
+        public InvalidGrantException(Exception innerException)
+            : base("The OAuth2 server answered with a 'invalid_grant error'.", innerException)
+        {
+        }
+    }
+
+    /// <summary>
     /// Throw this exception if the required parameter is missing or invalid.
     /// </summary>
     [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass", Justification = "Just a list of exceptions.")]
