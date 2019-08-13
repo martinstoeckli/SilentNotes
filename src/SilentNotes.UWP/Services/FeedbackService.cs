@@ -49,8 +49,11 @@ namespace SilentNotes.UWP.Services
         /// <inheritdoc/>
         public void ShowBusyIndicator(bool visible)
         {
-            ProgressRing busyIndicator = _mainPage.FindName("BusyIndicator") as ProgressRing;
-            busyIndicator.IsActive = visible;
+            Task.Run(async () => await _mainPage.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                ProgressRing busyIndicator = _mainPage.FindName("BusyIndicator") as ProgressRing;
+                busyIndicator.IsActive = visible;
+            }));
         }
 
         /// <inheritdoc/>
