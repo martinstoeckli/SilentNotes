@@ -7,7 +7,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using SilentNotes.Models;
 using SilentNotes.Services;
-using SilentNotes.Services.CloudStorageServices;
 
 namespace SilentNotes.StoryBoards.SynchronizationStory
 {
@@ -33,16 +32,16 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         public override async Task Run()
         {
             SettingsModel settings = _settingsService.LoadSettingsOrDefault();
-
-            bool serviceIsSet = (settings.CloudStorageAccount != null) && (settings.CloudStorageAccount.CloudType != CloudStorageType.Unknown);
-            if (serviceIsSet)
+            
+            bool clientIsSet = (settings.Credentials?.CloudStorageId != null);
+            if (clientIsSet)
             {
-                StoryBoard.StoreToSession(SynchronizationStorySessionKey.CloudStorageAccount.ToInt(), settings.CloudStorageAccount);
+                StoryBoard.StoreToSession(SynchronizationStorySessionKey.CloudStorageCredentials.ToInt(), settings.Credentials);
                 await StoryBoard.ContinueWith(SynchronizationStoryStepId.ExistsCloudRepository.ToInt());
             }
             else
             {
-                    await StoryBoard.ContinueWith(SynchronizationStoryStepId.ShowFirstTimeDialog.ToInt());
+                await StoryBoard.ContinueWith(SynchronizationStoryStepId.ShowFirstTimeDialog.ToInt());
             }
         }
     }

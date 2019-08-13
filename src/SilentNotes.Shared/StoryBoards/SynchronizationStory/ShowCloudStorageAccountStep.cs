@@ -6,8 +6,9 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using SilentNotes.Controllers;
+using SilentNotes.Crypto;
 using SilentNotes.Services;
-using SilentNotes.Services.CloudStorageServices;
+using VanillaCloudStorageClient;
 
 namespace SilentNotes.StoryBoards.SynchronizationStory
 {
@@ -19,9 +20,9 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
     public class ShowCloudStorageAccountStep : SynchronizationStoryBoardStepBase
     {
         private readonly INavigationService _navigationService;
-        private readonly ILanguageService _languageService;
-        private readonly IFeedbackService _feedbackService;
-        private readonly ICloudStorageServiceFactory _cloudStorageServiceFactory;
+        private readonly INativeBrowserService _nativeBrowserService;
+        private readonly ICryptoRandomService _randomSource;
+        private readonly ICloudStorageClientFactory _cloudStorageClientFactory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ShowCloudStorageAccountStep"/> class.
@@ -31,32 +32,37 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
             int stepId,
             IStoryBoard storyBoard,
             INavigationService navigationService,
-            ILanguageService languageService,
-            IFeedbackService feedbackService,
-            ICloudStorageServiceFactory cloudStorageServiceFactory)
+            INativeBrowserService nativeBrowserService,
+            ICryptoRandomService randomSource,
+            ICloudStorageClientFactory cloudStorageClientFactory)
             : base(stepId, storyBoard)
         {
             _navigationService = navigationService;
-            _languageService = languageService;
-            _cloudStorageServiceFactory = cloudStorageServiceFactory;
-            _feedbackService = feedbackService;
+            _nativeBrowserService = nativeBrowserService;
+            _randomSource = randomSource;
+            _cloudStorageClientFactory = cloudStorageClientFactory;
         }
 
         /// <inheritdoc/>
         public override Task Run()
         {
-            if (!IsRunningInSilentMode)
+            if (StoryBoard.Mode.ShouldUseGui())
             {
-                CloudStorageAccount account = StoryBoard.LoadFromSession<CloudStorageAccount>(SynchronizationStorySessionKey.CloudStorageAccount.ToInt());
-                ICloudStorageService cloudStorageService = _cloudStorageServiceFactory.Create(account);
-                if (cloudStorageService is IOauth2CloudStorageService oauthStorageService)
+                SerializeableCloudStorageCredentials credentials = StoryBoard.LoadFromSession<SerializeableCloudStorageCredentials>(SynchronizationStorySessionKey.CloudStorageCredentials.ToInt());
+                ICloudStorageClient cloudStorageClient = _cloudStorageClientFactory.GetOrCreate(credentials.CloudStorageId);
+                if (cloudStorageClient is IOAuth2CloudStorageClient oauthStorageClient)
                 {
-                    // show waiting page
+                    // Show waiting page
                     _navigationService.Navigate(ControllerNames.CloudStorageOauthWaiting);
 
-                    StoryBoard.StoreToSession(SynchronizationStorySessionKey.OauthCloudStorageService.ToInt(), oauthStorageService);
-                    oauthStorageService.Redirected += OauthStorageRedirectedEventHandler;
-                    oauthStorageService.ShowOauth2LoginPage();
+                    // Open OAuth2 login page in external browser
+                    string oauthState = CryptoUtils.GenerateRandomBase62String(16, _randomSource);
+                    string oauthCodeVerifier = CryptoUtils.GenerateRandomBase62String(64, _randomSource);
+                    StoryBoard.StoreToSession(SynchronizationStorySessionKey.OauthState.ToInt(), oauthState);
+                    StoryBoard.StoreToSession(SynchronizationStorySessionKey.OauthCodeVerifier.ToInt(), oauthCodeVerifier);
+
+                    string url = oauthStorageClient.BuildAuthorizationRequestUrl(oauthState, oauthCodeVerifier);
+                    _nativeBrowserService.OpenWebsiteInApp(url);
                 }
                 else
                 {
@@ -64,23 +70,6 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
                 }
             }
             return GetCompletedDummyTask();
-        }
-
-        private async void OauthStorageRedirectedEventHandler(object sender, RedirectedEventArgs e)
-        {
-            StoryBoard.RemoveFromSession(SynchronizationStorySessionKey.OauthCloudStorageService.ToInt());
-            switch (e.RedirectResult)
-            {
-                case Oauth2RedirectResult.Permitted:
-                    CloudStorageAccount account = StoryBoard.LoadFromSession<CloudStorageAccount>(SynchronizationStorySessionKey.CloudStorageAccount.ToInt());
-                    account.OauthAccessToken = e.OauthAccessToken;
-                    await StoryBoard.ContinueWith(SynchronizationStoryStepId.ExistsCloudRepository.ToInt());
-                    break;
-                case Oauth2RedirectResult.Rejected:
-                    await StoryBoard.ContinueWith(SynchronizationStoryStepId.StopAndShowRepository.ToInt());
-                    _feedbackService.ShowToast(_languageService.LoadText("sync_reject"));
-                    break;
-            }
         }
     }
 }

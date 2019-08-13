@@ -18,7 +18,7 @@
 
     <style type="text/css">
         .list-group {
-            max-width: 256px;
+            max-width: 300px;
         }
         .list-group-item {
             font-weight: bold;
@@ -44,7 +44,7 @@
         <div class="list-group">
             @foreach (var serviceChoice in @Model.ServiceChoices)
             {
-                <button type="button" class="list-group-item list-group-item-action" onclick="bind(event)" data-binding="choose" data-servicetype="@serviceChoice.ServiceType">
+                <button type="button" class="list-group-item list-group-item-action" onclick="bind(event)" data-binding="choose" data-cloudstorageid="@serviceChoice.CloudStorageId">
                     <img class="choice-icon" src="@serviceChoice.Icon" />
                     @serviceChoice.Title
                 </button>

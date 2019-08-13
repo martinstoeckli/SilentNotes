@@ -3,8 +3,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using SilentNotes.Models;
 using SilentNotes.Services;
-using SilentNotes.Services.CloudStorageServices;
 using SilentNotes.Workers;
+using VanillaCloudStorageClient;
 
 namespace SilentNotes.StoryBoards.SynchronizationStory
 {
@@ -19,7 +19,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         private readonly ISettingsService _settingsService;
         private readonly ICryptoRandomService _cryptoRandomService;
         private readonly IRepositoryStorageService _repositoryStorageService;
-        private readonly ICloudStorageServiceFactory _cloudStorageServiceFactory;
+        private readonly ICloudStorageClientFactory _cloudStorageClientFactory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StoreLocalRepositoryToCloudAndQuitStep"/> class.
@@ -33,7 +33,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
             ISettingsService settingsService,
             ICryptoRandomService randomService,
             IRepositoryStorageService repositoryStorageService,
-            ICloudStorageServiceFactory cloudStorageServiceFactory)
+            ICloudStorageClientFactory cloudStorageClientFactory)
             : base(stepId, storyBoard)
         {
             _languageService = languageService;
@@ -41,7 +41,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
             _settingsService = settingsService;
             _cryptoRandomService = randomService;
             _repositoryStorageService = repositoryStorageService;
-            _cloudStorageServiceFactory = cloudStorageServiceFactory;
+            _cloudStorageClientFactory = cloudStorageClientFactory;
         }
 
         /// <inheritdoc/>
@@ -49,7 +49,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         {
             try
             {
-                CloudStorageAccount account = StoryBoard.LoadFromSession<CloudStorageAccount>(SynchronizationStorySessionKey.CloudStorageAccount.ToInt());
+                SerializeableCloudStorageCredentials credentials = StoryBoard.LoadFromSession<SerializeableCloudStorageCredentials>(SynchronizationStorySessionKey.CloudStorageCredentials.ToInt());
                 _repositoryStorageService.LoadRepositoryOrDefault(out NoteRepositoryModel localRepository);
                 SettingsModel settings = _settingsService.LoadSettingsOrDefault();
                 string transferCode = settings.TransferCode;
@@ -61,8 +61,8 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
                 byte[] encryptedRepository = EncryptRepository(
                     localRepository, transferCode, _cryptoRandomService, settings.SelectedEncryptionAlgorithm);
 
-                ICloudStorageService cloudStorageService = _cloudStorageServiceFactory.Create(account);
-                await cloudStorageService.UploadRepositoryAsync(encryptedRepository);
+                ICloudStorageClient cloudStorageClient = _cloudStorageClientFactory.GetOrCreate(credentials.CloudStorageId);
+                await cloudStorageClient.UploadFileAsync(Config.RepositoryFileName, encryptedRepository, credentials);
 
                 // All went well, time to save the transfer code, if a new one was created
                 if (needsNewTransferCode)
@@ -73,7 +73,8 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
                     string formattedTransferCode = TransferCode.FormatTransferCodeForDisplay(transferCode).Replace(' ', '-');
                     string messageNewCreated = _languageService.LoadTextFmt("transfer_code_created", formattedTransferCode);
                     string messageWriteDown = _languageService.LoadText("transfer_code_writedown");
-                    await _feedbackService.ShowMessageAsync(messageNewCreated + Environment.NewLine + messageWriteDown, null);
+                    if (StoryBoard.Mode.ShouldUseGui())
+                        await _feedbackService.ShowMessageAsync(messageNewCreated + Environment.NewLine + messageWriteDown, null);
                 }
 
                 await StoryBoard.ContinueWith(SynchronizationStoryStepId.StopAndShowRepository.ToInt());

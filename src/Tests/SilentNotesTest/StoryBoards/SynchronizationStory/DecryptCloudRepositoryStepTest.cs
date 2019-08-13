@@ -25,15 +25,19 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
             storyBoard.
                 Setup(m => m.LoadFromSession<byte[]>(It.Is<int>(p => p == SynchronizationStorySessionKey.BinaryCloudRepository.ToInt()))).
                 Returns(encryptedRepository);
-            Mock<ILanguageService> languageService = new Mock<ILanguageService>();
-            Mock<IFeedbackService> feedbackService = new Mock<IFeedbackService>();
             Mock<ISettingsService> settingsService = new Mock<ISettingsService>();
             settingsService.
                 Setup(m => m.LoadSettingsOrDefault()).Returns(settingsModel);
             Mock<INoteRepositoryUpdater> updater = new Mock<INoteRepositoryUpdater>();
 
             // Run step
-            var step = new DecryptCloudRepositoryStep(SynchronizationStoryStepId.DecryptCloudRepository.ToInt(), storyBoard.Object, languageService.Object, feedbackService.Object, settingsService.Object, updater.Object);
+            var step = new DecryptCloudRepositoryStep(
+                SynchronizationStoryStepId.DecryptCloudRepository.ToInt(),
+                storyBoard.Object,
+                CommonMocksAndStubs.LanguageService(),
+                CommonMocksAndStubs.FeedbackService(),
+                settingsService.Object,
+                updater.Object);
             Assert.DoesNotThrowAsync(step.Run);
 
             // Repository has not changed and was not stored in session
@@ -55,15 +59,19 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
             storyBoard.
                 Setup(m => m.LoadFromSession<byte[]>(It.Is<int>(p => p == SynchronizationStorySessionKey.BinaryCloudRepository.ToInt()))).
                 Returns(encryptedRepository);
-            Mock<ILanguageService> languageService = new Mock<ILanguageService>();
-            Mock<IFeedbackService> feedbackService = new Mock<IFeedbackService>();
             Mock<ISettingsService> settingsService = new Mock<ISettingsService>();
             settingsService.
                 Setup(m => m.LoadSettingsOrDefault()).Returns(settingsModel);
             Mock<INoteRepositoryUpdater> updater = new Mock<INoteRepositoryUpdater>();
 
             // Run step
-            var step = new DecryptCloudRepositoryStep(SynchronizationStoryStepId.DecryptCloudRepository.ToInt(), storyBoard.Object, languageService.Object, feedbackService.Object, settingsService.Object, updater.Object);
+            var step = new DecryptCloudRepositoryStep(
+                SynchronizationStoryStepId.DecryptCloudRepository.ToInt(),
+                storyBoard.Object,
+                CommonMocksAndStubs.LanguageService(),
+                CommonMocksAndStubs.FeedbackService(),
+                settingsService.Object,
+                updater.Object);
             Assert.DoesNotThrowAsync(step.Run);
 
             // transfercode was moved from history to current and was stored
@@ -85,15 +93,19 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
             storyBoard.
                 Setup(m => m.LoadFromSession<byte[]>(It.Is<int>(p => p == SynchronizationStorySessionKey.BinaryCloudRepository.ToInt()))).
                 Returns(encryptedRepository);
-            Mock<ILanguageService> languageService = new Mock<ILanguageService>();
-            Mock<IFeedbackService> feedbackService = new Mock<IFeedbackService>();
             Mock<ISettingsService> settingsService = new Mock<ISettingsService>();
             settingsService.
                 Setup(m => m.LoadSettingsOrDefault()).Returns(settingsModel);
             Mock<INoteRepositoryUpdater> updater = new Mock<INoteRepositoryUpdater>();
 
             // Run step
-            var step = new DecryptCloudRepositoryStep(SynchronizationStoryStepId.DecryptCloudRepository.ToInt(), storyBoard.Object, languageService.Object, feedbackService.Object, settingsService.Object, updater.Object);
+            var step = new DecryptCloudRepositoryStep(
+                SynchronizationStoryStepId.DecryptCloudRepository.ToInt(),
+                storyBoard.Object,
+                CommonMocksAndStubs.LanguageService(),
+                CommonMocksAndStubs.FeedbackService(),
+                settingsService.Object,
+                updater.Object);
             Assert.DoesNotThrowAsync(step.Run);
 
             // No changes should be done to the settings
@@ -120,7 +132,6 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
             storyBoard.
                 Setup(m => m.LoadFromSession<byte[]>(It.Is<int>(p => p == SynchronizationStorySessionKey.BinaryCloudRepository.ToInt()))).
                 Returns(encryptedRepository);
-            Mock<ILanguageService> languageService = new Mock<ILanguageService>();
             Mock<IFeedbackService> feedbackService = new Mock<IFeedbackService>();
             Mock<ISettingsService> settingsService = new Mock<ISettingsService>();
             settingsService.
@@ -128,7 +139,13 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
             Mock<INoteRepositoryUpdater> updater = new Mock<INoteRepositoryUpdater>();
 
             // Run step
-            var step = new DecryptCloudRepositoryStep(SynchronizationStoryStepId.DecryptCloudRepository.ToInt(), storyBoard.Object, languageService.Object, feedbackService.Object, settingsService.Object, updater.Object);
+            var step = new DecryptCloudRepositoryStep(
+                SynchronizationStoryStepId.DecryptCloudRepository.ToInt(),
+                storyBoard.Object,
+                CommonMocksAndStubs.LanguageService(),
+                feedbackService.Object,
+                settingsService.Object,
+                updater.Object);
             Assert.DoesNotThrowAsync(step.Run);
 
             // Error message shown
@@ -152,7 +169,6 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
             storyBoard.
                 Setup(m => m.LoadFromSession<byte[]>(It.Is<int>(p => p == SynchronizationStorySessionKey.BinaryCloudRepository.ToInt()))).
                 Returns(encryptedRepository);
-            Mock<ILanguageService> languageService = new Mock<ILanguageService>();
             Mock<IFeedbackService> feedbackService = new Mock<IFeedbackService>();
             Mock<ISettingsService> settingsService = new Mock<ISettingsService>();
             settingsService.
@@ -163,7 +179,13 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
                 Returns(true);
 
             // Run step
-            var step = new DecryptCloudRepositoryStep(SynchronizationStoryStepId.DecryptCloudRepository.ToInt(), storyBoard.Object, languageService.Object, feedbackService.Object, settingsService.Object, updater.Object);
+            var step = new DecryptCloudRepositoryStep(
+                SynchronizationStoryStepId.DecryptCloudRepository.ToInt(),
+                storyBoard.Object,
+                CommonMocksAndStubs.LanguageService(),
+                feedbackService.Object,
+                settingsService.Object,
+                updater.Object);
             Assert.DoesNotThrowAsync(step.Run);
 
             // Error message shown
@@ -188,7 +210,7 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
                 repository = new NoteRepositoryModel();
             byte[] serializedRepository = XmlUtils.SerializeToXmlBytes(repository);
             EncryptorDecryptor encryptor = new EncryptorDecryptor("SilentNotes");
-            return encryptor.Encrypt(serializedRepository, password, SilentNotes.Crypto.KeyDerivation.KeyDerivationCostType.Low, new RandomSource4UnitTest(), BouncyCastleTwofishGcm.CryptoAlgorithmName);
+            return encryptor.Encrypt(serializedRepository, password, SilentNotes.Crypto.KeyDerivation.KeyDerivationCostType.Low, CommonMocksAndStubs.CryptoRandomService(), BouncyCastleTwofishGcm.CryptoAlgorithmName);
         }
     }
 }

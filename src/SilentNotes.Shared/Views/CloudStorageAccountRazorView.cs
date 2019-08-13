@@ -206,20 +206,20 @@ WriteLiteral(" ");
 
 
 #line 44 "CloudStorageAccountRazorView.cshtml"
-                                              if (Model.IsUrlFix) { 
+                                              if (!Model.NeedsUrl) { 
 
 #line default
 #line hidden
 
 #line 44 "CloudStorageAccountRazorView.cshtml"
-                                                                Write("hidden");
+                                                                 Write("hidden");
 
 
 #line default
 #line hidden
 
 #line 44 "CloudStorageAccountRazorView.cshtml"
-                                                                               ; }
+                                                                                 ; }
 
 #line default
 #line hidden
@@ -267,6 +267,27 @@ WriteLiteral(">\r\n                </div>\r\n            </div>\r\n            <
 
 WriteLiteral(" class=\"form-row form-group\"");
 
+WriteLiteral(" ");
+
+
+#line 50 "CloudStorageAccountRazorView.cshtml"
+                                              if (!Model.NeedsUsername) { 
+
+#line default
+#line hidden
+
+#line 50 "CloudStorageAccountRazorView.cshtml"
+                                                                      Write("hidden");
+
+
+#line default
+#line hidden
+
+#line 50 "CloudStorageAccountRazorView.cshtml"
+                                                                                      ; }
+
+#line default
+#line hidden
 WriteLiteral(">\r\n                <label");
 
 WriteLiteral(" class=\"col-form-label col-md-3\"");
@@ -311,6 +332,27 @@ WriteLiteral(">\r\n                </div>\r\n            </div>\r\n            <
 
 WriteLiteral(" class=\"form-row form-group\"");
 
+WriteLiteral(" ");
+
+
+#line 56 "CloudStorageAccountRazorView.cshtml"
+                                              if (!Model.NeedsPassword) { 
+
+#line default
+#line hidden
+
+#line 56 "CloudStorageAccountRazorView.cshtml"
+                                                                      Write("hidden");
+
+
+#line default
+#line hidden
+
+#line 56 "CloudStorageAccountRazorView.cshtml"
+                                                                                      ; }
+
+#line default
+#line hidden
 WriteLiteral(">\r\n                <label");
 
 WriteLiteral(" class=\"col-form-label col-md-3\"");
@@ -344,7 +386,68 @@ WriteLiteral(" id=\"Password\"");
 
 WriteLiteral(" value=\"\"");
 
-WriteLiteral(">\r\n                </div>\r\n            </div>\r\n            <button");
+WriteLiteral(">\r\n                </div>\r\n            </div>\r\n            <div");
+
+WriteLiteral(" class=\"form-row form-group form-check\"");
+
+WriteLiteral(" ");
+
+
+#line 62 "CloudStorageAccountRazorView.cshtml"
+                                                         if (!Model.NeedsSecureFlag) { 
+
+#line default
+#line hidden
+
+#line 62 "CloudStorageAccountRazorView.cshtml"
+                                                                                   Write("hidden");
+
+
+#line default
+#line hidden
+
+#line 62 "CloudStorageAccountRazorView.cshtml"
+                                                                                                   ; }
+
+#line default
+#line hidden
+WriteLiteral(">\r\n                <input");
+
+WriteLiteral(" class=\"form-check-input\"");
+
+WriteLiteral(" type=\"checkbox\"");
+
+WriteLiteral(" id=\"Secure\"");
+
+WriteLiteral(" onclick=\"bind(event)\"");
+
+WriteLiteral(" data-binding=\"Secure\"");
+
+WriteLiteral(" ");
+
+
+#line 63 "CloudStorageAccountRazorView.cshtml"
+                                                                                                                    Write(Model.Secure ? "checked" : "");
+
+
+#line default
+#line hidden
+WriteLiteral(">\r\n                <label");
+
+WriteLiteral(" class=\"form-check-label\"");
+
+WriteLiteral(" for=\"Secure\"");
+
+WriteLiteral(">");
+
+
+#line 64 "CloudStorageAccountRazorView.cshtml"
+                                                        Write(Model.Language["cloud_secure"]);
+
+
+#line default
+#line hidden
+WriteLiteral("</label>\r\n            </div>\r\n            <button");
 
 WriteLiteral(" type=\"button\"");
 
@@ -357,7 +460,7 @@ WriteLiteral(" data-binding=\"OkCommand\"");
 WriteLiteral(">");
 
 
-#line 62 "CloudStorageAccountRazorView.cshtml"
+#line 66 "CloudStorageAccountRazorView.cshtml"
                                                                                                          Write(Model.Language["continue"]);
 
 
@@ -376,7 +479,7 @@ WriteLiteral(" data-binding=\"CancelCommand\"");
 WriteLiteral(">");
 
 
-#line 63 "CloudStorageAccountRazorView.cshtml"
+#line 67 "CloudStorageAccountRazorView.cshtml"
                                                                                                                Write(Model.Language["cancel"]);
 
 

@@ -4,6 +4,8 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
+using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Flurl.Http;
 using Newtonsoft.Json;
@@ -34,13 +36,13 @@ namespace VanillaCloudStorageClient
         #region IOAuth2CloudStorageClient
 
         /// <inheritdoc/>
-        public string BuildAuthorizationRequestUrl(string state)
+        public virtual string BuildAuthorizationRequestUrl(string state, string codeVerifier)
         {
-            return OAuth2Utils.BuildAuthorizationRequestUrl(Config, state);
+            return OAuth2Utils.BuildAuthorizationRequestUrl(Config, state, codeVerifier);
         }
 
         /// <inheritdoc/>
-        public async Task<CloudStorageToken> FetchTokenAsync(string redirectedUrl, string state)
+        public virtual async Task<CloudStorageToken> FetchTokenAsync(string redirectedUrl, string state, string codeVerifier)
         {
             if (string.IsNullOrWhiteSpace(redirectedUrl))
                 throw new ArgumentNullException(nameof(redirectedUrl));
@@ -57,7 +59,7 @@ namespace VanillaCloudStorageClient
             if (response.State != state)
                 throw new CloudStorageException("The authorization response has a wrong state, this indicates a hacking attempt.", null);
 
-            // Check flow type
+            // Determine flow type
             AuthorizationFlow flow;
             if (!string.IsNullOrWhiteSpace(response.Token))
                 flow = AuthorizationFlow.Token;
@@ -76,14 +78,14 @@ namespace VanillaCloudStorageClient
                         RefreshToken = null
                     };
                 case AuthorizationFlow.Code:
-                    return await ExchangeCodeForTokenAsync(response.Code);
+                    return await ExchangeCodeForTokenAsync(response.Code, codeVerifier);
                 default:
                     return null; // Never happens
             }
         }
 
         /// <inheritdoc/>
-        public async Task<CloudStorageToken> RefreshTokenAsync(CloudStorageToken token)
+        public virtual async Task<CloudStorageToken> RefreshTokenAsync(CloudStorageToken token)
         {
             if (token == null)
                 throw new ArgumentNullException(nameof(token));
@@ -113,6 +115,8 @@ namespace VanillaCloudStorageClient
             }
             catch (Exception ex)
             {
+                if (await IsInvalidGrantException(ex))
+                    throw new RefreshTokenExpiredException(ex);
                 throw ConvertToCloudStorageException(ex);
             }
         }
@@ -127,8 +131,10 @@ namespace VanillaCloudStorageClient
         /// <param name="authorizationCode">The code form the authorization request, it can be
         /// found in <see cref="AuthorizationResponse.Code"/>.
         /// </param>
+        /// <param name="codeVerifier">The optional code verifier.</param>
         /// <returns>A token object containing the access token and a refresh token.</returns>
-        protected virtual async Task<CloudStorageToken> ExchangeCodeForTokenAsync(string authorizationCode)
+        protected virtual async Task<CloudStorageToken> ExchangeCodeForTokenAsync(
+            string authorizationCode, string codeVerifier)
         {
             if (string.IsNullOrWhiteSpace(authorizationCode))
                 throw new InvalidParameterException(nameof(authorizationCode));
@@ -143,6 +149,7 @@ namespace VanillaCloudStorageClient
                         client_secret = string.Empty, // Installable apps cannot keep secrets, thus the client secret is not transmitted
                         redirect_uri = Config.RedirectUrl,
                         grant_type = "authorization_code",
+                        code_verifier = codeVerifier,
                     })
                     .ReceiveString();
 
@@ -159,6 +166,19 @@ namespace VanillaCloudStorageClient
             {
                 throw ConvertToCloudStorageException(ex);
             }
+        }
+
+        private async Task<bool> IsInvalidGrantException(Exception ex)
+        {
+            HttpStatusCode[] possibleCodes = { HttpStatusCode.BadRequest, HttpStatusCode.Unauthorized, HttpStatusCode.Forbidden };
+            if ((ex is FlurlHttpException flurlHttpException) &&
+                (flurlHttpException.Call?.HttpStatus.HasValue != null) &&
+                possibleCodes.Contains(flurlHttpException.Call.HttpStatus.Value))
+            {
+                string jsonResponse = await flurlHttpException.GetResponseStringAsync();
+                return (jsonResponse != null) && (jsonResponse.IndexOf("invalid_grant") > 0);
+            }
+            return false;
         }
 
         /// <summary>

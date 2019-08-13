@@ -16,7 +16,6 @@ using Java.IO;
 using SilentNotes.Controllers;
 using SilentNotes.HtmlView;
 using SilentNotes.Services;
-using SilentNotes.Services.CloudStorageServices;
 using SilentNotes.StoryBoards.SynchronizationStory;
 
 namespace SilentNotes.Android
@@ -82,11 +81,12 @@ namespace SilentNotes.Android
             }
             else if (IsStartedByOAuthRedirectIndent(storyBoardService))
             {
-                IOauth2CloudStorageService oauthStorageService = storyBoardService.ActiveStory.LoadFromSession<IOauth2CloudStorageService>(SynchronizationStorySessionKey.OauthCloudStorageService.ToInt());
-                string redirectUrl = storyBoardService.ActiveStory.LoadFromSession<string>(SynchronizationStorySessionKey.OauthRedirectUrl.ToInt());
-                storyBoardService.ActiveStory.RemoveFromSession(SynchronizationStorySessionKey.OauthRedirectUrl.ToInt());
-
-                oauthStorageService?.HandleOauth2Redirect(new Uri(redirectUrl));
+                if (storyBoardService.ActiveStory is SynchronizationStoryBoard synchronizationStory)
+                {
+                    // Create a copy of the active story, which uses the Ioc of this new process
+                    storyBoardService.ActiveStory = new SynchronizationStoryBoard(synchronizationStory);
+                    storyBoardService.ActiveStory.ContinueWith(SynchronizationStoryStepId.HandleOAuthRedirect.ToInt());
+                }
             }
             else
             {

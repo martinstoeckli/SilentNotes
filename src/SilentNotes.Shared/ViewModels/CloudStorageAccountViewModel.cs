@@ -7,9 +7,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Security;
 using System.Windows.Input;
 using SilentNotes.Services;
-using SilentNotes.Services.CloudStorageServices;
 using SilentNotes.StoryBoards.SynchronizationStory;
-using SilentNotes.Workers;
+using VanillaCloudStorageClient;
 
 namespace SilentNotes.ViewModels
 {
@@ -19,6 +18,7 @@ namespace SilentNotes.ViewModels
     public class CloudStorageAccountViewModel : ViewModelBase
     {
         private readonly IStoryBoardService _storyBoardService;
+        private readonly CloudStorageCredentialsRequirements _credentialsRequirements;
         private readonly IFeedbackService _feedbackService;
 
         /// <summary>
@@ -32,13 +32,17 @@ namespace SilentNotes.ViewModels
             IBaseUrlService webviewBaseUrl,
             IStoryBoardService storyBoardService,
             IFeedbackService feedbackService,
-            CloudStorageAccount model)
+            ICloudStorageClientFactory cloudStorageClientFactory,
+            SerializeableCloudStorageCredentials model)
             : base(navigationService, languageService, svgIconService, webviewBaseUrl)
         {
             _storyBoardService = storyBoardService;
             _feedbackService = feedbackService;
-
             Model = model;
+
+            _credentialsRequirements = cloudStorageClientFactory.GetOrCreate(Model.CloudStorageId).CredentialsRequirements;
+            CloudServiceName = cloudStorageClientFactory.GetCloudStorageMetadata(Model.CloudStorageId).Title;
+
             GoBackCommand = new RelayCommand(GoBack);
             CancelCommand = new RelayCommand(Cancel);
             OkCommand = new RelayCommand(Ok);
@@ -78,18 +82,13 @@ namespace SilentNotes.ViewModels
 
         private async void Ok()
         {
-            using (var busyIndicator = _feedbackService.ShowBusyIndicator())
-            {
-                _storyBoardService.ActiveStory?.StoreToSession(SynchronizationStorySessionKey.CloudStorageAccount.ToInt(), Model);
-                await _storyBoardService.ActiveStory?.ContinueWith(SynchronizationStoryStepId.ExistsCloudRepository.ToInt());
-            }
+            _feedbackService.ShowBusyIndicator(true);
+            _storyBoardService.ActiveStory?.StoreToSession(SynchronizationStorySessionKey.CloudStorageCredentials.ToInt(), Model);
+            await _storyBoardService.ActiveStory?.ContinueWith(SynchronizationStoryStepId.ExistsCloudRepository.ToInt());
         }
 
         /// <inheritdoc />
-        public string CloudServiceName
-        {
-            get { return CloudStorageTypeExtensions.StorageTypeToString(Model.CloudType); }
-        }
+        public string CloudServiceName { get; private set; }
 
         /// <inheritdoc />
         public string Url
@@ -122,17 +121,47 @@ namespace SilentNotes.ViewModels
             }
         }
 
-        /// <summary>
-        /// Gets a value indicating whether the URL is fix, or if it can be edited by the user.
-        /// </summary>
-        public bool IsUrlFix
+        public bool Secure
         {
-            get { return Model.IsUrlReadonly; }
+            get { return Model.Secure; }
+            set { ChangePropertyIndirect(() => Model.Secure, (bool v) => Model.Secure = v, value, true); }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether a url must be entered.
+        /// </summary>
+        public bool NeedsUrl
+        {
+            get { return _credentialsRequirements.NeedsUrl(); }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether a user name must be entered.
+        /// </summary>
+        public bool NeedsUsername
+        {
+            get { return _credentialsRequirements.NeedsUsername(); }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether a password must be entered.
+        /// </summary>
+        public bool NeedsPassword
+        {
+            get { return _credentialsRequirements.NeedsPassword(); }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the secure flag must be entered.
+        /// </summary>
+        public bool NeedsSecureFlag
+        {
+            get { return _credentialsRequirements.NeedsSecureFlag(); }
         }
 
         /// <summary>
         /// Gets the wrapped model.
         /// </summary>
-        internal CloudStorageAccount Model { get; private set; }
+        internal SerializeableCloudStorageCredentials Model { get; private set; }
     }
 }

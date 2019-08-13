@@ -1,11 +1,13 @@
-﻿using System.Xml.Linq;
+﻿using System.Linq;
+using System.Text;
+using System.Xml.Linq;
 using Moq;
 using NUnit.Framework;
 using SilentNotes.Crypto;
 using SilentNotes.Models;
 using SilentNotes.Services;
-using SilentNotes.Services.CloudStorageServices;
 using SilentNotes.Workers;
+using VanillaCloudStorageClient;
 
 namespace SilentNotesTest.Services
 {
@@ -59,12 +61,26 @@ namespace SilentNotesTest.Services
                 Setup(m => m.TryLoad(It.IsAny<string>(), out xml)).
                 Returns(true);
             Mock<IDataProtectionService> dataProtectionService = new Mock<IDataProtectionService>();
+
             dataProtectionService.
-                Setup(m => m.Protect(It.IsAny<byte[]>())).
-                Returns("abcdefgh");
+                Setup(m => m.Protect(It.Is<byte[]>(p => p.SequenceEqual(Encoding.ASCII.GetBytes("abcdefgh"))))).
+                Returns("protected_abcdefgh_v2");
             dataProtectionService.
-                Setup(m => m.Unprotect(It.IsAny<string>())).
-                Returns(SecureStringExtensions.SecureStringToUnicodeBytes(SecureStringExtensions.StringToSecureString("brownie")));
+                Setup(m => m.Unprotect(It.Is<string>(p => p == "protected_abcdefgh_v2"))).
+                Returns(SecureStringExtensions.SecureStringToBytes(SecureStringExtensions.StringToSecureString("abcdefgh_v2"), Encoding.Unicode));
+            dataProtectionService.
+                Setup(m => m.Protect(It.Is<byte[]>(p => p.SequenceEqual(Encoding.UTF8.GetBytes("abcdefgh_v2"))))).
+                Returns("protected_abcdefgh_v3");
+            dataProtectionService.
+                Setup(m => m.Unprotect(It.Is<string>(p => p == "protected_abcdefgh_v3"))).
+                Returns(Encoding.UTF8.GetBytes("abcdefgh_v3"));
+
+            dataProtectionService.
+                Setup(m => m.Protect(It.Is<byte[]>(p => p.SequenceEqual(Encoding.UTF8.GetBytes("martinstoeckli"))))).
+                Returns("protected_martinstoeckli_v3");
+            dataProtectionService.
+                Setup(m => m.Unprotect(It.Is<string>(p => p == "protected_martinstoeckli_v3"))).
+                Returns(Encoding.UTF8.GetBytes("martinstoeckli_v3"));
 
             SettingsServiceBase service = new TestableService(fileService.Object, dataProtectionService.Object);
             SettingsModel settings = service.LoadSettingsOrDefault();
@@ -76,11 +92,56 @@ namespace SilentNotesTest.Services
             Assert.AreEqual("b2bgiqeghfvn2ufx", settings.TransferCodeHistory[1]);
 
             Assert.AreEqual(SettingsModel.NewestSupportedRevision, settings.Revision);
-            Assert.IsNotNull(settings.CloudStorageAccount);
-            Assert.AreEqual(CloudStorageType.WebDAV, settings.CloudStorageAccount.CloudType);
-            Assert.AreEqual("https://webdav.hidrive.strato.com/users/martinstoeckli/", settings.CloudStorageAccount.Url);
-            Assert.AreEqual("martinstoeckli", settings.CloudStorageAccount.Username);
-            Assert.AreEqual("brownie", SecureStringExtensions.SecureStringToString(settings.CloudStorageAccount.Password));
+            Assert.IsNotNull(settings.Credentials);
+            Assert.AreEqual(CloudStorageClientFactory.CloudStorageIdWebdav, settings.Credentials.CloudStorageId);
+            Assert.AreEqual("https://webdav.hidrive.strato.com/users/martinstoeckli/", settings.Credentials.Url);
+            Assert.AreEqual("martinstoeckli_v3", settings.Credentials.Username);
+            Assert.AreEqual("abcdefgh_v3", settings.Credentials.UnprotectedPassword);
+
+            // Updated settings where saved
+            fileService.Verify(m => m.TrySerializeAndSave(It.IsAny<string>(), It.IsAny<SettingsModel>()), Times.Once);
+        }
+
+        [Test]
+        public void Version2ConfigWillBeUpdated()
+        {
+            XDocument xml = XDocument.Parse(Version2Settings);
+            Mock<IXmlFileService> fileService = new Mock<IXmlFileService>();
+            fileService.
+                Setup(m => m.TryLoad(It.IsAny<string>(), out xml)).
+                Returns(true);
+            Mock<IDataProtectionService> dataProtectionService = new Mock<IDataProtectionService>();
+
+            dataProtectionService.
+                Setup(m => m.Unprotect(It.Is<string>(p => p == "this_is_a_protected_password"))).
+                Returns(SecureStringExtensions.SecureStringToBytes(SecureStringExtensions.StringToSecureString("abcdefgh_v2"), Encoding.Unicode));
+            dataProtectionService.
+                Setup(m => m.Protect(It.Is<byte[]>(p => p.SequenceEqual(Encoding.UTF8.GetBytes("abcdefgh_v2"))))).
+                Returns("protected_abcdefgh_v3");
+            dataProtectionService.
+                Setup(m => m.Unprotect(It.Is<string>(p => p == "protected_abcdefgh_v3"))).
+                Returns(Encoding.UTF8.GetBytes("abcdefgh_v3"));
+
+            dataProtectionService.
+                Setup(m => m.Protect(It.Is<byte[]>(p => p.SequenceEqual(Encoding.UTF8.GetBytes("martinstoeckli"))))).
+                Returns("protected_martinstoeckli_v3");
+            dataProtectionService.
+                Setup(m => m.Unprotect(It.Is<string>(p => p == "protected_martinstoeckli_v3"))).
+                Returns(Encoding.UTF8.GetBytes("martinstoeckli_v3"));
+
+            SettingsServiceBase service = new TestableService(fileService.Object, dataProtectionService.Object);
+            SettingsModel settings = service.LoadSettingsOrDefault();
+            Assert.AreEqual("twofish_gcm", settings.SelectedEncryptionAlgorithm);
+            Assert.AreEqual(true, settings.AdoptCloudEncryptionAlgorithm);
+            Assert.AreEqual("scuj2wfpdcodmgzm", settings.TransferCode);
+            Assert.AreEqual(0, settings.TransferCodeHistory.Count);
+
+            Assert.AreEqual(SettingsModel.NewestSupportedRevision, settings.Revision);
+            Assert.IsNotNull(settings.Credentials);
+            Assert.AreEqual(CloudStorageClientFactory.CloudStorageIdWebdav, settings.Credentials.CloudStorageId);
+            Assert.AreEqual("https://webdav.hidrive.strato.com/users/martinstoeckli/", settings.Credentials.Url);
+            Assert.AreEqual("martinstoeckli_v3", settings.Credentials.Username);
+            Assert.AreEqual("abcdefgh_v3", settings.Credentials.UnprotectedPassword);
 
             // Updated settings where saved
             fileService.Verify(m => m.TrySerializeAndSave(It.IsAny<string>(), It.IsAny<SettingsModel>()), Times.Once);
@@ -107,8 +168,8 @@ namespace SilentNotesTest.Services
             /// <param name="root"></param>
             protected override void UpdateSettingsFrom1To2(XElement root)
             {
-                const string snpsk = "53EC49B1-6600+406b;B84F-0B9CFA1D2BE1";
                 base.UpdateSettingsFrom1To2(root);
+                const string snpsk = "53EC49B1-6600+406b;B84F-0B9CFA1D2BE1";
 
                 // Handle protected password
                 XElement oldPasswortElement = root.Element("cloud_storage")?.Element("cloud_password");
@@ -144,6 +205,26 @@ namespace SilentNotesTest.Services
     <transfer_code>scuj2wfpdcodmgzm</transfer_code>
     <transfer_code>b2bgiqeghfvn2ufx</transfer_code>
   </transfer_code_history>
+</silentnotes_settings>";
+
+        private const string Version2Settings =
+@"<?xml version='1.0' encoding='utf-8'?>
+<silentnotes_settings xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xmlns:xsd='http://www.w3.org/2001/XMLSchema' revision='2'>
+  <cloud_storage_account>
+    <username>martinstoeckli</username>
+    <protected_password>this_is_a_protected_password</protected_password>
+    <url>https://webdav.hidrive.strato.com/users/martinstoeckli/</url>
+    <cloud_type>WebDAV</cloud_type>
+  </cloud_storage_account>
+  <selected_theme>forest</selected_theme>
+  <selected_encryption_algorithm>twofish_gcm</selected_encryption_algorithm>
+  <adopt_cloud_encryption_algorithm>true</adopt_cloud_encryption_algorithm>
+  <auto_sync_mode>CostFreeInternetOnly</auto_sync_mode>
+  <transfer_code>scuj2wfpdcodmgzm</transfer_code>
+  <transfer_code_history />
+  <show_cursor_keys>true</show_cursor_keys>
+  <font-scale>1</font-scale>
+  <default_note_color>#fbf4c1</default_note_color>
 </silentnotes_settings>";
     }
 }

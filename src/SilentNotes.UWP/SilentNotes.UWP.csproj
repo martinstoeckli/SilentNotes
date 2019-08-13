@@ -143,6 +143,12 @@
     <Content Include="..\SilentNotes.Shared\Assets\Html\cloud_service_gmx.png">
       <Link>Assets\Html\cloud_service_gmx.png</Link>
     </Content>
+    <Content Include="..\SilentNotes.Shared\Assets\Html\cloud_service_googledrive.png">
+      <Link>Assets\Html\cloud_service_googledrive.png</Link>
+    </Content>
+    <Content Include="..\SilentNotes.Shared\Assets\Html\cloud_service_onedrive.png">
+      <Link>Assets\Html\cloud_service_onedrive.png</Link>
+    </Content>
     <Content Include="..\SilentNotes.Shared\Assets\Html\cloud_service_webdav.png">
       <Link>Assets\Html\cloud_service_webdav.png</Link>
     </Content>

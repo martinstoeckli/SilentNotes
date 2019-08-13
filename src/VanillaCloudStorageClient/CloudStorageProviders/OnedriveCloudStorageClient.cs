@@ -25,6 +25,8 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
     /// </summary>
     public class OnedriveCloudStorageClient : OAuth2CloudStorageClient, ICloudStorageClient, IOAuth2CloudStorageClient
     {
+        private const string AuthorizeUrl = "https://login.microsoftonline.com/common/oauth2/v2.0/authorize";
+        private const string TokenUrl = "https://login.microsoftonline.com/common/oauth2/v2.0/token";
         private const string UploadUrl = "https://graph.microsoft.com/v1.0/me/drive/special/approot:/{0}:/createUploadSession";
         private const string DownloadUrl = "https://graph.microsoft.com/v1.0/me/drive/special/approot:/{0}:/content";
         private const string DeleteUrl = ExistsUrl;
@@ -39,8 +41,8 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
         public OnedriveCloudStorageClient(string oauthClientId, string oauthRedirectUrl)
             : base(new OAuth2Config
             {
-                AuthorizeServiceEndpoint = "https://login.microsoftonline.com/common/oauth2/v2.0/authorize",
-                TokenServiceEndpoint = "https://login.microsoftonline.com/common/oauth2/v2.0/token",
+                AuthorizeServiceEndpoint = AuthorizeUrl,
+                TokenServiceEndpoint = TokenUrl,
                 ClientId = oauthClientId,
                 RedirectUrl = oauthRedirectUrl,
                 Flow = AuthorizationFlow.Code,

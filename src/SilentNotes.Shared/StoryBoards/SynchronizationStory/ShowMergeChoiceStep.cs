@@ -17,22 +17,31 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
     public class ShowMergeChoiceStep : SynchronizationStoryBoardStepBase
     {
         private readonly INavigationService _navigationService;
+        private readonly IFeedbackService _feedbackService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ShowMergeChoiceStep"/> class.
         /// </summary>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1611:ElementParametersMustBeDocumented", Justification = "Dependency injection")]
-        public ShowMergeChoiceStep(int stepId, IStoryBoard storyBoard, INavigationService navigationService)
+        public ShowMergeChoiceStep(
+            int stepId,
+            IStoryBoard storyBoard,
+            INavigationService navigationService,
+            IFeedbackService feedbackService)
             : base(stepId, storyBoard)
         {
             _navigationService = navigationService;
+            _feedbackService = feedbackService;
         }
 
         /// <inheritdoc/>
         public override Task Run()
         {
-            if (!IsRunningInSilentMode)
+            if (StoryBoard.Mode.ShouldUseGui())
+            {
+                _feedbackService.ShowBusyIndicator(false);
                 _navigationService.Navigate(ControllerNames.MergeChoice);
+            }
             return GetCompletedDummyTask();
         }
     }

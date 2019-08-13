@@ -75,6 +75,7 @@ namespace SilentNotes.Services
             resources["cloud_url"] = "Server address";
             resources["cloud_username"] = "User name";
             resources["cloud_password"] = "Password";
+            resources["cloud_secure"] = "Use secure connection (SSL)";
             resources["cloud_service"] = "Online storage";
             resources["cloud_oauth_code"] = "Access code";
             resources["cloud_oauth_code_desc"] = "SilentNotes now opens the web page of the online-storage, please allow access for SilentNotes. Waiting for authorization…";
@@ -178,6 +179,7 @@ namespace SilentNotes.Services
             resources["cloud_url"] = "Server Addresse";
             resources["cloud_username"] = "Benutzername";
             resources["cloud_password"] = "Passwort";
+            resources["cloud_secure"] = "Verwende sichere Verbindung (SSL)";
             resources["cloud_service"] = "Online-Speicher";
             resources["cloud_oauth_code"] = "Zugangscode";
             resources["cloud_oauth_code_desc"] = "SilentNotes öffnet nun die Webseite des Online-Speichers, bitte erlauben Sie dort den Zugriff für SilentNotes. Warte auf Erlaubnis…";

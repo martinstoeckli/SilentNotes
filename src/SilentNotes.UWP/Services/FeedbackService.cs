@@ -6,6 +6,7 @@
 using System;
 using System.Threading.Tasks;
 using SilentNotes.Services;
+using Windows.UI.Core;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 
@@ -33,20 +34,23 @@ namespace SilentNotes.UWP.Services
         /// <inheritdoc/>
         public void ShowToast(string message)
         {
-            // Set new text
-            TextBlock toastText = _mainPage.FindName("ToastText") as TextBlock;
-            toastText.Text = message;
+            Task.Run(async () => await _mainPage.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                // Set new text
+                TextBlock toastText = _mainPage.FindName("ToastText") as TextBlock;
+                toastText.Text = message;
 
-            // Start fade-in fade-out animation
-            Storyboard toastStoryboard = _mainPage.Resources["ToastFadeInOut"] as Storyboard;
-            toastStoryboard.Begin();
+                // Start fade-in fade-out animation
+                Storyboard toastStoryboard = _mainPage.Resources["ToastFadeInOut"] as Storyboard;
+                toastStoryboard.Begin();
+            }));
         }
 
         /// <inheritdoc/>
-        public IDisposable ShowBusyIndicator()
+        public void ShowBusyIndicator(bool visible)
         {
             ProgressRing busyIndicator = _mainPage.FindName("BusyIndicator") as ProgressRing;
-            return new BusyIndicatorHolder(busyIndicator);
+            busyIndicator.IsActive = visible;
         }
 
         /// <inheritdoc/>
@@ -63,41 +67,6 @@ namespace SilentNotes.UWP.Services
                 CloseButtonText = _languageService.LoadText("ok"),
             };
             await dialog.ShowAsync();
-        }
-
-        /// <summary>
-        /// Helper class which acts as result of the <see cref="ShowBusyIndicator"/> method.
-        /// </summary>
-        private class BusyIndicatorHolder : IDisposable
-        {
-            private static int _busyIndicatorLevel = 0;
-            private bool _disposed = false;
-            private ProgressRing _busyIndicator;
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="BusyIndicatorHolder"/> class.
-            /// </summary>
-            /// <param name="busyIndicator">The platform specific busy indicator control.</param>
-            public BusyIndicatorHolder(ProgressRing busyIndicator)
-            {
-                _busyIndicator = busyIndicator;
-                _busyIndicator.IsActive = true;
-                _busyIndicatorLevel++;
-            }
-
-            /// <summary>
-            /// Removes the busy indicator, as soon as the last holders is disposed.
-            /// </summary>
-            public void Dispose()
-            {
-                if (_disposed)
-                    return;
-                _disposed = true;
-
-                _busyIndicatorLevel--;
-                if (_busyIndicatorLevel <= 0)
-                    _busyIndicator.IsActive = false;
-            }
         }
     }
 }

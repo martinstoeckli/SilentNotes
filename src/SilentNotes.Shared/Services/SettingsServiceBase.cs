@@ -6,11 +6,12 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Security;
+using System.Text;
 using System.Xml.Linq;
-using SilentNotes.Crypto;
 using SilentNotes.Models;
-using SilentNotes.Services.CloudStorageServices;
 using SilentNotes.Workers;
+using VanillaCloudStorageClient;
 
 namespace SilentNotes.Services
 {
@@ -118,9 +119,9 @@ namespace SilentNotes.Services
 
             // Check for necessary update steps
             if (oldRevision <= 1)
-            {
                 UpdateSettingsFrom1To2(root);
-            }
+            if (oldRevision <= 2)
+                UpdateSettingsFrom2To3(root);
 
             bool updated = oldRevision < SettingsModel.NewestSupportedRevision;
             if (updated)
@@ -157,27 +158,52 @@ namespace SilentNotes.Services
         }
 
         /// <summary>
+        /// Converts the XML document which contains a version 2 config, to a version 3 config.
+        /// </summary>
+        /// <param name="root">Root node of the XML document.</param>
+        protected virtual void UpdateSettingsFrom2To3(XElement root)
+        {
+            XElement cloudStorageAcount = root.Element("cloud_storage_account");
+            if (cloudStorageAcount != null)
+            {
+                XElement cloudStorageCredentialsElement = new XElement("cloud_storage_credentials");
+
+                XElement cloudTypeElement = cloudStorageAcount.Element("cloud_type");
+                if (cloudTypeElement != null)
+                    cloudStorageCredentialsElement.Add(new XElement("cloud_storage_id", cloudTypeElement.Value.ToLowerInvariant()));
+
+                XElement userElement = cloudStorageAcount.Element("username");
+                if (userElement != null)
+                    cloudStorageCredentialsElement.Add(new XElement("username", EncryptProperty(userElement.Value)));
+
+                XElement passwordElement = cloudStorageAcount.Element("protected_password");
+                if (passwordElement != null)
+                {
+                    byte[] passwordBytes = _dataProtectionService.Unprotect(passwordElement.Value);
+                    SecureString password = SecureStringExtensions.BytesToSecureString(passwordBytes, Encoding.Unicode);
+                    cloudStorageCredentialsElement.Add(new XElement("password", EncryptProperty(password.SecureStringToString())));
+                }
+
+                XElement urlElement = cloudStorageAcount.Element("url");
+                if (urlElement != null)
+                    cloudStorageCredentialsElement.Add(new XElement("url", urlElement.Value));
+
+                XElement accessTokenElement = cloudStorageAcount.Element("oauth_access_token");
+                if (accessTokenElement != null)
+                    cloudStorageCredentialsElement.Add(new XElement("access_token", EncryptProperty(accessTokenElement.Value)));
+
+                root.AddFirst(cloudStorageCredentialsElement);
+            }
+        }
+
+        /// <summary>
         /// Sub classes can optionally override this method to edit the model before it is saved to
         /// the file system.
         /// </summary>
         /// <param name="settings">The settings model which will be stored.</param>
         protected virtual void BeforeSaving(SettingsModel settings)
         {
-            // encrypt password
-            CloudStorageAccount account = settings.CloudStorageAccount;
-            if (account != null)
-            {
-                if (account.Password == null)
-                {
-                    account.ProtectedPassword = null;
-                }
-                else
-                {
-                    byte[] unprotectedPasswordBytes = SecureStringExtensions.SecureStringToUnicodeBytes(account.Password);
-                    account.ProtectedPassword = _dataProtectionService.Protect(unprotectedPasswordBytes);
-                    CryptoUtils.CleanArray(unprotectedPasswordBytes);
-                }
-            }
+            settings.Credentials?.EncryptBeforeSerialization(EncryptProperty);
         }
 
         /// <summary>
@@ -187,14 +213,17 @@ namespace SilentNotes.Services
         /// <param name="settings">The settings model which was loaded.</param>
         protected virtual void AfterLoading(SettingsModel settings)
         {
-            // decrypt password
-            CloudStorageAccount account = settings.CloudStorageAccount;
-            if (!string.IsNullOrEmpty(account?.ProtectedPassword))
-            {
-                byte[] passwordBytes = _dataProtectionService.Unprotect(account.ProtectedPassword);
-                account.Password = SecureStringExtensions.UnicodeBytesToSecureString(passwordBytes);
-                CryptoUtils.CleanArray(passwordBytes);
-            }
+            settings.Credentials?.DecryptAfterDeserialization(DecryptProperty);
+        }
+
+        private string EncryptProperty(string plainText)
+        {
+            return (plainText == null) ? null : _dataProtectionService.Protect(Encoding.UTF8.GetBytes(plainText));
+        }
+
+        private string DecryptProperty(string cipherText)
+        {
+            return (cipherText == null) ? null : Encoding.UTF8.GetString(_dataProtectionService.Unprotect(cipherText));
         }
     }
 }

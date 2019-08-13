@@ -7,8 +7,8 @@ using System;
 using SilentNotes.Crypto;
 using SilentNotes.Models;
 using SilentNotes.Services;
-using SilentNotes.Services.CloudStorageServices;
 using SilentNotes.Workers;
+using VanillaCloudStorageClient;
 
 namespace SilentNotes.StoryBoards.SynchronizationStory
 {
@@ -25,31 +25,18 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         }
 
         /// <summary>
-        /// Gets a value indicating, whether the story runs silently in the background. If this
-        /// value is true, no GUI should be involved and missing information should stop the story.
-        /// The SilentMode is used for auto-sync at application startup/shutdown.
-        /// </summary>
-        public bool IsRunningInSilentMode
-        {
-            get { return StoryBoard.SilentMode; }
-        }
-
-        /// <summary>
         /// Checks the type of the exception and shows an appropriate error message.
         /// </summary>
         /// <param name="ex">Exception to handle.</param>
         /// <param name="feedbackService">Dialog service to show the error message.</param>
         /// <param name="languageService">The language service.</param>
-        public void ShowExceptionMessage(Exception ex, IFeedbackService feedbackService, ILanguageService languageService)
+        public static void ShowExceptionMessage(Exception ex, IFeedbackService feedbackService, ILanguageService languageService)
         {
-            if (IsRunningInSilentMode)
-                return;
-
-            if (ex is CloudStorageConnectionException)
+            if (ex is ConnectionFailedException)
             {
                 feedbackService.ShowToast(languageService["sync_error_connection"]);
             }
-            else if (ex is CloudStorageForbiddenException)
+            else if (ex is AccessDeniedException)
             {
                 feedbackService.ShowToast(languageService["sync_error_privileges"]);
             }

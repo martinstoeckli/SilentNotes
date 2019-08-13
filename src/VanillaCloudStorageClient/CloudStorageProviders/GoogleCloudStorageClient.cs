@@ -22,11 +22,13 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
     /// </summary>
     public class GoogleCloudStorageClient : OAuth2CloudStorageClient, ICloudStorageClient, IOAuth2CloudStorageClient
     {
+        private const string AuthorizeUrl = "https://accounts.google.com/o/oauth2/v2/auth";
+        private const string TokenUrl = "https://www.googleapis.com/oauth2/v4/token";
         private const string UploadUrl = "https://www.googleapis.com/upload/drive/v3/files";
         private const string DownloadUrl = ListUrl;
         private const string DeleteUrl = ListUrl;
         private const string ListUrl = "https://www.googleapis.com/drive/v3/files";
-        private readonly string DataFolder = "appDataFolder";
+        private const string DataFolder = "appDataFolder";
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GoogleCloudStorageClient"/> class.
@@ -36,8 +38,8 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
         public GoogleCloudStorageClient(string oauthClientId, string oauthRedirectUrl)
             : base(new OAuth2Config
             {
-                AuthorizeServiceEndpoint = "https://accounts.google.com/o/oauth2/v2/auth",
-                TokenServiceEndpoint = "https://www.googleapis.com/oauth2/v4/token",
+                AuthorizeServiceEndpoint = AuthorizeUrl,
+                TokenServiceEndpoint = TokenUrl,
                 ClientId = oauthClientId,
                 RedirectUrl = oauthRedirectUrl,
                 Flow = AuthorizationFlow.Code,

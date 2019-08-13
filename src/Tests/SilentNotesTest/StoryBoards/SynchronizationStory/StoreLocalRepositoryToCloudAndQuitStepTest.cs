@@ -3,9 +3,9 @@ using NUnit.Framework;
 using SilentNotes.Crypto.SymmetricEncryption;
 using SilentNotes.Models;
 using SilentNotes.Services;
-using SilentNotes.Services.CloudStorageServices;
 using SilentNotes.StoryBoards;
 using SilentNotes.StoryBoards.SynchronizationStory;
+using VanillaCloudStorageClient;
 
 namespace SilentNotesTest.StoryBoards.SynchronizationStory
 {
@@ -15,27 +15,31 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
         [Test]
         public void GenerateAndStoreNewTransfercode()
         {
+            SerializeableCloudStorageCredentials credentialsFromSession = new SerializeableCloudStorageCredentials();
             var settingsModel = CreateSettingsModel(null); // Transfercode does not yet exist
             NoteRepositoryModel repositoryModel = new NoteRepositoryModel();
 
             Mock<IStoryBoard> storyBoard = new Mock<IStoryBoard>();
-            Mock<ILanguageService> languageService = new Mock<ILanguageService>();
-            Mock<IFeedbackService> feedbackService = new Mock<IFeedbackService>();
+            storyBoard.
+                Setup(m => m.LoadFromSession<SerializeableCloudStorageCredentials>(It.Is<int>(p => p == SynchronizationStorySessionKey.CloudStorageCredentials.ToInt()))).
+                Returns(credentialsFromSession);
             Mock<ISettingsService> settingsService = new Mock<ISettingsService>();
             settingsService.
                 Setup(m => m.LoadSettingsOrDefault()).Returns(settingsModel);
             Mock<IRepositoryStorageService> repositoryStorageService = new Mock<IRepositoryStorageService>();
             repositoryStorageService.
                 Setup(m => m.LoadRepositoryOrDefault(out repositoryModel));
-            Mock<ICloudStorageService> cloudStorageService = new Mock<ICloudStorageService>();
-            Mock<ICloudStorageServiceFactory> cloudStorageServiceFactory = new Mock<ICloudStorageServiceFactory>();
-            cloudStorageServiceFactory.
-                Setup(m => m.Create(It.IsAny<CloudStorageAccount>())).
-                Returns(cloudStorageService.Object);
 
             // Run step
             var step = new StoreLocalRepositoryToCloudAndQuitStep(
-                SynchronizationStoryStepId.StoreLocalRepositoryToCloudAndQuit.ToInt(), storyBoard.Object, languageService.Object, feedbackService.Object, settingsService.Object, new RandomSource4UnitTest(), repositoryStorageService.Object, cloudStorageServiceFactory.Object);
+                SynchronizationStoryStepId.StoreLocalRepositoryToCloudAndQuit.ToInt(),
+                storyBoard.Object,
+                CommonMocksAndStubs.LanguageService(),
+                CommonMocksAndStubs.FeedbackService(),
+                settingsService.Object,
+                CommonMocksAndStubs.CryptoRandomService(),
+                repositoryStorageService.Object,
+                CommonMocksAndStubs.CloudStorageClientFactory());
             Assert.DoesNotThrowAsync(step.Run);
 
             // Settings are stored with new transfer code
@@ -48,27 +52,31 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
         [Test]
         public void KeepExistingTransfercode()
         {
+            SerializeableCloudStorageCredentials credentialsFromSession = new SerializeableCloudStorageCredentials();
             var settingsModel = CreateSettingsModel("abcdefgh"); // Transfercode exists
             NoteRepositoryModel repositoryModel = new NoteRepositoryModel();
 
             Mock<IStoryBoard> storyBoard = new Mock<IStoryBoard>();
-            Mock<ILanguageService> languageService = new Mock<ILanguageService>();
-            Mock<IFeedbackService> feedbackService = new Mock<IFeedbackService>();
+            storyBoard.
+                Setup(m => m.LoadFromSession<SerializeableCloudStorageCredentials>(It.Is<int>(p => p == SynchronizationStorySessionKey.CloudStorageCredentials.ToInt()))).
+                Returns(credentialsFromSession);
             Mock<ISettingsService> settingsService = new Mock<ISettingsService>();
             settingsService.
                 Setup(m => m.LoadSettingsOrDefault()).Returns(settingsModel);
             Mock<IRepositoryStorageService> repositoryStorageService = new Mock<IRepositoryStorageService>();
             repositoryStorageService.
                 Setup(m => m.LoadRepositoryOrDefault(out repositoryModel));
-            Mock<ICloudStorageService> cloudStorageService = new Mock<ICloudStorageService>();
-            Mock<ICloudStorageServiceFactory> cloudStorageServiceFactory = new Mock<ICloudStorageServiceFactory>();
-            cloudStorageServiceFactory.
-                Setup(m => m.Create(It.IsAny<CloudStorageAccount>())).
-                Returns(cloudStorageService.Object);
 
             // Run step
             var step = new StoreLocalRepositoryToCloudAndQuitStep(
-                SynchronizationStoryStepId.StoreLocalRepositoryToCloudAndQuit.ToInt(), storyBoard.Object, languageService.Object, feedbackService.Object, settingsService.Object, new RandomSource4UnitTest(), repositoryStorageService.Object, cloudStorageServiceFactory.Object);
+                SynchronizationStoryStepId.StoreLocalRepositoryToCloudAndQuit.ToInt(),
+                storyBoard.Object,
+                CommonMocksAndStubs.LanguageService(),
+                CommonMocksAndStubs.FeedbackService(),
+                settingsService.Object,
+                CommonMocksAndStubs.CryptoRandomService(),
+                repositoryStorageService.Object,
+                CommonMocksAndStubs.CloudStorageClientFactory());
             Assert.DoesNotThrowAsync(step.Run);
 
             // No settings are stored

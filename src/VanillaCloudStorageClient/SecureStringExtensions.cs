@@ -4,17 +4,18 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
+using System.Net;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Text;
-using SilentNotes.Crypto;
 
-namespace SilentNotes.Workers
+namespace VanillaCloudStorageClient
 {
     /// <summary>
+    /// Extension methods of the <see cref="SecureString"/> class.
     /// Converting a string to SecureString and back should be avoided as much as possible.
-    /// Since we are working with HTML as user interface, this cannot be completely avoided, so we
-    /// just try to minimize the duration, a password is kept plain text in memory.
+    /// Sometimes it cannot be completely avoided, so we just try to minimize the duration, a
+    /// password is kept plain text in memory.
     /// </summary>
     public static class SecureStringExtensions
     {
@@ -28,11 +29,8 @@ namespace SilentNotes.Workers
         {
             if (password == null)
                 return null;
-
-            SecureString result = new SecureString();
-            foreach (char c in password)
-                result.AppendChar(c);
-            return result;
+            else
+                return new NetworkCredential(null, password).SecurePassword;
         }
 
         /// <summary>
@@ -45,78 +43,8 @@ namespace SilentNotes.Workers
         {
             if (password == null)
                 return null;
-            if (password.Length == 0)
-                return string.Empty;
-
-            IntPtr passwordBstr = IntPtr.Zero;
-            string result;
-            try
-            {
-                passwordBstr = Marshal.SecureStringToBSTR(password);
-                result = Marshal.PtrToStringBSTR(passwordBstr);
-            }
-            finally
-            {
-                if (passwordBstr != IntPtr.Zero)
-                    Marshal.ZeroFreeBSTR(passwordBstr);
-            }
-            return result;
-        }
-
-        /// <summary>
-        /// Converts a byte array to a SecureString.
-        /// </summary>
-        /// <param name="bytes">Password as byte array. The password should be Unicode encoded,
-        /// means 2 bytes represent a single character.</param>
-        /// <returns>Password in a SecureString.</returns>
-        public static SecureString UnicodeBytesToSecureString(byte[] bytes)
-        {
-            if (bytes == null)
-                return null;
-
-            SecureString result = new SecureString();
-            char[] password = null;
-            try
-            {
-                password = Encoding.Unicode.GetChars(bytes);
-                foreach (char c in password)
-                    result.AppendChar(c);
-            }
-            finally
-            {
-                CryptoUtils.CleanArray(password);
-            }
-            return result;
-        }
-
-        /// <summary>
-        /// Converts a SecureString to to a byte array.
-        /// </summary>
-        /// <param name="password">Password as SecureString.</param>
-        /// <returns>Array of bytes, or null if the password was null.</returns>
-        public static byte[] SecureStringToUnicodeBytes(this SecureString password)
-        {
-            if (password == null)
-                return null;
-            if (password.Length == 0)
-                return new byte[0];
-
-            IntPtr passwordBstr = IntPtr.Zero;
-            try
-            {
-                passwordBstr = Marshal.SecureStringToBSTR(password);
-                int length = Marshal.ReadInt32(passwordBstr, -4);
-                byte[] result = new byte[length];
-
-                for (int i = 0; i < length; i++)
-                    result[i] = Marshal.ReadByte(passwordBstr, i);
-                return result;
-            }
-            finally
-            {
-                if (passwordBstr != IntPtr.Zero)
-                    Marshal.ZeroFreeBSTR(passwordBstr);
-            }
+            else
+                return new NetworkCredential(null, password).Password;
         }
 
         /// <summary>
@@ -170,6 +98,72 @@ namespace SilentNotes.Workers
                     result = false;
             }
             return result;
+        }
+
+        /// <summary>
+        /// Converts a SecureString to to a encoded byte array. The function avoids the generation
+        /// of a string, which would depend on the garbage collector to be removed from memory.
+        /// </summary>
+        /// <param name="secretString">Password as SecureString.</param>
+        /// <param name="encoding">The encoding which is used to convert the string to bytes.
+        /// If the parameter is null, it defaults to Encoding.UTF8.</param>
+        /// <returns>Array of bytes, or null if the password was null.</returns>
+        public static byte[] SecureStringToBytes(this SecureString secretString, Encoding encoding)
+        {
+            if (encoding == null)
+                encoding = Encoding.UTF8;
+            if (secretString == null)
+                return null;
+            if (secretString.Length == 0)
+                return new byte[0];
+
+            IntPtr secretBstr = IntPtr.Zero;
+            char[] secretChars = null;
+            try
+            {
+                secretBstr = Marshal.SecureStringToBSTR(secretString);
+                secretChars = new char[secretString.Length];
+                Marshal.Copy(secretBstr, secretChars, 0, secretChars.Length);
+                return encoding.GetBytes(secretChars);
+            }
+            finally
+            {
+                if (secretBstr != IntPtr.Zero)
+                    Marshal.ZeroFreeBSTR(secretBstr);
+                if (secretChars != null)
+                    Array.Clear(secretChars, 0, secretChars.Length);
+            }
+        }
+
+        /// <summary>
+        /// Converts a UTF-8 encoded byte array to a SecureString. The function avoids the generation
+        /// of a string, which would depend on the garbage collector to be removed from memory.
+        /// </summary>
+        /// <param name="secretBytes">Password as byte array. The password should be UTF-8 encoded.</param>
+        /// <param name="encoding">The encoding which should be used to build the string from the
+        /// bytes. If the parameter is null, it defaults to Encoding.UTF8.</param>
+        /// <returns>Password in a SecureString.</returns>
+        public static SecureString BytesToSecureString(byte[] secretBytes, Encoding encoding)
+        {
+            if (encoding == null)
+                encoding = Encoding.UTF8;
+            if (secretBytes == null)
+                return null;
+
+            char[] secretChars = null;
+            try
+            {
+                SecureString result = new SecureString();
+                secretChars = encoding.GetChars(secretBytes);
+                foreach (char c in secretChars)
+                    result.AppendChar(c);
+                return result;
+            }
+            finally
+            {
+                if (secretChars != null)
+                    Array.Clear(secretChars, 0, secretChars.Length);
+            }
         }
     }
 }

@@ -178,7 +178,7 @@ WriteLiteral(" data-binding=\"TxtFilter\"");
 
 WriteLiteral(" autocomplete=\"off\"");
 
-WriteLiteral(" />\r\n            <svg");
+WriteLiteral(" autofocus />\r\n            <svg");
 
 WriteLiteral(" width=\'24\'");
 

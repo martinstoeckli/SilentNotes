@@ -4,10 +4,10 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using SilentNotes.Services;
-using SilentNotes.Services.CloudStorageServices;
 using SilentNotes.Workers;
 
 namespace SilentNotes.StoryBoards.SynchronizationStory
@@ -20,6 +20,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         IsCloudServiceSet,
         ShowCloudStorageChoice,
         ShowCloudStorageAccount,
+        HandleOAuthRedirect,
         ExistsCloudRepository,
         DownloadCloudRepository,
         ExistsTransferCode,
@@ -39,11 +40,13 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
     /// </summary>
     public enum SynchronizationStorySessionKey
     {
-        CloudStorageAccount,
+        CloudStorageCredentials,
         BinaryCloudRepository,
         UserEnteredTransferCode,
         CloudRepository,
         OauthCloudStorageService,
+        OauthState,
+        OauthCodeVerifier,
         OauthRedirectUrl,
     }
 
@@ -55,44 +58,57 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         /// <summary>
         /// Initializes a new instance of the <see cref="SynchronizationStoryBoard"/> class.
         /// </summary>
-        /// <param name="silentMode">Sets the property <see cref="SilentMode"/>.</param>
-        public SynchronizationStoryBoard(bool silentMode)
-            : base(silentMode)
+        /// <param name="mode">Sets the property <see cref="SilentMode"/>.</param>
+        public SynchronizationStoryBoard(StoryBoardMode mode)
+            : base(mode)
         {
-            IFeedbackService feedbackService = silentMode
-                ? new DummyFeedbackService()
-                : Ioc.GetOrCreate<IFeedbackService>();
+            IFeedbackService feedbackService = mode.ShouldShowToasts()
+                ? Ioc.GetOrCreate<IFeedbackService>()
+                : new DummyFeedbackService();
+            INavigationService navigationService = mode.ShouldUseGui()
+                ? Ioc.GetOrCreate<INavigationService>()
+                : new DummyNavigationService();
 
             RegisterStep(new IsCloudServiceSetStep(
                 SynchronizationStoryStepId.IsCloudServiceSet.ToInt(), this, Ioc.GetOrCreate<ISettingsService>()));
             RegisterStep(new ShowFirstTimeDialogStep(
-                SynchronizationStoryStepId.ShowFirstTimeDialog.ToInt(), this, Ioc.GetOrCreate<INavigationService>()));
+                SynchronizationStoryStepId.ShowFirstTimeDialog.ToInt(), this, navigationService));
             RegisterStep(new ShowCloudStorageChoiceStep(
-                SynchronizationStoryStepId.ShowCloudStorageChoice.ToInt(), this, Ioc.GetOrCreate<INavigationService>()));
+                SynchronizationStoryStepId.ShowCloudStorageChoice.ToInt(), this, navigationService));
             RegisterStep(new ShowCloudStorageAccountStep(
                 SynchronizationStoryStepId.ShowCloudStorageAccount.ToInt(),
                 this,
-                Ioc.GetOrCreate<INavigationService>(),
+                navigationService,
+                Ioc.GetOrCreate<INativeBrowserService>(),
+                Ioc.GetOrCreate<ICryptoRandomService>(),
+                Ioc.GetOrCreate<ICloudStorageClientFactory>()));
+            RegisterStep(new HandleOAuthRedirectStep(
+                SynchronizationStoryStepId.HandleOAuthRedirect.ToInt(),
+                this,
                 Ioc.GetOrCreate<ILanguageService>(),
                 feedbackService,
-                Ioc.GetOrCreate<ICloudStorageServiceFactory>()));
+                navigationService,
+                Ioc.GetOrCreate<ICloudStorageClientFactory>()));
             RegisterStep(new ExistsCloudRepositoryStep(
                 SynchronizationStoryStepId.ExistsCloudRepository.ToInt(),
                 this,
                 Ioc.GetOrCreate<ILanguageService>(),
                 feedbackService,
                 Ioc.GetOrCreate<ISettingsService>(),
-                Ioc.GetOrCreate<ICloudStorageServiceFactory>()));
+                Ioc.GetOrCreate<ICloudStorageClientFactory>()));
             RegisterStep(new DownloadCloudRepositoryStep(
                 SynchronizationStoryStepId.DownloadCloudRepository.ToInt(),
                 this,
                 Ioc.GetOrCreate<ILanguageService>(),
                 feedbackService,
-                Ioc.GetOrCreate<ICloudStorageServiceFactory>()));
+                Ioc.GetOrCreate<ICloudStorageClientFactory>()));
             RegisterStep(new ExistsTransferCodeStep(
                 SynchronizationStoryStepId.ExistsTransferCode.ToInt(), this, Ioc.GetOrCreate<ISettingsService>()));
             RegisterStep(new ShowTransferCodeStep(
-                SynchronizationStoryStepId.ShowTransferCode.ToInt(), this, Ioc.GetOrCreate<INavigationService>()));
+                SynchronizationStoryStepId.ShowTransferCode.ToInt(),
+                this,
+                navigationService,
+                feedbackService));
             RegisterStep(new DecryptCloudRepositoryStep(
                 SynchronizationStoryStepId.DecryptCloudRepository.ToInt(),
                 this,
@@ -103,7 +119,10 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
             RegisterStep(new IsSameRepositoryStep(
                 SynchronizationStoryStepId.IsSameRepository.ToInt(), this, Ioc.GetOrCreate<IRepositoryStorageService>()));
             RegisterStep(new ShowMergeChoiceStep(
-                SynchronizationStoryStepId.ShowMergeChoice.ToInt(), this, Ioc.GetOrCreate<INavigationService>()));
+                SynchronizationStoryStepId.ShowMergeChoice.ToInt(),
+                this,
+                navigationService,
+                feedbackService));
             RegisterStep(new StoreMergedRepositoryAndQuitStep(
                 SynchronizationStoryStepId.StoreMergedRepositoryAndQuit.ToInt(),
                 this,
@@ -112,7 +131,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
                 Ioc.GetOrCreate<ISettingsService>(),
                 Ioc.GetOrCreate<ICryptoRandomService>(),
                 Ioc.GetOrCreate<IRepositoryStorageService>(),
-                Ioc.GetOrCreate<ICloudStorageServiceFactory>()));
+                Ioc.GetOrCreate<ICloudStorageClientFactory>()));
             RegisterStep(new StoreLocalRepositoryToCloudAndQuitStep(
                 SynchronizationStoryStepId.StoreLocalRepositoryToCloudAndQuit.ToInt(),
                 this,
@@ -121,7 +140,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
                 Ioc.GetOrCreate<ISettingsService>(),
                 Ioc.GetOrCreate<ICryptoRandomService>(),
                 Ioc.GetOrCreate<IRepositoryStorageService>(),
-                Ioc.GetOrCreate<ICloudStorageServiceFactory>()));
+                Ioc.GetOrCreate<ICloudStorageClientFactory>()));
             RegisterStep(new StoreCloudRepositoryToDeviceAndQuitStep(
                 SynchronizationStoryStepId.StoreCloudRepositoryToDeviceAndQuit.ToInt(),
                 this,
@@ -129,7 +148,22 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
                 feedbackService,
                 Ioc.GetOrCreate<IRepositoryStorageService>()));
             RegisterStep(new StopAndShowRepositoryStep(
-                SynchronizationStoryStepId.StopAndShowRepository.ToInt(), this, Ioc.GetOrCreate<INavigationService>(), Ioc.GetOrCreate<IStoryBoardService>()));
+                SynchronizationStoryStepId.StopAndShowRepository.ToInt(),
+                this,
+                feedbackService,
+                navigationService,
+                Ioc.GetOrCreate<IStoryBoardService>()));
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SynchronizationStoryBoard"/> class, and
+        /// adopts the session of another story board.
+        /// </summary>
+        /// <param name="otherStoryBoard">Copy the session variables from this story board.</param>
+        public SynchronizationStoryBoard(SynchronizationStoryBoard otherStoryBoard)
+            : this(otherStoryBoard.Mode)
+        {
+            _session = new Dictionary<int, object>(otherStoryBoard._session);
         }
 
         /// <summary>

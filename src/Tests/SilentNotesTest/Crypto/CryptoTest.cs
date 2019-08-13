@@ -12,7 +12,7 @@ namespace SilentNotesTest.Crypto
     {
         private void TestSymmetricEncryptionWithShortMessage(ISymmetricEncryptionAlgorithm encryptor)
         {
-            ICryptoRandomService randomGenerator = new RandomSource4UnitTest();
+            ICryptoRandomService randomGenerator = CommonMocksAndStubs.CryptoRandomService();
             byte[] key = randomGenerator.GetRandomBytes(encryptor.ExpectedKeySize);
             byte[] nonce = randomGenerator.GetRandomBytes(encryptor.ExpectedNonceSize);
             string message = "Dies ist ein kurzer Text";
@@ -26,7 +26,7 @@ namespace SilentNotesTest.Crypto
 
         private void TestSymmetricEncryptionWithLongMessage(ISymmetricEncryptionAlgorithm encryptor)
         {
-            ICryptoRandomService randomGenerator = new RandomSource4UnitTest();
+            ICryptoRandomService randomGenerator = CommonMocksAndStubs.CryptoRandomService();
             byte[] key = randomGenerator.GetRandomBytes(encryptor.ExpectedKeySize);
             byte[] nonce = randomGenerator.GetRandomBytes(encryptor.ExpectedNonceSize);
             byte[] message = randomGenerator.GetRandomBytes(1523687);
@@ -79,7 +79,7 @@ namespace SilentNotesTest.Crypto
             const int KeyLength = 42;
             IKeyDerivationFunction kdf = new Pbkdf2();
 
-            ICryptoRandomService randomGenerator = new RandomSource4UnitTest();
+            ICryptoRandomService randomGenerator = CommonMocksAndStubs.CryptoRandomService();
             byte[] salt = randomGenerator.GetRandomBytes(kdf.ExpectedSaltSizeBytes);
             int cost = kdf.RecommendedCost(KeyDerivationCostType.Low);
 
@@ -96,7 +96,7 @@ namespace SilentNotesTest.Crypto
         public void CryptoTestEncryptor()
         {
             EncryptorDecryptor encryptor = new EncryptorDecryptor("sugus");
-            ICryptoRandomService randomGenerator = new RandomSource4UnitTest();
+            ICryptoRandomService randomGenerator = CommonMocksAndStubs.CryptoRandomService();
             string message = "Der schnelle Fuchs stolpert über den faulen Hund.";
             byte[] binaryMessage = CryptoUtils.StringToBytes(message);
             string password = "Der schnelle Uhu fliegt über den faulen Hund.";
@@ -109,7 +109,7 @@ namespace SilentNotesTest.Crypto
         [Test]
         public void GenerateRandomBase62StringGeneratesValidStrings()
         {
-            ICryptoRandomService randomGenerator = new RandomSource4UnitTest();
+            ICryptoRandomService randomGenerator = CommonMocksAndStubs.CryptoRandomService();
 
             // check if length always matches the required length
             for (int length = 0; length < 300; length++)
@@ -124,7 +124,7 @@ namespace SilentNotesTest.Crypto
         public void ObfuscationCanBeReversed()
         {
             string obfuscationKey = "A very strong passphrase...";
-            ICryptoRandomService randomGenerator = new RandomSource4UnitTest();
+            ICryptoRandomService randomGenerator = CommonMocksAndStubs.CryptoRandomService();
             byte[] binaryMessage = randomGenerator.GetRandomBytes(100);
 
             var obfuscatedMessage = CryptoUtils.Obfuscate(binaryMessage, obfuscationKey, randomGenerator);

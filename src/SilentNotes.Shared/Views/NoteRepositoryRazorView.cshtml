@@ -53,7 +53,7 @@
 <body style="background-color: @Model.Theme.ImageTint">
     <nav id="navigation" class="d-flex">
         <div class="nav-item nav-filter ml-auto d-inline-flex align-self-center">
-            <input oninput="bind(event)" data-binding="TxtFilter" autocomplete="off" />
+            <input oninput="bind(event)" data-binding="TxtFilter" autocomplete="off" autofocus />
             <svg width='24' height='24' viewBox='0 0 24 24' data-binding="FilterButtonMagnifier" style="fill:#a8a8a8">@{WriteLiteral(Model.Icon.LoadIconSvgPath("magnify"));}</svg>
             <svg width='24' height='24' viewBox='0 0 24 24' class="hidden-at-startup" onclick="bind(event)" data-binding="FilterButtonCancel" style="fill:#666666">@{WriteLiteral(Model.Icon.LoadIconSvgPath("close-circle-outline"));}</svg>
         </div>

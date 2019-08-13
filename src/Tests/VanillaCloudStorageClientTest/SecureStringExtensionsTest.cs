@@ -1,9 +1,9 @@
 ﻿using System.Security;
 using System.Text;
 using NUnit.Framework;
-using SilentNotes.Workers;
+using VanillaCloudStorageClient;
 
-namespace SilentNotesTest.Workers
+namespace VanillaCloudStorageClientTest
 {
     [TestFixture]
     public class SecureStringExtensionsTest
@@ -40,29 +40,6 @@ namespace SilentNotesTest.Workers
         }
 
         [Test]
-        public void CorrectlyConvertsUnicodeBytesToSecureString()
-        {
-            byte[] candidate = StringToUnicodeBytes("lazy 🐢🖐🏿 doc.");
-            SecureString result = SecureStringExtensions.UnicodeBytesToSecureString(candidate);
-            Assert.IsNotNull(result);
-            Assert.AreEqual("lazy 🐢🖐🏿 doc.", SecureStringExtensions.SecureStringToString(result));
-
-            candidate = null;
-            result = SecureStringExtensions.UnicodeBytesToSecureString(candidate);
-            Assert.IsNull(result);
-        }
-
-        [Test]
-        public void CorrectlyConvertsSecureStringToUnicodeBytes()
-        {
-            string candidate = "lazy 🐢🖐🏿 doc.";
-            SecureString secureCandidate = SecureStringExtensions.StringToSecureString(candidate);
-            byte[] bytes = SecureStringExtensions.SecureStringToUnicodeBytes(secureCandidate);
-
-            Assert.AreEqual("lazy 🐢🖐🏿 doc.", UnicodeBytesToString(bytes));
-        }
-
-        [Test]
         public void AreEqualsWorksCorrectly()
         {
             SecureString candidate1 = SecureStringExtensions.StringToSecureString("lazy 🐢🖐🏿 doc.");
@@ -85,14 +62,50 @@ namespace SilentNotesTest.Workers
             Assert.IsTrue(SecureStringExtensions.AreEqual(candidate1, candidate2));
         }
 
-        private static string UnicodeBytesToString(byte[] bytes)
+        [Test]
+        public void CorrectlyConvertsUnicodeBytesToSecureString()
         {
-            return Encoding.Unicode.GetString(bytes, 0, bytes.Length);
+            byte[] candidate = Encoding.Unicode.GetBytes("lazy 🐢🖐🏿 doc.");
+            SecureString result = SecureStringExtensions.BytesToSecureString(candidate, Encoding.Unicode);
+            Assert.IsNotNull(result);
+            Assert.AreEqual("lazy 🐢🖐🏿 doc.", SecureStringExtensions.SecureStringToString(result));
+
+            candidate = null;
+            result = SecureStringExtensions.BytesToSecureString(candidate, Encoding.Unicode);
+            Assert.IsNull(result);
         }
 
-        private static byte[] StringToUnicodeBytes(string unicodeString)
+        [Test]
+        public void CorrectlyConvertsSecureStringToUnicodeBytes()
         {
-            return Encoding.Unicode.GetBytes(unicodeString);
+            string candidate = "lazy 🐢🖐🏿 doc.";
+            SecureString secureCandidate = SecureStringExtensions.StringToSecureString(candidate);
+            byte[] bytes = SecureStringExtensions.SecureStringToBytes(secureCandidate, Encoding.Unicode);
+
+            Assert.AreEqual("lazy 🐢🖐🏿 doc.", Encoding.Unicode.GetString(bytes));
+        }
+
+        [Test]
+        public void CorrectlyConvertsUtf8BytesToSecureString()
+        {
+            byte[] candidate = Encoding.UTF8.GetBytes("lazy 🐢🖐🏿 doc.");
+            SecureString result = SecureStringExtensions.BytesToSecureString(candidate, Encoding.UTF8);
+            Assert.IsNotNull(result);
+            Assert.AreEqual("lazy 🐢🖐🏿 doc.", SecureStringExtensions.SecureStringToString(result));
+
+            candidate = null;
+            result = SecureStringExtensions.BytesToSecureString(candidate, Encoding.UTF8);
+            Assert.IsNull(result);
+        }
+
+        [Test]
+        public void CorrectlyConvertsSecureStringToUtf8Bytes()
+        {
+            string candidate = "lazy 🐢🖐🏿 doc.";
+            SecureString secureCandidate = SecureStringExtensions.StringToSecureString(candidate);
+            byte[] bytes = SecureStringExtensions.SecureStringToBytes(secureCandidate, Encoding.UTF8);
+
+            Assert.AreEqual("lazy 🐢🖐🏿 doc.", Encoding.UTF8.GetString(bytes));
         }
     }
 }

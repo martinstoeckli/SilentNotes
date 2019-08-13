@@ -35,6 +35,15 @@ namespace VanillaCloudStorageClient
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ConnectionFailedException"/> class.
+        /// Prefer the other constructors for production and keep this one for unittesting.
+        /// </summary>
+        public ConnectionFailedException()
+            : base("An error occured while connecting to the server", null)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ConnectionFailedException"/> class.
         /// </summary>
         /// <param name="message">Error message.</param>
         /// <param name="innerException">The inner exception if any, or null.</param>
@@ -62,10 +71,46 @@ namespace VanillaCloudStorageClient
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="AccessDeniedException"/> class.
+        /// Prefer the other constructors for production and keep this one for unittesting.
+        /// </summary>
+        public AccessDeniedException()
+            : base("Access to the requested resource was denied.", null)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AccessDeniedException"/> class.
         /// </summary>
         /// <param name="innerException">The inner exception if any, or null.</param>
         public AccessDeniedException(Exception innerException)
             : base("Access to the requested resource was denied.", innerException)
+        {
+        }
+    }
+
+    /// <summary>
+    /// Throw this exception if the token refresh was not granted by the OAuth2 server.
+    /// This happens when the refresh-token has expired and the user has to do a new login.
+    /// </summary>
+    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass", Justification = "Just a list of exceptions.")]
+    public class RefreshTokenExpiredException : CloudStorageException
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RefreshTokenExpiredException"/> class.
+        /// Prefer the other constructors for production and keep this one for unittesting.
+        /// </summary>
+        public RefreshTokenExpiredException()
+            : base("The OAuth2 server answered with a 'invalid_grant error'.", null)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RefreshTokenExpiredException"/> class.
+        /// Prefer the other constructors for production and keep this one for unittesting.
+        /// </summary>
+        /// <param name="innerException">The inner exception if any, or null.</param>
+        public RefreshTokenExpiredException(Exception innerException)
+            : base("The OAuth2 server answered with a 'invalid_grant error'.", innerException)
         {
         }
     }

@@ -7,7 +7,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using SilentNotes.Services;
-using SilentNotes.Services.CloudStorageServices;
+using VanillaCloudStorageClient;
 
 namespace SilentNotes.StoryBoards.SynchronizationStory
 {
@@ -19,7 +19,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
     {
         private readonly ILanguageService _languageService;
         private readonly IFeedbackService _feedbackService;
-        private readonly ICloudStorageServiceFactory _cloudStorageServiceFactory;
+        private readonly ICloudStorageClientFactory _cloudStorageClientFactory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DownloadCloudRepositoryStep"/> class.
@@ -30,21 +30,19 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
             IStoryBoard storyBoard,
             ILanguageService languageService,
             IFeedbackService feedbackService,
-            ICloudStorageServiceFactory cloudStorageServiceFactory)
+            ICloudStorageClientFactory cloudStorageClientFactory)
             : base(stepId, storyBoard)
         {
             _languageService = languageService;
             _feedbackService = feedbackService;
-            _cloudStorageServiceFactory = cloudStorageServiceFactory;
+            _cloudStorageClientFactory = cloudStorageClientFactory;
         }
 
         /// <inheritdoc/>
         public override async Task Run()
         {
-            CloudStorageAccount account = StoryBoard.LoadFromSession<CloudStorageAccount>(SynchronizationStorySessionKey.CloudStorageAccount.ToInt());
-            ICloudStorageService cloudStorageService = _cloudStorageServiceFactory.Create(account);
-            if (cloudStorageService == null)
-                return;
+            SerializeableCloudStorageCredentials credentials = StoryBoard.LoadFromSession<SerializeableCloudStorageCredentials>(SynchronizationStorySessionKey.CloudStorageCredentials.ToInt());
+            ICloudStorageClient cloudStorageClient = _cloudStorageClientFactory.GetOrCreate(credentials.CloudStorageId);
 
             try
             {
@@ -52,7 +50,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
                 byte[] binaryCloudRepository;
                 if (!StoryBoard.TryLoadFromSession(SynchronizationStorySessionKey.BinaryCloudRepository.ToInt(), out binaryCloudRepository))
                 {
-                    binaryCloudRepository = await cloudStorageService.DownloadRepositoryAsync();
+                    binaryCloudRepository = await cloudStorageClient.DownloadFileAsync(Config.RepositoryFileName, credentials);
                     StoryBoard.StoreToSession(SynchronizationStorySessionKey.BinaryCloudRepository.ToInt(), binaryCloudRepository);
                 }
                 await StoryBoard.ContinueWith(SynchronizationStoryStepId.ExistsTransferCode.ToInt());

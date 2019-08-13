@@ -12,6 +12,7 @@ using System.Windows.Input;
 using SilentNotes.Controllers;
 using SilentNotes.Models;
 using SilentNotes.Services;
+using SilentNotes.StoryBoards;
 using SilentNotes.StoryBoards.SynchronizationStory;
 using SilentNotes.Workers;
 
@@ -286,18 +287,20 @@ namespace SilentNotes.ViewModels
 
         private async void Synchronize()
         {
-            using (var busyIndicator = _feedbackService.ShowBusyIndicator())
+            _feedbackService.ShowBusyIndicator(true);
+            try
             {
-                try
-                {
-                    _storyBoardService.ActiveStory = new SynchronizationStoryBoard(false);
-                    await _storyBoardService.ActiveStory.Start();
-                }
-                catch (Exception)
-                {
-                    _storyBoardService.ActiveStory = null;
-                    throw;
-                }
+                _storyBoardService.ActiveStory = new SynchronizationStoryBoard(StoryBoardMode.GuiAndToasts);
+                await _storyBoardService.ActiveStory.Start();
+            }
+            catch (Exception)
+            {
+                _storyBoardService.ActiveStory = null;
+                throw;
+            }
+            finally
+            {
+                _feedbackService.ShowBusyIndicator(false);
             }
         }
 
