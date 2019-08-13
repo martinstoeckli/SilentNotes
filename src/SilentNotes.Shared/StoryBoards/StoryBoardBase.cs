@@ -15,8 +15,8 @@ namespace SilentNotes.StoryBoards
     /// </summary>
     public class StoryBoardBase : IStoryBoard
     {
-        private readonly Dictionary<int, object> _session;
         private readonly List<IStoryBoardStep> _steps;
+        protected Dictionary<int, object> _session;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StoryBoardBase"/> class.

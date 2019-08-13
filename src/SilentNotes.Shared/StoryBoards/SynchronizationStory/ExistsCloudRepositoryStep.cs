@@ -59,7 +59,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
                         credentials.Token = await oauthStorageClient.RefreshTokenAsync(credentials.Token);
                         SaveCredentialsToSettings(credentials);
                     }
-                    catch (InvalidGrantException)
+                    catch (RefreshTokenExpiredException)
                     {
                         // Refresh-token cannot be used to get new access-tokens anymore, a new
                         // authorization by the user is required.

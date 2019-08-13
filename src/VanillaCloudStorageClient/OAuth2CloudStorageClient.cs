@@ -4,6 +4,7 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Flurl.Http;
@@ -58,7 +59,7 @@ namespace VanillaCloudStorageClient
             if (response.State != state)
                 throw new CloudStorageException("The authorization response has a wrong state, this indicates a hacking attempt.", null);
 
-            // Check flow type
+            // Determine flow type
             AuthorizationFlow flow;
             if (!string.IsNullOrWhiteSpace(response.Token))
                 flow = AuthorizationFlow.Token;
@@ -115,7 +116,7 @@ namespace VanillaCloudStorageClient
             catch (Exception ex)
             {
                 if (await IsInvalidGrantException(ex))
-                    throw new InvalidGrantException(ex);
+                    throw new RefreshTokenExpiredException(ex);
                 throw ConvertToCloudStorageException(ex);
             }
         }
@@ -171,7 +172,8 @@ namespace VanillaCloudStorageClient
         {
             HttpStatusCode[] possibleCodes = { HttpStatusCode.BadRequest, HttpStatusCode.Unauthorized, HttpStatusCode.Forbidden };
             if ((ex is FlurlHttpException flurlHttpException) &&
-                (Array.IndexOf(possibleCodes, flurlHttpException.Call.HttpStatus) >= 0))
+                (flurlHttpException.Call?.HttpStatus.HasValue != null) &&
+                possibleCodes.Contains(flurlHttpException.Call.HttpStatus.Value))
             {
                 string jsonResponse = await flurlHttpException.GetResponseStringAsync();
                 return (jsonResponse != null) && (jsonResponse.IndexOf("invalid_grant") > 0);

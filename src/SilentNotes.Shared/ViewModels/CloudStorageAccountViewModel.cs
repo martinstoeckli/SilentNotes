@@ -82,11 +82,9 @@ namespace SilentNotes.ViewModels
 
         private async void Ok()
         {
-            using (var busyIndicator = _feedbackService.ShowBusyIndicator())
-            {
-                _storyBoardService.ActiveStory?.StoreToSession(SynchronizationStorySessionKey.CloudStorageCredentials.ToInt(), Model);
-                await _storyBoardService.ActiveStory?.ContinueWith(SynchronizationStoryStepId.ExistsCloudRepository.ToInt());
-            }
+            _feedbackService.ShowBusyIndicator(true);
+            _storyBoardService.ActiveStory?.StoreToSession(SynchronizationStorySessionKey.CloudStorageCredentials.ToInt(), Model);
+            await _storyBoardService.ActiveStory?.ContinueWith(SynchronizationStoryStepId.ExistsCloudRepository.ToInt());
         }
 
         /// <inheritdoc />

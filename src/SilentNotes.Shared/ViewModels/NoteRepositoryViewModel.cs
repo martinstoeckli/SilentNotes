@@ -287,18 +287,20 @@ namespace SilentNotes.ViewModels
 
         private async void Synchronize()
         {
-            using (var busyIndicator = _feedbackService.ShowBusyIndicator())
+            _feedbackService.ShowBusyIndicator(true);
+            try
             {
-                try
-                {
-                    _storyBoardService.ActiveStory = new SynchronizationStoryBoard(StoryBoardMode.GuiAndToasts);
-                    await _storyBoardService.ActiveStory.Start();
-                }
-                catch (Exception)
-                {
-                    _storyBoardService.ActiveStory = null;
-                    throw;
-                }
+                _storyBoardService.ActiveStory = new SynchronizationStoryBoard(StoryBoardMode.GuiAndToasts);
+                await _storyBoardService.ActiveStory.Start();
+            }
+            catch (Exception)
+            {
+                _storyBoardService.ActiveStory = null;
+                throw;
+            }
+            finally
+            {
+                _feedbackService.ShowBusyIndicator(false);
             }
         }
 

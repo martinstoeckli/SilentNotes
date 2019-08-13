@@ -16,6 +16,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
     /// </summary>
     public class StopAndShowRepositoryStep : SynchronizationStoryBoardStepBase
     {
+        private readonly IFeedbackService _feedbackService;
         private readonly INavigationService _navigationService;
         private readonly IStoryBoardService _storyBoardService;
 
@@ -23,9 +24,15 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         /// Initializes a new instance of the <see cref="StopAndShowRepositoryStep"/> class.
         /// </summary>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1611:ElementParametersMustBeDocumented", Justification = "Dependency injection")]
-        public StopAndShowRepositoryStep(int stepId, IStoryBoard storyBoard, INavigationService navigationService, IStoryBoardService storyBoardService)
+        public StopAndShowRepositoryStep(
+            int stepId,
+            IStoryBoard storyBoard,
+            IFeedbackService feedbackService,
+            INavigationService navigationService,
+            IStoryBoardService storyBoardService)
             : base(stepId, storyBoard)
         {
+            _feedbackService = feedbackService;
             _navigationService = navigationService;
             _storyBoardService = storyBoardService;
         }
@@ -35,6 +42,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         {
             StoryBoard.ClearSession();
             _storyBoardService.ActiveStory = null;
+            _feedbackService.ShowBusyIndicator(false);
             if (StoryBoard.Mode.ShouldUseGui())
             {
                 _navigationService.Navigate(ControllerNames.NoteRepository);

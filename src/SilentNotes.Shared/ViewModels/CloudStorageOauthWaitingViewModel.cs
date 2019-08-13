@@ -17,7 +17,6 @@ namespace SilentNotes.ViewModels
     public class CloudStorageOauthWaitingViewModel : ViewModelBase
     {
         private readonly IStoryBoardService _storyBoardService;
-        private IDisposable _busyIndicator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CloudStorageOauthWaitingViewModel"/> class.
@@ -33,15 +32,9 @@ namespace SilentNotes.ViewModels
             : base(navigationService, languageService, svgIconService, webviewBaseUrl)
         {
             _storyBoardService = storyBoardService;
-            _busyIndicator = feedbackService.ShowBusyIndicator();
+            feedbackService.ShowBusyIndicator(true);
 
             GoBackCommand = new RelayCommand(GoBack);
-        }
-
-        /// <inheritdoc/>
-        public override void OnClosing()
-        {
-            _busyIndicator.Dispose();
         }
 
         /// <summary>

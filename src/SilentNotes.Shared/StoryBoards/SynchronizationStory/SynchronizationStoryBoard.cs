@@ -4,6 +4,7 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using SilentNotes.Services;
@@ -104,7 +105,10 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
             RegisterStep(new ExistsTransferCodeStep(
                 SynchronizationStoryStepId.ExistsTransferCode.ToInt(), this, Ioc.GetOrCreate<ISettingsService>()));
             RegisterStep(new ShowTransferCodeStep(
-                SynchronizationStoryStepId.ShowTransferCode.ToInt(), this, navigationService));
+                SynchronizationStoryStepId.ShowTransferCode.ToInt(),
+                this,
+                navigationService,
+                feedbackService));
             RegisterStep(new DecryptCloudRepositoryStep(
                 SynchronizationStoryStepId.DecryptCloudRepository.ToInt(),
                 this,
@@ -115,7 +119,10 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
             RegisterStep(new IsSameRepositoryStep(
                 SynchronizationStoryStepId.IsSameRepository.ToInt(), this, Ioc.GetOrCreate<IRepositoryStorageService>()));
             RegisterStep(new ShowMergeChoiceStep(
-                SynchronizationStoryStepId.ShowMergeChoice.ToInt(), this, navigationService));
+                SynchronizationStoryStepId.ShowMergeChoice.ToInt(),
+                this,
+                navigationService,
+                feedbackService));
             RegisterStep(new StoreMergedRepositoryAndQuitStep(
                 SynchronizationStoryStepId.StoreMergedRepositoryAndQuit.ToInt(),
                 this,
@@ -141,7 +148,22 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
                 feedbackService,
                 Ioc.GetOrCreate<IRepositoryStorageService>()));
             RegisterStep(new StopAndShowRepositoryStep(
-                SynchronizationStoryStepId.StopAndShowRepository.ToInt(), this, navigationService, Ioc.GetOrCreate<IStoryBoardService>()));
+                SynchronizationStoryStepId.StopAndShowRepository.ToInt(),
+                this,
+                feedbackService,
+                navigationService,
+                Ioc.GetOrCreate<IStoryBoardService>()));
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SynchronizationStoryBoard"/> class, and
+        /// adopts the session of another story board.
+        /// </summary>
+        /// <param name="otherStoryBoard">Copy the session variables from this story board.</param>
+        public SynchronizationStoryBoard(SynchronizationStoryBoard otherStoryBoard)
+            : this(otherStoryBoard.Mode)
+        {
+            _session = new Dictionary<int, object>(otherStoryBoard._session);
         }
 
         /// <summary>

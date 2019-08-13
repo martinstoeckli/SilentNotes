@@ -63,14 +63,25 @@ namespace VanillaCloudStorageClient.OAuth2
             using (SHA256 hasher = SHA256.Create())
             {
                 byte[] hash = hasher.ComputeHash(Encoding.UTF8.GetBytes(codeVerifier));
-                string result = Convert.ToBase64String(hash);
-
-                // Converts base64 to base64url
-                result = result.Replace("+", "-");
-                result = result.Replace("/", "_");
-                result = result.Replace("=", "");
-                return result;
+                return Base64UrlEncode(hash);
             }
+        }
+
+        /// <summary>
+        /// Does a base64 url encoding, which uses only characters which are safe to use inside an url.
+        /// See also: https://tools.ietf.org/html/rfc4648#page-7
+        /// </summary>
+        /// <param name="data">Binary data to encode.</param>
+        /// <returns>Base64Url encoded data.</returns>
+        private static string Base64UrlEncode(byte[] data)
+        {
+            string result = Convert.ToBase64String(data);
+
+            // Convert base64 to base64url
+            result = result.Replace("+", "-");
+            result = result.Replace("/", "_");
+            result = result.Replace("=", "");
+            return result;
         }
 
         /// <summary>

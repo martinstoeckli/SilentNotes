@@ -48,6 +48,12 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
         #region ICloudStorageClient
 
         /// <inheritdoc/>
+        public override string BuildAuthorizationRequestUrl(string state, string codeVerifier)
+        {
+            return base.BuildAuthorizationRequestUrl(state, null); // Do not send code verifier
+        }
+
+        /// <inheritdoc/>
         public override CloudStorageCredentialsRequirements CredentialsRequirements
         {
             get { return CloudStorageCredentialsRequirements.Token; }

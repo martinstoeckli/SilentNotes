@@ -3,7 +3,6 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-using System;
 using System.Threading.Tasks;
 
 namespace SilentNotes.Services
@@ -15,17 +14,27 @@ namespace SilentNotes.Services
     {
         /// <summary>
         /// Shows a toast popup message.
+        /// Implementing classes should ensure that this method can also be called from a non-ui
+        /// thread.
         /// </summary>
+        /// <remarks>
+        /// Implementing classes should ensure that this method can be called from the gui-thread
+        /// as well as from a non-ui thread.
+        /// thread.
+        /// </remarks>
         /// <param name="message">Message to display.</param>
         void ShowToast(string message);
 
         /// <summary>
-        /// Shows an indicator that the applcation is busy (e.g. hourglass). The indicator will be
-        /// shown as long as the returned IDisposable object is alive, this object should be used
-        /// inside a "using" if possible. A nested calling is allowed.
+        /// Shows an indicator that the applcation is busy or hides it (e.g. hourglass).
         /// </summary>
-        /// <returns>A disposable object, which keeps the busy indicator running.</returns>
-        IDisposable ShowBusyIndicator();
+        /// <remarks>
+        /// The idea to use IDisposable to automatically hide the busy indicator didn't work out,
+        /// because it cannot be guaranteed that the same activity is active when the indicator
+        /// should be removed.
+        /// </remarks>
+        /// <param name="visible">Indicates whether the busy indicator should be shown or hidden.</param>
+        void ShowBusyIndicator(bool visible);
 
         /// <summary>
         /// Displays information to the user. The dialog box will have only one button with the text "OK".

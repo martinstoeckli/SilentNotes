@@ -81,8 +81,10 @@ namespace SilentNotes.Android
             }
             else if (IsStartedByOAuthRedirectIndent(storyBoardService))
             {
-                if (storyBoardService.ActiveStory is SynchronizationStoryBoard)
+                if (storyBoardService.ActiveStory is SynchronizationStoryBoard synchronizationStory)
                 {
+                    // Create a copy of the active story, which uses the Ioc of this new process
+                    storyBoardService.ActiveStory = new SynchronizationStoryBoard(synchronizationStory);
                     storyBoardService.ActiveStory.ContinueWith(SynchronizationStoryStepId.HandleOAuthRedirect.ToInt());
                 }
             }

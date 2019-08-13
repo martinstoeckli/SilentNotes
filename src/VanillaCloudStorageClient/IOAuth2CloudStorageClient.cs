@@ -57,7 +57,7 @@ namespace VanillaCloudStorageClient
         /// Clients which use the token-flow usually don't have to implement this method.
         /// </remarks>
         /// <param name="token">The token holding the access-token and the refresh-token.</param>
-        /// <exception cref="InvalidGrantException">Is thrown when the refresh token has expired
+        /// <exception cref="RefreshTokenExpiredException">Is thrown when the refresh token has expired
         /// and the user has to do a new authorization.</exception>
         /// <returns>Returns a new refreshed token.</returns>
         Task<CloudStorageToken> RefreshTokenAsync(CloudStorageToken token);

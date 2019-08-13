@@ -17,9 +17,8 @@ namespace SilentNotes.Services
         private static readonly Task _completedTask = Task.FromResult(0);
 
         /// <inheritdoc/>
-        public IDisposable ShowBusyIndicator()
+        public void ShowBusyIndicator(bool visible)
         {
-            return new BusyIndicatorHolder();
         }
 
         /// <inheritdoc/>
@@ -31,17 +30,6 @@ namespace SilentNotes.Services
         /// <inheritdoc/>
         public void ShowToast(string message)
         {
-        }
-
-        /// <summary>
-        /// Helper class which acts as result of the <see cref="ShowBusyIndicator"/> method.
-        /// </summary>
-        private class BusyIndicatorHolder : IDisposable
-        {
-            /// <inheritdoc/>
-            public void Dispose()
-            {
-            }
         }
     }
 }
