@@ -21,7 +21,7 @@ namespace SilentNotes.StoryBoards
         /// <summary>
         /// Initializes a new instance of the <see cref="StoryBoardBase"/> class.
         /// Derrived classes should register their steps in the constructor with
-        /// method <see cref="RegisterStep(IStoryBoardStep, bool)"/>.
+        /// method <see cref="RegisterStep(IStoryBoardStep)"/>.
         /// </summary>
         /// <param name="mode">Sets the property <see cref="Mode"/>.</param>
         public StoryBoardBase(StoryBoardMode mode = StoryBoardMode.GuiAndToasts)
@@ -51,7 +51,8 @@ namespace SilentNotes.StoryBoards
         public async Task ContinueWith(int stepId)
         {
             IStoryBoardStep step = FindRegisteredStep(stepId);
-            await step?.Run();
+            if (step != null)
+                await step.Run();
         }
 
         /// <inheritdoc/>
@@ -70,10 +71,9 @@ namespace SilentNotes.StoryBoards
         [DebuggerStepThrough]
         public bool TryLoadFromSession<T>(int key, out T value)
         {
-            object dictionaryValue;
-            if (_session.TryGetValue(key, out dictionaryValue) && (dictionaryValue is T))
+            if (_session.TryGetValue(key, out var dictionaryValue) && (dictionaryValue is T typedValue))
             {
-                value = (T)dictionaryValue;
+                value = typedValue;
                 return true;
             }
             value = default(T);
@@ -88,7 +88,7 @@ namespace SilentNotes.StoryBoards
             if (successful)
                 return result;
             else
-                throw new ArgumentOutOfRangeException("key");
+                throw new ArgumentOutOfRangeException(nameof(key));
         }
 
         /// <inheritdoc/>

@@ -5,6 +5,7 @@
 
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using SilentNotes.Services;
 using SilentNotes.StoryBoards.SynchronizationStory;
@@ -76,7 +77,8 @@ namespace SilentNotes.ViewModels
         {
             SerializeableCloudStorageCredentials credentials = new SerializeableCloudStorageCredentials { CloudStorageId = cloudStorageId };
             _storyBoardService.ActiveStory?.StoreToSession(SynchronizationStorySessionKey.CloudStorageCredentials.ToInt(), credentials);
-            await _storyBoardService.ActiveStory?.ContinueWith(SynchronizationStoryStepId.ShowCloudStorageAccount.ToInt());
+            await (_storyBoardService.ActiveStory?.ContinueWith(SynchronizationStoryStepId.ShowCloudStorageAccount.ToInt())
+                ?? Task.CompletedTask);
         }
 
         /// <summary>
@@ -86,7 +88,8 @@ namespace SilentNotes.ViewModels
 
         private async void GoBack()
         {
-            await _storyBoardService.ActiveStory?.ContinueWith(SynchronizationStoryStepId.StopAndShowRepository.ToInt());
+            await (_storyBoardService.ActiveStory?.ContinueWith(SynchronizationStoryStepId.StopAndShowRepository.ToInt())
+                ?? Task.CompletedTask);
         }
 
         /// <inheritdoc/>

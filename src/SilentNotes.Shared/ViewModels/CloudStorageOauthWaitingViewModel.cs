@@ -5,6 +5,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using SilentNotes.Services;
 using SilentNotes.StoryBoards.SynchronizationStory;
@@ -44,7 +45,8 @@ namespace SilentNotes.ViewModels
 
         private async void GoBack()
         {
-            await _storyBoardService.ActiveStory?.ContinueWith(SynchronizationStoryStepId.ShowCloudStorageChoice.ToInt());
+            await (_storyBoardService.ActiveStory?.ContinueWith(SynchronizationStoryStepId.ShowCloudStorageChoice.ToInt())
+                ?? Task.CompletedTask);
         }
 
         /// <inheritdoc/>

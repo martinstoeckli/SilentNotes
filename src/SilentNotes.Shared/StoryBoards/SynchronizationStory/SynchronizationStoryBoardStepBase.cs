@@ -19,7 +19,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
     public abstract class SynchronizationStoryBoardStepBase : StoryBoardStepBase
     {
         /// <inheritdoc/>
-        public SynchronizationStoryBoardStepBase(int stepId, IStoryBoard storyBoard)
+        protected SynchronizationStoryBoardStepBase(int stepId, IStoryBoard storyBoard)
             : base(stepId, storyBoard)
         {
         }

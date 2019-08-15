@@ -24,9 +24,9 @@ namespace SilentNotes.Workers
         public NoteRepositoryModel Merge(NoteRepositoryModel localRepository, NoteRepositoryModel remoteRepository)
         {
             if (localRepository == null)
-                throw new ArgumentNullException("localRepository");
+                throw new ArgumentNullException(nameof(localRepository));
             if (remoteRepository == null)
-                throw new ArgumentNullException("remoteRepository");
+                throw new ArgumentNullException(nameof(remoteRepository));
 
             List<Guid> deletedNotes = BuildMergedListOfDeletedNotes(localRepository, remoteRepository);
             deletedNotes.Sort(); // to allow binary search

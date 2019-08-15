@@ -42,11 +42,14 @@ namespace SilentNotes.Android.Services
         /// <inheritdoc/>
         public void ShowBusyIndicator(bool visible)
         {
-            ProgressBar busyIndicator = _rootActivity.FindViewById<ProgressBar>(Resource.Id.busyIndicator);
-            if (visible)
-                busyIndicator.Visibility = ViewStates.Visible;
-            else
-                busyIndicator.Visibility = ViewStates.Gone;
+            _rootActivity.RunOnUiThread(() =>
+            {
+                ProgressBar busyIndicator = _rootActivity.FindViewById<ProgressBar>(Resource.Id.busyIndicator);
+                if (visible)
+                    busyIndicator.Visibility = ViewStates.Visible;
+                else
+                    busyIndicator.Visibility = ViewStates.Gone;
+            });
         }
 
         /// <inheritdoc/>

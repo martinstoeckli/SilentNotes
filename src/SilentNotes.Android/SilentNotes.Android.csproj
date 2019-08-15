@@ -36,7 +36,11 @@
     <EnableLLVM>false</EnableLLVM>
     <BundleAssemblies>false</BundleAssemblies>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-    <AndroidSupportedAbis />
+    <AndroidSupportedAbis>armeabi-v7a;x86;arm64-v8a</AndroidSupportedAbis>
+    <AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
+    <AndroidDexTool>d8</AndroidDexTool>
+    <AndroidUseSharedRuntime>true</AndroidUseSharedRuntime>
+    <EmbedAssembliesIntoApk>false</EmbedAssembliesIntoApk>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -50,11 +54,13 @@
     <AotAssemblies>false</AotAssemblies>
     <EnableLLVM>false</EnableLLVM>
     <BundleAssemblies>false</BundleAssemblies>
-    <EnableProguard>true</EnableProguard>
     <AndroidSupportedAbis>armeabi-v7a;arm64-v8a</AndroidSupportedAbis>
     <AndroidLinkMode>SdkOnly</AndroidLinkMode>
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
     <EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
+    <AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
+    <AndroidDexTool>d8</AndroidDexTool>
+    <AndroidLinkTool>r8</AndroidLinkTool>
   </PropertyGroup>
   <Import Project="$(SolutionDir)\SolutionWideDefines.props" />
   <ItemGroup>
@@ -67,9 +73,6 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Xamarin.Android.Support.CustomTabs">
-      <Version>27.0.2.1</Version>
-    </PackageReference>
-    <PackageReference Include="Xamarin.Android.Support.v4">
       <Version>27.0.2.1</Version>
     </PackageReference>
   </ItemGroup>

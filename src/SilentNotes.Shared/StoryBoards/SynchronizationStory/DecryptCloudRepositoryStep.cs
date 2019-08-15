@@ -91,7 +91,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
                 }
                 else
                 {
-                    bool existsUserEnteredTransferCode = StoryBoard.TryLoadFromSession<string>(SynchronizationStorySessionKey.UserEnteredTransferCode.ToInt(), out string userEnteredTransferCode);
+                    bool existsUserEnteredTransferCode = StoryBoard.TryLoadFromSession<string>(SynchronizationStorySessionKey.UserEnteredTransferCode.ToInt(), out _);
                     if (existsUserEnteredTransferCode)
                     {
                         // Keep transfercode page open and show message

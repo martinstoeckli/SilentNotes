@@ -112,7 +112,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
         }
 
         /// <inheritdoc/>
-        public async override Task DeleteFileAsync(string filename, CloudStorageCredentials credentials)
+        public override async Task DeleteFileAsync(string filename, CloudStorageCredentials credentials)
         {
             credentials.ThrowIfInvalid(CredentialsRequirements);
 

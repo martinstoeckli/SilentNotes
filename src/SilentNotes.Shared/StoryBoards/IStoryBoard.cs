@@ -30,7 +30,7 @@ namespace SilentNotes.StoryBoards
         StoryBoardMode Mode { get; }
 
         /// <summary>
-        /// Starts the story at the first step, which was registered with <see cref="RegisterStep(IStoryBoardStep, bool)"/>.
+        /// Starts the story at the first step, which was registered with <see cref="RegisterStep(IStoryBoardStep)"/>.
         /// </summary>
         /// <returns>An asynchronous task.</returns>
         Task Start();

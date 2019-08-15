@@ -19,7 +19,6 @@ namespace SilentNotes.ViewModels
     public class RecycleBinViewModel : ViewModelBase
     {
         private readonly IThemeService _themeService;
-        private readonly IEnvironmentService _environmentService;
         private readonly IRepositoryStorageService _repositoryService;
         private NoteRepositoryModel _model;
 
@@ -33,12 +32,10 @@ namespace SilentNotes.ViewModels
             ISvgIconService svgIconService,
             IBaseUrlService webviewBaseUrl,
             IThemeService themeService,
-            IEnvironmentService environmentService,
             IRepositoryStorageService repositoryService)
             : base(navigationService, languageService, svgIconService, webviewBaseUrl)
         {
             _themeService = themeService;
-            _environmentService = environmentService;
             _repositoryService = repositoryService;
             RecycledNotes = new List<NoteViewModel>();
 
@@ -80,7 +77,7 @@ namespace SilentNotes.ViewModels
                 foreach (NoteModel note in _model.Notes)
                 {
                     if (note.InRecyclingBin)
-                        RecycledNotes.Add(new NoteViewModel(_navigationService, Language, Icon, _webviewBaseUrl, null, _repositoryService, null, _environmentService, note));
+                        RecycledNotes.Add(new NoteViewModel(_navigationService, Language, Icon, _webviewBaseUrl, null, _repositoryService, null, note));
                 }
             }
         }

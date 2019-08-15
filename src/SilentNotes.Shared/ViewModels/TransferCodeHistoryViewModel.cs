@@ -18,7 +18,6 @@ namespace SilentNotes.ViewModels
     /// </summary>
     public class TransferCodeHistoryViewModel : ViewModelBase
     {
-        private readonly ISettingsService _settingsService;
         private bool _showTransfercodeHistoryVisible;
         private bool _showTransfercodeHistory;
         private List<string> _transferCodeHistory;
@@ -35,8 +34,7 @@ namespace SilentNotes.ViewModels
             ISettingsService settingsService)
             : base(navigationService, languageService, svgIconService, webviewBaseUrl)
         {
-            _settingsService = settingsService;
-            Model = _settingsService.LoadSettingsOrDefault();
+            Model = settingsService.LoadSettingsOrDefault();
 
             ShowTransfercodeHistoryVisible = TransferCodeHistory.Count > 0;
             TransfercodeHistoryVisible = false;

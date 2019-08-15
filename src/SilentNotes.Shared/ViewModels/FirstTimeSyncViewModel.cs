@@ -4,6 +4,7 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using SilentNotes.Services;
 using SilentNotes.StoryBoards.SynchronizationStory;
@@ -42,7 +43,8 @@ namespace SilentNotes.ViewModels
 
         private async void Continue()
         {
-            await _storyBoardService.ActiveStory?.ContinueWith(SynchronizationStoryStepId.ShowCloudStorageChoice.ToInt());
+            await (_storyBoardService.ActiveStory?.ContinueWith(SynchronizationStoryStepId.ShowCloudStorageChoice.ToInt())
+                ?? Task.CompletedTask);
         }
 
         /// <summary>
@@ -52,7 +54,8 @@ namespace SilentNotes.ViewModels
 
         private async void GoBack()
         {
-            await _storyBoardService.ActiveStory?.ContinueWith(SynchronizationStoryStepId.StopAndShowRepository.ToInt());
+            await (_storyBoardService.ActiveStory?.ContinueWith(SynchronizationStoryStepId.StopAndShowRepository.ToInt())
+                ?? Task.CompletedTask);
         }
 
         /// <inheritdoc/>

@@ -47,7 +47,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
             {
                 _navigationService.Navigate(ControllerNames.NoteRepository);
             }
-            return GetCompletedDummyTask();
+            return Task.CompletedTask;
         }
     }
 }

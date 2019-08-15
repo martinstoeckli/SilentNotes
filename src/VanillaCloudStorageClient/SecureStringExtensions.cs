@@ -81,7 +81,7 @@ namespace VanillaCloudStorageClient
 
         private static bool BstrAreEqual(IntPtr leftBstr, IntPtr rightBstr)
         {
-            if ((leftBstr == null) || (rightBstr == null))
+            if ((leftBstr == IntPtr.Zero) || (rightBstr == IntPtr.Zero))
                 return false;
 
             int lengthLeft = Marshal.ReadInt32(leftBstr, -4);

@@ -23,7 +23,7 @@ namespace VanillaCloudStorageClient
         /// Initializes a new instance of the <see cref="OAuth2CloudStorageClient"/> class.
         /// </summary>
         /// <param name="config">Sets the <see cref="Config"/> property.</param>
-        public OAuth2CloudStorageClient(OAuth2Config config)
+        protected OAuth2CloudStorageClient(OAuth2Config config)
         {
             Config = config;
         }
@@ -172,11 +172,11 @@ namespace VanillaCloudStorageClient
         {
             HttpStatusCode[] possibleCodes = { HttpStatusCode.BadRequest, HttpStatusCode.Unauthorized, HttpStatusCode.Forbidden };
             if ((ex is FlurlHttpException flurlHttpException) &&
-                (flurlHttpException.Call?.HttpStatus.HasValue != null) &&
+                (flurlHttpException.Call?.HttpStatus != null) &&
                 possibleCodes.Contains(flurlHttpException.Call.HttpStatus.Value))
             {
                 string jsonResponse = await flurlHttpException.GetResponseStringAsync();
-                return (jsonResponse != null) && (jsonResponse.IndexOf("invalid_grant") > 0);
+                return (jsonResponse != null) && (jsonResponse.IndexOf("invalid_grant", StringComparison.InvariantCultureIgnoreCase) > 0);
             }
             return false;
         }
