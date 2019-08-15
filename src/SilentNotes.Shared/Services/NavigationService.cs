@@ -32,6 +32,18 @@ namespace SilentNotes.Services
         /// <inheritdoc/>
         public virtual void Navigate(string controllerId, KeyValueList<string, string> variables = null)
         {
+            CleanupCurrentController();
+
+            // Setup new controller
+            IController newController = Ioc.CreateWithKey<IController>(controllerId);
+            CurrentController = newController;
+            _currentControllerId = controllerId;
+            _currentVariables = variables;
+            newController.ShowInView(_htmlView, variables);
+        }
+
+        private void CleanupCurrentController()
+        {
             IController oldController = CurrentController;
             CurrentController = null;
             _currentControllerId = null;
@@ -43,14 +55,6 @@ namespace SilentNotes.Services
                 oldController.StoreUnsavedData();
                 oldController.Dispose();
             }
-
-            IController newController = Ioc.CreateWithKey<IController>(controllerId);
-            CurrentController = newController;
-            _currentControllerId = controllerId;
-            _currentVariables = variables;
-
-            // Setup new controller
-            newController.ShowInView(_htmlView, variables);
         }
 
         /// <inheritdoc/>

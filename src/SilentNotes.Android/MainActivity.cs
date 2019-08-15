@@ -103,6 +103,7 @@ namespace SilentNotes.Android
         {
             INavigationService navigationService = Ioc.GetOrCreate<INavigationService>();
             navigationService.CurrentController?.StoreUnsavedData();
+            navigationService.CurrentController?.Dispose();
 
             // The synchronization continues when we do not await it, even if another app became
             // active in the meantime. As long as the user doesn't swipe away the app from the

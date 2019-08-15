@@ -124,6 +124,7 @@ namespace SilentNotes.Controllers
 
         private void NavigationCompletedEventHandler(object sender, EventArgs e)
         {
+            View.NavigationCompleted -= NavigationCompletedEventHandler;
             View.ExecuteJavaScript("makeSelectable(); makeSortable();");
         }
 

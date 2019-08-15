@@ -84,6 +84,7 @@ namespace SilentNotes.Controllers
 
         private void NavigationCompletedEventHandler(object sender, EventArgs e)
         {
+            View.NavigationCompleted -= NavigationCompletedEventHandler;
             if (_startedWithSendToSilentnotes)
             {
                 // Let quill do the text import, so it can convert it safely to HTML and trigger
