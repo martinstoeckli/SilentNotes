@@ -33,7 +33,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         {
             if (StoryBoard.Mode.ShouldUseGui())
                 _navigationService.Navigate(ControllerNames.CloudStorageChoice);
-            return GetCompletedDummyTask();
+            return Task.CompletedTask;
         }
     }
 }

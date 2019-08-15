@@ -24,7 +24,7 @@ namespace SilentNotes.Controllers
         /// Initializes a new instance of the <see cref="ControllerBase"/> class.
         /// </summary>
         /// <param name="viewService">Razor view service which can generate the HTML view.</param>
-        public ControllerBase(IRazorViewService viewService)
+        protected ControllerBase(IRazorViewService viewService)
         {
             _viewService = viewService;
         }

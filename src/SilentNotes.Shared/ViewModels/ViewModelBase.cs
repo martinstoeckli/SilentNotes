@@ -26,7 +26,7 @@ namespace SilentNotes.ViewModels
         /// Initializes a new instance of the <see cref="ViewModelBase"/> class.
         /// </summary>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1611:ElementParametersMustBeDocumented", Justification = "Dependency injection")]
-        public ViewModelBase(
+        protected ViewModelBase(
             INavigationService navigationService,
             ILanguageService languageService,
             ISvgIconService svgIconService,
@@ -53,7 +53,7 @@ namespace SilentNotes.ViewModels
 
         /// <summary>
         /// Gets or sets a value indicating whether modifications where done to the
-        /// view model. This property is automatically updated when calling <see cref="ChangeProperty{T}(ref T, T, string)"/>.
+        /// view model. This property is automatically updated when calling <see cref="ChangeProperty{T}(ref T, T, bool, string)"/>.
         /// </summary>
         public bool Modified { get; set; }
 

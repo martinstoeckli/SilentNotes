@@ -16,7 +16,7 @@ namespace SilentNotes.Services
     /// </summary>
     public class NavigationService : INavigationService
     {
-        private IHtmlView _htmlView;
+        private readonly IHtmlView _htmlView;
         private string _currentControllerId;
         private KeyValueList<string, string> _currentVariables;
 

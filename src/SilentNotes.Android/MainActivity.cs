@@ -169,8 +169,7 @@ namespace SilentNotes.Android
             {
                 // Delegate the back pressed to the current controller
                 INavigationService navigation = Ioc.GetOrCreate<INavigationService>();
-                bool handled = false;
-                navigation.CurrentController.OnGoBackPressed(out handled);
+                navigation.CurrentController.OnGoBackPressed(out bool handled);
 
                 // If not handled by the controller, close the application
                 if (!handled)

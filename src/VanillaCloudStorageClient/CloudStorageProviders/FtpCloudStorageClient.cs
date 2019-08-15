@@ -50,7 +50,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
         }
 
         /// <inheritdoc/>
-        public async override Task UploadFileAsync(string filename, byte[] fileContent, CloudStorageCredentials credentials)
+        public override async Task UploadFileAsync(string filename, byte[] fileContent, CloudStorageCredentials credentials)
         {
             credentials.ThrowIfInvalid(CredentialsRequirements);
 
@@ -76,7 +76,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
         }
 
         /// <inheritdoc/>
-        public async override Task<byte[]> DownloadFileAsync(string filename, CloudStorageCredentials credentials)
+        public override async Task<byte[]> DownloadFileAsync(string filename, CloudStorageCredentials credentials)
         {
             credentials.ThrowIfInvalid(CredentialsRequirements);
 
@@ -106,7 +106,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
         }
 
         /// <inheritdoc/>
-        public async override Task DeleteFileAsync(string filename, CloudStorageCredentials credentials)
+        public override async Task DeleteFileAsync(string filename, CloudStorageCredentials credentials)
         {
             credentials.ThrowIfInvalid(CredentialsRequirements);
 
@@ -133,7 +133,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
         }
 
         /// <inheritdoc/>
-        public async override Task<List<string>> ListFileNamesAsync(CloudStorageCredentials credentials)
+        public override async Task<List<string>> ListFileNamesAsync(CloudStorageCredentials credentials)
         {
             credentials.ThrowIfInvalid(CredentialsRequirements);
 
@@ -182,7 +182,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
         /// </summary>
         private class CustomFtpWebClient : WebClient
         {
-            private Action<FtpWebRequest> _adjustWebRequest;
+            private readonly Action<FtpWebRequest> _adjustWebRequest;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="CustomFtpWebClient"/> class.

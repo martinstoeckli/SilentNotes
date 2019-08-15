@@ -4,6 +4,7 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using SilentNotes.Services;
 using SilentNotes.StoryBoards.SynchronizationStory;
@@ -57,7 +58,8 @@ namespace SilentNotes.ViewModels
             if (codeIsValid)
             {
                 _storyBoardService.ActiveStory?.StoreToSession(SynchronizationStorySessionKey.UserEnteredTransferCode.ToInt(), sanitizedCode);
-                await _storyBoardService.ActiveStory?.ContinueWith(SynchronizationStoryStepId.DecryptCloudRepository.ToInt());
+                await (_storyBoardService.ActiveStory?.ContinueWith(SynchronizationStoryStepId.DecryptCloudRepository.ToInt())
+                    ?? Task.CompletedTask);
             }
             else
             {

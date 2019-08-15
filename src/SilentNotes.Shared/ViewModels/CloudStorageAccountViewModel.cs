@@ -3,8 +3,10 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Security;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using SilentNotes.Services;
 using SilentNotes.StoryBoards.SynchronizationStory;
@@ -36,8 +38,8 @@ namespace SilentNotes.ViewModels
             SerializeableCloudStorageCredentials model)
             : base(navigationService, languageService, svgIconService, webviewBaseUrl)
         {
-            _storyBoardService = storyBoardService;
-            _feedbackService = feedbackService;
+            _storyBoardService = storyBoardService ?? throw new ArgumentNullException(nameof(storyBoardService));
+            _feedbackService = feedbackService ?? throw new ArgumentNullException(nameof(feedbackService));
             Model = model;
 
             _credentialsRequirements = cloudStorageClientFactory.GetOrCreate(Model.CloudStorageId).CredentialsRequirements;
@@ -55,7 +57,8 @@ namespace SilentNotes.ViewModels
 
         private async void GoBack()
         {
-            await _storyBoardService.ActiveStory?.ContinueWith(SynchronizationStoryStepId.ShowCloudStorageChoice.ToInt());
+            await (_storyBoardService.ActiveStory?.ContinueWith(SynchronizationStoryStepId.ShowCloudStorageChoice.ToInt())
+                ?? Task.CompletedTask);
         }
 
         /// <inheritdoc/>
@@ -84,7 +87,8 @@ namespace SilentNotes.ViewModels
         {
             _feedbackService.ShowBusyIndicator(true);
             _storyBoardService.ActiveStory?.StoreToSession(SynchronizationStorySessionKey.CloudStorageCredentials.ToInt(), Model);
-            await _storyBoardService.ActiveStory?.ContinueWith(SynchronizationStoryStepId.ExistsCloudRepository.ToInt());
+            await (_storyBoardService.ActiveStory?.ContinueWith(SynchronizationStoryStepId.ExistsCloudRepository.ToInt())
+                   ?? Task.CompletedTask);
         }
 
         /// <inheritdoc />

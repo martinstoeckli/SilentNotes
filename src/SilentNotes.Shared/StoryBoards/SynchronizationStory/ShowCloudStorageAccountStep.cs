@@ -69,7 +69,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
                     _navigationService.Navigate(ControllerNames.CloudStorageAccount);
                 }
             }
-            return GetCompletedDummyTask();
+            return Task.CompletedTask;
         }
     }
 }

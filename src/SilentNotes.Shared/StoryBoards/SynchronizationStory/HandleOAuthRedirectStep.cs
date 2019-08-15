@@ -14,7 +14,6 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
     {
         private readonly ILanguageService _languageService;
         private readonly IFeedbackService _feedbackService;
-        private readonly INavigationService _navigationService;
         private readonly ICloudStorageClientFactory _cloudStorageClientFactory;
 
         /// <summary>
@@ -26,13 +25,11 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
             IStoryBoard storyBoard,
             ILanguageService languageService,
             IFeedbackService feedbackService,
-            INavigationService navigationService,
             ICloudStorageClientFactory cloudStorageClientFactory)
             : base(stepId, storyBoard)
         {
             _languageService = languageService;
             _feedbackService = feedbackService;
-            _navigationService = navigationService;
             _cloudStorageClientFactory = cloudStorageClientFactory;
         }
 

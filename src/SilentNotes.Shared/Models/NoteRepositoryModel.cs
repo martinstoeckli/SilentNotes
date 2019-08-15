@@ -11,7 +11,7 @@ namespace SilentNotes.Models
 {
     /// <summary>
     /// Serializeable model of a note repository.
-    /// Whenever changes to this model are done, take care of the <see cref="SupportedRevision"/> property.
+    /// Whenever changes to this model are done, take care of the <see cref="NewestSupportedRevision"/> constant.
     /// </summary>
     [XmlRoot(ElementName = "silentnotes")]
     public class NoteRepositoryModel
@@ -106,7 +106,7 @@ namespace SilentNotes.Models
             {
                 long hashCode = Id.GetHashCode();
                 hashCode = (hashCode * 397) ^ Revision;
-                hashCode = (hashCode * 397) ^ (OrderModifiedAt != null ? OrderModifiedAt.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ OrderModifiedAt.GetHashCode();
                 foreach (NoteModel note in Notes)
                 {
                     hashCode = (hashCode * 397) ^ note.ModifiedAt.GetHashCode();

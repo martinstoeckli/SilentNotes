@@ -42,7 +42,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
                 _feedbackService.ShowBusyIndicator(false);
                 _navigationService.Navigate(ControllerNames.MergeChoice);
             }
-            return GetCompletedDummyTask();
+            return Task.CompletedTask;
         }
     }
 }

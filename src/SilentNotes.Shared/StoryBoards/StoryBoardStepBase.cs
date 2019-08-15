@@ -12,14 +12,12 @@ namespace SilentNotes.StoryBoards
     /// </summary>
     public abstract class StoryBoardStepBase : IStoryBoardStep
     {
-        private static readonly Task _completedTask = Task.FromResult(0);
-
         /// <summary>
         /// Initializes a new instance of the <see cref="StoryBoardStepBase"/> class.
         /// </summary>
         /// <param name="stepId">Id of this step.</param>
         /// <param name="storyBoard">The story board which owns the step.</param>
-        public StoryBoardStepBase(int stepId, IStoryBoard storyBoard)
+        protected StoryBoardStepBase(int stepId, IStoryBoard storyBoard)
         {
             Id = stepId;
             StoryBoard = storyBoard;
@@ -35,16 +33,5 @@ namespace SilentNotes.StoryBoards
         /// Gets the story board which owns this step.
         /// </summary>
         protected IStoryBoard StoryBoard { get; private set; }
-
-        /// <summary>
-        /// Gets a dummy task, which signals to be finished already. It can be used as the result
-        /// of a method which has a task as result but doesn't use it (e.g. implementation of an
-        /// async interface).
-        /// </summary>
-        /// <returns>Already completed task.</returns>
-        protected static Task GetCompletedDummyTask()
-        {
-            return _completedTask;
-        }
     }
 }

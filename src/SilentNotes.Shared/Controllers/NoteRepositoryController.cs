@@ -7,7 +7,6 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using SilentNotes.HtmlView;
-using SilentNotes.Models;
 using SilentNotes.Services;
 using SilentNotes.ViewModels;
 
@@ -60,7 +59,7 @@ namespace SilentNotes.Controllers
             View.NavigationCompleted += NavigationCompletedEventHandler;
             IRepositoryStorageService repositoryService = Ioc.GetOrCreate<IRepositoryStorageService>();
 
-            RepositoryStorageLoadResult loadResult = repositoryService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepository);
+            RepositoryStorageLoadResult loadResult = repositoryService.LoadRepositoryOrDefault(out _);
             if (loadResult != RepositoryStorageLoadResult.InvalidRepository)
             {
                 _viewModel = new NoteRepositoryViewModel(

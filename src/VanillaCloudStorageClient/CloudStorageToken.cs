@@ -98,7 +98,7 @@ namespace VanillaCloudStorageClient
         /// <returns>Returns true if the token should be refreshed, otherwise false.</returns>
         public static bool NeedsRefresh(this CloudStorageToken token)
         {
-            if ((token == null) || (token.RefreshToken == null))
+            if (token?.RefreshToken == null)
                 return false;
 
             if (token.ExpiryDate != null)

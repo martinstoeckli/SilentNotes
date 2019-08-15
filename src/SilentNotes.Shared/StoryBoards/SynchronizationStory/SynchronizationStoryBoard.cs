@@ -44,7 +44,6 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         BinaryCloudRepository,
         UserEnteredTransferCode,
         CloudRepository,
-        OauthCloudStorageService,
         OauthState,
         OauthCodeVerifier,
         OauthRedirectUrl,
@@ -58,7 +57,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         /// <summary>
         /// Initializes a new instance of the <see cref="SynchronizationStoryBoard"/> class.
         /// </summary>
-        /// <param name="mode">Sets the property <see cref="SilentMode"/>.</param>
+        /// <param name="mode">Sets the property <see cref="StoryBoardBase.Mode"/>.</param>
         public SynchronizationStoryBoard(StoryBoardMode mode)
             : base(mode)
         {
@@ -87,7 +86,6 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
                 this,
                 Ioc.GetOrCreate<ILanguageService>(),
                 feedbackService,
-                navigationService,
                 Ioc.GetOrCreate<ICloudStorageClientFactory>()));
             RegisterStep(new ExistsCloudRepositoryStep(
                 SynchronizationStoryStepId.ExistsCloudRepository.ToInt(),
