@@ -49,6 +49,8 @@ namespace SilentNotes.Services
             resources["note_list_unordered"] = "Bulleted list";
             resources["note_code"] = "Code block";
             resources["note_quotation"] = "Quotation";
+            resources["note_pull_from_server"] = "Replace with note from online-storage";
+            resources["note_push_to_server"] = "Overwrite note on online-storage";
 
             resources["show_recyclebin"] = "Open recycle bin";
             resources["show_settings"] = "Settings";
@@ -153,6 +155,8 @@ namespace SilentNotes.Services
             resources["note_list_unordered"] = "Aufzählungsliste";
             resources["note_code"] = "Code Block";
             resources["note_quotation"] = "Zitat";
+            resources["note_pull_from_server"] = "Übernehme Notiz vom Online-Speicher";
+            resources["note_push_to_server"] = "Überschreibe Notiz auf Online-Speicher";
 
             resources["show_recyclebin"] = "Papierkorb öffnen";
             resources["show_settings"] = "Einstellungen";

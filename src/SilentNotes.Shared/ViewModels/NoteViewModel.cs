@@ -44,6 +44,8 @@ namespace SilentNotes.ViewModels
             _settingsService = settingsService;
             _searchableTextConverter = searchableTextConverter;
             MarkSearchableContentAsDirty();
+            PushNoteToOnlineStorageCommand = new RelayCommand(PushNoteToOnlineStorage);
+            PullNoteFromOnlineStorageCommand = new RelayCommand(PullNoteFromOnlineStorage);
             GoBackCommand = new RelayCommand(GoBack);
 
             Model = noteFromRepository;
@@ -193,6 +195,38 @@ namespace SilentNotes.ViewModels
         {
             handled = true;
             GoBack();
+        }
+
+        /// <summary>
+        /// Gets the command which can overwrite the local note with the note from the online-storage.
+        /// </summary>
+        public ICommand PullNoteFromOnlineStorageCommand { get; private set; }
+
+        private void PullNoteFromOnlineStorage()
+        {
+        }
+
+        /// <summary>
+        /// Gets the command which can overwrite the note of the online-storage with the locale note.
+        /// </summary>
+        public ICommand PushNoteToOnlineStorageCommand { get; private set; }
+
+        private void PushNoteToOnlineStorage()
+        {
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the <see cref="PullNoteFromOnlineStorageCommand"/> and
+        /// the <see cref="PushNoteToOnlineStorageCommand"/> are enabled or disabled.
+        /// </summary>
+        public bool PushAndPullNoteEnabled
+        {
+            get
+            {
+                SettingsModel settings = _settingsService.LoadSettingsOrDefault();
+                bool cloudStorageClientIsSet = (settings.Credentials?.CloudStorageId != null);
+                return cloudStorageClientIsSet;
+            }
         }
 
         /// <summary>

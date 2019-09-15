@@ -75,6 +75,8 @@ namespace SilentNotes.Controllers
                 settingsService,
                 note);
 
+            Bindings.BindCommand("PullNoteFromOnlineStorage", _viewModel.PullNoteFromOnlineStorageCommand);
+            Bindings.BindCommand("PushNoteToOnlineStorage", _viewModel.PushNoteToOnlineStorageCommand);
             Bindings.BindCommand("GoBack", _viewModel.GoBackCommand);
             Bindings.UnhandledViewBindingEvent += UnhandledViewBindingEventHandler;
 
