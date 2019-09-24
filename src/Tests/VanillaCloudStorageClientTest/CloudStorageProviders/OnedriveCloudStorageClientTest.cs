@@ -24,7 +24,11 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
         private const bool DoRealWebRequests = false;
         private const string ClientId = "cid";
         private const string RedirectUrl = "com.example.myapp://oauth2redirect/";
-        private const string OnedriveAccessToken = "GetItWithTheReallyDoMethods";
+
+        private const string OnedriveRedirectedUrl = "GetItWith:ReallyDoOpenAuthorizationPageInBrowser";
+        private const string OnedriveAccessToken = "GetItWith:ReallyDoFetchToken_or_ReallyDoRefreshToken";
+        private const string OnedriveRefreshToken = "GetItWith:ReallyDoFetchToken";
+
         private const string State = "7ysv8L9s4LB9CZpA";
         private const string CodeVerifier = "abcdefghijklmnopqrstuvwxyabcdefghijklmnopqrstuvwxy";
         private HttpTest _httpTest;
@@ -63,11 +67,9 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
             if (!DoRealWebRequests)
                 return;
 
-            const string redirectedUrl = "ch.martinstoeckli.silentnotes://oauth2redirect/?code=Mee5dffeb-fdaa-aca7-d7ba-f281c8b49903&state=7ysv8L9s4LB9CZpA";
-
             // Fetch token
             IOAuth2CloudStorageClient client = new OnedriveCloudStorageClient(ClientId, RedirectUrl);
-            CloudStorageToken token = Task.Run(async () => await FetchTokenAsync(client, redirectedUrl)).Result;
+            CloudStorageToken token = Task.Run(async () => await FetchTokenAsync(client, OnedriveRedirectedUrl)).Result;
 
             Assert.IsNotNull(token.AccessToken);
             Assert.IsNotNull(token.RefreshToken);
@@ -87,7 +89,7 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
 
             CloudStorageToken oldToken = new CloudStorageToken
             {
-                RefreshToken = "MCW*!s3pagVCHVuUCmPqx88abRl9N!dzQOLCovpwhFof2ZUvt9I4rkiJ06GzPH0z14d2NtvN2zXksQgI4wuENAaB3znFQ*1ELcB5ApCA1LTs3Sv3JQPIV3NLj1bNgAFFN*lN*btcBcbsksofEnxNx3qULZ5BDdIWmNhxdWWPXGrzq!AaqQwCYSYcf5Lh1gkLYjwcGeXUkHbGloqE3K1TZmb40t0KrJgsAjKnkAp4*S94*Gl7YFR4rzo1MTUdubNhtJRB7PRo1wNkMIRoV1d8653owOeO6oRJzt9GVWc!GJG3t3F40a3R8VtYSsXIevRaNLRaz5LSygDOiRjEO2wekhu9tb7Hh6KDBVFg1dA**YOGc7NVyAxvBDEM7!8NRM35nIQ$$",
+                RefreshToken = OnedriveRefreshToken,
             };
 
             // Refresh token
