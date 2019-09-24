@@ -20,8 +20,8 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
     /// <summary>
     /// Implementation of the <see cref="ICloudStorageClient"/> interface, which can handle cloud
     /// storage with the Microsoft OneDrive API. Files are stored in the predefined "approot"
-    /// directory, the necessary privileges "offline_access" and "Files.ReadWrite.AppFolder" must
-    /// be defined in the Azure-developer-console for this client id.
+    /// directory, the necessary privileges "offline_access", "User.Read" and "Files.ReadWrite.AppFolder"
+    /// must be defined in the Azure-developer-console for this client id.
     /// </summary>
     public class OnedriveCloudStorageClient : OAuth2CloudStorageClient, ICloudStorageClient, IOAuth2CloudStorageClient
     {
@@ -32,6 +32,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
         private const string DeleteUrl = ExistsUrl;
         private const string ListUrl = "https://graph.microsoft.com/v1.0/me/drive/special/approot/children";
         private const string ExistsUrl = "https://graph.microsoft.com/v1.0/me/drive/special/approot:/{0}";
+        private const string AppRootUrl = "https://graph.microsoft.com/v1.0/me/drive/special/approot";
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OnedriveCloudStorageClient"/> class.
@@ -81,7 +82,8 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
                 // Now that we have got the session, the file can be uploaded
                 HttpContent content = new ByteArrayContent(fileContent);
                 HttpResponseMessage uploadResponse = await Flurl.Request(session.UploadUrl)
-                    .WithOAuthBearerToken(credentials.Token.AccessToken)
+                    .WithHeader("Content-Length", fileContent.Length)
+                    .WithHeader("Content-Range", string.Format("bytes 0-{0}/{1}", fileContent.Length - 1, fileContent.Length))
                     .PutAsync(content);
             }
             catch (Exception ex)
@@ -182,6 +184,31 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
                     return false;
                 else
                     throw ConvertToCloudStorageException(ex);
+            }
+            catch (Exception ex)
+            {
+                throw ConvertToCloudStorageException(ex);
+            }
+        }
+
+        /// <summary>
+        /// Gets the id of the app root folder on OneDrive, the id is an internal identifier of
+        /// cloud drive and can be used in subsequent requests.
+        /// </summary>
+        /// <param name="accessToken">A valid OAuth2 access token.</param>
+        /// <returns>The id of the folder, or null if no such file was found.
+        /// Note that several files with the same name can co-exist in the same folder.</returns>
+        private async Task<string> FindAppRootIdAsync(string accessToken)
+        {
+            try
+            {
+                string jsonResponse = await Flurl.Request(AppRootUrl)
+                    .WithOAuthBearerToken(accessToken)
+                    .SetQueryParam("$select", "id")
+                    .GetAsync()
+                    .ReceiveString();
+                JsonFolderEntry entry = JsonConvert.DeserializeObject<JsonFolderEntry>(jsonResponse);
+                return entry.Id;
             }
             catch (Exception ex)
             {
