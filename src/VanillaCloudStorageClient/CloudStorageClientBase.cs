@@ -59,6 +59,20 @@ namespace VanillaCloudStorageClient
         }
 
         /// <summary>
+        /// Ensures a trailing slash "/" at the end of the url, to mark a directory.
+        /// </summary>
+        /// <param name="url">Url with or without a trailing slash.</param>
+        /// <returns>Returns the url with trailing slash, or the original url in case or null or empty.</returns>
+        public static string IncludeTrailingSlash(string url)
+        {
+            if (!string.IsNullOrEmpty(url) && !url.EndsWith("/"))
+            {
+                return url + "/";
+            }
+            return url;
+        }
+
+        /// <summary>
         /// Analyses the exception and converts it to an exception deriving from
         /// <see cref="CloudStorageException"/>, so it can be re-thrown.
         /// <example><code>
