@@ -87,21 +87,22 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
 
             try
             {
-                // Request only displayname and resourcetype to reduce network traffic
+                // Request only resourcetype to reduce network traffic
                 byte[] requestBytes = Encoding.UTF8.GetBytes(
 @"<?xml version='1.0' encoding='utf-8'?>
 <D:propfind xmlns:D='DAV:'>
 <D:prop>
-    <D:displayname/>
     <D:resourcetype/>
 </D:prop>
 </D:propfind>");
-
+                
                 HttpContent content = new ByteArrayContent(requestBytes);
                 XDocument responseXml;
-                using (Stream responseStream = await Flurl.Request(credentials.Url)
+                Url url = new Url(IncludeTrailingSlash(credentials.Url));
+                using (Stream responseStream = await Flurl.Request(url)
                     .WithBasicAuth(credentials.Username, credentials.UnprotectedPassword)
                     .WithHeader("Depth", "1")
+                    .WithTimeout(20)
                     .SendAsync(new HttpMethod("PROPFIND"), content)
                     .ReceiveStream())
                 {
