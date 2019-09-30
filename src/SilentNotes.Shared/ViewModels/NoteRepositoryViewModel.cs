@@ -245,7 +245,7 @@ namespace SilentNotes.ViewModels
             _model.Notes.Insert(0, noteModel);
 
             // Update view model list
-            NoteViewModel noteViewModel = new NoteViewModel(_navigationService, Language, Icon, _webviewBaseUrl, _searchableTextConverter, _repositoryService, null, noteModel);
+            NoteViewModel noteViewModel = new NoteViewModel(_navigationService, Language, Icon, _webviewBaseUrl, _searchableTextConverter, _repositoryService, _feedbackService, null, noteModel);
             AllNotes.Insert(0, noteViewModel);
             FilteredNotes.Insert(0, noteViewModel);
 
@@ -385,7 +385,7 @@ namespace SilentNotes.ViewModels
                 // Wrap models in view models
                 foreach (NoteModel note in _model.Notes)
                 {
-                    NoteViewModel noteViewModel = new NoteViewModel(_navigationService, Language, Icon, _webviewBaseUrl, _searchableTextConverter, _repositoryService, null, note);
+                    NoteViewModel noteViewModel = new NoteViewModel(_navigationService, Language, Icon, _webviewBaseUrl, _searchableTextConverter, _repositoryService, _feedbackService, null, note);
                     AllNotes.Add(noteViewModel);
                     if (!noteViewModel.InRecyclingBin)
                         FilteredNotes.Add(noteViewModel);

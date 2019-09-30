@@ -19,12 +19,12 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
     /// </summary>
     public class StoreMergedRepositoryAndQuitStep : SynchronizationStoryBoardStepBase
     {
-        private readonly ILanguageService _languageService;
-        private readonly IFeedbackService _feedbackService;
-        private readonly ISettingsService _settingsService;
-        private readonly ICryptoRandomService _cryptoRandomService;
-        private readonly IRepositoryStorageService _repositoryStorageService;
-        private readonly ICloudStorageClientFactory _cloudStorageClientFactory;
+        protected readonly ILanguageService _languageService;
+        protected readonly IFeedbackService _feedbackService;
+        protected readonly ISettingsService _settingsService;
+        protected readonly ICryptoRandomService _cryptoRandomService;
+        protected readonly IRepositoryStorageService _repositoryStorageService;
+        protected readonly ICloudStorageClientFactory _cloudStorageClientFactory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StoreMergedRepositoryAndQuitStep"/> class.

@@ -72,6 +72,7 @@ namespace SilentNotes.Controllers
                 Ioc.GetOrCreate<IBaseUrlService>(),
                 null,
                 _repositoryService,
+                Ioc.GetOrCreate<IFeedbackService>(),
                 settingsService,
                 note);
 

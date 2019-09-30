@@ -21,6 +21,7 @@ namespace SilentNotes.ViewModels
     public class NoteViewModel : ViewModelBase
     {
         private readonly IRepositoryStorageService _repositoryService;
+        private readonly IFeedbackService _feedbackService;
         private readonly ISettingsService _settingsService;
         private SearchableHtmlConverter _searchableTextConverter;
         private string _searchableContent;
@@ -36,11 +37,13 @@ namespace SilentNotes.ViewModels
             IBaseUrlService webviewBaseUrl,
             SearchableHtmlConverter searchableTextConverter,
             IRepositoryStorageService repositoryService,
+            IFeedbackService feedbackService,
             ISettingsService settingsService,
             NoteModel noteFromRepository)
             : base(navigationService, languageService, svgIconService, webviewBaseUrl)
         {
             _repositoryService = repositoryService;
+            _feedbackService = feedbackService;
             _settingsService = settingsService;
             _searchableTextConverter = searchableTextConverter;
             MarkSearchableContentAsDirty();
@@ -204,6 +207,14 @@ namespace SilentNotes.ViewModels
 
         private void PullNoteFromOnlineStorage()
         {
+            _feedbackService.ShowBusyIndicator(true);
+            try
+            {
+            }
+            finally
+            {
+                _feedbackService.ShowBusyIndicator(false);
+            }
         }
 
         /// <summary>
@@ -213,6 +224,14 @@ namespace SilentNotes.ViewModels
 
         private void PushNoteToOnlineStorage()
         {
+            _feedbackService.ShowBusyIndicator(true);
+            try
+            {
+            }
+            finally
+            {
+                _feedbackService.ShowBusyIndicator(false);
+            }
         }
 
         /// <summary>
@@ -224,8 +243,7 @@ namespace SilentNotes.ViewModels
             get
             {
                 SettingsModel settings = _settingsService.LoadSettingsOrDefault();
-                bool cloudStorageClientIsSet = (settings.Credentials?.CloudStorageId != null);
-                return cloudStorageClientIsSet;
+                return settings.HasCloudStorageClient && settings.HasTransferCode;
             }
         }
 
