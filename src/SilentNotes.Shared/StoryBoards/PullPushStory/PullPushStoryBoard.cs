@@ -1,31 +1,11 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using SilentNotes.Services;
 using SilentNotes.Workers;
 
 namespace SilentNotes.StoryBoards.PullPushStory
 {
-    /// <summary>
-    /// Enumeration of all available step ids of the <see cref="PullPushStoryBoard"/>.
-    /// </summary>
-    public enum PullPushStoryStepId
-    {
-        ExistsCloudRepository,
-        DownloadCloudRepository,
-        DecryptCloudRepository,
-        IsSameRepository,
-        StoreMergedRepositoryAndQuit,
-    }
-
-    /// <summary>
-    /// Enumeration of all available session keys of the <see cref="PullPushStoryBoard"/>.
-    /// </summary>
-    public enum PullPushStorySessionKey
-    {
-        BinaryCloudRepository,
-        CloudRepository,
-    }
-
     /// <summary>
     /// Story for manual synchronization of a single note with the cloud.
     /// This story can only be triggered by the user and has no Gui input.
@@ -35,7 +15,9 @@ namespace SilentNotes.StoryBoards.PullPushStory
         /// <summary>
         /// Initializes a new instance of the <see cref="PullPushStoryBoard"/> class.
         /// </summary>
-        public PullPushStoryBoard()
+        /// <param name="noteId">Sets the <see cref="NoteId"/> property.</param>
+        /// <param name="direction">Sets the <see cref="Direction"/> property.</param>
+        public PullPushStoryBoard(Guid noteId, PullPushDirection direction)
             : base(StoryBoardMode.GuiAndToasts)
         {
             RegisterStep(new ExistsCloudRepositoryStep(
@@ -68,6 +50,8 @@ namespace SilentNotes.StoryBoards.PullPushStory
             RegisterStep(new StoreMergedRepositoryAndQuitStep(
                 PullPushStoryStepId.StoreMergedRepositoryAndQuit.ToInt(),
                 this,
+                noteId,
+                direction,
                 Ioc.GetOrCreate<ILanguageService>(),
                 Ioc.GetOrCreate<IFeedbackService>(),
                 Ioc.GetOrCreate<ISettingsService>(),
@@ -75,6 +59,40 @@ namespace SilentNotes.StoryBoards.PullPushStory
                 Ioc.GetOrCreate<IRepositoryStorageService>(),
                 Ioc.GetOrCreate<ICloudStorageClientFactory>()));
         }
+    }
+
+    /// <summary>
+    /// Enumeration of all available step ids of the <see cref="PullPushStoryBoard"/>.
+    /// </summary>
+    public enum PullPushStoryStepId
+    {
+        ExistsCloudRepository,
+        DownloadCloudRepository,
+        DecryptCloudRepository,
+        IsSameRepository,
+        StoreMergedRepositoryAndQuit,
+    }
+
+    /// <summary>
+    /// Enumeration of all available session keys of the <see cref="PullPushStoryBoard"/>.
+    /// </summary>
+    public enum PullPushStorySessionKey
+    {
+        BinaryCloudRepository,
+        CloudRepository,
+    }
+
+    /// <summary>
+    /// Enumeration of the direction of the synchronization, either from online storage to local
+    /// or reverse.
+    /// </summary>
+    public enum PullPushDirection
+    {
+        /// <summary>Pull the note from the server and overwrite the local note</summary>
+        PullFromServer,
+
+        /// <summary>Use the local note and overwrite the note on the server</summary>
+        PushToServer
     }
 
     /// <summary>Extension methods for the enumeration.</summary>

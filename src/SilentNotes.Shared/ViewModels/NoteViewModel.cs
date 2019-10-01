@@ -11,6 +11,7 @@ using System.Windows.Input;
 using SilentNotes.Controllers;
 using SilentNotes.Models;
 using SilentNotes.Services;
+using SilentNotes.StoryBoards.PullPushStory;
 using SilentNotes.Workers;
 
 namespace SilentNotes.ViewModels
@@ -205,16 +206,25 @@ namespace SilentNotes.ViewModels
         /// </summary>
         public ICommand PullNoteFromOnlineStorageCommand { get; private set; }
 
-        private void PullNoteFromOnlineStorage()
+        private async void PullNoteFromOnlineStorage()
         {
             _feedbackService.ShowBusyIndicator(true);
             try
             {
+                OnStoringUnsavedData();
+                PullPushStoryBoard storyBoard = new PullPushStoryBoard(Model.Id, PullPushDirection.PullFromServer);
+                await storyBoard.Start();
             }
             finally
             {
                 _feedbackService.ShowBusyIndicator(false);
             }
+
+            // Refresh view
+            if (Model.InRecyclingBin)
+                _navigationService.Navigate(ControllerNames.RecycleBin);
+            else
+                _navigationService.Navigate(ControllerNames.Note, ControllerParameters.NoteId, Model.Id.ToString());
         }
 
         /// <summary>

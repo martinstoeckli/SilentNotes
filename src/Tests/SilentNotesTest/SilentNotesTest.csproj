@@ -92,6 +92,8 @@
   <ItemGroup>
     <Compile Include="CommonMocksAndStubs.cs" />
     <Compile Include="HtmView\HtmlViewDuplicateEventFinderTest.cs" />
+    <Compile Include="Models\NoteListModelTest.cs" />
+    <Compile Include="Models\NoteModelTest.cs" />
     <Compile Include="Models\NoteRepositoryModelTest.cs" />
     <Compile Include="Logging\LoggerTest.cs" />
     <Compile Include="Services\RepositoryStorageServiceTest.cs" />

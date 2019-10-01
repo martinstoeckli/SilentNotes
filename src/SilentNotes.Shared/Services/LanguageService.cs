@@ -112,6 +112,7 @@ namespace SilentNotes.Services
             resources["sync_repository_cloud"] = "Use notes from the server, delete notes on the local device.";
             resources["sync_repository_device"] = "Use notes from the local device, delete notes on the server.";
             resources["pushpull_error_need_sync_first"] = "Could not synchronize this note with the cloud, please do a one-time synchronization of all notes first.";
+            resources["pushpull_error_no_cloud_note"] = "This note does not exist on the online-storage, please do a synchronization of all notes first.";
 
             resources["encryption"] = "Encryption";
             resources["encryption_algorithm"] = "Encryption mode";
@@ -219,6 +220,7 @@ namespace SilentNotes.Services
             resources["sync_repository_cloud"] = "Verwende nur Notizen vom Online-Speicher, lösche Notizen auf dem lokalen Gerät.";
             resources["sync_repository_device"] = "Verwende nur Notizen vom lokalen Gerät, lösche Notizen auf dem Online-Speicher.";
             resources["pushpull_error_need_sync_first"] = "Konnte diese Notiz nicht mit dem Online-Speicher synchronisieren, bitte führen Sie zuerst einmalig eine normale Synchronisation aller Notizen durch.";
+            resources["pushpull_error_no_cloud_note"] = "Diese Notiz existiert nicht auf dem Online-Speicher, bitte führen Sie vorher eine normale Synchronisation aller Notizen durch.";
 
             resources["encryption"] = "Verschlüsselung";
             resources["encryption_algorithm"] = "Verschlüsselungsverfahren";

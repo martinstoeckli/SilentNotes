@@ -38,5 +38,15 @@ namespace SilentNotes.Models
             int index = IndexOfById(id);
             return index >= 0;
         }
+
+        /// <summary>
+        /// Searches for a note with a given id in the repository and returns the found note.
+        /// </summary>
+        /// <param name="id">Search for the note with this id.</param>
+        /// <returns>Found note, or null if no such note exists.</returns>
+        public NoteModel FindById(Guid id)
+        {
+            return Find(item => item.Id == id);
+        }
     }
 }
