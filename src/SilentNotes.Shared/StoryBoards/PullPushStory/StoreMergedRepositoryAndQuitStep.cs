@@ -1,7 +1,13 @@
-﻿using System;
+﻿// Copyright © 2018 Martin Stoeckli.
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+using System;
 using System.Threading.Tasks;
 using SilentNotes.Models;
 using SilentNotes.Services;
+using VanillaCloudStorageClient;
 
 namespace SilentNotes.StoryBoards.PullPushStory
 {
@@ -40,65 +46,58 @@ namespace SilentNotes.StoryBoards.PullPushStory
                 NoteRepositoryModel cloudRepository = StoryBoard.LoadFromSession<NoteRepositoryModel>(PullPushStorySessionKey.CloudRepository.ToInt());
                 _repositoryStorageService.LoadRepositoryOrDefault(out NoteRepositoryModel localRepository);
                 SettingsModel settings = _settingsService.LoadSettingsOrDefault();
+                SerializeableCloudStorageCredentials credentials = settings.Credentials;
 
-                NoteInfo cloudInfo = CreateNoteInfo(cloudRepository, _noteId);
-                NoteInfo localInfo = CreateNoteInfo(localRepository, _noteId);
-                if (!localInfo.NoteExists)
+                NoteModel cloudNote = cloudRepository.Notes.FindById(_noteId);
+                NoteModel localNote = localRepository.Notes.FindById(_noteId);
+                if (localNote == null)
                 {
                     throw new Exception("PullPushStory is triggered on the note dialog, so the note must exist.");
                 }
 
-                if (!cloudInfo.NoteExists)
+                if (cloudNote == null)
                 {
+                    // Note does not yet exist in the cloud, or it was deleted permanently. Both
+                    // cases should be rejected.
                     _feedbackService.ShowToast(_languageService["pushpull_error_no_cloud_note"]);
                     return;
                 }
 
-                if (cloudInfo.Note.ModifiedAt == localInfo.Note.ModifiedAt)
+                if (cloudNote.ModifiedAt == localNote.ModifiedAt)
                 {
                     // Notes are equal, nothing to sync
-                    _feedbackService.ShowToast(_languageService["sync_success"]);
+                    _feedbackService.ShowToast(_languageService["pushpull_success"]);
                     return;
                 }
 
                 // Merge repositories
                 if (_direction == PullPushDirection.PullFromServer)
                 {
-                    cloudInfo.Note.CopyTo(localInfo.Note);
+                    cloudNote.CloneTo(localNote); // this can possibly move the note to the recycling bin or reverse
                     _repositoryStorageService.TrySaveRepository(localRepository);
-                    _feedbackService.ShowToast(_languageService["sync_success"]);
                 }
                 else
                 {
-                    // todo:
+                    // Uploading explicitely can be seen as a confirmation that this version is the
+                    // most current one. So we make sure that the uploaded version is not overwritten
+                    // by other devices afterwards.
+                    localNote.RefreshModifiedAt();
+                    _repositoryStorageService.TrySaveRepository(localRepository);
+
+                    localNote.CloneTo(cloudNote); // this can possibly move the note to the recycling bin or reverse
+                    byte[] encryptedRepository = EncryptRepository(
+                        cloudRepository, settings.TransferCode, _cryptoRandomService, settings.SelectedEncryptionAlgorithm);
+
+                    ICloudStorageClient cloudStorageClient = _cloudStorageClientFactory.GetOrCreate(credentials.CloudStorageId);
+                    await cloudStorageClient.UploadFileAsync(Config.RepositoryFileName, encryptedRepository, credentials);
                 }
+                _feedbackService.ShowToast(_languageService["pushpull_success"]);
             }
             catch (Exception ex)
             {
                 // Keep the current page open and show the error message
                 ShowExceptionMessage(ex, _feedbackService, _languageService);
             }
-        }
-
-        private static NoteInfo CreateNoteInfo(NoteRepositoryModel repository, Guid noteId)
-        {
-            NoteInfo result = new NoteInfo();
-            result.Note = repository.Notes.FindById(noteId);
-            result.NoteExists = result.Note != null;
-            result.NoteIsRecycled = result.NoteExists && result.Note.InRecyclingBin;
-            result.NoteIsDeleted = repository.DeletedNotes.Contains(noteId);
-            return result;
-        }
-
-        private class NoteInfo
-        {
-            public NoteModel Note { get; set; }
-
-            public bool NoteExists { get; set; }
-
-            public bool NoteIsRecycled { get;set; }
-
-            public bool NoteIsDeleted { get; set; }
         }
     }
 }

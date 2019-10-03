@@ -49,8 +49,8 @@ namespace SilentNotes.Services
             resources["note_list_unordered"] = "Bulleted list";
             resources["note_code"] = "Code block";
             resources["note_quotation"] = "Quotation";
-            resources["note_pull_from_server"] = "Replace with note from online-storage";
-            resources["note_push_to_server"] = "Overwrite note on online-storage";
+            resources["note_pull_from_server"] = "Download note (overwrite local)";
+            resources["note_push_to_server"] = "Upload note (overwrite online)";
 
             resources["show_recyclebin"] = "Open recycle bin";
             resources["show_settings"] = "Settings";
@@ -111,6 +111,7 @@ namespace SilentNotes.Services
             resources["sync_repository_merge"] = "Merge notes from local device and server [recommended].";
             resources["sync_repository_cloud"] = "Use notes from the server, delete notes on the local device.";
             resources["sync_repository_device"] = "Use notes from the local device, delete notes on the server.";
+            resources["pushpull_success"] = "Successfully synchronized this note.";
             resources["pushpull_error_need_sync_first"] = "Could not synchronize this note with the cloud, please do a one-time synchronization of all notes first.";
             resources["pushpull_error_no_cloud_note"] = "This note does not exist on the online-storage, please do a synchronization of all notes first.";
 
@@ -157,8 +158,8 @@ namespace SilentNotes.Services
             resources["note_list_unordered"] = "Aufzählungsliste";
             resources["note_code"] = "Code Block";
             resources["note_quotation"] = "Zitat";
-            resources["note_pull_from_server"] = "Übernehme Notiz vom Online-Speicher";
-            resources["note_push_to_server"] = "Überschreibe Notiz auf Online-Speicher";
+            resources["note_pull_from_server"] = "Notiz herunterladen (lokal überschreiben)";
+            resources["note_push_to_server"] = "Notiz hochladen (online überschreiben)";
 
             resources["show_recyclebin"] = "Papierkorb öffnen";
             resources["show_settings"] = "Einstellungen";
@@ -219,6 +220,7 @@ namespace SilentNotes.Services
             resources["sync_repository_merge"] = "Zusammenführen der Notizen vom Online-Speicher und vom lokalem Gerät [empfohlen].";
             resources["sync_repository_cloud"] = "Verwende nur Notizen vom Online-Speicher, lösche Notizen auf dem lokalen Gerät.";
             resources["sync_repository_device"] = "Verwende nur Notizen vom lokalen Gerät, lösche Notizen auf dem Online-Speicher.";
+            resources["pushpull_success"] = "Diese Notiz wurden erfolgreich synchronisiert.";
             resources["pushpull_error_need_sync_first"] = "Konnte diese Notiz nicht mit dem Online-Speicher synchronisieren, bitte führen Sie zuerst einmalig eine normale Synchronisation aller Notizen durch.";
             resources["pushpull_error_no_cloud_note"] = "Diese Notiz existiert nicht auf dem Online-Speicher, bitte führen Sie vorher eine normale Synchronisation aller Notizen durch.";
 

@@ -13,43 +13,6 @@ using SilentNotes.Workers;
 namespace SilentNotes.StoryBoards.SynchronizationStory
 {
     /// <summary>
-    /// Enumeration of all available step ids of the <see cref="SynchronizationStoryBoard"/>.
-    /// </summary>
-    public enum SynchronizationStoryStepId
-    {
-        IsCloudServiceSet,
-        ShowCloudStorageChoice,
-        ShowCloudStorageAccount,
-        HandleOAuthRedirect,
-        ExistsCloudRepository,
-        DownloadCloudRepository,
-        ExistsTransferCode,
-        ShowTransferCode,
-        DecryptCloudRepository,
-        IsSameRepository,
-        ShowMergeChoice,
-        StoreLocalRepositoryToCloudAndQuit,
-        StoreMergedRepositoryAndQuit,
-        StoreCloudRepositoryToDeviceAndQuit,
-        StopAndShowRepository,
-        ShowFirstTimeDialog,
-    }
-
-    /// <summary>
-    /// Enumeration of all available session keys of the <see cref="SynchronizationStoryBoard"/>.
-    /// </summary>
-    public enum SynchronizationStorySessionKey
-    {
-        CloudStorageCredentials,
-        BinaryCloudRepository,
-        UserEnteredTransferCode,
-        CloudRepository,
-        OauthState,
-        OauthCodeVerifier,
-        OauthRedirectUrl,
-    }
-
-    /// <summary>
     /// Story for synchronization of the repository with the cloud.
     /// </summary>
     public class SynchronizationStoryBoard : StoryBoardBase
@@ -171,6 +134,43 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         public class UnsuportedRepositoryRevisionException : Exception
         {
         }
+    }
+
+    /// <summary>
+    /// Enumeration of all available step ids of the <see cref="SynchronizationStoryBoard"/>.
+    /// </summary>
+    public enum SynchronizationStoryStepId
+    {
+        IsCloudServiceSet,
+        ShowCloudStorageChoice,
+        ShowCloudStorageAccount,
+        HandleOAuthRedirect,
+        ExistsCloudRepository,
+        DownloadCloudRepository,
+        ExistsTransferCode,
+        ShowTransferCode,
+        DecryptCloudRepository,
+        IsSameRepository,
+        ShowMergeChoice,
+        StoreLocalRepositoryToCloudAndQuit,
+        StoreMergedRepositoryAndQuit,
+        StoreCloudRepositoryToDeviceAndQuit,
+        StopAndShowRepository,
+        ShowFirstTimeDialog,
+    }
+
+    /// <summary>
+    /// Enumeration of all available session keys of the <see cref="SynchronizationStoryBoard"/>.
+    /// </summary>
+    public enum SynchronizationStorySessionKey
+    {
+        CloudStorageCredentials,
+        BinaryCloudRepository,
+        UserEnteredTransferCode,
+        CloudRepository,
+        OauthState,
+        OauthCodeVerifier,
+        OauthRedirectUrl,
     }
 
     /// <summary>Extension methods for the enumeration.</summary>

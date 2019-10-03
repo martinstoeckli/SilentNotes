@@ -23,7 +23,7 @@ using SilentNotes.ViewModels;
 #line hidden
 
 
-[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.2.0.95")]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.3.0.274")]
 public partial class NoteRazorView : NoteRazorViewBase
 {
 
@@ -593,32 +593,11 @@ WriteLiteral(" onclick=\"bind(event);\"");
 
 WriteLiteral(" data-binding=\"PullNoteFromOnlineStorage\"");
 
-WriteLiteral(" ");
-
-
-#line 159 "NoteRazorView.cshtml"
-                                                                                                               if (!Model.PushAndPullNoteEnabled) { 
-
-#line default
-#line hidden
-
-#line 159 "NoteRazorView.cshtml"
-                                                                                                                                                Write("disabled");
-
-
-#line default
-#line hidden
-
-#line 159 "NoteRazorView.cshtml"
-                                                                                                                                                                  ; }
-
-#line default
-#line hidden
 WriteLiteral(">");
 
 
 #line 159 "NoteRazorView.cshtml"
-                                                                                                                                                                 Write(Model.Language["note_pull_from_server"]);
+                                                                                                         Write(Model.Language["note_pull_from_server"]);
 
 
 #line default
@@ -631,32 +610,11 @@ WriteLiteral(" onclick=\"bind(event);\"");
 
 WriteLiteral(" data-binding=\"PushNoteToOnlineStorage\"");
 
-WriteLiteral(" ");
-
-
-#line 160 "NoteRazorView.cshtml"
-                                                                                                             if (!Model.PushAndPullNoteEnabled) { 
-
-#line default
-#line hidden
-
-#line 160 "NoteRazorView.cshtml"
-                                                                                                                                              Write("disabled");
-
-
-#line default
-#line hidden
-
-#line 160 "NoteRazorView.cshtml"
-                                                                                                                                                                ; }
-
-#line default
-#line hidden
 WriteLiteral(">");
 
 
 #line 160 "NoteRazorView.cshtml"
-                                                                                                                                                               Write(Model.Language["note_push_to_server"]);
+                                                                                                       Write(Model.Language["note_push_to_server"]);
 
 
 #line default

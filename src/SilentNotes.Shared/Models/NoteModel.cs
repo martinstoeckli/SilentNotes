@@ -89,15 +89,15 @@ namespace SilentNotes.Models
         public NoteModel Clone()
         {
             NoteModel result = new NoteModel();
-            CopyTo(result);
+            CloneTo(result);
             return result;
         }
 
         /// <summary>
-        /// Makes a deep copy of the note.
+        /// Makes <paramref name="targetNote"/> a deep copy of the note.
         /// </summary>
         /// <param name="targetNote">Copy all properties to this note.</param>
-        public void CopyTo(NoteModel targetNote)
+        public void CloneTo(NoteModel targetNote)
         {
             if (targetNote == null)
                 throw new ArgumentNullException(nameof(targetNote));

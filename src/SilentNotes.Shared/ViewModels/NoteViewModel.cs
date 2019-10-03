@@ -232,28 +232,18 @@ namespace SilentNotes.ViewModels
         /// </summary>
         public ICommand PushNoteToOnlineStorageCommand { get; private set; }
 
-        private void PushNoteToOnlineStorage()
+        private async void PushNoteToOnlineStorage()
         {
             _feedbackService.ShowBusyIndicator(true);
             try
             {
+                OnStoringUnsavedData();
+                PullPushStoryBoard storyBoard = new PullPushStoryBoard(Model.Id, PullPushDirection.PushToServer);
+                await storyBoard.Start();
             }
             finally
             {
                 _feedbackService.ShowBusyIndicator(false);
-            }
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether the <see cref="PullNoteFromOnlineStorageCommand"/> and
-        /// the <see cref="PushNoteToOnlineStorageCommand"/> are enabled or disabled.
-        /// </summary>
-        public bool PushAndPullNoteEnabled
-        {
-            get
-            {
-                SettingsModel settings = _settingsService.LoadSettingsOrDefault();
-                return settings.HasCloudStorageClient && settings.HasTransferCode;
             }
         }
 

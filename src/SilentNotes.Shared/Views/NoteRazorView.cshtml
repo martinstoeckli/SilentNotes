@@ -156,8 +156,8 @@
                 <div class="dropdown-item" onclick="toggleFormat('code-block');">@{WriteLiteral(Model.Icon["code-braces"]);} @Model.Language["note_code"]</div>
                 <div class="dropdown-item" onclick="toggleFormat('blockquote');">@{WriteLiteral(Model.Icon["format-quote-close"]);} @Model.Language["note_quotation"]</div>
                 <hr>
-                <button class="dropdown-item" onclick="bind(event);" data-binding="PullNoteFromOnlineStorage" @if (!Model.PushAndPullNoteEnabled) { @("disabled") ; }>@Model.Language["note_pull_from_server"]</button>
-                <button class="dropdown-item" onclick="bind(event);" data-binding="PushNoteToOnlineStorage" @if (!Model.PushAndPullNoteEnabled) { @("disabled") ; }>@Model.Language["note_push_to_server"]</button>
+                <button class="dropdown-item" onclick="bind(event);" data-binding="PullNoteFromOnlineStorage">@Model.Language["note_pull_from_server"]</button>
+                <button class="dropdown-item" onclick="bind(event);" data-binding="PushNoteToOnlineStorage">@Model.Language["note_push_to_server"]</button>
             </div>
         </div>
     </nav>
