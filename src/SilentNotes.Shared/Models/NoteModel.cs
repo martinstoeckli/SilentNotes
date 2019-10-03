@@ -88,15 +88,26 @@ namespace SilentNotes.Models
         /// <returns>Copy of the note.</returns>
         public NoteModel Clone()
         {
-            return new NoteModel
-            {
-                Id = this.Id,
-                HtmlContent = this.HtmlContent,
-                BackgroundColorHex = this.BackgroundColorHex,
-                InRecyclingBin = this.InRecyclingBin,
-                CreatedAt = this.CreatedAt,
-                ModifiedAt = this.ModifiedAt,
-            };
+            NoteModel result = new NoteModel();
+            CloneTo(result);
+            return result;
+        }
+
+        /// <summary>
+        /// Makes <paramref name="targetNote"/> a deep copy of the note.
+        /// </summary>
+        /// <param name="targetNote">Copy all properties to this note.</param>
+        public void CloneTo(NoteModel targetNote)
+        {
+            if (targetNote == null)
+                throw new ArgumentNullException(nameof(targetNote));
+
+            targetNote.Id = this.Id;
+            targetNote.HtmlContent = this.HtmlContent;
+            targetNote.BackgroundColorHex = this.BackgroundColorHex;
+            targetNote.InRecyclingBin = this.InRecyclingBin;
+            targetNote.CreatedAt = this.CreatedAt;
+            targetNote.ModifiedAt = this.ModifiedAt;
         }
     }
 }

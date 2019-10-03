@@ -53,7 +53,7 @@ namespace SilentNotes.UWP.Services
             {
                 ProgressRing busyIndicator = _mainPage.FindName("BusyIndicator") as ProgressRing;
                 busyIndicator.IsActive = visible;
-            }));
+            })).Wait(100);
         }
 
         /// <inheritdoc/>

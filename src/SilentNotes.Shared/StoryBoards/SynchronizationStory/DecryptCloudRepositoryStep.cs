@@ -21,10 +21,10 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
     /// </summary>
     public class DecryptCloudRepositoryStep : SynchronizationStoryBoardStepBase
     {
-        private readonly ILanguageService _languageService;
-        private readonly IFeedbackService _feedbackService;
-        private readonly ISettingsService _settingsService;
-        private readonly INoteRepositoryUpdater _noteRepositoryUpdater;
+        protected readonly ILanguageService _languageService;
+        protected readonly IFeedbackService _feedbackService;
+        protected readonly ISettingsService _settingsService;
+        protected readonly INoteRepositoryUpdater _noteRepositoryUpdater;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DecryptCloudRepositoryStep"/> class.
@@ -52,28 +52,10 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
             {
                 SettingsModel settings = _settingsService.LoadSettingsOrDefault();
                 byte[] binaryCloudRepository = StoryBoard.LoadFromSession<byte[]>(SynchronizationStorySessionKey.BinaryCloudRepository.ToInt());
-                List<string> transferCodesToTry = ListTransferCodesToTry(settings);
 
                 // Try to decode with all possible transfer codes
-                EncryptorDecryptor encryptor = new EncryptorDecryptor("SilentNotes");
-                byte[] decryptedRepository = null;
-                bool successfullyDecryptedRepository = false;
-                int index = 0;
-                while (!successfullyDecryptedRepository && index < transferCodesToTry.Count)
-                {
-                    string transferCodeCandidate = transferCodesToTry[index];
-                    successfullyDecryptedRepository = TryDecryptRepositoryWithTransfercode(encryptor, binaryCloudRepository, transferCodeCandidate, out decryptedRepository);
-                    if (successfullyDecryptedRepository)
-                    {
-                        // Store transfercode and encryption mode if necessary
-                        if (AdoptTransferCode(settings, transferCodeCandidate) ||
-                            AdoptEncryptionMode(settings, encryptor, binaryCloudRepository))
-                        {
-                            _settingsService.TrySaveSettingsToLocalDevice(settings);
-                        }
-                    }
-                    index++;
-                }
+                bool successfullyDecryptedRepository = TryDecryptWithAllTransferCodes(
+                    settings, binaryCloudRepository, out byte[] decryptedRepository);
 
                 if (successfullyDecryptedRepository)
                 {
@@ -109,6 +91,42 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
                 // Keep the current page open and show the error message
                 ShowExceptionMessage(ex, _feedbackService, _languageService);
             }
+        }
+
+        /// <summary>
+        /// Tries to decrypt the binary repository testing all known transfer codes.
+        /// If the decryption is successful, the transfer code and the encryption mode is updated
+        /// and saved.
+        /// </summary>
+        /// <param name="settings">The application settings.</param>
+        /// <param name="binaryCloudRepository">The repository to decrypt.</param>
+        /// <param name="decryptedRepository">The decrypted repository, or null if the decryption
+        /// was not successful.</param>
+        /// <returns>Returns true if the decryption was successful, otherwise false.</returns>
+        protected bool TryDecryptWithAllTransferCodes(SettingsModel settings, byte[] binaryCloudRepository, out byte[] decryptedRepository)
+        {
+            bool result = false;
+            decryptedRepository = null;
+
+            EncryptorDecryptor encryptor = new EncryptorDecryptor("SilentNotes");
+            List<string> transferCodesToTry = ListTransferCodesToTry(settings);
+            int index = 0;
+            while (!result && index < transferCodesToTry.Count)
+            {
+                string transferCodeCandidate = transferCodesToTry[index];
+                result = TryDecryptRepositoryWithTransfercode(encryptor, binaryCloudRepository, transferCodeCandidate, out decryptedRepository);
+                if (result)
+                {
+                    // Store transfercode and encryption mode if necessary
+                    if (AdoptTransferCode(settings, transferCodeCandidate) ||
+                        AdoptEncryptionMode(settings, encryptor, binaryCloudRepository))
+                    {
+                        _settingsService.TrySaveSettingsToLocalDevice(settings);
+                    }
+                }
+                index++;
+            }
+            return result;
         }
 
         /// <summary>

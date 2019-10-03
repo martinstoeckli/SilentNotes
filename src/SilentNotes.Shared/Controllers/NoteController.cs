@@ -72,9 +72,12 @@ namespace SilentNotes.Controllers
                 Ioc.GetOrCreate<IBaseUrlService>(),
                 null,
                 _repositoryService,
+                Ioc.GetOrCreate<IFeedbackService>(),
                 settingsService,
                 note);
 
+            Bindings.BindCommand("PullNoteFromOnlineStorage", _viewModel.PullNoteFromOnlineStorageCommand);
+            Bindings.BindCommand("PushNoteToOnlineStorage", _viewModel.PushNoteToOnlineStorageCommand);
             Bindings.BindCommand("GoBack", _viewModel.GoBackCommand);
             Bindings.UnhandledViewBindingEvent += UnhandledViewBindingEventHandler;
 

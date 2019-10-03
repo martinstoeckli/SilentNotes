@@ -18,10 +18,10 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
     /// </summary>
     public class ExistsCloudRepositoryStep : SynchronizationStoryBoardStepBase
     {
-        private readonly ILanguageService _languageService;
-        private readonly IFeedbackService _feedbackService;
-        private readonly ISettingsService _settingsService;
-        private readonly ICloudStorageClientFactory _cloudStorageClientFactory;
+        protected readonly ILanguageService _languageService;
+        protected readonly IFeedbackService _feedbackService;
+        protected readonly ISettingsService _settingsService;
+        protected readonly ICloudStorageClientFactory _cloudStorageClientFactory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ExistsCloudRepositoryStep"/> class.
@@ -96,7 +96,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
             }
         }
 
-        private void SaveCredentialsToSettings(SerializeableCloudStorageCredentials credentials)
+        protected void SaveCredentialsToSettings(SerializeableCloudStorageCredentials credentials)
         {
             SettingsModel settings = _settingsService.LoadSettingsOrDefault();
             if (!credentials.AreEqualOrNull(settings.Credentials))

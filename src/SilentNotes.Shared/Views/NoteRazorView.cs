@@ -23,7 +23,7 @@ using SilentNotes.ViewModels;
 #line hidden
 
 
-[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "4.12.3.80")]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.3.0.274")]
 public partial class NoteRazorView : NoteRazorViewBase
 {
 
@@ -585,7 +585,41 @@ WriteLiteral(" ");
 
 #line default
 #line hidden
-WriteLiteral("</div>\r\n            </div>\r\n        </div>\r\n    </nav>\r\n\r\n    <div");
+WriteLiteral("</div>\r\n                <hr>\r\n                <button");
+
+WriteLiteral(" class=\"dropdown-item\"");
+
+WriteLiteral(" onclick=\"bind(event);\"");
+
+WriteLiteral(" data-binding=\"PullNoteFromOnlineStorage\"");
+
+WriteLiteral(">");
+
+
+#line 159 "NoteRazorView.cshtml"
+                                                                                                         Write(Model.Language["note_pull_from_server"]);
+
+
+#line default
+#line hidden
+WriteLiteral("</button>\r\n                <button");
+
+WriteLiteral(" class=\"dropdown-item\"");
+
+WriteLiteral(" onclick=\"bind(event);\"");
+
+WriteLiteral(" data-binding=\"PushNoteToOnlineStorage\"");
+
+WriteLiteral(">");
+
+
+#line 160 "NoteRazorView.cshtml"
+                                                                                                       Write(Model.Language["note_push_to_server"]);
+
+
+#line default
+#line hidden
+WriteLiteral("</button>\r\n            </div>\r\n        </div>\r\n    </nav>\r\n\r\n    <div");
 
 WriteLiteral(" id=\"content\"");
 
@@ -596,7 +630,7 @@ WriteLiteral(" data-binding=\"Content\"");
 WriteAttribute ("style", " style=\"", "\""
 , Tuple.Create<string,object,bool> ("", "background-color:", true)
 
-#line 162 "NoteRazorView.cshtml"
+#line 165 "NoteRazorView.cshtml"
                                        , Tuple.Create<string,object,bool> (" ", Model.BackgroundColorHex
 
 #line default
@@ -610,7 +644,7 @@ WriteLiteral(" id=\"myeditor\"");
 WriteAttribute ("class", " class=\"", "\""
 , Tuple.Create<string,object,bool> ("", "note-viewer", true)
 
-#line 163 "NoteRazorView.cshtml"
+#line 166 "NoteRazorView.cshtml"
       , Tuple.Create<string,object,bool> (" ", Model.GetDarkClass()
 
 #line default
@@ -622,7 +656,7 @@ WriteLiteral(" data-binding=\"quill\"");
 WriteLiteral(">");
 
 
-#line 163 "NoteRazorView.cshtml"
+#line 166 "NoteRazorView.cshtml"
                                                                                             WriteLiteral(Model.HtmlContent);
 
 #line default
@@ -630,13 +664,13 @@ WriteLiteral(">");
 WriteLiteral("</div>\r\n    </div>\r\n\r\n");
 
 
-#line 166 "NoteRazorView.cshtml"
+#line 169 "NoteRazorView.cshtml"
     
 
 #line default
 #line hidden
 
-#line 166 "NoteRazorView.cshtml"
+#line 169 "NoteRazorView.cshtml"
      if (Model.ShowCursorArrowKeys)
     {
 
@@ -649,7 +683,7 @@ WriteLiteral(" id=\"arrowkeys\"");
 
 WriteAttribute ("class", " class=\"", "\""
 
-#line 168 "NoteRazorView.cshtml"
+#line 171 "NoteRazorView.cshtml"
 , Tuple.Create<string,object,bool> ("", Model.GetDarkClass()
 
 #line default
@@ -658,7 +692,7 @@ WriteAttribute ("class", " class=\"", "\""
 );
 WriteAttribute ("title", " title=\"", "\""
 
-#line 168 "NoteRazorView.cshtml"
+#line 171 "NoteRazorView.cshtml"
                       , Tuple.Create<string,object,bool> ("", Model.Language["gui_arrow_key"]
 
 #line default
@@ -678,7 +712,7 @@ WriteLiteral(" viewBox=\'0 0 24 24\'");
 WriteLiteral(">");
 
 
-#line 169 "NoteRazorView.cshtml"
+#line 172 "NoteRazorView.cshtml"
                                                                                                                           WriteLiteral(Model.Icon.LoadIconSvgPath("arrow-left-bold-box-outline"));
 
 #line default
@@ -696,7 +730,7 @@ WriteLiteral(" viewBox=\'0 0 24 24\'");
 WriteLiteral(">");
 
 
-#line 170 "NoteRazorView.cshtml"
+#line 173 "NoteRazorView.cshtml"
                                                                                                                           WriteLiteral(Model.Icon.LoadIconSvgPath("arrow-right-bold-box-outline"));
 
 #line default
@@ -704,7 +738,7 @@ WriteLiteral(">");
 WriteLiteral("</svg>\r\n    </div>\r\n");
 
 
-#line 172 "NoteRazorView.cshtml"
+#line 175 "NoteRazorView.cshtml"
     }
 
 

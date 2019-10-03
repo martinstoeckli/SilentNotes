@@ -17,9 +17,9 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
     /// </summary>
     public class DownloadCloudRepositoryStep : SynchronizationStoryBoardStepBase
     {
-        private readonly ILanguageService _languageService;
-        private readonly IFeedbackService _feedbackService;
-        private readonly ICloudStorageClientFactory _cloudStorageClientFactory;
+        protected readonly ILanguageService _languageService;
+        protected readonly IFeedbackService _feedbackService;
+        protected readonly ICloudStorageClientFactory _cloudStorageClientFactory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DownloadCloudRepositoryStep"/> class.

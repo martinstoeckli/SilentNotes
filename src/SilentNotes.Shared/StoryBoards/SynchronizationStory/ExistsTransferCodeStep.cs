@@ -37,7 +37,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
             SettingsModel settings = _settingsService.LoadSettingsOrDefault();
 
             // Execute step
-            if (!string.IsNullOrWhiteSpace(settings.TransferCode))
+            if (settings.HasTransferCode)
             {
                 await StoryBoard.ContinueWith(SynchronizationStoryStepId.DecryptCloudRepository.ToInt());
             }

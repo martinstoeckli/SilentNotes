@@ -174,5 +174,21 @@ namespace SilentNotes.Models
         {
             return BouncyCastleAesGcm.CryptoAlgorithmName;
         }
+
+        /// <summary>
+        /// Gets a value indicating whether a cloud storage is set.
+        /// </summary>
+        public bool HasCloudStorageClient
+        {
+            get { return Credentials?.CloudStorageId != null; }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether at least one transfercode is set.
+        /// </summary>
+        public bool HasTransferCode
+        {
+            get { return !string.IsNullOrWhiteSpace(TransferCode); }
+        }
     }
 }

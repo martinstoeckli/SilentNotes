@@ -16,7 +16,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
     /// </summary>
     public class IsSameRepositoryStep : SynchronizationStoryBoardStepBase
     {
-        private readonly IRepositoryStorageService _repositoryStorageService;
+        protected readonly IRepositoryStorageService _repositoryStorageService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="IsSameRepositoryStep"/> class.

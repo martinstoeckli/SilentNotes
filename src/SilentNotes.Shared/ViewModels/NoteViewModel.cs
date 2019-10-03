@@ -11,6 +11,7 @@ using System.Windows.Input;
 using SilentNotes.Controllers;
 using SilentNotes.Models;
 using SilentNotes.Services;
+using SilentNotes.StoryBoards.PullPushStory;
 using SilentNotes.Workers;
 
 namespace SilentNotes.ViewModels
@@ -21,6 +22,7 @@ namespace SilentNotes.ViewModels
     public class NoteViewModel : ViewModelBase
     {
         private readonly IRepositoryStorageService _repositoryService;
+        private readonly IFeedbackService _feedbackService;
         private readonly ISettingsService _settingsService;
         private SearchableHtmlConverter _searchableTextConverter;
         private string _searchableContent;
@@ -36,14 +38,18 @@ namespace SilentNotes.ViewModels
             IBaseUrlService webviewBaseUrl,
             SearchableHtmlConverter searchableTextConverter,
             IRepositoryStorageService repositoryService,
+            IFeedbackService feedbackService,
             ISettingsService settingsService,
             NoteModel noteFromRepository)
             : base(navigationService, languageService, svgIconService, webviewBaseUrl)
         {
             _repositoryService = repositoryService;
+            _feedbackService = feedbackService;
             _settingsService = settingsService;
             _searchableTextConverter = searchableTextConverter;
             MarkSearchableContentAsDirty();
+            PushNoteToOnlineStorageCommand = new RelayCommand(PushNoteToOnlineStorage);
+            PullNoteFromOnlineStorageCommand = new RelayCommand(PullNoteFromOnlineStorage);
             GoBackCommand = new RelayCommand(GoBack);
 
             Model = noteFromRepository;
@@ -193,6 +199,52 @@ namespace SilentNotes.ViewModels
         {
             handled = true;
             GoBack();
+        }
+
+        /// <summary>
+        /// Gets the command which can overwrite the local note with the note from the online-storage.
+        /// </summary>
+        public ICommand PullNoteFromOnlineStorageCommand { get; private set; }
+
+        private async void PullNoteFromOnlineStorage()
+        {
+            _feedbackService.ShowBusyIndicator(true);
+            try
+            {
+                OnStoringUnsavedData();
+                PullPushStoryBoard storyBoard = new PullPushStoryBoard(Model.Id, PullPushDirection.PullFromServer);
+                await storyBoard.Start();
+            }
+            finally
+            {
+                _feedbackService.ShowBusyIndicator(false);
+            }
+
+            // Refresh view
+            if (Model.InRecyclingBin)
+                _navigationService.Navigate(ControllerNames.RecycleBin);
+            else
+                _navigationService.Navigate(ControllerNames.Note, ControllerParameters.NoteId, Model.Id.ToString());
+        }
+
+        /// <summary>
+        /// Gets the command which can overwrite the note of the online-storage with the locale note.
+        /// </summary>
+        public ICommand PushNoteToOnlineStorageCommand { get; private set; }
+
+        private async void PushNoteToOnlineStorage()
+        {
+            _feedbackService.ShowBusyIndicator(true);
+            try
+            {
+                OnStoringUnsavedData();
+                PullPushStoryBoard storyBoard = new PullPushStoryBoard(Model.Id, PullPushDirection.PushToServer);
+                await storyBoard.Start();
+            }
+            finally
+            {
+                _feedbackService.ShowBusyIndicator(false);
+            }
         }
 
         /// <summary>
