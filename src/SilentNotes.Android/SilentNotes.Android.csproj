@@ -54,7 +54,8 @@
     <AotAssemblies>false</AotAssemblies>
     <EnableLLVM>false</EnableLLVM>
     <BundleAssemblies>false</BundleAssemblies>
-    <AndroidSupportedAbis>armeabi-v7a;arm64-v8a</AndroidSupportedAbis>
+    <AndroidSupportedAbis>
+    </AndroidSupportedAbis>
     <AndroidLinkMode>SdkOnly</AndroidLinkMode>
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
     <EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>

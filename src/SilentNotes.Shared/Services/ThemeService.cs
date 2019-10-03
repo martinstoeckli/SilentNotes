@@ -13,6 +13,7 @@ namespace SilentNotes.Services
     /// </summary>
     public class ThemeService : IThemeService
     {
+        private const int DefaultTheme = 2;
         private readonly ISettingsService _settingsService;
 
         /// <summary>
@@ -57,15 +58,7 @@ namespace SilentNotes.Services
         public ThemeModel FindThemeOrDefault(string themeId)
         {
             ThemeModel result = Themes.Find(item => string.Equals(item.Id, themeId));
-            return (result != null) ? result : DefaultTheme;
-        }
-
-        /// <summary>
-        /// Gets the default theme.
-        /// </summary>
-        private ThemeModel DefaultTheme
-        {
-            get { return Themes[0]; }
+            return result ?? (result = Themes[DefaultTheme]);
         }
     }
 }
