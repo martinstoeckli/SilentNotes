@@ -74,7 +74,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
                     string messageNewCreated = _languageService.LoadTextFmt("transfer_code_created", formattedTransferCode);
                     string messageWriteDown = _languageService.LoadText("transfer_code_writedown");
                     if (StoryBoard.Mode.ShouldUseGui())
-                        await _feedbackService.ShowMessageAsync(messageNewCreated + Environment.NewLine + messageWriteDown, null);
+                        await _feedbackService.ShowMessageAsync(messageNewCreated + Environment.NewLine + messageWriteDown, null, MessageBoxButtons.Ok);
                 }
 
                 await StoryBoard.ContinueWith(SynchronizationStoryStepId.StopAndShowRepository.ToInt());

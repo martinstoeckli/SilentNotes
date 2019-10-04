@@ -57,19 +57,68 @@ namespace SilentNotes.UWP.Services
         }
 
         /// <inheritdoc/>
-        public async Task ShowMessageAsync(string message, string title)
+        public async Task<MessageBoxResult> ShowMessageAsync(string message, string title, MessageBoxButtons buttons)
         {
-            if (string.IsNullOrEmpty(title))
-            {
-                title = "SilentNotes";
-            }
+            ButtonArrangement arrangement = ButtonArrangement.Create(buttons, _languageService);
             ContentDialog dialog = new ContentDialog()
             {
                 Title = title,
                 Content = message,
-                CloseButtonText = _languageService.LoadText("ok"),
+                CloseButtonText = arrangement.CloseButtonText,
+                PrimaryButtonText = arrangement.PrimaryButtonText,
             };
-            await dialog.ShowAsync();
+
+            ContentDialogResult result = await dialog.ShowAsync();
+            return arrangement.ToMessageBoxResult(result);
+        }
+
+        private class ButtonArrangement
+        {
+            public static ButtonArrangement Create(MessageBoxButtons buttons, ILanguageService languageService)
+            {
+                ButtonArrangement result = new ButtonArrangement();
+                switch (buttons)
+                {
+                    case MessageBoxButtons.Ok:
+                        result.CloseButton = MessageBoxResult.Ok;
+                        result.CloseButtonText = languageService.LoadText("ok");
+                        break;
+                    case MessageBoxButtons.ContinueCancel:
+                        result.PrimaryButton = MessageBoxResult.Continue;
+                        result.PrimaryButtonText = languageService.LoadText("continue");
+                        result.CloseButton = MessageBoxResult.Cancel;
+                        result.CloseButtonText = languageService.LoadText("cancel");
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(buttons));
+                }
+
+                // The dialog won't accept null strings, turn them to empty strings
+                result.PrimaryButtonText = result.PrimaryButtonText ?? string.Empty;
+                result.CloseButtonText = result.CloseButtonText ?? string.Empty;
+                return result;
+            }
+
+            public MessageBoxResult PrimaryButton { get; set; }
+
+            public MessageBoxResult CloseButton { get; set; }
+
+            public string PrimaryButtonText { get; set; }
+
+            public string CloseButtonText { get; set; }
+
+            public MessageBoxResult ToMessageBoxResult(ContentDialogResult dialogResult)
+            {
+                switch (dialogResult)
+                {
+                    case ContentDialogResult.None:
+                        return CloseButton;
+                    case ContentDialogResult.Primary:
+                        return PrimaryButton;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(dialogResult));
+                }
+            }
         }
     }
 }

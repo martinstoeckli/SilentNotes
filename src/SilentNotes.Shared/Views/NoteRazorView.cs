@@ -585,24 +585,7 @@ WriteLiteral(" ");
 
 #line default
 #line hidden
-WriteLiteral("</div>\r\n                <hr>\r\n                <button");
-
-WriteLiteral(" class=\"dropdown-item\"");
-
-WriteLiteral(" onclick=\"bind(event);\"");
-
-WriteLiteral(" data-binding=\"PullNoteFromOnlineStorage\"");
-
-WriteLiteral(">");
-
-
-#line 159 "NoteRazorView.cshtml"
-                                                                                                         Write(Model.Language["note_pull_from_server"]);
-
-
-#line default
-#line hidden
-WriteLiteral("</button>\r\n                <button");
+WriteLiteral("</div>\r\n                <hr>\r\n                <div");
 
 WriteLiteral(" class=\"dropdown-item\"");
 
@@ -613,13 +596,46 @@ WriteLiteral(" data-binding=\"PushNoteToOnlineStorage\"");
 WriteLiteral(">");
 
 
-#line 160 "NoteRazorView.cshtml"
-                                                                                                       Write(Model.Language["note_push_to_server"]);
+#line 159 "NoteRazorView.cshtml"
+                                                                                                           WriteLiteral(Model.Icon["cloud-upload"]);
+
+#line default
+#line hidden
+WriteLiteral(" ");
+
+
+#line 159 "NoteRazorView.cshtml"
+                                                                                                                                                 Write(Model.Language["note_push_to_server"]);
 
 
 #line default
 #line hidden
-WriteLiteral("</button>\r\n            </div>\r\n        </div>\r\n    </nav>\r\n\r\n    <div");
+WriteLiteral("</div>\r\n                <div");
+
+WriteLiteral(" class=\"dropdown-item\"");
+
+WriteLiteral(" onclick=\"bind(event);\"");
+
+WriteLiteral(" data-binding=\"PullNoteFromOnlineStorage\"");
+
+WriteLiteral(">");
+
+
+#line 160 "NoteRazorView.cshtml"
+                                                                                                             WriteLiteral(Model.Icon["cloud-download"]);
+
+#line default
+#line hidden
+WriteLiteral(" ");
+
+
+#line 160 "NoteRazorView.cshtml"
+                                                                                                                                                     Write(Model.Language["note_pull_from_server"]);
+
+
+#line default
+#line hidden
+WriteLiteral("</div>\r\n            </div>\r\n        </div>\r\n    </nav>\r\n\r\n    <div");
 
 WriteLiteral(" id=\"content\"");
 

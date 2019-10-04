@@ -37,11 +37,39 @@ namespace SilentNotes.Services
         void ShowBusyIndicator(bool visible);
 
         /// <summary>
-        /// Displays information to the user. The dialog box will have only one button with the text "OK".
+        /// Displays information to the user.
         /// </summary>
         /// <param name="message">The message to be shown to the user.</param>
         /// <param name="title">The title of the dialog box. This may be null.</param>
-        /// <returns>A Task allowing this async method to be awaited.</returns>
-        Task ShowMessageAsync(string message, string title);
+        /// <param name="buttons">Determines the buttons to show, and the possible dialog results.</param>
+        /// <returns>The pressed button.</returns>
+        Task<MessageBoxResult> ShowMessageAsync(string message, string title, MessageBoxButtons buttons);
+    }
+
+    /// <summary>
+    /// Enumeration of all known button combinations for the messagebox.
+    /// </summary>
+    public enum MessageBoxButtons
+    {
+        /// <summary>Shows a simple ok button</summary>
+        Ok,
+
+        /// <summary>Shows a continue and a cancel button</summary>
+        ContinueCancel,
+    }
+
+    /// <summary>
+    /// Enumeration of all known buttons which can be pressed in the messagebox.
+    /// </summary>
+    public enum MessageBoxResult
+    {
+        /// <summary>The ok button was pressed.</summary>
+        Ok,
+
+        /// <summary>The cancel button was pressed.</summary>
+        Cancel,
+
+        /// <summary>The continue button was pressed.</summary>
+        Continue,
     }
 }

@@ -19,9 +19,22 @@ namespace SilentNotes.Services
         }
 
         /// <inheritdoc/>
-        public Task ShowMessageAsync(string message, string title)
+        public Task<MessageBoxResult> ShowMessageAsync(string message, string title, MessageBoxButtons buttons)
         {
-            return Task.CompletedTask;
+            MessageBoxResult result;
+            switch (buttons)
+            {
+                case MessageBoxButtons.Ok:
+                    result = MessageBoxResult.Ok;
+                    break;
+                case MessageBoxButtons.ContinueCancel:
+                    result = MessageBoxResult.Continue;
+                    break;
+                default:
+                    result = MessageBoxResult.Ok;
+                    break;
+            }
+            return Task.FromResult(result);
         }
 
         /// <inheritdoc/>

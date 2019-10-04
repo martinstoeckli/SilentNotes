@@ -3,6 +3,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using System;
 using System.Threading.Tasks;
 using Android.App;
 using Android.Views;
@@ -53,11 +54,57 @@ namespace SilentNotes.Android.Services
         }
 
         /// <inheritdoc/>
-        public async Task ShowMessageAsync(string message, string title)
+        public async Task<MessageBoxResult> ShowMessageAsync(string message, string title, MessageBoxButtons buttons)
         {
-            if (string.IsNullOrEmpty(title))
-                title = "SilentNotes";
-            await AlertDialogHelper.ShowAsync(_rootActivity, message, title, _languageService.LoadText("ok"), null);
+            ButtonArrangement arrangement = ButtonArrangement.Create(buttons, _languageService);
+            bool dialogResult = await AlertDialogHelper.ShowAsync(
+                _rootActivity,
+                message,
+                title,
+                arrangement.PositiveButtonText,
+                arrangement.NegativeButtonText);
+
+            return arrangement.ToMessageBoxResult(dialogResult);
+        }
+
+        private class ButtonArrangement
+        {
+            public static ButtonArrangement Create(MessageBoxButtons buttons, ILanguageService languageService)
+            {
+                ButtonArrangement result = new ButtonArrangement();
+                switch (buttons)
+                {
+                    case MessageBoxButtons.Ok:
+                        result.PositiveButton = MessageBoxResult.Ok;
+                        result.PositiveButtonText = languageService.LoadText("ok");
+                        break;
+                    case MessageBoxButtons.ContinueCancel:
+                        result.PositiveButton = MessageBoxResult.Continue;
+                        result.PositiveButtonText = languageService.LoadText("continue");
+                        result.NegativeButton = MessageBoxResult.Cancel;
+                        result.NegativeButtonText = languageService.LoadText("cancel");
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(buttons));
+                }
+                return result;
+            }
+
+            public MessageBoxResult PositiveButton { get; set; }
+
+            public MessageBoxResult NegativeButton { get; set; }
+
+            public string PositiveButtonText { get; set; }
+
+            public string NegativeButtonText { get; set; }
+
+            public MessageBoxResult ToMessageBoxResult(bool dialogResult)
+            {
+                if (dialogResult)
+                    return PositiveButton;
+                else
+                    return NegativeButton;
+            }
         }
     }
 }
