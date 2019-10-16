@@ -33,7 +33,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         public override async Task Run()
         {
             _repositoryStorageService.LoadRepositoryOrDefault(out NoteRepositoryModel localRepository);
-            NoteRepositoryModel cloudRepository = StoryBoard.LoadFromSession<NoteRepositoryModel>(SynchronizationStorySessionKey.CloudRepository.ToInt());
+            NoteRepositoryModel cloudRepository = StoryBoard.LoadFromSession<NoteRepositoryModel>(SynchronizationStorySessionKey.CloudRepository);
 
             if (localRepository.Id == cloudRepository.Id)
             {

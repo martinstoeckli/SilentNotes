@@ -4,8 +4,6 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
-using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using SilentNotes.Services;
 using SilentNotes.Workers;
 
@@ -98,19 +96,5 @@ namespace SilentNotes.StoryBoards.PullPushStory
 
         /// <summary>Use the local note and overwrite the note on the server</summary>
         PushToServer
-    }
-
-    /// <summary>Extension methods for the enumeration.</summary>
-    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass", Justification = "Extension methods.")]
-    public static class PullPushStorySessionKeyExtensions
-    {
-        /// <summary>Conversion from enum to int.</summary>
-        /// <param name="step">The step.</param>
-        /// <returns>Integer of the step.</returns>
-        [DebuggerStepThrough]
-        public static int ToInt(this PullPushStorySessionKey step)
-        {
-            return (int)step;
-        }
     }
 }

@@ -23,7 +23,7 @@ namespace SilentNotesTest.StoryBoards.PullPushStory
 
             Mock<IStoryBoard> storyBoard = new Mock<IStoryBoard>();
             storyBoard.
-                Setup(m => m.LoadFromSession<NoteRepositoryModel>(It.Is<int>(p => p == PullPushStorySessionKey.CloudRepository.ToInt()))).
+                Setup(m => m.LoadFromSession<NoteRepositoryModel>(It.Is<PullPushStorySessionKey>(p => p == PullPushStorySessionKey.CloudRepository))).
                 Returns(cloudRepositoryModel);
             Mock<ISettingsService> settingsService = new Mock<ISettingsService>();
             Mock<IRepositoryStorageService> repositoryStorageService = new Mock<IRepositoryStorageService>();
@@ -59,7 +59,7 @@ namespace SilentNotesTest.StoryBoards.PullPushStory
 
             Mock<IStoryBoard> storyBoard = new Mock<IStoryBoard>();
             storyBoard.
-                Setup(m => m.LoadFromSession<NoteRepositoryModel>(It.Is<int>(p => p == PullPushStorySessionKey.CloudRepository.ToInt()))).
+                Setup(m => m.LoadFromSession<NoteRepositoryModel>(It.Is<PullPushStorySessionKey>(p => p == PullPushStorySessionKey.CloudRepository))).
                 Returns(repositoryModel); // same as from repositoryStorageService
             Mock<ISettingsService> settingsService = new Mock<ISettingsService>();
             settingsService.
@@ -112,7 +112,7 @@ namespace SilentNotesTest.StoryBoards.PullPushStory
 
             Mock<IStoryBoard> storyBoard = new Mock<IStoryBoard>();
             storyBoard.
-                Setup(m => m.LoadFromSession<NoteRepositoryModel>(It.Is<int>(p => p == PullPushStorySessionKey.CloudRepository.ToInt()))).
+                Setup(m => m.LoadFromSession<NoteRepositoryModel>(It.Is<PullPushStorySessionKey>(p => p == PullPushStorySessionKey.CloudRepository))).
                 Returns(cloudRepositoryModel);
             Mock<ISettingsService> settingsService = new Mock<ISettingsService>();
             settingsService.
@@ -172,7 +172,7 @@ namespace SilentNotesTest.StoryBoards.PullPushStory
 
             Mock<IStoryBoard> storyBoard = new Mock<IStoryBoard>();
             storyBoard.
-                Setup(m => m.LoadFromSession<NoteRepositoryModel>(It.Is<int>(p => p == PullPushStorySessionKey.CloudRepository.ToInt()))).
+                Setup(m => m.LoadFromSession<NoteRepositoryModel>(It.Is<PullPushStorySessionKey>(p => p == PullPushStorySessionKey.CloudRepository))).
                 Returns(cloudRepositoryModel);
             Mock<ISettingsService> settingsService = new Mock<ISettingsService>();
             settingsService.

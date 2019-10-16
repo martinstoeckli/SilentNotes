@@ -36,7 +36,7 @@ namespace SilentNotes.StoryBoards.PullPushStory
         public override async Task Run()
         {
             _repositoryStorageService.LoadRepositoryOrDefault(out NoteRepositoryModel localRepository);
-            NoteRepositoryModel cloudRepository = StoryBoard.LoadFromSession<NoteRepositoryModel>(PullPushStorySessionKey.CloudRepository.ToInt());
+            NoteRepositoryModel cloudRepository = StoryBoard.LoadFromSession<NoteRepositoryModel>(PullPushStorySessionKey.CloudRepository);
 
             if (localRepository.Id == cloudRepository.Id)
             {

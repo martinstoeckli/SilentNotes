@@ -38,7 +38,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         {
             try
             {
-                NoteRepositoryModel cloudRepository = StoryBoard.LoadFromSession<NoteRepositoryModel>(SynchronizationStorySessionKey.CloudRepository.ToInt());
+                NoteRepositoryModel cloudRepository = StoryBoard.LoadFromSession<NoteRepositoryModel>(SynchronizationStorySessionKey.CloudRepository);
                 _repositoryStorageService.TrySaveRepository(cloudRepository);
                 await StoryBoard.ContinueWith(SynchronizationStoryStepId.StopAndShowRepository);
                 _feedbackService.ShowToast(_languageService["sync_success"]);

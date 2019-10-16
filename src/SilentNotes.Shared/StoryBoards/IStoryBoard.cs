@@ -49,13 +49,13 @@ namespace SilentNotes.StoryBoards
         /// </summary>
         /// <param name="key">The name of the user input.</param>
         /// <param name="value">The user input.</param>
-        void StoreToSession(int key, object value);
+        void StoreToSession(Enum key, object value);
 
         /// <summary>
         /// Removes user input from the session. If no such user input can be found, nothing happens.
         /// </summary>
         /// <param name="key">The name of the user input.</param>
-        void RemoveFromSession(int key);
+        void RemoveFromSession(Enum key);
 
         /// <summary>
         /// Tries to find a user input object, previously stored with <see cref="StoreToSession(int,object)"/>.
@@ -66,7 +66,7 @@ namespace SilentNotes.StoryBoards
         /// was not stored.</param>
         /// <returns>Returns true if the user input was found and is of the expected type,
         /// otherwise false.</returns>
-        bool TryLoadFromSession<T>(int key, out T value);
+        bool TryLoadFromSession<T>(Enum key, out T value);
 
         /// <summary>
         /// Loads a user input object, previously stored with <see cref="StoreToSession(int,object)"/>.
@@ -76,7 +76,7 @@ namespace SilentNotes.StoryBoards
         /// <returns>The stored user input.</returns>
         /// <exception cref="ArgumentOutOfRangeException">This exception is thrown if no such
         /// object is stored in the session.</exception>
-        T LoadFromSession<T>(int key);
+        T LoadFromSession<T>(Enum key);
 
         /// <summary>
         /// Can be called if the story ended, to clean up the session variables.

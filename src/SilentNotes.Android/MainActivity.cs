@@ -206,7 +206,7 @@ namespace SilentNotes.Android
         private bool IsStartedByOAuthRedirectIndent(IStoryBoardService storyBoardService)
         {
             return (storyBoardService.ActiveStory != null) &&
-                storyBoardService.ActiveStory.TryLoadFromSession(SynchronizationStorySessionKey.OauthRedirectUrl.ToInt(), out string _);
+                storyBoardService.ActiveStory.TryLoadFromSession(SynchronizationStorySessionKey.OauthRedirectUrl, out string _);
         }
 
         private class WebviewValueCallback : Java.Lang.Object, IValueCallback

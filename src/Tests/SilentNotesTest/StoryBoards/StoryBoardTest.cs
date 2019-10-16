@@ -1,5 +1,4 @@
-﻿using System;
-using Moq;
+﻿using Moq;
 using NUnit.Framework;
 using SilentNotes.StoryBoards;
 
@@ -46,15 +45,15 @@ namespace SilentNotesTest.StoryBoards
         public void LoadingFromSessionRequiresCorrectType()
         {
             IStoryBoard board = new StoryBoardBase();
-            board.StoreToSession(1, "Caramel");
+            board.StoreToSession(SessionId.Key1, "Caramel");
 
             // Correctly read a string from the session
-            bool res = board.TryLoadFromSession(1, out string stringValue);
+            bool res = board.TryLoadFromSession(SessionId.Key1, out string stringValue);
             Assert.IsTrue(res);
             Assert.AreEqual("Caramel", stringValue);
 
             // Wrongly read an int from the session
-            res = board.TryLoadFromSession(1, out int intValue);
+            res = board.TryLoadFromSession(SessionId.Key1, out int intValue);
             Assert.IsFalse(res);
         }
 
@@ -62,29 +61,49 @@ namespace SilentNotesTest.StoryBoards
         public void RemoveFromSessionRemovesExistingKey()
         {
             IStoryBoard board = new StoryBoardBase();
-            board.StoreToSession(1, "Caramel");
-            bool result = board.TryLoadFromSession(1, out string value);
+            board.StoreToSession(SessionId.Key1, "Caramel");
+            bool result = board.TryLoadFromSession(SessionId.Key1, out string value);
             Assert.IsTrue(result);
             Assert.AreEqual("Caramel", value);
 
-            board.RemoveFromSession(1);
-            result = board.TryLoadFromSession(1, out value);
+            board.RemoveFromSession(SessionId.Key1);
+            result = board.TryLoadFromSession(SessionId.Key1, out value);
             Assert.IsFalse(result);
+        }
+
+        [Test]
+        public void WrongKeyDoesNotFindAnything()
+        {
+            IStoryBoard board = new StoryBoardBase();
+            board.StoreToSession(SessionId.Key1, "Caramel");
+
+            // Correctly read a string from the session
+            bool res = board.TryLoadFromSession(SessionId.Key2, out string _);
+            Assert.IsFalse(res);
+
+            res = board.TryLoadFromSession(StepId.Step1, out string _);
+            Assert.IsFalse(res);
         }
 
         [Test]
         public void RemoveFromSessionDoesNotThrowForUnexistingKeys()
         {
             IStoryBoard board = new StoryBoardBase();
-            board.StoreToSession(1, "Caramel");
+            board.StoreToSession(SessionId.Key1, "Caramel");
 
-            Assert.DoesNotThrow(() => board.RemoveFromSession(2));
+            Assert.DoesNotThrow(() => board.RemoveFromSession(SessionId.Key2));
         }
 
         private enum StepId
         {
             Step1,
             Step2,
+        }
+
+        private enum SessionId
+        {
+            Key1,
+            Key2,
         }
     }
 }

@@ -49,7 +49,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         {
             if (StoryBoard.Mode.ShouldUseGui())
             {
-                SerializeableCloudStorageCredentials credentials = StoryBoard.LoadFromSession<SerializeableCloudStorageCredentials>(SynchronizationStorySessionKey.CloudStorageCredentials.ToInt());
+                SerializeableCloudStorageCredentials credentials = StoryBoard.LoadFromSession<SerializeableCloudStorageCredentials>(SynchronizationStorySessionKey.CloudStorageCredentials);
                 ICloudStorageClient cloudStorageClient = _cloudStorageClientFactory.GetOrCreate(credentials.CloudStorageId);
                 if (cloudStorageClient is IOAuth2CloudStorageClient oauthStorageClient)
                 {
@@ -59,8 +59,8 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
                     // Open OAuth2 login page in external browser
                     string oauthState = CryptoUtils.GenerateRandomBase62String(16, _randomSource);
                     string oauthCodeVerifier = CryptoUtils.GenerateRandomBase62String(64, _randomSource);
-                    StoryBoard.StoreToSession(SynchronizationStorySessionKey.OauthState.ToInt(), oauthState);
-                    StoryBoard.StoreToSession(SynchronizationStorySessionKey.OauthCodeVerifier.ToInt(), oauthCodeVerifier);
+                    StoryBoard.StoreToSession(SynchronizationStorySessionKey.OauthState, oauthState);
+                    StoryBoard.StoreToSession(SynchronizationStorySessionKey.OauthCodeVerifier, oauthCodeVerifier);
 
                     string url = oauthStorageClient.BuildAuthorizationRequestUrl(oauthState, oauthCodeVerifier);
                     _nativeBrowserService.OpenWebsiteInApp(url);

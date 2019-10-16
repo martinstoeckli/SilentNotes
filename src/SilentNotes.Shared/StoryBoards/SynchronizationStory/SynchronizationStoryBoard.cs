@@ -5,8 +5,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using SilentNotes.Services;
 using SilentNotes.Workers;
 
@@ -124,7 +122,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         public SynchronizationStoryBoard(SynchronizationStoryBoard otherStoryBoard)
             : this(otherStoryBoard.Mode)
         {
-            _session = new Dictionary<int, object>(otherStoryBoard._session);
+            _session = new Dictionary<Enum, object>(otherStoryBoard._session);
         }
 
         /// <summary>
@@ -171,19 +169,5 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         OauthState,
         OauthCodeVerifier,
         OauthRedirectUrl,
-    }
-
-    /// <summary>Extension methods for the enumeration.</summary>
-    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass", Justification = "Extension methods.")]
-    public static class SynchronisationStorySessionKeyExtensions
-    {
-        /// <summary>Conversion from enum to int.</summary>
-        /// <param name="step">The step.</param>
-        /// <returns>Integer of the step.</returns>
-        [DebuggerStepThrough]
-        public static int ToInt(this SynchronizationStorySessionKey step)
-        {
-            return (int)step;
-        }
     }
 }

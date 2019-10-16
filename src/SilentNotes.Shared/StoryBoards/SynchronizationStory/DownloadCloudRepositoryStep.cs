@@ -41,17 +41,17 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         /// <inheritdoc/>
         public override async Task Run()
         {
-            SerializeableCloudStorageCredentials credentials = StoryBoard.LoadFromSession<SerializeableCloudStorageCredentials>(SynchronizationStorySessionKey.CloudStorageCredentials.ToInt());
+            SerializeableCloudStorageCredentials credentials = StoryBoard.LoadFromSession<SerializeableCloudStorageCredentials>(SynchronizationStorySessionKey.CloudStorageCredentials);
             ICloudStorageClient cloudStorageClient = _cloudStorageClientFactory.GetOrCreate(credentials.CloudStorageId);
 
             try
             {
                 // The repository can be cached for this story, download the repository only once.
                 byte[] binaryCloudRepository;
-                if (!StoryBoard.TryLoadFromSession(SynchronizationStorySessionKey.BinaryCloudRepository.ToInt(), out binaryCloudRepository))
+                if (!StoryBoard.TryLoadFromSession(SynchronizationStorySessionKey.BinaryCloudRepository, out binaryCloudRepository))
                 {
                     binaryCloudRepository = await cloudStorageClient.DownloadFileAsync(Config.RepositoryFileName, credentials);
-                    StoryBoard.StoreToSession(SynchronizationStorySessionKey.BinaryCloudRepository.ToInt(), binaryCloudRepository);
+                    StoryBoard.StoreToSession(SynchronizationStorySessionKey.BinaryCloudRepository, binaryCloudRepository);
                 }
                 await StoryBoard.ContinueWith(SynchronizationStoryStepId.ExistsTransferCode);
             }

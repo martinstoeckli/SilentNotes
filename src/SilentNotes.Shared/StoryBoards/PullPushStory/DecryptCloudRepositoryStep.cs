@@ -36,7 +36,7 @@ namespace SilentNotes.StoryBoards.PullPushStory
             try
             {
                 SettingsModel settings = _settingsService.LoadSettingsOrDefault();
-                byte[] binaryCloudRepository = StoryBoard.LoadFromSession<byte[]>(PullPushStorySessionKey.BinaryCloudRepository.ToInt());
+                byte[] binaryCloudRepository = StoryBoard.LoadFromSession<byte[]>(PullPushStorySessionKey.BinaryCloudRepository);
 
                 // Try to decode with all possible transfer codes
                 bool successfullyDecryptedRepository = TryDecryptWithAllTransferCodes(
@@ -53,7 +53,7 @@ namespace SilentNotes.StoryBoards.PullPushStory
                     NoteRepositoryModel cloudRepository = XmlUtils.DeserializeFromXmlDocument<NoteRepositoryModel>(cloudRepositoryXml);
 
                     // Continue with next step
-                    StoryBoard.StoreToSession(PullPushStorySessionKey.CloudRepository.ToInt(), cloudRepository);
+                    StoryBoard.StoreToSession(PullPushStorySessionKey.CloudRepository, cloudRepository);
                     await StoryBoard.ContinueWith(PullPushStoryStepId.IsSameRepository);
                 }
                 else
