@@ -156,7 +156,7 @@ namespace SilentNotes.UWP
             if (storyBoardService.ActiveStory is SynchronizationStoryBoard)
             {
                 storyBoardService.ActiveStory.StoreToSession(SynchronizationStorySessionKey.OauthRedirectUrl.ToInt(), url);
-                storyBoardService.ActiveStory.ContinueWith(SynchronizationStoryStepId.HandleOAuthRedirect.ToInt());
+                storyBoardService.ActiveStory.ContinueWith(SynchronizationStoryStepId.HandleOAuthRedirect);
             }
             return true;
         }

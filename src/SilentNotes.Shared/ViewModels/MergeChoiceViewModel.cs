@@ -45,7 +45,7 @@ namespace SilentNotes.ViewModels
 
         private void UseMergedRepository()
         {
-            _storyBoardService.ActiveStory?.ContinueWith(SynchronizationStoryStepId.StoreMergedRepositoryAndQuit.ToInt());
+            _storyBoardService.ActiveStory?.ContinueWith(SynchronizationStoryStepId.StoreMergedRepositoryAndQuit);
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace SilentNotes.ViewModels
 
         private void UseCloudRepository()
         {
-            _storyBoardService.ActiveStory?.ContinueWith(SynchronizationStoryStepId.StoreCloudRepositoryToDeviceAndQuit.ToInt());
+            _storyBoardService.ActiveStory?.ContinueWith(SynchronizationStoryStepId.StoreCloudRepositoryToDeviceAndQuit);
         }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace SilentNotes.ViewModels
 
         private void UseLocalRepository()
         {
-            _storyBoardService.ActiveStory?.ContinueWith(SynchronizationStoryStepId.StoreLocalRepositoryToCloudAndQuit.ToInt());
+            _storyBoardService.ActiveStory?.ContinueWith(SynchronizationStoryStepId.StoreLocalRepositoryToCloudAndQuit);
         }
 
         /// <summary>
@@ -92,7 +92,7 @@ namespace SilentNotes.ViewModels
 
         private void Cancel()
         {
-            _storyBoardService.ActiveStory?.ContinueWith(SynchronizationStoryStepId.StopAndShowRepository.ToInt());
+            _storyBoardService.ActiveStory?.ContinueWith(SynchronizationStoryStepId.StopAndShowRepository);
         }
     }
 }

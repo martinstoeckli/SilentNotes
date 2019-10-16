@@ -26,7 +26,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         /// </summary>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1611:ElementParametersMustBeDocumented", Justification = "Dependency injection")]
         public DownloadCloudRepositoryStep(
-            int stepId,
+            Enum stepId,
             IStoryBoard storyBoard,
             ILanguageService languageService,
             IFeedbackService feedbackService,
@@ -53,7 +53,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
                     binaryCloudRepository = await cloudStorageClient.DownloadFileAsync(Config.RepositoryFileName, credentials);
                     StoryBoard.StoreToSession(SynchronizationStorySessionKey.BinaryCloudRepository.ToInt(), binaryCloudRepository);
                 }
-                await StoryBoard.ContinueWith(SynchronizationStoryStepId.ExistsTransferCode.ToInt());
+                await StoryBoard.ContinueWith(SynchronizationStoryStepId.ExistsTransferCode);
             }
             catch (Exception ex)
             {

@@ -20,7 +20,7 @@ namespace SilentNotes.StoryBoards.PullPushStory
     {
         /// <inheritdoc/>
         public DecryptCloudRepositoryStep(
-            int stepId,
+            Enum stepId,
             IStoryBoard storyBoard,
             ILanguageService languageService,
             IFeedbackService feedbackService,
@@ -54,7 +54,7 @@ namespace SilentNotes.StoryBoards.PullPushStory
 
                     // Continue with next step
                     StoryBoard.StoreToSession(PullPushStorySessionKey.CloudRepository.ToInt(), cloudRepository);
-                    await StoryBoard.ContinueWith(PullPushStoryStepId.IsSameRepository.ToInt());
+                    await StoryBoard.ContinueWith(PullPushStoryStepId.IsSameRepository);
                 }
                 else
                 {

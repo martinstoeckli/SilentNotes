@@ -58,7 +58,7 @@ namespace SilentNotes.ViewModels
             if (codeIsValid)
             {
                 _storyBoardService.ActiveStory?.StoreToSession(SynchronizationStorySessionKey.UserEnteredTransferCode.ToInt(), sanitizedCode);
-                await (_storyBoardService.ActiveStory?.ContinueWith(SynchronizationStoryStepId.DecryptCloudRepository.ToInt())
+                await (_storyBoardService.ActiveStory?.ContinueWith(SynchronizationStoryStepId.DecryptCloudRepository)
                     ?? Task.CompletedTask);
             }
             else
@@ -91,7 +91,7 @@ namespace SilentNotes.ViewModels
 
         private void Cancel()
         {
-            _storyBoardService.ActiveStory?.ContinueWith(SynchronizationStoryStepId.StopAndShowRepository.ToInt());
+            _storyBoardService.ActiveStory?.ContinueWith(SynchronizationStoryStepId.StopAndShowRepository);
         }
     }
 }

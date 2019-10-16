@@ -31,7 +31,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         /// </summary>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1611:ElementParametersMustBeDocumented", Justification = "Dependency injection")]
         public DecryptCloudRepositoryStep(
-            int stepId,
+            Enum stepId,
             IStoryBoard storyBoard,
             ILanguageService languageService,
             IFeedbackService feedbackService,
@@ -69,7 +69,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
 
                     // Continue with next step
                     StoryBoard.StoreToSession(SynchronizationStorySessionKey.CloudRepository.ToInt(), cloudRepository);
-                    await StoryBoard.ContinueWith(SynchronizationStoryStepId.IsSameRepository.ToInt());
+                    await StoryBoard.ContinueWith(SynchronizationStoryStepId.IsSameRepository);
                 }
                 else
                 {
@@ -82,7 +82,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
                     else
                     {
                         // Open transfercode page
-                        await StoryBoard.ContinueWith(SynchronizationStoryStepId.ShowTransferCode.ToInt());
+                        await StoryBoard.ContinueWith(SynchronizationStoryStepId.ShowTransferCode);
                     }
                 }
             }

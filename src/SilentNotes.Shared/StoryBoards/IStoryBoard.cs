@@ -42,7 +42,7 @@ namespace SilentNotes.StoryBoards
         /// <param name="stepId">The next expected step. Passing the expected step allows to
         /// go forwards and backwards in the story.</param>
         /// <returns>An asynchronous task.</returns>
-        Task ContinueWith(int stepId);
+        Task ContinueWith(Enum stepId);
 
         /// <summary>
         /// Adds user input, required by the story.

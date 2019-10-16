@@ -57,7 +57,7 @@ namespace SilentNotes.ViewModels
 
         private async void GoBack()
         {
-            await (_storyBoardService.ActiveStory?.ContinueWith(SynchronizationStoryStepId.ShowCloudStorageChoice.ToInt())
+            await (_storyBoardService.ActiveStory?.ContinueWith(SynchronizationStoryStepId.ShowCloudStorageChoice)
                 ?? Task.CompletedTask);
         }
 
@@ -75,7 +75,7 @@ namespace SilentNotes.ViewModels
 
         private void Cancel()
         {
-            _storyBoardService.ActiveStory?.ContinueWith(SynchronizationStoryStepId.StopAndShowRepository.ToInt());
+            _storyBoardService.ActiveStory?.ContinueWith(SynchronizationStoryStepId.StopAndShowRepository);
         }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace SilentNotes.ViewModels
         {
             _feedbackService.ShowBusyIndicator(true);
             _storyBoardService.ActiveStory?.StoreToSession(SynchronizationStorySessionKey.CloudStorageCredentials.ToInt(), Model);
-            await (_storyBoardService.ActiveStory?.ContinueWith(SynchronizationStoryStepId.ExistsCloudRepository.ToInt())
+            await (_storyBoardService.ActiveStory?.ContinueWith(SynchronizationStoryStepId.ExistsCloudRepository)
                    ?? Task.CompletedTask);
         }
 

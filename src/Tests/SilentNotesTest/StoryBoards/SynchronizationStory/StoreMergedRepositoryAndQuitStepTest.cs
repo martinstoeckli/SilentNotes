@@ -30,7 +30,7 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
 
             // Run step
             var step = new StoreMergedRepositoryAndQuitStep(
-                SynchronizationStoryStepId.StoreLocalRepositoryToCloudAndQuit.ToInt(),
+                SynchronizationStoryStepId.StoreLocalRepositoryToCloudAndQuit,
                 storyBoard.Object,
                 CommonMocksAndStubs.LanguageService(),
                 CommonMocksAndStubs.FeedbackService(),
@@ -47,7 +47,7 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
             cloudStorageClient.Verify(m => m.UploadFileAsync(It.IsAny<string>(), It.IsAny<byte[]>(), It.IsAny<CloudStorageCredentials>()), Times.Never);
 
             // Next step is called
-            storyBoard.Verify(m => m.ContinueWith(It.Is<int>(x => x == SynchronizationStoryStepId.StopAndShowRepository.ToInt())), Times.Once);
+            storyBoard.Verify(m => m.ContinueWith(It.Is<SynchronizationStoryStepId>(x => x == SynchronizationStoryStepId.StopAndShowRepository)), Times.Once);
         }
 
         [Test]
@@ -78,7 +78,7 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
 
             // Run step
             var step = new StoreMergedRepositoryAndQuitStep(
-                SynchronizationStoryStepId.StoreLocalRepositoryToCloudAndQuit.ToInt(),
+                SynchronizationStoryStepId.StoreLocalRepositoryToCloudAndQuit,
                 storyBoard.Object,
                 CommonMocksAndStubs.LanguageService(),
                 CommonMocksAndStubs.FeedbackService(),
@@ -95,7 +95,7 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
             cloudStorageClient.Verify(m => m.UploadFileAsync(It.IsAny<string>(), It.IsAny<byte[]>(), It.IsAny<CloudStorageCredentials>()), Times.Once);
 
             // Next step is called
-            storyBoard.Verify(m => m.ContinueWith(It.Is<int>(x => x == SynchronizationStoryStepId.StopAndShowRepository.ToInt())), Times.Once);
+            storyBoard.Verify(m => m.ContinueWith(It.Is<SynchronizationStoryStepId>(x => x == SynchronizationStoryStepId.StopAndShowRepository)), Times.Once);
         }
 
         private static SettingsModel CreateSettingsModel(string transferCode)

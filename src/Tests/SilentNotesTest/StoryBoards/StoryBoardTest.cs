@@ -28,15 +28,15 @@ namespace SilentNotesTest.StoryBoards
         public void ContinuesWithRunsCorrectStep()
         {
             Mock<IStoryBoardStep> step1 = new Mock<IStoryBoardStep>();
-            step1.SetupGet(x => x.Id).Returns(1);
+            step1.SetupGet(x => x.Id).Returns(StepId.Step1);
             Mock<IStoryBoardStep> step2 = new Mock<IStoryBoardStep>();
-            step2.SetupGet(x => x.Id).Returns(2);
+            step2.SetupGet(x => x.Id).Returns(StepId.Step2);
 
             IStoryBoard board = new StoryBoardBase();
             board.RegisterStep(step1.Object);
             board.RegisterStep(step2.Object);
 
-            board.ContinueWith(2);
+            board.ContinueWith(StepId.Step2);
 
             step1.Verify(x => x.Run(), Times.Never);
             step2.Verify(x => x.Run(), Times.Once);
@@ -79,6 +79,12 @@ namespace SilentNotesTest.StoryBoards
             board.StoreToSession(1, "Caramel");
 
             Assert.DoesNotThrow(() => board.RemoveFromSession(2));
+        }
+
+        private enum StepId
+        {
+            Step1,
+            Step2,
         }
     }
 }

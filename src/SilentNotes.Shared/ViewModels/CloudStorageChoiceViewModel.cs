@@ -77,7 +77,7 @@ namespace SilentNotes.ViewModels
         {
             SerializeableCloudStorageCredentials credentials = new SerializeableCloudStorageCredentials { CloudStorageId = cloudStorageId };
             _storyBoardService.ActiveStory?.StoreToSession(SynchronizationStorySessionKey.CloudStorageCredentials.ToInt(), credentials);
-            await (_storyBoardService.ActiveStory?.ContinueWith(SynchronizationStoryStepId.ShowCloudStorageAccount.ToInt())
+            await (_storyBoardService.ActiveStory?.ContinueWith(SynchronizationStoryStepId.ShowCloudStorageAccount)
                 ?? Task.CompletedTask);
         }
 
@@ -88,7 +88,7 @@ namespace SilentNotes.ViewModels
 
         private async void GoBack()
         {
-            await (_storyBoardService.ActiveStory?.ContinueWith(SynchronizationStoryStepId.StopAndShowRepository.ToInt())
+            await (_storyBoardService.ActiveStory?.ContinueWith(SynchronizationStoryStepId.StopAndShowRepository)
                 ?? Task.CompletedTask);
         }
 

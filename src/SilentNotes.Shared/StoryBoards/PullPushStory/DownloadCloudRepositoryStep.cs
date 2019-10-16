@@ -20,7 +20,7 @@ namespace SilentNotes.StoryBoards.PullPushStory
 
         /// <inheritdoc/>
         public DownloadCloudRepositoryStep(
-            int stepId,
+            Enum stepId,
             IStoryBoard storyBoard,
             ILanguageService languageService,
             IFeedbackService feedbackService,
@@ -42,7 +42,7 @@ namespace SilentNotes.StoryBoards.PullPushStory
                 // The repository can be cached for this story, download the repository only once.
                 byte[] binaryCloudRepository = await cloudStorageClient.DownloadFileAsync(Config.RepositoryFileName, credentials);
                 StoryBoard.StoreToSession(PullPushStorySessionKey.BinaryCloudRepository.ToInt(), binaryCloudRepository);
-                await StoryBoard.ContinueWith(PullPushStoryStepId.DecryptCloudRepository.ToInt());
+                await StoryBoard.ContinueWith(PullPushStoryStepId.DecryptCloudRepository);
             }
             catch (Exception ex)
             {

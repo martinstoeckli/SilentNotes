@@ -28,7 +28,7 @@ namespace SilentNotesTest.StoryBoards.PullPushStory
 
             // Run step
             var step = new ExistsCloudRepositoryStep(
-                PullPushStoryStepId.ExistsCloudRepository.ToInt(),
+                PullPushStoryStepId.ExistsCloudRepository,
                 storyBoard.Object,
                 CommonMocksAndStubs.LanguageService(),
                 CommonMocksAndStubs.FeedbackService(),
@@ -40,7 +40,7 @@ namespace SilentNotesTest.StoryBoards.PullPushStory
             settingsService.Verify(m => m.TrySaveSettingsToLocalDevice(It.IsAny<SettingsModel>()), Times.Never);
 
             // Next step is called
-            storyBoard.Verify(m => m.ContinueWith(It.Is<int>(x => x == PullPushStoryStepId.DownloadCloudRepository.ToInt())), Times.Once);
+            storyBoard.Verify(m => m.ContinueWith(It.Is<PullPushStoryStepId>(x => x == PullPushStoryStepId.DownloadCloudRepository)), Times.Once);
         }
 
         [Test]
@@ -60,7 +60,7 @@ namespace SilentNotesTest.StoryBoards.PullPushStory
 
             // Run step with missing transfercode
             var step = new ExistsCloudRepositoryStep(
-                PullPushStoryStepId.ExistsCloudRepository.ToInt(),
+                PullPushStoryStepId.ExistsCloudRepository,
                 storyBoard.Object,
                 CommonMocksAndStubs.LanguageService(),
                 CommonMocksAndStubs.FeedbackService(),
@@ -69,7 +69,7 @@ namespace SilentNotesTest.StoryBoards.PullPushStory
             Assert.DoesNotThrowAsync(step.Run);
 
             // Next step is called
-            storyBoard.Verify(m => m.ContinueWith(It.Is<int>(x => x == PullPushStoryStepId.DownloadCloudRepository.ToInt())), Times.Never);
+            storyBoard.Verify(m => m.ContinueWith(It.Is<PullPushStoryStepId>(x => x == PullPushStoryStepId.DownloadCloudRepository)), Times.Never);
 
             // Run step with missing storage client
             settingsModel.TransferCode = "abc";
@@ -77,7 +77,7 @@ namespace SilentNotesTest.StoryBoards.PullPushStory
             Assert.DoesNotThrowAsync(step.Run);
 
             // Next step is called
-            storyBoard.Verify(m => m.ContinueWith(It.Is<int>(x => x == PullPushStoryStepId.DownloadCloudRepository.ToInt())), Times.Never);
+            storyBoard.Verify(m => m.ContinueWith(It.Is<PullPushStoryStepId>(x => x == PullPushStoryStepId.DownloadCloudRepository)), Times.Never);
         }
     }
 }

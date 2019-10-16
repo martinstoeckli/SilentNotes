@@ -31,7 +31,7 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
 
             // Run step
             var step = new ExistsCloudRepositoryStep(
-                SynchronizationStoryStepId.ExistsCloudRepository.ToInt(),
+                SynchronizationStoryStepId.ExistsCloudRepository,
                 storyBoard.Object,
                 CommonMocksAndStubs.LanguageService(),
                 CommonMocksAndStubs.FeedbackService(),
@@ -43,7 +43,7 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
             settingsService.Verify(m => m.TrySaveSettingsToLocalDevice(It.Is<SettingsModel>(s => s.Credentials == credentialsFromSession)), Times.Once);
 
             // Next step is called
-            storyBoard.Verify(m => m.ContinueWith(It.Is<int>(x => x == SynchronizationStoryStepId.DownloadCloudRepository.ToInt())), Times.Once);
+            storyBoard.Verify(m => m.ContinueWith(It.Is<SynchronizationStoryStepId>(x => x == SynchronizationStoryStepId.DownloadCloudRepository)), Times.Once);
         }
 
         [Test]
@@ -66,7 +66,7 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
 
             // Run step
             var step = new ExistsCloudRepositoryStep(
-                SynchronizationStoryStepId.ExistsCloudRepository.ToInt(),
+                SynchronizationStoryStepId.ExistsCloudRepository,
                 storyBoard.Object,
                 CommonMocksAndStubs.LanguageService(),
                 CommonMocksAndStubs.FeedbackService(),
@@ -78,7 +78,7 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
             settingsService.Verify(m => m.TrySaveSettingsToLocalDevice(It.IsAny<SettingsModel>()), Times.Never);
 
             // Next step is called
-            storyBoard.Verify(m => m.ContinueWith(It.Is<int>(x => x == SynchronizationStoryStepId.StoreLocalRepositoryToCloudAndQuit.ToInt())), Times.Once);
+            storyBoard.Verify(m => m.ContinueWith(It.Is<SynchronizationStoryStepId>(x => x == SynchronizationStoryStepId.StoreLocalRepositoryToCloudAndQuit)), Times.Once);
         }
     }
 }

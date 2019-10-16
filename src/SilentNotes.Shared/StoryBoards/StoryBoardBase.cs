@@ -48,7 +48,7 @@ namespace SilentNotes.StoryBoards
         }
 
         /// <inheritdoc/>
-        public async Task ContinueWith(int stepId)
+        public async Task ContinueWith(Enum stepId)
         {
             IStoryBoardStep step = FindRegisteredStep(stepId);
             if (step != null)
@@ -102,9 +102,9 @@ namespace SilentNotes.StoryBoards
         /// </summary>
         /// <param name="stepId">Id of the step to search for.</param>
         /// <returns>The found step, or null if no such step could be found.</returns>
-        protected IStoryBoardStep FindRegisteredStep(int stepId)
+        protected IStoryBoardStep FindRegisteredStep(Enum stepId)
         {
-            return _steps.Find(step => stepId == step.Id);
+            return _steps.Find(step => step.Id.Equals(stepId));
         }
     }
 }

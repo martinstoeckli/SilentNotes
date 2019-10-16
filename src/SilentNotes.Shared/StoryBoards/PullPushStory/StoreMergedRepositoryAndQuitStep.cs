@@ -22,7 +22,7 @@ namespace SilentNotes.StoryBoards.PullPushStory
 
         /// <inheritdoc/>
         public StoreMergedRepositoryAndQuitStep(
-            int stepId,
+            Enum stepId,
             IStoryBoard storyBoard,
             Guid noteId,
             PullPushDirection direction,

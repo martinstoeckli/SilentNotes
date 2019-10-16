@@ -32,60 +32,60 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
                 : new DummyNavigationService();
 
             RegisterStep(new IsCloudServiceSetStep(
-                SynchronizationStoryStepId.IsCloudServiceSet.ToInt(), this, Ioc.GetOrCreate<ISettingsService>()));
+                SynchronizationStoryStepId.IsCloudServiceSet, this, Ioc.GetOrCreate<ISettingsService>()));
             RegisterStep(new ShowFirstTimeDialogStep(
-                SynchronizationStoryStepId.ShowFirstTimeDialog.ToInt(), this, navigationService));
+                SynchronizationStoryStepId.ShowFirstTimeDialog, this, navigationService));
             RegisterStep(new ShowCloudStorageChoiceStep(
-                SynchronizationStoryStepId.ShowCloudStorageChoice.ToInt(), this, navigationService));
+                SynchronizationStoryStepId.ShowCloudStorageChoice, this, navigationService));
             RegisterStep(new ShowCloudStorageAccountStep(
-                SynchronizationStoryStepId.ShowCloudStorageAccount.ToInt(),
+                SynchronizationStoryStepId.ShowCloudStorageAccount,
                 this,
                 navigationService,
                 Ioc.GetOrCreate<INativeBrowserService>(),
                 Ioc.GetOrCreate<ICryptoRandomService>(),
                 Ioc.GetOrCreate<ICloudStorageClientFactory>()));
             RegisterStep(new HandleOAuthRedirectStep(
-                SynchronizationStoryStepId.HandleOAuthRedirect.ToInt(),
+                SynchronizationStoryStepId.HandleOAuthRedirect,
                 this,
                 Ioc.GetOrCreate<ILanguageService>(),
                 feedbackService,
                 Ioc.GetOrCreate<ICloudStorageClientFactory>()));
             RegisterStep(new ExistsCloudRepositoryStep(
-                SynchronizationStoryStepId.ExistsCloudRepository.ToInt(),
+                SynchronizationStoryStepId.ExistsCloudRepository,
                 this,
                 Ioc.GetOrCreate<ILanguageService>(),
                 feedbackService,
                 Ioc.GetOrCreate<ISettingsService>(),
                 Ioc.GetOrCreate<ICloudStorageClientFactory>()));
             RegisterStep(new DownloadCloudRepositoryStep(
-                SynchronizationStoryStepId.DownloadCloudRepository.ToInt(),
+                SynchronizationStoryStepId.DownloadCloudRepository,
                 this,
                 Ioc.GetOrCreate<ILanguageService>(),
                 feedbackService,
                 Ioc.GetOrCreate<ICloudStorageClientFactory>()));
             RegisterStep(new ExistsTransferCodeStep(
-                SynchronizationStoryStepId.ExistsTransferCode.ToInt(), this, Ioc.GetOrCreate<ISettingsService>()));
+                SynchronizationStoryStepId.ExistsTransferCode, this, Ioc.GetOrCreate<ISettingsService>()));
             RegisterStep(new ShowTransferCodeStep(
-                SynchronizationStoryStepId.ShowTransferCode.ToInt(),
+                SynchronizationStoryStepId.ShowTransferCode,
                 this,
                 navigationService,
                 feedbackService));
             RegisterStep(new DecryptCloudRepositoryStep(
-                SynchronizationStoryStepId.DecryptCloudRepository.ToInt(),
+                SynchronizationStoryStepId.DecryptCloudRepository,
                 this,
                 Ioc.GetOrCreate<ILanguageService>(),
                 feedbackService,
                 Ioc.GetOrCreate<ISettingsService>(),
                 Ioc.GetOrCreate<INoteRepositoryUpdater>()));
             RegisterStep(new IsSameRepositoryStep(
-                SynchronizationStoryStepId.IsSameRepository.ToInt(), this, Ioc.GetOrCreate<IRepositoryStorageService>()));
+                SynchronizationStoryStepId.IsSameRepository, this, Ioc.GetOrCreate<IRepositoryStorageService>()));
             RegisterStep(new ShowMergeChoiceStep(
-                SynchronizationStoryStepId.ShowMergeChoice.ToInt(),
+                SynchronizationStoryStepId.ShowMergeChoice,
                 this,
                 navigationService,
                 feedbackService));
             RegisterStep(new StoreMergedRepositoryAndQuitStep(
-                SynchronizationStoryStepId.StoreMergedRepositoryAndQuit.ToInt(),
+                SynchronizationStoryStepId.StoreMergedRepositoryAndQuit,
                 this,
                 Ioc.GetOrCreate<ILanguageService>(),
                 feedbackService,
@@ -94,7 +94,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
                 Ioc.GetOrCreate<IRepositoryStorageService>(),
                 Ioc.GetOrCreate<ICloudStorageClientFactory>()));
             RegisterStep(new StoreLocalRepositoryToCloudAndQuitStep(
-                SynchronizationStoryStepId.StoreLocalRepositoryToCloudAndQuit.ToInt(),
+                SynchronizationStoryStepId.StoreLocalRepositoryToCloudAndQuit,
                 this,
                 Ioc.GetOrCreate<ILanguageService>(),
                 feedbackService,
@@ -103,13 +103,13 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
                 Ioc.GetOrCreate<IRepositoryStorageService>(),
                 Ioc.GetOrCreate<ICloudStorageClientFactory>()));
             RegisterStep(new StoreCloudRepositoryToDeviceAndQuitStep(
-                SynchronizationStoryStepId.StoreCloudRepositoryToDeviceAndQuit.ToInt(),
+                SynchronizationStoryStepId.StoreCloudRepositoryToDeviceAndQuit,
                 this,
                 Ioc.GetOrCreate<ILanguageService>(),
                 feedbackService,
                 Ioc.GetOrCreate<IRepositoryStorageService>()));
             RegisterStep(new StopAndShowRepositoryStep(
-                SynchronizationStoryStepId.StopAndShowRepository.ToInt(),
+                SynchronizationStoryStepId.StopAndShowRepository,
                 this,
                 feedbackService,
                 navigationService,
@@ -171,20 +171,6 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         OauthState,
         OauthCodeVerifier,
         OauthRedirectUrl,
-    }
-
-    /// <summary>Extension methods for the enumeration.</summary>
-    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass", Justification = "Extension methods.")]
-    public static class SynchronizationStoryStepIdExtensions
-    {
-        /// <summary>Conversion from enum to int.</summary>
-        /// <param name="step">The step.</param>
-        /// <returns>Integer of the step.</returns>
-        [DebuggerStepThrough]
-        public static int ToInt(this SynchronizationStoryStepId step)
-        {
-            return (int)step;
-        }
     }
 
     /// <summary>Extension methods for the enumeration.</summary>

@@ -31,7 +31,7 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
 
             // Run step
             var step = new DownloadCloudRepositoryStep(
-                SynchronizationStoryStepId.DownloadCloudRepository.ToInt(),
+                SynchronizationStoryStepId.DownloadCloudRepository,
                 storyBoard.Object,
                 CommonMocksAndStubs.LanguageService(),
                 CommonMocksAndStubs.FeedbackService(),
@@ -42,7 +42,7 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
             storyBoard.Verify(m => m.StoreToSession(It.Is<int>(p => p == SynchronizationStorySessionKey.BinaryCloudRepository.ToInt()), It.Is<object>(p => p == repository)), Times.Once);
 
             // Next step is called
-            storyBoard.Verify(m => m.ContinueWith(It.Is<int>(x => x == SynchronizationStoryStepId.ExistsTransferCode.ToInt())), Times.Once);
+            storyBoard.Verify(m => m.ContinueWith(It.Is<SynchronizationStoryStepId>(x => x == SynchronizationStoryStepId.ExistsTransferCode)), Times.Once);
         }
 
         [Test]
@@ -67,7 +67,7 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
 
             // Run step
             var step = new DownloadCloudRepositoryStep(
-                SynchronizationStoryStepId.DownloadCloudRepository.ToInt(),
+                SynchronizationStoryStepId.DownloadCloudRepository,
                 storyBoard.Object,
                 CommonMocksAndStubs.LanguageService(),
                 feedbackService.Object,
@@ -78,7 +78,7 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
             feedbackService.Verify(m => m.ShowToast(It.IsAny<string>()), Times.Once);
 
             // Next step is called
-            storyBoard.Verify(m => m.ContinueWith(It.Is<int>(x => x == SynchronizationStoryStepId.ExistsTransferCode.ToInt())), Times.Never);
+            storyBoard.Verify(m => m.ContinueWith(It.Is<SynchronizationStoryStepId>(x => x == SynchronizationStoryStepId.ExistsTransferCode)), Times.Never);
         }
     }
 }

@@ -25,14 +25,14 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
 
             // Run step
             var step = new StoreCloudRepositoryToDeviceAndQuitStep(
-                SynchronizationStoryStepId.StoreCloudRepositoryToDeviceAndQuit.ToInt(), storyBoard.Object, languageService.Object, feedbackService.Object, repositoryStorageService.Object);
+                SynchronizationStoryStepId.StoreCloudRepositoryToDeviceAndQuit, storyBoard.Object, languageService.Object, feedbackService.Object, repositoryStorageService.Object);
             Assert.DoesNotThrowAsync(step.Run);
 
             // repository is stored to the local device
             repositoryStorageService.Verify(m => m.TrySaveRepository(It.Is<NoteRepositoryModel>(r => r == repositoryModel)), Times.Once);
 
             // Next step is called
-            storyBoard.Verify(m => m.ContinueWith(It.Is<int>(x => x == SynchronizationStoryStepId.StopAndShowRepository.ToInt())), Times.Once);
+            storyBoard.Verify(m => m.ContinueWith(It.Is<SynchronizationStoryStepId>(x => x == SynchronizationStoryStepId.StopAndShowRepository)), Times.Once);
         }
     }
 }

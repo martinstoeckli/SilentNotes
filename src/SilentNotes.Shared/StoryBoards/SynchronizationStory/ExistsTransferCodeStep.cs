@@ -3,6 +3,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using SilentNotes.Models;
@@ -23,7 +24,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         /// </summary>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1611:ElementParametersMustBeDocumented", Justification = "Dependency injection")]
         public ExistsTransferCodeStep(
-            int stepId,
+            Enum stepId,
             IStoryBoard storyBoard,
             ISettingsService settingsService)
             : base(stepId, storyBoard)
@@ -39,11 +40,11 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
             // Execute step
             if (settings.HasTransferCode)
             {
-                await StoryBoard.ContinueWith(SynchronizationStoryStepId.DecryptCloudRepository.ToInt());
+                await StoryBoard.ContinueWith(SynchronizationStoryStepId.DecryptCloudRepository);
             }
             else
             {
-                await StoryBoard.ContinueWith(SynchronizationStoryStepId.ShowTransferCode.ToInt());
+                await StoryBoard.ContinueWith(SynchronizationStoryStepId.ShowTransferCode);
             }
         }
     }

@@ -33,7 +33,7 @@ namespace SilentNotesTest.StoryBoards.PullPushStory
 
             // Run step
             var step = new StoreMergedRepositoryAndQuitStep(
-                PullPushStoryStepId.StoreMergedRepositoryAndQuit.ToInt(),
+                PullPushStoryStepId.StoreMergedRepositoryAndQuit,
                 storyBoard.Object,
                 localNoteModel.Id,
                 PullPushDirection.PullFromServer,
@@ -71,7 +71,7 @@ namespace SilentNotesTest.StoryBoards.PullPushStory
 
             // Run step
             var step = new StoreMergedRepositoryAndQuitStep(
-                PullPushStoryStepId.StoreMergedRepositoryAndQuit.ToInt(),
+                PullPushStoryStepId.StoreMergedRepositoryAndQuit,
                 storyBoard.Object,
                 noteModel.Id,
                 PullPushDirection.PullFromServer,
@@ -124,7 +124,7 @@ namespace SilentNotesTest.StoryBoards.PullPushStory
 
             // Run step
             var step = new StoreMergedRepositoryAndQuitStep(
-                PullPushStoryStepId.StoreMergedRepositoryAndQuit.ToInt(),
+                PullPushStoryStepId.StoreMergedRepositoryAndQuit,
                 storyBoard.Object,
                 cloudNoteModel.Id,
                 PullPushDirection.PullFromServer,
@@ -184,7 +184,7 @@ namespace SilentNotesTest.StoryBoards.PullPushStory
 
             // Run step
             var step = new StoreMergedRepositoryAndQuitStep(
-                PullPushStoryStepId.StoreMergedRepositoryAndQuit.ToInt(),
+                PullPushStoryStepId.StoreMergedRepositoryAndQuit,
                 storyBoard.Object,
                 cloudNoteModel.Id,
                 PullPushDirection.PushToServer,

@@ -21,7 +21,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         /// </summary>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1611:ElementParametersMustBeDocumented", Justification = "Dependency injection")]
         public HandleOAuthRedirectStep(
-            int stepId,
+            Enum stepId,
             IStoryBoard storyBoard,
             ILanguageService languageService,
             IFeedbackService feedbackService,
@@ -58,13 +58,13 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
                     {
                         // User has granted access.
                         credentials.Token = token;
-                        await StoryBoard.ContinueWith(SynchronizationStoryStepId.ExistsCloudRepository.ToInt());
+                        await StoryBoard.ContinueWith(SynchronizationStoryStepId.ExistsCloudRepository);
                     }
                     else
                     {
                         // User has rejected access.
                         _feedbackService.ShowToast(_languageService.LoadText("sync_reject"));
-                        await StoryBoard.ContinueWith(SynchronizationStoryStepId.StopAndShowRepository.ToInt());
+                        await StoryBoard.ContinueWith(SynchronizationStoryStepId.StopAndShowRepository);
                     }
                 }
             }

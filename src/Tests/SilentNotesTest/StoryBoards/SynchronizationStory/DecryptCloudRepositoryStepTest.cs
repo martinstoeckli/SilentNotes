@@ -32,7 +32,7 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
 
             // Run step
             var step = new DecryptCloudRepositoryStep(
-                SynchronizationStoryStepId.DecryptCloudRepository.ToInt(),
+                SynchronizationStoryStepId.DecryptCloudRepository,
                 storyBoard.Object,
                 CommonMocksAndStubs.LanguageService(),
                 CommonMocksAndStubs.FeedbackService(),
@@ -44,7 +44,7 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
             settingsService.Verify(m => m.TrySaveSettingsToLocalDevice(It.IsNotNull<SettingsModel>()), Times.Never);
 
             // Next step is called
-            storyBoard.Verify(m => m.ContinueWith(It.Is<int>(x => x == SynchronizationStoryStepId.IsSameRepository.ToInt())), Times.Once);
+            storyBoard.Verify(m => m.ContinueWith(It.Is<SynchronizationStoryStepId>(x => x == SynchronizationStoryStepId.IsSameRepository)), Times.Once);
         }
 
         [Test]
@@ -66,7 +66,7 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
 
             // Run step
             var step = new DecryptCloudRepositoryStep(
-                SynchronizationStoryStepId.DecryptCloudRepository.ToInt(),
+                SynchronizationStoryStepId.DecryptCloudRepository,
                 storyBoard.Object,
                 CommonMocksAndStubs.LanguageService(),
                 CommonMocksAndStubs.FeedbackService(),
@@ -79,7 +79,7 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
             settingsService.Verify(m => m.TrySaveSettingsToLocalDevice(It.IsNotNull<SettingsModel>()), Times.Once);
 
             // Next step is called
-            storyBoard.Verify(m => m.ContinueWith(It.Is<int>(x => x == SynchronizationStoryStepId.IsSameRepository.ToInt())), Times.Once);
+            storyBoard.Verify(m => m.ContinueWith(It.Is<SynchronizationStoryStepId>(x => x == SynchronizationStoryStepId.IsSameRepository)), Times.Once);
         }
 
         [Test]
@@ -100,7 +100,7 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
 
             // Run step
             var step = new DecryptCloudRepositoryStep(
-                SynchronizationStoryStepId.DecryptCloudRepository.ToInt(),
+                SynchronizationStoryStepId.DecryptCloudRepository,
                 storyBoard.Object,
                 CommonMocksAndStubs.LanguageService(),
                 CommonMocksAndStubs.FeedbackService(),
@@ -112,12 +112,12 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
             settingsService.Verify(m => m.TrySaveSettingsToLocalDevice(It.IsNotNull<SettingsModel>()), Times.Never);
 
             // Next step is called
-            storyBoard.Verify(m => m.ContinueWith(It.Is<int>(x => x == SynchronizationStoryStepId.ShowTransferCode.ToInt())), Times.Once);
+            storyBoard.Verify(m => m.ContinueWith(It.Is<SynchronizationStoryStepId>(x => x == SynchronizationStoryStepId.ShowTransferCode)), Times.Once);
 
             // Run step with wrong transfer code
             settingsModel.TransferCode = "qqqqqqqq";
             Assert.DoesNotThrowAsync(step.Run);
-            storyBoard.Verify(m => m.ContinueWith(It.Is<int>(x => x == SynchronizationStoryStepId.ShowTransferCode.ToInt())), Times.Exactly(2));
+            storyBoard.Verify(m => m.ContinueWith(It.Is<SynchronizationStoryStepId>(x => x == SynchronizationStoryStepId.ShowTransferCode)), Times.Exactly(2));
         }
 
         [Test]
@@ -140,7 +140,7 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
 
             // Run step
             var step = new DecryptCloudRepositoryStep(
-                SynchronizationStoryStepId.DecryptCloudRepository.ToInt(),
+                SynchronizationStoryStepId.DecryptCloudRepository,
                 storyBoard.Object,
                 CommonMocksAndStubs.LanguageService(),
                 feedbackService.Object,
@@ -155,7 +155,7 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
             settingsService.Verify(m => m.TrySaveSettingsToLocalDevice(It.IsNotNull<SettingsModel>()), Times.Never);
 
             // no next step is called
-            storyBoard.Verify(m => m.ContinueWith(It.IsAny<int>()), Times.Never);
+            storyBoard.Verify(m => m.ContinueWith(It.IsAny<SynchronizationStoryStepId>()), Times.Never);
         }
 
         [Test]
@@ -180,7 +180,7 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
 
             // Run step
             var step = new DecryptCloudRepositoryStep(
-                SynchronizationStoryStepId.DecryptCloudRepository.ToInt(),
+                SynchronizationStoryStepId.DecryptCloudRepository,
                 storyBoard.Object,
                 CommonMocksAndStubs.LanguageService(),
                 feedbackService.Object,
@@ -192,7 +192,7 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
             feedbackService.Verify(m => m.ShowToast(It.IsAny<string>()), Times.Once);
 
             // no next step is called
-            storyBoard.Verify(m => m.ContinueWith(It.IsAny<int>()), Times.Never);
+            storyBoard.Verify(m => m.ContinueWith(It.IsAny<SynchronizationStoryStepId>()), Times.Never);
         }
 
         private static SettingsModel CreateSettingsModel(string transferCode)

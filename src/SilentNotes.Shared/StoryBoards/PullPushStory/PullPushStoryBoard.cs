@@ -26,34 +26,34 @@ namespace SilentNotes.StoryBoards.PullPushStory
             : base(StoryBoardMode.GuiAndToasts)
         {
             RegisterStep(new ExistsCloudRepositoryStep(
-                PullPushStoryStepId.ExistsCloudRepository.ToInt(),
+                PullPushStoryStepId.ExistsCloudRepository,
                 this,
                 Ioc.GetOrCreate<ILanguageService>(),
                 Ioc.GetOrCreate<IFeedbackService>(),
                 Ioc.GetOrCreate<ISettingsService>(),
                 Ioc.GetOrCreate<ICloudStorageClientFactory>()));
             RegisterStep(new DownloadCloudRepositoryStep(
-                PullPushStoryStepId.DownloadCloudRepository.ToInt(),
+                PullPushStoryStepId.DownloadCloudRepository,
                 this,
                 Ioc.GetOrCreate<ILanguageService>(),
                 Ioc.GetOrCreate<IFeedbackService>(),
                 Ioc.GetOrCreate<ICloudStorageClientFactory>(),
                 Ioc.GetOrCreate<ISettingsService>()));
             RegisterStep(new DecryptCloudRepositoryStep(
-                PullPushStoryStepId.DecryptCloudRepository.ToInt(),
+                PullPushStoryStepId.DecryptCloudRepository,
                 this,
                 Ioc.GetOrCreate<ILanguageService>(),
                 Ioc.GetOrCreate<IFeedbackService>(),
                 Ioc.GetOrCreate<ISettingsService>(),
                 Ioc.GetOrCreate<INoteRepositoryUpdater>()));
             RegisterStep(new IsSameRepositoryStep(
-                PullPushStoryStepId.IsSameRepository.ToInt(),
+                PullPushStoryStepId.IsSameRepository,
                 this,
                 Ioc.GetOrCreate<ILanguageService>(),
                 Ioc.GetOrCreate<IFeedbackService>(),
                 Ioc.GetOrCreate<IRepositoryStorageService>()));
             RegisterStep(new StoreMergedRepositoryAndQuitStep(
-                PullPushStoryStepId.StoreMergedRepositoryAndQuit.ToInt(),
+                PullPushStoryStepId.StoreMergedRepositoryAndQuit,
                 this,
                 noteId,
                 direction,
@@ -98,20 +98,6 @@ namespace SilentNotes.StoryBoards.PullPushStory
 
         /// <summary>Use the local note and overwrite the note on the server</summary>
         PushToServer
-    }
-
-    /// <summary>Extension methods for the enumeration.</summary>
-    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass", Justification = "Extension methods.")]
-    public static class PullPushStoryStepIdExtensions
-    {
-        /// <summary>Conversion from enum to int.</summary>
-        /// <param name="step">The step.</param>
-        /// <returns>Integer of the step.</returns>
-        [DebuggerStepThrough]
-        public static int ToInt(this PullPushStoryStepId step)
-        {
-            return (int)step;
-        }
     }
 
     /// <summary>Extension methods for the enumeration.</summary>

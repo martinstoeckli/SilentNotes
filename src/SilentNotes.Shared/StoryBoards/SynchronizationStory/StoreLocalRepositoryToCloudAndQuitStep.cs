@@ -26,7 +26,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         /// </summary>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1611:ElementParametersMustBeDocumented", Justification = "Dependency injection")]
         public StoreLocalRepositoryToCloudAndQuitStep(
-            int stepId,
+            Enum stepId,
             IStoryBoard storyBoard,
             ILanguageService languageService,
             IFeedbackService feedbackService,
@@ -77,7 +77,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
                         await _feedbackService.ShowMessageAsync(messageNewCreated + Environment.NewLine + messageWriteDown, null, MessageBoxButtons.Ok);
                 }
 
-                await StoryBoard.ContinueWith(SynchronizationStoryStepId.StopAndShowRepository.ToInt());
+                await StoryBoard.ContinueWith(SynchronizationStoryStepId.StopAndShowRepository);
                 _feedbackService.ShowToast(_languageService["sync_success"]);
             }
             catch (Exception ex)

@@ -3,6 +3,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using SilentNotes.Models;
@@ -22,7 +23,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         /// Initializes a new instance of the <see cref="IsCloudServiceSetStep"/> class.
         /// </summary>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1611:ElementParametersMustBeDocumented", Justification = "Dependency injection")]
-        public IsCloudServiceSetStep(int stepId, IStoryBoard storyBoard, ISettingsService settingsService)
+        public IsCloudServiceSetStep(Enum stepId, IStoryBoard storyBoard, ISettingsService settingsService)
             : base(stepId, storyBoard)
         {
             _settingsService = settingsService;
@@ -36,11 +37,11 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
             if (settings.HasCloudStorageClient)
             {
                 StoryBoard.StoreToSession(SynchronizationStorySessionKey.CloudStorageCredentials.ToInt(), settings.Credentials);
-                await StoryBoard.ContinueWith(SynchronizationStoryStepId.ExistsCloudRepository.ToInt());
+                await StoryBoard.ContinueWith(SynchronizationStoryStepId.ExistsCloudRepository);
             }
             else
             {
-                await StoryBoard.ContinueWith(SynchronizationStoryStepId.ShowFirstTimeDialog.ToInt());
+                await StoryBoard.ContinueWith(SynchronizationStoryStepId.ShowFirstTimeDialog);
             }
         }
     }

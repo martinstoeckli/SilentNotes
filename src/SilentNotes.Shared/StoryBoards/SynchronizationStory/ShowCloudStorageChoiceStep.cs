@@ -3,6 +3,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using SilentNotes.Controllers;
@@ -22,7 +23,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         /// Initializes a new instance of the <see cref="ShowCloudStorageChoiceStep"/> class.
         /// </summary>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1611:ElementParametersMustBeDocumented", Justification = "Dependency injection")]
-        public ShowCloudStorageChoiceStep(int stepId, IStoryBoard storyBoard, INavigationService navigationService)
+        public ShowCloudStorageChoiceStep(Enum stepId, IStoryBoard storyBoard, INavigationService navigationService)
             : base(stepId, storyBoard)
         {
             _navigationService = navigationService;

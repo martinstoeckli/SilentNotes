@@ -43,7 +43,7 @@ namespace SilentNotes.ViewModels
 
         private async void Continue()
         {
-            await (_storyBoardService.ActiveStory?.ContinueWith(SynchronizationStoryStepId.ShowCloudStorageChoice.ToInt())
+            await (_storyBoardService.ActiveStory?.ContinueWith(SynchronizationStoryStepId.ShowCloudStorageChoice)
                 ?? Task.CompletedTask);
         }
 
@@ -54,7 +54,7 @@ namespace SilentNotes.ViewModels
 
         private async void GoBack()
         {
-            await (_storyBoardService.ActiveStory?.ContinueWith(SynchronizationStoryStepId.StopAndShowRepository.ToInt())
+            await (_storyBoardService.ActiveStory?.ContinueWith(SynchronizationStoryStepId.StopAndShowRepository)
                 ?? Task.CompletedTask);
         }
 
