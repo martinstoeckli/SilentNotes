@@ -4,6 +4,7 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
+using System.Drawing;
 using System.Threading.Tasks;
 using System.Web;
 using SilentNotes.Controllers;
@@ -91,6 +92,12 @@ namespace SilentNotes.UWP
                 });
             string result = await taskCompletion.Task;
             return result;
+        }
+
+        /// <inheritdoc/>
+        public void SetBackgroundColor(Color backgroundColor)
+        {
+            _webView.DefaultBackgroundColor = Windows.UI.Color.FromArgb(backgroundColor.A, backgroundColor.R, backgroundColor.G, backgroundColor.B);
         }
 
         /// <inheritdoc/>

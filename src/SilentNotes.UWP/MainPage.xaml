@@ -22,8 +22,8 @@
             </Storyboard>
         </ResourceDictionary>
     </Page.Resources>
-    
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
         <WebView
             Grid.Row="0"
             Name="webView">

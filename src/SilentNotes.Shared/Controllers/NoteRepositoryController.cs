@@ -9,6 +9,7 @@ using System.Linq;
 using SilentNotes.HtmlView;
 using SilentNotes.Services;
 using SilentNotes.ViewModels;
+using SilentNotes.Workers;
 
 namespace SilentNotes.Controllers
 {
@@ -120,6 +121,13 @@ namespace SilentNotes.Controllers
                 string html = _viewStop.GenerateHtml(_stopViewModel);
                 View.LoadHtml(html);
             }
+        }
+
+        /// <inheritdoc/>
+        protected override void SetViewBackgroundColor(IHtmlView htmlView)
+        {
+            IThemeService themeService = Ioc.GetOrCreate<IThemeService>();
+            htmlView.SetBackgroundColor(ColorExtensions.HexToColor(themeService.SelectedTheme.ImageTint));
         }
 
         private void NavigationCompletedEventHandler(object sender, EventArgs e)

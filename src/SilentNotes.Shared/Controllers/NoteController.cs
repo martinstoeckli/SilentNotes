@@ -9,6 +9,7 @@ using SilentNotes.HtmlView;
 using SilentNotes.Models;
 using SilentNotes.Services;
 using SilentNotes.ViewModels;
+using SilentNotes.Workers;
 
 namespace SilentNotes.Controllers
 {
@@ -75,6 +76,7 @@ namespace SilentNotes.Controllers
                 Ioc.GetOrCreate<IFeedbackService>(),
                 settingsService,
                 note);
+            SetViewBackgroundColor(htmlView);
 
             Bindings.BindCommand("PullNoteFromOnlineStorage", _viewModel.PullNoteFromOnlineStorageCommand);
             Bindings.BindCommand("PushNoteToOnlineStorage", _viewModel.PushNoteToOnlineStorageCommand);
@@ -83,6 +85,13 @@ namespace SilentNotes.Controllers
 
             string html = _viewService.GenerateHtml(_viewModel);
             View.LoadHtml(html);
+        }
+
+        /// <inheritdoc/>
+        protected override void SetViewBackgroundColor(IHtmlView htmlView)
+        {
+            if (_viewModel != null)
+                htmlView.SetBackgroundColor(ColorExtensions.HexToColor(_viewModel.BackgroundColorHex));
         }
 
         private void NavigationCompletedEventHandler(object sender, EventArgs e)
@@ -104,7 +113,8 @@ namespace SilentNotes.Controllers
             {
                 case "backgroundcolorhex":
                     _viewModel.BackgroundColorHex = e.Parameters["data-backgroundcolorhex"];
-                    SetBackgroundColorToView(_viewModel.BackgroundColorHex);
+                    SetViewBackgroundColor(View);
+                    AdjustBrightDarkThemeInView();
                     break;
                 case "quill":
                     string content = await View.ExecuteJavaScriptReturnString("getNoteHtmlContent();");
@@ -113,15 +123,13 @@ namespace SilentNotes.Controllers
             }
         }
 
-        private void SetBackgroundColorToView(string colorHex)
+        private void AdjustBrightDarkThemeInView()
         {
-            string script = string.Format(
-                "htmlViewBindingsSetCss('Content', 'background-color', '{0}');", colorHex);
+            //string script;
             string darkClass = _viewModel.GetDarkClass();
-            if (!string.IsNullOrEmpty(darkClass))
-                script += "htmlViewBindingsAddClass('quill', 'dark');";
-            else
-                script += "htmlViewBindingsRemoveClass('quill', 'dark');";
+            string script = string.IsNullOrEmpty(darkClass)
+                ? "htmlViewBindingsRemoveClass('quill', 'dark');"
+                : "htmlViewBindingsAddClass('quill', 'dark');";
             View.ExecuteJavaScript(script);
         }
     }

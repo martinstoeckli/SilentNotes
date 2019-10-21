@@ -52,7 +52,6 @@ namespace SilentNotes.Android
 
             // Prepare the webview
             _webView = FindViewById<WebView>(Resource.Id.webView);
-            _webView.SetBackgroundColor(Color.Argb(255, 56, 122, 168)); // Avoid white flicker
             _webView.SetWebViewClient(new HybridWebViewClient(
                 (url) => OnNavigating(url),
                 () => OnNavigationCompleted()));
@@ -157,6 +156,12 @@ namespace SilentNotes.Android
             _webView.EvaluateJavascript(script, callback);
             string result = await taskCompletion.Task;
             return result;
+        }
+
+        /// <inheritdoc/>
+        public void SetBackgroundColor(System.Drawing.Color backgroundColor)
+        {
+            _webView.SetBackgroundColor(Color.Argb(backgroundColor.A, backgroundColor.R, backgroundColor.G, backgroundColor.B));
         }
 
         /// <inheritdoc/>

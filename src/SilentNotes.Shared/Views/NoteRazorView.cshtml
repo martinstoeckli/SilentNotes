@@ -162,7 +162,7 @@
         </div>
     </nav>
 
-    <div id="content" class="" data-binding="Content" style="background-color: @Model.BackgroundColorHex">
+    <div id="content" class="" data-binding="Content">
         <div id="myeditor" class="note-viewer @Model.GetDarkClass()" data-binding="quill">@{WriteLiteral(Model.HtmlContent);}</div>
     </div>
 

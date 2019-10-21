@@ -23,7 +23,7 @@ using SilentNotes.ViewModels;
 #line hidden
 
 
-[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "4.12.3.80")]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.3.0.277")]
 public partial class RecycleBinRazorView : RecycleBinRazorViewBase
 {
 
@@ -141,11 +141,8 @@ WriteLiteral(@");
     <script>
     </script>
 </head>
-<body");
-
-WriteLiteral(" style=\"background-color: #bfbfbf\"");
-
-WriteLiteral(">\r\n    <nav");
+<body>
+    <nav");
 
 WriteLiteral(" id=\"navigation\"");
 
