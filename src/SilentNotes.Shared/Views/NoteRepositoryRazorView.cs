@@ -23,7 +23,7 @@ using SilentNotes.ViewModels;
 #line hidden
 
 
-[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "4.12.3.80")]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.3.0.277")]
 public partial class NoteRepositoryRazorView : NoteRepositoryRazorViewBase
 {
 
@@ -80,7 +80,7 @@ WriteLiteral(" rel=\"stylesheet\"");
 
 WriteLiteral(" />\r\n\r\n    <script");
 
-WriteLiteral(" src=\"jquery-3.3.1.min.js\"");
+WriteLiteral(" src=\"jquery-3.4.1.min.js\"");
 
 WriteLiteral("></script>\r\n    <script");
 
@@ -148,19 +148,8 @@ WriteLiteral(@"px !important;
     <script>
     </script>
 </head>
-<body");
-
-WriteAttribute ("style", " style=\"", "\""
-, Tuple.Create<string,object,bool> ("", "background-color:", true)
-
-#line 53 "NoteRepositoryRazorView.cshtml"
-, Tuple.Create<string,object,bool> (" ", Model.Theme.ImageTint
-
-#line default
-#line hidden
-, false)
-);
-WriteLiteral(">\r\n    <nav");
+<body>
+    <nav");
 
 WriteLiteral(" id=\"navigation\"");
 

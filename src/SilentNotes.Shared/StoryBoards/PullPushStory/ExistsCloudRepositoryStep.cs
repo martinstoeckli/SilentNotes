@@ -19,7 +19,7 @@ namespace SilentNotes.StoryBoards.PullPushStory
     {
         /// <inheritdoc/>
         public ExistsCloudRepositoryStep(
-            int stepId,
+            Enum stepId,
             IStoryBoard storyBoard,
             ILanguageService languageService,
             IFeedbackService feedbackService,
@@ -66,7 +66,7 @@ namespace SilentNotes.StoryBoards.PullPushStory
                 {
                     bool repositoryExists = await cloudStorageClient.ExistsFileAsync(Config.RepositoryFileName, credentials);
                     if (repositoryExists)
-                        await StoryBoard.ContinueWith(PullPushStoryStepId.DownloadCloudRepository.ToInt());
+                        await StoryBoard.ContinueWith(PullPushStoryStepId.DownloadCloudRepository);
                     else
                         _feedbackService.ShowToast(_languageService["pushpull_error_need_sync_first"]);
                 }

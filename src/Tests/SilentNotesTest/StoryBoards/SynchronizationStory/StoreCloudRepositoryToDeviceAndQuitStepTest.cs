@@ -17,7 +17,7 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
 
             Mock<IStoryBoard> storyBoard = new Mock<IStoryBoard>();
             storyBoard.
-                Setup(m => m.LoadFromSession<NoteRepositoryModel>(It.Is<int>(p => p == SynchronizationStorySessionKey.CloudRepository.ToInt()))).
+                Setup(m => m.LoadFromSession<NoteRepositoryModel>(It.Is<SynchronizationStorySessionKey>(p => p == SynchronizationStorySessionKey.CloudRepository))).
                 Returns(repositoryModel);
             Mock<ILanguageService> languageService = new Mock<ILanguageService>();
             Mock<IFeedbackService> feedbackService = new Mock<IFeedbackService>();
@@ -25,14 +25,14 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
 
             // Run step
             var step = new StoreCloudRepositoryToDeviceAndQuitStep(
-                SynchronizationStoryStepId.StoreCloudRepositoryToDeviceAndQuit.ToInt(), storyBoard.Object, languageService.Object, feedbackService.Object, repositoryStorageService.Object);
+                SynchronizationStoryStepId.StoreCloudRepositoryToDeviceAndQuit, storyBoard.Object, languageService.Object, feedbackService.Object, repositoryStorageService.Object);
             Assert.DoesNotThrowAsync(step.Run);
 
             // repository is stored to the local device
             repositoryStorageService.Verify(m => m.TrySaveRepository(It.Is<NoteRepositoryModel>(r => r == repositoryModel)), Times.Once);
 
             // Next step is called
-            storyBoard.Verify(m => m.ContinueWith(It.Is<int>(x => x == SynchronizationStoryStepId.StopAndShowRepository.ToInt())), Times.Once);
+            storyBoard.Verify(m => m.ContinueWith(It.Is<SynchronizationStoryStepId>(x => x == SynchronizationStoryStepId.StopAndShowRepository)), Times.Once);
         }
     }
 }

@@ -164,8 +164,8 @@
     <Content Include="..\SilentNotes.Shared\Assets\Html\grass.jpg">
       <Link>Assets\Html\grass.jpg</Link>
     </Content>
-    <Content Include="..\SilentNotes.Shared\Assets\Html\jquery-3.3.1.min.js">
-      <Link>Assets\Html\jquery-3.3.1.min.js</Link>
+    <Content Include="..\SilentNotes.Shared\Assets\Html\jquery-3.4.1.min.js">
+      <Link>Assets\Html\jquery-3.4.1.min.js</Link>
     </Content>
     <Content Include="..\SilentNotes.Shared\Assets\Html\jquery.longpress.js">
       <Link>Assets\Html\jquery.longpress.js</Link>

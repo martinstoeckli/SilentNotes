@@ -28,7 +28,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         /// </summary>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1611:ElementParametersMustBeDocumented", Justification = "Dependency injection")]
         public ExistsCloudRepositoryStep(
-            int stepId,
+            Enum stepId,
             IStoryBoard storyBoard,
             ILanguageService languageService,
             IFeedbackService feedbackService,
@@ -45,7 +45,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         /// <inheritdoc/>
         public override async Task Run()
         {
-            SerializeableCloudStorageCredentials credentials = StoryBoard.LoadFromSession<SerializeableCloudStorageCredentials>(SynchronizationStorySessionKey.CloudStorageCredentials.ToInt());
+            SerializeableCloudStorageCredentials credentials = StoryBoard.LoadFromSession<SerializeableCloudStorageCredentials>(SynchronizationStorySessionKey.CloudStorageCredentials);
             ICloudStorageClient cloudStorageClient = _cloudStorageClientFactory.GetOrCreate(credentials.CloudStorageId);
             try
             {
@@ -67,7 +67,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
                         switch (StoryBoard.Mode)
                         {
                             case StoryBoardMode.GuiAndToasts:
-                                await StoryBoard.ContinueWith(SynchronizationStoryStepId.ShowCloudStorageAccount.ToInt());
+                                await StoryBoard.ContinueWith(SynchronizationStoryStepId.ShowCloudStorageAccount);
                                 break;
                             case StoryBoardMode.ToastsOnly:
                                 _feedbackService.ShowToast(_languageService["sync_error_generic"]);
@@ -84,9 +84,9 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
                     SaveCredentialsToSettings(credentials);
 
                     if (repositoryExists)
-                        await StoryBoard.ContinueWith(SynchronizationStoryStepId.DownloadCloudRepository.ToInt());
+                        await StoryBoard.ContinueWith(SynchronizationStoryStepId.DownloadCloudRepository);
                     else
-                        await StoryBoard.ContinueWith(SynchronizationStoryStepId.StoreLocalRepositoryToCloudAndQuit.ToInt());
+                        await StoryBoard.ContinueWith(SynchronizationStoryStepId.StoreLocalRepositoryToCloudAndQuit);
                 }
             }
             catch (Exception ex)

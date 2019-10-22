@@ -23,7 +23,7 @@ using SilentNotes.ViewModels;
 #line hidden
 
 
-[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.3.0.274")]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.3.0.277")]
 public partial class NoteRazorView : NoteRazorViewBase
 {
 
@@ -92,7 +92,7 @@ WriteLiteral(" rel=\"stylesheet\"");
 
 WriteLiteral(">\r\n\r\n    <script");
 
-WriteLiteral(" src=\"jquery-3.3.1.min.js\"");
+WriteLiteral(" src=\"jquery-3.4.1.min.js\"");
 
 WriteLiteral("></script>\r\n    <script");
 
@@ -643,16 +643,6 @@ WriteLiteral(" class=\"\"");
 
 WriteLiteral(" data-binding=\"Content\"");
 
-WriteAttribute ("style", " style=\"", "\""
-, Tuple.Create<string,object,bool> ("", "background-color:", true)
-
-#line 165 "NoteRazorView.cshtml"
-                                       , Tuple.Create<string,object,bool> (" ", Model.BackgroundColorHex
-
-#line default
-#line hidden
-, false)
-);
 WriteLiteral(">\r\n        <div");
 
 WriteLiteral(" id=\"myeditor\"");

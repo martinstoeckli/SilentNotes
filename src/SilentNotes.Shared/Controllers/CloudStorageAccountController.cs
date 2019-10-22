@@ -38,7 +38,7 @@ namespace SilentNotes.Controllers
         {
             base.ShowInView(htmlView, variables);
             IStoryBoardService storyBoardService = Ioc.GetOrCreate<IStoryBoardService>();
-            SerializeableCloudStorageCredentials credentials = storyBoardService.ActiveStory.LoadFromSession<SerializeableCloudStorageCredentials>(SynchronizationStorySessionKey.CloudStorageCredentials.ToInt());
+            SerializeableCloudStorageCredentials credentials = storyBoardService.ActiveStory.LoadFromSession<SerializeableCloudStorageCredentials>(SynchronizationStorySessionKey.CloudStorageCredentials);
 
             _viewModel = new CloudStorageAccountViewModel(
                 Ioc.GetOrCreate<INavigationService>(),

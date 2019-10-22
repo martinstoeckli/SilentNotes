@@ -14,7 +14,7 @@
     <link href="quill/quill.snow.css" rel="stylesheet">
     <link href="NoteView.css" rel="stylesheet">
 
-    <script src="jquery-3.3.1.min.js"></script>
+    <script src="jquery-3.4.1.min.js"></script>
     <script src="bootstrap.bundle.min.js"></script>
     <script src="silentnotes.js"></script>
     <script src="quill/quill.min.js"></script>
@@ -162,7 +162,7 @@
         </div>
     </nav>
 
-    <div id="content" class="" data-binding="Content" style="background-color: @Model.BackgroundColorHex">
+    <div id="content" class="" data-binding="Content">
         <div id="myeditor" class="note-viewer @Model.GetDarkClass()" data-binding="quill">@{WriteLiteral(Model.HtmlContent);}</div>
     </div>
 

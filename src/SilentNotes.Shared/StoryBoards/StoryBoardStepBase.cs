@@ -3,6 +3,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using System;
 using System.Threading.Tasks;
 
 namespace SilentNotes.StoryBoards
@@ -17,14 +18,14 @@ namespace SilentNotes.StoryBoards
         /// </summary>
         /// <param name="stepId">Id of this step.</param>
         /// <param name="storyBoard">The story board which owns the step.</param>
-        protected StoryBoardStepBase(int stepId, IStoryBoard storyBoard)
+        protected StoryBoardStepBase(Enum stepId, IStoryBoard storyBoard)
         {
             Id = stepId;
             StoryBoard = storyBoard;
         }
 
         /// <inheritdoc/>
-        public int Id { get; private set; }
+        public Enum Id { get; private set; }
 
         /// <inheritdoc/>
         public abstract Task Run();

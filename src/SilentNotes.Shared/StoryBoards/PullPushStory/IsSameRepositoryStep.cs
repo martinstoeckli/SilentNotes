@@ -3,6 +3,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using System;
 using System.Threading.Tasks;
 using SilentNotes.Models;
 using SilentNotes.Services;
@@ -20,7 +21,7 @@ namespace SilentNotes.StoryBoards.PullPushStory
 
         /// <inheritdoc/>
         public IsSameRepositoryStep(
-            int stepId,
+            Enum stepId,
             IStoryBoard storyBoard,
             ILanguageService languageService,
             IFeedbackService feedbackService,
@@ -35,11 +36,11 @@ namespace SilentNotes.StoryBoards.PullPushStory
         public override async Task Run()
         {
             _repositoryStorageService.LoadRepositoryOrDefault(out NoteRepositoryModel localRepository);
-            NoteRepositoryModel cloudRepository = StoryBoard.LoadFromSession<NoteRepositoryModel>(PullPushStorySessionKey.CloudRepository.ToInt());
+            NoteRepositoryModel cloudRepository = StoryBoard.LoadFromSession<NoteRepositoryModel>(PullPushStorySessionKey.CloudRepository);
 
             if (localRepository.Id == cloudRepository.Id)
             {
-                await StoryBoard.ContinueWith(PullPushStoryStepId.StoreMergedRepositoryAndQuit.ToInt());
+                await StoryBoard.ContinueWith(PullPushStoryStepId.StoreMergedRepositoryAndQuit);
             }
             else
             {

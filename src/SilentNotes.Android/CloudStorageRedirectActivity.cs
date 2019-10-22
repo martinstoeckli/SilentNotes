@@ -36,7 +36,7 @@ namespace SilentNotes.Android
             string redirectUrl = Intent.Data.ToString();
             IStoryBoardService storyBoardService = new StoryBoardService();
             if (storyBoardService.ActiveStory != null)
-                storyBoardService.ActiveStory.StoreToSession(SynchronizationStorySessionKey.OauthRedirectUrl.ToInt(), redirectUrl);
+                storyBoardService.ActiveStory.StoreToSession(SynchronizationStorySessionKey.OauthRedirectUrl, redirectUrl);
 
             // Stop the redirect activity, its job is already done.
             Finish();

@@ -26,7 +26,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         /// </summary>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1611:ElementParametersMustBeDocumented", Justification = "Dependency injection")]
         public DownloadCloudRepositoryStep(
-            int stepId,
+            Enum stepId,
             IStoryBoard storyBoard,
             ILanguageService languageService,
             IFeedbackService feedbackService,
@@ -41,19 +41,19 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         /// <inheritdoc/>
         public override async Task Run()
         {
-            SerializeableCloudStorageCredentials credentials = StoryBoard.LoadFromSession<SerializeableCloudStorageCredentials>(SynchronizationStorySessionKey.CloudStorageCredentials.ToInt());
+            SerializeableCloudStorageCredentials credentials = StoryBoard.LoadFromSession<SerializeableCloudStorageCredentials>(SynchronizationStorySessionKey.CloudStorageCredentials);
             ICloudStorageClient cloudStorageClient = _cloudStorageClientFactory.GetOrCreate(credentials.CloudStorageId);
 
             try
             {
                 // The repository can be cached for this story, download the repository only once.
                 byte[] binaryCloudRepository;
-                if (!StoryBoard.TryLoadFromSession(SynchronizationStorySessionKey.BinaryCloudRepository.ToInt(), out binaryCloudRepository))
+                if (!StoryBoard.TryLoadFromSession(SynchronizationStorySessionKey.BinaryCloudRepository, out binaryCloudRepository))
                 {
                     binaryCloudRepository = await cloudStorageClient.DownloadFileAsync(Config.RepositoryFileName, credentials);
-                    StoryBoard.StoreToSession(SynchronizationStorySessionKey.BinaryCloudRepository.ToInt(), binaryCloudRepository);
+                    StoryBoard.StoreToSession(SynchronizationStorySessionKey.BinaryCloudRepository, binaryCloudRepository);
                 }
-                await StoryBoard.ContinueWith(SynchronizationStoryStepId.ExistsTransferCode.ToInt());
+                await StoryBoard.ContinueWith(SynchronizationStoryStepId.ExistsTransferCode);
             }
             catch (Exception ex)
             {

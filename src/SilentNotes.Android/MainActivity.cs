@@ -52,7 +52,6 @@ namespace SilentNotes.Android
 
             // Prepare the webview
             _webView = FindViewById<WebView>(Resource.Id.webView);
-            _webView.SetBackgroundColor(Color.Argb(255, 56, 122, 168)); // Avoid white flicker
             _webView.SetWebViewClient(new HybridWebViewClient(
                 (url) => OnNavigating(url),
                 () => OnNavigationCompleted()));
@@ -87,7 +86,7 @@ namespace SilentNotes.Android
                 {
                     // Create a copy of the active story, which uses the Ioc of this new process
                     storyBoardService.ActiveStory = new SynchronizationStoryBoard(synchronizationStory);
-                    storyBoardService.ActiveStory.ContinueWith(SynchronizationStoryStepId.HandleOAuthRedirect.ToInt());
+                    storyBoardService.ActiveStory.ContinueWith(SynchronizationStoryStepId.HandleOAuthRedirect);
                 }
             }
             else
@@ -160,6 +159,12 @@ namespace SilentNotes.Android
         }
 
         /// <inheritdoc/>
+        public void SetBackgroundColor(System.Drawing.Color backgroundColor)
+        {
+            _webView.SetBackgroundColor(Color.Argb(backgroundColor.A, backgroundColor.R, backgroundColor.G, backgroundColor.B));
+        }
+
+        /// <inheritdoc/>
         public event HtmlViewNavigatingEventHandler Navigating;
 
         private void OnNavigating(string url)
@@ -206,7 +211,7 @@ namespace SilentNotes.Android
         private bool IsStartedByOAuthRedirectIndent(IStoryBoardService storyBoardService)
         {
             return (storyBoardService.ActiveStory != null) &&
-                storyBoardService.ActiveStory.TryLoadFromSession(SynchronizationStorySessionKey.OauthRedirectUrl.ToInt(), out string _);
+                storyBoardService.ActiveStory.TryLoadFromSession(SynchronizationStorySessionKey.OauthRedirectUrl, out string _);
         }
 
         private class WebviewValueCallback : Java.Lang.Object, IValueCallback

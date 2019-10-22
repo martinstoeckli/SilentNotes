@@ -31,7 +31,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         /// </summary>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1611:ElementParametersMustBeDocumented", Justification = "Dependency injection")]
         public DecryptCloudRepositoryStep(
-            int stepId,
+            Enum stepId,
             IStoryBoard storyBoard,
             ILanguageService languageService,
             IFeedbackService feedbackService,
@@ -51,7 +51,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
             try
             {
                 SettingsModel settings = _settingsService.LoadSettingsOrDefault();
-                byte[] binaryCloudRepository = StoryBoard.LoadFromSession<byte[]>(SynchronizationStorySessionKey.BinaryCloudRepository.ToInt());
+                byte[] binaryCloudRepository = StoryBoard.LoadFromSession<byte[]>(SynchronizationStorySessionKey.BinaryCloudRepository);
 
                 // Try to decode with all possible transfer codes
                 bool successfullyDecryptedRepository = TryDecryptWithAllTransferCodes(
@@ -68,12 +68,12 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
                     NoteRepositoryModel cloudRepository = XmlUtils.DeserializeFromXmlDocument<NoteRepositoryModel>(cloudRepositoryXml);
 
                     // Continue with next step
-                    StoryBoard.StoreToSession(SynchronizationStorySessionKey.CloudRepository.ToInt(), cloudRepository);
-                    await StoryBoard.ContinueWith(SynchronizationStoryStepId.IsSameRepository.ToInt());
+                    StoryBoard.StoreToSession(SynchronizationStorySessionKey.CloudRepository, cloudRepository);
+                    await StoryBoard.ContinueWith(SynchronizationStoryStepId.IsSameRepository);
                 }
                 else
                 {
-                    bool existsUserEnteredTransferCode = StoryBoard.TryLoadFromSession<string>(SynchronizationStorySessionKey.UserEnteredTransferCode.ToInt(), out _);
+                    bool existsUserEnteredTransferCode = StoryBoard.TryLoadFromSession<string>(SynchronizationStorySessionKey.UserEnteredTransferCode, out _);
                     if (existsUserEnteredTransferCode)
                     {
                         // Keep transfercode page open and show message
@@ -82,7 +82,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
                     else
                     {
                         // Open transfercode page
-                        await StoryBoard.ContinueWith(SynchronizationStoryStepId.ShowTransferCode.ToInt());
+                        await StoryBoard.ContinueWith(SynchronizationStoryStepId.ShowTransferCode);
                     }
                 }
             }
@@ -171,7 +171,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         private List<string> ListTransferCodesToTry(SettingsModel settings)
         {
             var result = new List<string>();
-            bool existsUserEnteredTransferCode = StoryBoard.TryLoadFromSession<string>(SynchronizationStorySessionKey.UserEnteredTransferCode.ToInt(), out string userEnteredTransferCode);
+            bool existsUserEnteredTransferCode = StoryBoard.TryLoadFromSession<string>(SynchronizationStorySessionKey.UserEnteredTransferCode, out string userEnteredTransferCode);
             if (existsUserEnteredTransferCode)
             {
                 result.Add(userEnteredTransferCode);

@@ -244,7 +244,7 @@ namespace SilentNotes.ViewModels
             try
             {
                 _storyBoardService.ActiveStory = new SynchronizationStoryBoard(StoryBoardMode.GuiAndToasts);
-                await _storyBoardService.ActiveStory.ContinueWith(SynchronizationStoryStepId.ShowCloudStorageChoice.ToInt());
+                await _storyBoardService.ActiveStory.ContinueWith(SynchronizationStoryStepId.ShowCloudStorageChoice);
             }
             catch (Exception)
             {

@@ -4,6 +4,7 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
+using System.Drawing;
 using System.Threading.Tasks;
 
 namespace SilentNotes.HtmlView
@@ -38,6 +39,15 @@ namespace SilentNotes.HtmlView
         /// <param name="script">Java script to execute.</param>
         /// <returns>Result of the called java script function.</returns>
         Task<string> ExecuteJavaScriptReturnString(string script);
+
+        /// <summary>
+        /// Sets the default background color of the webview, this is the color shown while loading
+        /// an HTML page or when the css background color is transparent. This method is called as
+        /// early as possible, to avoid the white flicker when using dark themes, which is visible
+        /// until the html page has finished loading.
+        /// </summary>
+        /// <param name="backgroundColor">The default background color.</param>
+        void SetBackgroundColor(Color backgroundColor);
 
         /// <summary>
         /// This event is called whenever the user clicks a link or the javascript triggers a

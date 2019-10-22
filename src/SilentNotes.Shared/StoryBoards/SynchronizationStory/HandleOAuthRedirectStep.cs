@@ -21,7 +21,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         /// </summary>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1611:ElementParametersMustBeDocumented", Justification = "Dependency injection")]
         public HandleOAuthRedirectStep(
-            int stepId,
+            Enum stepId,
             IStoryBoard storyBoard,
             ILanguageService languageService,
             IFeedbackService feedbackService,
@@ -37,18 +37,18 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         {
             try
             {
-                if (!StoryBoard.TryLoadFromSession(SynchronizationStorySessionKey.CloudStorageCredentials.ToInt(), out SerializeableCloudStorageCredentials credentials))
+                if (!StoryBoard.TryLoadFromSession(SynchronizationStorySessionKey.CloudStorageCredentials, out SerializeableCloudStorageCredentials credentials))
                     throw new ArgumentNullException(nameof(credentials));
-                if (!StoryBoard.TryLoadFromSession(SynchronizationStorySessionKey.OauthState.ToInt(), out string oauthState))
+                if (!StoryBoard.TryLoadFromSession(SynchronizationStorySessionKey.OauthState, out string oauthState))
                     throw new ArgumentNullException(nameof(oauthState));
-                if (!StoryBoard.TryLoadFromSession(SynchronizationStorySessionKey.OauthCodeVerifier.ToInt(), out string oauthCodeVerifier))
+                if (!StoryBoard.TryLoadFromSession(SynchronizationStorySessionKey.OauthCodeVerifier, out string oauthCodeVerifier))
                     throw new ArgumentNullException(nameof(oauthState));
-                if (!StoryBoard.TryLoadFromSession(SynchronizationStorySessionKey.OauthRedirectUrl.ToInt(), out string redirectUrl))
+                if (!StoryBoard.TryLoadFromSession(SynchronizationStorySessionKey.OauthRedirectUrl, out string redirectUrl))
                     throw new ArgumentNullException(nameof(redirectUrl));
 
-                StoryBoard.RemoveFromSession(SynchronizationStorySessionKey.OauthState.ToInt());
-                StoryBoard.RemoveFromSession(SynchronizationStorySessionKey.OauthCodeVerifier.ToInt());
-                StoryBoard.RemoveFromSession(SynchronizationStorySessionKey.OauthRedirectUrl.ToInt());
+                StoryBoard.RemoveFromSession(SynchronizationStorySessionKey.OauthState);
+                StoryBoard.RemoveFromSession(SynchronizationStorySessionKey.OauthCodeVerifier);
+                StoryBoard.RemoveFromSession(SynchronizationStorySessionKey.OauthRedirectUrl);
 
                 ICloudStorageClient cloudStorageClient = _cloudStorageClientFactory.GetOrCreate(credentials.CloudStorageId);
                 if (cloudStorageClient is IOAuth2CloudStorageClient oauthStorageClient)
@@ -58,13 +58,13 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
                     {
                         // User has granted access.
                         credentials.Token = token;
-                        await StoryBoard.ContinueWith(SynchronizationStoryStepId.ExistsCloudRepository.ToInt());
+                        await StoryBoard.ContinueWith(SynchronizationStoryStepId.ExistsCloudRepository);
                     }
                     else
                     {
                         // User has rejected access.
                         _feedbackService.ShowToast(_languageService.LoadText("sync_reject"));
-                        await StoryBoard.ContinueWith(SynchronizationStoryStepId.StopAndShowRepository.ToInt());
+                        await StoryBoard.ContinueWith(SynchronizationStoryStepId.StopAndShowRepository);
                     }
                 }
             }

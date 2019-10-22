@@ -22,7 +22,7 @@ namespace SilentNotes.StoryBoards.PullPushStory
 
         /// <inheritdoc/>
         public StoreMergedRepositoryAndQuitStep(
-            int stepId,
+            Enum stepId,
             IStoryBoard storyBoard,
             Guid noteId,
             PullPushDirection direction,
@@ -43,7 +43,7 @@ namespace SilentNotes.StoryBoards.PullPushStory
         {
             try
             {
-                NoteRepositoryModel cloudRepository = StoryBoard.LoadFromSession<NoteRepositoryModel>(PullPushStorySessionKey.CloudRepository.ToInt());
+                NoteRepositoryModel cloudRepository = StoryBoard.LoadFromSession<NoteRepositoryModel>(PullPushStorySessionKey.CloudRepository);
                 _repositoryStorageService.LoadRepositoryOrDefault(out NoteRepositoryModel localRepository);
                 SettingsModel settings = _settingsService.LoadSettingsOrDefault();
                 SerializeableCloudStorageCredentials credentials = settings.Credentials;

@@ -19,10 +19,10 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
 
             Mock<IStoryBoard> storyBoard = new Mock<IStoryBoard>();
             storyBoard.
-                Setup(m => m.LoadFromSession<SerializeableCloudStorageCredentials>(It.Is<int>(p => p == SynchronizationStorySessionKey.CloudStorageCredentials.ToInt()))).
+                Setup(m => m.LoadFromSession<SerializeableCloudStorageCredentials>(It.Is<SynchronizationStorySessionKey>(p => p == SynchronizationStorySessionKey.CloudStorageCredentials))).
                 Returns(credentialsFromSession);
             storyBoard.
-                Setup(m => m.TryLoadFromSession(It.Is<int>(p => p == SynchronizationStorySessionKey.BinaryCloudRepository.ToInt()), out repositoryFromSession)).
+                Setup(m => m.TryLoadFromSession(It.Is<SynchronizationStorySessionKey>(p => p == SynchronizationStorySessionKey.BinaryCloudRepository), out repositoryFromSession)).
                 Returns(false);
             Mock<ICloudStorageClient> cloudStorageClient = new Mock<ICloudStorageClient>();
             cloudStorageClient.
@@ -31,7 +31,7 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
 
             // Run step
             var step = new DownloadCloudRepositoryStep(
-                SynchronizationStoryStepId.DownloadCloudRepository.ToInt(),
+                SynchronizationStoryStepId.DownloadCloudRepository,
                 storyBoard.Object,
                 CommonMocksAndStubs.LanguageService(),
                 CommonMocksAndStubs.FeedbackService(),
@@ -39,10 +39,10 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
             Assert.DoesNotThrowAsync(step.Run);
 
             // Repository was stored in session
-            storyBoard.Verify(m => m.StoreToSession(It.Is<int>(p => p == SynchronizationStorySessionKey.BinaryCloudRepository.ToInt()), It.Is<object>(p => p == repository)), Times.Once);
+            storyBoard.Verify(m => m.StoreToSession(It.Is<SynchronizationStorySessionKey>(p => p == SynchronizationStorySessionKey.BinaryCloudRepository), It.Is<object>(p => p == repository)), Times.Once);
 
             // Next step is called
-            storyBoard.Verify(m => m.ContinueWith(It.Is<int>(x => x == SynchronizationStoryStepId.ExistsTransferCode.ToInt())), Times.Once);
+            storyBoard.Verify(m => m.ContinueWith(It.Is<SynchronizationStoryStepId>(x => x == SynchronizationStoryStepId.ExistsTransferCode)), Times.Once);
         }
 
         [Test]
@@ -54,10 +54,10 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
 
             Mock<IStoryBoard> storyBoard = new Mock<IStoryBoard>();
             storyBoard.
-                Setup(m => m.LoadFromSession<SerializeableCloudStorageCredentials>(It.Is<int>(p => p == SynchronizationStorySessionKey.CloudStorageCredentials.ToInt()))).
+                Setup(m => m.LoadFromSession<SerializeableCloudStorageCredentials>(It.Is<SynchronizationStorySessionKey>(p => p == SynchronizationStorySessionKey.CloudStorageCredentials))).
                 Returns(credentialsFromSession);
             storyBoard.
-                Setup(m => m.TryLoadFromSession(It.Is<int>(p => p == SynchronizationStorySessionKey.BinaryCloudRepository.ToInt()), out repositoryFromSession)).
+                Setup(m => m.TryLoadFromSession(It.Is<SynchronizationStorySessionKey>(p => p == SynchronizationStorySessionKey.BinaryCloudRepository), out repositoryFromSession)).
                 Returns(false);
             Mock<IFeedbackService> feedbackService = new Mock<IFeedbackService>();
             Mock<ICloudStorageClient> cloudStorageClient = new Mock<ICloudStorageClient>();
@@ -67,7 +67,7 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
 
             // Run step
             var step = new DownloadCloudRepositoryStep(
-                SynchronizationStoryStepId.DownloadCloudRepository.ToInt(),
+                SynchronizationStoryStepId.DownloadCloudRepository,
                 storyBoard.Object,
                 CommonMocksAndStubs.LanguageService(),
                 feedbackService.Object,
@@ -78,7 +78,7 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
             feedbackService.Verify(m => m.ShowToast(It.IsAny<string>()), Times.Once);
 
             // Next step is called
-            storyBoard.Verify(m => m.ContinueWith(It.Is<int>(x => x == SynchronizationStoryStepId.ExistsTransferCode.ToInt())), Times.Never);
+            storyBoard.Verify(m => m.ContinueWith(It.Is<SynchronizationStoryStepId>(x => x == SynchronizationStoryStepId.ExistsTransferCode)), Times.Never);
         }
     }
 }

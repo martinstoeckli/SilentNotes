@@ -3,6 +3,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using System.Drawing;
 using SilentNotes.HtmlView;
 using SilentNotes.Services;
 using SilentNotes.ViewModels;
@@ -14,6 +15,7 @@ namespace SilentNotes.Controllers
     /// </summary>
     public abstract class ControllerBase : IController
     {
+        private readonly Color _defaultBackgroundColor = Color.FromArgb(255, 240, 240, 240);
         private bool _disposed = false;
 
         /// <summary>Gets the injected view service.</summary>
@@ -79,8 +81,21 @@ namespace SilentNotes.Controllers
         public virtual void ShowInView(IHtmlView htmlView, KeyValueList<string, string> variables)
         {
             View = htmlView;
+            SetViewBackgroundColor(htmlView);
             Bindings?.Dispose();
             Bindings = new HtmlViewBindings(htmlView);
+        }
+
+        /// <summary>
+        /// Sets the default background color of the webview, this is the color shown while loading
+        /// an HTML page or when the css background color is transparent. This method is called as
+        /// early as possible, to avoid the white flicker when using dark themes, which is visible
+        /// until the html page has finished loading.
+        /// </summary>
+        /// <param name="htmlView">The interface to the webview.</param>
+        protected virtual void SetViewBackgroundColor(IHtmlView htmlView)
+        {
+            htmlView.SetBackgroundColor(_defaultBackgroundColor);
         }
 
         /// <inheritdoc/>

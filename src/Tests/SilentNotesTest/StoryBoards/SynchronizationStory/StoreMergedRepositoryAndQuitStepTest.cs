@@ -20,7 +20,7 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
 
             Mock<IStoryBoard> storyBoard = new Mock<IStoryBoard>();
             storyBoard.
-                Setup(m => m.LoadFromSession<NoteRepositoryModel>(It.Is<int>(p => p == SynchronizationStorySessionKey.CloudRepository.ToInt()))).
+                Setup(m => m.LoadFromSession<NoteRepositoryModel>(It.Is<SynchronizationStorySessionKey>(p => p == SynchronizationStorySessionKey.CloudRepository))).
                 Returns(repositoryModel); // same as from repositoryStorageService
             Mock<ISettingsService> settingsService = new Mock<ISettingsService>();
             Mock<IRepositoryStorageService> repositoryStorageService = new Mock<IRepositoryStorageService>();
@@ -30,7 +30,7 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
 
             // Run step
             var step = new StoreMergedRepositoryAndQuitStep(
-                SynchronizationStoryStepId.StoreLocalRepositoryToCloudAndQuit.ToInt(),
+                SynchronizationStoryStepId.StoreLocalRepositoryToCloudAndQuit,
                 storyBoard.Object,
                 CommonMocksAndStubs.LanguageService(),
                 CommonMocksAndStubs.FeedbackService(),
@@ -47,7 +47,7 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
             cloudStorageClient.Verify(m => m.UploadFileAsync(It.IsAny<string>(), It.IsAny<byte[]>(), It.IsAny<CloudStorageCredentials>()), Times.Never);
 
             // Next step is called
-            storyBoard.Verify(m => m.ContinueWith(It.Is<int>(x => x == SynchronizationStoryStepId.StopAndShowRepository.ToInt())), Times.Once);
+            storyBoard.Verify(m => m.ContinueWith(It.Is<SynchronizationStoryStepId>(x => x == SynchronizationStoryStepId.StopAndShowRepository)), Times.Once);
         }
 
         [Test]
@@ -63,10 +63,10 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
 
             Mock<IStoryBoard> storyBoard = new Mock<IStoryBoard>();
             storyBoard.
-                Setup(m => m.LoadFromSession<SerializeableCloudStorageCredentials>(It.Is<int>(p => p == SynchronizationStorySessionKey.CloudStorageCredentials.ToInt()))).
+                Setup(m => m.LoadFromSession<SerializeableCloudStorageCredentials>(It.Is<SynchronizationStorySessionKey>(p => p == SynchronizationStorySessionKey.CloudStorageCredentials))).
                 Returns(credentialsFromSession);
             storyBoard.
-                Setup(m => m.LoadFromSession<NoteRepositoryModel>(It.Is<int>(p => p == SynchronizationStorySessionKey.CloudRepository.ToInt()))).
+                Setup(m => m.LoadFromSession<NoteRepositoryModel>(It.Is<SynchronizationStorySessionKey>(p => p == SynchronizationStorySessionKey.CloudRepository))).
                 Returns(repositoryModelCloud); // same as from repositoryStorageService
             Mock<ISettingsService> settingsService = new Mock<ISettingsService>();
             settingsService.
@@ -78,7 +78,7 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
 
             // Run step
             var step = new StoreMergedRepositoryAndQuitStep(
-                SynchronizationStoryStepId.StoreLocalRepositoryToCloudAndQuit.ToInt(),
+                SynchronizationStoryStepId.StoreLocalRepositoryToCloudAndQuit,
                 storyBoard.Object,
                 CommonMocksAndStubs.LanguageService(),
                 CommonMocksAndStubs.FeedbackService(),
@@ -95,7 +95,7 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
             cloudStorageClient.Verify(m => m.UploadFileAsync(It.IsAny<string>(), It.IsAny<byte[]>(), It.IsAny<CloudStorageCredentials>()), Times.Once);
 
             // Next step is called
-            storyBoard.Verify(m => m.ContinueWith(It.Is<int>(x => x == SynchronizationStoryStepId.StopAndShowRepository.ToInt())), Times.Once);
+            storyBoard.Verify(m => m.ContinueWith(It.Is<SynchronizationStoryStepId>(x => x == SynchronizationStoryStepId.StopAndShowRepository)), Times.Once);
         }
 
         private static SettingsModel CreateSettingsModel(string transferCode)

@@ -16,7 +16,7 @@ namespace SilentNotes.StoryBoards
     public class StoryBoardBase : IStoryBoard
     {
         private readonly List<IStoryBoardStep> _steps;
-        protected Dictionary<int, object> _session;
+        protected Dictionary<Enum, object> _session;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StoryBoardBase"/> class.
@@ -27,7 +27,7 @@ namespace SilentNotes.StoryBoards
         public StoryBoardBase(StoryBoardMode mode = StoryBoardMode.GuiAndToasts)
         {
             Mode = mode;
-            _session = new Dictionary<int, object>();
+            _session = new Dictionary<Enum, object>();
             _steps = new List<IStoryBoardStep>();
         }
 
@@ -48,7 +48,7 @@ namespace SilentNotes.StoryBoards
         }
 
         /// <inheritdoc/>
-        public async Task ContinueWith(int stepId)
+        public async Task ContinueWith(Enum stepId)
         {
             IStoryBoardStep step = FindRegisteredStep(stepId);
             if (step != null)
@@ -56,20 +56,20 @@ namespace SilentNotes.StoryBoards
         }
 
         /// <inheritdoc/>
-        public void StoreToSession(int key, object value)
+        public void StoreToSession(Enum key, object value)
         {
             _session[key] = value;
         }
 
         /// <inheritdoc/>
-        public void RemoveFromSession(int key)
+        public void RemoveFromSession(Enum key)
         {
             _session.Remove(key);
         }
 
         /// <inheritdoc/>
         [DebuggerStepThrough]
-        public bool TryLoadFromSession<T>(int key, out T value)
+        public bool TryLoadFromSession<T>(Enum key, out T value)
         {
             if (_session.TryGetValue(key, out var dictionaryValue) && (dictionaryValue is T typedValue))
             {
@@ -82,7 +82,7 @@ namespace SilentNotes.StoryBoards
 
         /// <inheritdoc/>
         [DebuggerStepThrough]
-        public T LoadFromSession<T>(int key)
+        public T LoadFromSession<T>(Enum key)
         {
             bool successful = TryLoadFromSession<T>(key, out T result);
             if (successful)
@@ -102,9 +102,9 @@ namespace SilentNotes.StoryBoards
         /// </summary>
         /// <param name="stepId">Id of the step to search for.</param>
         /// <returns>The found step, or null if no such step could be found.</returns>
-        protected IStoryBoardStep FindRegisteredStep(int stepId)
+        protected IStoryBoardStep FindRegisteredStep(Enum stepId)
         {
-            return _steps.Find(step => stepId == step.Id);
+            return _steps.Find(step => step.Id.Equals(stepId));
         }
     }
 }
