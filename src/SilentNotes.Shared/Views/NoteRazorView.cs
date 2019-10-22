@@ -92,7 +92,7 @@ WriteLiteral(" rel=\"stylesheet\"");
 
 WriteLiteral(">\r\n\r\n    <script");
 
-WriteLiteral(" src=\"jquery-3.3.1.min.js\"");
+WriteLiteral(" src=\"jquery-3.4.1.min.js\"");
 
 WriteLiteral("></script>\r\n    <script");
 
