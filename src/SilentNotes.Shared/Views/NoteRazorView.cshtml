@@ -46,6 +46,13 @@
             quill.format(formatName, newSelectionFormat, 'user');
         }
 
+        function toggleLink() {
+            var selectionFormat = quill.getFormat();
+            var selectionFormatValue = selectionFormat['link'];
+            var toolbar = quill.getModule('toolbar');
+            toolbar.handlers['link'].call(toolbar, !selectionFormatValue);
+        }
+
         function simulateArrowKey(key) {
             quill.focus();
             var range = quill.getSelection();
@@ -77,7 +84,7 @@
 
         $(function () {
             quill = new Quill('#myeditor', {
-                formats: ['header', 'bold', 'italic', 'underline', 'strike', 'list', 'code', 'code-block', 'blockquote'],
+                formats: ['header', 'bold', 'italic', 'underline', 'strike', 'list', 'code', 'code-block', 'blockquote', 'link'],
                 modules: {
                     toolbar: '#quill-toolbar',
                 },
@@ -155,6 +162,7 @@
                 <div class="dropdown-item show-only-on-narrow-browser" onclick="toggleBlockFormat('list', 'bullet');">@{WriteLiteral(Model.Icon["format-list-bulleted"]);} @Model.Language["note_list_unordered"]</div>
                 <div class="dropdown-item" onclick="toggleFormat('code-block');">@{WriteLiteral(Model.Icon["code-braces"]);} @Model.Language["note_code"]</div>
                 <div class="dropdown-item" onclick="toggleFormat('blockquote');">@{WriteLiteral(Model.Icon["format-quote-close"]);} @Model.Language["note_quotation"]</div>
+                <div class="dropdown-item" onclick="toggleLink()">@{WriteLiteral(Model.Icon["link-variant"]);} @Model.Language["note_link"]</div>
                 <hr>
                 <div class="dropdown-item" onclick="bind(event);" data-binding="PushNoteToOnlineStorage">@{WriteLiteral(Model.Icon["cloud-upload"]);} @Model.Language["note_push_to_server"]</div>
                 <div class="dropdown-item" onclick="bind(event);" data-binding="PullNoteFromOnlineStorage">@{WriteLiteral(Model.Icon["cloud-download"]);} @Model.Language["note_pull_from_server"]</div>
