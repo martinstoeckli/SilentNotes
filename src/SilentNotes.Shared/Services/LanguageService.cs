@@ -49,6 +49,7 @@ namespace SilentNotes.Services
             resources["note_list_unordered"] = "Bulleted list";
             resources["note_code"] = "Code block";
             resources["note_quotation"] = "Quotation";
+            resources["note_link"] = "Link";
             resources["note_pull_from_server"] = "Download note";
             resources["note_push_to_server"] = "Upload note";
 
@@ -160,6 +161,7 @@ namespace SilentNotes.Services
             resources["note_list_unordered"] = "Aufzählungsliste";
             resources["note_code"] = "Code Block";
             resources["note_quotation"] = "Zitat";
+            resources["note_link"] = "Link";
             resources["note_pull_from_server"] = "Notiz herunterladen";
             resources["note_push_to_server"] = "Notiz hochladen";
 

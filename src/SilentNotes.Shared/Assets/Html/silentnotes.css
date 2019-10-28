@@ -193,6 +193,12 @@ h3 {
 	box-shadow: 2px 1px 4px rgba(0, 0, 0, 0.4);
 	font-size: 0.9em;
 	user-select: none;
+	cursor: default;
+}
+.note-card a:hover {
+	text-decoration: none;
+	cursor: default;
+	color: #007bff;
 }
 
 /* narrow browser */
