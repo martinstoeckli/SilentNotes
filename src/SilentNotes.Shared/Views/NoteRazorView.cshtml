@@ -112,6 +112,10 @@
             $(quill.root).one("focusin", function () {
                 $('#arrowkeys').css("display", "inline-flex");
             });
+
+            // This way we can remove the tel:// protocol
+            var Link = Quill.import('formats/link');
+            Link.PROTOCOL_WHITELIST = ['http', 'https', 'mailto'];
         });
     </script>
 </head>

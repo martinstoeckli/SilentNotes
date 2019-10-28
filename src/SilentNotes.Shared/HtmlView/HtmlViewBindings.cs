@@ -58,7 +58,7 @@ namespace SilentNotes.HtmlView
         /// <param name="uri">The navigation Uri.</param>
         private void NavigatingEventHandler(object sender, string uri)
         {
-            if (_disposed || string.IsNullOrEmpty(uri) || !uri.Contains(JsNamespace))
+            if (_disposed || !IsHtmlViewBindingUri(uri))
                 return;
 
             // Read parameters from requested url
@@ -340,6 +340,32 @@ namespace SilentNotes.HtmlView
             _htmlView.NavigationCompleted -= NavigationCompletedEventHandler;
             _htmlView.Navigating -= NavigatingEventHandler;
             _bindings.Clear();
+        }
+
+        private static bool IsHtmlViewBindingUri(string uri)
+        {
+            return !string.IsNullOrEmpty(uri) && uri.Contains(JsNamespace) && !IsExternalLinkUri(uri);
+        }
+
+        /// <summary>
+        /// Determines whether the <paramref name="uri"/> contains an url which opens an external
+        /// webpage or triggers an external action. Accepted protocols are "http:", "https:"
+        /// and "mailto:".
+        /// </summary>
+        /// <param name="uri">Test candidate.</param>
+        /// <returns>Returns true in case of a link uri, otherwise false.</returns>
+        public static bool IsExternalLinkUri(string uri)
+        {
+            if (string.IsNullOrEmpty(uri))
+                return false;
+
+            string[] acceptedProtocols = { "http:", "https:", "mailto:" };
+            foreach (string acceptedProtocol in acceptedProtocols)
+            {
+                if (uri.StartsWith(acceptedProtocol, StringComparison.InvariantCultureIgnoreCase))
+                    return true;
+            }
+            return false;
         }
 
         private Action<T> ViewSetterOrNullIfNotRequired<T>(Action<T> viewSetter, HtmlViewBindingMode bindingMode)

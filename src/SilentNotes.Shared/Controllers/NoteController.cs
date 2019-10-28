@@ -36,6 +36,13 @@ namespace SilentNotes.Controllers
         }
 
         /// <inheritdoc/>
+        protected override void OverrideableDispose()
+        {
+            View.Navigating -= NavigatingEventHandler;
+            base.OverrideableDispose();
+        }
+
+        /// <inheritdoc/>
         protected override IViewModel GetViewModel()
         {
             return _viewModel;
@@ -94,9 +101,20 @@ namespace SilentNotes.Controllers
                 htmlView.SetBackgroundColor(ColorExtensions.HexToColor(_viewModel.BackgroundColorHex));
         }
 
+        private void NavigatingEventHandler(object sender, string uri)
+        {
+            if (HtmlViewBindings.IsExternalLinkUri(uri))
+            {
+                INativeBrowserService nativeBrowser = Ioc.GetOrCreate<INativeBrowserService>();
+                nativeBrowser.OpenWebsite(uri);
+            }
+        }
+
         private void NavigationCompletedEventHandler(object sender, EventArgs e)
         {
             View.NavigationCompleted -= NavigationCompletedEventHandler;
+            View.Navigating += NavigatingEventHandler;
+
             if (_startedWithSendToSilentnotes)
             {
                 // Let quill do the text import, so it can convert it safely to HTML and trigger

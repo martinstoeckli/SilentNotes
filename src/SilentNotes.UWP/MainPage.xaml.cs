@@ -33,6 +33,8 @@ namespace SilentNotes.UWP
             _webView.Settings.IsIndexedDBEnabled = false;
             _webView.NavigationStarting += NavigatingStartingEventHandler;
             _webView.NavigationCompleted += NavigationCompletedEventHandler;
+            _webView.NewWindowRequested += NewWindowRequestedEventHandler;
+            _webView.UnsupportedUriSchemeIdentified += UnsupportedUriSchemeIdentified;
 
             Startup.InitializeApplication(this);
         }
@@ -46,10 +48,11 @@ namespace SilentNotes.UWP
 
         private void NavigatingStartingEventHandler(WebView sender, WebViewNavigationStartingEventArgs args)
         {
-            if (args.Uri != null)
+            // This event is called when a link is clicked or when JS tries to navigate.
+            if (TryExtractOriginalUrl(args, out string url))
             {
-                OnNavigating(args.Uri.OriginalString);
                 args.Cancel = true;
+                OnNavigating(url);
             }
         }
 
@@ -57,6 +60,79 @@ namespace SilentNotes.UWP
         {
             if ((NavigationCompleted != null) && args.IsSuccess)
                 NavigationCompleted(sender, new EventArgs());
+        }
+
+        private void NewWindowRequestedEventHandler(WebView sender, WebViewNewWindowRequestedEventArgs args)
+        {
+            // This event is called when a link with an external target is clicked.
+            args.Handled = true;
+            if (TryExtractOriginalUrl(args, out string url))
+                OnNavigating(url);
+        }
+
+        private void UnsupportedUriSchemeIdentified(WebView sender, WebViewUnsupportedUriSchemeIdentifiedEventArgs args)
+        {
+            // This event is called when a link like mailto:// is called.
+            args.Handled = true;
+            if (TryExtractOriginalUrl(args, out string url))
+                OnNavigating(url);
+        }
+
+        private static bool TryExtractOriginalUrl(WebViewNavigationStartingEventArgs args, out string url)
+        {
+            try
+            {
+                if (args?.Uri != null)
+                {
+                    url = args.Uri.OriginalString;
+                    return true;
+                }
+            }
+            catch
+            {
+                // It is possible that even calling the getter "args.Uri" already results in an
+                // exception, e.g. when the event was triggered with a "tel://*" protocol.
+            }
+            url = null;
+            return false;
+        }
+
+        private static bool TryExtractOriginalUrl(WebViewNewWindowRequestedEventArgs args, out string url)
+        {
+            try
+            {
+                if (args?.Uri != null)
+                {
+                    url = args.Uri.OriginalString;
+                    return true;
+                }
+            }
+            catch
+            {
+                // It is possible that even calling the getter "args.Uri" already results in an
+                // exception, e.g. when the event was triggered with a "tel://*" protocol.
+            }
+            url = null;
+            return false;
+        }
+
+        private static bool TryExtractOriginalUrl(WebViewUnsupportedUriSchemeIdentifiedEventArgs args, out string url)
+        {
+            try
+            {
+                if (args?.Uri != null)
+                {
+                    url = args.Uri.OriginalString;
+                    return true;
+                }
+            }
+            catch
+            {
+                // It is possible that even calling the getter "args.Uri" already results in an
+                // exception, e.g. when the event was triggered with a "tel://*" protocol.
+            }
+            url = null;
+            return false;
         }
 
         /// <inheritdoc/>
