@@ -30,6 +30,9 @@ namespace SilentNotes.Services
         }
 
         /// <inheritdoc/>
+        public Navigation CurrentNavigation { get; private set; }
+
+        /// <inheritdoc/>
         public IController CurrentController { get; private set; }
     }
 }

@@ -4,6 +4,7 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using Android.App;
@@ -33,6 +34,7 @@ namespace SilentNotes.Android
     public class MainActivity : Activity, IHtmlView
     {
         private WebView _webView;
+        private Navigation _lastNavigation;
 
         /// <inheritdoc/>
         protected override void OnCreate(Bundle bundle)
@@ -92,17 +94,27 @@ namespace SilentNotes.Android
             else
             {
                 // Normal startup
-                navigation.Navigate(ControllerNames.NoteRepository);
+                if (CanStartupWithLastNavigation(_lastNavigation))
+                    navigation.Navigate(_lastNavigation.ControllerId, _lastNavigation.Variables);
+                else
+                    navigation.Navigate(ControllerNames.NoteRepository);
 
                 IAutoSynchronizationService syncService = Ioc.GetOrCreate<IAutoSynchronizationService>();
                 syncService.SynchronizeAtStartup(); // no awaiting, run in background
             }
         }
 
+        private static bool CanStartupWithLastNavigation(Navigation navigation)
+        {
+            var allowedStartupNavigations = new[] { ControllerNames.NoteRepository, ControllerNames.Note, ControllerNames.Settings, ControllerNames.Info };
+            return allowedStartupNavigations.Contains(navigation?.ControllerId);
+        }
+
         /// <inheritdoc/>
         protected override void OnStop()
         {
             INavigationService navigationService = Ioc.GetOrCreate<INavigationService>();
+            _lastNavigation = navigationService?.CurrentNavigation;
             navigationService.CurrentController?.StoreUnsavedData();
             navigationService.CurrentController?.Dispose();
 
