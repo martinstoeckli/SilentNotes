@@ -42,8 +42,29 @@ namespace SilentNotes.Services
         void RepeatNavigationIf(IEnumerable<string> ifAnyOfThisControllers);
 
         /// <summary>
+        /// Gets the parameters of the currently active navigation.
+        /// </summary>
+        Navigation CurrentNavigation { get; }
+
+        /// <summary>
         /// Gets the currently active controller.
         /// </summary>
         IController CurrentController { get; }
+    }
+
+    /// <summary>
+    /// Describes all parameters necessary to do a navigation.
+    /// </summary>
+    public class Navigation
+    {
+        /// <summary>
+        /// Gets or sets the id of the controller.
+        /// </summary>
+        public string ControllerId { get; set; }
+
+        /// <summary>
+        /// Gets or sets an optional collection of variables for the navigation.
+        /// </summary>
+        public KeyValueList<string, string> Variables { get; set; }
     }
 }

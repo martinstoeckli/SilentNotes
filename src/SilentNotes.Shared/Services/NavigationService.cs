@@ -17,8 +17,6 @@ namespace SilentNotes.Services
     public class NavigationService : INavigationService
     {
         private readonly IHtmlView _htmlView;
-        private string _currentControllerId;
-        private KeyValueList<string, string> _currentVariables;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NavigationService"/> class.
@@ -33,21 +31,18 @@ namespace SilentNotes.Services
         public virtual void Navigate(string controllerId, KeyValueList<string, string> variables = null)
         {
             CleanupCurrentController();
+            CurrentNavigation = new Navigation { ControllerId = controllerId, Variables = variables };
 
             // Setup new controller
-            IController newController = Ioc.CreateWithKey<IController>(controllerId);
-            CurrentController = newController;
-            _currentControllerId = controllerId;
-            _currentVariables = variables;
-            newController.ShowInView(_htmlView, variables);
+            CurrentController = Ioc.CreateWithKey<IController>(CurrentNavigation.ControllerId);
+            CurrentController.ShowInView(_htmlView, CurrentNavigation.Variables);
         }
 
         private void CleanupCurrentController()
         {
             IController oldController = CurrentController;
             CurrentController = null;
-            _currentControllerId = null;
-            _currentVariables = null;
+            CurrentNavigation = null;
 
             // Clean up old controller
             if (oldController != null)
@@ -68,11 +63,14 @@ namespace SilentNotes.Services
         /// <inheritdoc/>
         public void RepeatNavigationIf(IEnumerable<string> ifAnyOfThisControllers)
         {
-            if ((CurrentController != null) && ifAnyOfThisControllers.Contains(_currentControllerId))
+            if ((CurrentNavigation != null) && ifAnyOfThisControllers.Contains(CurrentNavigation.ControllerId))
             {
-                Navigate(_currentControllerId, _currentVariables);
+                Navigate(CurrentNavigation.ControllerId, CurrentNavigation.Variables);
             }
         }
+
+        /// <inheritdoc/>
+        public Navigation CurrentNavigation { get; private set; }
 
         /// <inheritdoc/>
         public IController CurrentController { get; private set; }
