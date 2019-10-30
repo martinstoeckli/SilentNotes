@@ -81,7 +81,7 @@ namespace SilentNotes.Controllers
         public virtual void ShowInView(IHtmlView htmlView, KeyValueList<string, string> variables)
         {
             View = htmlView;
-            SetViewBackgroundColor(htmlView);
+            SetHtmlViewBackgroundColor(htmlView);
             Bindings?.Dispose();
             Bindings = new HtmlViewBindings(htmlView);
         }
@@ -93,7 +93,7 @@ namespace SilentNotes.Controllers
         /// until the html page has finished loading.
         /// </summary>
         /// <param name="htmlView">The interface to the webview.</param>
-        protected virtual void SetViewBackgroundColor(IHtmlView htmlView)
+        protected virtual void SetHtmlViewBackgroundColor(IHtmlView htmlView)
         {
             htmlView.SetBackgroundColor(_defaultBackgroundColor);
         }

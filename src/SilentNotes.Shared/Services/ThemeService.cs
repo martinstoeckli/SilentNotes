@@ -29,16 +29,16 @@ namespace SilentNotes.Services
 
         private void FillThemes(List<ThemeModel> themes)
         {
-            themes.Add(new ThemeModel("cork", "cork.jpg", "#a27b50"));
-            themes.Add(new ThemeModel("forest", "forest.jpg", "#32601f"));
-            themes.Add(new ThemeModel("stone", "stone.jpg", "#3c2e33"));
-            themes.Add(new ThemeModel("grass", "grass.jpg", "#347b19"));
+            themes.Add(new ThemeModel("cork", "cork.jpg", "#7d6346"));
+            themes.Add(new ThemeModel("forest", "forest.jpg", "#323e2d"));
+            themes.Add(new ThemeModel("stone", "stone.jpg", "#373033"));
+            themes.Add(new ThemeModel("grass", "grass.jpg", "#335726"));
             themes.Add(new ThemeModel("paper", "paper.jpg", "#fcf7f4"));
-            themes.Add(new ThemeModel("sky", "sky.jpg", "#5187b3"));
-            themes.Add(new ThemeModel("water", "water.jpg", "#2b94c4"));
-            themes.Add(new ThemeModel("sand", "sand.jpg", "#c6a06f"));
+            themes.Add(new ThemeModel("sky", "sky.jpg", "#4f718d"));
+            themes.Add(new ThemeModel("water", "water.jpg", "#2f637b"));
+            themes.Add(new ThemeModel("sand", "sand.jpg", "#7c6951"));
             themes.Add(new ThemeModel("stars", "stars.jpg", "#000518"));
-            themes.Add(new ThemeModel("meadow", "meadow.jpg", "#245619"));
+            themes.Add(new ThemeModel("meadow", "meadow.jpg", "#2b4426"));
         }
 
         /// <inheritdoc/>
