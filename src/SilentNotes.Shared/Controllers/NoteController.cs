@@ -4,7 +4,6 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
-using System.Web;
 using SilentNotes.HtmlView;
 using SilentNotes.Models;
 using SilentNotes.Services;
@@ -119,7 +118,7 @@ namespace SilentNotes.Controllers
             {
                 // Let quill do the text import, so it can convert it safely to HTML and trigger
                 // the "quill" event which eventually sets the modified property.
-                string encodedNewText = HttpUtility.JavaScriptStringEncode(_sendToSilentnotesText, false);
+                string encodedNewText = View.EscapeJavaScriptString(_sendToSilentnotesText);
                 string script = string.Format("setNoteHtmlContent('{0}');", encodedNewText);
                 View.ExecuteJavaScript(script);
             }
