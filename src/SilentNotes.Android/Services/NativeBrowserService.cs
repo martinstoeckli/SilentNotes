@@ -5,7 +5,7 @@
 
 using Android.Content;
 using Android.Net;
-using Android.Support.CustomTabs;
+using AndroidX.Browser.CustomTabs;
 using SilentNotes.Services;
 
 namespace SilentNotes.Android.Services
