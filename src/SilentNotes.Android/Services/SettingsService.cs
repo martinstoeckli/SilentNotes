@@ -7,7 +7,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Xml.Linq;
 using Android.Content;
-using Android.Support.V4.Content;
+using AndroidX.Core.Content;
 using SilentNotes.Crypto;
 using SilentNotes.Services;
 

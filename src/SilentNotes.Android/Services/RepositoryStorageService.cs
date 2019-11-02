@@ -5,7 +5,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 using Android.Content;
-using Android.Support.V4.Content;
+using AndroidX.Core.Content;
 using SilentNotes.Services;
 
 namespace SilentNotes.Android.Services
