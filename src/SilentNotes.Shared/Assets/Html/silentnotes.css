@@ -27,7 +27,8 @@ h3 {
 	color: steelblue;
 }
 
-.a { text-decoration: underline; color: #007bff; }
+a { color: #007bff; text-decoration: none; }
+a:hover { color: #007bff; text-decoration: underline; }
 
 #navigation {
 	margin: 0;
@@ -196,9 +197,7 @@ h3 {
 	cursor: default;
 }
 .note-card a:hover {
-	text-decoration: none;
 	cursor: default;
-	color: #007bff;
 }
 
 /* narrow browser */
@@ -375,3 +374,8 @@ a[data-tooltip]:hover:after {
 .note-viewer.dark blockquote {
 	border-left: 3px solid rgba(211, 211, 211, 0.6) !important;
 }
+
+.note-viewer a { color: rgba(70, 130, 180, 0.80) !important; text-decoration: none !important; }
+.note-viewer a:hover { color: rgba(70, 130, 180, 0.80) !important; text-decoration: underline !important; }
+.note-viewer.dark a { color: rgba(173, 216, 230, 0.90) !important; }
+.note-viewer.dark a:hover { color: rgba(173, 216, 230, 0.90) !important; }
