@@ -3,7 +3,7 @@
   <PropertyGroup>
     <BaseIntermediateOutputPath>$(TEMP)\SilentNotesUWP\obj\</BaseIntermediateOutputPath>
     <PackageCertificateThumbprint>BB3C3B4BEE739D0F79A9C5C04827A774E0C9421E</PackageCertificateThumbprint>
-    <GenerateAppInstallerFile>True</GenerateAppInstallerFile>
+    <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <AppxBundle>Always</AppxBundle>
     <AppxBundlePlatforms>x86|x64</AppxBundlePlatforms>
