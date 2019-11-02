@@ -399,7 +399,7 @@ namespace SilentNotes.HtmlView
 
         private void ViewValueSetter(string bindingName, object value)
         {
-            string valueText = value == null ? string.Empty : value.ToString();
+            string valueText = _htmlView.EscapeJavaScriptString(value?.ToString());
             string script = string.Format(
                 "htmlViewBindingsSetValue('{0}', '{1}');", bindingName, valueText);
             _htmlView.ExecuteJavaScript(script);
@@ -415,7 +415,7 @@ namespace SilentNotes.HtmlView
         private void ViewBackgroundImageSetter(string bindingName, string image)
         {
             string script = string.Format(
-                "htmlViewBindingsSetBackgroundImage('{0}', '{1}');", bindingName, image);
+                "htmlViewBindingsSetBackgroundImage('{0}', '{1}');", bindingName, _htmlView.EscapeJavaScriptString(image));
             _htmlView.ExecuteJavaScript(script);
         }
     }

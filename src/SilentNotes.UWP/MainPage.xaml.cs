@@ -144,7 +144,7 @@ namespace SilentNotes.UWP
         /// <inheritdoc/>
         public void ReplaceNode(string nodeId, string newHtml)
         {
-            string encodedNewHtml = HttpUtility.JavaScriptStringEncode(newHtml, false);
+            string encodedNewHtml = EscapeJavaScriptString(newHtml);
             string script = string.Format("document.getElementById('{0}').outerHTML = \"{1}\";", nodeId, encodedNewHtml);
             ExecuteJavaScript(script);
         }
@@ -168,6 +168,15 @@ namespace SilentNotes.UWP
                 });
             string result = await taskCompletion.Task;
             return result;
+        }
+
+        /// <inheritdoc/>
+        public string EscapeJavaScriptString(string text)
+        {
+            if (string.IsNullOrEmpty(text))
+                return string.Empty;
+            else
+                return HttpUtility.JavaScriptStringEncode(text, false);
         }
 
         /// <inheritdoc/>
