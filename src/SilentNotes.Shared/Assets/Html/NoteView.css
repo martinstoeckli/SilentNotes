@@ -120,3 +120,8 @@
 	color: black;
 	font-size: 15px;
 }
+
+/* Link editor */
+
+.ql-snow .ql-tooltip a { color: #007bff !important; text-decoration: none !important; }
+.ql-snow .ql-tooltip a:hover { color: #007bff !important; text-decoration: none !important; }

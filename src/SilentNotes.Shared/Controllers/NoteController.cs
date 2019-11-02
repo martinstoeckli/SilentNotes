@@ -83,7 +83,7 @@ namespace SilentNotes.Controllers
                 Ioc.GetOrCreate<IFeedbackService>(),
                 settingsService,
                 note);
-            SetViewBackgroundColor(htmlView);
+            SetHtmlViewBackgroundColor(htmlView);
 
             Bindings.BindCommand("PullNoteFromOnlineStorage", _viewModel.PullNoteFromOnlineStorageCommand);
             Bindings.BindCommand("PushNoteToOnlineStorage", _viewModel.PushNoteToOnlineStorageCommand);
@@ -95,7 +95,7 @@ namespace SilentNotes.Controllers
         }
 
         /// <inheritdoc/>
-        protected override void SetViewBackgroundColor(IHtmlView htmlView)
+        protected override void SetHtmlViewBackgroundColor(IHtmlView htmlView)
         {
             if (_viewModel != null)
                 htmlView.SetBackgroundColor(ColorExtensions.HexToColor(_viewModel.BackgroundColorHex));
@@ -131,8 +131,8 @@ namespace SilentNotes.Controllers
             {
                 case "backgroundcolorhex":
                     _viewModel.BackgroundColorHex = e.Parameters["data-backgroundcolorhex"];
-                    SetViewBackgroundColor(View);
-                    AdjustBrightDarkThemeInView();
+                    SetHtmlViewBackgroundColor(View);
+                    SetViewBackgroundColor(_viewModel.BackgroundColorHex);
                     break;
                 case "quill":
                     string content = await View.ExecuteJavaScriptReturnString("getNoteHtmlContent();");
@@ -141,11 +141,12 @@ namespace SilentNotes.Controllers
             }
         }
 
-        private void AdjustBrightDarkThemeInView()
+        private void SetViewBackgroundColor(string colorHex)
         {
-            //string script;
+            string script = string.Format(
+                "htmlViewBindingsSetCss('Content', 'background-color', '{0}');", colorHex);
             string darkClass = _viewModel.GetDarkClass();
-            string script = string.IsNullOrEmpty(darkClass)
+            script += string.IsNullOrEmpty(darkClass)
                 ? "htmlViewBindingsRemoveClass('quill', 'dark');"
                 : "htmlViewBindingsAddClass('quill', 'dark');";
             View.ExecuteJavaScript(script);

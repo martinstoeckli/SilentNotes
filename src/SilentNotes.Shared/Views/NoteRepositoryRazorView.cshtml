@@ -19,7 +19,10 @@
     <script src="jquery.longpress.js"></script>
 
     <style type="text/css">
-        body { background: url(@Model.Theme.Image); }
+        body {
+            background-color: @Model.Theme.ImageTint;
+            background: url(@Model.Theme.Image);
+        }
 
         .note-viewer {
             font-size: @(Model.NoteBaseFontSize)px !important;
