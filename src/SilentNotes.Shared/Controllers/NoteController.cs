@@ -102,11 +102,25 @@ namespace SilentNotes.Controllers
 
         private void NavigatingEventHandler(object sender, string uri)
         {
-            if (HtmlViewBindings.IsExternalLinkUri(uri))
+            if (IsExternalLink(uri))
             {
                 INativeBrowserService nativeBrowser = Ioc.GetOrCreate<INativeBrowserService>();
                 nativeBrowser.OpenWebsite(uri);
             }
+        }
+
+        private static bool IsExternalLink(string uri)
+        {
+            if (string.IsNullOrEmpty(uri))
+                return false;
+
+            string[] acceptedProtocols = { "http:", "https:", "mailto:" };
+            foreach (string acceptedProtocol in acceptedProtocols)
+            {
+                if (uri.StartsWith(acceptedProtocol, StringComparison.InvariantCultureIgnoreCase))
+                    return true;
+            }
+            return false;
         }
 
         private void NavigationCompletedEventHandler(object sender, EventArgs e)
@@ -118,7 +132,7 @@ namespace SilentNotes.Controllers
             {
                 // Let quill do the text import, so it can convert it safely to HTML and trigger
                 // the "quill" event which eventually sets the modified property.
-                string encodedNewText = View.EscapeJavaScriptString(_sendToSilentnotesText);
+                string encodedNewText = WebviewUtils.EscapeJavaScriptString(_sendToSilentnotesText);
                 string script = string.Format("setNoteHtmlContent('{0}');", encodedNewText);
                 View.ExecuteJavaScript(script);
             }
