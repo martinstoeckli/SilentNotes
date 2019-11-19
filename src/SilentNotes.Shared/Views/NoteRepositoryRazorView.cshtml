@@ -27,6 +27,10 @@
         .note-viewer {
             font-size: @(Model.NoteBaseFontSize)px !important;
         }
+        .note-viewer a {
+            pointer-events: none; /* ignore clicks on links */
+            cursor: default;
+        }
 
         .nav-filter {
             margin: 0 1em 0 0;

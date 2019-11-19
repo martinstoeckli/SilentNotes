@@ -92,7 +92,6 @@
   <ItemGroup>
     <Compile Include="CommonMocksAndStubs.cs" />
     <Compile Include="HtmView\HtmlViewBindingsTest.cs" />
-    <Compile Include="HtmView\HtmlViewDuplicateEventFinderTest.cs" />
     <Compile Include="Models\NoteListModelTest.cs" />
     <Compile Include="Models\NoteModelTest.cs" />
     <Compile Include="Models\NoteRepositoryModelTest.cs" />
@@ -120,6 +119,7 @@
     <Compile Include="Crypto\CryptoTest.cs" />
     <Compile Include="StoryBoards\StoryBoardTest.cs" />
     <Compile Include="Workers\TransferCodeTest.cs" />
+    <Compile Include="Workers\WebviewUtilsTest.cs" />
     <Compile Include="Workers\XmlUtilsTest.cs" />
   </ItemGroup>
   <ItemGroup>

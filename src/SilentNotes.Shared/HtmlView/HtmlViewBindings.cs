@@ -9,6 +9,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Web;
 using System.Windows.Input;
+using SilentNotes.Workers;
 
 namespace SilentNotes.HtmlView
 {
@@ -344,28 +345,7 @@ namespace SilentNotes.HtmlView
 
         private static bool IsHtmlViewBindingUri(string uri)
         {
-            return !string.IsNullOrEmpty(uri) && uri.Contains(JsNamespace) && !IsExternalLinkUri(uri);
-        }
-
-        /// <summary>
-        /// Determines whether the <paramref name="uri"/> contains an url which opens an external
-        /// webpage or triggers an external action. Accepted protocols are "http:", "https:"
-        /// and "mailto:".
-        /// </summary>
-        /// <param name="uri">Test candidate.</param>
-        /// <returns>Returns true in case of a link uri, otherwise false.</returns>
-        public static bool IsExternalLinkUri(string uri)
-        {
-            if (string.IsNullOrEmpty(uri))
-                return false;
-
-            string[] acceptedProtocols = { "http:", "https:", "mailto:" };
-            foreach (string acceptedProtocol in acceptedProtocols)
-            {
-                if (uri.StartsWith(acceptedProtocol, StringComparison.InvariantCultureIgnoreCase))
-                    return true;
-            }
-            return false;
+            return !string.IsNullOrEmpty(uri) && uri.Contains(JsNamespace) && !WebviewUtils.IsExternalUri(uri);
         }
 
         private Action<T> ViewSetterOrNullIfNotRequired<T>(Action<T> viewSetter, HtmlViewBindingMode bindingMode)
@@ -399,7 +379,7 @@ namespace SilentNotes.HtmlView
 
         private void ViewValueSetter(string bindingName, object value)
         {
-            string valueText = _htmlView.EscapeJavaScriptString(value?.ToString());
+            string valueText = WebviewUtils.EscapeJavaScriptString(value?.ToString());
             string script = string.Format(
                 "htmlViewBindingsSetValue('{0}', '{1}');", bindingName, valueText);
             _htmlView.ExecuteJavaScript(script);
@@ -415,7 +395,7 @@ namespace SilentNotes.HtmlView
         private void ViewBackgroundImageSetter(string bindingName, string image)
         {
             string script = string.Format(
-                "htmlViewBindingsSetBackgroundImage('{0}', '{1}');", bindingName, _htmlView.EscapeJavaScriptString(image));
+                "htmlViewBindingsSetBackgroundImage('{0}', '{1}');", bindingName, WebviewUtils.EscapeJavaScriptString(image));
             _htmlView.ExecuteJavaScript(script);
         }
     }

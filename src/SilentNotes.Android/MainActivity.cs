@@ -6,7 +6,6 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using Android.App;
 using Android.Content;
 using Android.Content.PM;
@@ -19,6 +18,7 @@ using SilentNotes.Controllers;
 using SilentNotes.HtmlView;
 using SilentNotes.Services;
 using SilentNotes.StoryBoards.SynchronizationStory;
+using SilentNotes.Workers;
 
 namespace SilentNotes.Android
 {
@@ -149,7 +149,7 @@ namespace SilentNotes.Android
         /// <inheritdoc/>
         public void ReplaceNode(string nodeId, string newHtml)
         {
-            string encodedNewHtml = EscapeJavaScriptString(newHtml);
+            string encodedNewHtml = WebviewUtils.EscapeJavaScriptString(newHtml);
             string script = string.Format("document.getElementById('{0}').outerHTML = \"{1}\";", nodeId, encodedNewHtml);
             ExecuteJavaScript(script);
         }
@@ -168,15 +168,6 @@ namespace SilentNotes.Android
             _webView.EvaluateJavascript(script, callback);
             string result = await taskCompletion.Task;
             return result;
-        }
-
-        /// <inheritdoc/>
-        public string EscapeJavaScriptString(string text)
-        {
-            if (string.IsNullOrEmpty(text))
-                return string.Empty;
-            else
-                return HttpUtility.JavaScriptStringEncode(text, false);
         }
 
         /// <inheritdoc/>

@@ -41,15 +41,6 @@ namespace SilentNotes.HtmlView
         Task<string> ExecuteJavaScriptReturnString(string script);
 
         /// <summary>
-        /// Escapes a string so it can be inserted into a script as string. Characters like single
-        /// quotation marks and double quotation marks are encoded, null string are converted to an
-        /// empty string.
-        /// </summary>
-        /// <param name="text">String to encode.</param>
-        /// <returns>Encoded string, which can safely be placed into a script.</returns>
-        string EscapeJavaScriptString(string text);
-
-        /// <summary>
         /// Sets the default background color of the webview, this is the color shown while loading
         /// an HTML page or when the css background color is transparent. This method is called as
         /// early as possible, to avoid the white flicker when using dark themes, which is visible
