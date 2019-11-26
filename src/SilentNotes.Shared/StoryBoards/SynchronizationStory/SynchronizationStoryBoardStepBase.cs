@@ -5,6 +5,7 @@
 
 using System;
 using SilentNotes.Crypto;
+using SilentNotes.Crypto.KeyDerivation;
 using SilentNotes.Models;
 using SilentNotes.Services;
 using SilentNotes.Workers;
@@ -44,6 +45,10 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
             {
                 feedbackService.ShowToast(languageService["sync_error_repository"]);
             }
+            else if (ex is CryptoUnsupportedRevisionException)
+            {
+                feedbackService.ShowToast(languageService["sync_error_revision"]);
+            }
             else if (ex is SynchronizationStoryBoard.UnsuportedRepositoryRevisionException)
             {
                 feedbackService.ShowToast(languageService["sync_error_revision"]);
@@ -61,7 +66,13 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
 
             // The key derivation cost is set to low, because we can be sure that the transferCode
             // is a very strong password, and to not overload slow mobile devices.
-            return encryptor.Encrypt(binaryRepository, transferCode, Crypto.KeyDerivation.KeyDerivationCostType.Low, randomService, encryptionAlgorithm);
+            return encryptor.Encrypt(
+                binaryRepository, transferCode,
+                KeyDerivationCostType.Low,
+                randomService,
+                encryptionAlgorithm,
+                Pbkdf2.CryptoKdfName,
+                EncryptorDecryptor.CompressionGzip);
         }
     }
 }

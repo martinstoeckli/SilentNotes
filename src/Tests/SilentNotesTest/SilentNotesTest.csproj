@@ -91,6 +91,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommonMocksAndStubs.cs" />
+    <Compile Include="Crypto\CryptoHeaderPackerTest.cs" />
+    <Compile Include="Crypto\CryptoUtilsTest.cs" />
     <Compile Include="HtmView\HtmlViewBindingsTest.cs" />
     <Compile Include="Models\NoteListModelTest.cs" />
     <Compile Include="Models\NoteModelTest.cs" />
@@ -106,7 +108,9 @@
     <Compile Include="StoryBoards\SynchronizationStory\ExistsCloudRepositoryStepTest.cs" />
     <Compile Include="StoryBoards\SynchronizationStory\StoreMergedRepositoryAndQuitStepTest.cs" />
     <Compile Include="CultureSwitcher4UnitTest.cs" />
+    <Compile Include="Workers\ByteArrayExtensionsTest.cs" />
     <Compile Include="Workers\ColorExtensionsTest.cs" />
+    <Compile Include="Workers\CompressUtilsTest.cs" />
     <Compile Include="Workers\FloatingPointUtilsTest.cs" />
     <Compile Include="Workers\SearchableHtmlConverterTest.cs" />
     <Compile Include="Models\SettingsModelTest.cs" />

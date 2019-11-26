@@ -85,7 +85,6 @@ namespace SilentNotesTest.Services
             SettingsServiceBase service = new TestableService(fileService.Object, dataProtectionService.Object);
             SettingsModel settings = service.LoadSettingsOrDefault();
             Assert.AreEqual("twofish_gcm", settings.SelectedEncryptionAlgorithm);
-            Assert.AreEqual(true, settings.AdoptCloudEncryptionAlgorithm);
             Assert.AreEqual("scuj2wfpdcodmgzm", settings.TransferCode);
             Assert.AreEqual(2, settings.TransferCodeHistory.Count);
             Assert.AreEqual("scuj2wfpdcodmgzm", settings.TransferCodeHistory[0]);
@@ -132,7 +131,6 @@ namespace SilentNotesTest.Services
             SettingsServiceBase service = new TestableService(fileService.Object, dataProtectionService.Object);
             SettingsModel settings = service.LoadSettingsOrDefault();
             Assert.AreEqual("twofish_gcm", settings.SelectedEncryptionAlgorithm);
-            Assert.AreEqual(true, settings.AdoptCloudEncryptionAlgorithm);
             Assert.AreEqual("scuj2wfpdcodmgzm", settings.TransferCode);
             Assert.AreEqual(0, settings.TransferCodeHistory.Count);
 

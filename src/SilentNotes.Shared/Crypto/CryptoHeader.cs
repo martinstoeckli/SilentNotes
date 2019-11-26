@@ -13,11 +13,20 @@ namespace SilentNotes.Crypto
     /// </summary>
     public class CryptoHeader
     {
+        /// <summary>The highest revision of the header which can be handled by this application.</summary>
+        public const int NewestSupportedRevision = 2;
+
         /// <summary>
         /// Gets or sets the application name.
         /// This value is used to recognize owned ciphers.
         /// </summary>
         public string AppName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the revision of the header. This can be used to detect headers which are
+        /// created by future app versions.
+        /// </summary>
+        public int Revision { get; set; }
 
         /// <summary>Gets or sets the used encryption algorithm.</summary>
         public string AlgorithmName { get; set; }
@@ -33,5 +42,8 @@ namespace SilentNotes.Crypto
 
         /// <summary>Gets or sets the used cost factor for the key derivation function.</summary>
         public string Cost { get; set; }
+
+        /// <summary>Gets or sets the used compression algorithm if any, otherwise null.</summary>
+        public string Compression { get; set; }
     }
 }

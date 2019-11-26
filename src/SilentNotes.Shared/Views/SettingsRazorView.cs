@@ -23,7 +23,7 @@ using SilentNotes.ViewModels;
 #line hidden
 
 
-[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.3.0.277")]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.3.0.281")]
 public partial class SettingsRazorView : SettingsRazorViewBase
 {
 
@@ -615,50 +615,10 @@ WriteLiteral("</option>\r\n");
 
 #line default
 #line hidden
-WriteLiteral("                </select>\r\n            </div>\r\n            <div");
-
-WriteLiteral(" class=\"form-row form-group form-check\"");
-
-WriteLiteral(">\r\n                <input");
-
-WriteLiteral(" class=\"form-check-input\"");
-
-WriteLiteral(" type=\"checkbox\"");
-
-WriteLiteral(" id=\"AdoptCloudEncryptionAlgorithm\"");
-
-WriteLiteral(" onclick=\"bind(event)\"");
-
-WriteLiteral(" data-binding=\"AdoptCloudEncryptionAlgorithm\"");
-
-WriteLiteral(" ");
-
-
-#line 121 "SettingsRazorView.cshtml"
-                                                                                                                                                                  Write(Model.AdoptCloudEncryptionAlgorithm ? "checked" : "");
-
-
-#line default
-#line hidden
-WriteLiteral(">\r\n                <label");
-
-WriteLiteral(" class=\"form-check-label\"");
-
-WriteLiteral(" for=\"AdoptCloudEncryptionAlgorithm\"");
-
-WriteLiteral(">");
+WriteLiteral("                </select>\r\n            </div>\r\n        </form>\r\n\r\n        <h2>");
 
 
 #line 122 "SettingsRazorView.cshtml"
-                                                                               Write(Model.Language["encryption_adopt_cloud_desc"]);
-
-
-#line default
-#line hidden
-WriteLiteral("</label>\r\n            </div>\r\n        </form>\r\n\r\n        <h2>");
-
-
-#line 126 "SettingsRazorView.cshtml"
        Write(Model.Language["sync"]);
 
 
@@ -681,7 +641,7 @@ WriteLiteral(" for=\"AutoSyncMode\"");
 WriteLiteral(">");
 
 
-#line 129 "SettingsRazorView.cshtml"
+#line 125 "SettingsRazorView.cshtml"
                                                             Write(Model.Language["sync_auto"]);
 
 
@@ -704,7 +664,7 @@ WriteLiteral(" value=\"Never\"");
 WriteLiteral(" ");
 
 
-#line 131 "SettingsRazorView.cshtml"
+#line 127 "SettingsRazorView.cshtml"
                                       Write(Model.SelectedAutoSyncMode == "Never" ? "selected" : "");
 
 
@@ -713,7 +673,7 @@ WriteLiteral(" ");
 WriteLiteral(">");
 
 
-#line 131 "SettingsRazorView.cshtml"
+#line 127 "SettingsRazorView.cshtml"
                                                                                                 Write(Model.Language["sync_auto_never"]);
 
 
@@ -726,7 +686,7 @@ WriteLiteral(" value=\"CostFreeInternetOnly\"");
 WriteLiteral(" ");
 
 
-#line 132 "SettingsRazorView.cshtml"
+#line 128 "SettingsRazorView.cshtml"
                                                      Write(Model.SelectedAutoSyncMode == "CostFreeInternetOnly" ? "selected" : "");
 
 
@@ -735,7 +695,7 @@ WriteLiteral(" ");
 WriteLiteral(">");
 
 
-#line 132 "SettingsRazorView.cshtml"
+#line 128 "SettingsRazorView.cshtml"
                                                                                                                               Write(Model.Language["sync_auto_costfree"]);
 
 
@@ -748,7 +708,7 @@ WriteLiteral(" value=\"Always\"");
 WriteLiteral(" ");
 
 
-#line 133 "SettingsRazorView.cshtml"
+#line 129 "SettingsRazorView.cshtml"
                                        Write(Model.SelectedAutoSyncMode == "Always" ? "selected" : "");
 
 
@@ -757,7 +717,7 @@ WriteLiteral(" ");
 WriteLiteral(">");
 
 
-#line 133 "SettingsRazorView.cshtml"
+#line 129 "SettingsRazorView.cshtml"
                                                                                                   Write(Model.Language["sync_auto_always"]);
 
 
@@ -776,7 +736,7 @@ WriteLiteral(" for=\"CloudStorageSettings\"");
 WriteLiteral(">");
 
 
-#line 137 "SettingsRazorView.cshtml"
+#line 133 "SettingsRazorView.cshtml"
                                                                     Write(Model.Language["cloud_service"]);
 
 
@@ -795,7 +755,7 @@ WriteLiteral(" rows=\"4\"");
 WriteLiteral(" readonly>");
 
 
-#line 138 "SettingsRazorView.cshtml"
+#line 134 "SettingsRazorView.cshtml"
                                                                                                                           Write(Model.AccountSummary);
 
 
@@ -813,7 +773,7 @@ WriteLiteral(" data-binding=\"ChangeCloudSettingsCommand\"");
 
 WriteAttribute ("title", " title=\"", "\""
 
-#line 140 "SettingsRazorView.cshtml"
+#line 136 "SettingsRazorView.cshtml"
                                                                                                  , Tuple.Create<string,object,bool> ("", Model.Language["cloud_change_settings_desc"]
 
 #line default
@@ -823,7 +783,7 @@ WriteAttribute ("title", " title=\"", "\""
 WriteLiteral(">");
 
 
-#line 140 "SettingsRazorView.cshtml"
+#line 136 "SettingsRazorView.cshtml"
                                                                                                                                                                                   Write(Model.Language["cloud_change_settings"]);
 
 
@@ -841,7 +801,7 @@ WriteLiteral(" data-binding=\"ClearCloudSettingsCommand\"");
 
 WriteAttribute ("title", " title=\"", "\""
 
-#line 141 "SettingsRazorView.cshtml"
+#line 137 "SettingsRazorView.cshtml"
                                                                                                 , Tuple.Create<string,object,bool> ("", Model.Language["cloud_clear_settings_desc"]
 
 #line default
@@ -851,7 +811,7 @@ WriteAttribute ("title", " title=\"", "\""
 WriteLiteral(">");
 
 
-#line 141 "SettingsRazorView.cshtml"
+#line 137 "SettingsRazorView.cshtml"
                                                                                                                                                                                 Write(Model.Language["cloud_clear_settings"]);
 
 

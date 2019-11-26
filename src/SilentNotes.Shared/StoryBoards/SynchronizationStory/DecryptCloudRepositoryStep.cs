@@ -118,8 +118,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
                 if (result)
                 {
                     // Store transfercode and encryption mode if necessary
-                    if (AdoptTransferCode(settings, transferCodeCandidate) ||
-                        AdoptEncryptionMode(settings, encryptor, binaryCloudRepository))
+                    if (AdoptTransferCode(settings, transferCodeCandidate))
                     {
                         _settingsService.TrySaveSettingsToLocalDevice(settings);
                     }
@@ -142,28 +141,6 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
             {
                 settings.TransferCode = transferCode;
                 return true;
-            }
-            return false;
-        }
-
-        /// <summary>
-        /// Adopts the encryption mode to the settings, if the settings are set accordingly and the
-        /// mode differs from the stored one.
-        /// </summary>
-        /// <param name="settings">Settings to update.</param>
-        /// <param name="encryptor">The eccryptor.</param>
-        /// <param name="binaryCloudRepository">The repository containing the encryption mode.</param>
-        /// <returns>Returns true if the encryption mode was adopted, otherwise false.</returns>
-        private static bool AdoptEncryptionMode(SettingsModel settings, EncryptorDecryptor encryptor, byte[] binaryCloudRepository)
-        {
-            if (settings.AdoptCloudEncryptionAlgorithm)
-            {
-                string cloudEncryptionAlgorithm = encryptor.ExtractAlgorithmName(binaryCloudRepository);
-                if (!string.Equals(settings.SelectedEncryptionAlgorithm, cloudEncryptionAlgorithm, StringComparison.OrdinalIgnoreCase))
-                {
-                    settings.SelectedEncryptionAlgorithm = cloudEncryptionAlgorithm;
-                    return true;
-                }
             }
             return false;
         }
@@ -194,7 +171,11 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
             }
             catch (CryptoExceptionInvalidCipherFormat)
             {
-                // If the downloaded repository is invalid, this is serioud and we should not continue
+                // If the downloaded repository is invalid, this is serious and we should not continue
+                throw;
+            }
+            catch (CryptoUnsupportedRevisionException)
+            {
                 throw;
             }
             catch (Exception)

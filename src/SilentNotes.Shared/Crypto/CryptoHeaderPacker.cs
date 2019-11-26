@@ -5,6 +5,7 @@
 
 using System;
 using System.Text;
+using SilentNotes.Workers;
 
 namespace SilentNotes.Crypto
 {
@@ -15,7 +16,7 @@ namespace SilentNotes.Crypto
     public class CryptoHeaderPacker
     {
         private const char Separator = '$';
-        private const int ExpectedSeparatorCount = 6;
+        private const string RevisionSeparator = " v=";
 
         /// <summary>
         /// Pack an encryption header and its cipher together to a byte array.
@@ -31,7 +32,7 @@ namespace SilentNotes.Crypto
                 throw new ArgumentNullException("cipher");
 
             StringBuilder sb = new StringBuilder();
-            sb.Append(header.AppName);
+            sb.Append(header.AppName + RevisionSeparator + CryptoHeader.NewestSupportedRevision);
             sb.Append(Separator);
             sb.Append(header.AlgorithmName);
             sb.Append(Separator);
@@ -43,6 +44,8 @@ namespace SilentNotes.Crypto
             sb.Append(Separator);
             sb.Append(header.Cost);
             sb.Append(Separator);
+            sb.Append(header.Compression);
+            sb.Append(Separator);
             string stringHeader = sb.ToString();
             byte[] binaryHeader = CryptoUtils.StringToBytes(stringHeader);
 
@@ -53,17 +56,76 @@ namespace SilentNotes.Crypto
         }
 
         /// <summary>
+        /// Checks whether a byte array starts with a known header, containing the app name and an
+        /// optional revision number.
+        /// </summary>
+        /// <param name="packedCipher">Byte array to examine.</param>
+        /// <param name="expectedAppName">The header must start with this app name.</param>
+        /// <param name="revision">reveives the revision number.</param>
+        /// <returns>Returns true if the array starts with a valid header, otherwise false.</returns>
+        public static bool HasMatchingHeader(byte[] packedCipher, string expectedAppName, out int revision)
+        {
+            if (packedCipher != null)
+            {
+                // test for app name
+                if (ByteArrayExtensions.ContainsAt(packedCipher, CryptoUtils.StringToBytes(expectedAppName), 0))
+                {
+                    int position = expectedAppName.Length;
+
+                    // Followed by separator?
+                    if (ByteArrayExtensions.ContainsAt(packedCipher, (byte)Separator, position))
+                    {
+                        revision = 1;
+                        return true;
+                    }
+
+                    if (ByteArrayExtensions.ContainsAt(packedCipher, CryptoUtils.StringToBytes(RevisionSeparator), position))
+                    {
+                        int digitsStart = position + RevisionSeparator.Length;
+                        int digitsEnd = digitsStart;
+
+                        // Skip digits
+                        while (ByteArrayExtensions.ContainsDigitCharAt(packedCipher, digitsEnd))
+                            digitsEnd++;
+
+                        // Followed by separator?
+                        if ((digitsEnd > digitsStart) &&
+                            (ByteArrayExtensions.ContainsAt(packedCipher, (byte)Separator, digitsEnd)))
+                        {
+                            byte[] digitsPart = new byte[digitsEnd - digitsStart];
+                            Array.Copy(packedCipher, digitsStart, digitsPart, 0, digitsPart.Length);
+                            revision = int.Parse(CryptoUtils.BytesToString(digitsPart));
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            revision = 0;
+            return false;
+        }
+
+        /// <summary>
         /// Unpacks a cipher formerly packed with <see cref="PackHeaderAndCypher(CryptoHeader, byte[])"/>.
         /// </summary>
         /// <param name="packedCipher">Packed cipher containing a header and its cipher.</param>
+        /// <param name="expectedAppName">The app name which must match.</param>
         /// <param name="header">Receives the extracted header.</param>
         /// <param name="cipher">Receives the extracted cipher.</param>
-        public static void UnpackHeaderAndCipher(byte[] packedCipher, out CryptoHeader header, out byte[] cipher)
+        /// <exception cref="CryptoExceptionInvalidCipherFormat">Thrown if it doesn't contain a valid header.</exception>
+        /// <exception cref="CryptoUnsupportedRevisionException">Thrown if it was packed with a future incompatible version.</exception>
+        public static void UnpackHeaderAndCipher(byte[] packedCipher, string expectedAppName, out CryptoHeader header, out byte[] cipher)
         {
-            if (packedCipher == null)
-                throw new ArgumentNullException("packedCipher");
+            header = null;
+            cipher = null;
+            if (!HasMatchingHeader(packedCipher, expectedAppName, out int revision))
+                throw new CryptoExceptionInvalidCipherFormat();
 
-            int lastSeparatorPos = IndexOfLastSeparator(packedCipher, ExpectedSeparatorCount);
+            if (revision > CryptoHeader.NewestSupportedRevision)
+                throw new CryptoUnsupportedRevisionException();
+
+            int expectedSeparatorCount = (revision > 1) ? 7 : 6;
+            int lastSeparatorPos = IndexOfLastSeparator(packedCipher, expectedSeparatorCount);
             if (lastSeparatorPos < 0)
                 throw new CryptoExceptionInvalidCipherFormat();
 
@@ -73,22 +135,29 @@ namespace SilentNotes.Crypto
             Array.Copy(packedCipher, lastSeparatorPos + 1, cipher, 0, cipherLength);
 
             // Read header part
-            string headerString = Encoding.UTF8.GetString(packedCipher, 0, lastSeparatorPos + 1);
-            header = UnpackHeader(headerString);
-        }
-
-        private static CryptoHeader UnpackHeader(string headerString)
-        {
-            string[] parts = headerString.Split(new char[] { Separator }, StringSplitOptions.RemoveEmptyEntries);
-
-            CryptoHeader result = new CryptoHeader();
-            result.AppName = parts[0];
-            result.AlgorithmName = parts[1];
-            result.Nonce = CryptoUtils.Base64StringToBytes(parts[2]);
-            result.KdfName = parts[3];
-            result.Salt = CryptoUtils.Base64StringToBytes(parts[4]);
-            result.Cost = parts[5];
-            return result;
+            try
+            {
+                string headerString = Encoding.UTF8.GetString(packedCipher, 0, lastSeparatorPos + 1);
+                string[] parts = headerString.Split(new char[] { Separator });
+                header = new CryptoHeader
+                {
+                    AppName = expectedAppName,
+                    Revision = revision,
+                    AlgorithmName = parts[1],
+                    Nonce = CryptoUtils.Base64StringToBytes(parts[2]),
+                    KdfName = parts[3],
+                    Salt = CryptoUtils.Base64StringToBytes(parts[4]),
+                    Cost = parts[5],
+                };
+                if (revision > 1)
+                {
+                    header.Compression = parts[6];
+                }
+            }
+            catch (Exception)
+            {
+                throw new CryptoExceptionInvalidCipherFormat();
+            }
         }
 
         private static int IndexOfLastSeparator(byte[] packedCipher, int expectedSeparatorCount)

@@ -38,6 +38,24 @@ namespace SilentNotesTest
         }
 
         /// <summary>
+        /// Creates a random service for unittests with a predictable output.
+        /// </summary>
+        /// <param name="predictableOutput">Returns output only containing this byte.</param>
+        /// <returns>Random service.</returns>
+        public static ICryptoRandomService CryptoRandomService(byte predictableOutput)
+        {
+            return new RandomSource4UnitTest();
+        }
+
+        public static byte[] FilledByteArray(int length, byte fill)
+        {
+            byte[] result = new byte[length];
+            for (int index = 0; index < length; index++)
+                result[index] = fill;
+            return result;
+        }
+
+        /// <summary>
         /// Creates an <see cref="ICloudStorageClientFactory"/> mock.
         /// </summary>
         /// <returns>Mock for a cloud storage client factory.</returns>
@@ -68,7 +86,8 @@ namespace SilentNotesTest
         /// </summary>
         private class RandomSource4UnitTest : ICryptoRandomService
         {
-            private Random _nonCryptoRandom;
+            private readonly Random _nonCryptoRandom;
+            private readonly byte _predictableOutput;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="RandomSource4UnitTest"/> class.
@@ -79,14 +98,26 @@ namespace SilentNotesTest
                 _nonCryptoRandom = new Random();
             }
 
+            public RandomSource4UnitTest(byte predictableOutput)
+            {
+                _predictableOutput = predictableOutput;
+            }
+
             public byte[] GetRandomBytes(int numberOfBytes)
             {
                 if (numberOfBytes <= 0)
                     throw new ArgumentOutOfRangeException("numberOfBytes");
 
-                byte[] result = new byte[numberOfBytes];
-                _nonCryptoRandom.NextBytes(result);
-                return result;
+                if (_nonCryptoRandom != null)
+                {
+                    byte[] result = new byte[numberOfBytes];
+                    _nonCryptoRandom.NextBytes(result);
+                    return result;
+                }
+                else
+                {
+                    return FilledByteArray(numberOfBytes, _predictableOutput);
+                }
             }
         }
     }

@@ -200,7 +200,6 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
             return new SettingsModel
             {
                 TransferCode = transferCode,
-                AdoptCloudEncryptionAlgorithm = false,
             };
         }
 
