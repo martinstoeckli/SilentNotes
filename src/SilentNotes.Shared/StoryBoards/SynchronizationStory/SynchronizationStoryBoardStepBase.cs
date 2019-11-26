@@ -44,6 +44,10 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
             {
                 feedbackService.ShowToast(languageService["sync_error_repository"]);
             }
+            else if (ex is CryptoUnsupportedRevisionException)
+            {
+                feedbackService.ShowToast(languageService["sync_error_revision"]);
+            }
             else if (ex is SynchronizationStoryBoard.UnsuportedRepositoryRevisionException)
             {
                 feedbackService.ShowToast(languageService["sync_error_revision"]);

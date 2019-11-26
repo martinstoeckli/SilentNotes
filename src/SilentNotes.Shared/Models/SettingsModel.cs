@@ -33,7 +33,6 @@ namespace SilentNotes.Models
         public SettingsModel()
         {
             Revision = NewestSupportedRevision;
-            AdoptCloudEncryptionAlgorithm = true;
             AutoSyncMode = AutoSynchronizationMode.CostFreeInternetOnly;
             ShowCursorArrowKeys = true;
             FontScale = 1.0;
@@ -75,13 +74,6 @@ namespace SilentNotes.Models
 
             set { _selectedEncryptionAlgorithm = value; }
         }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the encryption algorithm from the cloud storage
-        /// should replace the selected encryption algorithm.
-        /// </summary>
-        [XmlElement("adopt_cloud_encryption_algorithm")]
-        public bool AdoptCloudEncryptionAlgorithm { get; set; }
 
         /// <summary>
         /// Gets or sets a value describing whether auto synchronization with the online storage

@@ -50,6 +50,14 @@ namespace SilentNotes.Crypto
     }
 
     /// <summary>
+    /// This exception will be thrown, whenever the cipher was packed with a future incompatible
+    /// version and cannot be decrypted with the current version.
+    /// </summary>
+    public class CryptoUnsupportedRevisionException : CryptoException
+    {
+    }
+
+    /// <summary>
     /// This exception will be thrown, whenever the decryption fails, mostly because of a wrong key.
     /// </summary>
     [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass", Justification = "Just exceptions.")]

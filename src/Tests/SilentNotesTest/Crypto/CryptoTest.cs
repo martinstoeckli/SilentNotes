@@ -52,7 +52,7 @@ namespace SilentNotesTest.Crypto
         }
 
         [Test]
-        public void EnsureLongTimeDecryptionOfAesGcm()
+        public void EnsureBackwardsCompatibilityLongTimeDecryptionOfAesGcm()
         {
             // Ensure that a once stored cipher can always be decrypted even after changes in the liberary
             string base64Cipher = "dW5pdHRlc3QkYWVzX2djbSQ0NG04QXBFU1ptcXhnYll2OE5wcWl3PT0kcGJrZGYyJGgwSDdxSGZnVFlXNzBKS3lEb0JLeFE9PSQxMDAwJJsMDjdYEYXYmcqTOFRbge6iVfWo/iny4nrIOMVuoqYak6xB/MAe53G5H3AyxiTi8OENJbi9tzZStpe3p3nlDB7l+J8=";
@@ -63,7 +63,7 @@ namespace SilentNotesTest.Crypto
         }
 
         [Test]
-        public void EnsureLongTimeDecryptionOfTwofishGcm()
+        public void EnsureBackwardsCompatibilityDecryptionOfTwofishGcm()
         {
             // Ensure that a once stored cipher can always be decrypted even after changes in the liberary
             string base64Cipher = "dW5pdHRlc3QkdHdvZmlzaF9nY20kZHhMWFh4K0UrZ2MzWHdWc01rWUFxQT09JHBia2RmMiRma1BCWTdDWXp1OG5YUlJtYk9DUlp3PT0kMTAwMCRRc0ETSqDekQuBgKJ5x4Mvy02OHsivm0uJ9KchKdpGk+pmbF4Kq/EDbx9Uw54uEZUQLnK70dNKSEVtb1GyUOX1mitr";
@@ -107,20 +107,6 @@ namespace SilentNotesTest.Crypto
         }
 
         [Test]
-        public void GenerateRandomBase62StringGeneratesValidStrings()
-        {
-            ICryptoRandomService randomGenerator = CommonMocksAndStubs.CryptoRandomService();
-
-            // check if length always matches the required length
-            for (int length = 0; length < 300; length++)
-            {
-                string randomString = CryptoUtils.GenerateRandomBase62String(length, randomGenerator);
-                Assert.AreEqual(length, randomString.Length);
-                Assert.IsTrue(IsInBase62Alphabet(randomString));
-            }
-        }
-
-        [Test]
         public void ObfuscationCanBeReversed()
         {
             string obfuscationKey = "A very strong passphrase...";
@@ -138,7 +124,7 @@ namespace SilentNotesTest.Crypto
         }
 
         [Test]
-        public void EnsureLongTimeDeobfuscation()
+        public void EnsureBackwardsCompatibilityDeobfuscation()
         {
             // Ensure that a once stored obfuscated text can always be deobfuscated even after changes in the liberary
             string obfuscationKey = "A very strong passphrase...";
@@ -147,14 +133,43 @@ namespace SilentNotesTest.Crypto
             Assert.AreEqual("The brown fox jumps over the lazy 🐢🖐🏿 doc.", deobfuscatedMessage);
         }
 
-        private bool IsInBase62Alphabet(string randomString)
+        [Test]
+        public void TestSymmetricEncryptionWithCompression()
         {
-            foreach (char c in randomString)
+            EncryptorDecryptor encryptor = new EncryptorDecryptor("sugus");
+            ICryptoRandomService randomGenerator = CommonMocksAndStubs.CryptoRandomService(88);
+            byte[] binaryMessage = CommonMocksAndStubs.FilledByteArray(1024, 88);
+            string password = "Der schnelle Uhu fliegt über den faulen Hund.";
+
+            byte[] cipher = encryptor.Encrypt(
+                binaryMessage,
+                password,
+                KeyDerivationCostType.Low,
+                randomGenerator,
+                BouncyCastleTwofishGcm.CryptoAlgorithmName,
+                Pbkdf2.CryptoKdfName,
+                EncryptorDecryptor.CompressionGzip);
+            byte[] decryptedMessage = encryptor.Decrypt(cipher, password);
+            Assert.AreEqual(binaryMessage, decryptedMessage);
+        }
+
+        [Test]
+        public void UnknownAlgorithmThrows()
+        {
+            EncryptorDecryptor encryptor = new EncryptorDecryptor("sugus");
+            ICryptoRandomService randomGenerator = CommonMocksAndStubs.CryptoRandomService();
+            byte[] binaryMessage = new byte[] { 88 };
+            string password = "unittestpwd";
+
+            Assert.Throws<CryptoException>(delegate
             {
-                if (!"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".Contains(c.ToString()))
-                    return false;
-            }
-            return true;
+                byte[] cipher = encryptor.Encrypt(
+                    binaryMessage,
+                    password,
+                    KeyDerivationCostType.Low,
+                    randomGenerator,
+                    "InvalidAlgorithmName");
+            });
         }
     }
 }

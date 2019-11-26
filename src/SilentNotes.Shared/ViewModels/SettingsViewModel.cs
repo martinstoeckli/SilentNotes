@@ -178,16 +178,6 @@ namespace SilentNotes.ViewModels
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the encryption algorithm from the cloud storage
-        /// should replace the selected encryption algorithm.
-        /// </summary>
-        public bool AdoptCloudEncryptionAlgorithm
-        {
-            get { return Model.AdoptCloudEncryptionAlgorithm; }
-            set { ChangePropertyIndirect<bool>(() => Model.AdoptCloudEncryptionAlgorithm, (v) => Model.AdoptCloudEncryptionAlgorithm = v, value, true); }
-        }
-
-        /// <summary>
         /// Gets or sets the auto sync mode selected by the user.
         /// </summary>
         public string SelectedAutoSyncMode

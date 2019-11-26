@@ -6,6 +6,7 @@
 using System;
 using SilentNotes.Crypto.KeyDerivation;
 using SilentNotes.Crypto.SymmetricEncryption;
+using SilentNotes.Workers;
 
 namespace SilentNotes.Crypto
 {
@@ -15,6 +16,7 @@ namespace SilentNotes.Crypto
     /// </summary>
     public class EncryptorDecryptor
     {
+        public const string CompressionGzip = "gzip";
         private const int MinPasswordLength = 7;
         private readonly string _appName;
 
@@ -40,6 +42,8 @@ namespace SilentNotes.Crypto
         /// do the encryption.</param>
         /// <param name="kdfName">The name of a key derivation function, which can convert the
         /// password to a key.</param>
+        /// <param name="compression">The name of the compression algorithm, or null if no compression
+        /// should happen before the encryption. Currently supported is <see cref="CompressionGzip"/>.</param>
         /// <returns>A binary array containing the cipher.</returns>
         public byte[] Encrypt(
             byte[] message,
@@ -47,7 +51,8 @@ namespace SilentNotes.Crypto
             KeyDerivationCostType costType, 
             ICryptoRandomSource randomSource,
             string encryptorName,
-            string kdfName = Pbkdf2.CryptoKdfName)
+            string kdfName = Pbkdf2.CryptoKdfName,
+            string compression = null)
         {
             if (message == null)
                 throw new ArgumentNullException("message");
@@ -70,9 +75,13 @@ namespace SilentNotes.Crypto
             header.Salt = randomSource.GetRandomBytes(kdf.ExpectedSaltSizeBytes);
             int cost = kdf.RecommendedCost(costType);
             header.Cost = cost.ToString();
+            header.Compression = compression;
 
             try
             {
+                if (string.Equals(CompressionGzip, header.Compression, StringComparison.InvariantCultureIgnoreCase))
+                    message = CompressUtils.Compress(message);
+
                 byte[] key = kdf.DeriveKeyFromPassword(password, encryptor.ExpectedKeySize, header.Salt, cost);
                 byte[] cipher = encryptor.Encrypt(message, key, header.Nonce);
                 return CryptoHeaderPacker.PackHeaderAndCypher(header, cipher);
@@ -89,6 +98,9 @@ namespace SilentNotes.Crypto
         /// <param name="packedCipher">The cipher containing a header with the
         /// necessary parameters for decryption.</param>
         /// <param name="password">The password which was used for encryption.</param>
+        /// <exception cref="CryptoExceptionInvalidCipherFormat">Thrown if it doesn't contain a valid header.</exception>
+        /// <exception cref="CryptoUnsupportedRevisionException">Thrown if it was packed with a future incompatible version.</exception>
+        /// <exception cref="CryptoDecryptionException">Thrown if there was an error decrypting the cipher.</exception>
         /// <returns>The plain text message.</returns>
         public byte[] Decrypt(byte[] packedCipher, string password)
         {
@@ -97,9 +109,7 @@ namespace SilentNotes.Crypto
 
             CryptoHeader header;
             byte[] cipher;
-            CryptoHeaderPacker.UnpackHeaderAndCipher(packedCipher, out header, out cipher);
-            if (_appName != header.AppName)
-                throw new CryptoExceptionInvalidCipherFormat();
+            CryptoHeaderPacker.UnpackHeaderAndCipher(packedCipher, _appName, out header, out cipher);
 
             ISymmetricEncryptionAlgorithm decryptor = new SymmetricEncryptionAlgorithmFactory().CreateAlgorithm(header.AlgorithmName);
             IKeyDerivationFunction kdf = new KeyDerivationFactory().CreateKdf(header.KdfName);
@@ -109,29 +119,16 @@ namespace SilentNotes.Crypto
                 int cost = int.Parse(header.Cost);
                 byte[] key = kdf.DeriveKeyFromPassword(password, decryptor.ExpectedKeySize, header.Salt, cost);
                 byte[] message = decryptor.Decrypt(cipher, key, header.Nonce);
+
+                if (string.Equals(CompressionGzip, header.Compression, StringComparison.InvariantCultureIgnoreCase))
+                    message = CompressUtils.Decompress(message);
+
                 return message;
             }
             catch (Exception ex)
             {
                 throw new CryptoDecryptionException("Could not decrypt cipher, probably because the key is wrong.", ex);
             }
-        }
-
-        /// <summary>
-        /// Extracts the name of the used algorithm from the cipher.
-        /// </summary>
-        /// <param name="packedCipher">Cipher with header.</param>
-        /// <returns>The name of the used algorithm.</returns>
-        public string ExtractAlgorithmName(byte[] packedCipher)
-        {
-            if (packedCipher == null)
-                throw new ArgumentNullException("packedCipher");
-
-            CryptoHeaderPacker.UnpackHeaderAndCipher(packedCipher, out CryptoHeader header, out byte[] cipher);
-            if (_appName != header.AppName)
-                throw new CryptoExceptionInvalidCipherFormat();
-
-             return header.AlgorithmName;
         }
 
         private void ValidatePassword(string password)
