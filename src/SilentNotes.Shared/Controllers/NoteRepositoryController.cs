@@ -83,6 +83,9 @@ namespace SilentNotes.Controllers
                 Bindings.BindCommand("ShowRecycleBin", _viewModel.ShowRecycleBinCommand);
                 Bindings.BindCommand("ShowSettings", _viewModel.ShowSettingsCommand);
                 Bindings.BindCommand("ShowInfo", _viewModel.ShowInfoCommand);
+                Bindings.BindCommand("OpenSafe", _viewModel.OpenSafeCommand);
+                Bindings.BindCommand("CloseSafe", _viewModel.CloseSafeCommand);
+                Bindings.BindCommand("ChangeSafePassword", _viewModel.ChangeSafePasswordCommand);
                 Bindings.BindCommand("FilterButtonCancel", _viewModel.ClearFilterCommand);
                 Bindings.BindCommand("Fab", _viewModel.AddNoteCommand);
                 Bindings.BindText("TxtFilter", () => _viewModel.Filter, (value) => _viewModel.Filter = value, _viewModel, nameof(_viewModel.Filter), HtmlViewBindingMode.TwoWay);
@@ -102,6 +105,8 @@ namespace SilentNotes.Controllers
                     null,
                     new HtmlViewBindingViewmodelNotifier(_viewModel, "Notes"),
                     HtmlViewBindingMode.OneWayToView);
+                Bindings.BindVisibility("OpenSafe", () => !_viewModel.IsSafeOpen, _viewModel, nameof(_viewModel.IsSafeOpen), HtmlViewBindingMode.OneWayToViewPlusOneTimeToView);
+                Bindings.BindVisibility("CloseSafe", () => _viewModel.IsSafeOpen, _viewModel, nameof(_viewModel.IsSafeOpen), HtmlViewBindingMode.OneWayToViewPlusOneTimeToView);
                 Bindings.UnhandledViewBindingEvent += UnhandledViewBindingEventHandler;
 
                 // Load html page and content (notes)

@@ -74,6 +74,9 @@ namespace SilentNotes.ViewModels
             ShowSettingsCommand = new RelayCommand(ShowSettings);
             ShowRecycleBinCommand = new RelayCommand(ShowRecycleBin);
             ShowInfoCommand = new RelayCommand(ShowInfo);
+            OpenSafeCommand = new RelayCommand(OpenSafe);
+            CloseSafeCommand = new RelayCommand(CloseSafe);
+            ChangeSafePasswordCommand = new RelayCommand(ChangeSafePassword);
 
             OnPropertyChanged(nameof(FilterButtonMagnifierVisible));
             OnPropertyChanged(nameof(FilterButtonCancelVisible));
@@ -342,6 +345,53 @@ namespace SilentNotes.ViewModels
         private void ShowInfo()
         {
             _navigationService.Navigate(ControllerNames.Info);
+        }
+
+        /// <summary>
+        /// Gets the command which opens encrypted notes.
+        /// </summary>
+        public ICommand OpenSafeCommand { get; private set; }
+
+        private void OpenSafe()
+        {
+
+            OnPropertyChanged(nameof(IsSafeOpen));
+        }
+
+        /// <summary>
+        /// Gets the command which closes encrypted notes.
+        /// </summary>
+        public ICommand CloseSafeCommand { get; private set; }
+
+        private void CloseSafe()
+        {
+
+            OnPropertyChanged(nameof(IsSafeOpen));
+        }
+
+        /// <summary>
+        /// Gets the command which allows to change the password to encrypt the notes.
+        /// </summary>
+        public ICommand ChangeSafePasswordCommand { get; private set; }
+
+        private void ChangeSafePassword()
+        {
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the encrypted notes are currently shown or hidden.
+        /// </summary>
+        public bool IsSafeOpen
+        {
+            get { return false; }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether there exists encrypted notes.
+        /// </summary>
+        public bool HasEncryptedNotes
+        {
+            get { return false; }
         }
 
         /// <summary>

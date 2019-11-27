@@ -33,6 +33,9 @@ namespace SilentNotes.Services
 
             resources["note_create_new"] = "Create new note";
             resources["note_view_or_edit"] = "Edit selected note";
+            resources["note_show_encrypted"] = "Open safe";
+            resources["note_hide_encrypted"] = "Close safe";
+            resources["note_change_password"] = "Change safe password";
             resources["note_to_recyclebin"] = "Move selected notes to the recycle bin";
             resources["note_undelete"] = "Restore note";
             resources["note_undelete_selected"] = "Restore selected notes";
@@ -144,6 +147,9 @@ namespace SilentNotes.Services
 
             resources["note_create_new"] = "Neue Notiz erstellen";
             resources["note_view_or_edit"] = "Bearbeiten der selektierten Notiz";
+            resources["note_show_encrypted"] = "Tresor öffnen";
+            resources["note_hide_encrypted"] = "Tresor schliessen";
+            resources["note_change_password"] = "Tresor-Passwort ändern";
             resources["note_to_recyclebin"] = "Selektierte Notizen in den Papierkorb verschieben";
             resources["note_undelete"] = "Notiz wiederherstellen";
             resources["note_undelete_selected"] = "Selektierte Notizen wiederherstellen";
