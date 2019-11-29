@@ -171,6 +171,14 @@ function htmlViewBindingsSetEnabled(bindingName, enabled) {
 		$(selector).addClass('disabled');
 }
 
+function htmlViewBindingsSetInvalid(bindingName, invalid) {
+	var selector = '[data-binding="' + bindingName + '"]';
+    if (invalid)
+        $(selector).addClass('is-invalid');
+	else
+        $(selector).removeClass('is-invalid');
+}
+
 function htmlViewBindingsAddClass(bindingName, className) {
 	var selector = '[data-binding="' + bindingName + '"]';
 	$(selector).addClass(className);

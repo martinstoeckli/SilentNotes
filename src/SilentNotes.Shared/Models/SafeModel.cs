@@ -4,14 +4,17 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
+using System.Security;
 using System.Xml.Serialization;
+using SilentNotes.Crypto;
+using VanillaCloudStorageClient;
 
 namespace SilentNotes.Models
 {
     /// <summary>
     /// A safe can be used to encrypt one or more notes.
     /// </summary>
-    public class SafeModel
+    public class SafeModel : IDisposable
     {
         private Guid _id;
 
@@ -22,6 +25,16 @@ namespace SilentNotes.Models
         {
             CreatedAt = DateTime.UtcNow;
             ModifiedAt = CreatedAt;
+        }
+
+        ~SafeModel()
+        {
+            Dispose();
+        }
+
+        public void Dispose()
+        {
+            Close();
         }
 
         /// <summary>
@@ -53,11 +66,81 @@ namespace SilentNotes.Models
         public string SerializeableKey { get; set; }
 
         /// <summary>
+        /// Gets the key of the safe, which can be used to encrypt/decrypt data.
+        /// This key is only available if the safe is open, otherwise it is null.
+        /// </summary>
+        [XmlIgnore]
+        public byte[] Key { get; private set; }
+
+        /// <summary>
+        /// Gets a value indicating whether the safe is open and its <see cref="Key"/> can be used
+        /// to encrypt/decrypt data.
+        /// </summary>
+        [XmlIgnore]
+        public bool IsOpen
+        {
+            get { return Key != null; }
+        }
+
+        /// <summary>
         /// Sets the <see cref="ModifiedAt"/> property to the current UTC time.
         /// </summary>
         public void RefreshModifiedAt()
         {
             ModifiedAt = DateTime.UtcNow;
+        }
+
+        /// <summary>
+        /// Tries to open the safe. The <see cref="SerializeableKey"/> will be decrypted and the
+        /// <see cref="Key"/> will be set.
+        /// </summary>
+        /// <param name="password">User password to open the safe.</param>
+        /// <returns>Returns true if the safe could be opened or was already open, otherwise false.</returns>
+        public bool TryOpen(SecureString password)
+        {
+            if (!IsOpen)
+            {
+                try
+                {
+                    byte[] encryptedKey = CryptoUtils.Base64StringToBytes(SerializeableKey);
+                    EncryptorDecryptor encryptor = new EncryptorDecryptor("SilentNote");
+                    Key = encryptor.Decrypt(encryptedKey, password);
+                }
+                catch (Exception)
+                {
+                    Close();
+                }
+            }
+            return IsOpen;
+        }
+
+        /// <summary>
+        /// Closes the safe if it was open. The <see cref="Key"/> is removed from memory.
+        /// </summary>
+        public void Close()
+        {
+            CryptoUtils.CleanArray(Key);
+            Key = null;
+        }
+
+        /// <summary>
+        /// Generates a new <see cref="Key"/> for the safe.
+        /// </summary>
+        /// <param name="password">The user password to encrypt the key for serialization.</param>
+        /// <param name="randomSource">A cryptographically random source.</param>
+        /// <param name="encryptionAlgorithm">The encryption algorithm to encrypt the key.</param>
+        public void GenerateNewKey(SecureString password, ICryptoRandomSource randomSource, string encryptionAlgorithm)
+        {
+            Close();
+
+            // We generate a 256 bit key, this is required by all available symmetric encryption
+            // algorithms and is more than big enough even for future algorithms.
+            Key = randomSource.GetRandomBytes(32);
+
+            EncryptorDecryptor encryptor = new EncryptorDecryptor("SilentNote");
+            byte[] encryptedKey = encryptor.Encrypt(
+                Key, password, Crypto.KeyDerivation.KeyDerivationCostType.High, randomSource, encryptionAlgorithm);
+            SerializeableKey = CryptoUtils.BytesToBase64String(encryptedKey);
         }
 
         /// <summary>
@@ -82,6 +165,7 @@ namespace SilentNotes.Models
 
             target.Id = this.Id;
             target.SerializeableKey = this.SerializeableKey;
+            target.Key = this.Key;
             target.CreatedAt = this.CreatedAt;
             target.ModifiedAt = this.ModifiedAt;
         }

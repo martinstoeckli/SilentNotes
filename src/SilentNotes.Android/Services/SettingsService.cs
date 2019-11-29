@@ -55,7 +55,7 @@ namespace SilentNotes.Android.Services
                 // Deobfuscate old password
                 EncryptorDecryptor decryptor = new EncryptorDecryptor("snps");
                 byte[] binaryCipher = CryptoUtils.Base64StringToBytes(oldPasswortElement.Value);
-                byte[] unprotectedBinaryPassword = decryptor.Decrypt(binaryCipher, snpsk);
+                byte[] unprotectedBinaryPassword = decryptor.Decrypt(binaryCipher, CryptoUtils.StringToSecureString(snpsk));
 
                 // Protect with new data protection service and add to XML
                 char[] unprotectedChars = Encoding.UTF8.GetChars(unprotectedBinaryPassword);

@@ -33,11 +33,6 @@ namespace SilentNotes.Services
 
             resources["note_create_new"] = "Create new note";
             resources["note_view_or_edit"] = "Edit selected note";
-            resources["note_show_encrypted"] = "Open safe";
-            resources["note_hide_encrypted"] = "Close safe";
-            resources["note_change_password"] = "Change safe password";
-            resources["note_add_to_safe"] = "Add note to safe";
-            resources["note_remove_from_safe"] = "Remove note from safe";
             resources["note_to_recyclebin"] = "Move selected notes to the recycle bin";
             resources["note_undelete"] = "Restore note";
             resources["note_undelete_selected"] = "Restore selected notes";
@@ -57,6 +52,19 @@ namespace SilentNotes.Services
             resources["note_link"] = "Link";
             resources["note_pull_from_server"] = "Download note";
             resources["note_push_to_server"] = "Upload note";
+
+            resources["safe_open"] = "Open safe";
+            resources["safe_close"] = "Close safe";
+            resources["safe_change_password"] = "Change safe password";
+            resources["safe_confirm_password"] = "Confirm password";
+            resources["safe_add_note"] = "Add note to safe";
+            resources["safe_remove_note"] = "Remove note from safe";
+            resources["safe_open_existing"] = "Please enter your password, to unlock the protected notes.";
+            resources["safe_open_new"] = "Please create a new password to protect your notes. Afterwards you can choose the notes which should be protected.";
+            resources["safe_password_requirement"] = "A safe password contains at least 8 characters, it is recommended to use a passphrase like: 'I like to sleep from 10 to august'.";
+            resources["password_short_error"] = "The password needs at least 5 characters.";
+            resources["password_confirmation_error"] = "The password inputs do not match.";
+            resources["password_wrong_error"] = "Cannot open the safe with this password, please check for typos.";
 
             resources["show_recyclebin"] = "Open recycle bin";
             resources["show_settings"] = "Settings";
@@ -149,11 +157,6 @@ namespace SilentNotes.Services
 
             resources["note_create_new"] = "Neue Notiz erstellen";
             resources["note_view_or_edit"] = "Bearbeiten der selektierten Notiz";
-            resources["note_show_encrypted"] = "Tresor öffnen";
-            resources["note_hide_encrypted"] = "Tresor schliessen";
-            resources["note_change_password"] = "Tresor-Passwort ändern";
-            resources["note_add_to_safe"] = "Notiz zu Tresor hinzufügen";
-            resources["note_remove_from_safe"] = "Notiz aus Tresor herausnehmen";
             resources["note_to_recyclebin"] = "Selektierte Notizen in den Papierkorb verschieben";
             resources["note_undelete"] = "Notiz wiederherstellen";
             resources["note_undelete_selected"] = "Selektierte Notizen wiederherstellen";
@@ -173,6 +176,19 @@ namespace SilentNotes.Services
             resources["note_link"] = "Link";
             resources["note_pull_from_server"] = "Notiz herunterladen";
             resources["note_push_to_server"] = "Notiz hochladen";
+
+            resources["safe_open"] = "Tresor öffnen";
+            resources["safe_close"] = "Tresor schliessen";
+            resources["safe_change_password"] = "Tresor-Passwort ändern";
+            resources["safe_confirm_password"] = "Passwort bestätigen";
+            resources["safe_add_note"] = "Notiz zu Tresor hinzufügen";
+            resources["safe_remove_note"] = "Notiz aus Tresor herausnehmen";
+            resources["safe_open_existing"] = "Bitte geben Sie Ihr Passwort ein, um die geschützten Notizen anzuzeigen.";
+            resources["safe_open_new"] = "Bitte vergeben Sie ein neues Passwort um Ihre Notizen zu schützen. Anschliessen können Sie die Notizen auswählen welche geschützt werden sollen.";
+            resources["safe_password_requirement"] = "Ein sicheres Passwort enthält mindestens 8 Zeichen, es wird empfohlen einen Passwortsatz zu verwenden wie; 'Ich schlafe gerne von 10 bis August'.";
+            resources["password_short_error"] = "Das Passwort benötigt mindestens 5 Zeichen.";
+            resources["password_confirmation_error"] = "Die Passworteingaben stimmen nicht überein.";
+            resources["password_wrong_error"] = "Kann den Tresor nicht mit diesem Passwort öffnen, bitte prüfen Sie auf Tippfehler.";
 
             resources["show_recyclebin"] = "Papierkorb öffnen";
             resources["show_settings"] = "Einstellungen";

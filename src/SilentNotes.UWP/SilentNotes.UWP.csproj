@@ -181,6 +181,9 @@
     <Content Include="..\SilentNotes.Shared\Assets\Html\NoteView.css">
       <Link>Assets\Html\NoteView.css</Link>
     </Content>
+    <Content Include="..\SilentNotes.Shared\Assets\Html\opensafe-background.svg">
+      <Link>Assets\Html\opensafe-background.svg</Link>
+    </Content>
     <Content Include="..\SilentNotes.Shared\Assets\Html\paper.jpg">
       <Link>Assets\Html\paper.jpg</Link>
     </Content>

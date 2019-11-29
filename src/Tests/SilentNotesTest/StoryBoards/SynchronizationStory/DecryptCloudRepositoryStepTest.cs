@@ -209,7 +209,7 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
                 repository = new NoteRepositoryModel();
             byte[] serializedRepository = XmlUtils.SerializeToXmlBytes(repository);
             EncryptorDecryptor encryptor = new EncryptorDecryptor("SilentNotes");
-            return encryptor.Encrypt(serializedRepository, password, SilentNotes.Crypto.KeyDerivation.KeyDerivationCostType.Low, CommonMocksAndStubs.CryptoRandomService(), BouncyCastleTwofishGcm.CryptoAlgorithmName);
+            return encryptor.Encrypt(serializedRepository, CryptoUtils.StringToSecureString(password), SilentNotes.Crypto.KeyDerivation.KeyDerivationCostType.Low, CommonMocksAndStubs.CryptoRandomService(), BouncyCastleTwofishGcm.CryptoAlgorithmName);
         }
     }
 }

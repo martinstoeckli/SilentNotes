@@ -448,7 +448,7 @@ WriteLiteral(">");
 
 
 #line 114 "NoteRepositoryRazorView.cshtml"
-                                                                                            WriteLiteral(Model.Icon["lock-open-variant"]);
+                                                                                            WriteLiteral(Model.Icon["safe-square-outline"]);
 
 #line default
 #line hidden
@@ -456,7 +456,7 @@ WriteLiteral(" ");
 
 
 #line 114 "NoteRepositoryRazorView.cshtml"
-                                                                                                                                       Write(Model.Language["note_show_encrypted"]);
+                                                                                                                                         Write(Model.Language["safe_open"]);
 
 
 #line default
@@ -481,7 +481,7 @@ WriteLiteral(" ");
 
 
 #line 115 "NoteRepositoryRazorView.cshtml"
-                                                                                                                           Write(Model.Language["note_hide_encrypted"]);
+                                                                                                                           Write(Model.Language["safe_close"]);
 
 
 #line default
@@ -506,7 +506,7 @@ WriteLiteral(" ");
 
 
 #line 116 "NoteRepositoryRazorView.cshtml"
-                                                                                                                                          Write(Model.Language["note_change_password"]);
+                                                                                                                                          Write(Model.Language["safe_change_password"]);
 
 
 #line default

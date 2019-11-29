@@ -4,6 +4,7 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
+using System.Security;
 using SilentNotes.Crypto.KeyDerivation;
 using SilentNotes.Crypto.SymmetricEncryption;
 using SilentNotes.Workers;
@@ -17,7 +18,7 @@ namespace SilentNotes.Crypto
     public class EncryptorDecryptor
     {
         public const string CompressionGzip = "gzip";
-        private const int MinPasswordLength = 7;
+        private const int MinPasswordLength = 5;
         private readonly string _appName;
 
         /// <summary>
@@ -35,7 +36,8 @@ namespace SilentNotes.Crypto
         /// necessary for the decryption (algorithm, nonce, salt, ...).
         /// </summary>
         /// <param name="message">Plain text message to encrypt.</param>
-        /// <param name="password">Password to use for encryption, minimum length is 7 characters.</param>
+        /// <param name="password">Password to use for encryption, minimum length is 5 characters,
+        /// recommended are at least 8 characters.</param>
         /// <param name="costType">The cost type to use for encryption.</param>
         /// <param name="randomSource">A cryptographically safe random source.</param>
         /// <param name="encryptorName">The name of an encryption algorithm which shall be used to
@@ -47,7 +49,7 @@ namespace SilentNotes.Crypto
         /// <returns>A binary array containing the cipher.</returns>
         public byte[] Encrypt(
             byte[] message,
-            string password,
+            SecureString password,
             KeyDerivationCostType costType, 
             ICryptoRandomSource randomSource,
             string encryptorName,
@@ -102,7 +104,7 @@ namespace SilentNotes.Crypto
         /// <exception cref="CryptoUnsupportedRevisionException">Thrown if it was packed with a future incompatible version.</exception>
         /// <exception cref="CryptoDecryptionException">Thrown if there was an error decrypting the cipher.</exception>
         /// <returns>The plain text message.</returns>
-        public byte[] Decrypt(byte[] packedCipher, string password)
+        public byte[] Decrypt(byte[] packedCipher, SecureString password)
         {
             if (packedCipher == null)
                 throw new ArgumentNullException("packedCipher");
@@ -131,9 +133,9 @@ namespace SilentNotes.Crypto
             }
         }
 
-        private void ValidatePassword(string password)
+        private void ValidatePassword(SecureString password)
         {
-            if (string.IsNullOrWhiteSpace(password) || (password.Length < MinPasswordLength))
+            if ((password == null) || (password.Length < MinPasswordLength))
                 throw new CryptoException(string.Format("The password must be at least {0} characters in length.", MinPasswordLength));
         }
     }

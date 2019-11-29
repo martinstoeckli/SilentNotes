@@ -83,6 +83,11 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
     </Compile>
+    <Compile Update="Views\OpenSafeRazorView.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>OpenSafeRazorView.cshtml</DependentUpon>
+    </Compile>
     <Compile Update="Views\RecycleBinContentRazorView.cs">
       <DependentUpon>RecycleBinContentRazorView.cshtml</DependentUpon>
       <DesignTime>True</DesignTime>
@@ -165,6 +170,10 @@
     <None Update="Views\NoteRepositoryRazorView.cshtml">
       <LastGenOutput>NoteRepositoryRazorView.cs</LastGenOutput>
       <Generator>RazorTemplatePreprocessor</Generator>
+    </None>
+    <None Update="Views\OpenSafeRazorView.cshtml">
+      <Generator>RazorTemplatePreprocessor</Generator>
+      <LastGenOutput>OpenSafeRazorView.cs</LastGenOutput>
     </None>
     <None Update="Views\RecycleBinContentRazorView.cshtml">
       <LastGenOutput>RecycleBinContentRazorView.cs</LastGenOutput>

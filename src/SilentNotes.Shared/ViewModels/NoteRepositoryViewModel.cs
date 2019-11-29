@@ -354,6 +354,7 @@ namespace SilentNotes.ViewModels
 
         private void OpenSafe()
         {
+            _navigationService.Navigate(ControllerNames.OpenSafe);
         }
 
         /// <summary>

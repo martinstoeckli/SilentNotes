@@ -166,7 +166,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         {
             try
             {
-                decryptedRepository = encryptor.Decrypt(binaryCloudRepository, transferCode);
+                decryptedRepository = encryptor.Decrypt(binaryCloudRepository, CryptoUtils.StringToSecureString(transferCode));
                 return true;
             }
             catch (CryptoExceptionInvalidCipherFormat)

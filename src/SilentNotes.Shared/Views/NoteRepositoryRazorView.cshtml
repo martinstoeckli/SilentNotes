@@ -111,9 +111,9 @@ body {
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navOverflowMenu">
                 <div class="dropdown-item show-only-on-narrow-browser" onclick="bind(event);" data-binding="AddNote">@{WriteLiteral(Model.Icon["plus"]);} @Model.Language["note_create_new"]</div>
                 <div class="dropdown-item show-only-on-narrow-browser" onclick="bind(event);" data-binding="ShowNote">@{WriteLiteral(Model.Icon["lead-pencil"]);} @Model.Language["note_view_or_edit"]</div>
-                <div class="dropdown-item" onclick="bind(event);" data-binding="OpenSafe">@{WriteLiteral(Model.Icon["lock-open-variant"]);} @Model.Language["note_show_encrypted"]</div>
-                <div class="dropdown-item" onclick="bind(event);" data-binding="CloseSafe">@{WriteLiteral(Model.Icon["lock"]);} @Model.Language["note_hide_encrypted"]</div>
-                <div class="dropdown-item" onclick="bind(event);" data-binding="ChangeSafePassword">@{WriteLiteral(Model.Icon["lock-reset"]);} @Model.Language["note_change_password"]</div>
+                <div class="dropdown-item" onclick="bind(event);" data-binding="OpenSafe">@{WriteLiteral(Model.Icon["safe-square-outline"]);} @Model.Language["safe_open"]</div>
+                <div class="dropdown-item" onclick="bind(event);" data-binding="CloseSafe">@{WriteLiteral(Model.Icon["lock"]);} @Model.Language["safe_close"]</div>
+                <div class="dropdown-item" onclick="bind(event);" data-binding="ChangeSafePassword">@{WriteLiteral(Model.Icon["lock-reset"]);} @Model.Language["safe_change_password"]</div>
                 <div class="dropdown-item" onclick="bind(event);" data-binding="ShowRecycleBin">@{WriteLiteral(Model.Icon["delete-empty"]);} @Model.Language["show_recyclebin"]</div>
                 <div class="dropdown-item" onclick="bind(event);" data-binding="ShowTransferCode">@{WriteLiteral(Model.Icon["key"]);} @Model.Language["show_transfer_code"]</div>
                 <div class="dropdown-item" onclick="bind(event);" data-binding="ShowSettings">@{WriteLiteral(Model.Icon["settings"]);} @Model.Language["show_settings"]</div>

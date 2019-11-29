@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security;
 using NUnit.Framework;
 using SilentNotes.Crypto;
 using SilentNotes.Crypto.KeyDerivation;
@@ -58,7 +59,7 @@ namespace SilentNotesTest.Crypto
             string base64Cipher = "dW5pdHRlc3QkYWVzX2djbSQ0NG04QXBFU1ptcXhnYll2OE5wcWl3PT0kcGJrZGYyJGgwSDdxSGZnVFlXNzBKS3lEb0JLeFE9PSQxMDAwJJsMDjdYEYXYmcqTOFRbge6iVfWo/iny4nrIOMVuoqYak6xB/MAe53G5H3AyxiTi8OENJbi9tzZStpe3p3nlDB7l+J8=";
             byte[] cipher = CryptoUtils.Base64StringToBytes(base64Cipher);
             EncryptorDecryptor decryptor = new EncryptorDecryptor("unittest");
-            string decryptedMessage = CryptoUtils.BytesToString(decryptor.Decrypt(cipher, "brownie"));
+            string decryptedMessage = CryptoUtils.BytesToString(decryptor.Decrypt(cipher, CryptoUtils.StringToSecureString("brownie")));
             Assert.AreEqual("The brown fox jumps over the lazy 🐢🖐🏿 doc.", decryptedMessage);
         }
 
@@ -69,7 +70,7 @@ namespace SilentNotesTest.Crypto
             string base64Cipher = "dW5pdHRlc3QkdHdvZmlzaF9nY20kZHhMWFh4K0UrZ2MzWHdWc01rWUFxQT09JHBia2RmMiRma1BCWTdDWXp1OG5YUlJtYk9DUlp3PT0kMTAwMCRRc0ETSqDekQuBgKJ5x4Mvy02OHsivm0uJ9KchKdpGk+pmbF4Kq/EDbx9Uw54uEZUQLnK70dNKSEVtb1GyUOX1mitr";
             byte[] cipher = CryptoUtils.Base64StringToBytes(base64Cipher);
             EncryptorDecryptor decryptor = new EncryptorDecryptor("unittest");
-            string decryptedMessage = CryptoUtils.BytesToString(decryptor.Decrypt(cipher, "brownie"));
+            string decryptedMessage = CryptoUtils.BytesToString(decryptor.Decrypt(cipher, CryptoUtils.StringToSecureString("brownie")));
             Assert.AreEqual("The brown fox jumps over the lazy 🐢🖐🏿 doc.", decryptedMessage);
         }
 
@@ -83,7 +84,7 @@ namespace SilentNotesTest.Crypto
             byte[] salt = randomGenerator.GetRandomBytes(kdf.ExpectedSaltSizeBytes);
             int cost = kdf.RecommendedCost(KeyDerivationCostType.Low);
 
-            string password = "Das ist kein gutes Passwort";
+            SecureString password = CryptoUtils.StringToSecureString("Das ist kein gutes Passwort");
             byte[] key = kdf.DeriveKeyFromPassword(password, KeyLength, salt, cost);
             Assert.AreEqual(KeyLength, key.Length);
 
@@ -99,7 +100,7 @@ namespace SilentNotesTest.Crypto
             ICryptoRandomService randomGenerator = CommonMocksAndStubs.CryptoRandomService();
             string message = "Der schnelle Fuchs stolpert über den faulen Hund.";
             byte[] binaryMessage = CryptoUtils.StringToBytes(message);
-            string password = "Der schnelle Uhu fliegt über den faulen Hund.";
+            SecureString password = CryptoUtils.StringToSecureString("Der schnelle Uhu fliegt über den faulen Hund.");
 
             byte[] cipher = encryptor.Encrypt(binaryMessage, password, KeyDerivationCostType.Low, randomGenerator, BouncyCastleTwofishGcm.CryptoAlgorithmName);
             byte[] decryptedMessage = encryptor.Decrypt(cipher, password);
@@ -109,7 +110,7 @@ namespace SilentNotesTest.Crypto
         [Test]
         public void ObfuscationCanBeReversed()
         {
-            string obfuscationKey = "A very strong passphrase...";
+            SecureString obfuscationKey = CryptoUtils.StringToSecureString("A very strong passphrase...");
             ICryptoRandomService randomGenerator = CommonMocksAndStubs.CryptoRandomService();
             byte[] binaryMessage = randomGenerator.GetRandomBytes(100);
 
@@ -127,7 +128,7 @@ namespace SilentNotesTest.Crypto
         public void EnsureBackwardsCompatibilityDeobfuscation()
         {
             // Ensure that a once stored obfuscated text can always be deobfuscated even after changes in the liberary
-            string obfuscationKey = "A very strong passphrase...";
+            SecureString obfuscationKey = CryptoUtils.StringToSecureString("A very strong passphrase...");
             string obfuscatedMessage = "b2JmdXNjYXRpb24kdHdvZmlzaF9nY20kU1pmWWpzWWV6MUZ0S0xqZWhHM1FCUT09JHBia2RmMiR0emVXNU9PTWNucEkxaHhWbkt2Y0Z3PT0kMTAwMCQh9UPVY34fufBoywrqb0JjKU/BMqnTABoXfaTsmEudBRVMpMb+Yx+GZIBjNbrWpqMSmWMgiIwfNBlixP0vi7ohAiv9";
             string deobfuscatedMessage = CryptoUtils.Deobfuscate(obfuscatedMessage, obfuscationKey);
             Assert.AreEqual("The brown fox jumps over the lazy 🐢🖐🏿 doc.", deobfuscatedMessage);
@@ -139,7 +140,7 @@ namespace SilentNotesTest.Crypto
             EncryptorDecryptor encryptor = new EncryptorDecryptor("sugus");
             ICryptoRandomService randomGenerator = CommonMocksAndStubs.CryptoRandomService(88);
             byte[] binaryMessage = CommonMocksAndStubs.FilledByteArray(1024, 88);
-            string password = "Der schnelle Uhu fliegt über den faulen Hund.";
+            SecureString password = CryptoUtils.StringToSecureString("Der schnelle Uhu fliegt über den faulen Hund.");
 
             byte[] cipher = encryptor.Encrypt(
                 binaryMessage,
@@ -159,7 +160,7 @@ namespace SilentNotesTest.Crypto
             EncryptorDecryptor encryptor = new EncryptorDecryptor("sugus");
             ICryptoRandomService randomGenerator = CommonMocksAndStubs.CryptoRandomService();
             byte[] binaryMessage = new byte[] { 88 };
-            string password = "unittestpwd";
+            SecureString password = CryptoUtils.StringToSecureString("unittestpwd");
 
             Assert.Throws<CryptoException>(delegate
             {

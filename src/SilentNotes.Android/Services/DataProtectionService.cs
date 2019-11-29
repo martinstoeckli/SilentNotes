@@ -73,7 +73,7 @@ namespace SilentNotes.Android.Services
             {
                 // Seems there are exotic devices, which do not support the keystore properly.
                 // The least we can do is obfuscating the key.
-                encryptedRandomKey = CryptoUtils.Obfuscate(randomKey, Obcake, _randomService);
+                encryptedRandomKey = CryptoUtils.Obfuscate(randomKey, CryptoUtils.StringToSecureString(Obcake), _randomService);
             }
 
             // Combine the encrypted random key and the encrypted data
@@ -116,7 +116,7 @@ namespace SilentNotes.Android.Services
 
             // Fallback to obfuscated key
             if (storedKey == null)
-                storedKey = CryptoUtils.Deobfuscate(encryptedStoredKey, Obcake);
+                storedKey = CryptoUtils.Deobfuscate(encryptedStoredKey, CryptoUtils.StringToSecureString(Obcake));
 
             // Decrypt the data with the random key
             BouncyCastleTwofishGcm decryptor = new BouncyCastleTwofishGcm();

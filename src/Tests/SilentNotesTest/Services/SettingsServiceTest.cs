@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Security;
 using System.Text;
 using System.Xml.Linq;
 using Moq;
@@ -167,7 +168,7 @@ namespace SilentNotesTest.Services
             protected override void UpdateSettingsFrom1To2(XElement root)
             {
                 base.UpdateSettingsFrom1To2(root);
-                const string snpsk = "53EC49B1-6600+406b;B84F-0B9CFA1D2BE1";
+                SecureString snpsk = CryptoUtils.StringToSecureString("53EC49B1-6600+406b;B84F-0B9CFA1D2BE1");
 
                 // Handle protected password
                 XElement oldPasswortElement = root.Element("cloud_storage")?.Element("cloud_password");
