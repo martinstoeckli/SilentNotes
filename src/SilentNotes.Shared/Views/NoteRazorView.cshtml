@@ -20,15 +20,22 @@
     <script src="quill/quill.min.js"></script>
 
     <style type="text/css">
-        body { background-color: transparent; }
-        #content { background-color: @Model.BackgroundColorHex; }
+body { background-color: transparent; }
+#content { background-color: @Model.BackgroundColorHex; }
 
-        .note-viewer {
-            font-size: @(Model.NoteBaseFontSize)px !important;
-        }
-        .color-btn.dark {
-            color: white;
-        }
+.note-viewer {
+    font-size: @(Model.NoteBaseFontSize)px !important;
+}
+.color-btn.dark {
+    color: white;
+}
+.locked {
+    position: relative;
+    height: 100%;
+}
+.locked svg {
+    fill: rgba(160, 160, 160, 0.4);
+}
     </style>
     <script>
         var quill;
@@ -127,21 +134,24 @@
         <button class="nav-item mr-auto" onclick="bind(event);" data-binding="GoBack" title="@Model.Language["back"]">@{WriteLiteral(Model.Icon["arrow-left"]);}</button>
 
         <span id="quill-toolbar" class="d-inline-flex">
-            <select class="nav-item ql-header">
-                <option value="1"></option>
-                <option value="2"></option>
-                <option value="3"></option>
-                <option selected="selected"></option>
-            </select>
+            @if (!Model.IsLocked)
+            {
+                <select class="nav-item ql-header">
+                    <option value="1"></option>
+                    <option value="2"></option>
+                    <option value="3"></option>
+                    <option selected="selected"></option>
+                </select>
 
-            <button class="nav-item ql-bold" title="@Model.Language["note_bold"]"></button>
-            <button class="nav-item ql-italic" title="@Model.Language["note_italic"]"></button>
-            <span class="show-only-on-wide-browser">
-                <button class="nav-item ql-underline" title="@Model.Language["note_underline"]"></button>
-                <button class="nav-item ql-strike" title="@Model.Language["note_strike"]"></button>
-                <button class="nav-item ql-list" value="ordered" title="@Model.Language["note_list_ordered"]"></button>
-                <button class="nav-item ql-list" value="bullet" title="@Model.Language["note_list_unordered"]"></button>
-            </span>
+                <button class="nav-item ql-bold" title="@Model.Language["note_bold"]"></button>
+                <button class="nav-item ql-italic" title="@Model.Language["note_italic"]"></button>
+                <span class="show-only-on-wide-browser">
+                    <button class="nav-item ql-underline" title="@Model.Language["note_underline"]"></button>
+                    <button class="nav-item ql-strike" title="@Model.Language["note_strike"]"></button>
+                    <button class="nav-item ql-list" value="ordered" title="@Model.Language["note_list_ordered"]"></button>
+                    <button class="nav-item ql-list" value="bullet" title="@Model.Language["note_list_unordered"]"></button>
+                </span>
+            }
         </span>
 
         <!-- Color dropdown -->
@@ -152,7 +162,7 @@
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="colorDropdownMenu">
                 @foreach (var backgroundColor in @Model.BackgroundColorsHex)
                 {
-                <div class="dropdown-item color-btn @Model.GetDarkClass(backgroundColor)" onclick="bind(event);" data-binding="backgroundcolorhex" data-backgroundcolorhex="@backgroundColor" style="background-color: @backgroundColor">Lorem ipsum</div>
+                    <div class="dropdown-item color-btn @Model.GetDarkClass(backgroundColor)" onclick="bind(event);" data-binding="backgroundcolorhex" data-backgroundcolorhex="@backgroundColor" style="background-color: @backgroundColor">Lorem ipsum</div>
                 }
             </div>
         </div>
@@ -163,30 +173,52 @@
                 @{WriteLiteral(Model.Icon["dots-vertical"]);}
             </button>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navOverflowMenu">
-                <div class="dropdown-item show-only-on-narrow-browser" onclick="toggleFormat('underline');">@{WriteLiteral(Model.Icon["format-underline"]);} @Model.Language["note_underline"]</div>
-                <div class="dropdown-item show-only-on-narrow-browser" onclick="toggleFormat('strike');">@{WriteLiteral(Model.Icon["format-strikethrough-variant"]);} @Model.Language["note_strike"]</div>
-                <div class="dropdown-item show-only-on-narrow-browser" onclick="toggleBlockFormat('list', 'ordered');">@{WriteLiteral(Model.Icon["format-list-numbers"]);} @Model.Language["note_list_ordered"]</div>
-                <div class="dropdown-item show-only-on-narrow-browser" onclick="toggleBlockFormat('list', 'bullet');">@{WriteLiteral(Model.Icon["format-list-bulleted"]);} @Model.Language["note_list_unordered"]</div>
-                <div class="dropdown-item" onclick="toggleFormat('code-block');">@{WriteLiteral(Model.Icon["code-braces"]);} @Model.Language["note_code"]</div>
-                <div class="dropdown-item" onclick="toggleFormat('blockquote');">@{WriteLiteral(Model.Icon["format-quote-close"]);} @Model.Language["note_quotation"]</div>
-                <div class="dropdown-item" onclick="toggleLink()">@{WriteLiteral(Model.Icon["link-variant"]);} @Model.Language["note_link"]</div>
-                <hr>
-                <div class="dropdown-item" onclick="bind(event);" data-binding="PushNoteToOnlineStorage">@{WriteLiteral(Model.Icon["cloud-upload"]);} @Model.Language["note_push_to_server"]</div>
-                <div class="dropdown-item" onclick="bind(event);" data-binding="PullNoteFromOnlineStorage">@{WriteLiteral(Model.Icon["cloud-download"]);} @Model.Language["note_pull_from_server"]</div>
+                @if (!Model.IsLocked)
+                {
+                    <div class="dropdown-item show-only-on-narrow-browser" onclick="toggleFormat('underline');">@{WriteLiteral(Model.Icon["format-underline"]);} @Model.Language["note_underline"]</div>
+                    <div class="dropdown-item show-only-on-narrow-browser" onclick="toggleFormat('strike');">@{WriteLiteral(Model.Icon["format-strikethrough-variant"]);} @Model.Language["note_strike"]</div>
+                    <div class="dropdown-item show-only-on-narrow-browser" onclick="toggleBlockFormat('list', 'ordered');">@{WriteLiteral(Model.Icon["format-list-numbers"]);} @Model.Language["note_list_ordered"]</div>
+                    <div class="dropdown-item show-only-on-narrow-browser" onclick="toggleBlockFormat('list', 'bullet');">@{WriteLiteral(Model.Icon["format-list-bulleted"]);} @Model.Language["note_list_unordered"]</div>
+                    <div class="dropdown-item" onclick="toggleFormat('code-block');">@{WriteLiteral(Model.Icon["code-braces"]);} @Model.Language["note_code"]</div>
+                    <div class="dropdown-item" onclick="toggleFormat('blockquote');">@{WriteLiteral(Model.Icon["format-quote-close"]);} @Model.Language["note_quotation"]</div>
+                    <div class="dropdown-item" onclick="toggleLink()">@{WriteLiteral(Model.Icon["link-variant"]);} @Model.Language["note_link"]</div>
+                    <hr>
+                    <div class="dropdown-item" onclick="bind(event);" data-binding="PushNoteToOnlineStorage">@{WriteLiteral(Model.Icon["cloud-upload"]);} @Model.Language["note_push_to_server"]</div>
+                    <div class="dropdown-item" onclick="bind(event);" data-binding="PullNoteFromOnlineStorage">@{WriteLiteral(Model.Icon["cloud-download"]);} @Model.Language["note_pull_from_server"]</div>
+                }
             </div>
         </div>
     </nav>
 
     <div id="content" class="" data-binding="Content">
-        <div id="myeditor" class="note-viewer @Model.GetDarkClass()" data-binding="quill">@{WriteLiteral(Model.HtmlContent);}</div>
+        @if (Model.IsLocked)
+        {
+            <span class="locked d-flex justify-content-center align-items-center @Model.GetDarkClass()"><svg width='128' height='128' viewBox='0 0 24 24'><use xlink:href="#svg-lock-outline" /></svg></span>
+        }
+        else
+        {
+            <div id="myeditor" class="note-viewer @Model.GetDarkClass()" data-binding="quill">@{WriteLiteral(Model.HtmlContent);}</div>
+        }
     </div>
 
     @if (Model.ShowCursorArrowKeys)
     {
-    <div id="arrowkeys" class="@Model.GetDarkClass()" title="@Model.Language["gui_arrow_key"]">
-        <svg class="arrowkey" onmousedown="event.preventDefault();" onclick="simulateArrowKey(37);" viewBox='0 0 24 24'>@{WriteLiteral(Model.Icon.LoadIconSvgPath("arrow-left-bold-box-outline"));}</svg>
-        <svg class="arrowkey" onmousedown="event.preventDefault();" onclick="simulateArrowKey(39);" viewBox='0 0 24 24'>@{WriteLiteral(Model.Icon.LoadIconSvgPath("arrow-right-bold-box-outline"));}</svg>
-    </div>
+        <div id="arrowkeys" class="@Model.GetDarkClass()" title="@Model.Language["gui_arrow_key"]">
+            @{WriteLiteral(Model.Icon.LoadIcon("arrow-left-bold-box-outline",
+                        new[] {
+              new KeyValuePair<string, string>("class", "arrowkey"),
+              new KeyValuePair<string, string>("onmousedown", "event.preventDefault();"),
+              new KeyValuePair<string, string>("onclick", "simulateArrowKey(37);") }));}
+            @{WriteLiteral(Model.Icon.LoadIcon("arrow-right-bold-box-outline",
+                        new[] {
+              new KeyValuePair<string, string>("class", "arrowkey"),
+              new KeyValuePair<string, string>("onmousedown", "event.preventDefault();"),
+              new KeyValuePair<string, string>("onclick", "simulateArrowKey(39);") }));}
+        </div>
     }
+
+    <div hidden>
+        @{WriteLiteral(Model.Icon.LoadIcon("lock-outline", new[] { new KeyValuePair<string, string>("id", "svg-lock-outline") }));}
+    </div>
 </body>
 </html>

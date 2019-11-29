@@ -8,6 +8,17 @@ namespace SilentNotesTest.Models
     public class NoteModelTest
     {
         [Test]
+        public void LazyGenerationOfId()
+        {
+            NoteModel model = new NoteModel();
+            Guid id1 = model.Id;
+            Guid id2 = model.Id;
+
+            Assert.AreNotEqual(Guid.Empty, model.Id); // Id is created when first accessed
+            Assert.AreEqual(id1, id2); // Id does not change when accessed repeatedly
+        }
+
+        [Test]
         public void CloneCopiesAllProperties()
         {
             NoteModel note1 = new NoteModel

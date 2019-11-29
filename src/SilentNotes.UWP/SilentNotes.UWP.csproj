@@ -175,9 +175,6 @@
     <Content Include="..\SilentNotes.Shared\Assets\Html\key-background.svg">
       <Link>Assets\Html\key-background.svg</Link>
     </Content>
-    <Content Include="..\SilentNotes.Shared\Assets\Html\lock-outline.svg">
-      <Link>Assets\Html\lock-outline.svg</Link>
-    </Content>
     <Content Include="..\SilentNotes.Shared\Assets\Html\meadow.jpg">
       <Link>Assets\Html\meadow.jpg</Link>
     </Content>

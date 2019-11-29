@@ -165,10 +165,23 @@ namespace SilentNotes.ViewModels
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the note is a selected item.
-        /// This can be used to implement multi selection lists.
+        /// Gets a value indicating whether the note is in a safe. Notes in a safe can be locked
+        /// or unlocked.
         /// </summary>
-        public bool IsSelected { get; set; }
+        public bool IsInSafe
+        {
+            get { return Model.SafeId != null; }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the note is locked. A locked note is part of a safe and
+        /// is not yet decrypted.
+        /// </summary>
+        public bool IsLocked
+        {
+            // todo: stom
+            get { return false; }
+        }
 
         /// <inheritdoc />
         public override void OnStoringUnsavedData()

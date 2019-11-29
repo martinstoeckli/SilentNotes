@@ -354,8 +354,6 @@ namespace SilentNotes.ViewModels
 
         private void OpenSafe()
         {
-
-            OnPropertyChanged(nameof(IsSafeOpen));
         }
 
         /// <summary>
@@ -365,8 +363,11 @@ namespace SilentNotes.ViewModels
 
         private void CloseSafe()
         {
+        }
 
-            OnPropertyChanged(nameof(IsSafeOpen));
+        public bool IsSafeOpen
+        {
+            get { return false; }
         }
 
         /// <summary>
@@ -378,20 +379,12 @@ namespace SilentNotes.ViewModels
         {
         }
 
-        /// <summary>
-        /// Gets a value indicating whether the encrypted notes are currently shown or hidden.
-        /// </summary>
-        public bool IsSafeOpen
+        public void AddNoteToSafe(Guid noteId)
         {
-            get { return false; }
         }
 
-        /// <summary>
-        /// Gets a value indicating whether there exists encrypted notes.
-        /// </summary>
-        public bool HasEncryptedNotes
+        public void RemoveNoteFromSafe(Guid noteId)
         {
-            get { return false; }
         }
 
         /// <summary>

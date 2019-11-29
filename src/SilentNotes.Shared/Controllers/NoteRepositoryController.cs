@@ -155,6 +155,18 @@ namespace SilentNotes.Controllers
             View.ExecuteJavaScript(script);
         }
 
+        private void SetVisibilityAddRemoveTresor(Guid noteId, bool isInSafe)
+        {
+            string bindingVisible = isInSafe ? "RemoveFromSafe" : "AddToSafe";
+            string bindingInvisible = isInSafe ? "AddToSafe" : "RemoveFromSafe";
+            string script = string.Format(
+                "$(\"[data-note='{2}']\").children(\"[data-binding='{0}']\").show(); $(\"[data-note='{2}']\").children(\"[data-binding='{1}']\").hide();",
+                bindingVisible,
+                bindingInvisible,
+                noteId.ToString());
+            View.ExecuteJavaScript(script);
+        }
+
         private void UnhandledViewBindingEventHandler(object sender, HtmlViewBindingNotifiedEventArgs e)
         {
             Guid noteId;
@@ -172,6 +184,19 @@ namespace SilentNotes.Controllers
                     int oldIndex = int.Parse(e.Parameters["oldIndex"]);
                     int newIndex = int.Parse(e.Parameters["newIndex"]);
                     _viewModel.MoveNote(oldIndex, newIndex);
+                    break;
+            }
+            switch (e.BindingName?.ToLowerInvariant())
+            {
+                case "addtosafe":
+                    noteId = new Guid(e.Parameters["parent.data-note"]);
+                    _viewModel.AddNoteToSafe(noteId);
+                    SetVisibilityAddRemoveTresor(noteId, true);
+                    break;
+                case "removefromsafe":
+                    noteId = new Guid(e.Parameters["parent.data-note"]);
+                    _viewModel.RemoveNoteFromSafe(noteId);
+                    SetVisibilityAddRemoveTresor(noteId, false);
                     break;
             }
         }

@@ -9,24 +9,23 @@ using System.Xml.Serialization;
 namespace SilentNotes.Models
 {
     /// <summary>
-    /// Serializeable model of a single note.
+    /// A safe can be used to encrypt one or more notes.
     /// </summary>
-    public class NoteModel
+    public class SafeModel
     {
         private Guid _id;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NoteModel"/> class.
+        /// Initializes a new instance of the <see cref="SafeModel"/> class.
         /// </summary>
-        public NoteModel()
+        public SafeModel()
         {
-            BackgroundColorHex = SettingsModel.StartDefaultNoteColorHex;
             CreatedAt = DateTime.UtcNow;
             ModifiedAt = CreatedAt;
         }
 
         /// <summary>
-        /// Gets or sets the id of the note.
+        /// Gets or sets the id of the safe.
         /// </summary>
         [XmlAttribute(AttributeName = "id")]
         public Guid Id
@@ -36,42 +35,22 @@ namespace SilentNotes.Models
         }
 
         /// <summary>
-        /// Gets or sets the formatted html content of the note.
-        /// </summary>
-        [XmlElement(ElementName = "html_content")]
-        public string HtmlContent { get; set; }
-
-        /// <summary>
-        /// Gets or sets the background color of the note as hex string, e.g. #ff0000
-        /// </summary>
-        [XmlAttribute(AttributeName = "background_color")]
-        public string BackgroundColorHex { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the note is deleted and is part of the
-        /// recycling bin.
-        /// </summary>
-        [XmlAttribute(AttributeName = "in_recycling_bin")]
-        public bool InRecyclingBin { get; set; }
-
-        /// <summary>
         /// Gets or sets the time in UTC, when the note was first created.
         /// </summary>
         [XmlAttribute(AttributeName = "created_at")]
         public DateTime CreatedAt { get; set; }
 
         /// <summary>
-        /// Gets or sets the time in UTC, when the note was last updated.
+        /// Gets or sets the time in UTC, when the password was last updated.
         /// </summary>
         [XmlAttribute(AttributeName = "modified_at")]
         public DateTime ModifiedAt { get; set; }
 
         /// <summary>
-        /// Gets or sets the safe which was used to encrypt the note, or null if it is not encrypted.
+        /// Gets or sets the serializable <see cref="Key"/>.
         /// </summary>
-        [XmlElement(ElementName = "safe")]
-        public Guid? SafeId { get; set; }
-        public bool SafeIdSpecified { get { return SafeId != null; } } // Do only serialize when set
+        [XmlElement("key")]
+        public string SerializeableKey { get; set; }
 
         /// <summary>
         /// Sets the <see cref="ModifiedAt"/> property to the current UTC time.
@@ -82,32 +61,29 @@ namespace SilentNotes.Models
         }
 
         /// <summary>
-        /// Makes a deep copy of the note.
+        /// Makes a deep copy of the safe.
         /// </summary>
         /// <returns>Copy of the note.</returns>
-        public NoteModel Clone()
+        public SafeModel Clone()
         {
-            NoteModel result = new NoteModel();
+            SafeModel result = new SafeModel();
             CloneTo(result);
             return result;
         }
 
         /// <summary>
-        /// Makes <paramref name="target"/> a deep copy of the note.
+        /// Makes <paramref name="target"/> a deep copy of the safe.
         /// </summary>
         /// <param name="target">Copy all properties to this note.</param>
-        public void CloneTo(NoteModel target)
+        public void CloneTo(SafeModel target)
         {
             if (target == null)
                 throw new ArgumentNullException(nameof(target));
 
             target.Id = this.Id;
-            target.HtmlContent = this.HtmlContent;
-            target.BackgroundColorHex = this.BackgroundColorHex;
-            target.InRecyclingBin = this.InRecyclingBin;
+            target.SerializeableKey = this.SerializeableKey;
             target.CreatedAt = this.CreatedAt;
             target.ModifiedAt = this.ModifiedAt;
-            target.SafeId = this.SafeId;
         }
     }
 }

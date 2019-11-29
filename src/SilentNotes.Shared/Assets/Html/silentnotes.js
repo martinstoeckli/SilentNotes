@@ -129,6 +129,12 @@ function bind(event) {
 		if (/^data-/.test(attr.name))
 			params[attr.name] = attr.value;
 	});
+	if (event.currentTarget.parentNode !== null) {
+		$.each(event.currentTarget.parentNode.attributes, function(index, attr) {
+			if (/^data-/.test(attr.name))
+				params['parent.' + attr.name] = attr.value;
+		});
+	}
 
 	var parts = [];
 	$.each(params, function(key, value) {
