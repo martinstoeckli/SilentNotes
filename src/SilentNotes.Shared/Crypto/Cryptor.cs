@@ -16,6 +16,7 @@ namespace SilentNotes.Crypto
     /// </summary>
     public class Cryptor : ICryptor
     {
+        /// <summary>Can be used in the compression parameter, to compress with the GZip library.</summary>
         public const string CompressionGzip = "gzip";
         private const int MinPasswordLength = 5;
 
@@ -176,7 +177,6 @@ namespace SilentNotes.Crypto
                 throw new CryptoDecryptionException("Could not decrypt cipher, probably because the key is wrong.", ex);
             }
         }
-
 
         private void ValidatePassword(SecureString password)
         {

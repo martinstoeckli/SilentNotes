@@ -21,7 +21,7 @@ namespace SilentNotes.Logging
         }
 
         /// <summary>
-        /// Gets of sets the creation time (UTC) of the log entry.
+        /// Gets or sets the creation time (UTC) of the log entry.
         /// </summary>
         public DateTime CreationTime { get; set; }
 

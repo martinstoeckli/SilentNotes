@@ -27,11 +27,15 @@ namespace SilentNotes.Models
             ModifiedAt = CreatedAt;
         }
 
+        /// <summary>
+        /// Finalizes an instance of the <see cref="SafeModel"/> class.
+        /// </summary>
         ~SafeModel()
         {
             Dispose();
         }
 
+        /// <inheritdoc/>
         public void Dispose()
         {
             Close();

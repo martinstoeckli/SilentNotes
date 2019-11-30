@@ -19,7 +19,7 @@ namespace SilentNotes.Services
         /// <summary>
         /// Initializes a new instance of the <see cref="ThemeService"/> class.
         /// </summary>
-        /// <param name="settingsService"></param>
+        /// <param name="settingsService">A settings service, which can get the current theme.</param>
         public ThemeService(ISettingsService settingsService)
         {
             _settingsService = settingsService;
