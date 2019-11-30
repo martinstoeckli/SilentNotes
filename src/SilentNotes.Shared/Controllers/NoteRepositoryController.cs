@@ -105,8 +105,6 @@ namespace SilentNotes.Controllers
                     null,
                     new HtmlViewBindingViewmodelNotifier(_viewModel, "Notes"),
                     HtmlViewBindingMode.OneWayToView);
-                Bindings.BindVisibility("OpenSafe", () => !_viewModel.IsSafeOpen, _viewModel, nameof(_viewModel.IsSafeOpen), HtmlViewBindingMode.OneWayToViewPlusOneTimeToView);
-                Bindings.BindVisibility("CloseSafe", () => _viewModel.IsSafeOpen, _viewModel, nameof(_viewModel.IsSafeOpen), HtmlViewBindingMode.OneWayToViewPlusOneTimeToView);
                 Bindings.UnhandledViewBindingEvent += UnhandledViewBindingEventHandler;
 
                 // Load html page and content (notes)

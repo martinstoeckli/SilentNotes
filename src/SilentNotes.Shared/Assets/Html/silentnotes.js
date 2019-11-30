@@ -1,3 +1,14 @@
+function addShortcuts() {
+    $('body').keyup(function(evt) {
+        if (evt.which === 13) {
+            $('.shortcut-enter')[0].click();
+        }
+        if (evt.which === 27) {
+            $('.shortcut-escape')[0].click();
+        }
+    });
+}
+
 // Makes child elements of class .sortable sortable, using
 // https://github.com/RubaXa/Sortable
 function makeSortable() {

@@ -51,8 +51,8 @@ namespace SilentNotes.Controllers
             Bindings.BindCommand("CancelCommand", _viewModel.CancelCommand);
             Bindings.BindText("Password", null, (v) => _viewModel.Password = SecureStringExtensions.StringToSecureString(v), null, null, HtmlViewBindingMode.OneWayToViewmodel);
             Bindings.BindText("PasswordConfirmation", null, (v) => _viewModel.PasswordConfirmation = SecureStringExtensions.StringToSecureString(v), null, null, HtmlViewBindingMode.OneWayToViewmodel);
-            Bindings.BindInvalid("Password", () => _viewModel.IsInvalidPassword, _viewModel, nameof(_viewModel.IsInvalidPassword), HtmlViewBindingMode.OneWayToView);
-            Bindings.BindInvalid("PasswordConfirmation", () => _viewModel.IsInvalidPasswordConfirmation, _viewModel, nameof(_viewModel.IsInvalidPasswordConfirmation), HtmlViewBindingMode.OneWayToView);
+            Bindings.BindInvalid("Password", () => _viewModel.InvalidPasswordError, _viewModel, nameof(_viewModel.InvalidPasswordError), HtmlViewBindingMode.OneWayToView);
+            Bindings.BindInvalid("PasswordConfirmation", () => _viewModel.InvalidPasswordConfirmationError, _viewModel, nameof(_viewModel.InvalidPasswordConfirmationError), HtmlViewBindingMode.OneWayToView);
 
             string html = _viewService.GenerateHtml(_viewModel);
             View.LoadHtml(html);

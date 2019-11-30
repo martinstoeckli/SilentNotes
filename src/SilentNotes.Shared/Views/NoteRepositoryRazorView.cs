@@ -184,11 +184,11 @@ WriteLiteral(@"px !important;
 }
 .greenish, .greenish.dark {
 	fill: #0a480a;
-	background-color: rgba(027, 187, 027, 0.8);
+	background-color: #1bbb1b;
 }
 .reddish, .reddish.dark {
 	fill: #470a0a;
-	background-color: rgba(190, 028, 028, 0.8);
+	background-color: #be1c1c;
 }
 
     </style>
@@ -440,15 +440,32 @@ WriteLiteral("</div>\r\n                <div");
 
 WriteLiteral(" class=\"dropdown-item\"");
 
-WriteLiteral(" onclick=\"bind(event);\"");
-
-WriteLiteral(" data-binding=\"OpenSafe\"");
-
-WriteLiteral(">");
+WriteLiteral(" ");
 
 
 #line 114 "NoteRepositoryRazorView.cshtml"
-                                                                                            WriteLiteral(Model.Icon["safe-square-outline"]);
+                                            if (Model.IsAnySafeOpen) { 
+
+#line default
+#line hidden
+
+#line 114 "NoteRepositoryRazorView.cshtml"
+                                                                   Write("hidden");
+
+
+#line default
+#line hidden
+
+#line 114 "NoteRepositoryRazorView.cshtml"
+                                                                                   ; }
+
+#line default
+#line hidden
+WriteLiteral(" onclick=\"bind(event);\" data-binding=\"OpenSafe\">");
+
+
+#line 114 "NoteRepositoryRazorView.cshtml"
+                                                                                                                                        WriteLiteral(Model.Icon["safe-square-outline"]);
 
 #line default
 #line hidden
@@ -456,7 +473,7 @@ WriteLiteral(" ");
 
 
 #line 114 "NoteRepositoryRazorView.cshtml"
-                                                                                                                                         Write(Model.Language["safe_open"]);
+                                                                                                                                                                                     Write(Model.Language["safe_open"]);
 
 
 #line default
@@ -465,15 +482,32 @@ WriteLiteral("</div>\r\n                <div");
 
 WriteLiteral(" class=\"dropdown-item\"");
 
-WriteLiteral(" onclick=\"bind(event);\"");
-
-WriteLiteral(" data-binding=\"CloseSafe\"");
-
-WriteLiteral(">");
+WriteLiteral(" ");
 
 
 #line 115 "NoteRepositoryRazorView.cshtml"
-                                                                                             WriteLiteral(Model.Icon["lock"]);
+                                            if (!Model.IsAnySafeOpen) { 
+
+#line default
+#line hidden
+
+#line 115 "NoteRepositoryRazorView.cshtml"
+                                                                    Write("hidden");
+
+
+#line default
+#line hidden
+
+#line 115 "NoteRepositoryRazorView.cshtml"
+                                                                                    ; }
+
+#line default
+#line hidden
+WriteLiteral(" onclick=\"bind(event);\" data-binding=\"CloseSafe\">");
+
+
+#line 115 "NoteRepositoryRazorView.cshtml"
+                                                                                                                                          WriteLiteral(Model.Icon["safe-square-outline"]);
 
 #line default
 #line hidden
@@ -481,7 +515,7 @@ WriteLiteral(" ");
 
 
 #line 115 "NoteRepositoryRazorView.cshtml"
-                                                                                                                           Write(Model.Language["safe_close"]);
+                                                                                                                                                                                       Write(Model.Language["safe_close"]);
 
 
 #line default

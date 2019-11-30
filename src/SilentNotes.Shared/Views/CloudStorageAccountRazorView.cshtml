@@ -25,6 +25,9 @@
         }
     </style>
     <script>
+        $(function () {
+            addShortcuts();
+        });
     </script>
 </head>
 <body>
@@ -63,8 +66,8 @@
                 <input class="form-check-input" type="checkbox" id="Secure" onclick="bind(event)" data-binding="Secure" @(Model.Secure ? "checked" : "")>
                 <label class="form-check-label" for="Secure">@Model.Language["cloud_secure"]</label>
             </div>
-            <button type="button" class="btn btn-primary mb-2" onclick="bind(event)" data-binding="OkCommand">@Model.Language["continue"]</button>
-            <button type="button" class="btn btn-secondary mb-2" onclick="bind(event)" data-binding="CancelCommand">@Model.Language["cancel"]</button>
+            <button type="button" class="btn btn-primary mb-2 shortcut-enter" onclick="bind(event)" data-binding="OkCommand">@Model.Language["continue"]</button>
+            <button type="button" class="btn btn-secondary mb-2 shortcut-escape" onclick="bind(event)" data-binding="CancelCommand">@Model.Language["cancel"]</button>
         </form>
     </div>
 </body>

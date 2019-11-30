@@ -236,7 +236,7 @@ WriteAttribute ("class", " class=\"", "\""
 , Tuple.Create<string,object,bool> (" ", new Action<System.IO.TextWriter> (__razor_attribute_value_writer => {
 
 #line 18 "NoteRepositoryContentRazorView.cshtml"
-                                                      if (@note.IsLocked || @note.IsInSafe) {
+                                                      if (!@Model.IsAnySafeOpen || @note.IsInSafe || @note.IsLocked) {
 
 #line default
 #line hidden
@@ -248,14 +248,14 @@ WriteLiteralTo(__razor_attribute_value_writer, " ");
 
 
 #line 18 "NoteRepositoryContentRazorView.cshtml"
-                                                                                                                             }
+                                                                                                                                                      }
 
 #line default
 #line hidden
 }), false)
 
 #line 18 "NoteRepositoryContentRazorView.cshtml"
-                                                                                       , Tuple.Create<string,object,bool> (" ", note.GetDarkClass()
+                                                                                                                , Tuple.Create<string,object,bool> (" ", note.GetDarkClass()
 
 #line default
 #line hidden
@@ -282,7 +282,7 @@ WriteAttribute ("class", " class=\"", "\""
 , Tuple.Create<string,object,bool> (" ", new Action<System.IO.TextWriter> (__razor_attribute_value_writer => {
 
 #line 19 "NoteRepositoryContentRazorView.cshtml"
-                                                     if (@note.IsLocked || !@note.IsInSafe) {
+                                                     if (!@Model.IsAnySafeOpen || !@note.IsInSafe || @note.IsLocked) {
 
 #line default
 #line hidden
@@ -294,14 +294,14 @@ WriteLiteralTo(__razor_attribute_value_writer, " ");
 
 
 #line 19 "NoteRepositoryContentRazorView.cshtml"
-                                                                                                                             }
+                                                                                                                                                      }
 
 #line default
 #line hidden
 }), false)
 
 #line 19 "NoteRepositoryContentRazorView.cshtml"
-                                                                                       , Tuple.Create<string,object,bool> (" ", note.GetDarkClass()
+                                                                                                                , Tuple.Create<string,object,bool> (" ", note.GetDarkClass()
 
 #line default
 #line hidden

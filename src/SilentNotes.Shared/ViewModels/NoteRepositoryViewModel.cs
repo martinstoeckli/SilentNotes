@@ -364,11 +364,19 @@ namespace SilentNotes.ViewModels
 
         private void CloseSafe()
         {
+            foreach (SafeModel safe in Model.Safes)
+            {
+                safe.Close();
+            }
+            _navigationService.Navigate(ControllerNames.NoteRepository);
         }
 
-        public bool IsSafeOpen
+        /// <summary>
+        /// Gets a value indicating whether at least one safe is open.
+        /// </summary>
+        public bool IsAnySafeOpen
         {
-            get { return false; }
+            get { return Model.Safes.Any(safe => safe.IsOpen); }
         }
 
         /// <summary>

@@ -25,8 +25,8 @@ namespace SilentNotes.ViewModels
         private readonly IRepositoryStorageService _repositoryService;
         private SecureString _password;
         private SecureString _passwordConfirmation;
-        private bool _isInvalidPassword;
-        private bool _isInvalidPasswordConfirmation;
+        private bool _invalidPasswordError;
+        private bool _invalidPasswordConfirmationError;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OpenSafeViewModel"/> class.
@@ -92,14 +92,14 @@ namespace SilentNotes.ViewModels
         {
             if (!ValidatePassword(Password))
             {
-                IsInvalidPassword = true;
-                IsInvalidPasswordConfirmation = false;
+                InvalidPasswordError = true;
+                InvalidPasswordConfirmationError = false;
                 return;
             }
             if (!SafeExists && !ValidatePasswordConfirmation(Password, PasswordConfirmation))
             {
-                IsInvalidPassword = false;
-                IsInvalidPasswordConfirmation = true;
+                InvalidPasswordError = false;
+                InvalidPasswordConfirmationError = true;
                 return;
             }
 
@@ -116,8 +116,8 @@ namespace SilentNotes.ViewModels
 
             if (openedSafes == 0)
             {
-                IsInvalidPassword = false;
-                IsInvalidPasswordConfirmation = false;
+                InvalidPasswordError = false;
+                InvalidPasswordConfirmationError = false;
                 _feedbackService.ShowToast(Language.LoadText("password_wrong_error"));
             }
             else
@@ -155,16 +155,16 @@ namespace SilentNotes.ViewModels
             get { return Model.Safes.Count >= 1; }
         }
 
-        public bool IsInvalidPassword
+        public bool InvalidPasswordError
         {
-            get { return _isInvalidPassword; }
-            set { ChangeProperty(ref _isInvalidPassword, value, false); }
+            get { return _invalidPasswordError; }
+            set { ChangeProperty(ref _invalidPasswordError, value, false); }
         }
 
-        public bool IsInvalidPasswordConfirmation
+        public bool InvalidPasswordConfirmationError
         {
-            get { return _isInvalidPasswordConfirmation; }
-            set { ChangeProperty(ref _isInvalidPasswordConfirmation, value, false); }
+            get { return _invalidPasswordConfirmationError; }
+            set { ChangeProperty(ref _invalidPasswordConfirmationError, value, false); }
         }
 
         /// <summary>

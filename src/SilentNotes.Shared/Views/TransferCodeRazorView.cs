@@ -23,7 +23,7 @@ using SilentNotes.ViewModels;
 #line hidden
 
 
-[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.3.0.277")]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.3.0.281")]
 public partial class TransferCodeRazorView : TransferCodeRazorViewBase
 {
 
@@ -108,6 +108,9 @@ WriteLiteral(@">
         }
     </style>
     <script>
+        $(function () {
+            addShortcuts();
+        });
     </script>
 </head>
 <body>
@@ -127,7 +130,7 @@ WriteLiteral(" data-binding=\"GoBack\"");
 
 WriteAttribute ("title", " title=\"", "\""
 
-#line 37 "TransferCodeRazorView.cshtml"
+#line 40 "TransferCodeRazorView.cshtml"
                                                       , Tuple.Create<string,object,bool> ("", Model.Language["back"]
 
 #line default
@@ -137,7 +140,7 @@ WriteAttribute ("title", " title=\"", "\""
 WriteLiteral(">");
 
 
-#line 37 "TransferCodeRazorView.cshtml"
+#line 40 "TransferCodeRazorView.cshtml"
                                                                                                                         WriteLiteral(Model.Icon["arrow-left"]);
 
 #line default
@@ -151,7 +154,7 @@ WriteLiteral(" class=\"container-fluid p-4\"");
 WriteLiteral(">\r\n        <h1>");
 
 
-#line 41 "TransferCodeRazorView.cshtml"
+#line 44 "TransferCodeRazorView.cshtml"
        Write(Model.Language["transfer_code"]);
 
 
@@ -160,7 +163,7 @@ WriteLiteral(">\r\n        <h1>");
 WriteLiteral("</h1>\r\n\r\n        <p>");
 
 
-#line 43 "TransferCodeRazorView.cshtml"
+#line 46 "TransferCodeRazorView.cshtml"
       Write(Model.Language["transfer_code_required"]);
 
 
@@ -188,7 +191,7 @@ WriteLiteral(" id=\"Code\"");
 
 WriteAttribute ("value", " value=\"", "\""
 
-#line 47 "TransferCodeRazorView.cshtml"
+#line 50 "TransferCodeRazorView.cshtml"
                                                                                  , Tuple.Create<string,object,bool> ("", Model.Code
 
 #line default
@@ -199,7 +202,7 @@ WriteLiteral(">\r\n            </div>\r\n            <button");
 
 WriteLiteral(" type=\"button\"");
 
-WriteLiteral(" class=\"btn btn-primary mb-2\"");
+WriteLiteral(" class=\"btn btn-primary mb-2 shortcut-enter\"");
 
 WriteLiteral(" onclick=\"bind(event)\"");
 
@@ -208,8 +211,8 @@ WriteLiteral(" data-binding=\"OkCommand\"");
 WriteLiteral(">");
 
 
-#line 49 "TransferCodeRazorView.cshtml"
-                                                                                                         Write(Model.Language["continue"]);
+#line 52 "TransferCodeRazorView.cshtml"
+                                                                                                                        Write(Model.Language["continue"]);
 
 
 #line default
@@ -218,7 +221,7 @@ WriteLiteral("</button>\r\n            <button");
 
 WriteLiteral(" type=\"button\"");
 
-WriteLiteral(" class=\"btn btn-secondary mb-2\"");
+WriteLiteral(" class=\"btn btn-secondary mb-2 shortcut-escape\"");
 
 WriteLiteral(" onclick=\"bind(event)\"");
 
@@ -227,8 +230,8 @@ WriteLiteral(" data-binding=\"CancelCommand\"");
 WriteLiteral(">");
 
 
-#line 50 "TransferCodeRazorView.cshtml"
-                                                                                                               Write(Model.Language["cancel"]);
+#line 53 "TransferCodeRazorView.cshtml"
+                                                                                                                               Write(Model.Language["cancel"]);
 
 
 #line default
