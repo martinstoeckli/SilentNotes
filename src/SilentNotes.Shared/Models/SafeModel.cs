@@ -103,7 +103,7 @@ namespace SilentNotes.Models
                 try
                 {
                     byte[] encryptedKey = CryptoUtils.Base64StringToBytes(SerializeableKey);
-                    EncryptorDecryptor encryptor = new EncryptorDecryptor("SilentNote");
+                    ICryptor encryptor = new Cryptor("SilentNote");
                     Key = encryptor.Decrypt(encryptedKey, password);
                 }
                 catch (Exception)
@@ -137,7 +137,7 @@ namespace SilentNotes.Models
             // algorithms and is more than big enough even for future algorithms.
             Key = randomSource.GetRandomBytes(32);
 
-            EncryptorDecryptor encryptor = new EncryptorDecryptor("SilentNote");
+            ICryptor encryptor = new Cryptor("SilentNote");
             byte[] encryptedKey = encryptor.Encrypt(
                 Key, password, Crypto.KeyDerivation.KeyDerivationCostType.High, randomSource, encryptionAlgorithm);
             SerializeableKey = CryptoUtils.BytesToBase64String(encryptedKey);

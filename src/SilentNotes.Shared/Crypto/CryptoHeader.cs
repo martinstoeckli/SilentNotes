@@ -17,10 +17,9 @@ namespace SilentNotes.Crypto
         public const int NewestSupportedRevision = 2;
 
         /// <summary>
-        /// Gets or sets the application name.
-        /// This value is used to recognize owned ciphers.
+        /// Gets or sets the package name, <see cref="ICryptor.PackageName"/>.
         /// </summary>
-        public string AppName { get; set; }
+        public string PackageName { get; set; }
 
         /// <summary>
         /// Gets or sets the revision of the header. This can be used to detect headers which are

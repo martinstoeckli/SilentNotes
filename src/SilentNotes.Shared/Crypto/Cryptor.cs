@@ -12,41 +12,26 @@ using SilentNotes.Workers;
 namespace SilentNotes.Crypto
 {
     /// <summary>
-    /// This is the starting point for the crypto module. Use this class to encrypt and decrypt
-    /// messages.
+    /// Implementation of the <see cref="ICryptor"/> interface.
     /// </summary>
-    public class EncryptorDecryptor
+    public class Cryptor : ICryptor
     {
         public const string CompressionGzip = "gzip";
         private const int MinPasswordLength = 5;
-        private readonly string _appName;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="EncryptorDecryptor"/> class.
+        /// Initializes a new instance of the <see cref="Cryptor"/> class.
         /// </summary>
-        /// <param name="appName">This name will be added to the header,
-        /// so an application can recognize its own encrypted data.</param>
-        public EncryptorDecryptor(string appName)
+        /// <param name="packageName">Sets the <see cref="PackageName"/> property.</param>
+        public Cryptor(string packageName)
         {
-            _appName = appName;
+            PackageName = packageName;
         }
 
-        /// <summary>
-        /// Encrypts a message with a user password, and adds a header containing all information
-        /// necessary for the decryption (algorithm, nonce, salt, ...).
-        /// </summary>
-        /// <param name="message">Plain text message to encrypt.</param>
-        /// <param name="password">Password to use for encryption, minimum length is 5 characters,
-        /// recommended are at least 8 characters.</param>
-        /// <param name="costType">The cost type to use for encryption.</param>
-        /// <param name="randomSource">A cryptographically safe random source.</param>
-        /// <param name="encryptorName">The name of an encryption algorithm which shall be used to
-        /// do the encryption.</param>
-        /// <param name="kdfName">The name of a key derivation function, which can convert the
-        /// password to a key.</param>
-        /// <param name="compression">The name of the compression algorithm, or null if no compression
-        /// should happen before the encryption. Currently supported is <see cref="CompressionGzip"/>.</param>
-        /// <returns>A binary array containing the cipher.</returns>
+        /// <inheritdoc/>
+        public string PackageName { get; private set; }
+
+        /// <inheritdoc/>
         public byte[] Encrypt(
             byte[] message,
             SecureString password,
@@ -70,7 +55,7 @@ namespace SilentNotes.Crypto
 
             // Prepare header
             CryptoHeader header = new CryptoHeader();
-            header.AppName = _appName;
+            header.PackageName = PackageName;
             header.AlgorithmName = encryptor.Name;
             header.Nonce = randomSource.GetRandomBytes(encryptor.ExpectedNonceSize);
             header.KdfName = kdf.Name;
@@ -94,16 +79,47 @@ namespace SilentNotes.Crypto
             }
         }
 
-        /// <summary>
-        /// Decrypts a cipher, which was encrypted with <see cref="Encrypt(byte[],string,KeyDerivationCostType,ICryptoRandomSource,string,string)"/>.
-        /// </summary>
-        /// <param name="packedCipher">The cipher containing a header with the
-        /// necessary parameters for decryption.</param>
-        /// <param name="password">The password which was used for encryption.</param>
-        /// <exception cref="CryptoExceptionInvalidCipherFormat">Thrown if it doesn't contain a valid header.</exception>
-        /// <exception cref="CryptoUnsupportedRevisionException">Thrown if it was packed with a future incompatible version.</exception>
-        /// <exception cref="CryptoDecryptionException">Thrown if there was an error decrypting the cipher.</exception>
-        /// <returns>The plain text message.</returns>
+        /// <inheritdoc/>
+        public byte[] Encrypt(
+            byte[] message,
+            byte[] key,
+            ICryptoRandomSource randomSource,
+            string encryptorName,
+            string compression = null)
+        {
+            if (message == null)
+                throw new ArgumentNullException(nameof(message));
+            if (key == null)
+                throw new ArgumentNullException(nameof(key));
+            if (randomSource == null)
+                throw new ArgumentNullException(nameof(randomSource));
+            if (string.IsNullOrWhiteSpace(encryptorName))
+                encryptorName = BouncyCastleAesGcm.CryptoAlgorithmName;
+            ISymmetricEncryptionAlgorithm encryptor = new SymmetricEncryptionAlgorithmFactory().CreateAlgorithm(encryptorName);
+
+            // Prepare header
+            CryptoHeader header = new CryptoHeader();
+            header.PackageName = PackageName;
+            header.AlgorithmName = encryptor.Name;
+            header.Nonce = randomSource.GetRandomBytes(encryptor.ExpectedNonceSize);
+            header.Compression = compression;
+
+            try
+            {
+                if (string.Equals(CompressionGzip, header.Compression, StringComparison.InvariantCultureIgnoreCase))
+                    message = CompressUtils.Compress(message);
+
+                byte[] truncatedKey = CryptoUtils.TruncateKey(key, encryptor.ExpectedKeySize);
+                byte[] cipher = encryptor.Encrypt(message, truncatedKey, header.Nonce);
+                return CryptoHeaderPacker.PackHeaderAndCypher(header, cipher);
+            }
+            catch (Exception ex)
+            {
+                throw new CryptoException("An unexpected error occured, while encrypting the message.", ex);
+            }
+        }
+
+        /// <inheritdoc/>
         public byte[] Decrypt(byte[] packedCipher, SecureString password)
         {
             if (packedCipher == null)
@@ -111,7 +127,7 @@ namespace SilentNotes.Crypto
 
             CryptoHeader header;
             byte[] cipher;
-            CryptoHeaderPacker.UnpackHeaderAndCipher(packedCipher, _appName, out header, out cipher);
+            CryptoHeaderPacker.UnpackHeaderAndCipher(packedCipher, PackageName, out header, out cipher);
 
             ISymmetricEncryptionAlgorithm decryptor = new SymmetricEncryptionAlgorithmFactory().CreateAlgorithm(header.AlgorithmName);
             IKeyDerivationFunction kdf = new KeyDerivationFactory().CreateKdf(header.KdfName);
@@ -132,6 +148,35 @@ namespace SilentNotes.Crypto
                 throw new CryptoDecryptionException("Could not decrypt cipher, probably because the key is wrong.", ex);
             }
         }
+
+        /// <inheritdoc/>
+        public byte[] Decrypt(byte[] packedCipher, byte[] key)
+        {
+            if (packedCipher == null)
+                throw new ArgumentNullException("packedCipher");
+
+            CryptoHeader header;
+            byte[] cipher;
+            CryptoHeaderPacker.UnpackHeaderAndCipher(packedCipher, PackageName, out header, out cipher);
+
+            ISymmetricEncryptionAlgorithm decryptor = new SymmetricEncryptionAlgorithmFactory().CreateAlgorithm(header.AlgorithmName);
+
+            try
+            {
+                byte[] truncatedKey = CryptoUtils.TruncateKey(key, decryptor.ExpectedKeySize);
+                byte[] message = decryptor.Decrypt(cipher, truncatedKey, header.Nonce);
+
+                if (string.Equals(CompressionGzip, header.Compression, StringComparison.InvariantCultureIgnoreCase))
+                    message = CompressUtils.Decompress(message);
+
+                return message;
+            }
+            catch (Exception ex)
+            {
+                throw new CryptoDecryptionException("Could not decrypt cipher, probably because the key is wrong.", ex);
+            }
+        }
+
 
         private void ValidatePassword(SecureString password)
         {

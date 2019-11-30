@@ -107,6 +107,28 @@ namespace SilentNotes.Crypto
         }
 
         /// <summary>
+        /// Truncates a key to a maximum length.
+        /// </summary>
+        /// <param name="key">Key to truncate.</param>
+        /// <param name="maxLength">The part of the key which is longer than this, will be truncated.</param>
+        /// <returns>Returns a truncated key, or the original key if its length was smaller or equal
+        /// than <paramref name="maxLength"/>.</returns>
+        public static byte[] TruncateKey(byte[] key, int maxLength)
+        {
+            byte[] result;
+            if ((key == null) || (key.Length <= maxLength))
+            {
+                result = key;
+            }
+            else
+            {
+                result = new byte[maxLength];
+                Array.Copy(key, 0, result, 0, maxLength);
+            }
+            return result;
+        }
+
+        /// <summary>
         /// This function can be used, if an API key must be stored inside the application code,
         /// so it doesn't show up in plain text.
         /// </summary>
@@ -117,7 +139,7 @@ namespace SilentNotes.Crypto
         /// <returns>Obfuscated message.</returns>
         public static byte[] Obfuscate(byte[] plainMessage, SecureString obfuscationKey, ICryptoRandomSource randomSource)
         {
-            EncryptorDecryptor encryptor = new EncryptorDecryptor("obfuscation");
+            ICryptor encryptor = new Cryptor("obfuscation");
             return encryptor.Encrypt(
                 plainMessage,
                 obfuscationKey,
@@ -150,7 +172,7 @@ namespace SilentNotes.Crypto
         /// <returns>Original plain message.</returns>
         public static byte[] Deobfuscate(byte[] obfuscatedMessage, SecureString obfuscationKey)
         {
-            EncryptorDecryptor encryptor = new EncryptorDecryptor("obfuscation");
+            ICryptor encryptor = new Cryptor("obfuscation");
             return encryptor.Decrypt(obfuscatedMessage, obfuscationKey);
         }
 

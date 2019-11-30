@@ -32,7 +32,7 @@ namespace SilentNotes.Crypto
                 throw new ArgumentNullException("cipher");
 
             StringBuilder sb = new StringBuilder();
-            sb.Append(header.AppName + RevisionSeparator + CryptoHeader.NewestSupportedRevision);
+            sb.Append(header.PackageName + RevisionSeparator + CryptoHeader.NewestSupportedRevision);
             sb.Append(Separator);
             sb.Append(header.AlgorithmName);
             sb.Append(Separator);
@@ -40,7 +40,8 @@ namespace SilentNotes.Crypto
             sb.Append(Separator);
             sb.Append(header.KdfName);
             sb.Append(Separator);
-            sb.Append(CryptoUtils.BytesToBase64String(header.Salt));
+            if (header.Salt != null)
+                sb.Append(CryptoUtils.BytesToBase64String(header.Salt));
             sb.Append(Separator);
             sb.Append(header.Cost);
             sb.Append(Separator);
@@ -141,13 +142,13 @@ namespace SilentNotes.Crypto
                 string[] parts = headerString.Split(new char[] { Separator });
                 header = new CryptoHeader
                 {
-                    AppName = expectedAppName,
+                    PackageName = expectedAppName,
                     Revision = revision,
                     AlgorithmName = parts[1],
                     Nonce = CryptoUtils.Base64StringToBytes(parts[2]),
-                    KdfName = parts[3],
-                    Salt = CryptoUtils.Base64StringToBytes(parts[4]),
-                    Cost = parts[5],
+                    KdfName = string.IsNullOrEmpty(parts[3]) ? null : parts[3],
+                    Salt = string.IsNullOrEmpty(parts[4]) ? null : CryptoUtils.Base64StringToBytes(parts[4]),
+                    Cost = string.IsNullOrEmpty(parts[5]) ? null : parts[5],
                 };
                 if (revision > 1)
                 {

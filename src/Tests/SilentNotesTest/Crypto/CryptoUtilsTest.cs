@@ -22,6 +22,32 @@ namespace SilentNotesTest.Crypto
             }
         }
 
+        [Test]
+        public void TruncateKeyReturnsOriginalIfNotLonger()
+        {
+            byte[] key = new byte[] { 3, 4, 5 };
+            byte[] truncatedKey;
+
+            truncatedKey = CryptoUtils.TruncateKey(key, 3);
+            Assert.AreSame(key, truncatedKey);
+
+            truncatedKey = CryptoUtils.TruncateKey(key, 4);
+            Assert.AreSame(key, truncatedKey);
+
+            truncatedKey = CryptoUtils.TruncateKey(null, 2);
+            Assert.IsNull(truncatedKey);
+        }
+
+        [Test]
+        public void TruncateKeyCutsIfLonger()
+        {
+            byte[] key = new byte[] { 3, 4, 5 };
+            byte[] truncatedKey;
+
+            truncatedKey = CryptoUtils.TruncateKey(key, 2);
+            Assert.AreEqual(new byte[] { 3, 4 }, truncatedKey);
+        }
+
         private static bool IsInBase62Alphabet(string randomString)
         {
             foreach (char c in randomString)

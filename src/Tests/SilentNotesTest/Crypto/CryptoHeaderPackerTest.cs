@@ -11,7 +11,7 @@ namespace SilentNotesTest.Crypto
         {
             CryptoHeader header = new CryptoHeader
             {
-                AppName = "MyAppName",
+                PackageName = "MyAppName",
                 AlgorithmName = "Twofish",
                 KdfName = "PBKDF2",
                 Cost = "10",
@@ -24,7 +24,36 @@ namespace SilentNotesTest.Crypto
             byte[] packedHeader = CryptoHeaderPacker.PackHeaderAndCypher(header, cipher);
             CryptoHeaderPacker.UnpackHeaderAndCipher(packedHeader, "MyAppName", out CryptoHeader unpackedHeader, out byte[] unpackedCipher);
 
-            Assert.AreEqual(header.AppName, unpackedHeader.AppName);
+            Assert.AreEqual(header.PackageName, unpackedHeader.PackageName);
+            Assert.AreEqual(header.AlgorithmName, unpackedHeader.AlgorithmName);
+            Assert.AreEqual(header.KdfName, unpackedHeader.KdfName);
+            Assert.AreEqual(header.Cost, unpackedHeader.Cost);
+            Assert.AreEqual(header.Nonce, unpackedHeader.Nonce);
+            Assert.AreEqual(header.Salt, unpackedHeader.Salt);
+            Assert.AreEqual(cipher, unpackedCipher);
+            Assert.AreEqual(header.Compression, unpackedHeader.Compression);
+        }
+
+        [Test]
+        public void PackingAndUnpackingWorksWithKeyOnly()
+        {
+            // If the encryption is started with a key instead of a password, there are not all parametes set.
+            CryptoHeader header = new CryptoHeader
+            {
+                PackageName = "MyAppName",
+                AlgorithmName = "Twofish",
+                KdfName = null,
+                Cost = null,
+                Nonce = CommonMocksAndStubs.FilledByteArray(8, 66),
+                Salt = null,
+                Compression = "gzip",
+            };
+            byte[] cipher = CommonMocksAndStubs.FilledByteArray(16, 88);
+
+            byte[] packedHeader = CryptoHeaderPacker.PackHeaderAndCypher(header, cipher);
+            CryptoHeaderPacker.UnpackHeaderAndCipher(packedHeader, "MyAppName", out CryptoHeader unpackedHeader, out byte[] unpackedCipher);
+
+            Assert.AreEqual(header.PackageName, unpackedHeader.PackageName);
             Assert.AreEqual(header.AlgorithmName, unpackedHeader.AlgorithmName);
             Assert.AreEqual(header.KdfName, unpackedHeader.KdfName);
             Assert.AreEqual(header.Cost, unpackedHeader.Cost);
@@ -93,7 +122,7 @@ namespace SilentNotesTest.Crypto
             byte[] packedHeader = CryptoUtils.Base64StringToBytes(packedBase64Header);
             CryptoHeaderPacker.UnpackHeaderAndCipher(packedHeader, "MyAppName", out CryptoHeader unpackedHeader, out byte[] unpackedCipher);
 
-            Assert.AreEqual("MyAppName", unpackedHeader.AppName);
+            Assert.AreEqual("MyAppName", unpackedHeader.PackageName);
             Assert.AreEqual("Twofish", unpackedHeader.AlgorithmName);
             Assert.AreEqual("PBKDF2", unpackedHeader.KdfName);
             Assert.AreEqual("10", unpackedHeader.Cost);

@@ -108,7 +108,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
             bool result = false;
             decryptedRepository = null;
 
-            EncryptorDecryptor encryptor = new EncryptorDecryptor("SilentNotes");
+            ICryptor encryptor = new Cryptor("SilentNotes");
             List<string> transferCodesToTry = ListTransferCodesToTry(settings);
             int index = 0;
             while (!result && index < transferCodesToTry.Count)
@@ -162,7 +162,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
             return result;
         }
 
-        private bool TryDecryptRepositoryWithTransfercode(EncryptorDecryptor encryptor, byte[] binaryCloudRepository, string transferCode, out byte[] decryptedRepository)
+        private bool TryDecryptRepositoryWithTransfercode(ICryptor encryptor, byte[] binaryCloudRepository, string transferCode, out byte[] decryptedRepository)
         {
             try
             {
