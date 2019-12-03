@@ -359,7 +359,23 @@ WriteLiteral("        </span>\r\n\r\n        <!-- Color dropdown -->\r\n        
 
 WriteLiteral(" class=\"dropdown\"");
 
-WriteLiteral(">\r\n            <button");
+WriteLiteral(">\r\n");
+
+
+#line 159 "NoteRazorView.cshtml"
+            
+
+#line default
+#line hidden
+
+#line 159 "NoteRazorView.cshtml"
+             if (!Model.IsLocked)
+            {
+
+
+#line default
+#line hidden
+WriteLiteral("            <button");
 
 WriteLiteral(" class=\"nav-item\"");
 
@@ -373,7 +389,7 @@ WriteLiteral(" aria-expanded=\"false\"");
 
 WriteAttribute ("title", " title=\"", "\""
 
-#line 159 "NoteRazorView.cshtml"
+#line 161 "NoteRazorView.cshtml"
                                                                                               , Tuple.Create<string,object,bool> ("", Model.Language["note_colors"]
 
 #line default
@@ -383,18 +399,27 @@ WriteAttribute ("title", " title=\"", "\""
 WriteLiteral(">\r\n");
 
 
-#line 160 "NoteRazorView.cshtml"
+#line 162 "NoteRazorView.cshtml"
                 
 
 #line default
 #line hidden
 
-#line 160 "NoteRazorView.cshtml"
+#line 162 "NoteRazorView.cshtml"
                   WriteLiteral(Model.Icon["palette"]);
 
 #line default
 #line hidden
-WriteLiteral("\r\n            </button>\r\n            <div");
+WriteLiteral("\r\n            </button>\r\n");
+
+
+#line 164 "NoteRazorView.cshtml"
+            }
+
+
+#line default
+#line hidden
+WriteLiteral("            <div");
 
 WriteLiteral(" class=\"dropdown-menu dropdown-menu-right\"");
 
@@ -403,13 +428,13 @@ WriteLiteral(" aria-labelledby=\"colorDropdownMenu\"");
 WriteLiteral(">\r\n");
 
 
-#line 163 "NoteRazorView.cshtml"
+#line 166 "NoteRazorView.cshtml"
                 
 
 #line default
 #line hidden
 
-#line 163 "NoteRazorView.cshtml"
+#line 166 "NoteRazorView.cshtml"
                  foreach (var backgroundColor in @Model.BackgroundColorsHex)
                 {
 
@@ -422,7 +447,7 @@ WriteAttribute ("class", " class=\"", "\""
 , Tuple.Create<string,object,bool> ("", "dropdown-item", true)
 , Tuple.Create<string,object,bool> (" ", "color-btn", true)
 
-#line 165 "NoteRazorView.cshtml"
+#line 168 "NoteRazorView.cshtml"
                 , Tuple.Create<string,object,bool> (" ", Model.GetDarkClass(backgroundColor)
 
 #line default
@@ -436,7 +461,7 @@ WriteLiteral(" data-binding=\"backgroundcolorhex\"");
 WriteLiteral(" data-backgroundcolorhex=\"");
 
 
-#line 165 "NoteRazorView.cshtml"
+#line 168 "NoteRazorView.cshtml"
                                                                                                                                                                            Write(backgroundColor);
 
 
@@ -447,7 +472,7 @@ WriteLiteral("\"");
 WriteAttribute ("style", " style=\"", "\""
 , Tuple.Create<string,object,bool> ("", "background-color:", true)
 
-#line 165 "NoteRazorView.cshtml"
+#line 168 "NoteRazorView.cshtml"
                                                                                                                                                                                    , Tuple.Create<string,object,bool> (" ", backgroundColor
 
 #line default
@@ -457,14 +482,29 @@ WriteAttribute ("style", " style=\"", "\""
 WriteLiteral(">Lorem ipsum</div>\r\n");
 
 
-#line 166 "NoteRazorView.cshtml"
+#line 169 "NoteRazorView.cshtml"
                 }
 
 
 #line default
 #line hidden
-WriteLiteral("            </div>\r\n        </div>\r\n\r\n        <!-- Dropdown Menu -->\r\n        <di" +
-"v");
+WriteLiteral("            </div>\r\n        </div>\r\n\r\n        <!-- Dropdown Menu -->\r\n");
+
+
+#line 174 "NoteRazorView.cshtml"
+        
+
+#line default
+#line hidden
+
+#line 174 "NoteRazorView.cshtml"
+         if (!Model.IsLocked)
+        {
+
+
+#line default
+#line hidden
+WriteLiteral("        <div");
 
 WriteLiteral(" class=\"dropdown\"");
 
@@ -483,13 +523,13 @@ WriteLiteral(" aria-expanded=\"false\"");
 WriteLiteral(">\r\n");
 
 
-#line 173 "NoteRazorView.cshtml"
+#line 178 "NoteRazorView.cshtml"
                 
 
 #line default
 #line hidden
 
-#line 173 "NoteRazorView.cshtml"
+#line 178 "NoteRazorView.cshtml"
                   WriteLiteral(Model.Icon["dots-vertical"]);
 
 #line default
@@ -500,23 +540,7 @@ WriteLiteral(" class=\"dropdown-menu dropdown-menu-right\"");
 
 WriteLiteral(" aria-labelledby=\"navOverflowMenu\"");
 
-WriteLiteral(">\r\n");
-
-
-#line 176 "NoteRazorView.cshtml"
-                
-
-#line default
-#line hidden
-
-#line 176 "NoteRazorView.cshtml"
-                 if (!Model.IsLocked)
-                {
-
-
-#line default
-#line hidden
-WriteLiteral("                    <div");
+WriteLiteral(">\r\n                <div");
 
 WriteLiteral(" class=\"dropdown-item show-only-on-narrow-browser\"");
 
@@ -525,23 +549,21 @@ WriteLiteral(" onclick=\"toggleFormat(\'underline\');\"");
 WriteLiteral(">");
 
 
-#line 178 "NoteRazorView.cshtml"
-                                                                                                                  WriteLiteral(Model.Icon["format-underline"]);
+#line 181 "NoteRazorView.cshtml"
+                                                                                                              WriteLiteral(Model.Icon["format-underline"]);
 
 #line default
 #line hidden
 WriteLiteral(" ");
 
 
-#line 178 "NoteRazorView.cshtml"
-                                                                                                                                                            Write(Model.Language["note_underline"]);
+#line 181 "NoteRazorView.cshtml"
+                                                                                                                                                        Write(Model.Language["note_underline"]);
 
 
 #line default
 #line hidden
-WriteLiteral("</div>\r\n");
-
-WriteLiteral("                    <div");
+WriteLiteral("</div>\r\n                <div");
 
 WriteLiteral(" class=\"dropdown-item show-only-on-narrow-browser\"");
 
@@ -550,23 +572,21 @@ WriteLiteral(" onclick=\"toggleFormat(\'strike\');\"");
 WriteLiteral(">");
 
 
-#line 179 "NoteRazorView.cshtml"
-                                                                                                               WriteLiteral(Model.Icon["format-strikethrough-variant"]);
+#line 182 "NoteRazorView.cshtml"
+                                                                                                           WriteLiteral(Model.Icon["format-strikethrough-variant"]);
 
 #line default
 #line hidden
 WriteLiteral(" ");
 
 
-#line 179 "NoteRazorView.cshtml"
-                                                                                                                                                                     Write(Model.Language["note_strike"]);
+#line 182 "NoteRazorView.cshtml"
+                                                                                                                                                                 Write(Model.Language["note_strike"]);
 
 
 #line default
 #line hidden
-WriteLiteral("</div>\r\n");
-
-WriteLiteral("                    <div");
+WriteLiteral("</div>\r\n                <div");
 
 WriteLiteral(" class=\"dropdown-item show-only-on-narrow-browser\"");
 
@@ -575,23 +595,21 @@ WriteLiteral(" onclick=\"toggleBlockFormat(\'list\', \'ordered\');\"");
 WriteLiteral(">");
 
 
-#line 180 "NoteRazorView.cshtml"
-                                                                                                                             WriteLiteral(Model.Icon["format-list-numbers"]);
+#line 183 "NoteRazorView.cshtml"
+                                                                                                                         WriteLiteral(Model.Icon["format-list-numbers"]);
 
 #line default
 #line hidden
 WriteLiteral(" ");
 
 
-#line 180 "NoteRazorView.cshtml"
-                                                                                                                                                                          Write(Model.Language["note_list_ordered"]);
+#line 183 "NoteRazorView.cshtml"
+                                                                                                                                                                      Write(Model.Language["note_list_ordered"]);
 
 
 #line default
 #line hidden
-WriteLiteral("</div>\r\n");
-
-WriteLiteral("                    <div");
+WriteLiteral("</div>\r\n                <div");
 
 WriteLiteral(" class=\"dropdown-item show-only-on-narrow-browser\"");
 
@@ -600,23 +618,21 @@ WriteLiteral(" onclick=\"toggleBlockFormat(\'list\', \'bullet\');\"");
 WriteLiteral(">");
 
 
-#line 181 "NoteRazorView.cshtml"
-                                                                                                                            WriteLiteral(Model.Icon["format-list-bulleted"]);
+#line 184 "NoteRazorView.cshtml"
+                                                                                                                        WriteLiteral(Model.Icon["format-list-bulleted"]);
 
 #line default
 #line hidden
 WriteLiteral(" ");
 
 
-#line 181 "NoteRazorView.cshtml"
-                                                                                                                                                                          Write(Model.Language["note_list_unordered"]);
+#line 184 "NoteRazorView.cshtml"
+                                                                                                                                                                      Write(Model.Language["note_list_unordered"]);
 
 
 #line default
 #line hidden
-WriteLiteral("</div>\r\n");
-
-WriteLiteral("                    <div");
+WriteLiteral("</div>\r\n                <div");
 
 WriteLiteral(" class=\"dropdown-item\"");
 
@@ -625,23 +641,21 @@ WriteLiteral(" onclick=\"toggleFormat(\'code-block\');\"");
 WriteLiteral(">");
 
 
-#line 182 "NoteRazorView.cshtml"
-                                                                                       WriteLiteral(Model.Icon["code-braces"]);
+#line 185 "NoteRazorView.cshtml"
+                                                                                   WriteLiteral(Model.Icon["code-braces"]);
 
 #line default
 #line hidden
 WriteLiteral(" ");
 
 
-#line 182 "NoteRazorView.cshtml"
-                                                                                                                            Write(Model.Language["note_code"]);
+#line 185 "NoteRazorView.cshtml"
+                                                                                                                        Write(Model.Language["note_code"]);
 
 
 #line default
 #line hidden
-WriteLiteral("</div>\r\n");
-
-WriteLiteral("                    <div");
+WriteLiteral("</div>\r\n                <div");
 
 WriteLiteral(" class=\"dropdown-item\"");
 
@@ -650,23 +664,21 @@ WriteLiteral(" onclick=\"toggleFormat(\'blockquote\');\"");
 WriteLiteral(">");
 
 
-#line 183 "NoteRazorView.cshtml"
-                                                                                       WriteLiteral(Model.Icon["format-quote-close"]);
+#line 186 "NoteRazorView.cshtml"
+                                                                                   WriteLiteral(Model.Icon["format-quote-close"]);
 
 #line default
 #line hidden
 WriteLiteral(" ");
 
 
-#line 183 "NoteRazorView.cshtml"
-                                                                                                                                   Write(Model.Language["note_quotation"]);
+#line 186 "NoteRazorView.cshtml"
+                                                                                                                               Write(Model.Language["note_quotation"]);
 
 
 #line default
 #line hidden
-WriteLiteral("</div>\r\n");
-
-WriteLiteral("                    <div");
+WriteLiteral("</div>\r\n                <div");
 
 WriteLiteral(" class=\"dropdown-item\"");
 
@@ -675,25 +687,21 @@ WriteLiteral(" onclick=\"toggleLink()\"");
 WriteLiteral(">");
 
 
-#line 184 "NoteRazorView.cshtml"
-                                                                        WriteLiteral(Model.Icon["link-variant"]);
+#line 187 "NoteRazorView.cshtml"
+                                                                    WriteLiteral(Model.Icon["link-variant"]);
 
 #line default
 #line hidden
 WriteLiteral(" ");
 
 
-#line 184 "NoteRazorView.cshtml"
-                                                                                                              Write(Model.Language["note_link"]);
+#line 187 "NoteRazorView.cshtml"
+                                                                                                          Write(Model.Language["note_link"]);
 
 
 #line default
 #line hidden
-WriteLiteral("</div>\r\n");
-
-WriteLiteral("                    <hr>\r\n");
-
-WriteLiteral("                    <div");
+WriteLiteral("</div>\r\n                <hr>\r\n                <div");
 
 WriteLiteral(" class=\"dropdown-item\"");
 
@@ -704,23 +712,21 @@ WriteLiteral(" data-binding=\"PushNoteToOnlineStorage\"");
 WriteLiteral(">");
 
 
-#line 186 "NoteRazorView.cshtml"
-                                                                                                               WriteLiteral(Model.Icon["cloud-upload"]);
+#line 189 "NoteRazorView.cshtml"
+                                                                                                           WriteLiteral(Model.Icon["cloud-upload"]);
 
 #line default
 #line hidden
 WriteLiteral(" ");
 
 
-#line 186 "NoteRazorView.cshtml"
-                                                                                                                                                     Write(Model.Language["note_push_to_server"]);
+#line 189 "NoteRazorView.cshtml"
+                                                                                                                                                 Write(Model.Language["note_push_to_server"]);
 
 
 #line default
 #line hidden
-WriteLiteral("</div>\r\n");
-
-WriteLiteral("                    <div");
+WriteLiteral("</div>\r\n                <div");
 
 WriteLiteral(" class=\"dropdown-item\"");
 
@@ -731,30 +737,30 @@ WriteLiteral(" data-binding=\"PullNoteFromOnlineStorage\"");
 WriteLiteral(">");
 
 
-#line 187 "NoteRazorView.cshtml"
-                                                                                                                 WriteLiteral(Model.Icon["cloud-download"]);
+#line 190 "NoteRazorView.cshtml"
+                                                                                                             WriteLiteral(Model.Icon["cloud-download"]);
 
 #line default
 #line hidden
 WriteLiteral(" ");
 
 
-#line 187 "NoteRazorView.cshtml"
-                                                                                                                                                         Write(Model.Language["note_pull_from_server"]);
+#line 190 "NoteRazorView.cshtml"
+                                                                                                                                                     Write(Model.Language["note_pull_from_server"]);
 
 
 #line default
 #line hidden
-WriteLiteral("</div>\r\n");
+WriteLiteral("</div>\r\n            </div>\r\n        </div>\r\n");
 
 
-#line 188 "NoteRazorView.cshtml"
-                }
+#line 193 "NoteRazorView.cshtml"
+        }
 
 
 #line default
 #line hidden
-WriteLiteral("            </div>\r\n        </div>\r\n    </nav>\r\n\r\n    <div");
+WriteLiteral("    </nav>\r\n\r\n    <div");
 
 WriteLiteral(" id=\"content\"");
 
@@ -765,13 +771,13 @@ WriteLiteral(" data-binding=\"Content\"");
 WriteLiteral(">\r\n");
 
 
-#line 194 "NoteRazorView.cshtml"
+#line 197 "NoteRazorView.cshtml"
         
 
 #line default
 #line hidden
 
-#line 194 "NoteRazorView.cshtml"
+#line 197 "NoteRazorView.cshtml"
          if (Model.IsLocked)
         {
 
@@ -786,7 +792,7 @@ WriteAttribute ("class", " class=\"", "\""
 , Tuple.Create<string,object,bool> (" ", "justify-content-center", true)
 , Tuple.Create<string,object,bool> (" ", "align-items-center", true)
 
-#line 196 "NoteRazorView.cshtml"
+#line 199 "NoteRazorView.cshtml"
                                          , Tuple.Create<string,object,bool> (" ", Model.GetDarkClass()
 
 #line default
@@ -808,7 +814,7 @@ WriteLiteral(" xlink:href=\"#svg-lock-outline\"");
 WriteLiteral(" /></svg></span>\r\n");
 
 
-#line 197 "NoteRazorView.cshtml"
+#line 200 "NoteRazorView.cshtml"
         }
         else
         {
@@ -823,7 +829,7 @@ WriteLiteral(" id=\"myeditor\"");
 WriteAttribute ("class", " class=\"", "\""
 , Tuple.Create<string,object,bool> ("", "note-viewer", true)
 
-#line 200 "NoteRazorView.cshtml"
+#line 203 "NoteRazorView.cshtml"
           , Tuple.Create<string,object,bool> (" ", Model.GetDarkClass()
 
 #line default
@@ -835,15 +841,15 @@ WriteLiteral(" data-binding=\"quill\"");
 WriteLiteral(">");
 
 
-#line 200 "NoteRazorView.cshtml"
-                                                                                                WriteLiteral(Model.HtmlContent);
+#line 203 "NoteRazorView.cshtml"
+                                                                                                WriteLiteral(Model.UnlockedHtmlContent);
 
 #line default
 #line hidden
 WriteLiteral("</div>\r\n");
 
 
-#line 201 "NoteRazorView.cshtml"
+#line 204 "NoteRazorView.cshtml"
         }
 
 
@@ -852,13 +858,13 @@ WriteLiteral("</div>\r\n");
 WriteLiteral("    </div>\r\n\r\n");
 
 
-#line 204 "NoteRazorView.cshtml"
+#line 207 "NoteRazorView.cshtml"
     
 
 #line default
 #line hidden
 
-#line 204 "NoteRazorView.cshtml"
+#line 207 "NoteRazorView.cshtml"
      if (Model.ShowCursorArrowKeys)
     {
 
@@ -871,7 +877,7 @@ WriteLiteral(" id=\"arrowkeys\"");
 
 WriteAttribute ("class", " class=\"", "\""
 
-#line 206 "NoteRazorView.cshtml"
+#line 209 "NoteRazorView.cshtml"
 , Tuple.Create<string,object,bool> ("", Model.GetDarkClass()
 
 #line default
@@ -880,7 +886,7 @@ WriteAttribute ("class", " class=\"", "\""
 );
 WriteAttribute ("title", " title=\"", "\""
 
-#line 206 "NoteRazorView.cshtml"
+#line 209 "NoteRazorView.cshtml"
                           , Tuple.Create<string,object,bool> ("", Model.Language["gui_arrow_key"]
 
 #line default
@@ -890,13 +896,13 @@ WriteAttribute ("title", " title=\"", "\""
 WriteLiteral(">\r\n");
 
 
-#line 207 "NoteRazorView.cshtml"
+#line 210 "NoteRazorView.cshtml"
             
 
 #line default
 #line hidden
 
-#line 207 "NoteRazorView.cshtml"
+#line 210 "NoteRazorView.cshtml"
               WriteLiteral(Model.Icon.LoadIcon("arrow-left-bold-box-outline",
                         new[] {
               new KeyValuePair<string, string>("class", "arrowkey"),
@@ -908,13 +914,13 @@ WriteLiteral(">\r\n");
 WriteLiteral("\r\n");
 
 
-#line 212 "NoteRazorView.cshtml"
+#line 215 "NoteRazorView.cshtml"
             
 
 #line default
 #line hidden
 
-#line 212 "NoteRazorView.cshtml"
+#line 215 "NoteRazorView.cshtml"
               WriteLiteral(Model.Icon.LoadIcon("arrow-right-bold-box-outline",
                         new[] {
               new KeyValuePair<string, string>("class", "arrowkey"),
@@ -926,7 +932,7 @@ WriteLiteral("\r\n");
 WriteLiteral("\r\n        </div>\r\n");
 
 
-#line 218 "NoteRazorView.cshtml"
+#line 221 "NoteRazorView.cshtml"
     }
 
 
@@ -935,13 +941,13 @@ WriteLiteral("\r\n        </div>\r\n");
 WriteLiteral("\r\n    <div hidden>\r\n");
 
 
-#line 221 "NoteRazorView.cshtml"
+#line 224 "NoteRazorView.cshtml"
         
 
 #line default
 #line hidden
 
-#line 221 "NoteRazorView.cshtml"
+#line 224 "NoteRazorView.cshtml"
           WriteLiteral(Model.Icon.LoadIcon("lock-outline", new[] { new KeyValuePair<string, string>("id", "svg-lock-outline") }));
 
 #line default

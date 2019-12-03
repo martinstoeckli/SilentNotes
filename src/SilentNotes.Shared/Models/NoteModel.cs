@@ -13,6 +13,7 @@ namespace SilentNotes.Models
     /// </summary>
     public class NoteModel
     {
+        public const string CryptorPackageName = "SilentNote";
         private Guid _id;
 
         /// <summary>
@@ -67,11 +68,27 @@ namespace SilentNotes.Models
         public DateTime ModifiedAt { get; set; }
 
         /// <summary>
+        /// Gets or sets the time in UTC, when the object was last updated by the system, instead of
+        /// the user. This way the system can clean up deprecated functions, but does not interfere
+        /// with more important user changes.
+        /// </summary>
+        [XmlIgnore]
+        public DateTime? MaintainedAt { get; set; }
+
+        [XmlAttribute(AttributeName = "maintained_at")]
+        public DateTime MaintainedAtSerializeable
+        {
+            get { return MaintainedAt.Value; }
+            set { MaintainedAt = value; }
+        }
+        public bool MaintainedAtSerializeableSpecified { get { return MaintainedAt != null && MaintainedAt > ModifiedAt; } } // Serialize only when set
+
+        /// <summary>
         /// Gets or sets the safe which was used to encrypt the note, or null if it is not encrypted.
         /// </summary>
         [XmlElement(ElementName = "safe")]
         public Guid? SafeId { get; set; }
-        public bool SafeIdSpecified { get { return SafeId != null; } } // Do only serialize when set
+        public bool SafeIdSpecified { get { return SafeId != null; } } // Serialize only when set
 
         /// <summary>
         /// Sets the <see cref="ModifiedAt"/> property to the current UTC time.

@@ -36,7 +36,7 @@ namespace SilentNotes.Workers
             XAttribute revisionAttribute = root.Attribute("revision");
             int oldRevision = int.Parse(revisionAttribute.Value);
 
-            // Check for necessary update steps
+            // Check for necessary update steps (nothing to do from 2 to 3)
             if (oldRevision <= 1)
             {
                 UpdateRepositoryFrom1To2(root);

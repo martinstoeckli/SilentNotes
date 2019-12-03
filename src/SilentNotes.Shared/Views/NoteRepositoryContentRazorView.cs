@@ -189,7 +189,7 @@ WriteLiteral(">");
 
 
 #line 14 "NoteRepositoryContentRazorView.cshtml"
-                                                                WriteLiteral(note.HtmlContent);
+                                                                WriteLiteral(note.UnlockedHtmlContent);
 
 #line default
 #line hidden

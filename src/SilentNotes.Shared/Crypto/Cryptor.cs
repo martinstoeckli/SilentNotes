@@ -19,14 +19,18 @@ namespace SilentNotes.Crypto
         /// <summary>Can be used in the compression parameter, to compress with the GZip library.</summary>
         public const string CompressionGzip = "gzip";
         private const int MinPasswordLength = 5;
+        private readonly ICryptoRandomSource _randomSource;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Cryptor"/> class.
         /// </summary>
         /// <param name="packageName">Sets the <see cref="PackageName"/> property.</param>
-        public Cryptor(string packageName)
+        /// <param name="randomSource">A cryptographically safe random generator. It is required to
+        /// encrypt data, if the cryptor is exclusively used for decryption, null can be passed.</param>
+        public Cryptor(string packageName, ICryptoRandomSource randomSource)
         {
             PackageName = packageName;
+            _randomSource = randomSource;
         }
 
         /// <inheritdoc/>
@@ -37,16 +41,15 @@ namespace SilentNotes.Crypto
             byte[] message,
             SecureString password,
             KeyDerivationCostType costType, 
-            ICryptoRandomSource randomSource,
             string encryptorName,
             string kdfName = Pbkdf2.CryptoKdfName,
             string compression = null)
         {
             if (message == null)
-                throw new ArgumentNullException("message");
+                throw new ArgumentNullException(nameof(message));
             ValidatePassword(password);
-            if (randomSource == null)
-                throw new ArgumentNullException("randomSource");
+            if (_randomSource == null)
+                throw new ArgumentNullException(nameof(_randomSource));
             if (string.IsNullOrWhiteSpace(encryptorName))
                 encryptorName = BouncyCastleAesGcm.CryptoAlgorithmName;
             if (string.IsNullOrWhiteSpace(kdfName))
@@ -58,9 +61,9 @@ namespace SilentNotes.Crypto
             CryptoHeader header = new CryptoHeader();
             header.PackageName = PackageName;
             header.AlgorithmName = encryptor.Name;
-            header.Nonce = randomSource.GetRandomBytes(encryptor.ExpectedNonceSize);
+            header.Nonce = _randomSource.GetRandomBytes(encryptor.ExpectedNonceSize);
             header.KdfName = kdf.Name;
-            header.Salt = randomSource.GetRandomBytes(kdf.ExpectedSaltSizeBytes);
+            header.Salt = _randomSource.GetRandomBytes(kdf.ExpectedSaltSizeBytes);
             int cost = kdf.RecommendedCost(costType);
             header.Cost = cost.ToString();
             header.Compression = compression;
@@ -84,7 +87,6 @@ namespace SilentNotes.Crypto
         public byte[] Encrypt(
             byte[] message,
             byte[] key,
-            ICryptoRandomSource randomSource,
             string encryptorName,
             string compression = null)
         {
@@ -92,8 +94,8 @@ namespace SilentNotes.Crypto
                 throw new ArgumentNullException(nameof(message));
             if (key == null)
                 throw new ArgumentNullException(nameof(key));
-            if (randomSource == null)
-                throw new ArgumentNullException(nameof(randomSource));
+            if (_randomSource == null)
+                throw new ArgumentNullException(nameof(_randomSource));
             if (string.IsNullOrWhiteSpace(encryptorName))
                 encryptorName = BouncyCastleAesGcm.CryptoAlgorithmName;
             ISymmetricEncryptionAlgorithm encryptor = new SymmetricEncryptionAlgorithmFactory().CreateAlgorithm(encryptorName);
@@ -102,7 +104,7 @@ namespace SilentNotes.Crypto
             CryptoHeader header = new CryptoHeader();
             header.PackageName = PackageName;
             header.AlgorithmName = encryptor.Name;
-            header.Nonce = randomSource.GetRandomBytes(encryptor.ExpectedNonceSize);
+            header.Nonce = _randomSource.GetRandomBytes(encryptor.ExpectedNonceSize);
             header.Compression = compression;
 
             try

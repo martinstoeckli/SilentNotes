@@ -72,7 +72,7 @@ WriteLiteral(">\r\n                <div>");
 
 
 #line 8 "RecycleBinContentRazorView.cshtml"
-                       WriteLiteral(note.HtmlContent);
+                       WriteLiteral(note.UnlockedHtmlContent);
 
 #line default
 #line hidden

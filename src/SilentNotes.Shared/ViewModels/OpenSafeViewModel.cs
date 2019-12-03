@@ -56,6 +56,17 @@ namespace SilentNotes.ViewModels
             OkCommand = new RelayCommand(Ok);
         }
 
+        /// <inheritdoc />
+        public override void OnStoringUnsavedData()
+        {
+            if (Modified)
+            {
+                _repositoryService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepository);
+                _repositoryService.TrySaveRepository(noteRepository);
+                Modified = false;
+            }
+        }
+
         /// <summary>
         /// Gets the command to go back to the note overview.
         /// </summary>
@@ -112,6 +123,7 @@ namespace SilentNotes.ViewModels
             {
                 CreateNewSafe(Password);
                 openedSafes++;
+                Modified = true;
             }
 
             if (openedSafes == 0)
@@ -122,6 +134,8 @@ namespace SilentNotes.ViewModels
             }
             else
             {
+                if (Model.ReuniteOpenSafes() > 0)
+                    Modified = true;
                 _navigationService.Navigate(ControllerNames.NoteRepository);
             }
         }
@@ -131,9 +145,7 @@ namespace SilentNotes.ViewModels
             SafeModel safe = new SafeModel();
             string algorithm = _settingsService.LoadSettingsOrDefault().SelectedEncryptionAlgorithm;
             safe.GenerateNewKey(password, _randomService, algorithm);
-
             Model.Safes.Add(safe);
-            _repositoryService.TrySaveRepository(Model);
         }
 
         private int TryOpenSafes(SecureString password)
@@ -141,6 +153,7 @@ namespace SilentNotes.ViewModels
             int result = 0;
             foreach (SafeModel safe in Model.Safes)
             {
+                safe.Close(); // Actually it shouldn't be possible to have an open safe at this time...
                 if (safe.TryOpen(password))
                     result++;
             }

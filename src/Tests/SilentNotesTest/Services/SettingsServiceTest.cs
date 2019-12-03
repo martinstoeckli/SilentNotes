@@ -176,7 +176,7 @@ namespace SilentNotesTest.Services
                 if ((oldPasswortElement != null) && (cloudStorageAccount != null))
                 {
                     // Deobfuscate old password
-                    ICryptor decryptor = new Cryptor("snps");
+                    ICryptor decryptor = new Cryptor("snps", null);
                     byte[] binaryCipher = CryptoUtils.Base64StringToBytes(oldPasswortElement.Value);
                     byte[] unprotectedBinaryPassword = decryptor.Decrypt(binaryCipher, snpsk);
 

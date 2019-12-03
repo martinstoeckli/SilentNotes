@@ -93,11 +93,13 @@
     <Compile Include="CommonMocksAndStubs.cs" />
     <Compile Include="Crypto\CryptoHeaderPackerTest.cs" />
     <Compile Include="Crypto\CryptoUtilsTest.cs" />
+    <Compile Include="Crypto\Pbkdf2Test.cs" />
     <Compile Include="HtmView\HtmlViewBindingsTest.cs" />
     <Compile Include="Models\NoteListModelTest.cs" />
     <Compile Include="Models\NoteModelTest.cs" />
     <Compile Include="Models\NoteRepositoryModelTest.cs" />
     <Compile Include="Logging\LoggerTest.cs" />
+    <Compile Include="Models\SafeListModelTest.cs" />
     <Compile Include="Services\RepositoryStorageServiceTest.cs" />
     <Compile Include="Services\SettingsServiceTest.cs" />
     <Compile Include="StoryBoards\PullPushStory\ExistsCloudRepositoryStepTest.cs" />

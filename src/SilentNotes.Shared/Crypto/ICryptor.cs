@@ -31,7 +31,6 @@ namespace SilentNotes.Crypto
         /// <param name="password">Password to use for encryption, minimum length is 5 characters,
         /// recommended are at least 8 characters.</param>
         /// <param name="costType">The cost type to use for encryption.</param>
-        /// <param name="randomSource">A cryptographically safe random source.</param>
         /// <param name="encryptorName">The name of an encryption algorithm which shall be used to
         /// do the encryption.</param>
         /// <param name="kdfName">The name of a key derivation function, which can convert the
@@ -43,7 +42,6 @@ namespace SilentNotes.Crypto
             byte[] message,
             SecureString password,
             KeyDerivationCostType costType,
-            ICryptoRandomSource randomSource,
             string encryptorName,
             string kdfName = Pbkdf2.CryptoKdfName,
             string compression = null);
@@ -55,7 +53,6 @@ namespace SilentNotes.Crypto
         /// <param name="message">Plain text message to encrypt.</param>
         /// <param name="key">Key to use for encryption. The length of the key must be equal or longer
         /// than <see cref="SymmetricEncryption.ISymmetricEncryptionAlgorithm.ExpectedKeySize"/>.</param>
-        /// <param name="randomSource">A cryptographically safe random source.</param>
         /// <param name="encryptorName">The name of an encryption algorithm which shall be used to
         /// do the encryption.</param>
         /// <param name="compression">The name of the compression algorithm, or null if no compression
@@ -64,7 +61,6 @@ namespace SilentNotes.Crypto
         byte[] Encrypt(
             byte[] message,
             byte[] key,
-            ICryptoRandomSource randomSource,
             string encryptorName,
             string compression = null);
 

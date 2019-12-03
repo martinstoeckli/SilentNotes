@@ -58,7 +58,7 @@ namespace SilentNotesTest.Crypto
             // Ensure that a once stored cipher can always be decrypted even after changes in the liberary
             string base64Cipher = "dW5pdHRlc3QkYWVzX2djbSQ0NG04QXBFU1ptcXhnYll2OE5wcWl3PT0kcGJrZGYyJGgwSDdxSGZnVFlXNzBKS3lEb0JLeFE9PSQxMDAwJJsMDjdYEYXYmcqTOFRbge6iVfWo/iny4nrIOMVuoqYak6xB/MAe53G5H3AyxiTi8OENJbi9tzZStpe3p3nlDB7l+J8=";
             byte[] cipher = CryptoUtils.Base64StringToBytes(base64Cipher);
-            ICryptor decryptor = new Cryptor("unittest");
+            ICryptor decryptor = new Cryptor("unittest", null);
             string decryptedMessage = CryptoUtils.BytesToString(decryptor.Decrypt(cipher, CryptoUtils.StringToSecureString("brownie")));
             Assert.AreEqual("The brown fox jumps over the lazy 🐢🖐🏿 doc.", decryptedMessage);
         }
@@ -69,7 +69,7 @@ namespace SilentNotesTest.Crypto
             // Ensure that a once stored cipher can always be decrypted even after changes in the liberary
             string base64Cipher = "dW5pdHRlc3QkdHdvZmlzaF9nY20kZHhMWFh4K0UrZ2MzWHdWc01rWUFxQT09JHBia2RmMiRma1BCWTdDWXp1OG5YUlJtYk9DUlp3PT0kMTAwMCRRc0ETSqDekQuBgKJ5x4Mvy02OHsivm0uJ9KchKdpGk+pmbF4Kq/EDbx9Uw54uEZUQLnK70dNKSEVtb1GyUOX1mitr";
             byte[] cipher = CryptoUtils.Base64StringToBytes(base64Cipher);
-            ICryptor decryptor = new Cryptor("unittest");
+            ICryptor decryptor = new Cryptor("unittest", null);
             string decryptedMessage = CryptoUtils.BytesToString(decryptor.Decrypt(cipher, CryptoUtils.StringToSecureString("brownie")));
             Assert.AreEqual("The brown fox jumps over the lazy 🐢🖐🏿 doc.", decryptedMessage);
         }
@@ -96,13 +96,13 @@ namespace SilentNotesTest.Crypto
         [Test]
         public void CryptorWorksWithPassword()
         {
-            ICryptor encryptor = new Cryptor("sugus");
             ICryptoRandomService randomGenerator = CommonMocksAndStubs.CryptoRandomService();
+            ICryptor encryptor = new Cryptor("sugus", randomGenerator);
             string message = "Der schnelle Fuchs stolpert über den faulen Hund.";
             byte[] binaryMessage = CryptoUtils.StringToBytes(message);
             SecureString password = CryptoUtils.StringToSecureString("Der schnelle Uhu fliegt über den faulen Hund.");
 
-            byte[] cipher = encryptor.Encrypt(binaryMessage, password, KeyDerivationCostType.Low, randomGenerator, BouncyCastleTwofishGcm.CryptoAlgorithmName);
+            byte[] cipher = encryptor.Encrypt(binaryMessage, password, KeyDerivationCostType.Low, BouncyCastleTwofishGcm.CryptoAlgorithmName);
             byte[] decryptedMessage = encryptor.Decrypt(cipher, password);
             Assert.AreEqual(binaryMessage, decryptedMessage);
         }
@@ -110,13 +110,13 @@ namespace SilentNotesTest.Crypto
         [Test]
         public void CryptorWorksWithKey()
         {
-            ICryptor encryptor = new Cryptor("sugus");
             ICryptoRandomService randomGenerator = CommonMocksAndStubs.CryptoRandomService();
+            ICryptor encryptor = new Cryptor("sugus", randomGenerator);
             string message = "Der schnelle Fuchs stolpert über den faulen Hund.";
             byte[] binaryMessage = CryptoUtils.StringToBytes(message);
             byte[] key = randomGenerator.GetRandomBytes(32);
 
-            byte[] cipher = encryptor.Encrypt(binaryMessage, key, randomGenerator, BouncyCastleTwofishGcm.CryptoAlgorithmName);
+            byte[] cipher = encryptor.Encrypt(binaryMessage, key, BouncyCastleTwofishGcm.CryptoAlgorithmName);
             byte[] decryptedMessage = encryptor.Decrypt(cipher, key);
             Assert.AreEqual(binaryMessage, decryptedMessage);
         }
@@ -151,8 +151,8 @@ namespace SilentNotesTest.Crypto
         [Test]
         public void TestSymmetricEncryptionWithCompression()
         {
-            ICryptor encryptor = new Cryptor("sugus");
             ICryptoRandomService randomGenerator = CommonMocksAndStubs.CryptoRandomService(88);
+            ICryptor encryptor = new Cryptor("sugus", randomGenerator);
             byte[] binaryMessage = CommonMocksAndStubs.FilledByteArray(1024, 88);
             SecureString password = CryptoUtils.StringToSecureString("Der schnelle Uhu fliegt über den faulen Hund.");
 
@@ -160,7 +160,6 @@ namespace SilentNotesTest.Crypto
                 binaryMessage,
                 password,
                 KeyDerivationCostType.Low,
-                randomGenerator,
                 BouncyCastleTwofishGcm.CryptoAlgorithmName,
                 Pbkdf2.CryptoKdfName,
                 Cryptor.CompressionGzip);
@@ -171,8 +170,8 @@ namespace SilentNotesTest.Crypto
         [Test]
         public void UnknownAlgorithmThrows()
         {
-            ICryptor encryptor = new Cryptor("sugus");
             ICryptoRandomService randomGenerator = CommonMocksAndStubs.CryptoRandomService();
+            ICryptor encryptor = new Cryptor("sugus", randomGenerator);
             byte[] binaryMessage = new byte[] { 88 };
             SecureString password = CryptoUtils.StringToSecureString("unittestpwd");
 
@@ -182,7 +181,6 @@ namespace SilentNotesTest.Crypto
                     binaryMessage,
                     password,
                     KeyDerivationCostType.Low,
-                    randomGenerator,
                     "InvalidAlgorithmName");
             });
         }

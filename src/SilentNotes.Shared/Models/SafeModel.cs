@@ -7,7 +7,6 @@ using System;
 using System.Security;
 using System.Xml.Serialization;
 using SilentNotes.Crypto;
-using VanillaCloudStorageClient;
 
 namespace SilentNotes.Models
 {
@@ -16,6 +15,7 @@ namespace SilentNotes.Models
     /// </summary>
     public class SafeModel : IDisposable
     {
+        public const string CryptorPackageName = "SilentSafe";
         private Guid _id;
 
         /// <summary>
@@ -64,6 +64,22 @@ namespace SilentNotes.Models
         public DateTime ModifiedAt { get; set; }
 
         /// <summary>
+        /// Gets or sets the time in UTC, when the object was last updated by the system, instead of
+        /// the user. This way the system can clean up deprecated functions, but does not interfere
+        /// with more important user changes.
+        /// </summary>
+        [XmlIgnore]
+        public DateTime? MaintainedAt { get; set; }
+
+        [XmlAttribute(AttributeName = "maintained_at")]
+        public DateTime MaintainedAtSerializeable
+        { 
+            get { return MaintainedAt.Value; }
+            set { MaintainedAt = value; }
+        }
+        public bool MaintainedAtSerializeableSpecified { get { return MaintainedAt != null && MaintainedAt > ModifiedAt; } } // Serialize only when set
+
+        /// <summary>
         /// Gets or sets the serializable <see cref="Key"/>.
         /// </summary>
         [XmlElement("key")]
@@ -74,7 +90,7 @@ namespace SilentNotes.Models
         /// This key is only available if the safe is open, otherwise it is null.
         /// </summary>
         [XmlIgnore]
-        public byte[] Key { get; private set; }
+        public byte[] Key { get; internal set; }
 
         /// <summary>
         /// Gets a value indicating whether the safe is open and its <see cref="Key"/> can be used
@@ -107,7 +123,7 @@ namespace SilentNotes.Models
                 try
                 {
                     byte[] encryptedKey = CryptoUtils.Base64StringToBytes(SerializeableKey);
-                    ICryptor encryptor = new Cryptor("SilentNote");
+                    ICryptor encryptor = new Cryptor(CryptorPackageName, null);
                     Key = encryptor.Decrypt(encryptedKey, password);
                 }
                 catch (Exception)
@@ -141,9 +157,9 @@ namespace SilentNotes.Models
             // algorithms and is more than big enough even for future algorithms.
             Key = randomSource.GetRandomBytes(32);
 
-            ICryptor encryptor = new Cryptor("SilentNote");
+            ICryptor encryptor = new Cryptor(CryptorPackageName, randomSource);
             byte[] encryptedKey = encryptor.Encrypt(
-                Key, password, Crypto.KeyDerivation.KeyDerivationCostType.High, randomSource, encryptionAlgorithm);
+                Key, password, Crypto.KeyDerivation.KeyDerivationCostType.High, encryptionAlgorithm);
             SerializeableKey = CryptoUtils.BytesToBase64String(encryptedKey);
         }
 
@@ -169,7 +185,7 @@ namespace SilentNotes.Models
 
             target.Id = this.Id;
             target.SerializeableKey = this.SerializeableKey;
-            target.Key = this.Key;
+            target.Key = null; // A cloned safe is closed by default, but can be opened
             target.CreatedAt = this.CreatedAt;
             target.ModifiedAt = this.ModifiedAt;
         }

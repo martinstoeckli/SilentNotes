@@ -62,7 +62,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         internal static byte[] EncryptRepository(NoteRepositoryModel repository, string transferCode, ICryptoRandomService randomService, string encryptionAlgorithm)
         {
             byte[] binaryRepository = XmlUtils.SerializeToXmlBytes(repository);
-            ICryptor encryptor = new Cryptor("SilentNotes");
+            ICryptor encryptor = new Cryptor("SilentNotes", randomService);
 
             // The key derivation cost is set to low, because we can be sure that the transferCode
             // is a very strong password, and to not overload slow mobile devices.
@@ -70,7 +70,6 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
                 binaryRepository,
                 CryptoUtils.StringToSecureString(transferCode),
                 KeyDerivationCostType.Low,
-                randomService,
                 encryptionAlgorithm,
                 Pbkdf2.CryptoKdfName,
                 Cryptor.CompressionGzip);

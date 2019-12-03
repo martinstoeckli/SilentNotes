@@ -85,7 +85,7 @@ namespace VanillaCloudStorageClient
         [DataMember(EmitDefaultValue = false, Name = "access_token")]
         public string SerializeableAccessToken { get; set; }
         [JsonIgnore]
-        public bool SerializeableAccessTokenSpecified { get { return SerializeableAccessToken != null; } } // Do only serialize when set
+        public bool SerializeableAccessTokenSpecified { get { return SerializeableAccessToken != null; } } // Serialize only when set
 
         /// <summary>
         /// Gets or sets the serializable <see cref="CloudStorageToken.ExpiryDate"/>.
@@ -95,7 +95,7 @@ namespace VanillaCloudStorageClient
         [DataMember(EmitDefaultValue = false, Name = "token_expiry_date")]
         public DateTime? SerializeableExpiryDate { get; set; }
         [JsonIgnore]
-        public bool SerializeableExpiryDateSpecified { get { return SerializeableExpiryDate != null; } } // Do only serialize when set
+        public bool SerializeableExpiryDateSpecified { get { return SerializeableExpiryDate != null; } } // Serialize only when set
 
         /// <summary>
         /// Gets or sets the serializable <see cref="CloudStorageToken.RefreshToken"/>.
@@ -105,7 +105,7 @@ namespace VanillaCloudStorageClient
         [DataMember(EmitDefaultValue = false, Name = "refresh_token")]
         public string SerializeableRefreshToken { get; set; }
         [JsonIgnore]
-        public bool SerializeableRefreshTokenSpecified { get { return SerializeableRefreshToken != null; } } // Do only serialize when set
+        public bool SerializeableRefreshTokenSpecified { get { return SerializeableRefreshToken != null; } } // Serialize only when set
 
         /// <summary>
         /// Gets or sets the serializable <see cref="CloudStorageCredentials.Username"/>.
@@ -115,7 +115,7 @@ namespace VanillaCloudStorageClient
         [DataMember(EmitDefaultValue = false, Name = "username")]
         public string SerializeableUsername { get; set; }
         [JsonIgnore]
-        public bool SerializeableUsernameSpecified { get { return SerializeableUsername != null; } } // Do only serialize when set
+        public bool SerializeableUsernameSpecified { get { return SerializeableUsername != null; } } // Serialize only when set
 
         /// <summary>
         /// Gets or sets the serializable <see cref="CloudStorageCredentials.Password"/>.
@@ -125,7 +125,7 @@ namespace VanillaCloudStorageClient
         [DataMember(EmitDefaultValue = false, Name = "password")]
         public string SerializeablePassword { get; set; }
         [JsonIgnore]
-        public bool SerializeablePasswordSpecified { get { return SerializeablePassword != null; } } // Do only serialize when set
+        public bool SerializeablePasswordSpecified { get { return SerializeablePassword != null; } } // Serialize only when set
 
         /// <summary>
         /// Gets or sets the url for login if necessary, otherwise this is null.
@@ -135,7 +135,7 @@ namespace VanillaCloudStorageClient
         [DataMember(EmitDefaultValue = false, Name = "url")]
         public string SerializeableUrl { get; set; }
         [JsonIgnore]
-        public bool SerializeableUrlSpecified { get { return SerializeableUrl != null; } } // Do only serialize when set
+        public bool SerializeableUrlSpecified { get { return SerializeableUrl != null; } } // Serialize only when set
 
         /// <summary>
         /// Gets or sets a value indicating whether an encrypted SSL connection should be used.
@@ -146,7 +146,7 @@ namespace VanillaCloudStorageClient
         [DataMember(EmitDefaultValue = false, Name = "secure")]
         public bool SerializeableSecure { get; set; }
         [JsonIgnore]
-        public bool SerializeableSecureSpecified { get { return SerializeableSecure == true; } } // Do only serialize when set
+        public bool SerializeableSecureSpecified { get { return SerializeableSecure == true; } } // Serialize only when set
 
         private string EncryptProperty(string plainText, Func<string, string> encrypt)
         {

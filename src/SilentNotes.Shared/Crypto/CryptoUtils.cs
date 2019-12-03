@@ -17,6 +17,8 @@ namespace SilentNotes.Crypto
     /// </summary>
     public static class CryptoUtils
     {
+        private const string CryptorObfuscationPackageName = "obfuscation";
+
         /// <summary>
         /// Gets a byte array from a given string.
         /// </summary>
@@ -139,12 +141,11 @@ namespace SilentNotes.Crypto
         /// <returns>Obfuscated message.</returns>
         public static byte[] Obfuscate(byte[] plainMessage, SecureString obfuscationKey, ICryptoRandomSource randomSource)
         {
-            ICryptor encryptor = new Cryptor("obfuscation");
+            ICryptor encryptor = new Cryptor(CryptorObfuscationPackageName, randomSource);
             return encryptor.Encrypt(
                 plainMessage,
                 obfuscationKey,
                 KeyDerivationCostType.Low,
-                randomSource,
                 "twofish_gcm");
         }
 
@@ -172,7 +173,7 @@ namespace SilentNotes.Crypto
         /// <returns>Original plain message.</returns>
         public static byte[] Deobfuscate(byte[] obfuscatedMessage, SecureString obfuscationKey)
         {
-            ICryptor encryptor = new Cryptor("obfuscation");
+            ICryptor encryptor = new Cryptor(CryptorObfuscationPackageName, null);
             return encryptor.Decrypt(obfuscatedMessage, obfuscationKey);
         }
 
