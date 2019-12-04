@@ -15,6 +15,23 @@ namespace SilentNotes.Models
     public class SafeListModel : List<SafeModel>
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="SafeListModel"/> class.
+        /// </summary>
+        public SafeListModel()
+            : base()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SafeListModel"/> class.
+        /// </summary>
+        /// <param name="collection">The collection whose elements are copied to the new list.</param>
+        public SafeListModel(IEnumerable<SafeModel> collection)
+            : base(collection)
+        {
+        }
+
+        /// <summary>
         /// Searches for a safe with a given id in the list and returns the found safe.
         /// </summary>
         /// <param name="id">Search for the safe with this id.</param>

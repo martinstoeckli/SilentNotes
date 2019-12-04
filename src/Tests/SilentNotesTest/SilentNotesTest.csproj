@@ -61,6 +61,12 @@
     <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <HintPath>C:\Users\Tinu\AppData\Local\Temp\SilentNotes.NugetPackages\Castle.Core.4.4.0\lib\net45\Castle.Core.dll</HintPath>
     </Reference>
+    <Reference Include="GalaSoft.MvvmLight, Version=5.4.1.0, Culture=neutral, PublicKeyToken=0ffbc31322e9d308, processorArchitecture=MSIL">
+      <HintPath>C:\Users\Tinu\AppData\Local\Temp\SilentNotes.NugetPackages\MvvmLightLibsStd10.5.4.1.1\lib\net45\GalaSoft.MvvmLight.dll</HintPath>
+    </Reference>
+    <Reference Include="GalaSoft.MvvmLight.Platform, Version=5.4.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>C:\Users\Tinu\AppData\Local\Temp\SilentNotes.NugetPackages\MvvmLightLibsStd10.5.4.1.1\lib\net45\GalaSoft.MvvmLight.Platform.dll</HintPath>
+    </Reference>
     <Reference Include="Moq, Version=4.12.0.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <HintPath>C:\Users\Tinu\AppData\Local\Temp\SilentNotes.NugetPackages\Moq.4.12.0\lib\net45\Moq.dll</HintPath>
     </Reference>
@@ -84,6 +90,9 @@
       <HintPath>C:\Users\Tinu\AppData\Local\Temp\SilentNotes.NugetPackages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
     </Reference>
     <Reference Include="System.Web" />
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>C:\Users\Tinu\AppData\Local\Temp\SilentNotes.NugetPackages\MvvmLightLibsStd10.5.4.1.1\lib\net45\System.Windows.Interactivity.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
@@ -110,6 +119,7 @@
     <Compile Include="StoryBoards\SynchronizationStory\ExistsCloudRepositoryStepTest.cs" />
     <Compile Include="StoryBoards\SynchronizationStory\StoreMergedRepositoryAndQuitStepTest.cs" />
     <Compile Include="CultureSwitcher4UnitTest.cs" />
+    <Compile Include="ViewModels\NoteViewModelTest.cs" />
     <Compile Include="Workers\ByteArrayExtensionsTest.cs" />
     <Compile Include="Workers\ColorExtensionsTest.cs" />
     <Compile Include="Workers\CompressUtilsTest.cs" />

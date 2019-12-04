@@ -397,7 +397,7 @@ namespace SilentNotes.ViewModels
             if ((note != null) && (oldestOpenSafe != null))
             {
                 note.Model.SafeId = oldestOpenSafe.Id;
-                note.Model.HtmlContent = note.Lock(note.Model.HtmlContent);
+                note.Model.HtmlContent = note.Lock(note.UnlockedHtmlContent);
                 note.Model.RefreshModifiedAt();
                 Modified = true;
             }
