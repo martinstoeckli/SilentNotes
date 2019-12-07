@@ -84,6 +84,16 @@ namespace SilentNotes.Models
         public bool MaintainedAtSerializeableSpecified { get { return MaintainedAt != null && MaintainedAt > ModifiedAt; } } // Serialize only when set
 
         /// <summary>
+        /// Clears the <see cref="MaintainedAt"/> property if it is obsolete, because the object was
+        /// modified later.
+        /// </summary>
+        public void ClearMaintainedAtIfObsolete()
+        {
+            if ((MaintainedAt != null) && (MaintainedAt < ModifiedAt))
+                MaintainedAt = null;
+        }
+
+        /// <summary>
         /// Gets or sets the safe which was used to encrypt the note, or null if it is not encrypted.
         /// </summary>
         [XmlElement(ElementName = "safe")]
@@ -124,6 +134,7 @@ namespace SilentNotes.Models
             target.InRecyclingBin = this.InRecyclingBin;
             target.CreatedAt = this.CreatedAt;
             target.ModifiedAt = this.ModifiedAt;
+            target.MaintainedAt = this.MaintainedAt;
             target.SafeId = this.SafeId;
         }
     }

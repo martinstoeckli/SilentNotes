@@ -136,6 +136,18 @@ namespace SilentNotes.Models
         }
 
         /// <summary>
+        /// Clears all the MaintainedAt properties if they are obsolete, because the object was
+        /// modified later.
+        /// </summary>
+        public void ClearMaintainedAtIfObsolete()
+        {
+            foreach (NoteModel note in Notes)
+                note.ClearMaintainedAtIfObsolete();
+            foreach (SafeModel safe in Safes)
+                safe.ClearMaintainedAtIfObsolete();
+        }
+
+        /// <summary>
         /// Since open safes always have the same password, we can reunite them. The oldest safe is
         /// preferred and all notes pointing to one of the open safes can point to the oldest safe.
         /// </summary>

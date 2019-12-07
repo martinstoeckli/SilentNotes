@@ -80,6 +80,15 @@ namespace SilentNotes.Models
         public bool MaintainedAtSerializeableSpecified { get { return MaintainedAt != null && MaintainedAt > ModifiedAt; } } // Serialize only when set
 
         /// <summary>
+        /// Clears <see cref="MaintainedAt"/> if it was modified later.
+        /// </summary>
+        public void ClearMaintainedAtIfObsolete()
+        {
+            if ((MaintainedAt != null) && (MaintainedAt < ModifiedAt))
+                MaintainedAt = null;
+        }
+
+        /// <summary>
         /// Gets or sets the serializable <see cref="Key"/>.
         /// </summary>
         [XmlElement("key")]

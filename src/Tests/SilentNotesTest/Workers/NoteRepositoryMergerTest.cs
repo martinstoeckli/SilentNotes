@@ -117,15 +117,17 @@ namespace SilentNotesTest.Workers
             clientRepo.Notes.Add(note105);
             NoteRepositoryModel serverRepo = new NoteRepositoryModel();
             NoteModel note201 = new NoteModel();
-            NoteModel note202 = note102.Clone();
+            NoteModel note202 = note103.Clone();
             NoteModel note203 = new NoteModel();
-            NoteModel note204 = note104.Clone();
+            NoteModel note204 = note102.Clone();
             NoteModel note205 = new NoteModel();
+            NoteModel note206 = note104.Clone();
             serverRepo.Notes.Add(note201);
             serverRepo.Notes.Add(note202);
             serverRepo.Notes.Add(note203);
             serverRepo.Notes.Add(note204);
             serverRepo.Notes.Add(note205);
+            serverRepo.Notes.Add(note206);
 
             // Take order of client
             NoteRepositoryMerger merger = new NoteRepositoryMerger();
@@ -137,11 +139,11 @@ namespace SilentNotesTest.Workers
             Assert.AreEqual(note101.Id, result.Notes[0].Id);
             Assert.AreEqual(note201.Id, result.Notes[1].Id);
             Assert.AreEqual(note102.Id, result.Notes[2].Id);
-            Assert.AreEqual(note103.Id, result.Notes[3].Id);
-            Assert.AreEqual(note203.Id, result.Notes[4].Id);
-            Assert.AreEqual(note104.Id, result.Notes[5].Id);
-            Assert.AreEqual(note105.Id, result.Notes[6].Id);
-            Assert.AreEqual(note205.Id, result.Notes[7].Id);
+            Assert.AreEqual(note205.Id, result.Notes[3].Id);
+            Assert.AreEqual(note103.Id, result.Notes[4].Id);
+            Assert.AreEqual(note203.Id, result.Notes[5].Id);
+            Assert.AreEqual(note104.Id, result.Notes[6].Id);
+            Assert.AreEqual(note105.Id, result.Notes[7].Id);
 
             // Take order of server
             clientRepo.OrderModifiedAt = new DateTime(2000, 01, 01); // older
@@ -151,11 +153,11 @@ namespace SilentNotesTest.Workers
             Assert.AreEqual(8, result.Notes.Count);
             Assert.AreEqual(note201.Id, result.Notes[0].Id);
             Assert.AreEqual(note101.Id, result.Notes[1].Id);
-            Assert.AreEqual(note102.Id, result.Notes[2].Id);
+            Assert.AreEqual(note202.Id, result.Notes[2].Id);
             Assert.AreEqual(note203.Id, result.Notes[3].Id);
-            Assert.AreEqual(note103.Id, result.Notes[4].Id);
-            Assert.AreEqual(note104.Id, result.Notes[5].Id);
-            Assert.AreEqual(note205.Id, result.Notes[6].Id);
+            Assert.AreEqual(note204.Id, result.Notes[4].Id);
+            Assert.AreEqual(note205.Id, result.Notes[5].Id);
+            Assert.AreEqual(note206.Id, result.Notes[6].Id);
             Assert.AreEqual(note105.Id, result.Notes[7].Id);
         }
 
@@ -170,8 +172,8 @@ namespace SilentNotesTest.Workers
             NoteRepositoryModel serverRepo = new NoteRepositoryModel();
             NoteModel note202 = note102.Clone();
             NoteModel note204 = note104.Clone();
-            serverRepo.Notes.Add(note202);
             serverRepo.Notes.Add(note204);
+            serverRepo.Notes.Add(note202);
 
             // Take order of client
             NoteRepositoryMerger merger = new NoteRepositoryMerger();
@@ -182,6 +184,59 @@ namespace SilentNotesTest.Workers
             Assert.AreEqual(2, result.Notes.Count);
             Assert.AreEqual(note102.Id, result.Notes[0].Id);
             Assert.AreEqual(note104.Id, result.Notes[1].Id);
+        }
+
+        [Test]
+        public void ChooseLastModifiedNoteWorksCorrectly()
+        {
+            NoteModel note1 = new NoteModel();
+            NoteModel note2 = new NoteModel();
+
+            // Newer ModifiedAt wins
+            note1.ModifiedAt = new DateTime(2000, 06, 15);
+            note1.MaintainedAt = null;
+            note2.ModifiedAt = new DateTime(2000, 06, 01);
+            note2.MaintainedAt = null;
+            Assert.AreSame(note1, NoteRepositoryMerger.ChooseLastModified(note1, note2, item => item.ModifiedAt, item => item.MaintainedAt));
+
+            note1.ModifiedAt = new DateTime(2000, 06, 01);
+            note1.MaintainedAt = null;
+            note2.ModifiedAt = new DateTime(2000, 06, 15);
+            note2.MaintainedAt = null;
+            Assert.AreSame(note2, NoteRepositoryMerger.ChooseLastModified(note1, note2, item => item.ModifiedAt, item => item.MaintainedAt));
+
+            note1.ModifiedAt = new DateTime(2000, 06, 15);
+            note1.MaintainedAt = null;
+            note2.ModifiedAt = new DateTime(2000, 06, 15);
+            note2.MaintainedAt = null;
+            Assert.AreSame(note1, NoteRepositoryMerger.ChooseLastModified(note1, note2, item => item.ModifiedAt, item => item.MaintainedAt));
+
+            // MaintainedAt is ignored when ModifiedAt is different
+            note1.ModifiedAt = new DateTime(2000, 06, 15);
+            note1.MaintainedAt = new DateTime(2001, 06, 30);
+            note2.ModifiedAt = new DateTime(2000, 06, 30);
+            note2.MaintainedAt = new DateTime(2001, 06, 15);
+            Assert.AreSame(note2, NoteRepositoryMerger.ChooseLastModified(note1, note2, item => item.ModifiedAt, item => item.MaintainedAt));
+
+            // Newer MaintainedAt wins
+            note1.ModifiedAt = new DateTime(2000, 06, 15);
+            note1.MaintainedAt = new DateTime(2001, 06, 15);
+            note2.ModifiedAt = new DateTime(2000, 06, 15);
+            note2.MaintainedAt = new DateTime(2001, 06, 30);
+            Assert.AreSame(note2, NoteRepositoryMerger.ChooseLastModified(note1, note2, item => item.ModifiedAt, item => item.MaintainedAt));
+
+            // Non null MaintainedAt wins
+            note1.ModifiedAt = new DateTime(2000, 06, 15);
+            note1.MaintainedAt = new DateTime(2001, 06, 15);
+            note2.ModifiedAt = new DateTime(2000, 06, 15);
+            note2.MaintainedAt = null;
+            Assert.AreSame(note1, NoteRepositoryMerger.ChooseLastModified(note1, note2, item => item.ModifiedAt, item => item.MaintainedAt));
+
+            note1.ModifiedAt = new DateTime(2000, 06, 15);
+            note1.MaintainedAt = null;
+            note2.ModifiedAt = new DateTime(2000, 06, 15);
+            note2.MaintainedAt = new DateTime(2001, 06, 15);
+            Assert.AreSame(note2, NoteRepositoryMerger.ChooseLastModified(note1, note2, item => item.ModifiedAt, item => item.MaintainedAt));
         }
     }
 }
