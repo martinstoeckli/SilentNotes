@@ -187,6 +187,45 @@ namespace SilentNotesTest.Workers
         }
 
         [Test]
+        public void MergeSafes()
+        {
+            Guid safe1Id = new Guid("10000000000000000000000000000000");
+            Guid safe2Id = new Guid("20000000000000000000000000000000");
+            Guid safe3Id = new Guid("30000000000000000000000000000000");
+            Guid safe4Id = new Guid("40000000000000000000000000000000");
+            Guid safe5Id = new Guid("50000000000000000000000000000000");
+            Guid safe6Id = new Guid("60000000000000000000000000000000");
+            DateTime newerDate = new DateTime(2008, 08, 08);
+            DateTime middleDate = new DateTime(2006, 06, 06);
+
+            NoteRepositoryModel serverRepo = new NoteRepositoryModel();
+            SafeModel safeS1 = new SafeModel { Id = safe2Id, SerializeableKey = "s1", ModifiedAt = newerDate };
+            SafeModel safeS2 = new SafeModel { Id = safe4Id, SerializeableKey = "s2", ModifiedAt = middleDate };
+            SafeModel safeS3 = new SafeModel { Id = safe6Id, SerializeableKey = "s3", ModifiedAt = middleDate };
+            serverRepo.Safes.AddRange(new[] { safeS1, safeS2, safeS3 });
+
+            NoteRepositoryModel clientRepo = new NoteRepositoryModel();
+            SafeModel safeC1 = new SafeModel { Id = safe5Id, SerializeableKey = "c1", ModifiedAt = middleDate };
+            SafeModel safeC2 = new SafeModel { Id = safe4Id, SerializeableKey = "c2", ModifiedAt = newerDate };
+            SafeModel safeC3 = new SafeModel { Id = safe2Id, SerializeableKey = "c3", ModifiedAt = middleDate };
+            SafeModel safeC4 = new SafeModel { Id = safe1Id, SerializeableKey = "c4", ModifiedAt = middleDate };
+            SafeModel safeC5 = new SafeModel { Id = safe3Id, SerializeableKey = "c5", ModifiedAt = middleDate };
+            clientRepo.Safes.AddRange(new[] { safeC1, safeC2, safeC3, safeC4, safeC5 });
+
+            NoteRepositoryMerger merger = new NoteRepositoryMerger();
+            NoteRepositoryModel result = merger.Merge(clientRepo, serverRepo);
+            SafeListModel safes = result.Safes;
+
+            Assert.AreEqual(6, safes.Count);
+            Assert.AreEqual(safe5Id, safes[0].Id); Assert.AreEqual("c1", safes[0].SerializeableKey);
+            Assert.AreEqual(safe2Id, safes[1].Id); Assert.AreEqual("s1", safes[1].SerializeableKey);
+            Assert.AreEqual(safe1Id, safes[2].Id); Assert.AreEqual("c4", safes[2].SerializeableKey);
+            Assert.AreEqual(safe3Id, safes[3].Id); Assert.AreEqual("c5", safes[3].SerializeableKey);
+            Assert.AreEqual(safe4Id, safes[4].Id); Assert.AreEqual("c2", safes[4].SerializeableKey);
+            Assert.AreEqual(safe6Id, safes[5].Id); Assert.AreEqual("s3", safes[5].SerializeableKey);
+        }
+
+        [Test]
         public void ChooseLastModifiedNoteWorksCorrectly()
         {
             NoteModel note1 = new NoteModel();

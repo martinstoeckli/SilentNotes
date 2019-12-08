@@ -34,25 +34,23 @@ namespace SilentNotes.Workers
             deletedNotes.Sort(); // to allow binary search
             NoteListModel localLivingNotes = BuildListOfLivingNotes(localRepository, deletedNotes);
             NoteListModel remoteLivingNotes = BuildListOfLivingNotes(remoteRepository, deletedNotes);
-            bool orderInLocalRepo = localRepository.OrderModifiedAt > remoteRepository.OrderModifiedAt;
 
             // Create new merge repository
             NoteRepositoryModel result = new NoteRepositoryModel();
             result.Revision = NoteRepositoryModel.NewestSupportedRevision;
             result.Id = remoteRepository.Id;
             result.DeletedNotes = deletedNotes;
-            result.Safes = CreateSafeList(localRepository.Safes, remoteRepository.Safes);
+            result.Safes = BuildMergedListOfSafes(remoteRepository.Safes, localRepository.Safes);
 
+            bool orderInLocalRepo = localRepository.OrderModifiedAt > remoteRepository.OrderModifiedAt;
             if (orderInLocalRepo)
             {
-                var joinMap = OuterJoin(localLivingNotes, remoteLivingNotes, item => item.Id);
-                result.Notes = CreateNoteList(joinMap);
+                result.Notes = BuildMergedListOfNotes(localLivingNotes, remoteLivingNotes);
                 result.OrderModifiedAt = localRepository.OrderModifiedAt;
             }
             else
             {
-                var joinMap = OuterJoin(remoteLivingNotes, localLivingNotes, item => item.Id);
-                result.Notes = CreateNoteList(joinMap);
+                result.Notes = BuildMergedListOfNotes(remoteLivingNotes, localLivingNotes);
                 result.OrderModifiedAt = remoteRepository.OrderModifiedAt;
             }
 
@@ -82,11 +80,6 @@ namespace SilentNotes.Workers
             return result;
         }
 
-        private static SafeListModel CreateSafeList(SafeListModel localSafes, SafeListModel remoteSafes)
-        {
-            return null;
-        }
-
         /// <summary>
         /// Creates a list of notes and adds all notes which are not deleted.
         /// </summary>
@@ -106,37 +99,68 @@ namespace SilentNotes.Workers
         }
 
         /// <summary>
-        /// Build a combined list of notes, using the map.
+        /// Build a merged list of notes.
         /// </summary>
-        /// <param name="joinMap">Map with corresponding notes of both repositories.</param>
+        /// <param name="leftItems">List of notes from the left repository, whose order has precedence.</param>
+        /// <param name="rightItems">List of notes from the right side repository.</param>
         /// <returns>List of notes for the new merged repository.</returns>
-        private static NoteListModel CreateNoteList(List<Tuple<NoteModel, NoteModel>> joinMap)
+        private static NoteListModel BuildMergedListOfNotes(NoteListModel leftItems, NoteListModel rightItems)
         {
             NoteListModel result = new NoteListModel();
 
-            foreach (var pair in joinMap)
+            var map = OuterJoin(leftItems, rightItems, item => item.Id);
+            foreach (Tuple<NoteModel, NoteModel> pair in map)
             {
                 if (pair.Item1 == null)
                 {
-                    // Only available in otherNotes
-                    NoteModel otherNote = pair.Item2;
-                    result.Add(otherNote.Clone());
+                    // Only available on the right side
+                    result.Add(pair.Item2.Clone());
                 }
                 else if (pair.Item2 == null)
                 {
-                    // Only available in orderedNotes
-                    NoteModel orderedNote = pair.Item1;
-                    result.Add(orderedNote.Clone());
+                    // Only available on the left side
+                    result.Add(pair.Item1.Clone());
                 }
                 else
                 {
-                    // Take the more recent note
-                    NoteModel orderedNote = pair.Item1;
-                    NoteModel otherNote = pair.Item2;
-                    NoteModel lastModifiedNote = ChooseLastModified(
-                        orderedNote, otherNote, item => item.ModifiedAt, item => item.MaintainedAt);
-                    NoteModel newNote = lastModifiedNote.Clone();
-                    result.Add(newNote);
+                    // Take the more recent
+                    NoteModel lastModifiedItem = ChooseLastModified(
+                        pair.Item1, pair.Item2, item => item.ModifiedAt, item => item.MaintainedAt);
+                    result.Add(lastModifiedItem.Clone());
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Build a merged list of safes.
+        /// </summary>
+        /// <param name="leftItems">List of safes from the left repository, whose order has precedence.</param>
+        /// <param name="rightItems">List of safes from the right side repository.</param>
+        /// <returns>List of safes for the new merged repository.</returns>
+        private static SafeListModel BuildMergedListOfSafes(SafeListModel leftItems, SafeListModel rightItems)
+        {
+            SafeListModel result = new SafeListModel();
+
+            var map = OuterJoin(leftItems, rightItems, item => item.Id);
+            foreach (Tuple<SafeModel, SafeModel> pair in map)
+            {
+                if (pair.Item1 == null)
+                {
+                    // Only available on the right side
+                    result.Add(pair.Item2.Clone());
+                }
+                else if (pair.Item2 == null)
+                {
+                    // Only available on the left side
+                    result.Add(pair.Item1.Clone());
+                }
+                else
+                {
+                    // Take the more recent
+                    SafeModel lastModifiedItem = ChooseLastModified(
+                        pair.Item1, pair.Item2, item => item.ModifiedAt, item => item.MaintainedAt);
+                    result.Add(lastModifiedItem.Clone());
                 }
             }
             return result;
@@ -248,10 +272,6 @@ namespace SilentNotes.Workers
                 comparisonResult = Nullable.Compare(maintainedAtSelector(item1), maintainedAtSelector(item2));
 
             return (comparisonResult >= 0) ? item1 : item2;
-        }
-
-        private class Map : List<Tuple<int, int>>
-        {
         }
     }
 }
