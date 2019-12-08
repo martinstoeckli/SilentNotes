@@ -129,18 +129,35 @@ namespace SilentNotes.Models
         {
             if (!IsOpen)
             {
-                try
-                {
-                    byte[] encryptedKey = CryptoUtils.Base64StringToBytes(SerializeableKey);
-                    ICryptor encryptor = new Cryptor(CryptorPackageName, null);
-                    Key = encryptor.Decrypt(encryptedKey, password);
-                }
-                catch (Exception)
-                {
+                if (TryDecryptKey(SerializeableKey, password, out byte[] decryptedKey))
+                    Key = decryptedKey;
+                else
                     Close();
-                }
             }
             return IsOpen;
+        }
+
+        /// <summary>
+        /// Tries to decrypt the key with a password, regardless whether the safe is already open.
+        /// </summary>
+        /// <param name="serializeableKey">Serializeable key to decrypt.</param>
+        /// <param name="password">User password to decrypt the key.</param>
+        /// <param name="key">Retrieves the decrypted key if the decryption was successful.</param>
+        /// <returns>Returns true if the decryption was successful, otherwise false.</returns>
+        public static bool TryDecryptKey(string serializeableKey, SecureString password, out byte[] key)
+        {
+            try
+            {
+                byte[] encryptedKey = CryptoUtils.Base64StringToBytes(serializeableKey);
+                ICryptor encryptor = new Cryptor(CryptorPackageName, null);
+                key = encryptor.Decrypt(encryptedKey, password);
+                return true;
+            }
+            catch (Exception)
+            {
+                key = null;
+                return false;
+            }
         }
 
         /// <summary>
@@ -165,11 +182,23 @@ namespace SilentNotes.Models
             // We generate a 256 bit key, this is required by all available symmetric encryption
             // algorithms and is more than big enough even for future algorithms.
             Key = randomSource.GetRandomBytes(32);
+            SerializeableKey = EncryptKey(Key, password, randomSource, encryptionAlgorithm);
+        }
 
+        /// <summary>
+        /// Tries to encrypt the key with a password, so it can be stored as <see cref="SerializeableKey"/>.
+        /// </summary>
+        /// <param name="key">Key to encrypt.</param>
+        /// <param name="password">The user password to encrypt the key with.</param>
+        /// <param name="randomSource">A cryptographically random source.</param>
+        /// <param name="encryptionAlgorithm">The encryption algorithm to encrypt the key.</param>
+        /// <returns>Returns the encrypted serializeable key.</returns>
+        public static string EncryptKey(byte[] key, SecureString password, ICryptoRandomSource randomSource, string encryptionAlgorithm)
+        {
             ICryptor encryptor = new Cryptor(CryptorPackageName, randomSource);
             byte[] encryptedKey = encryptor.Encrypt(
-                Key, password, Crypto.KeyDerivation.KeyDerivationCostType.High, encryptionAlgorithm);
-            SerializeableKey = CryptoUtils.BytesToBase64String(encryptedKey);
+                key, password, Crypto.KeyDerivation.KeyDerivationCostType.High, encryptionAlgorithm);
+            return CryptoUtils.BytesToBase64String(encryptedKey);
         }
 
         /// <summary>

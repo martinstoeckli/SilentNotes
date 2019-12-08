@@ -119,6 +119,7 @@
     <Compile Include="StoryBoards\SynchronizationStory\ExistsCloudRepositoryStepTest.cs" />
     <Compile Include="StoryBoards\SynchronizationStory\StoreMergedRepositoryAndQuitStepTest.cs" />
     <Compile Include="CultureSwitcher4UnitTest.cs" />
+    <Compile Include="UnmixableAlphabetTest.cs" />
     <Compile Include="ViewModels\NoteViewModelTest.cs" />
     <Compile Include="Workers\ByteArrayExtensionsTest.cs" />
     <Compile Include="Workers\ColorExtensionsTest.cs" />

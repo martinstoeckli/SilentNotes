@@ -4,6 +4,7 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Security;
 using System.Windows.Input;
@@ -14,17 +15,16 @@ using VanillaCloudStorageClient;
 
 namespace SilentNotes.ViewModels
 {
-    /// <summary>
-    /// View model to present the cloud storage settings to the user.
-    /// </summary>
-    public class OpenSafeViewModel : ViewModelBase
+    public class ChangePasswordViewModel : ViewModelBase
     {
         private readonly IFeedbackService _feedbackService;
         private readonly ICryptoRandomService _randomService;
         private readonly ISettingsService _settingsService;
         private readonly IRepositoryStorageService _repositoryService;
+        private SecureString _oldPassword;
         private SecureString _password;
         private SecureString _passwordConfirmation;
+        private bool _invalidOldPasswordError;
         private bool _invalidPasswordError;
         private bool _invalidPasswordConfirmationError;
 
@@ -32,7 +32,7 @@ namespace SilentNotes.ViewModels
         /// Initializes a new instance of the <see cref="OpenSafeViewModel"/> class.
         /// </summary>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1611:ElementParametersMustBeDocumented", Justification = "Dependency injection")]
-        public OpenSafeViewModel(
+        public ChangePasswordViewModel(
             INavigationService navigationService,
             ILanguageService languageService,
             ISvgIconService svgIconService,
@@ -101,63 +101,30 @@ namespace SilentNotes.ViewModels
 
         private void Ok()
         {
+            List<SafeInfo> matchingSafes = TryPasswordOnSafes(OldPassword);
+            InvalidOldPasswordError = matchingSafes.Count == 0;
             InvalidPasswordError = !ValidatePassword(Password);
-            InvalidPasswordConfirmationError = !SafeExists && !ValidatePasswordConfirmation(Password, PasswordConfirmation);
-            if (InvalidPasswordError || InvalidPasswordConfirmationError)
+            InvalidPasswordConfirmationError = !ValidatePasswordConfirmation(Password, PasswordConfirmation);
+            if (InvalidOldPasswordError || InvalidPasswordError || InvalidPasswordConfirmationError)
                 return;
 
-            int openedSafes = 0;
-            if (SafeExists)
-            {
-                openedSafes = TryOpenSafes(Password);
-            }
-            else
-            {
-                CreateNewSafe(Password);
-                openedSafes++;
-                Modified = true;
-            }
-
-            if (openedSafes == 0)
-            {
-                InvalidPasswordError = false;
-                InvalidPasswordConfirmationError = false;
-                _feedbackService.ShowToast(Language.LoadText("password_wrong_error"));
-            }
-            else
-            {
-                if (Model.ReuniteOpenSafes() > 0)
-                    Modified = true;
-                _navigationService.Navigate(ControllerNames.NoteRepository);
-            }
-        }
-
-        private void CreateNewSafe(SecureString password)
-        {
-            SafeModel safe = new SafeModel();
+            // Change the encrypted key of each safe which could have been opened with the password.
             string algorithm = _settingsService.LoadSettingsOrDefault().SelectedEncryptionAlgorithm;
-            safe.GenerateNewKey(password, _randomService, algorithm);
-            Model.Safes.Add(safe);
-        }
-
-        private int TryOpenSafes(SecureString password)
-        {
-            int result = 0;
-            foreach (SafeModel safe in Model.Safes)
+            foreach (SafeInfo safeInfo in matchingSafes)
             {
-                safe.Close(); // Actually it shouldn't be possible to have an open safe at this time...
-                if (safe.TryOpen(password))
-                    result++;
+                // No need to open or close the safe, just replace the encrypted key.
+                safeInfo.Safe.SerializeableKey = SafeModel.EncryptKey(safeInfo.Key, Password, _randomService, algorithm);
+                safeInfo.Safe.RefreshModifiedAt();
             }
-            return result;
+
+            Modified = true;
+            _navigationService.Navigate(ControllerNames.NoteRepository);
         }
 
-        /// <summary>
-        /// Gets a value indicating whether there are already one or more safes in the repository.
-        /// </summary>
-        public bool SafeExists
+        public bool InvalidOldPasswordError
         {
-            get { return Model.Safes.Count >= 1; }
+            get { return _invalidOldPasswordError; }
+            set { ChangeProperty(ref _invalidOldPasswordError, value, false); }
         }
 
         public bool InvalidPasswordError
@@ -170,6 +137,20 @@ namespace SilentNotes.ViewModels
         {
             get { return _invalidPasswordConfirmationError; }
             set { ChangeProperty(ref _invalidPasswordConfirmationError, value, false); }
+        }
+
+        /// <summary>
+        /// Gets or sets the user entered previous password.
+        /// </summary>
+        public SecureString OldPassword
+        {
+            get { return _oldPassword; }
+
+            set
+            {
+                _oldPassword?.Clear();
+                _oldPassword = value;
+            }
         }
 
         /// <summary>
@@ -200,6 +181,19 @@ namespace SilentNotes.ViewModels
             }
         }
 
+        private List<SafeInfo> TryPasswordOnSafes(SecureString password)
+        {
+            List<SafeInfo> result = new List<SafeInfo>();
+            foreach (SafeModel safe in Model.Safes)
+            {
+                if (SafeModel.TryDecryptKey(safe.SerializeableKey, password, out byte[] key))
+                {
+                    result.Add(new SafeInfo { Safe = safe, Key = key });
+                }
+            }
+            return result;
+        }
+
         private static bool ValidatePassword(SecureString password)
         {
             return (password != null) && (password.Length >= 5);
@@ -214,5 +208,12 @@ namespace SilentNotes.ViewModels
         /// Gets the wrapped model.
         /// </summary>
         internal NoteRepositoryModel Model { get; private set; }
+
+        private class SafeInfo
+        {
+            public SafeModel Safe { get; set; }
+
+            public byte[] Key { get; set; }
+        }
     }
 }

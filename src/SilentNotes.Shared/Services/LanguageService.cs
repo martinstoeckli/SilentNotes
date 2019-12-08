@@ -57,13 +57,15 @@ namespace SilentNotes.Services
             resources["safe_close"] = "Close safe";
             resources["safe_change_password"] = "Change safe password";
             resources["safe_confirm_password"] = "Confirm password";
+            resources["safe_old_password"] = "Current password";
+            resources["safe_new_password"] = "New password";
             resources["safe_add_note"] = "Add note to safe";
             resources["safe_remove_note"] = "Remove note from safe";
             resources["safe_open_existing"] = "Please enter your password, to unlock the protected notes.";
             resources["safe_open_new"] = "Please create a new password to protect your notes. Afterwards you can choose the notes which should be protected.";
             resources["safe_password_requirement"] = "A safe password contains at least 8 characters, it is recommended to use a passphrase like: 'I like to sleep from 10 to august'.";
             resources["password_short_error"] = "The password needs at least 5 characters.";
-            resources["password_confirmation_error"] = "The password inputs do not match.";
+            resources["password_confirmation_error"] = "The password confirmation does not match.";
             resources["password_wrong_error"] = "Cannot open the safe with this password, please check for typos.";
 
             resources["show_recyclebin"] = "Open recycle bin";
@@ -181,14 +183,16 @@ namespace SilentNotes.Services
             resources["safe_close"] = "Tresor schliessen";
             resources["safe_change_password"] = "Tresor-Passwort ändern";
             resources["safe_confirm_password"] = "Passwort bestätigen";
+            resources["safe_old_password"] = "Aktuelles Passwort";
+            resources["safe_new_password"] = "Neues Passwort";
             resources["safe_add_note"] = "Notiz zu Tresor hinzufügen";
             resources["safe_remove_note"] = "Notiz aus Tresor herausnehmen";
             resources["safe_open_existing"] = "Bitte geben Sie Ihr Passwort ein, um die geschützten Notizen anzuzeigen.";
             resources["safe_open_new"] = "Bitte vergeben Sie ein neues Passwort um Ihre Notizen zu schützen. Anschliessen können Sie die Notizen auswählen welche geschützt werden sollen.";
             resources["safe_password_requirement"] = "Ein sicheres Passwort enthält mindestens 8 Zeichen, es wird empfohlen einen Passwortsatz zu verwenden wie; 'Ich schlafe gerne von 10 bis August'.";
             resources["password_short_error"] = "Das Passwort benötigt mindestens 5 Zeichen.";
-            resources["password_confirmation_error"] = "Die Passworteingaben stimmen nicht überein.";
-            resources["password_wrong_error"] = "Kann den Tresor nicht mit diesem Passwort öffnen, bitte prüfen Sie auf Tippfehler.";
+            resources["password_confirmation_error"] = "Die Passwortbestätigung stimmt nicht überein.";
+            resources["password_wrong_error"] = "Kann den Tresor nicht mit diesem Passwort öffnen, bitte achten Sie auf Tippfehler.";
 
             resources["show_recyclebin"] = "Papierkorb öffnen";
             resources["show_settings"] = "Einstellungen";

@@ -701,7 +701,11 @@ WriteLiteral(" ");
 
 #line default
 #line hidden
-WriteLiteral("</div>\r\n                <hr>\r\n                <div");
+WriteLiteral("</div>\r\n                <div");
+
+WriteLiteral(" class=\"dropdown-divider\"");
+
+WriteLiteral("></div>\r\n                <div");
 
 WriteLiteral(" class=\"dropdown-item\"");
 

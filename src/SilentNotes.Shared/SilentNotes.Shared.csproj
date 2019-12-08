@@ -38,6 +38,11 @@
       <ExcludeFromSourceAnalysis>True</ExcludeFromSourceAnalysis>
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
+    <Compile Update="Views\ChangePasswordRazorView.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ChangePasswordRazorView.cshtml</DependentUpon>
+    </Compile>
     <Compile Update="Views\CloudStorageChoiceRazorView.cs">
       <DependentUpon>CloudStorageChoiceRazorView.cshtml</DependentUpon>
       <DesignTime>True</DesignTime>
@@ -135,6 +140,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Views\ChangePasswordRazorView.cshtml">
+      <Generator>RazorTemplatePreprocessor</Generator>
+      <LastGenOutput>ChangePasswordRazorView.cs</LastGenOutput>
+    </None>
     <None Update="Views\CloudStorageChoiceRazorView.cshtml">
       <LastGenOutput>CloudStorageChoiceRazorView.cs</LastGenOutput>
       <Generator>RazorTemplatePreprocessor</Generator>

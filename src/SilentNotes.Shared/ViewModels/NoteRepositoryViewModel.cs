@@ -388,6 +388,11 @@ namespace SilentNotes.ViewModels
 
         private void ChangeSafePassword()
         {
+            if (Model.Safes.Count > 0)
+                _navigationService.Navigate(ControllerNames.ChangePassword);
+            else
+                // First create a safe before the password can be changed.
+                _navigationService.Navigate(ControllerNames.OpenSafe);
         }
 
         public void AddNoteToSafe(Guid noteId)
