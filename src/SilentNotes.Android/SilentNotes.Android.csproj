@@ -275,5 +275,10 @@
       <Link>Assets\Html\jquery-3.4.1.min.js</Link>
     </AndroidAsset>
   </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\opensafe-background.svg">
+      <Link>Assets\Html\opensafe-background.svg</Link>
+    </AndroidAsset>
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
 </Project>

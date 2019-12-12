@@ -4,6 +4,7 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System.Collections.Generic;
+using System.Text;
 
 namespace SilentNotes.Services
 {
@@ -48,8 +49,11 @@ namespace SilentNotes.Services
                 { "information", "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M13,9H11V7H13M13,17H11V11H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z' /></svg>" },
                 { "key", "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M7,14A2,2 0 0,1 5,12A2,2 0 0,1 7,10A2,2 0 0,1 9,12A2,2 0 0,1 7,14M12.65,10C11.83,7.67 9.61,6 7,6A6,6 0 0,0 1,12A6,6 0 0,0 7,18C9.61,18 11.83,16.33 12.65,14H17V18H21V14H23V10H12.65Z' /></svg>" },
                 { "lead-pencil", "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M16.84,2.73C16.45,2.73 16.07,2.88 15.77,3.17L13.65,5.29L18.95,10.6L21.07,8.5C21.67,7.89 21.67,6.94 21.07,6.36L17.9,3.17C17.6,2.88 17.22,2.73 16.84,2.73M12.94,6L4.84,14.11L7.4,14.39L7.58,16.68L9.86,16.85L10.15,19.41L18.25,11.3M4.25,15.04L2.5,21.73L9.2,19.94L8.96,17.78L6.65,17.61L6.47,15.29' /></svg>" },
-                { "lock-open-outline", "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M18,20V10H6V20H18M18,8A2,2 0 0,1 20,10V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V10A2,2 0 0,1 6,8H15V6A3,3 0 0,0 12,3A3,3 0 0,0 9,6H7A5,5 0 0,1 12,1A5,5 0 0,1 17,6V8H18M12,17A2,2 0 0,1 10,15A2,2 0 0,1 12,13A2,2 0 0,1 14,15A2,2 0 0,1 12,17Z' /></svg>" },
+                { "safe-square-outline", "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M10 12C10 10.9 10.9 10 12 10C13.1 10 14 10.9 14 12C14 13.1 13.1 14 12 14C10.9 14 10 13.1 10 12M7.8 17.7L6.3 16.3L7.8 14.8C7.3 14 7 13 7 12C7 11 7.3 10 7.8 9.3L6.3 7.8L7.8 6.3L9.2 7.8C10 7.3 11 7 12 7C13 7 14 7.3 14.8 7.8L16.3 6.3L17.7 7.7L16.2 9.2C16.7 10 17 11 17 12C17 13 16.7 14 16.2 14.8L17.7 16.3L16.3 17.7L14.8 16.2C14 16.7 13 17 12 17C11 17 10 16.7 9.3 16.2L7.8 17.7M12 9C10.3 9 9 10.3 9 12C9 13.7 10.3 15 12 15C13.7 15 15 13.7 15 12C15 10.3 13.7 9 12 9M20 2C21.1 2 22 2.9 22 4V20C22 21.1 21.1 22 20 22H19V23H15V22H9V23H5V22H4C2.9 22 2 21.1 2 20V4C2 2.9 2.9 2 4 2H20M20 20V4H4V20H20Z' /></svg>" },
+                { "lock", "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M12,17A2,2 0 0,0 14,15C14,13.89 13.1,13 12,13A2,2 0 0,0 10,15A2,2 0 0,0 12,17M18,8A2,2 0 0,1 20,10V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V10C4,8.89 4.9,8 6,8H7V6A5,5 0 0,1 12,1A5,5 0 0,1 17,6V8H18M12,3A3,3 0 0,0 9,6V8H15V6A3,3 0 0,0 12,3Z' /></svg>" },
                 { "lock-outline", "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M12,17C10.89,17 10,16.1 10,15C10,13.89 10.89,13 12,13A2,2 0 0,1 14,15A2,2 0 0,1 12,17M18,20V10H6V20H18M18,8A2,2 0 0,1 20,10V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V10C4,8.89 4.89,8 6,8H7V6A5,5 0 0,1 12,1A5,5 0 0,1 17,6V8H18M12,3A3,3 0 0,0 9,6V8H15V6A3,3 0 0,0 12,3Z' /></svg>" },
+                { "lock-open-variant", "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M18 1C15.24 1 13 3.24 13 6V8H4C2.9 8 2 8.89 2 10V20C2 21.11 2.9 22 4 22H16C17.11 22 18 21.11 18 20V10C18 8.9 17.11 8 16 8H15V6C15 4.34 16.34 3 18 3C19.66 3 21 4.34 21 6V8H23V6C23 3.24 20.76 1 18 1M10 13C11.1 13 12 13.89 12 15C12 16.11 11.11 17 10 17C8.9 17 8 16.11 8 15C8 13.9 8.9 13 10 13Z' /></svg>" },
+                { "lock-reset", "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M12.63,2C18.16,2 22.64,6.5 22.64,12C22.64,17.5 18.16,22 12.63,22C9.12,22 6.05,20.18 4.26,17.43L5.84,16.18C7.25,18.47 9.76,20 12.64,20A8,8 0 0,0 20.64,12A8,8 0 0,0 12.64,4C8.56,4 5.2,7.06 4.71,11H7.47L3.73,14.73L0,11H2.69C3.19,5.95 7.45,2 12.63,2M15.59,10.24C16.09,10.25 16.5,10.65 16.5,11.16V15.77C16.5,16.27 16.09,16.69 15.58,16.69H10.05C9.54,16.69 9.13,16.27 9.13,15.77V11.16C9.13,10.65 9.54,10.25 10.04,10.24V9.23C10.04,7.7 11.29,6.46 12.81,6.46C14.34,6.46 15.59,7.7 15.59,9.23V10.24M12.81,7.86C12.06,7.86 11.44,8.47 11.44,9.23V10.24H14.19V9.23C14.19,8.47 13.57,7.86 12.81,7.86Z' /></svg>" },
                 { "magnify", "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z' /></svg>" },
                 { "palette", "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M17.5,12A1.5,1.5 0 0,1 16,10.5A1.5,1.5 0 0,1 17.5,9A1.5,1.5 0 0,1 19,10.5A1.5,1.5 0 0,1 17.5,12M14.5,8A1.5,1.5 0 0,1 13,6.5A1.5,1.5 0 0,1 14.5,5A1.5,1.5 0 0,1 16,6.5A1.5,1.5 0 0,1 14.5,8M9.5,8A1.5,1.5 0 0,1 8,6.5A1.5,1.5 0 0,1 9.5,5A1.5,1.5 0 0,1 11,6.5A1.5,1.5 0 0,1 9.5,8M6.5,12A1.5,1.5 0 0,1 5,10.5A1.5,1.5 0 0,1 6.5,9A1.5,1.5 0 0,1 8,10.5A1.5,1.5 0 0,1 6.5,12M12,3A9,9 0 0,0 3,12A9,9 0 0,0 12,21A1.5,1.5 0 0,0 13.5,19.5C13.5,19.11 13.35,18.76 13.11,18.5C12.88,18.23 12.73,17.88 12.73,17.5A1.5,1.5 0 0,1 14.23,16H16A5,5 0 0,0 21,11C21,6.58 16.97,3 12,3Z' /></svg>" },
                 { "plus", "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z' /></svg>" },
@@ -68,9 +72,19 @@ namespace SilentNotes.Services
         }
 
         /// <inheritdoc/>
-        public string LoadIcon(string id)
+        public string LoadIcon(string id, IEnumerable<KeyValuePair<string, string>> attributes = null)
         {
-            return _svgResources[id];
+            string result = _svgResources[id];
+            if (attributes != null)
+            {
+                StringBuilder sb = new StringBuilder();
+                foreach (KeyValuePair<string, string> attribute in attributes)
+                {
+                    sb.Append(' ').Append(attribute.Key).Append("='").Append(attribute.Value).Append("'");
+                }
+                result = result.Insert(4, sb.ToString());
+            }
+            return result;
         }
 
         /// <inheritdoc/>
@@ -80,29 +94,6 @@ namespace SilentNotes.Services
             int startPos = result.IndexOf("<path");
             int endPos = result.IndexOf("</svg");
             return result.Substring(startPos, endPos - startPos);
-        }
-
-        /// <summary>
-        /// Loads a given vector graphic icon.
-        /// The icons are usually without color information, but they can be styled with the CSS
-        /// styles "fill" and "stroke" of the SVG element.
-        /// </summary>
-        /// <param name="id">Id of the vector graphic.</param>
-        /// <param name="attributes">Additional HTML attributes for the SVG element.</param>
-        /// <returns>A string containing the SVG vector graphic.</returns>
-        private string LoadIconWithAttributes(string id, KeyValueList<string, string> attributes)
-        {
-            List<string> lines = new List<string>();
-            foreach (var attribute in attributes)
-            {
-                string line = string.Format("{0}='{1}'", attribute.Key, attribute.Value);
-                lines.Add(line);
-            }
-            string formattedAttributes = " " + string.Join(" ", lines) + " ";
-
-            string result = LoadIcon(id);
-            result = result.Insert(4, formattedAttributes);
-            return result;
         }
     }
 }

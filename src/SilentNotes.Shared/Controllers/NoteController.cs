@@ -4,6 +4,7 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
+using SilentNotes.Crypto;
 using SilentNotes.HtmlView;
 using SilentNotes.Models;
 using SilentNotes.Services;
@@ -72,6 +73,7 @@ namespace SilentNotes.Controllers
                 note = noteRepository.Notes.Find(item => noteId == item.Id);
             }
 
+            ICryptor cryptor = new Cryptor(NoteModel.CryptorPackageName, Ioc.GetOrCreate<ICryptoRandomService>());
             _viewModel = new NoteViewModel(
                 Ioc.GetOrCreate<INavigationService>(),
                 Ioc.GetOrCreate<ILanguageService>(),
@@ -81,6 +83,8 @@ namespace SilentNotes.Controllers
                 _repositoryService,
                 Ioc.GetOrCreate<IFeedbackService>(),
                 settingsService,
+                cryptor,
+                noteRepository.Safes,
                 note);
             SetHtmlViewBackgroundColor(htmlView);
 
@@ -149,7 +153,7 @@ namespace SilentNotes.Controllers
                     break;
                 case "quill":
                     string content = await View.ExecuteJavaScriptReturnString("getNoteHtmlContent();");
-                    _viewModel.HtmlContent = content;
+                    _viewModel.UnlockedHtmlContent = content;
                     break;
             }
         }

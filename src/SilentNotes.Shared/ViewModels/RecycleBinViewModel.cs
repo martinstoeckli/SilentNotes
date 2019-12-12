@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Input;
 using SilentNotes.Controllers;
+using SilentNotes.Crypto;
 using SilentNotes.Models;
 using SilentNotes.Services;
 
@@ -20,6 +21,7 @@ namespace SilentNotes.ViewModels
     {
         private readonly IThemeService _themeService;
         private readonly IRepositoryStorageService _repositoryService;
+        private readonly ICryptor _noteCryptor;
         private NoteRepositoryModel _model;
 
         /// <summary>
@@ -32,11 +34,13 @@ namespace SilentNotes.ViewModels
             ISvgIconService svgIconService,
             IBaseUrlService webviewBaseUrl,
             IThemeService themeService,
+            ICryptoRandomSource randomSource,
             IRepositoryStorageService repositoryService)
             : base(navigationService, languageService, svgIconService, webviewBaseUrl)
         {
             _themeService = themeService;
             _repositoryService = repositoryService;
+            _noteCryptor = new Cryptor(NoteModel.CryptorPackageName, randomSource);
             RecycledNotes = new List<NoteViewModel>();
 
             _repositoryService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepository);
@@ -78,7 +82,7 @@ namespace SilentNotes.ViewModels
                 foreach (NoteModel note in _model.Notes)
                 {
                     if (note.InRecyclingBin)
-                        RecycledNotes.Add(new NoteViewModel(_navigationService, Language, Icon, _webviewBaseUrl, null, _repositoryService, feedbackService, null, note));
+                        RecycledNotes.Add(new NoteViewModel(_navigationService, Language, Icon, _webviewBaseUrl, null, _repositoryService, feedbackService, null, _noteCryptor, _model.Safes, note));
                 }
             }
         }

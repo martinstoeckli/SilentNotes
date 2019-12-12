@@ -17,7 +17,6 @@ namespace SilentNotes.Workers
     /// </summary>
     public static class TransferCode
     {
-        private static readonly char[] Alphabet = new char[] { '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' };
         private const int CodeLength = 16;
 
         /// <summary>
@@ -56,10 +55,10 @@ namespace SilentNotes.Workers
                 byte[] binaryString = randomSource.GetRandomBytes(binaryLength);
 
                 // We take advantage of the fast base64 encoding
-                string base64String = Convert.ToBase64String(binaryString).ToLowerInvariant();
+                string base64String = Convert.ToBase64String(binaryString);
                 foreach (char letter in base64String)
                 {
-                    if (IsOfCorrectAlphabet(letter))
+                    if (UnmixableAlphabet.IsOfCorrectAlphabet(letter))
                         sb.Append(letter);
                 }
 
@@ -93,7 +92,7 @@ namespace SilentNotes.Workers
             if (sanitizedCode.Length != CodeLength)
                 return false;
 
-            if (!IsOfCorrectAlphabet(sanitizedCode))
+            if (!UnmixableAlphabet.IsOfCorrectAlphabet(sanitizedCode))
                 return false;
 
             return true;
@@ -119,21 +118,6 @@ namespace SilentNotes.Workers
                     transferCode.Substring(8, 4),
                     transferCode.Substring(12, 4));
             }
-        }
-
-        private static bool IsOfCorrectAlphabet(string code)
-        {
-            foreach (char letter in code)
-            {
-                if (!IsOfCorrectAlphabet(letter))
-                    return false;
-            }
-            return true;
-        }
-
-        private static bool IsOfCorrectAlphabet(char letter)
-        {
-            return Array.IndexOf(Alphabet, letter) >= 0;
         }
     }
 }

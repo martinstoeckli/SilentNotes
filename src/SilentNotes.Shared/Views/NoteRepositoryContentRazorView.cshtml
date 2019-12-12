@@ -3,11 +3,20 @@
 <ul id="note-repository" class="wraplist selectable sortable">
     @foreach (var note in @Model.FilteredNotes)
     {
-        <li class="wraplist-item selectable-item sortable-item @if(@Model.SelectedNote == @note) { <text>selected</text> }" data-note="@note.Id.ToString()">
-            <div class="note-card" style="background-color:@note.BackgroundColorHex">
+    <li class="wraplist-item sortable-item @if(@Model.SelectedNote == @note) { <text>selected</text> }" data-note="@note.Id.ToString()">
+        <div class="note-card selectable-item" style="background-color:@note.BackgroundColorHex" data-note="@note.Id.ToString()">
+            @if (@note.IsLocked)
+            {
+                <span class="locked @note.GetDarkClass()"><svg width='24' height='24' viewBox='0 0 24 24'><use xlink:href="#svg-lock-outline" /></svg></span>
+            }
+            else
+            {
                 <div class="note-viewer @note.GetDarkClass()">@{WriteLiteral(note.HtmlContent);}</div>
-            </div>
-            <div class="sortable-handle @note.GetDarkClass()">@{WriteLiteral(Model.Icon["menu-swap"]);}</div>
-        </li>
+            }
+        </div>
+        <div class="note-handle sortable-handle @note.GetDarkClass()"><svg width='24' height='24' viewBox='0 0 24 24'><use xlink:href="#svg-menu-swap" /></svg></div>
+        <div class="note-handle safe-handle greenish @if (!@Model.IsAnySafeOpen || @note.IsInSafe || @note.IsLocked) { <text>hidden-at-startup</text> } @note.GetDarkClass()" onclick="bind(event);" data-binding="AddToSafe"><svg viewBox='0 0 24 24'><use xlink:href="#svg-lock-open-variant" /></svg></div>
+        <div class="note-handle safe-handle reddish @if (!@Model.IsAnySafeOpen || !@note.IsInSafe || @note.IsLocked) { <text>hidden-at-startup</text> } @note.GetDarkClass()" onclick="bind(event);" data-binding="RemoveFromSafe"><svg width='24' height='24' viewBox='0 0 24 24'><use xlink:href="#svg-lock" /></svg></div>
+    </li>
     }
 </ul>

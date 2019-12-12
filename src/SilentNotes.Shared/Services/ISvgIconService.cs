@@ -3,7 +3,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-using System;
+using System.Collections.Generic;
 
 namespace SilentNotes.Services
 {
@@ -27,15 +27,9 @@ namespace SilentNotes.Services
         /// styles "fill" and "stroke" of the SVG element.
         /// </summary>
         /// <param name="id">Id of the vector graphic.</param>
+        /// <param name="attributes">Optional attributes, which can be added to the icon, so it can
+        /// be customized.</param>
         /// <returns>A string containing the SVG vector graphic.</returns>
-        string LoadIcon(string id);
-
-        /// <summary>
-        /// Loads only the path of a given vector graphic icon without the SVG element. This can be
-        /// useful, if the SVG HTML element requires attributes like class or style="fill:#a8a8a8".
-        /// </summary>
-        /// <param name="id">Id of the vector graphic.</param>
-        /// <returns>A string containing the SVG vector graphic path.</returns>
-        string LoadIconSvgPath(string id);
+        string LoadIcon(string id, IEnumerable<KeyValuePair<string, string>> attributes = null);
     }
 }

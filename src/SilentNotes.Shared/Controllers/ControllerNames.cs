@@ -26,5 +26,7 @@ namespace SilentNotes.Controllers
         public const string CloudStorageAccount = "cloudstorageaccount";
         public const string CloudStorageOauthWaiting = "cloudstorageoauthwaiting";
         public const string MergeChoice = "mergechoice";
+        public const string OpenSafe = "opensafe";
+        public const string ChangePassword = "changepassword";
     }
 }

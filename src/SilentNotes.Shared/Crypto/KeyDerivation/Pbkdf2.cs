@@ -4,7 +4,10 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
+using System.Security;
 using System.Security.Cryptography;
+using System.Text;
+using VanillaCloudStorageClient;
 
 namespace SilentNotes.Crypto.KeyDerivation
 {
@@ -26,16 +29,24 @@ namespace SilentNotes.Crypto.KeyDerivation
         }
 
         /// <inheritdoc />
-        public byte[] DeriveKeyFromPassword(string password, int expectedKeySizeBytes, byte[] salt, int cost)
+        public byte[] DeriveKeyFromPassword(SecureString password, int expectedKeySizeBytes, byte[] salt, int cost)
         {
-            if (string.IsNullOrWhiteSpace(password))
+            if ((password == null) || (password.Length == 0))
                 throw new CryptoException("The password cannot be empty.");
             if (cost < 1)
                 throw new CryptoException("The cost factor is too small.");
 
-            byte[] binaryPassword = CryptoUtils.StringToBytes(password);
-            Rfc2898DeriveBytes kdf = new Rfc2898DeriveBytes(binaryPassword, salt, cost);
-            return kdf.GetBytes(expectedKeySizeBytes);
+            byte[] binaryPassword = SecureStringExtensions.SecureStringToBytes(password, Encoding.UTF8);
+            try
+            {
+                Rfc2898DeriveBytes kdf = new Rfc2898DeriveBytes(binaryPassword, salt, cost);
+                byte[] result = kdf.GetBytes(expectedKeySizeBytes);
+                return result;
+            }
+            finally
+            {
+                CryptoUtils.CleanArray(binaryPassword);
+            }
         }
 
         /// <inheritdoc />

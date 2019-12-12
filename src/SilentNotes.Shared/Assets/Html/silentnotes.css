@@ -131,7 +131,8 @@ a:hover { color: #007bff; text-decoration: underline; }
 .sortable-item {
 	position: relative;
 }
-.sortable-handle {
+
+.note-handle {
 	position: absolute;
 	display: inline-block;
 	padding: 1px;
@@ -144,9 +145,16 @@ a:hover { color: #007bff; text-decoration: underline; }
 	border-radius: 13px;
 	cursor: pointer;
 }
-.sortable-handle.dark {
+.note-handle.dark {
 	fill: #505050;
-	background-color: rgba(204, 204, 204, 0.8);
+	background-color: rgba(204, 204, 204, 0.6);
+}
+
+.sortable-handle {
+	right: 18px;
+}
+.safe-handle {
+	right: 50px;
 }
 
 .selected {

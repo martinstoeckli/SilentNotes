@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Security;
 using System.Text;
 using System.Xml.Linq;
 using Moq;
@@ -25,7 +26,7 @@ namespace SilentNotesTest.Services
                 Returns(true);
             Mock<IDataProtectionService> dataProtectionService = new Mock<IDataProtectionService>();
 
-            SettingsServiceBase service = new TestableService(fileService.Object, dataProtectionService.Object);
+            SettingsServiceBase service = new TestableService(fileService.Object, dataProtectionService.Object, CommonMocksAndStubs.EnvironmentService());
             SettingsModel settings = service.LoadSettingsOrDefault();
 
             // Loaded existing settings and did not store it
@@ -44,7 +45,7 @@ namespace SilentNotesTest.Services
                 Returns(false);
             Mock<IDataProtectionService> dataProtectionService = new Mock<IDataProtectionService>();
 
-            SettingsServiceBase service = new TestableService(fileService.Object, dataProtectionService.Object);
+            SettingsServiceBase service = new TestableService(fileService.Object, dataProtectionService.Object, CommonMocksAndStubs.EnvironmentService());
             SettingsModel settings = service.LoadSettingsOrDefault();
 
             // Created new settings and stored it
@@ -82,7 +83,7 @@ namespace SilentNotesTest.Services
                 Setup(m => m.Unprotect(It.Is<string>(p => p == "protected_martinstoeckli_v3"))).
                 Returns(Encoding.UTF8.GetBytes("martinstoeckli_v3"));
 
-            SettingsServiceBase service = new TestableService(fileService.Object, dataProtectionService.Object);
+            SettingsServiceBase service = new TestableService(fileService.Object, dataProtectionService.Object, CommonMocksAndStubs.EnvironmentService());
             SettingsModel settings = service.LoadSettingsOrDefault();
             Assert.AreEqual("twofish_gcm", settings.SelectedEncryptionAlgorithm);
             Assert.AreEqual("scuj2wfpdcodmgzm", settings.TransferCode);
@@ -128,7 +129,7 @@ namespace SilentNotesTest.Services
                 Setup(m => m.Unprotect(It.Is<string>(p => p == "protected_martinstoeckli_v3"))).
                 Returns(Encoding.UTF8.GetBytes("martinstoeckli_v3"));
 
-            SettingsServiceBase service = new TestableService(fileService.Object, dataProtectionService.Object);
+            SettingsServiceBase service = new TestableService(fileService.Object, dataProtectionService.Object, CommonMocksAndStubs.EnvironmentService());
             SettingsModel settings = service.LoadSettingsOrDefault();
             Assert.AreEqual("twofish_gcm", settings.SelectedEncryptionAlgorithm);
             Assert.AreEqual("scuj2wfpdcodmgzm", settings.TransferCode);
@@ -150,8 +151,8 @@ namespace SilentNotesTest.Services
         /// </summary>
         private class TestableService : SettingsServiceBase
         {
-            public TestableService(IXmlFileService xmlFileService, IDataProtectionService dataProtectionService)
-                : base(xmlFileService, dataProtectionService)
+            public TestableService(IXmlFileService xmlFileService, IDataProtectionService dataProtectionService, IEnvironmentService environmentService)
+                : base(xmlFileService, dataProtectionService, environmentService)
             {
             }
 
@@ -167,7 +168,7 @@ namespace SilentNotesTest.Services
             protected override void UpdateSettingsFrom1To2(XElement root)
             {
                 base.UpdateSettingsFrom1To2(root);
-                const string snpsk = "53EC49B1-6600+406b;B84F-0B9CFA1D2BE1";
+                SecureString snpsk = CryptoUtils.StringToSecureString("53EC49B1-6600+406b;B84F-0B9CFA1D2BE1");
 
                 // Handle protected password
                 XElement oldPasswortElement = root.Element("cloud_storage")?.Element("cloud_password");
@@ -175,7 +176,7 @@ namespace SilentNotesTest.Services
                 if ((oldPasswortElement != null) && (cloudStorageAccount != null))
                 {
                     // Deobfuscate old password
-                    EncryptorDecryptor decryptor = new EncryptorDecryptor("snps");
+                    ICryptor decryptor = new Cryptor("snps", null);
                     byte[] binaryCipher = CryptoUtils.Base64StringToBytes(oldPasswortElement.Value);
                     byte[] unprotectedBinaryPassword = decryptor.Decrypt(binaryCipher, snpsk);
 

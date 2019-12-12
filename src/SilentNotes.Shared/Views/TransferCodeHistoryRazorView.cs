@@ -23,7 +23,7 @@ using SilentNotes.ViewModels;
 #line hidden
 
 
-[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.3.0.277")]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.3.0.281")]
 public partial class TransferCodeHistoryRazorView : TransferCodeHistoryRazorViewBase
 {
 
@@ -113,6 +113,9 @@ WriteLiteral(@">
         }
     </style>
     <script>
+        $(function () {
+            addShortcuts();
+        });
     </script>
 </head>
 <body>
@@ -124,7 +127,7 @@ WriteLiteral(" class=\"d-flex\"");
 
 WriteLiteral(">\r\n        <button");
 
-WriteLiteral(" class=\"nav-item mr-auto\"");
+WriteLiteral(" class=\"nav-item mr-auto shortcut-escape\"");
 
 WriteLiteral(" onclick=\"bind(event);\"");
 
@@ -132,8 +135,8 @@ WriteLiteral(" data-binding=\"GoBack\"");
 
 WriteAttribute ("title", " title=\"", "\""
 
-#line 42 "TransferCodeHistoryRazorView.cshtml"
-                                                      , Tuple.Create<string,object,bool> ("", Model.Language["back"]
+#line 45 "TransferCodeHistoryRazorView.cshtml"
+                                                                      , Tuple.Create<string,object,bool> ("", Model.Language["back"]
 
 #line default
 #line hidden
@@ -142,8 +145,8 @@ WriteAttribute ("title", " title=\"", "\""
 WriteLiteral(">");
 
 
-#line 42 "TransferCodeHistoryRazorView.cshtml"
-                                                                                                                        WriteLiteral(Model.Icon["arrow-left"]);
+#line 45 "TransferCodeHistoryRazorView.cshtml"
+                                                                                                                                        WriteLiteral(Model.Icon["arrow-left"]);
 
 #line default
 #line hidden
@@ -156,7 +159,7 @@ WriteLiteral(" class=\"container-fluid p-4\"");
 WriteLiteral(">\r\n        <h1>");
 
 
-#line 46 "TransferCodeHistoryRazorView.cshtml"
+#line 49 "TransferCodeHistoryRazorView.cshtml"
        Write(Model.Language["transfer_code"]);
 
 
@@ -165,13 +168,13 @@ WriteLiteral(">\r\n        <h1>");
 WriteLiteral("</h1>\r\n\r\n");
 
 
-#line 48 "TransferCodeHistoryRazorView.cshtml"
+#line 51 "TransferCodeHistoryRazorView.cshtml"
         
 
 #line default
 #line hidden
 
-#line 48 "TransferCodeHistoryRazorView.cshtml"
+#line 51 "TransferCodeHistoryRazorView.cshtml"
          if (@Model.TransferCodeFmt == "")
         {
 
@@ -185,7 +188,7 @@ WriteLiteral(" class=\"alert alert-success my-4\"");
 WriteLiteral(">");
 
 
-#line 50 "TransferCodeHistoryRazorView.cshtml"
+#line 53 "TransferCodeHistoryRazorView.cshtml"
                                              Write(Model.Language["transfer_not_existing"]);
 
 
@@ -194,7 +197,7 @@ WriteLiteral(">");
 WriteLiteral("</div>\r\n");
 
 
-#line 51 "TransferCodeHistoryRazorView.cshtml"
+#line 54 "TransferCodeHistoryRazorView.cshtml"
         }
         else
         {
@@ -209,7 +212,7 @@ WriteLiteral(" class=\"my-1\"");
 WriteLiteral(">");
 
 
-#line 54 "TransferCodeHistoryRazorView.cshtml"
+#line 57 "TransferCodeHistoryRazorView.cshtml"
                          Write(Model.Language["transfer_code_usage"]);
 
 
@@ -218,7 +221,7 @@ WriteLiteral(">");
 WriteLiteral("</div>\r\n");
 
 
-#line 55 "TransferCodeHistoryRazorView.cshtml"
+#line 58 "TransferCodeHistoryRazorView.cshtml"
 
 
 
@@ -235,7 +238,7 @@ WriteLiteral(" class=\"code my-4\"");
 WriteLiteral(">");
 
 
-#line 57 "TransferCodeHistoryRazorView.cshtml"
+#line 60 "TransferCodeHistoryRazorView.cshtml"
                                   Write(Model.TransferCodeFmt);
 
 
@@ -244,7 +247,7 @@ WriteLiteral(">");
 WriteLiteral("</div>\r\n            </div>\r\n");
 
 
-#line 59 "TransferCodeHistoryRazorView.cshtml"
+#line 62 "TransferCodeHistoryRazorView.cshtml"
 
 
 
@@ -257,7 +260,7 @@ WriteLiteral(" class=\"my-1\"");
 WriteLiteral(">");
 
 
-#line 60 "TransferCodeHistoryRazorView.cshtml"
+#line 63 "TransferCodeHistoryRazorView.cshtml"
                          Write(Model.Language["transfer_code_writedown"]);
 
 
@@ -266,7 +269,7 @@ WriteLiteral(">");
 WriteLiteral("</div>\r\n");
 
 
-#line 61 "TransferCodeHistoryRazorView.cshtml"
+#line 64 "TransferCodeHistoryRazorView.cshtml"
 
 
 
@@ -285,7 +288,7 @@ WriteLiteral(" data-binding=\"ShowTransfercodeHistoryCommand\"");
 WriteLiteral(">");
 
 
-#line 62 "TransferCodeHistoryRazorView.cshtml"
+#line 65 "TransferCodeHistoryRazorView.cshtml"
                                                                                                                                 Write(Model.Language["transfer_code_show_history"]);
 
 
@@ -294,7 +297,7 @@ WriteLiteral(">");
 WriteLiteral("</button>\r\n");
 
 
-#line 63 "TransferCodeHistoryRazorView.cshtml"
+#line 66 "TransferCodeHistoryRazorView.cshtml"
 
 
 
@@ -309,13 +312,13 @@ WriteLiteral(" data-binding=\"TransfercodeHistory\"");
 WriteLiteral(">\r\n");
 
 
-#line 65 "TransferCodeHistoryRazorView.cshtml"
+#line 68 "TransferCodeHistoryRazorView.cshtml"
                 
 
 #line default
 #line hidden
 
-#line 65 "TransferCodeHistoryRazorView.cshtml"
+#line 68 "TransferCodeHistoryRazorView.cshtml"
                  foreach (var historyEntry in @Model.TransferCodeHistory)
                 {
 
@@ -329,7 +332,7 @@ WriteLiteral(" class=\"list-group-item list-group-item-secondary\"");
 WriteLiteral(">");
 
 
-#line 67 "TransferCodeHistoryRazorView.cshtml"
+#line 70 "TransferCodeHistoryRazorView.cshtml"
                                                                      Write(historyEntry);
 
 
@@ -338,7 +341,7 @@ WriteLiteral(">");
 WriteLiteral("</li>\r\n");
 
 
-#line 68 "TransferCodeHistoryRazorView.cshtml"
+#line 71 "TransferCodeHistoryRazorView.cshtml"
                 }
 
 
@@ -347,7 +350,7 @@ WriteLiteral("</li>\r\n");
 WriteLiteral("            </ul>\r\n");
 
 
-#line 70 "TransferCodeHistoryRazorView.cshtml"
+#line 73 "TransferCodeHistoryRazorView.cshtml"
         }
 
 

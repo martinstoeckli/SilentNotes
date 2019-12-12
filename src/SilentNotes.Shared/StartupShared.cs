@@ -48,6 +48,10 @@ namespace SilentNotes
                 Ioc.CreateWithKey<IRazorViewService>(ViewNames.TransferCode)));
             Ioc.RegisterFactoryWithKey<IController>(ControllerNames.MergeChoice, () => new MergeChoiceController(
                 Ioc.CreateWithKey<IRazorViewService>(ViewNames.MergeChoice)));
+            Ioc.RegisterFactoryWithKey<IController>(ControllerNames.OpenSafe, () => new OpenSafeController(
+                Ioc.CreateWithKey<IRazorViewService>(ViewNames.OpenSafe)));
+            Ioc.RegisterFactoryWithKey<IController>(ControllerNames.ChangePassword, () => new ChangePasswordController(
+                Ioc.CreateWithKey<IRazorViewService>(ViewNames.ChangePassword)));
         }
 
         /// <summary>
@@ -70,6 +74,8 @@ namespace SilentNotes
             Ioc.RegisterFactoryWithKey<IRazorViewService>(ViewNames.CloudStorageOauthWaiting, () => new RazorViewService<CloudStorageOauthWaitingRazorView>());
             Ioc.RegisterFactoryWithKey<IRazorViewService>(ViewNames.TransferCode, () => new RazorViewService<TransferCodeRazorView>());
             Ioc.RegisterFactoryWithKey<IRazorViewService>(ViewNames.MergeChoice, () => new RazorViewService<MergeChoiceRazorView>());
+            Ioc.RegisterFactoryWithKey<IRazorViewService>(ViewNames.OpenSafe, () => new RazorViewService<OpenSafeRazorView>());
+            Ioc.RegisterFactoryWithKey<IRazorViewService>(ViewNames.ChangePassword, () => new RazorViewService<ChangePasswordRazorView>());
         }
 
         /// <summary>

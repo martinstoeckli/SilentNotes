@@ -73,6 +73,7 @@ namespace SilentNotes.Controllers
                     Ioc.GetOrCreate<ISettingsService>(),
                     Ioc.GetOrCreate<IThemeService>(),
                     Ioc.GetOrCreate<IEnvironmentService>(),
+                    Ioc.GetOrCreate<ICryptoRandomService>(),
                     repositoryService);
 
                 Bindings.BindCommand("AddNote", _viewModel.AddNoteCommand);
@@ -83,6 +84,9 @@ namespace SilentNotes.Controllers
                 Bindings.BindCommand("ShowRecycleBin", _viewModel.ShowRecycleBinCommand);
                 Bindings.BindCommand("ShowSettings", _viewModel.ShowSettingsCommand);
                 Bindings.BindCommand("ShowInfo", _viewModel.ShowInfoCommand);
+                Bindings.BindCommand("OpenSafe", _viewModel.OpenSafeCommand);
+                Bindings.BindCommand("CloseSafe", _viewModel.CloseSafeCommand);
+                Bindings.BindCommand("ChangeSafePassword", _viewModel.ChangeSafePasswordCommand);
                 Bindings.BindCommand("FilterButtonCancel", _viewModel.ClearFilterCommand);
                 Bindings.BindCommand("Fab", _viewModel.AddNoteCommand);
                 Bindings.BindText("TxtFilter", () => _viewModel.Filter, (value) => _viewModel.Filter = value, _viewModel, nameof(_viewModel.Filter), HtmlViewBindingMode.TwoWay);
@@ -150,6 +154,18 @@ namespace SilentNotes.Controllers
             View.ExecuteJavaScript(script);
         }
 
+        private void SetVisibilityAddRemoveTresor(Guid noteId, bool isInSafe)
+        {
+            string bindingVisible = isInSafe ? "RemoveFromSafe" : "AddToSafe";
+            string bindingInvisible = isInSafe ? "AddToSafe" : "RemoveFromSafe";
+            string script = string.Format(
+                "$(\"[data-note='{2}']\").children(\"[data-binding='{0}']\").show(); $(\"[data-note='{2}']\").children(\"[data-binding='{1}']\").hide();",
+                bindingVisible,
+                bindingInvisible,
+                noteId.ToString());
+            View.ExecuteJavaScript(script);
+        }
+
         private void UnhandledViewBindingEventHandler(object sender, HtmlViewBindingNotifiedEventArgs e)
         {
             Guid noteId;
@@ -167,6 +183,19 @@ namespace SilentNotes.Controllers
                     int oldIndex = int.Parse(e.Parameters["oldIndex"]);
                     int newIndex = int.Parse(e.Parameters["newIndex"]);
                     _viewModel.MoveNote(oldIndex, newIndex);
+                    break;
+            }
+            switch (e.BindingName?.ToLowerInvariant())
+            {
+                case "addtosafe":
+                    noteId = new Guid(e.Parameters["parent.data-note"]);
+                    _viewModel.AddNoteToSafe(noteId);
+                    SetVisibilityAddRemoveTresor(noteId, true);
+                    break;
+                case "removefromsafe":
+                    noteId = new Guid(e.Parameters["parent.data-note"]);
+                    _viewModel.RemoveNoteFromSafe(noteId);
+                    SetVisibilityAddRemoveTresor(noteId, false);
                     break;
             }
         }

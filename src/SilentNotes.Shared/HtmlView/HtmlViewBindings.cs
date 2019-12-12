@@ -304,6 +304,34 @@ namespace SilentNotes.HtmlView
                 bindingMode);
         }
 
+        public void BindEnabled(string bindingName, Func<bool> viewmodelGetter, INotifyPropertyChanged viewmodelNotifier, string viewmodelPropertyName, HtmlViewBindingMode bindingMode)
+        {
+            if (!bindingMode.In(new[] { HtmlViewBindingMode.OneWayToView, HtmlViewBindingMode.OneWayToViewPlusOneTimeToView }))
+                throw new Exception("BindEnabled expects the bindingMode to be either OneWayToView or OneWayToViewPlusOneTimeToView.");
+
+            BindGeneric<bool>(
+                ViewSetterOrNullIfNotRequired<bool>((value) => ViewEnabledSetter(bindingName, value), bindingMode),
+                null,
+                viewmodelGetter,
+                null,
+                CreateViewmodelNotifierOrNull(viewmodelNotifier, viewmodelPropertyName),
+                bindingMode);
+        }
+
+        public void BindInvalid(string bindingName, Func<bool> viewmodelGetter, INotifyPropertyChanged viewmodelNotifier, string viewmodelPropertyName, HtmlViewBindingMode bindingMode)
+        {
+            if (!bindingMode.In(new[] { HtmlViewBindingMode.OneWayToView, HtmlViewBindingMode.OneWayToViewPlusOneTimeToView }))
+                throw new Exception("BindInvalid expects the bindingMode to be either OneWayToView or OneWayToViewPlusOneTimeToView.");
+
+            BindGeneric<bool>(
+                ViewSetterOrNullIfNotRequired<bool>((value) => ViewInvalidSetter(bindingName, value), bindingMode),
+                null,
+                viewmodelGetter,
+                null,
+                CreateViewmodelNotifierOrNull(viewmodelNotifier, viewmodelPropertyName),
+                bindingMode);
+        }
+
         /// <summary>
         /// Binds a string property of the viewmodel to the background image of a control in the
         /// (HTML) view. This is a one way binding from the viewmodel to the view. The viewmodel
@@ -389,6 +417,20 @@ namespace SilentNotes.HtmlView
         {
             string script = string.Format(
                 "htmlViewBindingsSetVisibility('{0}', {1});", bindingName, visible.ToString().ToLowerInvariant());
+            _htmlView.ExecuteJavaScript(script);
+        }
+
+        private void ViewEnabledSetter(string bindingName, bool enabled)
+        {
+            string script = string.Format(
+                "htmlViewBindingsSetEnabled('{0}', {1});", bindingName, enabled.ToString().ToLowerInvariant());
+            _htmlView.ExecuteJavaScript(script);
+        }
+
+        private void ViewInvalidSetter(string bindingName, bool invalid)
+        {
+            string script = string.Format(
+                "htmlViewBindingsSetInvalid('{0}', {1});", bindingName, invalid.ToString().ToLowerInvariant());
             _htmlView.ExecuteJavaScript(script);
         }
 

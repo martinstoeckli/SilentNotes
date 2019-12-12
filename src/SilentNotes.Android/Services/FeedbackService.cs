@@ -54,7 +54,7 @@ namespace SilentNotes.Android.Services
         }
 
         /// <inheritdoc/>
-        public async Task<MessageBoxResult> ShowMessageAsync(string message, string title, MessageBoxButtons buttons)
+        public async Task<MessageBoxResult> ShowMessageAsync(string message, string title, MessageBoxButtons buttons, bool conservativeDefault)
         {
             ButtonArrangement arrangement = ButtonArrangement.Create(buttons, _languageService);
             bool dialogResult = await AlertDialogHelper.ShowAsync(

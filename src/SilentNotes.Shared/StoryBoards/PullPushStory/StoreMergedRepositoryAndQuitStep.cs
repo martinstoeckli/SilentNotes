@@ -74,6 +74,7 @@ namespace SilentNotes.StoryBoards.PullPushStory
                 if (_direction == PullPushDirection.PullFromServer)
                 {
                     cloudNote.CloneTo(localNote); // this can possibly move the note to the recycling bin or reverse
+                    AddSafeToOtherRepositoryIfMissing(cloudRepository, localRepository, cloudNote.SafeId);
                     _repositoryStorageService.TrySaveRepository(localRepository);
                 }
                 else
@@ -85,6 +86,7 @@ namespace SilentNotes.StoryBoards.PullPushStory
                     _repositoryStorageService.TrySaveRepository(localRepository);
 
                     localNote.CloneTo(cloudNote); // this can possibly move the note to the recycling bin or reverse
+                    AddSafeToOtherRepositoryIfMissing(localRepository, cloudRepository, localNote.SafeId);
                     byte[] encryptedRepository = EncryptRepository(
                         cloudRepository, settings.TransferCode, _cryptoRandomService, settings.SelectedEncryptionAlgorithm);
 
@@ -97,6 +99,17 @@ namespace SilentNotes.StoryBoards.PullPushStory
             {
                 // Keep the current page open and show the error message
                 ShowExceptionMessage(ex, _feedbackService, _languageService);
+            }
+        }
+
+        private static void AddSafeToOtherRepositoryIfMissing(NoteRepositoryModel myRepository, NoteRepositoryModel otherRepository, Guid? safeId)
+        {
+            bool isMissingInOtherRepository = (safeId != null) && (otherRepository.Safes.FindById(safeId) == null);
+            if (isMissingInOtherRepository)
+            {
+                SafeModel mySafe = myRepository.Safes.FindById(safeId);
+                if (mySafe != null)
+                    otherRepository.Safes.Add(mySafe.Clone());
             }
         }
     }

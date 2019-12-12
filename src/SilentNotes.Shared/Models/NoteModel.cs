@@ -4,15 +4,20 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Xml.Serialization;
+using SilentNotes.Crypto;
 
 namespace SilentNotes.Models
 {
     /// <summary>
     /// Serializeable model of a single note.
     /// </summary>
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Properties are only used for serialization.")]
     public class NoteModel
     {
+        /// <summary>The package name used for encryption, see <see cref="CryptoHeader.PackageName"/></summary>
+        public const string CryptorPackageName = "SilentNote";
         private Guid _id;
 
         /// <summary>
@@ -20,7 +25,6 @@ namespace SilentNotes.Models
         /// </summary>
         public NoteModel()
         {
-            _id = Guid.Empty;
             BackgroundColorHex = SettingsModel.StartDefaultNoteColorHex;
             CreatedAt = DateTime.UtcNow;
             ModifiedAt = CreatedAt;
@@ -32,14 +36,7 @@ namespace SilentNotes.Models
         [XmlAttribute(AttributeName = "id")]
         public Guid Id
         {
-            get
-            {
-                // Lazy creation
-                if (Guid.Empty == _id)
-                    _id = Guid.NewGuid();
-                return _id;
-            }
-
+            get { return (_id != Guid.Empty) ? _id : (_id = Guid.NewGuid()); }
             set { _id = value; }
         }
 
@@ -75,6 +72,39 @@ namespace SilentNotes.Models
         public DateTime ModifiedAt { get; set; }
 
         /// <summary>
+        /// Gets or sets the time in UTC, when the object was last updated by the system, instead of
+        /// the user. This way the system can clean up deprecated functions, but does not interfere
+        /// with more important user changes.
+        /// </summary>
+        [XmlIgnore]
+        public DateTime? MaintainedAt { get; set; }
+
+        [XmlAttribute(AttributeName = "maintained_at")]
+        public DateTime MaintainedAtSerializeable
+        {
+            get { return MaintainedAt.Value; }
+            set { MaintainedAt = value; }
+        }
+        public bool MaintainedAtSerializeableSpecified { get { return MaintainedAt != null && MaintainedAt > ModifiedAt; } } // Serialize only when set
+
+        /// <summary>
+        /// Clears the <see cref="MaintainedAt"/> property if it is obsolete, because the object was
+        /// modified later.
+        /// </summary>
+        public void ClearMaintainedAtIfObsolete()
+        {
+            if ((MaintainedAt != null) && (MaintainedAt < ModifiedAt))
+                MaintainedAt = null;
+        }
+
+        /// <summary>
+        /// Gets or sets the safe which was used to encrypt the note, or null if it is not encrypted.
+        /// </summary>
+        [XmlElement(ElementName = "safe")]
+        public Guid? SafeId { get; set; }
+        public bool SafeIdSpecified { get { return SafeId != null; } } // Serialize only when set
+
+        /// <summary>
         /// Sets the <see cref="ModifiedAt"/> property to the current UTC time.
         /// </summary>
         public void RefreshModifiedAt()
@@ -94,20 +124,22 @@ namespace SilentNotes.Models
         }
 
         /// <summary>
-        /// Makes <paramref name="targetNote"/> a deep copy of the note.
+        /// Makes <paramref name="target"/> a deep copy of the note.
         /// </summary>
-        /// <param name="targetNote">Copy all properties to this note.</param>
-        public void CloneTo(NoteModel targetNote)
+        /// <param name="target">Copy all properties to this note.</param>
+        public void CloneTo(NoteModel target)
         {
-            if (targetNote == null)
-                throw new ArgumentNullException(nameof(targetNote));
+            if (target == null)
+                throw new ArgumentNullException(nameof(target));
 
-            targetNote.Id = this.Id;
-            targetNote.HtmlContent = this.HtmlContent;
-            targetNote.BackgroundColorHex = this.BackgroundColorHex;
-            targetNote.InRecyclingBin = this.InRecyclingBin;
-            targetNote.CreatedAt = this.CreatedAt;
-            targetNote.ModifiedAt = this.ModifiedAt;
+            target.Id = this.Id;
+            target.HtmlContent = this.HtmlContent;
+            target.BackgroundColorHex = this.BackgroundColorHex;
+            target.InRecyclingBin = this.InRecyclingBin;
+            target.CreatedAt = this.CreatedAt;
+            target.ModifiedAt = this.ModifiedAt;
+            target.MaintainedAt = this.MaintainedAt;
+            target.SafeId = this.SafeId;
         }
     }
 }

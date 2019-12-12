@@ -25,8 +25,8 @@ namespace SilentNotes.Android.Services
         /// Initializes a new instance of the <see cref="SettingsService"/> class.
         /// </summary>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1611:ElementParametersMustBeDocumented", Justification = "Dependency injection")]
-        public SettingsService(Context appContext, IXmlFileService xmlFileService, IDataProtectionService dataProtectionService)
-            : base(xmlFileService, dataProtectionService)
+        public SettingsService(Context appContext, IXmlFileService xmlFileService, IDataProtectionService dataProtectionService, IEnvironmentService environmentService)
+            : base(xmlFileService, dataProtectionService, environmentService)
         {
             _appContext = appContext;
         }
@@ -53,9 +53,9 @@ namespace SilentNotes.Android.Services
             if ((oldPasswortElement != null) && (cloudStorageAccount != null))
             {
                 // Deobfuscate old password
-                EncryptorDecryptor decryptor = new EncryptorDecryptor("snps");
+                ICryptor decryptor = new Cryptor("snps", null);
                 byte[] binaryCipher = CryptoUtils.Base64StringToBytes(oldPasswortElement.Value);
-                byte[] unprotectedBinaryPassword = decryptor.Decrypt(binaryCipher, snpsk);
+                byte[] unprotectedBinaryPassword = decryptor.Decrypt(binaryCipher, CryptoUtils.StringToSecureString(snpsk));
 
                 // Protect with new data protection service and add to XML
                 char[] unprotectedChars = Encoding.UTF8.GetChars(unprotectedBinaryPassword);

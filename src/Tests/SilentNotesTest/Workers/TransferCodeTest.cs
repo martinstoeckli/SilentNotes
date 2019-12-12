@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using SilentNotes;
 using SilentNotes.Workers;
 
 namespace SilentNotesTest.Workers
@@ -22,18 +23,8 @@ namespace SilentNotesTest.Workers
             for (int length = 0; length < 999; length++)
             {
                 string code = TransferCode.GenerateCode(length, CommonMocksAndStubs.CryptoRandomService());
-                Assert.IsTrue(IsOfCorrectAlphabet(code));
+                Assert.IsTrue(UnmixableAlphabet.IsOfCorrectAlphabet(code));
             }
-        }
-
-        private bool IsOfCorrectAlphabet(string code)
-        {
-            foreach (var letter in code)
-            {
-                if ((letter < '1' || letter > '9') && (letter < 'a' || letter > 'z') || letter == 'l')
-                    return false;
-            }
-            return true;
         }
     }
 }

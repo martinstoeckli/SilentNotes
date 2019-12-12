@@ -94,7 +94,7 @@ namespace SilentNotes.Services
         /// <returns>The plain text client id.</returns>
         private string DeobfuscateClientId(string obfuscatedClientId)
         {
-            return CryptoUtils.Deobfuscate(obfuscatedClientId, _obfuscationKey);
+            return CryptoUtils.Deobfuscate(obfuscatedClientId, SecureStringExtensions.StringToSecureString(_obfuscationKey));
         }
     }
 }

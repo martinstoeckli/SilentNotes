@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Serialization;
 
 namespace SilentNotes.Models
@@ -17,17 +18,17 @@ namespace SilentNotes.Models
     public class NoteRepositoryModel
     {
         /// <summary>The highest revision of the repository which can be handled by this application.</summary>
-        public const int NewestSupportedRevision = 2;
+        public const int NewestSupportedRevision = 3;
         private Guid _id;
         private NoteListModel _notes;
         private List<Guid> _deletedNotes;
+        private SafeListModel _safes;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NoteRepositoryModel"/> class.
         /// </summary>
         public NoteRepositoryModel()
         {
-            _id = Guid.Empty;
             OrderModifiedAt = DateTime.UtcNow;
         }
 
@@ -37,13 +38,7 @@ namespace SilentNotes.Models
         [XmlAttribute(AttributeName = "id")]
         public Guid Id
         {
-            get
-            {
-                if (Guid.Empty == _id)
-                    _id = Guid.NewGuid();
-                return _id;
-            }
-
+            get { return (_id != Guid.Empty) ? _id : (_id = Guid.NewGuid()); }
             set { _id = value; }
         }
 
@@ -90,6 +85,19 @@ namespace SilentNotes.Models
         }
 
         /// <summary>
+        /// Gets or sets a list of safes which are used to encrypt notes. Ideally at most one safe
+        /// is used, but because of synchronisation between several devices, there can be more than
+        /// one safe.
+        /// </summary>
+        [XmlArray("safes")]
+        [XmlArrayItem("safe")]
+        public SafeListModel Safes
+        {
+            get { return _safes ?? (_safes = new SafeListModel()); }
+            set { _safes = value; }
+        }
+
+        /// <summary>
         /// Gets a fingerprint of the current repository, which can be used to determine, whether
         /// two repositories are different, or if a repository was modified in the meantime.
         /// Equal fingerprints mean unchanged repositories, different fingerprints indicate
@@ -110,13 +118,33 @@ namespace SilentNotes.Models
                 foreach (NoteModel note in Notes)
                 {
                     hashCode = (hashCode * 397) ^ note.ModifiedAt.GetHashCode();
+                    if (note.MaintainedAt != null)
+                        hashCode = (hashCode * 397) ^ note.MaintainedAt.GetHashCode();
                 }
                 foreach (Guid deletedNote in DeletedNotes)
                 {
                     hashCode = (hashCode * 397) ^ deletedNote.GetHashCode();
                 }
+                foreach (SafeModel safe in Safes)
+                {
+                    hashCode = (hashCode * 397) ^ safe.ModifiedAt.GetHashCode();
+                    if (safe.MaintainedAt != null)
+                        hashCode = (hashCode * 397) ^ safe.MaintainedAt.GetHashCode();
+                }
                 return hashCode;
             }
+        }
+
+        /// <summary>
+        /// Clears all the MaintainedAt properties if they are obsolete, because the object was
+        /// modified later.
+        /// </summary>
+        public void ClearMaintainedAtIfObsolete()
+        {
+            foreach (NoteModel note in Notes)
+                note.ClearMaintainedAtIfObsolete();
+            foreach (SafeModel safe in Safes)
+                safe.ClearMaintainedAtIfObsolete();
         }
     }
 }

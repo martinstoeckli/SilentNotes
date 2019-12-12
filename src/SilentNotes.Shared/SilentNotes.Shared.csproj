@@ -38,6 +38,11 @@
       <ExcludeFromSourceAnalysis>True</ExcludeFromSourceAnalysis>
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
+    <Compile Update="Views\ChangePasswordRazorView.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ChangePasswordRazorView.cshtml</DependentUpon>
+    </Compile>
     <Compile Update="Views\CloudStorageChoiceRazorView.cs">
       <DependentUpon>CloudStorageChoiceRazorView.cshtml</DependentUpon>
       <DesignTime>True</DesignTime>
@@ -82,6 +87,11 @@
       <DependentUpon>NoteRepositoryRazorView.cshtml</DependentUpon>
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Views\OpenSafeRazorView.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>OpenSafeRazorView.cshtml</DependentUpon>
     </Compile>
     <Compile Update="Views\RecycleBinContentRazorView.cs">
       <DependentUpon>RecycleBinContentRazorView.cshtml</DependentUpon>
@@ -130,6 +140,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Views\ChangePasswordRazorView.cshtml">
+      <Generator>RazorTemplatePreprocessor</Generator>
+      <LastGenOutput>ChangePasswordRazorView.cs</LastGenOutput>
+    </None>
     <None Update="Views\CloudStorageChoiceRazorView.cshtml">
       <LastGenOutput>CloudStorageChoiceRazorView.cs</LastGenOutput>
       <Generator>RazorTemplatePreprocessor</Generator>
@@ -165,6 +179,10 @@
     <None Update="Views\NoteRepositoryRazorView.cshtml">
       <LastGenOutput>NoteRepositoryRazorView.cs</LastGenOutput>
       <Generator>RazorTemplatePreprocessor</Generator>
+    </None>
+    <None Update="Views\OpenSafeRazorView.cshtml">
+      <Generator>RazorTemplatePreprocessor</Generator>
+      <LastGenOutput>OpenSafeRazorView.cs</LastGenOutput>
     </None>
     <None Update="Views\RecycleBinContentRazorView.cshtml">
       <LastGenOutput>RecycleBinContentRazorView.cs</LastGenOutput>

@@ -30,6 +30,9 @@
         }
     </style>
     <script>
+        $(function () {
+            addShortcuts();
+        });
     </script>
 </head>
 <body>
@@ -46,8 +49,8 @@
             <div class="form-row form-group">
                 <input type="text" class="form-control code" oninput="bind(event)" data-binding="Code" id="Code" value="@Model.Code">
             </div>
-            <button type="button" class="btn btn-primary mb-2" onclick="bind(event)" data-binding="OkCommand">@Model.Language["continue"]</button>
-            <button type="button" class="btn btn-secondary mb-2" onclick="bind(event)" data-binding="CancelCommand">@Model.Language["cancel"]</button>
+            <button type="button" class="btn btn-primary mb-2 shortcut-enter" onclick="bind(event)" data-binding="OkCommand">@Model.Language["continue"]</button>
+            <button type="button" class="btn btn-secondary mb-2 shortcut-escape" onclick="bind(event)" data-binding="CancelCommand">@Model.Language["cancel"]</button>
         </form>
     </div>
 </body>

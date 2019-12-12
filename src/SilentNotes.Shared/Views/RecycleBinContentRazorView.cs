@@ -23,7 +23,7 @@ using SilentNotes.ViewModels;
 #line hidden
 
 
-[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "4.12.3.73")]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.3.0.281")]
 public partial class RecycleBinContentRazorView : RecycleBinContentRazorViewBase
 {
 
@@ -72,15 +72,13 @@ WriteLiteral(">\r\n                <div>");
 
 
 #line 8 "RecycleBinContentRazorView.cshtml"
-                       WriteLiteral(note.HtmlContent);
+                       WriteLiteral(note.UnlockedHtmlContent);
 
 #line default
 #line hidden
 WriteLiteral("</div>\r\n                <span");
 
-WriteLiteral(" class=\"restore\"");
-
-WriteLiteral(" class=\"undelete\"");
+WriteLiteral(" class=\"restore undelete\"");
 
 WriteLiteral(" onclick=\"bind(event);\"");
 
@@ -90,7 +88,7 @@ WriteLiteral(" data-note=\"");
 
 
 #line 9 "RecycleBinContentRazorView.cshtml"
-                                                                                                                Write(note.Id.ToString());
+                                                                                                        Write(note.Id.ToString());
 
 
 #line default
@@ -100,7 +98,7 @@ WriteLiteral("\"");
 WriteAttribute ("title", " title=\"", "\""
 
 #line 9 "RecycleBinContentRazorView.cshtml"
-                                                                                                          , Tuple.Create<string,object,bool> ("", Model.Language["note_undelete"]
+                                                                                                  , Tuple.Create<string,object,bool> ("", Model.Language["note_undelete"]
 
 #line default
 #line hidden

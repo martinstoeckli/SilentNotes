@@ -4,6 +4,7 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
+using System.Security;
 
 namespace SilentNotes.Crypto.KeyDerivation
 {
@@ -28,7 +29,7 @@ namespace SilentNotes.Crypto.KeyDerivation
         /// <param name="cost">The cost factor which controls the necessary time for the
         /// calculation (the longer the more safe from brute-forcing).</param>
         /// <returns>Key for decryption.</returns>
-        byte[] DeriveKeyFromPassword(string password, int expectedKeySizeBytes, byte[] salt, int cost);
+        byte[] DeriveKeyFromPassword(SecureString password, int expectedKeySizeBytes, byte[] salt, int cost);
 
         /// <summary>
         /// Gets the size of the salt in bytes, which is expected by the implementing key

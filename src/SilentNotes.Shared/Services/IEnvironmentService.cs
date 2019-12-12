@@ -17,6 +17,11 @@ namespace SilentNotes.Services
         /// Gets the current operating system.
         /// </summary>
         OperatingSystem Os { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether the app is running on a mobile device.
+        /// </summary>
+        bool IsMobileDevice { get; }
     }
 
     /// <summary>

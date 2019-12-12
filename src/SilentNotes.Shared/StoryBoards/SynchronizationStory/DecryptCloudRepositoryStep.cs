@@ -108,13 +108,13 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
             bool result = false;
             decryptedRepository = null;
 
-            EncryptorDecryptor encryptor = new EncryptorDecryptor("SilentNotes");
+            ICryptor decryptor = new Cryptor("SilentNotes", null);
             List<string> transferCodesToTry = ListTransferCodesToTry(settings);
             int index = 0;
             while (!result && index < transferCodesToTry.Count)
             {
                 string transferCodeCandidate = transferCodesToTry[index];
-                result = TryDecryptRepositoryWithTransfercode(encryptor, binaryCloudRepository, transferCodeCandidate, out decryptedRepository);
+                result = TryDecryptRepositoryWithTransfercode(decryptor, binaryCloudRepository, transferCodeCandidate, out decryptedRepository);
                 if (result)
                 {
                     // Store transfercode and encryption mode if necessary
@@ -162,11 +162,11 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
             return result;
         }
 
-        private bool TryDecryptRepositoryWithTransfercode(EncryptorDecryptor encryptor, byte[] binaryCloudRepository, string transferCode, out byte[] decryptedRepository)
+        private bool TryDecryptRepositoryWithTransfercode(ICryptor decryptor, byte[] binaryCloudRepository, string transferCode, out byte[] decryptedRepository)
         {
             try
             {
-                decryptedRepository = encryptor.Decrypt(binaryCloudRepository, transferCode);
+                decryptedRepository = decryptor.Decrypt(binaryCloudRepository, CryptoUtils.StringToSecureString(transferCode));
                 return true;
             }
             catch (CryptoExceptionInvalidCipherFormat)

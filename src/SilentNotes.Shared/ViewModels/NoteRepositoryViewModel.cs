@@ -10,6 +10,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Windows.Input;
 using SilentNotes.Controllers;
+using SilentNotes.Crypto;
 using SilentNotes.Models;
 using SilentNotes.Services;
 using SilentNotes.StoryBoards;
@@ -30,6 +31,7 @@ namespace SilentNotes.ViewModels
         private readonly IThemeService _themeService;
         private readonly IEnvironmentService _environmentService;
         private readonly SearchableHtmlConverter _searchableTextConverter;
+        private readonly ICryptor _noteCryptor;
         private NoteRepositoryModel _model;
         private NoteViewModel _selectedNote;
         private string _filter;
@@ -48,6 +50,7 @@ namespace SilentNotes.ViewModels
             ISettingsService settingsService,
             IThemeService themeService,
             IEnvironmentService environmentService,
+            ICryptoRandomSource randomSource,
             IRepositoryStorageService repositoryService)
             : base(navigationService, languageService, svgIconService, webviewBaseUrl)
         {
@@ -57,6 +60,7 @@ namespace SilentNotes.ViewModels
             _settingsService = settingsService;
             _themeService = themeService;
             _environmentService = environmentService;
+            _noteCryptor = new Cryptor(NoteModel.CryptorPackageName, randomSource);
             _searchableTextConverter = new SearchableHtmlConverter();
             AllNotes = new List<NoteViewModel>();
             FilteredNotes = new ObservableCollection<NoteViewModel>();
@@ -74,6 +78,9 @@ namespace SilentNotes.ViewModels
             ShowSettingsCommand = new RelayCommand(ShowSettings);
             ShowRecycleBinCommand = new RelayCommand(ShowRecycleBin);
             ShowInfoCommand = new RelayCommand(ShowInfo);
+            OpenSafeCommand = new RelayCommand(OpenSafe);
+            CloseSafeCommand = new RelayCommand(CloseSafe);
+            ChangeSafePasswordCommand = new RelayCommand(ChangeSafePassword);
 
             OnPropertyChanged(nameof(FilterButtonMagnifierVisible));
             OnPropertyChanged(nameof(FilterButtonCancelVisible));
@@ -245,7 +252,7 @@ namespace SilentNotes.ViewModels
             _model.Notes.Insert(0, noteModel);
 
             // Update view model list
-            NoteViewModel noteViewModel = new NoteViewModel(_navigationService, Language, Icon, _webviewBaseUrl, _searchableTextConverter, _repositoryService, _feedbackService, null, noteModel);
+            NoteViewModel noteViewModel = new NoteViewModel(_navigationService, Language, Icon, _webviewBaseUrl, _searchableTextConverter, _repositoryService, _feedbackService, null, _noteCryptor, _model.Safes, noteModel);
             AllNotes.Insert(0, noteViewModel);
             FilteredNotes.Insert(0, noteViewModel);
 
@@ -345,6 +352,75 @@ namespace SilentNotes.ViewModels
         }
 
         /// <summary>
+        /// Gets the command which opens encrypted notes.
+        /// </summary>
+        public ICommand OpenSafeCommand { get; private set; }
+
+        private void OpenSafe()
+        {
+            _navigationService.Navigate(ControllerNames.OpenSafe);
+        }
+
+        /// <summary>
+        /// Gets the command which closes encrypted notes.
+        /// </summary>
+        public ICommand CloseSafeCommand { get; private set; }
+
+        private void CloseSafe()
+        {
+            foreach (SafeModel safe in Model.Safes)
+                safe.Close();
+            _navigationService.Navigate(ControllerNames.NoteRepository);
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether at least one safe is open.
+        /// </summary>
+        public bool IsAnySafeOpen
+        {
+            get { return Model.Safes.Any(safe => safe.IsOpen); }
+        }
+
+        /// <summary>
+        /// Gets the command which allows to change the password to encrypt the notes.
+        /// </summary>
+        public ICommand ChangeSafePasswordCommand { get; private set; }
+
+        private void ChangeSafePassword()
+        {
+            if (Model.Safes.Count > 0)
+                _navigationService.Navigate(ControllerNames.ChangePassword);
+            else
+                // First create a safe before the password can be changed.
+                _navigationService.Navigate(ControllerNames.OpenSafe);
+        }
+
+        public void AddNoteToSafe(Guid noteId)
+        {
+            NoteViewModel note = AllNotes.Find(item => item.Id == noteId);
+            SafeModel oldestOpenSafe = Model.Safes.FindOldestOpenSafe();
+            if ((note != null) && (oldestOpenSafe != null))
+            {
+                note.Model.SafeId = oldestOpenSafe.Id;
+                note.Model.HtmlContent = note.Lock(note.UnlockedHtmlContent);
+                note.Model.RefreshModifiedAt();
+                Modified = true;
+            }
+        }
+
+        public void RemoveNoteFromSafe(Guid noteId)
+        {
+            NoteViewModel note = AllNotes.Find(item => item.Id == noteId);
+            if (note != null)
+            {
+                note.Model.SafeId = null;
+                note.Model.HtmlContent = note.UnlockedHtmlContent;
+                note.Model.RefreshModifiedAt();
+                Modified = true;
+            }
+        }
+
+        /// <summary>
         /// Command to move a note to a new place in the list. This is usually
         /// called after a drag and drop action.
         /// </summary>
@@ -385,7 +461,7 @@ namespace SilentNotes.ViewModels
                 // Wrap models in view models
                 foreach (NoteModel note in _model.Notes)
                 {
-                    NoteViewModel noteViewModel = new NoteViewModel(_navigationService, Language, Icon, _webviewBaseUrl, _searchableTextConverter, _repositoryService, _feedbackService, null, note);
+                    NoteViewModel noteViewModel = new NoteViewModel(_navigationService, Language, Icon, _webviewBaseUrl, _searchableTextConverter, _repositoryService, _feedbackService, _settingsService, _noteCryptor, _model.Safes, note);
                     AllNotes.Add(noteViewModel);
                     if (!noteViewModel.InRecyclingBin)
                         FilteredNotes.Add(noteViewModel);

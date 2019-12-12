@@ -1,3 +1,14 @@
+function addShortcuts() {
+    $('body').keyup(function(evt) {
+        if (evt.which === 13) {
+            $('.shortcut-enter')[0].click();
+        }
+        if (evt.which === 27) {
+            $('.shortcut-escape')[0].click();
+        }
+    });
+}
+
 // Makes child elements of class .sortable sortable, using
 // https://github.com/RubaXa/Sortable
 function makeSortable() {
@@ -129,6 +140,12 @@ function bind(event) {
 		if (/^data-/.test(attr.name))
 			params[attr.name] = attr.value;
 	});
+	if (event.currentTarget.parentNode !== null) {
+		$.each(event.currentTarget.parentNode.attributes, function(index, attr) {
+			if (/^data-/.test(attr.name))
+				params['parent.' + attr.name] = attr.value;
+		});
+	}
 
 	var parts = [];
 	$.each(params, function(key, value) {
@@ -155,6 +172,22 @@ function htmlViewBindingsSetVisibility(bindingName, visible) {
 		$(selector).show();
 	else
 		$(selector).hide();
+}
+
+function htmlViewBindingsSetEnabled(bindingName, enabled) {
+	var selector = '[data-binding="' + bindingName + '"]';
+	if (enabled)
+		$(selector).removeClass('disabled');
+	else
+		$(selector).addClass('disabled');
+}
+
+function htmlViewBindingsSetInvalid(bindingName, invalid) {
+	var selector = '[data-binding="' + bindingName + '"]';
+    if (invalid)
+        $(selector).addClass('is-invalid');
+	else
+        $(selector).removeClass('is-invalid');
 }
 
 function htmlViewBindingsAddClass(bindingName, className) {

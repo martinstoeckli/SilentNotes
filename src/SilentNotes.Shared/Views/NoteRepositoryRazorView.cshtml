@@ -19,40 +19,74 @@
     <script src="jquery.longpress.js"></script>
 
     <style type="text/css">
-        body {
-            background-color: @Model.Theme.ImageTint;
-            background: url(@Model.Theme.Image);
-        }
+body {
+    background-color: @Model.Theme.ImageTint;
+    background: url(@Model.Theme.Image);
+}
 
-        .note-viewer {
-            font-size: @(Model.NoteBaseFontSize)px !important;
-        }
-        .note-viewer a {
-            pointer-events: none; /* ignore clicks on links */
-            cursor: default;
-        }
+.note-viewer {
+    font-size: @(Model.NoteBaseFontSize)px !important;
+}
+.note-viewer a {
+    pointer-events: none; /* ignore clicks on links */
+    cursor: default;
+}
 
-        .nav-filter {
-            margin: 0 1em 0 0;
-            width: 200px;
-            height: 28px;
-            background-color: #FFFFFF;
-            border-radius: 14px;
-        }
-        .nav-filter:hover {
-            background-color: #FFFFFF;
-        }
-        .nav-filter input {
-            margin: auto;
-            width: 154px;
-            left: 14px;
-            border: none;
-            border-width: 0;
-            outline: none;
-            background-color: transparent;
-            color: #666666;
-            font-size: 1.1em;
-        }
+.nav-filter {
+    margin: 0 1em 0 0;
+    width: 200px;
+    height: 28px;
+    background-color: #FFFFFF;
+    border-radius: 14px;
+}
+.nav-filter:hover {
+    background-color: #FFFFFF;
+}
+.nav-filter input {
+    margin: auto;
+    width: 154px;
+    left: 14px;
+    border: none;
+    border-width: 0;
+    outline: none;
+    background-color: transparent;
+    color: #666666;
+    font-size: 1.1em;
+}
+.locked {
+    position: absolute;
+    width: 48px;
+    height: 48px;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+.locked svg {
+    width: 100%;
+    height: 100%;
+    fill: rgba(160, 160, 160, 0.4);
+}
+.locked.dark svg {
+    fill: rgba(204, 204, 204, 0.4);
+}
+.safe-handle svg {
+    position: relative;
+    left: 3px;
+    top: 3px;
+    width: 18px;
+    height: 18px;
+}
+.greenish, .greenish.dark {
+	fill: #0a480a;
+	background-color: #1bbb1b;
+}
+.reddish, .reddish.dark {
+	fill: #470a0a;
+	background-color: #be1c1c;
+}
+
     </style>
     <script>
     </script>
@@ -61,8 +95,8 @@
     <nav id="navigation" class="d-flex">
         <div class="nav-item nav-filter ml-auto d-inline-flex align-self-center">
             <input oninput="bind(event)" data-binding="TxtFilter" autocomplete="off" autofocus />
-            <svg width='24' height='24' viewBox='0 0 24 24' data-binding="FilterButtonMagnifier" style="fill:#a8a8a8">@{WriteLiteral(Model.Icon.LoadIconSvgPath("magnify"));}</svg>
-            <svg width='24' height='24' viewBox='0 0 24 24' class="hidden-at-startup" onclick="bind(event)" data-binding="FilterButtonCancel" style="fill:#666666">@{WriteLiteral(Model.Icon.LoadIconSvgPath("close-circle-outline"));}</svg>
+            <svg width='24' height='24' viewBox='0 0 24 24' data-binding="FilterButtonMagnifier"><use xlink:href="#svg-magnify" fill="#a8a8a8" /></svg>
+            <svg width='24' height='24' viewBox='0 0 24 24' class="hidden-at-startup" onclick="bind(event)" data-binding="FilterButtonCancel"><use xlink:href="#svg-close-circle-outline" fill="#666666" /></svg>
         </div>
 
         <button class="nav-item show-only-on-wide-browser" onclick="bind(event);" data-binding="AddNote" title="@Model.Language["note_create_new"]">@{WriteLiteral(Model.Icon["plus"]);}</button>
@@ -79,6 +113,11 @@
                 <div class="dropdown-item show-only-on-narrow-browser" onclick="bind(event);" data-binding="ShowNote">@{WriteLiteral(Model.Icon["lead-pencil"]);} @Model.Language["note_view_or_edit"]</div>
                 <div class="dropdown-item" onclick="bind(event);" data-binding="ShowTransferCode">@{WriteLiteral(Model.Icon["key"]);} @Model.Language["show_transfer_code"]</div>
                 <div class="dropdown-item" onclick="bind(event);" data-binding="ShowRecycleBin">@{WriteLiteral(Model.Icon["delete-empty"]);} @Model.Language["show_recyclebin"]</div>
+                <div class="dropdown-divider"></div>
+                <div class="dropdown-item" @if (Model.IsAnySafeOpen) { @("hidden") ; } onclick="bind(event);" data-binding="OpenSafe">@{WriteLiteral(Model.Icon["safe-square-outline"]);} @Model.Language["safe_open"]</div>
+                <div class="dropdown-item" @if (!Model.IsAnySafeOpen) { @("hidden") ; } onclick="bind(event);" data-binding="CloseSafe">@{WriteLiteral(Model.Icon["safe-square-outline"]);} @Model.Language["safe_close"]</div>
+                <div class="dropdown-item" onclick="bind(event);" data-binding="ChangeSafePassword">@{WriteLiteral(Model.Icon["lock-reset"]);} @Model.Language["safe_change_password"]</div>
+                <div class="dropdown-divider"></div>
                 <div class="dropdown-item" onclick="bind(event);" data-binding="ShowSettings">@{WriteLiteral(Model.Icon["settings"]);} @Model.Language["show_settings"]</div>
                 <div class="dropdown-item" onclick="bind(event);" data-binding="ShowInfo">@{WriteLiteral(Model.Icon["information"]);} @Model.Language["show_info"]</div>
             </div>
@@ -89,6 +128,15 @@
 
     <div id="content" class="p-2">
         <ul id="note-repository"></ul>
+    </div>
+
+    <div hidden>
+        @{WriteLiteral(Model.Icon.LoadIcon("magnify", new[] { new KeyValuePair<string, string>("id", "svg-magnify") }));}
+        @{WriteLiteral(Model.Icon.LoadIcon("close-circle-outline", new[] { new KeyValuePair<string, string>("id", "svg-close-circle-outline") }));}
+        @{WriteLiteral(Model.Icon.LoadIcon("menu-swap", new[] { new KeyValuePair<string, string>("id", "svg-menu-swap") }));}
+        @{WriteLiteral(Model.Icon.LoadIcon("lock", new[] { new KeyValuePair<string, string>("id", "svg-lock") }));}
+        @{WriteLiteral(Model.Icon.LoadIcon("lock-open-variant", new[] { new KeyValuePair<string, string>("id", "svg-lock-open-variant") }));}
+        @{WriteLiteral(Model.Icon.LoadIcon("lock-outline", new[] { new KeyValuePair<string, string>("id", "svg-lock-outline") }));}
     </div>
 </body>
 </html>

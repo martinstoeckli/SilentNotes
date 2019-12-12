@@ -15,6 +15,7 @@ namespace SilentNotes.Services
         /// <summary>
         /// Initializes a new instance of the <see cref="EnvironmentService"/> class.
         /// </summary>
+        /// <param name="os">Sets the <see cref="Os"/> property.</param>
         public EnvironmentService(OperatingSystem os)
         {
             Os = os;
@@ -22,5 +23,11 @@ namespace SilentNotes.Services
 
         /// <inheritdoc/>
         public OperatingSystem Os { get; }
+
+        /// <inheritdoc/>
+        public bool IsMobileDevice
+        {
+            get { return Os == OperatingSystem.Android; }
+        }
     }
 }

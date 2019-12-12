@@ -57,7 +57,7 @@ namespace SilentNotes.UWP.Services
         }
 
         /// <inheritdoc/>
-        public async Task<MessageBoxResult> ShowMessageAsync(string message, string title, MessageBoxButtons buttons)
+        public async Task<MessageBoxResult> ShowMessageAsync(string message, string title, MessageBoxButtons buttons, bool conservativeDefault)
         {
             ButtonArrangement arrangement = ButtonArrangement.Create(buttons, _languageService);
             ContentDialog dialog = new ContentDialog()
@@ -66,6 +66,7 @@ namespace SilentNotes.UWP.Services
                 Content = message,
                 CloseButtonText = arrangement.CloseButtonText,
                 PrimaryButtonText = arrangement.PrimaryButtonText,
+                DefaultButton = conservativeDefault ? ContentDialogButton.Close : ContentDialogButton.Primary,
             };
 
             ContentDialogResult result = await dialog.ShowAsync();

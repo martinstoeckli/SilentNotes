@@ -23,7 +23,7 @@ using SilentNotes.ViewModels;
 #line hidden
 
 
-[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.3.0.277")]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.3.0.281")]
 public partial class RecycleBinRazorView : RecycleBinRazorViewBase
 {
 
@@ -139,6 +139,9 @@ WriteLiteral(@");
         }
     </style>
     <script>
+        $(function () {
+            addShortcuts();
+        });
     </script>
 </head>
 <body>
@@ -150,7 +153,7 @@ WriteLiteral(" class=\"d-flex\"");
 
 WriteLiteral(">\r\n        <button");
 
-WriteLiteral(" class=\"nav-item mr-auto\"");
+WriteLiteral(" class=\"nav-item mr-auto shortcut-escape\"");
 
 WriteLiteral(" onclick=\"bind(event);\"");
 
@@ -158,8 +161,8 @@ WriteLiteral(" data-binding=\"GoBack\"");
 
 WriteAttribute ("title", " title=\"", "\""
 
-#line 62 "RecycleBinRazorView.cshtml"
-                                                      , Tuple.Create<string,object,bool> ("", Model.Language["back"]
+#line 65 "RecycleBinRazorView.cshtml"
+                                                                      , Tuple.Create<string,object,bool> ("", Model.Language["back"]
 
 #line default
 #line hidden
@@ -168,8 +171,8 @@ WriteAttribute ("title", " title=\"", "\""
 WriteLiteral(">");
 
 
-#line 62 "RecycleBinRazorView.cshtml"
-                                                                                                                        WriteLiteral(Model.Icon["arrow-left"]);
+#line 65 "RecycleBinRazorView.cshtml"
+                                                                                                                                        WriteLiteral(Model.Icon["arrow-left"]);
 
 #line default
 #line hidden
@@ -183,7 +186,7 @@ WriteLiteral(" data-binding=\"EmptyRecycleBin\"");
 
 WriteAttribute ("title", " title=\"", "\""
 
-#line 63 "RecycleBinRazorView.cshtml"
+#line 66 "RecycleBinRazorView.cshtml"
                                                       , Tuple.Create<string,object,bool> ("", Model.Language["empty_recyclebin"]
 
 #line default
@@ -193,7 +196,7 @@ WriteAttribute ("title", " title=\"", "\""
 WriteLiteral(">");
 
 
-#line 63 "RecycleBinRazorView.cshtml"
+#line 66 "RecycleBinRazorView.cshtml"
                                                                                                                                     WriteLiteral(Model.Icon["delete-forever"]);
 
 #line default

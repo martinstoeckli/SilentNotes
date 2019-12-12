@@ -18,8 +18,8 @@ namespace SilentNotes.UWP.Services
         /// Initializes a new instance of the <see cref="SettingsService"/> class.
         /// </summary>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1611:ElementParametersMustBeDocumented", Justification = "Dependency injection")]
-        public SettingsService(IXmlFileService xmlFileService, IDataProtectionService dataProtectionService)
-            : base(xmlFileService, dataProtectionService)
+        public SettingsService(IXmlFileService xmlFileService, IDataProtectionService dataProtectionService, IEnvironmentService environmentService)
+            : base(xmlFileService, dataProtectionService, environmentService)
         {
         }
 

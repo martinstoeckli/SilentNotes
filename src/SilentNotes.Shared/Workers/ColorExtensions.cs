@@ -32,7 +32,7 @@ namespace SilentNotes.Workers
         /// <returns>Color value.</returns>
         public static Color HexToColor(string colorHex)
         {
-            colorHex = colorHex.Replace("#", ""); // strip off # if it exists
+            colorHex = colorHex.Replace("#", string.Empty); // strip off # if it exists
 
             // Add alpha value if necessary
             bool hasAlpha = colorHex.Length > 6;

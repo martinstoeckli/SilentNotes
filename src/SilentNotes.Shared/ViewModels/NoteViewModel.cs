@@ -9,6 +9,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Windows.Input;
 using SilentNotes.Controllers;
+using SilentNotes.Crypto;
 using SilentNotes.Models;
 using SilentNotes.Services;
 using SilentNotes.StoryBoards.PullPushStory;
@@ -24,7 +25,10 @@ namespace SilentNotes.ViewModels
         private readonly IRepositoryStorageService _repositoryService;
         private readonly IFeedbackService _feedbackService;
         private readonly ISettingsService _settingsService;
+        private readonly ICryptor _cryptor;
+        private readonly SafeListModel _safes;
         private SearchableHtmlConverter _searchableTextConverter;
+        private string _unlockedContent;
         private string _searchableContent;
 
         /// <summary>
@@ -40,6 +44,8 @@ namespace SilentNotes.ViewModels
             IRepositoryStorageService repositoryService,
             IFeedbackService feedbackService,
             ISettingsService settingsService,
+            ICryptor cryptor,
+            SafeListModel safes,
             NoteModel noteFromRepository)
             : base(navigationService, languageService, svgIconService, webviewBaseUrl)
         {
@@ -47,12 +53,15 @@ namespace SilentNotes.ViewModels
             _feedbackService = feedbackService;
             _settingsService = settingsService;
             _searchableTextConverter = searchableTextConverter;
+            _cryptor = cryptor;
+            _safes = safes;
             MarkSearchableContentAsDirty();
             PushNoteToOnlineStorageCommand = new RelayCommand(PushNoteToOnlineStorage);
             PullNoteFromOnlineStorageCommand = new RelayCommand(PullNoteFromOnlineStorage);
             GoBackCommand = new RelayCommand(GoBack);
 
             Model = noteFromRepository;
+            _unlockedContent = IsInSafe ? Unlock(Model.HtmlContent) : Model.HtmlContent;
         }
 
         /// <summary>
@@ -64,7 +73,7 @@ namespace SilentNotes.ViewModels
         }
 
         /// <summary>
-        /// Gets a searchable representation of the <see cref="HtmlContent"/>. This searchable
+        /// Gets a searchable representation of the <see cref="UnlockedHtmlContent"/>. This searchable
         /// text is generated on demand only, to mark it as dirty use <see cref="MarkSearchableContentAsDirty"/>.
         /// </summary>
         public string SearchableContent
@@ -72,10 +81,10 @@ namespace SilentNotes.ViewModels
             get
             {
                 bool searchableContentIsDirty = _searchableContent == null;
-                if (searchableContentIsDirty)
+                if (searchableContentIsDirty && UnlockedHtmlContent != null)
                 {
                     SearchableHtmlConverter converter = _searchableTextConverter ?? (_searchableTextConverter = new SearchableHtmlConverter());
-                    converter.TryConvertHtml(HtmlContent, out _searchableContent);
+                    converter.TryConvertHtml(UnlockedHtmlContent, out _searchableContent);
                 }
                 return _searchableContent;
             }
@@ -93,15 +102,15 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets or sets the Html content of the note.
         /// </summary>
-        public string HtmlContent
+        public string UnlockedHtmlContent
         {
-            get { return Model.HtmlContent; }
+            get { return _unlockedContent; }
 
             set
             {
                 if (value == null)
                     value = string.Empty;
-                if (ChangePropertyIndirect(() => Model.HtmlContent, (string v) => Model.HtmlContent = v, value, true))
+                if (ChangeProperty(ref _unlockedContent, value, true))
                 {
                     MarkSearchableContentAsDirty();
                     Model.RefreshModifiedAt();
@@ -165,17 +174,71 @@ namespace SilentNotes.ViewModels
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the note is a selected item.
-        /// This can be used to implement multi selection lists.
+        /// Gets a value indicating whether the note is in a safe. Notes in a safe can be locked
+        /// or unlocked.
         /// </summary>
-        public bool IsSelected { get; set; }
+        public bool IsInSafe
+        {
+            get { return Model.SafeId != null; }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the note is locked. A locked note is part of a safe and
+        /// is not yet decrypted.
+        /// </summary>
+        public bool IsLocked
+        {
+            get { return IsInSafe && (UnlockedHtmlContent == null); }
+        }
+
+        /// <summary>
+        /// Decrypts the note, if the belonging safe is open.
+        /// </summary>
+        /// <returns>Decrypted note content.</returns>
+        private string Unlock(string lockedContent)
+        {
+            SafeModel safe = _safes.FindById(Model.SafeId);
+            if ((safe != null) && safe.IsOpen)
+            {
+                byte[] binaryContent = CryptoUtils.Base64StringToBytes(lockedContent);
+                byte[] unlockedContent = _cryptor.Decrypt(binaryContent, safe.Key);
+                return CryptoUtils.BytesToString(unlockedContent);
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the note is unlocked. An unlocked note is part of a safe
+        /// and is decrypted.
+        /// </summary>
+        private bool IsUnlocked
+        {
+            get { return IsInSafe && (UnlockedHtmlContent != null); }
+        }
+
+        /// <summary>
+        /// Encrpyts the unlocked content with the key of the assigned safe.
+        /// </summary>
+        /// <param name="unlockedContent">Content to encrypt.</param>
+        /// <returns>Encrypted content.</returns>
+        public string Lock(string unlockedContent)
+        {
+            string encryptionAlgorithm = _settingsService.LoadSettingsOrDefault().SelectedEncryptionAlgorithm;
+            SafeModel safe = _safes.FindById(Model.SafeId);
+            byte[] binaryContent = CryptoUtils.StringToBytes(unlockedContent);
+            byte[] lockedContent = _cryptor.Encrypt(binaryContent, safe.Key, encryptionAlgorithm, null);
+            return CryptoUtils.BytesToBase64String(lockedContent);
+        }
 
         /// <inheritdoc />
         public override void OnStoringUnsavedData()
         {
             if (Modified)
             {
-                Model.HtmlContent = XmlUtils.SanitizeXmlString(Model.HtmlContent);
+                if (IsUnlocked)
+                    Model.HtmlContent = Lock(_unlockedContent);
+                else
+                    Model.HtmlContent = XmlUtils.SanitizeXmlString(_unlockedContent);
 
                 _repositoryService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepository);
                 _repositoryService.TrySaveRepository(noteRepository);
@@ -208,7 +271,7 @@ namespace SilentNotes.ViewModels
 
         private async void PullNoteFromOnlineStorage()
         {
-            MessageBoxResult dialogResult = await _feedbackService.ShowMessageAsync(Language["pushpull_pull_confirmation"], Language["note_pull_from_server"], MessageBoxButtons.ContinueCancel);
+            MessageBoxResult dialogResult = await _feedbackService.ShowMessageAsync(Language["pushpull_pull_confirmation"], Language["note_pull_from_server"], MessageBoxButtons.ContinueCancel, false);
             if (dialogResult != MessageBoxResult.Continue)
                 return;
 
@@ -238,7 +301,7 @@ namespace SilentNotes.ViewModels
 
         private async void PushNoteToOnlineStorage()
         {
-            MessageBoxResult dialogResult = await _feedbackService.ShowMessageAsync(Language["pushpull_push_confirmation"], Language["note_push_to_server"], MessageBoxButtons.ContinueCancel);
+            MessageBoxResult dialogResult = await _feedbackService.ShowMessageAsync(Language["pushpull_push_confirmation"], Language["note_push_to_server"], MessageBoxButtons.ContinueCancel, false);
             if (dialogResult != MessageBoxResult.Continue)
                 return;
 
