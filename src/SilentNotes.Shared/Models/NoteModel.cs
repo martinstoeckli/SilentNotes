@@ -4,15 +4,19 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Xml.Serialization;
+using SilentNotes.Crypto;
 
 namespace SilentNotes.Models
 {
     /// <summary>
     /// Serializeable model of a single note.
     /// </summary>
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Properties are only used for serialization.")]
     public class NoteModel
     {
+        /// <summary>The package name used for encryption, see <see cref="CryptoHeader.PackageName"/></summary>
         public const string CryptorPackageName = "SilentNote";
         private Guid _id;
 

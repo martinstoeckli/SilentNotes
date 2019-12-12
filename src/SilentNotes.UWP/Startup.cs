@@ -48,7 +48,8 @@ namespace SilentNotes.UWP
             Ioc.RegisterFactory<IVersionService>(() => new VersionService());
             Ioc.RegisterFactory<ISettingsService>(() => new SettingsService(
                 Ioc.GetOrCreate<IXmlFileService>(),
-                Ioc.GetOrCreate<IDataProtectionService>()));
+                Ioc.GetOrCreate<IDataProtectionService>(),
+                Ioc.GetOrCreate<IEnvironmentService>()));
             Ioc.RegisterFactory<IRepositoryStorageService>(() => new RepositoryStorageService(
                 Ioc.GetOrCreate<IXmlFileService>(),
                 Ioc.GetOrCreate<ILanguageService>()));

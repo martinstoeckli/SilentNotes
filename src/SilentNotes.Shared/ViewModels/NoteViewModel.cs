@@ -271,7 +271,7 @@ namespace SilentNotes.ViewModels
 
         private async void PullNoteFromOnlineStorage()
         {
-            MessageBoxResult dialogResult = await _feedbackService.ShowMessageAsync(Language["pushpull_pull_confirmation"], Language["note_pull_from_server"], MessageBoxButtons.ContinueCancel);
+            MessageBoxResult dialogResult = await _feedbackService.ShowMessageAsync(Language["pushpull_pull_confirmation"], Language["note_pull_from_server"], MessageBoxButtons.ContinueCancel, false);
             if (dialogResult != MessageBoxResult.Continue)
                 return;
 
@@ -301,7 +301,7 @@ namespace SilentNotes.ViewModels
 
         private async void PushNoteToOnlineStorage()
         {
-            MessageBoxResult dialogResult = await _feedbackService.ShowMessageAsync(Language["pushpull_push_confirmation"], Language["note_push_to_server"], MessageBoxButtons.ContinueCancel);
+            MessageBoxResult dialogResult = await _feedbackService.ShowMessageAsync(Language["pushpull_push_confirmation"], Language["note_push_to_server"], MessageBoxButtons.ContinueCancel, false);
             if (dialogResult != MessageBoxResult.Continue)
                 return;
 

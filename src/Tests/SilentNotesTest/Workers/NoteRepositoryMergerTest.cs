@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using NUnit.Framework;
 using SilentNotes.Models;
 using SilentNotes.Workers;
@@ -86,6 +87,30 @@ namespace SilentNotesTest.Workers
             Assert.AreEqual(0, result.Notes.Count);
             Assert.AreEqual(1, result.DeletedNotes.Count);
             Assert.IsTrue(result.DeletedNotes.Contains(note.Id));
+        }
+
+        [Test]
+        public void NoDuplicatesOnDeletedNotes()
+        {
+            Guid note1Id = new Guid("10000000000000000000000000000000");
+            Guid note2Id = new Guid("20000000000000000000000000000000");
+            Guid note3Id = new Guid("30000000000000000000000000000000");
+
+            NoteRepositoryModel serverRepo = new NoteRepositoryModel();
+            serverRepo.DeletedNotes.Add(note1Id);
+            serverRepo.DeletedNotes.Add(note2Id);
+            serverRepo.DeletedNotes.Add(note3Id);
+            NoteRepositoryModel clientRepo = new NoteRepositoryModel();
+            clientRepo.DeletedNotes.Add(note2Id); // deleted in both repos
+            clientRepo.Notes.Add(new NoteModel { Id = note3Id }); // not yet deleted
+
+            NoteRepositoryMerger merger = new NoteRepositoryMerger();
+            NoteRepositoryModel result = merger.Merge(clientRepo, serverRepo);
+
+            Assert.AreEqual(3, result.DeletedNotes.Count);
+            Assert.IsTrue(result.DeletedNotes.Contains(note1Id));
+            Assert.IsTrue(result.DeletedNotes.Contains(note2Id));
+            Assert.IsTrue(result.DeletedNotes.Contains(note3Id));
         }
 
         [Test]
@@ -203,6 +228,7 @@ namespace SilentNotesTest.Workers
             SafeModel safeS2 = new SafeModel { Id = safe4Id, SerializeableKey = "s2", ModifiedAt = middleDate };
             SafeModel safeS3 = new SafeModel { Id = safe6Id, SerializeableKey = "s3", ModifiedAt = middleDate };
             serverRepo.Safes.AddRange(new[] { safeS1, safeS2, safeS3 });
+            AddNotesWithSafeIds(serverRepo, new[] { safe2Id, safe4Id, safe6Id } );
 
             NoteRepositoryModel clientRepo = new NoteRepositoryModel();
             SafeModel safeC1 = new SafeModel { Id = safe5Id, SerializeableKey = "c1", ModifiedAt = middleDate };
@@ -211,6 +237,7 @@ namespace SilentNotesTest.Workers
             SafeModel safeC4 = new SafeModel { Id = safe1Id, SerializeableKey = "c4", ModifiedAt = middleDate };
             SafeModel safeC5 = new SafeModel { Id = safe3Id, SerializeableKey = "c5", ModifiedAt = middleDate };
             clientRepo.Safes.AddRange(new[] { safeC1, safeC2, safeC3, safeC4, safeC5 });
+            AddNotesWithSafeIds(clientRepo, new[] { safe5Id, safe4Id, safe2Id, safe1Id, safe3Id });
 
             NoteRepositoryMerger merger = new NoteRepositoryMerger();
             NoteRepositoryModel result = merger.Merge(clientRepo, serverRepo);
@@ -223,6 +250,12 @@ namespace SilentNotesTest.Workers
             Assert.AreEqual(safe3Id, safes[3].Id); Assert.AreEqual("c5", safes[3].SerializeableKey);
             Assert.AreEqual(safe4Id, safes[4].Id); Assert.AreEqual("c2", safes[4].SerializeableKey);
             Assert.AreEqual(safe6Id, safes[5].Id); Assert.AreEqual("s3", safes[5].SerializeableKey);
+        }
+
+        private static void AddNotesWithSafeIds(NoteRepositoryModel repo, IEnumerable<Guid> safeIds)
+        {
+            foreach (Guid safeId in safeIds)
+                repo.Notes.Add(new NoteModel { SafeId = safeId });
         }
 
         [Test]

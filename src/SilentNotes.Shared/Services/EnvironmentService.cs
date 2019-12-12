@@ -23,5 +23,11 @@ namespace SilentNotes.Services
 
         /// <inheritdoc/>
         public OperatingSystem Os { get; }
+
+        /// <inheritdoc/>
+        public bool IsMobileDevice
+        {
+            get { return Os == OperatingSystem.Android; }
+        }
     }
 }

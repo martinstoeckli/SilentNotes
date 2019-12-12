@@ -146,31 +146,33 @@ WriteLiteral(" id=\"content\"");
 
 WriteLiteral(" class=\"container-fluid p-4\"");
 
-WriteLiteral(">\r\n        <h2>");
+WriteLiteral(">\r\n");
 
 
 #line 39 "OpenSafeRazorView.cshtml"
-       Write(Model.Language["safe_open"]);
-
-
-#line default
-#line hidden
-WriteLiteral("</h2>\r\n\r\n");
-
-
-#line 41 "OpenSafeRazorView.cshtml"
         
 
 #line default
 #line hidden
 
-#line 41 "OpenSafeRazorView.cshtml"
+#line 39 "OpenSafeRazorView.cshtml"
          if (Model.SafeExists)
         {
 
 
 #line default
 #line hidden
+WriteLiteral("            <h2>");
+
+
+#line 41 "OpenSafeRazorView.cshtml"
+           Write(Model.Language["safe_open"]);
+
+
+#line default
+#line hidden
+WriteLiteral("</h2>\r\n");
+
 WriteLiteral("            <div");
 
 WriteLiteral(" class=\"my-4\"");
@@ -178,7 +180,7 @@ WriteLiteral(" class=\"my-4\"");
 WriteLiteral(">");
 
 
-#line 43 "OpenSafeRazorView.cshtml"
+#line 42 "OpenSafeRazorView.cshtml"
                          Write(Model.Language["safe_open_existing"]);
 
 
@@ -187,7 +189,7 @@ WriteLiteral(">");
 WriteLiteral("</div>\r\n");
 
 
-#line 44 "OpenSafeRazorView.cshtml"
+#line 43 "OpenSafeRazorView.cshtml"
         }
         else
         {
@@ -195,6 +197,17 @@ WriteLiteral("</div>\r\n");
 
 #line default
 #line hidden
+WriteLiteral("            <h2>");
+
+
+#line 46 "OpenSafeRazorView.cshtml"
+           Write(Model.Language["safe_new"]);
+
+
+#line default
+#line hidden
+WriteLiteral("</h2>\r\n");
+
 WriteLiteral("            <div");
 
 WriteLiteral(" class=\"my-4\"");
@@ -217,15 +230,15 @@ WriteLiteral("</div>\r\n");
 
 #line default
 #line hidden
-WriteLiteral("\r\n        <form");
+WriteLiteral("\r\n    <form");
 
 WriteLiteral(" class=\"mb-4 col-md-9\"");
 
-WriteLiteral(">\r\n            <div");
+WriteLiteral(">\r\n        <div");
 
 WriteLiteral(" class=\"form-row form-group\"");
 
-WriteLiteral(">\r\n                <label");
+WriteLiteral(">\r\n            <label");
 
 WriteLiteral(" class=\"col-form-label col-md-3\"");
 
@@ -235,16 +248,16 @@ WriteLiteral(">");
 
 
 #line 52 "OpenSafeRazorView.cshtml"
-                                                                 Write(Model.Language["cloud_password"]);
+                                                             Write(Model.Language["cloud_password"]);
 
 
 #line default
 #line hidden
-WriteLiteral("</label>\r\n                <div");
+WriteLiteral("</label>\r\n            <div");
 
 WriteLiteral(" class=\"col-md-9\"");
 
-WriteLiteral(">\r\n                    <input");
+WriteLiteral(">\r\n                <input");
 
 WriteLiteral(" type=\"password\"");
 
@@ -258,7 +271,7 @@ WriteLiteral(" id=\"Password\"");
 
 WriteLiteral(" value=\"\"");
 
-WriteLiteral(" autofocus>\r\n                    <div");
+WriteLiteral(" autofocus>\r\n                <div");
 
 WriteLiteral(" class=\"invalid-feedback\"");
 
@@ -266,12 +279,12 @@ WriteLiteral(">");
 
 
 #line 55 "OpenSafeRazorView.cshtml"
-                                             Write(Model.Language["password_short_error"]);
+                                         Write(Model.Language["password_short_error"]);
 
 
 #line default
 #line hidden
-WriteLiteral("</div>\r\n                </div>\r\n            </div>\r\n            <div");
+WriteLiteral("</div>\r\n            </div>\r\n        </div>\r\n        <div");
 
 WriteLiteral(" class=\"form-row form-group mb-4\"");
 
@@ -279,24 +292,24 @@ WriteLiteral(" ");
 
 
 #line 58 "OpenSafeRazorView.cshtml"
-                                                   if (Model.SafeExists) { 
+                                               if (Model.SafeExists) { 
 
 #line default
 #line hidden
 
 #line 58 "OpenSafeRazorView.cshtml"
-                                                                       Write("hidden");
+                                                                   Write("hidden");
 
 
 #line default
 #line hidden
 
 #line 58 "OpenSafeRazorView.cshtml"
-                                                                                       ; }
+                                                                                   ; }
 
 #line default
 #line hidden
-WriteLiteral(">\r\n                <label");
+WriteLiteral(">\r\n            <label");
 
 WriteLiteral(" class=\"col-form-label col-md-3\"");
 
@@ -306,16 +319,16 @@ WriteLiteral(">");
 
 
 #line 59 "OpenSafeRazorView.cshtml"
-                                                                             Write(Model.Language["safe_confirm_password"]);
+                                                                         Write(Model.Language["safe_confirm_password"]);
 
 
 #line default
 #line hidden
-WriteLiteral("</label>\r\n                <div");
+WriteLiteral("</label>\r\n            <div");
 
 WriteLiteral(" class=\"col-md-9\"");
 
-WriteLiteral(">\r\n                    <input");
+WriteLiteral(">\r\n                <input");
 
 WriteLiteral(" type=\"password\"");
 
@@ -329,7 +342,7 @@ WriteLiteral(" id=\"PasswordConfirmation\"");
 
 WriteLiteral(" value=\"\"");
 
-WriteLiteral(">\r\n                    <div");
+WriteLiteral(">\r\n                <div");
 
 WriteLiteral(" class=\"invalid-feedback\"");
 
@@ -337,12 +350,12 @@ WriteLiteral(">");
 
 
 #line 62 "OpenSafeRazorView.cshtml"
-                                             Write(Model.Language["password_confirmation_error"]);
+                                         Write(Model.Language["password_confirmation_error"]);
 
 
 #line default
 #line hidden
-WriteLiteral("</div>\r\n                </div>\r\n            </div>\r\n\r\n            <button");
+WriteLiteral("</div>\r\n            </div>\r\n        </div>\r\n\r\n        <button");
 
 WriteLiteral(" type=\"button\"");
 
@@ -356,12 +369,12 @@ WriteLiteral(">");
 
 
 #line 66 "OpenSafeRazorView.cshtml"
-                                                                                                                        Write(Model.Language["ok"]);
+                                                                                                                    Write(Model.Language["ok"]);
 
 
 #line default
 #line hidden
-WriteLiteral("</button>\r\n            <button");
+WriteLiteral("</button>\r\n        <button");
 
 WriteLiteral(" type=\"button\"");
 
@@ -375,21 +388,65 @@ WriteLiteral(">");
 
 
 #line 67 "OpenSafeRazorView.cshtml"
-                                                                                                               Write(Model.Language["cancel"]);
+                                                                                                           Write(Model.Language["cancel"]);
 
 
 #line default
 #line hidden
-WriteLiteral("</button>\r\n        </form>\r\n\r\n");
+WriteLiteral("</button>\r\n");
 
 
-#line 70 "OpenSafeRazorView.cshtml"
+#line 68 "OpenSafeRazorView.cshtml"
         
 
 #line default
 #line hidden
 
+#line 68 "OpenSafeRazorView.cshtml"
+         if (Model.SafeExists)
+        {
+
+
+#line default
+#line hidden
+WriteLiteral("        <button");
+
+WriteLiteral(" type=\"button\"");
+
+WriteLiteral(" class=\"btn btn-danger mb-2 ml-4\"");
+
+WriteLiteral(" onclick=\"bind(event)\"");
+
+WriteLiteral(" data-binding=\"ResetSafeCommand\"");
+
+WriteLiteral(">");
+
+
 #line 70 "OpenSafeRazorView.cshtml"
+                                                                                                                Write(Model.Language["safe_reset"]);
+
+
+#line default
+#line hidden
+WriteLiteral("</button>\r\n");
+
+
+#line 71 "OpenSafeRazorView.cshtml"
+        }
+
+
+#line default
+#line hidden
+WriteLiteral("    </form>\r\n\r\n");
+
+
+#line 74 "OpenSafeRazorView.cshtml"
+        
+
+#line default
+#line hidden
+
+#line 74 "OpenSafeRazorView.cshtml"
          if (!Model.SafeExists)
         {
 
@@ -403,7 +460,7 @@ WriteLiteral(" class=\"alert alert-success my-4\"");
 WriteLiteral(">");
 
 
-#line 72 "OpenSafeRazorView.cshtml"
+#line 76 "OpenSafeRazorView.cshtml"
                                              Write(Model.Language["safe_password_requirement"]);
 
 
@@ -412,7 +469,7 @@ WriteLiteral(">");
 WriteLiteral("</div>\r\n");
 
 
-#line 73 "OpenSafeRazorView.cshtml"
+#line 77 "OpenSafeRazorView.cshtml"
         }
 
 

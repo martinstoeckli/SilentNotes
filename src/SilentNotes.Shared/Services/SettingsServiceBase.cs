@@ -26,16 +26,18 @@ namespace SilentNotes.Services
         /// <summary>Gets the injected dependency to a data protection service</summary>
         protected readonly IDataProtectionService _dataProtectionService;
 
+        private readonly IEnvironmentService _environmentSettings;
         private SettingsModel _cachedSettings;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SettingsServiceBase"/> class.
         /// </summary>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1611:ElementParametersMustBeDocumented", Justification = "Dependency injection")]
-        public SettingsServiceBase(IXmlFileService xmlFileService, IDataProtectionService dataProtectionService)
+        public SettingsServiceBase(IXmlFileService xmlFileService, IDataProtectionService dataProtectionService, IEnvironmentService environmentService)
         {
             _xmlFileService = xmlFileService;
             _dataProtectionService = dataProtectionService;
+            _environmentSettings = environmentService;
         }
 
         /// <inheritdoc/>
@@ -65,6 +67,7 @@ namespace SilentNotes.Services
             if (result == null)
             {
                 result = new SettingsModel();
+                result.ShowCursorArrowKeys = _environmentSettings.IsMobileDevice;
                 modelWasUpdated = true;
             }
 

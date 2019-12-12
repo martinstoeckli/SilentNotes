@@ -4,7 +4,9 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Security;
 using System.Windows.Input;
 using SilentNotes.Controllers;
@@ -54,6 +56,7 @@ namespace SilentNotes.ViewModels
             GoBackCommand = new RelayCommand(GoBack);
             CancelCommand = new RelayCommand(Cancel);
             OkCommand = new RelayCommand(Ok);
+            ResetSafeCommand = new RelayCommand(ResetSafe);
         }
 
         /// <inheritdoc />
@@ -126,8 +129,6 @@ namespace SilentNotes.ViewModels
             }
             else
             {
-                if (Model.ReuniteOpenSafes() > 0)
-                    Modified = true;
                 _navigationService.Navigate(ControllerNames.NoteRepository);
             }
         }
@@ -150,6 +151,34 @@ namespace SilentNotes.ViewModels
                     result++;
             }
             return result;
+        }
+
+        /// <summary>
+        /// Gets the command to reset the safe(s). This command can only be called from the safe-open
+        /// dialog, so there cannot be any open notes at this time.
+        /// </summary>
+        public ICommand ResetSafeCommand { get; private set; }
+
+        private async void ResetSafe()
+        {
+            MessageBoxResult dialogResult = await _feedbackService.ShowMessageAsync(Language.LoadText("safe_reset_warning"), Language.LoadText("safe_reset"), MessageBoxButtons.ContinueCancel, true);
+            if (dialogResult == MessageBoxResult.Continue)
+            {
+                // Move all protected notes to the deleted notes
+                List<NoteModel> protectedNotes = Model.Notes.Where(item => item.SafeId != null).ToList();
+                foreach (NoteModel protectedNote in protectedNotes)
+                {
+                    Model.DeletedNotes.Add(protectedNote.Id);
+                    Model.Notes.Remove(protectedNote);
+                }
+
+                // Remove all safes
+                Model.Safes.Clear();
+                Modified = true;
+
+                // Continue with the create safe dialog
+                _navigationService.Navigate(ControllerNames.OpenSafe);
+            }
         }
 
         /// <summary>

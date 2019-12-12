@@ -49,6 +49,7 @@ namespace SilentNotes.Controllers
             Bindings.BindCommand("GoBack", _viewModel.GoBackCommand);
             Bindings.BindCommand("OkCommand", _viewModel.OkCommand);
             Bindings.BindCommand("CancelCommand", _viewModel.CancelCommand);
+            Bindings.BindCommand("ResetSafeCommand", _viewModel.ResetSafeCommand);
             Bindings.BindText("Password", null, (v) => _viewModel.Password = SecureStringExtensions.StringToSecureString(v), null, null, HtmlViewBindingMode.OneWayToViewmodel);
             Bindings.BindText("PasswordConfirmation", null, (v) => _viewModel.PasswordConfirmation = SecureStringExtensions.StringToSecureString(v), null, null, HtmlViewBindingMode.OneWayToViewmodel);
             Bindings.BindInvalid("Password", () => _viewModel.InvalidPasswordError, _viewModel, nameof(_viewModel.InvalidPasswordError), HtmlViewBindingMode.OneWayToView);

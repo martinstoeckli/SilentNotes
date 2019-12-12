@@ -53,9 +53,11 @@ namespace SilentNotes.Services
             resources["note_pull_from_server"] = "Download note";
             resources["note_push_to_server"] = "Upload note";
 
+            resources["safe_new"] = "Create safe";
             resources["safe_open"] = "Open safe";
             resources["safe_close"] = "Close safe";
             resources["safe_change_password"] = "Change safe password";
+            resources["safe_reset"] = "Reset safe";
             resources["safe_confirm_password"] = "Confirm password";
             resources["safe_old_password"] = "Current password";
             resources["safe_new_password"] = "New password";
@@ -64,6 +66,7 @@ namespace SilentNotes.Services
             resources["safe_open_existing"] = "Please enter your password, to unlock the protected notes.";
             resources["safe_open_new"] = "Please create a new password to protect your notes. Afterwards you can choose the notes which should be protected.";
             resources["safe_password_requirement"] = "A safe password contains at least 8 characters, it is recommended to use a passphrase like: 'I like to sleep from 10 to august'.";
+            resources["safe_reset_warning"] = "If you forgot the password you can reset the safe and create a new one, but thereby you will lose all protected notes. Are you really sure you want to continue?";
             resources["password_short_error"] = "The password needs at least 5 characters.";
             resources["password_confirmation_error"] = "The password confirmation does not match.";
             resources["password_wrong_error"] = "Cannot open the safe with this password, please check for typos.";
@@ -179,9 +182,11 @@ namespace SilentNotes.Services
             resources["note_pull_from_server"] = "Notiz herunterladen";
             resources["note_push_to_server"] = "Notiz hochladen";
 
+            resources["safe_new"] = "Tresor einrichten";
             resources["safe_open"] = "Tresor öffnen";
             resources["safe_close"] = "Tresor schliessen";
             resources["safe_change_password"] = "Tresor-Passwort ändern";
+            resources["safe_reset"] = "Tresor zurücksetzen";
             resources["safe_confirm_password"] = "Passwort bestätigen";
             resources["safe_old_password"] = "Aktuelles Passwort";
             resources["safe_new_password"] = "Neues Passwort";
@@ -190,6 +195,7 @@ namespace SilentNotes.Services
             resources["safe_open_existing"] = "Bitte geben Sie Ihr Passwort ein, um die geschützten Notizen anzuzeigen.";
             resources["safe_open_new"] = "Bitte vergeben Sie ein neues Passwort um Ihre Notizen zu schützen. Anschliessen können Sie die Notizen auswählen welche geschützt werden sollen.";
             resources["safe_password_requirement"] = "Ein sicheres Passwort enthält mindestens 8 Zeichen, es wird empfohlen einen Passwortsatz zu verwenden wie; 'Ich schlafe gerne von 10 bis August'.";
+            resources["safe_reset_warning"] = "Wenn Sie das Passwort vergessen haben können Sie den Tresor zurücksetzen und einen neuen erstellen, aber sämtliche geschützten Notizen gehen dabei verloren. Sind Sie sicher dass Sie weiterfahren wollen?";
             resources["password_short_error"] = "Das Passwort benötigt mindestens 5 Zeichen.";
             resources["password_confirmation_error"] = "Die Passwortbestätigung stimmt nicht überein.";
             resources["password_wrong_error"] = "Kann den Tresor nicht mit diesem Passwort öffnen, bitte achten Sie auf Tippfehler.";

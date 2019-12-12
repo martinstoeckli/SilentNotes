@@ -181,6 +181,12 @@ namespace SilentNotes.ViewModels
             }
         }
 
+        /// <summary>
+        /// Tries the password on all safes and returns a list of decrypted safes/keys.
+        /// The function does not change the open/close state of the safe.
+        /// </summary>
+        /// <param name="password">Password to test with.</param>
+        /// <returns>List of safes where the password matches.</returns>
         private List<SafeInfo> TryPasswordOnSafes(SecureString password)
         {
             List<SafeInfo> result = new List<SafeInfo>();

@@ -50,7 +50,8 @@ namespace SilentNotes.Android
             Ioc.RegisterFactory<ISettingsService>(() => new SettingsService(
                 rootActivity,
                 Ioc.GetOrCreate<IXmlFileService>(),
-                Ioc.GetOrCreate<IDataProtectionService>()));
+                Ioc.GetOrCreate<IDataProtectionService>(),
+                Ioc.GetOrCreate<IEnvironmentService>()));
             Ioc.RegisterFactory<IRepositoryStorageService>(() => new RepositoryStorageService(
                 rootActivity,
                 Ioc.GetOrCreate<IXmlFileService>(),

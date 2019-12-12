@@ -36,36 +36,40 @@
     </nav>
 
     <div id="content" class="container-fluid p-4">
-        <h2>@Model.Language["safe_open"]</h2>
-
         @if (Model.SafeExists)
         {
+            <h2>@Model.Language["safe_open"]</h2>
             <div class="my-4">@Model.Language["safe_open_existing"]</div>
         }
         else
         {
+            <h2>@Model.Language["safe_new"]</h2>
             <div class="my-4">@Model.Language["safe_open_new"]</div>
         }
 
-        <form class="mb-4 col-md-9">
-            <div class="form-row form-group">
-                <label class="col-form-label col-md-3" for="Password">@Model.Language["cloud_password"]</label>
-                <div class="col-md-9">
-                    <input type="password" class="form-control" oninput="bind(event)" data-binding="Password" id="Password" value="" autofocus>
-                    <div class="invalid-feedback">@Model.Language["password_short_error"]</div>
-                </div>
+    <form class="mb-4 col-md-9">
+        <div class="form-row form-group">
+            <label class="col-form-label col-md-3" for="Password">@Model.Language["cloud_password"]</label>
+            <div class="col-md-9">
+                <input type="password" class="form-control" oninput="bind(event)" data-binding="Password" id="Password" value="" autofocus>
+                <div class="invalid-feedback">@Model.Language["password_short_error"]</div>
             </div>
-            <div class="form-row form-group mb-4" @if (Model.SafeExists) { @("hidden") ; }>
-                <label class="col-form-label col-md-3" for="PasswordConfirmation">@Model.Language["safe_confirm_password"]</label>
-                <div class="col-md-9">
-                    <input type="password" class="form-control" oninput="bind(event)" data-binding="PasswordConfirmation" id="PasswordConfirmation" value="">
-                    <div class="invalid-feedback">@Model.Language["password_confirmation_error"]</div>
-                </div>
+        </div>
+        <div class="form-row form-group mb-4" @if (Model.SafeExists) { @("hidden") ; }>
+            <label class="col-form-label col-md-3" for="PasswordConfirmation">@Model.Language["safe_confirm_password"]</label>
+            <div class="col-md-9">
+                <input type="password" class="form-control" oninput="bind(event)" data-binding="PasswordConfirmation" id="PasswordConfirmation" value="">
+                <div class="invalid-feedback">@Model.Language["password_confirmation_error"]</div>
             </div>
+        </div>
 
-            <button type="button" class="btn btn-primary mb-2 shortcut-enter" onclick="bind(event)" data-binding="OkCommand">@Model.Language["ok"]</button>
-            <button type="button" class="btn btn-secondary mb-2" onclick="bind(event)" data-binding="CancelCommand">@Model.Language["cancel"]</button>
-        </form>
+        <button type="button" class="btn btn-primary mb-2 shortcut-enter" onclick="bind(event)" data-binding="OkCommand">@Model.Language["ok"]</button>
+        <button type="button" class="btn btn-secondary mb-2" onclick="bind(event)" data-binding="CancelCommand">@Model.Language["cancel"]</button>
+        @if (Model.SafeExists)
+        {
+        <button type="button" class="btn btn-danger mb-2 ml-4" onclick="bind(event)" data-binding="ResetSafeCommand">@Model.Language["safe_reset"]</button>
+        }
+    </form>
 
         @if (!Model.SafeExists)
         {

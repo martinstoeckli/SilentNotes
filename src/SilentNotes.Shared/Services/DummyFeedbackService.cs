@@ -19,7 +19,7 @@ namespace SilentNotes.Services
         }
 
         /// <inheritdoc/>
-        public Task<MessageBoxResult> ShowMessageAsync(string message, string title, MessageBoxButtons buttons)
+        public Task<MessageBoxResult> ShowMessageAsync(string message, string title, MessageBoxButtons buttons, bool conservativeDefault)
         {
             MessageBoxResult result;
             switch (buttons)

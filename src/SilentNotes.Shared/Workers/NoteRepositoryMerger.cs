@@ -20,6 +20,7 @@ namespace SilentNotes.Workers
         /// </summary>
         /// <param name="localRepository">Repository from the local device.</param>
         /// <param name="remoteRepository">Repository stored on the server for synchronization.</param>
+        /// not used by any note.</param>
         /// <returns>The merged repository.</returns>
         public NoteRepositoryModel Merge(NoteRepositoryModel localRepository, NoteRepositoryModel remoteRepository)
         {
@@ -71,11 +72,16 @@ namespace SilentNotes.Workers
             // Add ids from remote repository
             result.AddRange(remoteRepository.DeletedNotes);
 
-            // Add ids from the local repository which exist in the remote repository
+            // Add note ids from the local repository whose notes exist in the remote repository.
+            // As long as they are not part of the remote repository, they existed only locally,
+            // where deleted, and we can forget about them.
             foreach (Guid locallyDeletedNoteId in localRepository.DeletedNotes)
             {
-                if (remoteRepository.Notes.ContainsById(locallyDeletedNoteId))
+                bool noteStillExistsInRemoteRepo = remoteRepository.Notes.ContainsById(locallyDeletedNoteId);
+                if (noteStillExistsInRemoteRepo && !result.Contains(locallyDeletedNoteId))
+                {
                     result.Add(locallyDeletedNoteId);
+                }
             }
             return result;
         }

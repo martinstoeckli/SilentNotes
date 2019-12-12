@@ -146,54 +146,5 @@ namespace SilentNotes.Models
             foreach (SafeModel safe in Safes)
                 safe.ClearMaintainedAtIfObsolete();
         }
-
-        /// <summary>
-        /// Since open safes always have the same password, we can reunite them. The oldest safe is
-        /// preferred and all notes pointing to one of the open safes can point to the oldest safe.
-        /// </summary>
-        /// <remarks>
-        /// Several safes with the same password can exist, when safes where created on different
-        /// devices before synchronization. At the time of synchronization the safes are closed and
-        /// therefore we cannot compare the passwords. The time to call this method is when the user
-        /// entered the password and opened all safes with this password.
-        /// </remarks>
-        /// <returns>Number of deleted safes.</returns>
-        public int ReuniteOpenSafes()
-        {
-            int result = 0;
-            List<SafeModel> openSafes = Safes.Where(item => item.IsOpen).ToList();
-            if (openSafes.Count < 2)
-                return result;
-
-            // Find oldest safe
-            SafeModel oldestSafe = openSafes[0];
-            for (int index = 1; index < openSafes.Count; index++)
-            {
-                if (openSafes[index].CreatedAt < oldestSafe.CreatedAt)
-                    oldestSafe = openSafes[index];
-            }
-
-            // Relink notes to oldest safe and remove other open safes
-            DateTime maintainedAt = DateTime.UtcNow;
-            foreach (SafeModel safeToReunite in openSafes)
-            {
-                if (safeToReunite == oldestSafe)
-                    continue;
-
-                foreach (NoteModel note in Notes)
-                {
-                    if (note.SafeId == safeToReunite.Id)
-                    {
-                        note.SafeId = oldestSafe.Id;
-                        note.MaintainedAt = maintainedAt; // Mark as maintained
-                    }
-                }
-
-                // Remove safe
-                Safes.Remove(safeToReunite);
-                result++;
-            }
-            return result;
-        }
     }
 }

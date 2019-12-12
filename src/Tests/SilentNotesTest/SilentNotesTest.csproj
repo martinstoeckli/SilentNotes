@@ -109,6 +109,7 @@
     <Compile Include="Models\NoteRepositoryModelTest.cs" />
     <Compile Include="Logging\LoggerTest.cs" />
     <Compile Include="Models\SafeListModelTest.cs" />
+    <Compile Include="Models\SafeModelTest.cs" />
     <Compile Include="Services\RepositoryStorageServiceTest.cs" />
     <Compile Include="Services\SettingsServiceTest.cs" />
     <Compile Include="StoryBoards\PullPushStory\ExistsCloudRepositoryStepTest.cs" />
@@ -121,6 +122,7 @@
     <Compile Include="CultureSwitcher4UnitTest.cs" />
     <Compile Include="UnmixableAlphabetTest.cs" />
     <Compile Include="ViewModels\NoteViewModelTest.cs" />
+    <Compile Include="ViewModels\OpenSafeViewModelTest.cs" />
     <Compile Include="Workers\ByteArrayExtensionsTest.cs" />
     <Compile Include="Workers\ColorExtensionsTest.cs" />
     <Compile Include="Workers\CompressUtilsTest.cs" />

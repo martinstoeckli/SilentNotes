@@ -26,7 +26,7 @@ namespace SilentNotesTest.Services
                 Returns(true);
             Mock<IDataProtectionService> dataProtectionService = new Mock<IDataProtectionService>();
 
-            SettingsServiceBase service = new TestableService(fileService.Object, dataProtectionService.Object);
+            SettingsServiceBase service = new TestableService(fileService.Object, dataProtectionService.Object, CommonMocksAndStubs.EnvironmentService());
             SettingsModel settings = service.LoadSettingsOrDefault();
 
             // Loaded existing settings and did not store it
@@ -45,7 +45,7 @@ namespace SilentNotesTest.Services
                 Returns(false);
             Mock<IDataProtectionService> dataProtectionService = new Mock<IDataProtectionService>();
 
-            SettingsServiceBase service = new TestableService(fileService.Object, dataProtectionService.Object);
+            SettingsServiceBase service = new TestableService(fileService.Object, dataProtectionService.Object, CommonMocksAndStubs.EnvironmentService());
             SettingsModel settings = service.LoadSettingsOrDefault();
 
             // Created new settings and stored it
@@ -83,7 +83,7 @@ namespace SilentNotesTest.Services
                 Setup(m => m.Unprotect(It.Is<string>(p => p == "protected_martinstoeckli_v3"))).
                 Returns(Encoding.UTF8.GetBytes("martinstoeckli_v3"));
 
-            SettingsServiceBase service = new TestableService(fileService.Object, dataProtectionService.Object);
+            SettingsServiceBase service = new TestableService(fileService.Object, dataProtectionService.Object, CommonMocksAndStubs.EnvironmentService());
             SettingsModel settings = service.LoadSettingsOrDefault();
             Assert.AreEqual("twofish_gcm", settings.SelectedEncryptionAlgorithm);
             Assert.AreEqual("scuj2wfpdcodmgzm", settings.TransferCode);
@@ -129,7 +129,7 @@ namespace SilentNotesTest.Services
                 Setup(m => m.Unprotect(It.Is<string>(p => p == "protected_martinstoeckli_v3"))).
                 Returns(Encoding.UTF8.GetBytes("martinstoeckli_v3"));
 
-            SettingsServiceBase service = new TestableService(fileService.Object, dataProtectionService.Object);
+            SettingsServiceBase service = new TestableService(fileService.Object, dataProtectionService.Object, CommonMocksAndStubs.EnvironmentService());
             SettingsModel settings = service.LoadSettingsOrDefault();
             Assert.AreEqual("twofish_gcm", settings.SelectedEncryptionAlgorithm);
             Assert.AreEqual("scuj2wfpdcodmgzm", settings.TransferCode);
@@ -151,8 +151,8 @@ namespace SilentNotesTest.Services
         /// </summary>
         private class TestableService : SettingsServiceBase
         {
-            public TestableService(IXmlFileService xmlFileService, IDataProtectionService dataProtectionService)
-                : base(xmlFileService, dataProtectionService)
+            public TestableService(IXmlFileService xmlFileService, IDataProtectionService dataProtectionService, IEnvironmentService environmentService)
+                : base(xmlFileService, dataProtectionService, environmentService)
             {
             }
 

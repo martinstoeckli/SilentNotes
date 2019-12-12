@@ -47,6 +47,15 @@ namespace SilentNotesTest
             return new RandomSource4UnitTest();
         }
 
+        /// <summary>
+        /// Creates an environment service for unittests.
+        /// </summary>
+        /// <returns>Environment service.</returns>
+        public static IEnvironmentService EnvironmentService()
+        {
+            return new EnvironmentService(SilentNotes.Services.OperatingSystem.Windows);
+        }
+
         public static byte[] FilledByteArray(int length, byte fill)
         {
             byte[] result = new byte[length];

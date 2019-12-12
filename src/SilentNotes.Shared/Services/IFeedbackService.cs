@@ -42,8 +42,9 @@ namespace SilentNotes.Services
         /// <param name="message">The message to be shown to the user.</param>
         /// <param name="title">The title of the dialog box. This may be null.</param>
         /// <param name="buttons">Determines the buttons to show, and the possible dialog results.</param>
+        /// <param name="conservativeDefault">Sets the non destructive cancel button as default.</param>
         /// <returns>The pressed button.</returns>
-        Task<MessageBoxResult> ShowMessageAsync(string message, string title, MessageBoxButtons buttons);
+        Task<MessageBoxResult> ShowMessageAsync(string message, string title, MessageBoxButtons buttons, bool conservativeDefault);
     }
 
     /// <summary>
