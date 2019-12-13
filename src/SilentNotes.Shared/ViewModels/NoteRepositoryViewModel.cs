@@ -297,6 +297,7 @@ namespace SilentNotes.ViewModels
             _feedbackService.ShowBusyIndicator(true);
             try
             {
+                OnStoringUnsavedData();
                 _storyBoardService.ActiveStory = new SynchronizationStoryBoard(StoryBoardMode.GuiAndToasts);
                 await _storyBoardService.ActiveStory.Start();
             }

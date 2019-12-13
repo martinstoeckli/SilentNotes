@@ -58,6 +58,24 @@ namespace SilentNotesTest.Models
             Assert.AreNotEqual(model1.GetModificationFingerprint(), model2.GetModificationFingerprint());
         }
 
+        [Test]
+        public void RemoveUnusedSafesWorksCorrectly()
+        {
+            Guid safe1Id = new Guid("10000000000000000000000000000000");
+            Guid safe2Id = new Guid("20000000000000000000000000000000");
+
+            NoteRepositoryModel repository = new NoteRepositoryModel();
+            SafeModel safeS1 = new SafeModel { Id = safe1Id };
+            SafeModel safeS2 = new SafeModel { Id = safe2Id };
+            repository.Safes.AddRange(new[] { safeS1, safeS2 });
+            NoteModel noteN2 = new NoteModel { SafeId = safe2Id };
+            repository.Notes.Add(noteN2);
+
+            repository.RemoveUnusedSafes();
+            Assert.AreEqual(1, repository.Safes.Count);
+            Assert.AreEqual(safe2Id, repository.Safes[0].Id);
+        }
+
         private static NoteRepositoryModel CreateNoteRepositoryModel()
         {
             NoteRepositoryModel model = new NoteRepositoryModel();
