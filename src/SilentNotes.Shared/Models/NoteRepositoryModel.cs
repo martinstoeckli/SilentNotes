@@ -146,5 +146,14 @@ namespace SilentNotes.Models
             foreach (SafeModel safe in Safes)
                 safe.ClearMaintainedAtIfObsolete();
         }
+
+        /// <summary>
+        /// Removes all safes, which are not used by any note anymore.
+        /// </summary>
+        public void RemoveUnusedSafes()
+        {
+            List<Guid> usedSafeIds = Notes.Where(note => note.SafeId != null).Select(note => note.SafeId.Value).ToList();
+            Safes.RemoveAll(safe => !usedSafeIds.Contains(safe.Id));
+        }
     }
 }

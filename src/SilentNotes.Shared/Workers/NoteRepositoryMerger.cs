@@ -55,6 +55,7 @@ namespace SilentNotes.Workers
                 result.OrderModifiedAt = remoteRepository.OrderModifiedAt;
             }
 
+            result.RemoveUnusedSafes();
             result.ClearMaintainedAtIfObsolete();
             return result;
         }
