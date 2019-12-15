@@ -106,6 +106,16 @@ Temperature  4 out of 10
                 HtmlContent = @"<h1>Shopping list</h1><ul><li>Milk</li><li>Toast</li><li>Sun cream</li><li>Garbage bags</li></ul>"
             });
 
+            Notes.Add(new NoteModel
+            {
+                Id = new Guid("a5076c29-0503-4d06-b1d0-4759868be7c6"),
+                BackgroundColorHex = "#fdd8bb",
+                InRecyclingBin = false,
+                CreatedAt = DateTime.Parse("2017-09-10T09:25:16.6787213Z"),
+                ModifiedAt = DateTime.Parse("2018-12-18T12:52:42.8746458Z"),
+                HtmlContent = @"<h1>Fun</h1><h3>Old enough</h3><p>The son asks his father: ""Can I borrow your car, I'm old enough?"". The father answers: ""Yes you are, but the car is not"".</p>",
+            });
+
             DeletedNotes.Add(new Guid("fae40c63-d850-4b78-a8bd-609893d2983b"));
         }
     }
