@@ -10,6 +10,7 @@ More information you can find on [SilentNote's homepage](https://www.martinstoec
 
 * ✔ Take your notes wherever you are on your Android and Windows devices.
 * ✔ Write the notes in an easily operated WYSIWYG editor.
+* ✔ Protect your notes with a user defined password.
 * ✔ Quickly find the right note with the full-text search, just by typing a few letters.
 * ✔ Store the notes to an online-storage of your choice, this allows to synchronize them between devices and offers an easy backup.
 * ✔ Currently supported are the `FTP` protocol, the `WebDav` protocol and `Dropbox`.
@@ -20,7 +21,7 @@ More information you can find on [SilentNote's homepage](https://www.martinstoec
 
 ## Security
 
-Whenever an application promises security and confidentiality, users just have to trust the developer team. Not only is it challenging to do encryption right, users are more and more used to pay with their personal data, to benefit from new technologies. We believe that the best way out of this dilemma is to publish the entire code, this is why SilentNotes was turned into an open source project.
+Whenever an application promises security and confidentiality, users just have to trust the developer team. Not only is it challenging to do encryption right, but also users cannot be sure whether they pay with their personal data, to benefit from new technologies. We believe that the best way out of this dilemma is to publish the entire code, this is why SilentNotes was turned into an open source project.
 
 ## Credits
 
