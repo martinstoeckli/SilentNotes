@@ -26,7 +26,7 @@ namespace SilentNotes.Android
     /// The main activity of the Android app. Because this is a single page app, it is the only
     /// activity showing a window.
     /// </summary>
-    [Activity(Label = "SilentNotes", Icon = "@drawable/icon", Theme = "@style/MainTheme.SplashScreen", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
+    [Activity(Label = "SilentNotes", Icon = "@drawable/ic_launcher", Theme = "@style/MainTheme.SplashScreen", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
     [IntentFilter(
         new[] { Intent.ActionSend },
         Categories = new[] { Intent.CategoryDefault },
