@@ -12,8 +12,6 @@ namespace SilentNotes.Workers
     /// <summary>
     /// Generates and handles cryptographically safe transfer codes.
     /// The codes use only non-interchangeable characters (e.g. never 0/O 1/I/l).
-    /// Instead of forcing the user to press the "shift" key on smartphones (additional keystrokes),
-    /// we generate longer codes with only lower case characters.
     /// </summary>
     public static class TransferCode
     {
@@ -73,8 +71,7 @@ namespace SilentNotes.Workers
         }
 
         /// <summary>
-        /// Tries to read unser input and brings it into a wellformed format without
-        /// whitespaces and in lower case letters.
+        /// Tries to read unser input and brings it into a wellformed format without whitespaces.
         /// </summary>
         /// <param name="code">User input to validate.</param>
         /// <param name="sanitizedCode">Wellformed code.</param>
@@ -87,7 +84,7 @@ namespace SilentNotes.Workers
                 return false;
 
             // remove whitespaces
-            sanitizedCode = code.Replace(" ", string.Empty).Replace("-", string.Empty).ToLowerInvariant();
+            sanitizedCode = code.Replace(" ", string.Empty).Replace("-", string.Empty);
 
             if (sanitizedCode.Length != CodeLength)
                 return false;

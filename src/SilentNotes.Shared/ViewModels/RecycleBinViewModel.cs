@@ -21,6 +21,7 @@ namespace SilentNotes.ViewModels
     {
         private readonly IThemeService _themeService;
         private readonly IRepositoryStorageService _repositoryService;
+        private readonly IFeedbackService _feedbackService;
         private readonly ICryptor _noteCryptor;
         private NoteRepositoryModel _model;
 
@@ -34,11 +35,13 @@ namespace SilentNotes.ViewModels
             ISvgIconService svgIconService,
             IBaseUrlService webviewBaseUrl,
             IThemeService themeService,
+            IFeedbackService feedbackService,
             ICryptoRandomSource randomSource,
             IRepositoryStorageService repositoryService)
             : base(navigationService, languageService, svgIconService, webviewBaseUrl)
         {
             _themeService = themeService;
+            _feedbackService = feedbackService;
             _repositoryService = repositoryService;
             _noteCryptor = new Cryptor(NoteModel.CryptorPackageName, randomSource);
             RecycledNotes = new List<NoteViewModel>();
@@ -119,8 +122,12 @@ namespace SilentNotes.ViewModels
         /// </summary>
         public ICommand EmptyRecycleBinCommand { get; private set; }
 
-        private void EmptyRecycleBin()
+        private async void EmptyRecycleBin()
         {
+            MessageBoxResult dialogResult = await _feedbackService.ShowMessageAsync(Language["empty_recyclebin_confirmation"], Language["empty_recyclebin"], MessageBoxButtons.ContinueCancel, false);
+            if (dialogResult != MessageBoxResult.Continue)
+                return;
+
             if (RecycledNotes.Count > 0)
                 Modified = true;
             RecycledNotes.Clear();

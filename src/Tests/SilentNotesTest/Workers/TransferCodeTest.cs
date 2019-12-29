@@ -26,5 +26,36 @@ namespace SilentNotesTest.Workers
                 Assert.IsTrue(UnmixableAlphabet.IsOfCorrectAlphabet(code));
             }
         }
+
+        [Test]
+        public void TrySanitizeUserInputAcceptsValidCodes()
+        {
+            string sanitizedCode;
+            Assert.IsTrue(TransferCode.TrySanitizeUserInput("8AerUwv22345hkpM", out sanitizedCode));
+            Assert.AreEqual("8AerUwv22345hkpM", sanitizedCode);
+
+            Assert.IsTrue(TransferCode.TrySanitizeUserInput("8Aer-Uwv2-2345-hkpM", out sanitizedCode));
+            Assert.AreEqual("8AerUwv22345hkpM", sanitizedCode);
+
+            Assert.IsTrue(TransferCode.TrySanitizeUserInput("8Aer Uwv2 2345   hkpM", out sanitizedCode));
+            Assert.AreEqual("8AerUwv22345hkpM", sanitizedCode);
+        }
+
+        [Test]
+        public void TrySanitizeUserInputRejectsInvalidCodes()
+        {
+            // Invalid alphabet
+            Assert.IsFalse(TransferCode.TrySanitizeUserInput("IAerUwv22345hkpM", out _));
+
+            // Invalid length
+            Assert.IsFalse(TransferCode.TrySanitizeUserInput("8AerUwv22345hkp", out _));
+            Assert.IsFalse(TransferCode.TrySanitizeUserInput("8AerUwv22345hkpMS", out _));
+            Assert.IsFalse(TransferCode.TrySanitizeUserInput("8Aer        hkpM", out _));
+
+            // null and empty
+            Assert.IsFalse(TransferCode.TrySanitizeUserInput(string.Empty, out _));
+            Assert.IsFalse(TransferCode.TrySanitizeUserInput(null, out _));
+            Assert.IsFalse(TransferCode.TrySanitizeUserInput("                ", out _));
+        }
     }
 }

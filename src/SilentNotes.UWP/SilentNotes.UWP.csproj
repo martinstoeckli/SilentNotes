@@ -2,8 +2,8 @@
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <BaseIntermediateOutputPath>$(TEMP)\SilentNotesUWP\obj\</BaseIntermediateOutputPath>
-    <PackageCertificateThumbprint>BB3C3B4BEE739D0F79A9C5C04827A774E0C9421E</PackageCertificateThumbprint>
-    <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
+    <PackageCertificateThumbprint>0EA7D6B20DEA1091C653B9B1B0E8432535ADEB7E</PackageCertificateThumbprint>
+    <GenerateAppInstallerFile>True</GenerateAppInstallerFile>
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <AppxBundle>Always</AppxBundle>
     <AppxBundlePlatforms>x86|x64</AppxBundlePlatforms>
