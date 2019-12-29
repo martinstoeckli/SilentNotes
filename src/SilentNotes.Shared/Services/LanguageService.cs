@@ -50,8 +50,8 @@ namespace SilentNotes.Services
             resources["note_code"] = "Code block";
             resources["note_quotation"] = "Quotation";
             resources["note_link"] = "Link";
-            resources["note_pull_from_server"] = "Download note";
-            resources["note_push_to_server"] = "Upload note";
+            resources["note_pull_from_server"] = "Manually download note";
+            resources["note_push_to_server"] = "Manually upload note";
 
             resources["safe_new"] = "Create safe";
             resources["safe_open"] = "Open safe";
@@ -74,6 +74,7 @@ namespace SilentNotes.Services
             resources["show_recyclebin"] = "Open recycle bin";
             resources["show_settings"] = "Settings";
             resources["empty_recyclebin"] = "Empty recycle bin";
+            resources["empty_recyclebin_confirmation"] = "The recycle bin will be cleared. Are you sure you want to continue?";
 
             resources["show_transfer_code"] = "Show transfer code";
             resources["transfer_not_existing"] = "The transfer code will be available after the first synchronization.";
@@ -179,8 +180,8 @@ namespace SilentNotes.Services
             resources["note_code"] = "Code Block";
             resources["note_quotation"] = "Zitat";
             resources["note_link"] = "Link";
-            resources["note_pull_from_server"] = "Notiz herunterladen";
-            resources["note_push_to_server"] = "Notiz hochladen";
+            resources["note_pull_from_server"] = "Notiz manuell herunterladen";
+            resources["note_push_to_server"] = "Notiz manuell hochladen";
 
             resources["safe_new"] = "Tresor einrichten";
             resources["safe_open"] = "Tresor öffnen";
@@ -203,6 +204,7 @@ namespace SilentNotes.Services
             resources["show_recyclebin"] = "Papierkorb öffnen";
             resources["show_settings"] = "Einstellungen";
             resources["empty_recyclebin"] = "Papierkorb leeren";
+            resources["empty_recyclebin_confirmation"] = "Der Papierkorb wird geleert. Sind sie sicher, dass Sie weiterfahren wollen?";
 
             resources["show_transfer_code"] = "Transfercode anzeigen";
             resources["transfer_not_existing"] = "Der Transfercode ist erst verfügbar nach der ersten Synchronisation.";
