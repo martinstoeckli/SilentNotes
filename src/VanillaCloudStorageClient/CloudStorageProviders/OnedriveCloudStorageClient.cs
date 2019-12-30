@@ -33,6 +33,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
         private const string ListUrl = "https://graph.microsoft.com/v1.0/me/drive/special/approot/children";
         private const string ExistsUrl = "https://graph.microsoft.com/v1.0/me/drive/special/approot:/{0}";
         private const string AppRootUrl = "https://graph.microsoft.com/v1.0/me/drive/special/approot";
+        private string _appRootId;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OnedriveCloudStorageClient"/> class.
@@ -65,6 +66,8 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
 
             try
             {
+                await InitializeAppRootFolderAsync(credentials.Token.AccessToken);
+
                 string url = string.Format(UploadUrl, Url.Encode(filename));
                 byte[] requestBytes = Encoding.UTF8.GetBytes("{ \"item\": { \"@microsoft.graph.conflictBehavior\": \"replace\" } }");
                 HttpContent sessionContent = new ByteArrayContent(requestBytes);
@@ -214,6 +217,18 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
             {
                 throw ConvertToCloudStorageException(ex);
             }
+        }
+
+        /// <summary>
+        /// The first time a file is uploaded, the appRoot folder does not yet exist and an upload
+        /// process will end up with a 403-Forbidden error. A precedent request to retrieve the id
+        /// of the appRoot folder, will create this folder.
+        /// </summary>
+        /// <param name="accessToken">A valid OAuth2 access token.</param>
+        private async Task InitializeAppRootFolderAsync(string accessToken)
+        {
+            if (string.IsNullOrEmpty(_appRootId))
+                _appRootId = await FindAppRootIdAsync(accessToken);
         }
 
         /// <summary>
