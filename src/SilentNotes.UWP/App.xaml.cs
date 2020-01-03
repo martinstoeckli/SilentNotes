@@ -9,6 +9,7 @@ using SilentNotes.StoryBoards.SynchronizationStory;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.ExtendedExecution;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -29,6 +30,23 @@ namespace SilentNotes.UWP
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+        }
+
+        /// <summary>
+        /// This method should set the size of the main window when the DEMO condition is set in the
+        /// SolutionWideDefines.props, so that screenshots all have a preset size.
+        /// Unfortunately a change of the condition is only respected after reloading and rebuilding
+        /// of the project, this is too error prone for release builds, but it can be called manually.
+        /// </summary>
+        private void AdjustWindowSizeInDemoMode()
+        {
+#if (DEMO)
+            // Set size to get 4:3 screenshots (800:600). border = 1 title bar = 32
+            ApplicationView.PreferredLaunchViewSize = new Windows.Foundation.Size(800 - 2 * 1, 600 - 32 - 2 * 1);
+            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
+#else
+            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.Auto;
+#endif
         }
 
         /// <summary>
