@@ -323,10 +323,39 @@ WriteLiteral("><use");
 
 WriteLiteral(" xlink:href=\"#svg-lock\"");
 
+WriteLiteral(" /></svg></div>\r\n        <div");
+
+WriteAttribute ("class", " class=\"", "\""
+, Tuple.Create<string,object,bool> ("", "note-handle", true)
+, Tuple.Create<string,object,bool> (" ", "recycle-handle", true)
+
+#line 20 "NoteRepositoryContentRazorView.cshtml"
+       , Tuple.Create<string,object,bool> (" ", note.GetDarkClass()
+
+#line default
+#line hidden
+, false)
+);
+WriteLiteral(" onclick=\"bind(event);\"");
+
+WriteLiteral(" data-binding=\"DeleteNote\"");
+
+WriteLiteral("><svg");
+
+WriteLiteral(" width=\'24\'");
+
+WriteLiteral(" height=\'24\'");
+
+WriteLiteral(" viewBox=\'0 0 24 24\'");
+
+WriteLiteral("><use");
+
+WriteLiteral(" xlink:href=\"#svg-delete\"");
+
 WriteLiteral(" /></svg></div>\r\n    </li>\r\n");
 
 
-#line 21 "NoteRepositoryContentRazorView.cshtml"
+#line 22 "NoteRepositoryContentRazorView.cshtml"
     }
 
 

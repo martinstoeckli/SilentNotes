@@ -11,12 +11,13 @@
             }
             else
             {
-                <div class="note-viewer @note.GetDarkClass()">@{WriteLiteral(note.HtmlContent);}</div>
+                <div class="note-viewer @note.GetDarkClass()">@{WriteLiteral(note.UnlockedHtmlContent);}</div>
             }
         </div>
         <div class="note-handle sortable-handle @note.GetDarkClass()"><svg width='24' height='24' viewBox='0 0 24 24'><use xlink:href="#svg-menu-swap" /></svg></div>
         <div class="note-handle safe-handle greenish @if (!@Model.IsAnySafeOpen || @note.IsInSafe || @note.IsLocked) { <text>hidden-at-startup</text> } @note.GetDarkClass()" onclick="bind(event);" data-binding="AddToSafe"><svg viewBox='0 0 24 24'><use xlink:href="#svg-lock-open-variant" /></svg></div>
         <div class="note-handle safe-handle reddish @if (!@Model.IsAnySafeOpen || !@note.IsInSafe || @note.IsLocked) { <text>hidden-at-startup</text> } @note.GetDarkClass()" onclick="bind(event);" data-binding="RemoveFromSafe"><svg width='24' height='24' viewBox='0 0 24 24'><use xlink:href="#svg-lock" /></svg></div>
+        <div class="note-handle recycle-handle @note.GetDarkClass()" onclick="bind(event);" data-binding="DeleteNote"><svg width='24' height='24' viewBox='0 0 24 24'><use xlink:href="#svg-delete" /></svg></div>
     </li>
     }
 </ul>

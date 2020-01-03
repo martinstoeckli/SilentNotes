@@ -156,6 +156,11 @@ a:hover { color: #007bff; text-decoration: underline; }
 .safe-handle {
 	right: 50px;
 }
+.recycle-handle {
+	right: 18px;
+	top: auto;
+	bottom: 14px;
+}
 
 .selected {
 	background-color: rgba(38, 160, 218, 0.2);

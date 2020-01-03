@@ -78,7 +78,6 @@ namespace SilentNotes.Controllers
 
                 Bindings.BindCommand("AddNote", _viewModel.AddNoteCommand);
                 Bindings.BindCommand("ShowNote", _viewModel.ShowNoteCommand);
-                Bindings.BindCommand("DeleteNote", _viewModel.DeleteNoteCommand);
                 Bindings.BindCommand("Synchronize", _viewModel.SynchronizeCommand);
                 Bindings.BindCommand("ShowTransferCode", _viewModel.ShowTransferCodeCommand);
                 Bindings.BindCommand("ShowRecycleBin", _viewModel.ShowRecycleBinCommand);
@@ -196,6 +195,10 @@ namespace SilentNotes.Controllers
                     noteId = new Guid(e.Parameters["parent.data-note"]);
                     _viewModel.RemoveNoteFromSafe(noteId);
                     SetVisibilityAddRemoveTresor(noteId, false);
+                    break;
+                case "deletenote":
+                    noteId = new Guid(e.Parameters["parent.data-note"]);
+                    _viewModel.DeleteNoteCommand.Execute(noteId);
                     break;
             }
         }

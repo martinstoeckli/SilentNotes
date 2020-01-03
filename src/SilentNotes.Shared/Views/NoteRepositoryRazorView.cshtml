@@ -101,7 +101,6 @@ body {
 
         <button class="nav-item show-only-on-wide-browser" onclick="bind(event);" data-binding="AddNote" title="@Model.Language["note_create_new"]">@{WriteLiteral(Model.Icon["plus"]);}</button>
         <button class="nav-item show-only-on-wide-browser" onclick="bind(event);" data-binding="ShowNote" title="@Model.Language["note_view_or_edit"]">@{WriteLiteral(Model.Icon["lead-pencil"]);}</button>
-        <button class="nav-item" onclick="bind(event);" data-binding="DeleteNote" title="@Model.Language["note_to_recyclebin"]">@{WriteLiteral(Model.Icon["delete"]);}</button>
         <button class="nav-item" onclick="bind(event);" data-binding="Synchronize" title="@Model.Language["sync_notes"]">@{WriteLiteral(Model.Icon["cloud-sync"]);}</button>
 
         <div class="dropdown">
@@ -137,6 +136,7 @@ body {
         @{WriteLiteral(Model.Icon.LoadIcon("lock", new[] { new KeyValuePair<string, string>("id", "svg-lock") }));}
         @{WriteLiteral(Model.Icon.LoadIcon("lock-open-variant", new[] { new KeyValuePair<string, string>("id", "svg-lock-open-variant") }));}
         @{WriteLiteral(Model.Icon.LoadIcon("lock-outline", new[] { new KeyValuePair<string, string>("id", "svg-lock-outline") }));}
+        @{WriteLiteral(Model.Icon.LoadIcon("delete", new[] { new KeyValuePair<string, string>("id", "svg-delete") }));}
     </div>
 </body>
 </html>

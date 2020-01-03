@@ -71,7 +71,7 @@ namespace SilentNotes.ViewModels
             // Initialize commands and events
             ShowNoteCommand = new RelayCommand<Guid?>(ShowNote);
             AddNoteCommand = new RelayCommand(AddNote);
-            DeleteNoteCommand = new RelayCommand(DeleteNote);
+            DeleteNoteCommand = new RelayCommand<Guid>(DeleteNote);
             ClearFilterCommand = new RelayCommand(ClearFilter);
             SynchronizeCommand = new RelayCommand(Synchronize);
             ShowTransferCodeCommand = new RelayCommand(ShowTransferCode);
@@ -265,26 +265,20 @@ namespace SilentNotes.ViewModels
         /// </summary>
         public ICommand DeleteNoteCommand { get; private set; }
 
-        private void DeleteNote()
+        private void DeleteNote(Guid noteId)
         {
-            if (SelectedNote == null)
+            NoteViewModel selectedNote = AllNotes.Find(item => item.Id == noteId);
+            if (selectedNote == null)
                 return;
             Modified = true;
 
             // Mark note as deleted
-            SelectedNote.InRecyclingBin = true;
+            selectedNote.InRecyclingBin = true;
 
             // Remove note from filtered list
-            int selectedIndex = FilteredNotes.IndexOf(SelectedNote);
+            int selectedIndex = FilteredNotes.IndexOf(selectedNote);
             FilteredNotes.RemoveAt(selectedIndex);
             OnPropertyChanged("Notes");
-
-            // Set new selection
-            selectedIndex = Math.Min(selectedIndex, FilteredNotes.Count - 1);
-            if (selectedIndex >= 0)
-                SelectedNote = FilteredNotes[selectedIndex];
-            else
-                SelectedNote = null;
         }
 
         /// <summary>

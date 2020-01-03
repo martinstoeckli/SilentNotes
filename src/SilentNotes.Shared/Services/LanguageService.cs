@@ -33,9 +33,7 @@ namespace SilentNotes.Services
 
             resources["note_create_new"] = "Create new note";
             resources["note_view_or_edit"] = "Edit selected note";
-            resources["note_to_recyclebin"] = "Move selected notes to the recycle bin";
             resources["note_undelete"] = "Restore note";
-            resources["note_undelete_selected"] = "Restore selected notes";
             resources["note_title"] = "Title";
             resources["note_content"] = "Text";
             resources["note_left_key"] = "Left arrow key";
@@ -163,9 +161,7 @@ namespace SilentNotes.Services
 
             resources["note_create_new"] = "Neue Notiz erstellen";
             resources["note_view_or_edit"] = "Bearbeiten der selektierten Notiz";
-            resources["note_to_recyclebin"] = "Selektierte Notizen in den Papierkorb verschieben";
             resources["note_undelete"] = "Notiz wiederherstellen";
-            resources["note_undelete_selected"] = "Selektierte Notizen wiederherstellen";
             resources["note_title"] = "Titel";
             resources["note_content"] = "Text";
             resources["note_left_key"] = "Linke Pfeiltaste";
