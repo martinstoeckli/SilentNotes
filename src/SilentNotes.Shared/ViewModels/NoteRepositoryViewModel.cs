@@ -257,6 +257,8 @@ namespace SilentNotes.ViewModels
             int selectedIndex = FilteredNotes.IndexOf(selectedNote);
             FilteredNotes.RemoveAt(selectedIndex);
             OnPropertyChanged("Notes");
+
+            _feedbackService.ShowToast(Language.LoadText("feedback_note_to_recycle"));
         }
 
         /// <summary>

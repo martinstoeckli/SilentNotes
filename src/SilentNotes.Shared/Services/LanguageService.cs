@@ -49,6 +49,7 @@ namespace SilentNotes.Services
             resources["note_link"] = "Link";
             resources["note_pull_from_server"] = "Manually download note";
             resources["note_push_to_server"] = "Manually upload note";
+            resources["feedback_note_to_recycle"] = "The note has been moved to the recycle bin and can be restored from there.";
 
             resources["safe_new"] = "Create safe";
             resources["safe_open"] = "Open safe";
@@ -176,6 +177,7 @@ namespace SilentNotes.Services
             resources["note_link"] = "Link";
             resources["note_pull_from_server"] = "Notiz manuell herunterladen";
             resources["note_push_to_server"] = "Notiz manuell hochladen";
+            resources["feedback_note_to_recycle"] = "Die Notiz ist in den Papierkorb verschoben worden und kann von dort wieder hergestellt werden.";
 
             resources["safe_new"] = "Tresor einrichten";
             resources["safe_open"] = "Tresor öffnen";
