@@ -62,35 +62,13 @@ WriteLiteral(">\r\n");
 #line hidden
 WriteLiteral("    <li");
 
-WriteAttribute ("class", " class=\"", "\""
-, Tuple.Create<string,object,bool> ("", "wraplist-item", true)
-, Tuple.Create<string,object,bool> (" ", "sortable-item", true)
-, Tuple.Create<string,object,bool> (" ", new Action<System.IO.TextWriter> (__razor_attribute_value_writer => {
+WriteLiteral(" class=\"wraplist-item sortable-item\"");
 
-#line 6 "NoteRepositoryContentRazorView.cshtml"
-                                            if(@Model.SelectedNote == @note) {
-
-#line default
-#line hidden
-WriteLiteralTo(__razor_attribute_value_writer, " ");
-
-WriteLiteralTo(__razor_attribute_value_writer, "selected");
-
-WriteLiteralTo(__razor_attribute_value_writer, " ");
-
-
-#line 6 "NoteRepositoryContentRazorView.cshtml"
-                                                                                                     }
-
-#line default
-#line hidden
-}), false)
-);
 WriteLiteral(" data-note=\"");
 
 
 #line 6 "NoteRepositoryContentRazorView.cshtml"
-                                                                                                              Write(note.Id.ToString());
+                                                  Write(note.Id.ToString());
 
 
 #line default
@@ -99,28 +77,21 @@ WriteLiteral("\"");
 
 WriteLiteral(">\r\n        <div");
 
-WriteLiteral(" class=\"note-card selectable-item\"");
+WriteLiteral(" class=\"note-card\"");
 
 WriteAttribute ("style", " style=\"", "\""
 , Tuple.Create<string,object,bool> ("", "background-color:", true)
 
 #line 7 "NoteRepositoryContentRazorView.cshtml"
-                                , Tuple.Create<string,object,bool> ("", note.BackgroundColorHex
+                , Tuple.Create<string,object,bool> ("", note.BackgroundColorHex
 
 #line default
 #line hidden
 , false)
 );
-WriteLiteral(" data-note=\"");
+WriteLiteral(" onclick=\"bind(event);\"");
 
-
-#line 7 "NoteRepositoryContentRazorView.cshtml"
-                                                                                                       Write(note.Id.ToString());
-
-
-#line default
-#line hidden
-WriteLiteral("\"");
+WriteLiteral(" data-binding=\"ShowNote\"");
 
 WriteLiteral(">\r\n");
 
@@ -323,10 +294,39 @@ WriteLiteral("><use");
 
 WriteLiteral(" xlink:href=\"#svg-lock\"");
 
+WriteLiteral(" /></svg></div>\r\n        <div");
+
+WriteAttribute ("class", " class=\"", "\""
+, Tuple.Create<string,object,bool> ("", "note-handle", true)
+, Tuple.Create<string,object,bool> (" ", "recycle-handle", true)
+
+#line 20 "NoteRepositoryContentRazorView.cshtml"
+       , Tuple.Create<string,object,bool> (" ", note.GetDarkClass()
+
+#line default
+#line hidden
+, false)
+);
+WriteLiteral(" onclick=\"bind(event);\"");
+
+WriteLiteral(" data-binding=\"DeleteNote\"");
+
+WriteLiteral("><svg");
+
+WriteLiteral(" width=\'24\'");
+
+WriteLiteral(" height=\'24\'");
+
+WriteLiteral(" viewBox=\'0 0 24 24\'");
+
+WriteLiteral("><use");
+
+WriteLiteral(" xlink:href=\"#svg-delete\"");
+
 WriteLiteral(" /></svg></div>\r\n    </li>\r\n");
 
 
-#line 21 "NoteRepositoryContentRazorView.cshtml"
+#line 22 "NoteRepositoryContentRazorView.cshtml"
     }
 
 

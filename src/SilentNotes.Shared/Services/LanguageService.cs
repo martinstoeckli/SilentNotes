@@ -32,10 +32,7 @@ namespace SilentNotes.Services
             resources["welcome_note"] = "<h1>Welcome to SilentNotes</h1><ul><li>SilentNotes respects your privacy with end-to-end encryption.</li><li>Take your notes and synchronize them between your pc and mobile devices.</li></ul>";
 
             resources["note_create_new"] = "Create new note";
-            resources["note_view_or_edit"] = "Edit selected note";
-            resources["note_to_recyclebin"] = "Move selected notes to the recycle bin";
             resources["note_undelete"] = "Restore note";
-            resources["note_undelete_selected"] = "Restore selected notes";
             resources["note_title"] = "Title";
             resources["note_content"] = "Text";
             resources["note_left_key"] = "Left arrow key";
@@ -52,6 +49,7 @@ namespace SilentNotes.Services
             resources["note_link"] = "Link";
             resources["note_pull_from_server"] = "Manually download note";
             resources["note_push_to_server"] = "Manually upload note";
+            resources["feedback_note_to_recycle"] = "The note has been moved to the recycle bin and can be restored from there.";
 
             resources["safe_new"] = "Create safe";
             resources["safe_open"] = "Open safe";
@@ -162,10 +160,7 @@ namespace SilentNotes.Services
             resources["welcome_note"] = "<h1>Willkommen bei SilentNotes</h1><ul><li>SilentNotes respektiert Ihre Privatsphäre mit Ende-zu-Ende Verschlüsselung.</li><li>Schreiben Sie Ihre Notizen und synchronisieren Sie sie zwischen PC und Mobilgeräten.</li></ul>";
 
             resources["note_create_new"] = "Neue Notiz erstellen";
-            resources["note_view_or_edit"] = "Bearbeiten der selektierten Notiz";
-            resources["note_to_recyclebin"] = "Selektierte Notizen in den Papierkorb verschieben";
             resources["note_undelete"] = "Notiz wiederherstellen";
-            resources["note_undelete_selected"] = "Selektierte Notizen wiederherstellen";
             resources["note_title"] = "Titel";
             resources["note_content"] = "Text";
             resources["note_left_key"] = "Linke Pfeiltaste";
@@ -182,6 +177,7 @@ namespace SilentNotes.Services
             resources["note_link"] = "Link";
             resources["note_pull_from_server"] = "Notiz manuell herunterladen";
             resources["note_push_to_server"] = "Notiz manuell hochladen";
+            resources["feedback_note_to_recycle"] = "Die Notiz ist in den Papierkorb verschoben worden und kann von dort wieder hergestellt werden.";
 
             resources["safe_new"] = "Tresor einrichten";
             resources["safe_open"] = "Tresor öffnen";

@@ -156,10 +156,10 @@ a:hover { color: #007bff; text-decoration: underline; }
 .safe-handle {
 	right: 50px;
 }
-
-.selected {
-	background-color: rgba(38, 160, 218, 0.2);
-	border: 1px solid #26a0da;
+.recycle-handle {
+	right: 18px;
+	top: auto;
+	bottom: 14px;
 }
 
 .fab {
@@ -170,7 +170,7 @@ a:hover { color: #007bff; text-decoration: underline; }
 	z-index: 1030;
 	width: 56px;
 	height: 56px;
-	background-color: #259000;
+	background-color: #2090ea;
 	border-radius: 50%;
 	box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }

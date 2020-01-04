@@ -172,9 +172,6 @@
     <Content Include="..\SilentNotes.Shared\Assets\Html\jquery-3.4.1.min.js">
       <Link>Assets\Html\jquery-3.4.1.min.js</Link>
     </Content>
-    <Content Include="..\SilentNotes.Shared\Assets\Html\jquery.longpress.js">
-      <Link>Assets\Html\jquery.longpress.js</Link>
-    </Content>
     <Content Include="..\SilentNotes.Shared\Assets\Html\key-background.svg">
       <Link>Assets\Html\key-background.svg</Link>
     </Content>
