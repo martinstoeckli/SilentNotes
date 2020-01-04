@@ -32,7 +32,6 @@ namespace SilentNotes.Services
             resources["welcome_note"] = "<h1>Welcome to SilentNotes</h1><ul><li>SilentNotes respects your privacy with end-to-end encryption.</li><li>Take your notes and synchronize them between your pc and mobile devices.</li></ul>";
 
             resources["note_create_new"] = "Create new note";
-            resources["note_view_or_edit"] = "Edit selected note";
             resources["note_undelete"] = "Restore note";
             resources["note_title"] = "Title";
             resources["note_content"] = "Text";
@@ -160,7 +159,6 @@ namespace SilentNotes.Services
             resources["welcome_note"] = "<h1>Willkommen bei SilentNotes</h1><ul><li>SilentNotes respektiert Ihre Privatsphäre mit Ende-zu-Ende Verschlüsselung.</li><li>Schreiben Sie Ihre Notizen und synchronisieren Sie sie zwischen PC und Mobilgeräten.</li></ul>";
 
             resources["note_create_new"] = "Neue Notiz erstellen";
-            resources["note_view_or_edit"] = "Bearbeiten der selektierten Notiz";
             resources["note_undelete"] = "Notiz wiederherstellen";
             resources["note_title"] = "Titel";
             resources["note_content"] = "Text";

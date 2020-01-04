@@ -16,7 +16,6 @@
     <script src="bootstrap.bundle.min.js"></script>
     <script src="silentnotes.js"></script>
     <script src="Sortable.min.js"></script>
-    <script src="jquery.longpress.js"></script>
 
     <style type="text/css">
 body {
@@ -86,7 +85,6 @@ body {
 	fill: #470a0a;
 	background-color: #be1c1c;
 }
-
     </style>
     <script>
     </script>
@@ -100,7 +98,6 @@ body {
         </div>
 
         <button class="nav-item show-only-on-wide-browser" onclick="bind(event);" data-binding="AddNote" title="@Model.Language["note_create_new"]">@{WriteLiteral(Model.Icon["plus"]);}</button>
-        <button class="nav-item show-only-on-wide-browser" onclick="bind(event);" data-binding="ShowNote" title="@Model.Language["note_view_or_edit"]">@{WriteLiteral(Model.Icon["lead-pencil"]);}</button>
         <button class="nav-item" onclick="bind(event);" data-binding="Synchronize" title="@Model.Language["sync_notes"]">@{WriteLiteral(Model.Icon["cloud-sync"]);}</button>
 
         <div class="dropdown">
@@ -109,7 +106,6 @@ body {
             </button>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navOverflowMenu">
                 <div class="dropdown-item show-only-on-narrow-browser" onclick="bind(event);" data-binding="AddNote">@{WriteLiteral(Model.Icon["plus"]);} @Model.Language["note_create_new"]</div>
-                <div class="dropdown-item show-only-on-narrow-browser" onclick="bind(event);" data-binding="ShowNote">@{WriteLiteral(Model.Icon["lead-pencil"]);} @Model.Language["note_view_or_edit"]</div>
                 <div class="dropdown-item" onclick="bind(event);" data-binding="ShowTransferCode">@{WriteLiteral(Model.Icon["key"]);} @Model.Language["show_transfer_code"]</div>
                 <div class="dropdown-item" onclick="bind(event);" data-binding="ShowRecycleBin">@{WriteLiteral(Model.Icon["delete-empty"]);} @Model.Language["show_recyclebin"]</div>
                 <div class="dropdown-divider"></div>

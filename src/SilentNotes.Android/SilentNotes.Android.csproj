@@ -154,11 +154,6 @@
     </AndroidAsset>
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\jquery.longpress.js">
-      <Link>Assets\Html\jquery.longpress.js</Link>
-    </AndroidAsset>
-  </ItemGroup>
-  <ItemGroup>
     <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\settings-background.svg">
       <Link>Assets\Html\settings-background.svg</Link>
     </AndroidAsset>

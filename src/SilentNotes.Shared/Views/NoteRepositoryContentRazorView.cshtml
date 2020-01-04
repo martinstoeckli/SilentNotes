@@ -3,8 +3,8 @@
 <ul id="note-repository" class="wraplist selectable sortable">
     @foreach (var note in @Model.FilteredNotes)
     {
-    <li class="wraplist-item sortable-item @if(@Model.SelectedNote == @note) { <text>selected</text> }" data-note="@note.Id.ToString()">
-        <div class="note-card selectable-item" style="background-color:@note.BackgroundColorHex" data-note="@note.Id.ToString()">
+    <li class="wraplist-item sortable-item" data-note="@note.Id.ToString()">
+        <div class="note-card" style="background-color:@note.BackgroundColorHex" onclick="bind(event);" data-binding="ShowNote">
             @if (@note.IsLocked)
             {
                 <span class="locked @note.GetDarkClass()"><svg width='24' height='24' viewBox='0 0 24 24'><use xlink:href="#svg-lock-outline" /></svg></span>

@@ -48,56 +48,6 @@ function makeSortableMobile()
 	});
 }
 
-function makeSelectable()
-{
-	if (isMobile())
-		makeSelectableListMobile();
-	else
-		makeSelectableListDesktop();
-}
-
-function makeSelectableListDesktop()
-{
-	$('.selectable').find('.selectable-item').each(function ()
-	{
-		// mouse down selects item
-		$(this).on('mousedown', function (evt) {
-			// Ignore duplicate event in case of double click
-			if (evt.originalEvent.detail <= 1) {
-				evt.type = 'list-select';
-				bind(evt);
-			}
-		});
-
-		// double click triggers action
-		$(this).on('dblclick', function (evt) {
-			evt.type = 'list-open';
-			bind(evt);
-		});
-	});
-}
-
-function makeSelectableListMobile()
-{
-	var lastLongPressTime = new Date().getTime();
-	$('.selectable').find('.selectable-item').each(function () {
-		$(this).longpress(
-			function (evt) {
-				lastLongPressTime = new Date().getTime();
-
-				// long press selects item
-				evt.type = 'list-select';
-				bind(evt);
-			},
-			function (evt) {
-				// short press triggers action
-				evt.type = 'list-open';
-				bind(evt);
-			},
-			350);
-	});
-}
-
 /**
  * Can be called by the app to close all dropdowns when the devices back button is pressed on the
  * main form. If no dropdown is open, the function can signal the application to handle the event.
@@ -208,18 +158,4 @@ function htmlViewBindingsSetCss(bindingName, cssAttributeName, cssAttributeValue
 function htmlViewBindingsSetBackgroundImage(bindingName, image) {
 	var selector = '[data-binding="' + bindingName + '"]';
 	$(selector).css('background-image', 'url(' + image + ')');
-}
-
-function selectNote(noteId) {
-	$('#note-repository').find('.selectable-item').each(function () {
-		var item = $(this);
-		if (item.data('note') === noteId) {
-			if (!item.hasClass('selected'))
-				item.addClass('selected');
-		}
-		else {
-			if (item.hasClass('selected'))
-				item.removeClass('selected');
-		}
-	});
 }

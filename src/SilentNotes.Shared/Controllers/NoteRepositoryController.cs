@@ -5,7 +5,6 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using SilentNotes.HtmlView;
 using SilentNotes.Services;
 using SilentNotes.ViewModels;
@@ -77,7 +76,6 @@ namespace SilentNotes.Controllers
                     repositoryService);
 
                 Bindings.BindCommand("AddNote", _viewModel.AddNoteCommand);
-                Bindings.BindCommand("ShowNote", _viewModel.ShowNoteCommand);
                 Bindings.BindCommand("Synchronize", _viewModel.SynchronizeCommand);
                 Bindings.BindCommand("ShowTransferCode", _viewModel.ShowTransferCodeCommand);
                 Bindings.BindCommand("ShowRecycleBin", _viewModel.ShowRecycleBinCommand);
@@ -89,13 +87,6 @@ namespace SilentNotes.Controllers
                 Bindings.BindCommand("FilterButtonCancel", _viewModel.ClearFilterCommand);
                 Bindings.BindCommand("Fab", _viewModel.AddNoteCommand);
                 Bindings.BindText("TxtFilter", () => _viewModel.Filter, (value) => _viewModel.Filter = value, _viewModel, nameof(_viewModel.Filter), HtmlViewBindingMode.TwoWay);
-                Bindings.BindGeneric(
-                    (value) => SelectedNoteChangedEventHandler(value),
-                    null,
-                    () => _viewModel.SelectedNote,
-                    null,
-                    new HtmlViewBindingViewmodelNotifier(_viewModel, nameof(_viewModel.SelectedNote)),
-                    HtmlViewBindingMode.OneWayToViewPlusOneTimeToView);
                 Bindings.BindVisibility("FilterButtonMagnifier", () => string.IsNullOrEmpty(_viewModel.Filter), _viewModel, nameof(_viewModel.FilterButtonMagnifierVisible), HtmlViewBindingMode.OneWayToView);
                 Bindings.BindVisibility("FilterButtonCancel", () => !string.IsNullOrEmpty(_viewModel.Filter), _viewModel, nameof(_viewModel.FilterButtonCancelVisible), HtmlViewBindingMode.OneWayToView);
                 Bindings.BindGeneric<object>(
@@ -136,7 +127,7 @@ namespace SilentNotes.Controllers
         private void NavigationCompletedEventHandler(object sender, EventArgs e)
         {
             View.NavigationCompleted -= NavigationCompletedEventHandler;
-            View.ExecuteJavaScript("makeSelectable(); makeSortable();");
+            View.ExecuteJavaScript("makeSortable();");
         }
 
         private void NotesChangedEventHandler(object obj)
@@ -144,13 +135,7 @@ namespace SilentNotes.Controllers
             // Update the note list in the (HTML) view.
             string html = _viewContentService.GenerateHtml(_viewModel);
             View.ReplaceNode("note-repository", html);
-            View.ExecuteJavaScript("makeSelectable(); makeSortable();");
-        }
-
-        private void SelectedNoteChangedEventHandler(NoteViewModel selectedNote)
-        {
-            string script = string.Format("selectNote('{0}');", selectedNote?.Id.ToString());
-            View.ExecuteJavaScript(script);
+            View.ExecuteJavaScript("makeSortable();");
         }
 
         private void SetVisibilityAddRemoveTresor(Guid noteId, bool isInSafe)
@@ -170,14 +155,6 @@ namespace SilentNotes.Controllers
             Guid noteId;
             switch (e.EventType?.ToLowerInvariant())
             {
-                case "list-open":
-                    noteId = new Guid(e.Parameters["data-note"]);
-                    _viewModel.ShowNoteCommand.Execute(noteId);
-                    break;
-                case "list-select":
-                    noteId = new Guid(e.Parameters["data-note"]);
-                    _viewModel.SelectedNote = _viewModel.FilteredNotes.FirstOrDefault(item => item.Id == noteId);
-                    break;
                 case "list-orderchanged":
                     int oldIndex = int.Parse(e.Parameters["oldIndex"]);
                     int newIndex = int.Parse(e.Parameters["newIndex"]);
@@ -186,6 +163,10 @@ namespace SilentNotes.Controllers
             }
             switch (e.BindingName?.ToLowerInvariant())
             {
+                case "shownote":
+                    noteId = new Guid(e.Parameters["parent.data-note"]);
+                    _viewModel.ShowNoteCommand.Execute(noteId);
+                    break;
                 case "addtosafe":
                     noteId = new Guid(e.Parameters["parent.data-note"]);
                     _viewModel.AddNoteToSafe(noteId);

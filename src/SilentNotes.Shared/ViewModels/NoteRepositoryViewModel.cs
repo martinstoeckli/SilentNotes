@@ -33,7 +33,6 @@ namespace SilentNotes.ViewModels
         private readonly SearchableHtmlConverter _searchableTextConverter;
         private readonly ICryptor _noteCryptor;
         private NoteRepositoryModel _model;
-        private NoteViewModel _selectedNote;
         private string _filter;
 
         /// <summary>
@@ -69,7 +68,7 @@ namespace SilentNotes.ViewModels
             Model = noteRepository;
 
             // Initialize commands and events
-            ShowNoteCommand = new RelayCommand<Guid?>(ShowNote);
+            ShowNoteCommand = new RelayCommand<Guid>(ShowNote);
             AddNoteCommand = new RelayCommand(AddNote);
             DeleteNoteCommand = new RelayCommand<Guid>(DeleteNote);
             ClearFilterCommand = new RelayCommand(ClearFilter);
@@ -147,15 +146,6 @@ namespace SilentNotes.ViewModels
         public ObservableCollection<NoteViewModel> FilteredNotes { get; private set; }
 
         /// <summary>
-        /// Gets or sets the selected Note.
-        /// </summary>
-        public NoteViewModel SelectedNote
-        {
-            get { return _selectedNote; }
-            set { ChangeProperty(ref _selectedNote, value, false); }
-        }
-
-        /// <summary>
         /// Gets or sets the search filter.
         /// </summary>
         public string Filter
@@ -178,7 +168,6 @@ namespace SilentNotes.ViewModels
         {
             string normalizedFilter = SearchableHtmlConverter.NormalizeWhitespaces(filter);
             NoteFilter noteFilter = new NoteFilter(normalizedFilter);
-            NoteViewModel selectedNote = SelectedNote;
 
             FilteredNotes.Clear();
             foreach (NoteViewModel noteViewModel in AllNotes)
@@ -186,9 +175,6 @@ namespace SilentNotes.ViewModels
                 if (!noteViewModel.InRecyclingBin && noteFilter.ContainsPattern(noteViewModel.SearchableContent))
                     FilteredNotes.Add(noteViewModel);
             }
-
-            if (FilteredNotes.Contains(selectedNote))
-                SelectedNote = selectedNote;
         }
 
         /// <summary>
@@ -222,18 +208,11 @@ namespace SilentNotes.ViewModels
         /// </summary>
         public ICommand ShowNoteCommand { get; private set; }
 
-        private void ShowNote(Guid? noteId)
+        private void ShowNote(Guid noteId)
         {
-            NoteViewModel note;
-            if (noteId != null)
-                note = FilteredNotes.FirstOrDefault(item => item.Id == noteId);
-            else
-                note = SelectedNote;
-
-            if (note != null)
-            {
-                _navigationService.Navigate(ControllerNames.Note, ControllerParameters.NoteId, note.Id.ToString());
-            }
+            bool noteExists = FilteredNotes.Any(item => item.Id == noteId);
+            if (noteExists)
+                _navigationService.Navigate(ControllerNames.Note, ControllerParameters.NoteId, noteId.ToString());
         }
 
         /// <summary>
@@ -256,7 +235,6 @@ namespace SilentNotes.ViewModels
             AllNotes.Insert(0, noteViewModel);
             FilteredNotes.Insert(0, noteViewModel);
 
-            SelectedNote = noteViewModel;
             ShowNote(noteViewModel.Id);
         }
 
@@ -449,7 +427,6 @@ namespace SilentNotes.ViewModels
             {
                 FilteredNotes.Clear();
                 AllNotes.Clear();
-                SelectedNote = null;
                 Filter = null;
                 _model = value;
 
