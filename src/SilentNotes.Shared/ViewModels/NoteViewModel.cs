@@ -254,7 +254,7 @@ namespace SilentNotes.ViewModels
         /// <inheritdoc/>
         private void GoBack()
         {
-            _navigationService.Navigate(ControllerNames.NoteRepository);
+            _navigationService.Navigate(ControllerNames.NoteRepository, ControllerParameters.NoteId, Model.Id.ToString());
         }
 
         /// <inheritdoc/>

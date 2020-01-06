@@ -21,6 +21,7 @@ namespace SilentNotes.Controllers
         private readonly IRazorViewService _viewStop;
         private NoteRepositoryViewModel _viewModel;
         private StopViewModel _stopViewModel;
+        private string _scrollToNote;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NoteRepositoryController"/> class.
@@ -58,6 +59,7 @@ namespace SilentNotes.Controllers
             base.ShowInView(htmlView, variables);
             View.NavigationCompleted += NavigationCompletedEventHandler;
             IRepositoryStorageService repositoryService = Ioc.GetOrCreate<IRepositoryStorageService>();
+            _scrollToNote = variables?.GetValueOrDefault(ControllerParameters.NoteId);
 
             RepositoryStorageLoadResult loadResult = repositoryService.LoadRepositoryOrDefault(out _);
             if (loadResult != RepositoryStorageLoadResult.InvalidRepository)
@@ -127,7 +129,17 @@ namespace SilentNotes.Controllers
         private void NavigationCompletedEventHandler(object sender, EventArgs e)
         {
             View.NavigationCompleted -= NavigationCompletedEventHandler;
-            View.ExecuteJavaScript("makeSortable();");
+
+            string scrollToNoteScript = BuildScrollToNoteScript(_scrollToNote);
+            View.ExecuteJavaScript("makeSortable();" + scrollToNoteScript);
+        }
+
+        private static string BuildScrollToNoteScript(string noteId)
+        {
+            if (string.IsNullOrEmpty(noteId))
+                return null;
+            else
+                return string.Format("$('[data-note=\"{0}\"]').get(0).scrollIntoView();", noteId);
         }
 
         private void NotesChangedEventHandler(object obj)
