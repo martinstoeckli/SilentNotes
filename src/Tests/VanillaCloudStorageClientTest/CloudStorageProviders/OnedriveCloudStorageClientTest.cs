@@ -116,6 +116,7 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
             // 1) Test upload
             if (!DoRealWebRequests)
             {
+                _httpTest.RespondWith("{ 'id': 'fakeid' }");
                 _httpTest.RespondWith(GetOneDriveUploadSession());
             }
             Assert.DoesNotThrowAsync(() => UploadFileWorksAsync(fileName, fileContent));
