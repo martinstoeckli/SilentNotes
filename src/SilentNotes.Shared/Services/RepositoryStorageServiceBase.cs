@@ -124,11 +124,13 @@ namespace SilentNotes.Services
 
         private void AddWelcomeNote(NoteRepositoryModel repositoryModel)
         {
-            NoteModel welcomeNote = new NoteModel
+            NoteModel[] notes = new NoteModel[]
             {
-                HtmlContent = _languageService.LoadText("welcome_note"),
+                new NoteModel { HtmlContent = _languageService.LoadText("welcome_note"), BackgroundColorHex = "#fbf4c1" },
+                new NoteModel { HtmlContent = _languageService.LoadText("welcome_note_2"), BackgroundColorHex = "#d9f8c8" },
+                new NoteModel { HtmlContent = _languageService.LoadText("welcome_note_3"), BackgroundColorHex = "#d0f8f9" },
             };
-            repositoryModel.Notes.Add(welcomeNote);
+            repositoryModel.Notes.AddRange(notes);
         }
     }
 }

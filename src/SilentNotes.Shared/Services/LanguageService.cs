@@ -29,7 +29,9 @@ namespace SilentNotes.Services
             resources["continue"] = "Continue";
 
             resources["error_loading_repository"] = "Could not read the notes. The application was stopped, to avoid further damage of already existing notes.";
-            resources["welcome_note"] = "<h1>Welcome to SilentNotes</h1><ul><li>SilentNotes respects your privacy with end-to-end encryption.</li><li>Take your notes and synchronize them between your pc and mobile devices.</li></ul>";
+            resources["welcome_note"] = "<h1>Welcome 💛</h1><p>SilentNotes respects your privacy. It doesn't collect personal data, runs free of adds and is open source.</p>";
+            resources["welcome_note_2"] = "<h1>Ordering notes</h1><p>Drag the double-arrow icon on a note to change the order.</p>";
+            resources["welcome_note_3"] = "<h1>Password protection</h1><p>Open the safe and use the lock icon to protect a note.</p>";
 
             resources["note_create_new"] = "Create new note";
             resources["note_undelete"] = "Restore note";
@@ -157,7 +159,9 @@ namespace SilentNotes.Services
             resources["continue"] = "Weiter";
 
             resources["error_loading_repository"] = "Die Notizen konnten nicht gelesen werden. Die Anwendung wurde gestoppt um bereits existierende Notizen nicht weiter zu beschädigen.";
-            resources["welcome_note"] = "<h1>Willkommen bei SilentNotes</h1><ul><li>SilentNotes respektiert Ihre Privatsphäre mit Ende-zu-Ende Verschlüsselung.</li><li>Schreiben Sie Ihre Notizen und synchronisieren Sie sie zwischen PC und Mobilgeräten.</li></ul>";
+            resources["welcome_note"] = "<h1>Willkommen 💛</h1><p>SilentNotes respektiert Ihre Privatsphäre, es sammelt keine Benutzerdaten, verzichtet auf Werbung und ist Open Source.";
+            resources["welcome_note_2"] = "<h1>Notizen ordnen</h1><p>Ziehen Sie das Doppelpfeil-Icon einer Notiz um die Reihenfolge zu ändern.</p>";
+            resources["welcome_note_3"] = "<h1>Passwortschutz</h1><p>Öffnen Sie den Tresor und benützen Sie das Schloss-Icon um eine Notiz zu schützen.</p>";
 
             resources["note_create_new"] = "Neue Notiz erstellen";
             resources["note_undelete"] = "Notiz wiederherstellen";
