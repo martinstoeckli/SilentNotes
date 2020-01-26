@@ -29,10 +29,11 @@ namespace SilentNotes.ViewModels
             INavigationService navigationService,
             ILanguageService languageService,
             ISvgIconService svgIconService,
+            IThemeService themeService,
             IBaseUrlService webviewBaseUrl,
             IStoryBoardService storyBoardService,
             ICloudStorageClientFactory cloudStorageClientFactory)
-            : base(navigationService, languageService, svgIconService, webviewBaseUrl)
+            : base(navigationService, languageService, svgIconService, themeService, webviewBaseUrl)
         {
             _storyBoardService = storyBoardService;
             _cloudStorageClientFactory = cloudStorageClientFactory;

@@ -23,7 +23,7 @@ using SilentNotes.ViewModels;
 #line hidden
 
 
-[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.3.0.277")]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.4.0.308")]
 public partial class MergeChoiceRazorView : MergeChoiceRazorViewBase
 {
 
@@ -68,14 +68,34 @@ WriteLiteral(" content=\"width=device-width, initial-scale=1, shrink-to-fit=no, 
 
 WriteLiteral(">\r\n\r\n    <link");
 
-WriteLiteral(" href=\"bootstrap.min.css\"");
+WriteAttribute ("href", " href=\"", "\""
 
+#line 12 "MergeChoiceRazorView.cshtml"
+, Tuple.Create<string,object,bool> ("", Model.Theme.DarkMode ? "bootstrap.dark.min.css" : "bootstrap.min.css"
+
+#line default
+#line hidden
+, false)
+);
 WriteLiteral(" rel=\"stylesheet\"");
 
 WriteLiteral(" />\r\n    <link");
 
 WriteLiteral(" href=\"silentnotes.css\"");
 
+WriteLiteral(" rel=\"stylesheet\"");
+
+WriteLiteral(" />\r\n    <link");
+
+WriteAttribute ("href", " href=\"", "\""
+
+#line 14 "MergeChoiceRazorView.cshtml"
+, Tuple.Create<string,object,bool> ("", Model.Theme.DarkMode ? "silentnotes.dark.css" : "silentnotes.light.css"
+
+#line default
+#line hidden
+, false)
+);
 WriteLiteral(" rel=\"stylesheet\"");
 
 WriteLiteral(" />\r\n\r\n    <script");
@@ -94,25 +114,9 @@ WriteLiteral("></script>\r\n\r\n    <style");
 
 WriteLiteral(" type=\"text/css\"");
 
-WriteLiteral(@">
-        .list-group {
-            max-width: 360px;
-        }
-        .list-group-item {
-            cursor: pointer;
-        }
-        .arrow {
-            font-size: 18pt;
-            color: ForestGreen;
-        }
-        .btn-text {
-        }
-    </style>
-    <script>
-    </script>
-</head>
-<body>
-    <nav");
+WriteLiteral(">\r\n        .list-group {\r\n            max-width: 360px;\r\n        }\r\n\r\n        .li" +
+"st-group-item {\r\n            cursor: pointer;\r\n        }\r\n    </style>\r\n    <scr" +
+"ipt>\r\n    </script>\r\n</head>\r\n<body>\r\n    <nav");
 
 WriteLiteral(" id=\"navigation\"");
 
@@ -128,7 +132,7 @@ WriteLiteral(" data-binding=\"GoBack\"");
 
 WriteAttribute ("title", " title=\"", "\""
 
-#line 38 "MergeChoiceRazorView.cshtml"
+#line 34 "MergeChoiceRazorView.cshtml"
                                                       , Tuple.Create<string,object,bool> ("", Model.Language["back"]
 
 #line default
@@ -138,7 +142,7 @@ WriteAttribute ("title", " title=\"", "\""
 WriteLiteral(">");
 
 
-#line 38 "MergeChoiceRazorView.cshtml"
+#line 34 "MergeChoiceRazorView.cshtml"
                                                                                                                         WriteLiteral(Model.Icon["arrow-left"]);
 
 #line default
@@ -152,7 +156,7 @@ WriteLiteral(" class=\"container-fluid p-4\"");
 WriteLiteral(">\r\n        <h1>");
 
 
-#line 42 "MergeChoiceRazorView.cshtml"
+#line 38 "MergeChoiceRazorView.cshtml"
        Write(Model.Language["cloud_service_choice"]);
 
 
@@ -174,7 +178,7 @@ WriteLiteral(" data-binding=\"UseMergedRepository\"");
 
 WriteLiteral(">\r\n                <span");
 
-WriteLiteral(" class=\"arrow align-items-center mr-3\"");
+WriteLiteral(" class=\"dialog-action-arrow align-items-center mr-3\"");
 
 WriteLiteral(">➜</span><span");
 
@@ -183,8 +187,8 @@ WriteLiteral(" class=\"btn-text\"");
 WriteLiteral(">");
 
 
-#line 46 "MergeChoiceRazorView.cshtml"
-                                                                                      Write(Model.Language["sync_repository_merge"]);
+#line 42 "MergeChoiceRazorView.cshtml"
+                                                                                                    Write(Model.Language["sync_repository_merge"]);
 
 
 #line default
@@ -201,7 +205,7 @@ WriteLiteral(" data-binding=\"UseCloudRepository\"");
 
 WriteLiteral(">\r\n                <span");
 
-WriteLiteral(" class=\"arrow align-items-center mr-3\"");
+WriteLiteral(" class=\"dialog-action-arrow align-items-center mr-3\"");
 
 WriteLiteral(">➜</span><span");
 
@@ -210,8 +214,8 @@ WriteLiteral(" class=\"btn-text\"");
 WriteLiteral(">");
 
 
-#line 49 "MergeChoiceRazorView.cshtml"
-                                                                                      Write(Model.Language["sync_repository_cloud"]);
+#line 45 "MergeChoiceRazorView.cshtml"
+                                                                                                    Write(Model.Language["sync_repository_cloud"]);
 
 
 #line default
@@ -228,7 +232,7 @@ WriteLiteral(" data-binding=\"UseLocalRepository\"");
 
 WriteLiteral(">\r\n                <span");
 
-WriteLiteral(" class=\"arrow align-items-center mr-3\"");
+WriteLiteral(" class=\"dialog-action-arrow align-items-center mr-3\"");
 
 WriteLiteral(">➜</span><span");
 
@@ -237,8 +241,8 @@ WriteLiteral(" class=\"btn-text\"");
 WriteLiteral(">");
 
 
-#line 52 "MergeChoiceRazorView.cshtml"
-                                                                                      Write(Model.Language["sync_repository_device"]);
+#line 48 "MergeChoiceRazorView.cshtml"
+                                                                                                    Write(Model.Language["sync_repository_device"]);
 
 
 #line default

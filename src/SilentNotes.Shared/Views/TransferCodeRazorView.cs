@@ -23,7 +23,7 @@ using SilentNotes.ViewModels;
 #line hidden
 
 
-[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.3.0.281")]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.4.0.308")]
 public partial class TransferCodeRazorView : TransferCodeRazorViewBase
 {
 
@@ -68,14 +68,34 @@ WriteLiteral(" content=\"width=device-width, initial-scale=1, shrink-to-fit=no, 
 
 WriteLiteral(">\r\n\r\n    <link");
 
-WriteLiteral(" href=\"bootstrap.min.css\"");
+WriteAttribute ("href", " href=\"", "\""
+
+#line 12 "TransferCodeRazorView.cshtml"
+, Tuple.Create<string,object,bool> ("", Model.Theme.DarkMode ? "bootstrap.dark.min.css" : "bootstrap.min.css"
+
+#line default
+#line hidden
+, false)
+);
+WriteLiteral(" rel=\"stylesheet\"");
+
+WriteLiteral(" />\r\n    <link");
+
+WriteLiteral(" href=\"silentnotes.cs\"");
 
 WriteLiteral(" rel=\"stylesheet\"");
 
 WriteLiteral(" />\r\n    <link");
 
-WriteLiteral(" href=\"silentnotes.css\"");
+WriteAttribute ("href", " href=\"", "\""
 
+#line 14 "TransferCodeRazorView.cshtml"
+, Tuple.Create<string,object,bool> ("", Model.Theme.DarkMode ? "silentnotes.dark.css" : "silentnotes.light.css"
+
+#line default
+#line hidden
+, false)
+);
 WriteLiteral(" rel=\"stylesheet\"");
 
 WriteLiteral(" />\r\n\r\n    <script");
@@ -95,11 +115,9 @@ WriteLiteral("></script>\r\n\r\n    <style");
 WriteLiteral(" type=\"text/css\"");
 
 WriteLiteral(@">
-        #content {
-            background-image: url(""key-background.svg"");
-            background-repeat: no-repeat;
-            background-position: right -32px top -164px;
-            background-size: 480px;
+        .background-icon {
+            right: -32px;
+            top: -122px;
         }
 
         .code {
@@ -130,7 +148,7 @@ WriteLiteral(" data-binding=\"GoBack\"");
 
 WriteAttribute ("title", " title=\"", "\""
 
-#line 40 "TransferCodeRazorView.cshtml"
+#line 39 "TransferCodeRazorView.cshtml"
                                                       , Tuple.Create<string,object,bool> ("", Model.Language["back"]
 
 #line default
@@ -140,7 +158,7 @@ WriteAttribute ("title", " title=\"", "\""
 WriteLiteral(">");
 
 
-#line 40 "TransferCodeRazorView.cshtml"
+#line 39 "TransferCodeRazorView.cshtml"
                                                                                                                         WriteLiteral(Model.Icon["arrow-left"]);
 
 #line default
@@ -151,10 +169,24 @@ WriteLiteral(" id=\"content\"");
 
 WriteLiteral(" class=\"container-fluid p-4\"");
 
-WriteLiteral(">\r\n        <h1>");
+WriteLiteral(">\r\n        <svg");
+
+WriteLiteral(" class=\"background-icon\"");
+
+WriteLiteral(" width=\'24\'");
+
+WriteLiteral(" height=\'24\'");
+
+WriteLiteral(" viewBox=\'0 0 24 24\'");
+
+WriteLiteral("><use");
+
+WriteLiteral(" xlink:href=\"#svg-key\"");
+
+WriteLiteral(" /></svg>\r\n\r\n        <h1>");
 
 
-#line 44 "TransferCodeRazorView.cshtml"
+#line 45 "TransferCodeRazorView.cshtml"
        Write(Model.Language["transfer_code"]);
 
 
@@ -163,7 +195,7 @@ WriteLiteral(">\r\n        <h1>");
 WriteLiteral("</h1>\r\n\r\n        <p>");
 
 
-#line 46 "TransferCodeRazorView.cshtml"
+#line 47 "TransferCodeRazorView.cshtml"
       Write(Model.Language["transfer_code_required"]);
 
 
@@ -191,7 +223,7 @@ WriteLiteral(" id=\"Code\"");
 
 WriteAttribute ("value", " value=\"", "\""
 
-#line 50 "TransferCodeRazorView.cshtml"
+#line 51 "TransferCodeRazorView.cshtml"
                                                                                  , Tuple.Create<string,object,bool> ("", Model.Code
 
 #line default
@@ -211,7 +243,7 @@ WriteLiteral(" data-binding=\"OkCommand\"");
 WriteLiteral(">");
 
 
-#line 52 "TransferCodeRazorView.cshtml"
+#line 53 "TransferCodeRazorView.cshtml"
                                                                                                                         Write(Model.Language["continue"]);
 
 
@@ -230,13 +262,27 @@ WriteLiteral(" data-binding=\"CancelCommand\"");
 WriteLiteral(">");
 
 
-#line 53 "TransferCodeRazorView.cshtml"
+#line 54 "TransferCodeRazorView.cshtml"
                                                                                                                                Write(Model.Language["cancel"]);
 
 
 #line default
 #line hidden
-WriteLiteral("</button>\r\n        </form>\r\n    </div>\r\n</body>\r\n</html>\r\n");
+WriteLiteral("</button>\r\n        </form>\r\n    </div>\r\n\r\n    <div hidden>\r\n");
+
+
+#line 59 "TransferCodeRazorView.cshtml"
+        
+
+#line default
+#line hidden
+
+#line 59 "TransferCodeRazorView.cshtml"
+          WriteLiteral(Model.Icon.LoadIcon("key", new[] { new KeyValuePair<string, string>("id", "svg-key") }));
+
+#line default
+#line hidden
+WriteLiteral("\r\n    </div>\r\n</body>\r\n</html>\r\n");
 
 }
 }

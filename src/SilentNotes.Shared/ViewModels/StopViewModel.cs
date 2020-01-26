@@ -21,8 +21,9 @@ namespace SilentNotes.ViewModels
             INavigationService navigationService,
             ILanguageService languageService,
             ISvgIconService svgIconService,
+            IThemeService themeService,
             IBaseUrlService webviewBaseUrl)
-            : base(navigationService, languageService, svgIconService, webviewBaseUrl)
+            : base(navigationService, languageService, svgIconService, themeService, webviewBaseUrl)
         {
         }
 

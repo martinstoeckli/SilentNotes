@@ -7,28 +7,21 @@ html {
 	font-size: 14px;
 }
 
-body {
-	background-color: #f0f0f0;
-}
-
 h1 {
 	font-size: 1.7em;
 	font-weight: bold;
-	color: steelblue;
 }
 h2 {
 	font-size: 1.3em;
 	font-weight: bold;
-	color: steelblue;
 }
 h3 {
 	font-size: 1.1em;
 	font-weight: bold;
-	color: steelblue;
 }
 
-a { color: #007bff; text-decoration: none; }
-a:hover { color: #007bff; text-decoration: underline; }
+a { text-decoration: none; }
+a:hover { text-decoration: underline; }
 
 #navigation {
 	margin: 0;
@@ -41,8 +34,6 @@ a:hover { color: #007bff; text-decoration: underline; }
 	height: 42px;
 	border-style: none;
 	border-width: 0;
-	background-color: #323232;
-	color: #FFFFFF;
 }
 
 #content {
@@ -66,14 +57,7 @@ a:hover { color: #007bff; text-decoration: underline; }
 	min-width: 38px;
 	border-style: none;
 	border-width: 0;
-	color: #fff;
-	background-color: #323232;
-	border-color: #323232;
 	text-align: center;
-}
-.nav-item:hover {
-	background-color: #5a6268;
-	border-color: #545b62;
 }
 .nav-item:focus {
 	outline: 0; /* removes pressed dots */
@@ -84,7 +68,6 @@ a:hover { color: #007bff; text-decoration: underline; }
 .nav-item svg {
 	height: 28px;
 	width: 28px;
-	fill: white;
 }
 
 .dropdown {
@@ -110,7 +93,6 @@ a:hover { color: #007bff; text-decoration: underline; }
 	margin-right: 0.6em;
 	height: 26px;
 	width: 26px;
-	fill: #666666;
 }
 
 .wraplist {
@@ -125,9 +107,6 @@ a:hover { color: #007bff; text-decoration: underline; }
 	vertical-align: top;
 }
 
-.sortable-ghost {
-	background-color: rgba(38, 160, 218, 0.3);
-}
 .sortable-item {
 	position: relative;
 }
@@ -140,14 +119,8 @@ a:hover { color: #007bff; text-decoration: underline; }
 	right: 18px;
 	width: 26px;
 	height: 26px;
-	fill: #808080;
-	background-color: rgba(160, 160, 160, 0.3);
 	border-radius: 13px;
 	cursor: pointer;
-}
-.note-handle.dark {
-	fill: #505050;
-	background-color: rgba(204, 204, 204, 0.6);
 }
 
 .sortable-handle {
@@ -160,6 +133,16 @@ a:hover { color: #007bff; text-decoration: underline; }
 	right: 18px;
 	top: auto;
 	bottom: 14px;
+}
+
+.background-icon {
+	position: fixed;
+	display: inline-block;
+	right: 0;
+	top: 0;
+	width: 480px;
+	height: 480px;
+	z-index: -1;
 }
 
 .fab {
@@ -190,15 +173,15 @@ a:hover { color: #007bff; text-decoration: underline; }
 .fab svg {
 	width: 36px;
 	height: 36px;
-	fill: white;
 }
+
+.dialog-action-arrow { font-size: 18pt; }
 
 .note-card {
 	padding: 12px;
 	min-height: 115px;
 	max-height: 160px;
 	overflow: hidden;
-	background-color: #fbf4c1;
 	box-shadow: 2px 1px 4px rgba(0, 0, 0, 0.4);
 	font-size: 0.9em;
 	user-select: none;
@@ -251,8 +234,6 @@ a[data-tooltip]:hover:after {
 	position: absolute;
 	right: 0;
 	top: 100%;
-	color: #575757;
-	background: #f1f2f7;
 	border: 1px #b4b4b7 solid;
 	white-space: nowrap;
 	z-index: 2;
@@ -270,38 +251,17 @@ a[data-tooltip]:hover:after {
 
 /* Text formatting */
 
-.note-viewer {
-	color: black !important;
-}
-.note-viewer.dark {
-	color: white !important;
-}
-
 .note-viewer h1 {
 	margin: 0.7em 0 0.3em 0 !important;
-	color: rgba(70, 130, 180, 1) !important;
 	font: normal bold 1.35em/1.1 "Segoe UI",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol" !important;
 }
-.note-viewer.dark h1 {
-	color: rgba(173, 216, 230, 1) !important;
-}
-
 .note-viewer h2 {
 	margin: 0.8em 0 0.2em 0 !important;
-	color: rgba(70, 130, 180, 0.85) !important;
 	font: normal bold 1.2em/1.1 "Segoe UI",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol" !important;
 }
-.note-viewer.dark h2 {
-	color: rgba(173, 216, 230, 0.94) !important;
-}
-
 .note-viewer h3 {
 	margin: 0.8em 0 0.2em 0 !important;
-	color: rgba(70, 130, 180, 0.7) !important;
 	font: normal bold 1.1em/1.1 "Segoe UI",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol" !important;
-}
-.note-viewer.dark h3 {
-	color: rgba(173, 216, 230, 0.88) !important;
 }
 
 .note-viewer p {
@@ -327,11 +287,7 @@ a[data-tooltip]:hover:after {
 	padding: 0 0.3em 0 0 !important;
 	width: 1.8em !important;
 	content: counter(sn-counter) ".";
-	color: steelblue;
 	text-align: right !important;
-}
-.note-viewer.dark ol > li::before {
-	color: lightblue;
 }
 
 .note-viewer ul {
@@ -351,26 +307,16 @@ a[data-tooltip]:hover:after {
 	width: 1.8em !important;
 	white-space: nowrap;
 	content: '•';
-	color: steelblue !important;
 	text-align: right !important;
-}
-.note-viewer.dark ul > li::before {
-	color: lightblue !important;
 }
 
 .note-viewer pre {
 	margin: 0.5em 0 0.5em 0 !important;
 	padding: 1em !important;
 	font: normal normal 0.9em/1.2 Consolas,monospace,"Courier New" !important;
-	color: black !important;
 	overflow: auto !important;
 	white-space: pre !important;
 	text-wrap: none !important;
-	background-color: rgba(128, 128, 128, 0.2) !important;
-}
-.note-viewer.dark pre {
-	color: white !important;
-	background-color: rgba(211, 211, 211, 0.3) !important;
 }
 
 .note-viewer blockquote {
@@ -383,7 +329,5 @@ a[data-tooltip]:hover:after {
 	border-left: 3px solid rgba(211, 211, 211, 0.6) !important;
 }
 
-.note-viewer a { color: rgba(70, 130, 180, 0.80) !important; text-decoration: none !important; }
-.note-viewer a:hover { color: rgba(70, 130, 180, 0.80) !important; text-decoration: underline !important; }
-.note-viewer.dark a { color: rgba(173, 216, 230, 0.90) !important; }
-.note-viewer.dark a:hover { color: rgba(173, 216, 230, 0.90) !important; }
+.note-viewer a { text-decoration: none !important; }
+.note-viewer a:hover { text-decoration: underline !important; }

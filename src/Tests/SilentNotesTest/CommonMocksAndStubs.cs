@@ -53,7 +53,11 @@ namespace SilentNotesTest
         /// <returns>Environment service.</returns>
         public static IEnvironmentService EnvironmentService()
         {
-            return new EnvironmentService(SilentNotes.Services.OperatingSystem.Windows);
+            Mock<IEnvironmentService> environmentService = new Mock<IEnvironmentService>();
+            environmentService
+                .SetupGet(p => p.Os)
+                .Returns(SilentNotes.Services.OperatingSystem.Windows);
+            return environmentService.Object;
         }
 
         public static byte[] FilledByteArray(int length, byte fill)

@@ -23,7 +23,7 @@ using SilentNotes.ViewModels;
 #line hidden
 
 
-[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.3.0.281")]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.4.0.308")]
 public partial class InfoRazorView : InfoRazorViewBase
 {
 
@@ -68,14 +68,34 @@ WriteLiteral(" content=\"width=device-width, initial-scale=1, shrink-to-fit=no, 
 
 WriteLiteral(">\r\n\r\n    <link");
 
-WriteLiteral(" href=\"bootstrap.min.css\"");
+WriteAttribute ("href", " href=\"", "\""
 
+#line 12 "InfoRazorView.cshtml"
+, Tuple.Create<string,object,bool> ("", Model.Theme.DarkMode ? "bootstrap.dark.min.css" : "bootstrap.min.css"
+
+#line default
+#line hidden
+, false)
+);
 WriteLiteral(" rel=\"stylesheet\"");
 
 WriteLiteral(" />\r\n    <link");
 
 WriteLiteral(" href=\"silentnotes.css\"");
 
+WriteLiteral(" rel=\"stylesheet\"");
+
+WriteLiteral(" />\r\n    <link");
+
+WriteAttribute ("href", " href=\"", "\""
+
+#line 14 "InfoRazorView.cshtml"
+, Tuple.Create<string,object,bool> ("", Model.Theme.DarkMode ? "silentnotes.dark.css" : "silentnotes.light.css"
+
+#line default
+#line hidden
+, false)
+);
 WriteLiteral(" rel=\"stylesheet\"");
 
 WriteLiteral(" />\r\n\r\n    <script");
@@ -111,7 +131,7 @@ WriteLiteral(" data-binding=\"GoBack\"");
 
 WriteAttribute ("title", " title=\"", "\""
 
-#line 29 "InfoRazorView.cshtml"
+#line 30 "InfoRazorView.cshtml"
                                                                       , Tuple.Create<string,object,bool> ("", Model.Language["back"]
 
 #line default
@@ -121,7 +141,7 @@ WriteAttribute ("title", " title=\"", "\""
 WriteLiteral(">");
 
 
-#line 29 "InfoRazorView.cshtml"
+#line 30 "InfoRazorView.cshtml"
                                                                                                                                         WriteLiteral(Model.Icon["arrow-left"]);
 
 #line default
@@ -161,7 +181,7 @@ WriteLiteral(" class=\"\"");
 WriteLiteral(">");
 
 
-#line 43 "InfoRazorView.cshtml"
+#line 44 "InfoRazorView.cshtml"
                                 Write(Model.Language["version"]);
 
 
@@ -170,7 +190,7 @@ WriteLiteral(">");
 WriteLiteral("</th>\r\n                        <td>");
 
 
-#line 44 "InfoRazorView.cshtml"
+#line 45 "InfoRazorView.cshtml"
                        Write(Model.VersionFmt);
 
 
@@ -184,7 +204,7 @@ WriteLiteral(" class=\"\"");
 WriteLiteral(">");
 
 
-#line 47 "InfoRazorView.cshtml"
+#line 48 "InfoRazorView.cshtml"
                                 Write(Model.Language["copyright"]);
 
 
@@ -198,7 +218,7 @@ WriteLiteral(" class=\"\"");
 WriteLiteral(">");
 
 
-#line 51 "InfoRazorView.cshtml"
+#line 52 "InfoRazorView.cshtml"
                                 Write(Model.Language["website"]);
 
 
@@ -222,7 +242,7 @@ WriteLiteral(" class=\"\"");
 WriteLiteral(">");
 
 
-#line 55 "InfoRazorView.cshtml"
+#line 56 "InfoRazorView.cshtml"
                                 Write(Model.Language["opensource"]);
 
 
@@ -231,7 +251,7 @@ WriteLiteral(">");
 WriteLiteral("</th>\r\n                        <td>");
 
 
-#line 56 "InfoRazorView.cshtml"
+#line 57 "InfoRazorView.cshtml"
                        Write(Model.Language["opensource_desc"]);
 
 
@@ -241,7 +261,7 @@ WriteLiteral("</td>\r\n                    </tr>\r\n                </table>\r\n
 "");
 
 
-#line 60 "InfoRazorView.cshtml"
+#line 61 "InfoRazorView.cshtml"
               Write(Model.Language["license"]);
 
 

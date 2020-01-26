@@ -23,7 +23,7 @@ using SilentNotes.ViewModels;
 #line hidden
 
 
-[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.3.0.277")]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.4.0.308")]
 public partial class CloudStorageOauthWaitingRazorView : CloudStorageOauthWaitingRazorViewBase
 {
 
@@ -68,14 +68,34 @@ WriteLiteral(" content=\"width=device-width, initial-scale=1, shrink-to-fit=no, 
 
 WriteLiteral(">\r\n\r\n    <link");
 
-WriteLiteral(" href=\"bootstrap.min.css\"");
+WriteAttribute ("href", " href=\"", "\""
 
+#line 12 "CloudStorageOauthWaitingRazorView.cshtml"
+, Tuple.Create<string,object,bool> ("", Model.Theme.DarkMode ? "bootstrap.dark.min.css" : "bootstrap.min.css"
+
+#line default
+#line hidden
+, false)
+);
 WriteLiteral(" rel=\"stylesheet\"");
 
 WriteLiteral(" />\r\n    <link");
 
 WriteLiteral(" href=\"silentnotes.css\"");
 
+WriteLiteral(" rel=\"stylesheet\"");
+
+WriteLiteral(" />\r\n    <link");
+
+WriteAttribute ("href", " href=\"", "\""
+
+#line 14 "CloudStorageOauthWaitingRazorView.cshtml"
+, Tuple.Create<string,object,bool> ("", Model.Theme.DarkMode ? "silentnotes.dark.css" : "silentnotes.light.css"
+
+#line default
+#line hidden
+, false)
+);
 WriteLiteral(" rel=\"stylesheet\"");
 
 WriteLiteral(" />\r\n\r\n    <script");
@@ -110,7 +130,7 @@ WriteLiteral(" data-binding=\"GoBack\"");
 
 WriteAttribute ("title", " title=\"", "\""
 
-#line 26 "CloudStorageOauthWaitingRazorView.cshtml"
+#line 27 "CloudStorageOauthWaitingRazorView.cshtml"
                                                       , Tuple.Create<string,object,bool> ("", Model.Language["back"]
 
 #line default
@@ -120,7 +140,7 @@ WriteAttribute ("title", " title=\"", "\""
 WriteLiteral(">");
 
 
-#line 26 "CloudStorageOauthWaitingRazorView.cshtml"
+#line 27 "CloudStorageOauthWaitingRazorView.cshtml"
                                                                                                                         WriteLiteral(Model.Icon["arrow-left"]);
 
 #line default
@@ -138,7 +158,7 @@ WriteLiteral(" class=\"alert alert-success m-4\"");
 WriteLiteral(">");
 
 
-#line 30 "CloudStorageOauthWaitingRazorView.cshtml"
+#line 31 "CloudStorageOauthWaitingRazorView.cshtml"
                                         Write(Model.Language["cloud_oauth_code_desc"]);
 
 

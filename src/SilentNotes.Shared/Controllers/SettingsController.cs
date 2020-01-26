@@ -39,9 +39,9 @@ namespace SilentNotes.Controllers
                 Ioc.GetOrCreate<INavigationService>(),
                 Ioc.GetOrCreate<ILanguageService>(),
                 Ioc.GetOrCreate<ISvgIconService>(),
+                Ioc.GetOrCreate<IThemeService>(),
                 Ioc.GetOrCreate<IBaseUrlService>(),
                 Ioc.GetOrCreate<ISettingsService>(),
-                Ioc.GetOrCreate<IThemeService>(),
                 Ioc.GetOrCreate<IStoryBoardService>());
 
             Bindings.BindCommand("GoBack", _viewModel.GoBackCommand);
@@ -70,7 +70,7 @@ namespace SilentNotes.Controllers
             {
                 case "SelectedThemePreview":
                     string themeId = e.Parameters["data-theme"];
-                    _viewModel.SelectedTheme = _viewModel.Themes.Find(item => item.Id == themeId);
+                    _viewModel.SelectedTheme = _viewModel.Theme.Themes.Find(item => item.Id == themeId);
                     break;
                 case "DefaultNoteColorPreview":
                     _viewModel.DefaultNoteColorHex = e.Parameters["data-notecolorhex"];

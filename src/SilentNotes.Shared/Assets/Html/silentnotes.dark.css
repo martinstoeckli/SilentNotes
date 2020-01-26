@@ -1,0 +1,48 @@
+body { background-color: #222; }
+h1, h2, h3 { color: #7ba7cc; }
+a { color: #007bff; }
+a:hover { color: #007bff; }
+#navigation { background-color: #323232; color: #FFFFFF; }
+.nav-item { background-color: #323232; color: #fff; border-color: #323232; }
+.nav-item:hover { background-color: #5a6268; border-color: #545b62; }
+.nav-item svg { fill: #d3d3d3; }
+.nav-filter {background-color: #696969; }
+.nav-filter:hover { background-color: #696969; }
+.nav-filter input { background-color: transparent; color: white; }
+#filter-icon { fill: #d3d3d3; }
+#filter-cancel-icon { fill: #d3d3d3; }
+.dialog-action-arrow { color: #8dc37a }
+
+.dropdown-item svg { fill: #c0c0c0; }
+.sortable-ghost { background-color: rgba(38, 160, 218, 0.3); }
+.note-handle { background-color: rgba(160, 160, 160, 0.3); fill: #808080 }
+.note-handle.dark { background-color: rgba(204, 204, 204, 0.6); fill: #505050; }
+.background-icon { fill: #424242; }
+.fab { background-color: #2090ea; }
+.fab svg { fill: white; }
+.note-card { background-color: #fbf4c1; }
+#recycled-notes .note-card { background-color: #696969; }
+.restore svg { fill: #8dc37a; }
+a[data-tooltip]:hover:after { background: #f1f2f7; color: #575757; }
+
+.note-viewer { color: black !important; }
+.note-viewer.dark { color: white !important; }
+.note-viewer h1 { color: rgba(70, 130, 180, 1) !important; }
+.note-viewer.dark h1 { color: rgba(173, 216, 230, 1) !important; }
+.note-viewer h2 { color: rgba(70, 130, 180, 0.85) !important; }
+.note-viewer.dark h2 { color: rgba(173, 216, 230, 0.94) !important; }
+.note-viewer h3 { color: rgba(70, 130, 180, 0.7) !important; }
+.note-viewer.dark h3 { color: rgba(173, 216, 230, 0.88) !important; }
+.note-viewer ol > li::before { color: steelblue; }
+.note-viewer.dark ol > li::before { color: lightblue; }
+.note-viewer ul > li::before { color: steelblue !important; }
+.note-viewer.dark ul > li::before { color: lightblue !important; }
+.note-viewer pre { background-color: rgba(128, 128, 128, 0.2) !important; color: black !important; }
+.note-viewer.dark pre { background-color: rgba(211, 211, 211, 0.3) !important; color: white !important; }
+.note-viewer a { color: rgba(70, 130, 180, 0.80) !important; }
+.note-viewer a:hover { color: rgba(70, 130, 180, 0.80) !important; }
+.note-viewer.dark a { color: rgba(173, 216, 230, 0.90) !important; }
+.note-viewer.dark a:hover { color: rgba(173, 216, 230, 0.90) !important; }
+
+/* overridings which exist only in dark mode */
+.form-control { background-color: #696969; }

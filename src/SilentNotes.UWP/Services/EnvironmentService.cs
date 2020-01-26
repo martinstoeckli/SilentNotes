@@ -1,14 +1,15 @@
-﻿// Copyright © 2018 Martin Stoeckli.
+﻿// Copyright © 2020 Martin Stoeckli.
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-using System;
+using SilentNotes.Services;
+using Windows.UI.Xaml;
 
-namespace SilentNotes.Services
+namespace SilentNotes.UWP.Services
 {
     /// <summary>
-    /// Implementation of the <see cref="IEnvironmentService"/> interface.
+    /// Implementation of the <see cref="IEnvironmentService"/> for the UWP platform.
     /// </summary>
     public class EnvironmentService : IEnvironmentService
     {
@@ -22,12 +23,12 @@ namespace SilentNotes.Services
         }
 
         /// <inheritdoc/>
-        public OperatingSystem Os { get; }
+        public OperatingSystem Os { get; private set; }
 
         /// <inheritdoc/>
-        public bool IsMobileDevice
+        public bool InDarkMode
         {
-            get { return Os == OperatingSystem.Android; }
+            get { return Application.Current.RequestedTheme == ApplicationTheme.Dark; }
         }
     }
 }

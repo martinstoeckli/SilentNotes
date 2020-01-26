@@ -9,19 +9,18 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no">
 
-    <link href="bootstrap.min.css" rel="stylesheet" />
+    <link href="@(Model.Theme.DarkMode ? "bootstrap.dark.min.css" : "bootstrap.min.css")" rel="stylesheet" />
     <link href="silentnotes.css" rel="stylesheet" />
+    <link href="@(Model.Theme.DarkMode ? "silentnotes.dark.css" : "silentnotes.light.css")" rel="stylesheet" />
 
     <script src="jquery-3.4.1.min.js"></script>
     <script src="bootstrap.bundle.min.js"></script>
     <script src="silentnotes.js"></script>
 
     <style type="text/css">
-        #content {
-            background-image: url("opensafe-background.svg");
-            background-repeat: no-repeat;
-            background-position: right -110px top -210px;
-            background-size: 480px;
+        .background-icon {
+            right: -110px;
+            top: -168px;
         }
     </style>
     <script>
@@ -36,6 +35,8 @@
     </nav>
 
     <div id="content" class="container-fluid p-4">
+        <svg class="background-icon" width='24' height='24' viewBox='0 0 24 24'><use xlink:href="#svg-safe-square-outline" /></svg>
+
         @if (Model.SafeExists)
         {
             <h2>@Model.Language["safe_open"]</h2>
@@ -47,34 +48,38 @@
             <div class="my-4">@Model.Language["safe_open_new"]</div>
         }
 
-    <form class="mb-4 col-md-9">
-        <div class="form-row form-group">
-            <label class="col-form-label col-md-3" for="Password">@Model.Language["cloud_password"]</label>
-            <div class="col-md-9">
-                <input type="password" class="form-control" oninput="bind(event)" data-binding="Password" id="Password" value="" autofocus>
-                <div class="invalid-feedback">@Model.Language["password_short_error"]</div>
+        <form class="mb-4 col-md-9">
+            <div class="form-row form-group">
+                <label class="col-form-label col-md-3" for="Password">@Model.Language["cloud_password"]</label>
+                <div class="col-md-9">
+                    <input type="password" class="form-control" oninput="bind(event)" data-binding="Password" id="Password" value="" autofocus>
+                    <div class="invalid-feedback">@Model.Language["password_short_error"]</div>
+                </div>
             </div>
-        </div>
-        <div class="form-row form-group mb-4" @if (Model.SafeExists) { @("hidden") ; }>
-            <label class="col-form-label col-md-3" for="PasswordConfirmation">@Model.Language["safe_confirm_password"]</label>
-            <div class="col-md-9">
-                <input type="password" class="form-control" oninput="bind(event)" data-binding="PasswordConfirmation" id="PasswordConfirmation" value="">
-                <div class="invalid-feedback">@Model.Language["password_confirmation_error"]</div>
+            <div class="form-row form-group mb-4" @if (Model.SafeExists) { @("hidden") ; }>
+                <label class="col-form-label col-md-3" for="PasswordConfirmation">@Model.Language["safe_confirm_password"]</label>
+                <div class="col-md-9">
+                    <input type="password" class="form-control" oninput="bind(event)" data-binding="PasswordConfirmation" id="PasswordConfirmation" value="">
+                    <div class="invalid-feedback">@Model.Language["password_confirmation_error"]</div>
+                </div>
             </div>
-        </div>
 
-        <button type="button" class="btn btn-primary mb-2 shortcut-enter" onclick="bind(event)" data-binding="OkCommand">@Model.Language["ok"]</button>
-        <button type="button" class="btn btn-secondary mb-2" onclick="bind(event)" data-binding="CancelCommand">@Model.Language["cancel"]</button>
-        @if (Model.SafeExists)
-        {
-        <button type="button" class="btn btn-danger mb-2 ml-4" onclick="bind(event)" data-binding="ResetSafeCommand">@Model.Language["safe_reset"]</button>
-        }
-    </form>
+            <button type="button" class="btn btn-primary mb-2 shortcut-enter" onclick="bind(event)" data-binding="OkCommand">@Model.Language["ok"]</button>
+            <button type="button" class="btn btn-secondary mb-2" onclick="bind(event)" data-binding="CancelCommand">@Model.Language["cancel"]</button>
+            @if (Model.SafeExists)
+            {
+                <button type="button" class="btn btn-danger mb-2 ml-4" onclick="bind(event)" data-binding="ResetSafeCommand">@Model.Language["safe_reset"]</button>
+            }
+        </form>
 
         @if (!Model.SafeExists)
         {
             <div class="alert alert-success my-4">@Model.Language["safe_password_requirement"]</div>
         }
+    </div>
+
+    <div hidden>
+        @{WriteLiteral(Model.Icon.LoadIcon("safe-square-outline", new[] { new KeyValuePair<string, string>("id", "svg-safe-square-outline") }));}
     </div>
 </body>
 </html>

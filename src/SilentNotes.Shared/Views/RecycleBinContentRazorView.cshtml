@@ -5,7 +5,7 @@
     {
         <li class="wraplist-item">
             <div class="note-card">
-                <div>@{WriteLiteral(note.HtmlContent);}</div>
+                <div>@{WriteLiteral(note.UnlockedHtmlContent);}</div>
                 <span class="restore undelete" onclick="bind(event);" data-binding="restore_note" data-note="@note.Id.ToString()" title="@Model.Language["note_undelete"]">
                     @{WriteLiteral(Model.Icon.LoadIcon("file-restore"));}
                 </span>

@@ -14,6 +14,13 @@ namespace SilentNotes.Services
     public interface IThemeService
     {
         /// <summary>
+        /// Gets a value indicating whether the app should show its dark theme.
+        /// </summary>
+        bool DarkMode { get; }
+
+        string CssDark { get; }
+
+        /// <summary>
         /// Gets a list of all available themes.
         /// </summary>
         List<ThemeModel> Themes { get; }

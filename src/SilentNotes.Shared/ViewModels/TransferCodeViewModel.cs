@@ -28,10 +28,11 @@ namespace SilentNotes.ViewModels
             INavigationService navigationService,
             ILanguageService languageService,
             ISvgIconService svgIconService,
+            IThemeService themeService,
             IBaseUrlService webviewBaseUrl,
             IStoryBoardService storyBoardService,
             IFeedbackService feedbackService)
-            : base(navigationService, languageService, svgIconService, webviewBaseUrl)
+            : base(navigationService, languageService, svgIconService, themeService, webviewBaseUrl)
         {
             _storyBoardService = storyBoardService;
             _feedbackService = feedbackService;

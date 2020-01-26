@@ -23,7 +23,7 @@ using SilentNotes.ViewModels;
 #line hidden
 
 
-[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.3.0.281")]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.4.0.308")]
 public partial class RecycleBinRazorView : RecycleBinRazorViewBase
 {
 
@@ -68,14 +68,34 @@ WriteLiteral(" content=\"width=device-width, initial-scale=1, shrink-to-fit=no, 
 
 WriteLiteral(">\r\n\r\n    <link");
 
-WriteLiteral(" href=\"bootstrap.min.css\"");
+WriteAttribute ("href", " href=\"", "\""
 
+#line 12 "RecycleBinRazorView.cshtml"
+, Tuple.Create<string,object,bool> ("", Model.Theme.DarkMode ? "bootstrap.dark.min.css" : "bootstrap.min.css"
+
+#line default
+#line hidden
+, false)
+);
 WriteLiteral(" rel=\"stylesheet\"");
 
 WriteLiteral(" />\r\n    <link");
 
 WriteLiteral(" href=\"silentnotes.css\"");
 
+WriteLiteral(" rel=\"stylesheet\"");
+
+WriteLiteral(" />\r\n    <link");
+
+WriteAttribute ("href", " href=\"", "\""
+
+#line 14 "RecycleBinRazorView.cshtml"
+, Tuple.Create<string,object,bool> ("", Model.Theme.DarkMode ? "silentnotes.dark.css" : "silentnotes.light.css"
+
+#line default
+#line hidden
+, false)
+);
 WriteLiteral(" rel=\"stylesheet\"");
 
 WriteLiteral(" />\r\n\r\n    <script");
@@ -98,8 +118,8 @@ WriteLiteral(">\r\n        body::after {\r\n            position: absolute;\r\n 
 "\";\r\n            background: url(");
 
 
-#line 23 "RecycleBinRazorView.cshtml"
-                       Write(Model.Theme.Image);
+#line 24 "RecycleBinRazorView.cshtml"
+                       Write(Model.Theme.SelectedTheme.Image);
 
 
 #line default
@@ -119,7 +139,6 @@ WriteLiteral(@");
         }
         .note-card {
             max-height: 220px;
-            background-color: #f5f5f5;
         }
         .restore {
             position: absolute;
@@ -135,7 +154,6 @@ WriteLiteral(@");
         .restore svg {
             width: 100%;
             height: 100%;
-            fill: #259000;
         }
     </style>
     <script>
@@ -161,7 +179,7 @@ WriteLiteral(" data-binding=\"GoBack\"");
 
 WriteAttribute ("title", " title=\"", "\""
 
-#line 65 "RecycleBinRazorView.cshtml"
+#line 64 "RecycleBinRazorView.cshtml"
                                                                       , Tuple.Create<string,object,bool> ("", Model.Language["back"]
 
 #line default
@@ -171,7 +189,7 @@ WriteAttribute ("title", " title=\"", "\""
 WriteLiteral(">");
 
 
-#line 65 "RecycleBinRazorView.cshtml"
+#line 64 "RecycleBinRazorView.cshtml"
                                                                                                                                         WriteLiteral(Model.Icon["arrow-left"]);
 
 #line default
@@ -186,7 +204,7 @@ WriteLiteral(" data-binding=\"EmptyRecycleBin\"");
 
 WriteAttribute ("title", " title=\"", "\""
 
-#line 66 "RecycleBinRazorView.cshtml"
+#line 65 "RecycleBinRazorView.cshtml"
                                                       , Tuple.Create<string,object,bool> ("", Model.Language["empty_recyclebin"]
 
 #line default
@@ -196,7 +214,7 @@ WriteAttribute ("title", " title=\"", "\""
 WriteLiteral(">");
 
 
-#line 66 "RecycleBinRazorView.cshtml"
+#line 65 "RecycleBinRazorView.cshtml"
                                                                                                                                     WriteLiteral(Model.Icon["delete-forever"]);
 
 #line default

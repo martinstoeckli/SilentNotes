@@ -39,6 +39,7 @@ namespace SilentNotes.Controllers
                 Ioc.GetOrCreate<INavigationService>(),
                 Ioc.GetOrCreate<ILanguageService>(),
                 Ioc.GetOrCreate<ISvgIconService>(),
+                Ioc.GetOrCreate<IThemeService>(),
                 Ioc.GetOrCreate<IBaseUrlService>(),
                 Ioc.GetOrCreate<IStoryBoardService>());
 

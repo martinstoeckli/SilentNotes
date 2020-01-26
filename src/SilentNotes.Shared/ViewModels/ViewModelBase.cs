@@ -30,11 +30,13 @@ namespace SilentNotes.ViewModels
             INavigationService navigationService,
             ILanguageService languageService,
             ISvgIconService svgIconService,
+            IThemeService themeService,
             IBaseUrlService webviewBaseUrl)
         {
             _navigationService = navigationService;
             Language = languageService;
             Icon = svgIconService;
+            Theme = themeService;
             _webviewBaseUrl = webviewBaseUrl;
         }
 
@@ -153,5 +155,10 @@ namespace SilentNotes.ViewModels
         /// </code>
         /// </summary>
         public ISvgIconService Icon { get; private set; }
+
+        /// <summary>
+        /// Gets the theme service, which controls the design of the application.
+        /// </summary>
+        public IThemeService Theme { get; private set; }
     }
 }

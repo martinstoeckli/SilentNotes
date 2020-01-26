@@ -9,8 +9,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no">
 
-    <link href="bootstrap.min.css" rel="stylesheet" />
+    <link href="@(Model.Theme.DarkMode ? "bootstrap.dark.min.css" : "bootstrap.min.css")" rel="stylesheet" />
     <link href="silentnotes.css" rel="stylesheet" />
+    <link href="@(Model.Theme.DarkMode ? "silentnotes.dark.css" : "silentnotes.light.css")" rel="stylesheet" />
 
     <script src="jquery-3.4.1.min.js"></script>
     <script src="bootstrap.bundle.min.js"></script>
@@ -19,8 +20,8 @@
 
     <style type="text/css">
 body {
-    background-color: @Model.Theme.ImageTint;
-    background: url(@Model.Theme.Image);
+    background-color: @Model.Theme.SelectedTheme.ImageTint;
+    background: url(@Model.Theme.SelectedTheme.Image);
 }
 
 .note-viewer {
@@ -35,11 +36,7 @@ body {
     margin: 0 1em 0 0;
     width: 200px;
     height: 28px;
-    background-color: #FFFFFF;
     border-radius: 14px;
-}
-.nav-filter:hover {
-    background-color: #FFFFFF;
 }
 .nav-filter input {
     margin: auto;
@@ -48,8 +45,6 @@ body {
     border: none;
     border-width: 0;
     outline: none;
-    background-color: transparent;
-    color: #666666;
     font-size: 1.1em;
 }
 .locked {
@@ -93,8 +88,8 @@ body {
     <nav id="navigation" class="d-flex">
         <div class="nav-item nav-filter ml-auto d-inline-flex align-self-center">
             <input oninput="bind(event)" data-binding="TxtFilter" autocomplete="off" autofocus />
-            <svg width='24' height='24' viewBox='0 0 24 24' data-binding="FilterButtonMagnifier"><use xlink:href="#svg-magnify" fill="#a8a8a8" /></svg>
-            <svg width='24' height='24' viewBox='0 0 24 24' class="hidden-at-startup" onclick="bind(event)" data-binding="FilterButtonCancel"><use xlink:href="#svg-close-circle-outline" fill="#666666" /></svg>
+            <svg id="filter-icon" width='24' height='24' viewBox='0 0 24 24' data-binding="FilterButtonMagnifier"><use xlink:href="#svg-magnify" /></svg>
+            <svg id="filter-cancel-icon" width='24' height='24' viewBox='0 0 24 24' class="hidden-at-startup" onclick="bind(event)" data-binding="FilterButtonCancel"><use xlink:href="#svg-close-circle-outline" /></svg>
         </div>
 
         <button class="nav-item show-only-on-wide-browser" onclick="bind(event);" data-binding="AddNote" title="@Model.Language["note_create_new"]">@{WriteLiteral(Model.Icon["plus"]);}</button>

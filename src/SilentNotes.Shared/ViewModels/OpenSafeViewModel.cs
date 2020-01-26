@@ -38,12 +38,13 @@ namespace SilentNotes.ViewModels
             INavigationService navigationService,
             ILanguageService languageService,
             ISvgIconService svgIconService,
+            IThemeService themeService,
             IBaseUrlService webviewBaseUrl,
             IFeedbackService feedbackService,
             ICryptoRandomService randomService,
             ISettingsService settingsService,
             IRepositoryStorageService repositoryService)
-            : base(navigationService, languageService, svgIconService, webviewBaseUrl)
+            : base(navigationService, languageService, svgIconService, themeService, webviewBaseUrl)
         {
             _feedbackService = feedbackService ?? throw new ArgumentNullException(nameof(feedbackService));
             _randomService = randomService;

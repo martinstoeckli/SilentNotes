@@ -31,12 +31,13 @@ namespace SilentNotes.ViewModels
             INavigationService navigationService,
             ILanguageService languageService,
             ISvgIconService svgIconService,
+            IThemeService themeService,
             IBaseUrlService webviewBaseUrl,
             IStoryBoardService storyBoardService,
             IFeedbackService feedbackService,
             ICloudStorageClientFactory cloudStorageClientFactory,
             SerializeableCloudStorageCredentials model)
-            : base(navigationService, languageService, svgIconService, webviewBaseUrl)
+            : base(navigationService, languageService, svgIconService, themeService, webviewBaseUrl)
         {
             _storyBoardService = storyBoardService ?? throw new ArgumentNullException(nameof(storyBoardService));
             _feedbackService = feedbackService ?? throw new ArgumentNullException(nameof(feedbackService));
