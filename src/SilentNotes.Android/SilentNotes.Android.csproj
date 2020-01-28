@@ -276,11 +276,6 @@
     <AndroidResource Include="Resources\drawable\ic_launcher_foreground.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\bootstrap.dark.min.css">
-      <Link>Assets\Html\bootstrap.dark.min.css</Link>
-    </AndroidAsset>
-  </ItemGroup>
-  <ItemGroup>
     <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\silentnotes.light.css">
       <Link>Assets\Html\silentnotes.light.css</Link>
     </AndroidAsset>

@@ -68,15 +68,8 @@ WriteLiteral(" content=\"width=device-width, initial-scale=1, shrink-to-fit=no, 
 
 WriteLiteral(">\r\n\r\n    <link");
 
-WriteAttribute ("href", " href=\"", "\""
+WriteLiteral(" href=\"bootstrap.min.css\"");
 
-#line 12 "NoteRepositoryRazorView.cshtml"
-, Tuple.Create<string,object,bool> ("", Model.Theme.DarkMode ? "bootstrap.dark.min.css" : "bootstrap.min.css"
-
-#line default
-#line hidden
-, false)
-);
 WriteLiteral(" rel=\"stylesheet\"");
 
 WriteLiteral(" />\r\n    <link");

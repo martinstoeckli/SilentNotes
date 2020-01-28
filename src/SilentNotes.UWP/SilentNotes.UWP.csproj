@@ -140,9 +140,6 @@
     <Content Include="..\SilentNotes.Shared\Assets\Html\bootstrap.bundle.min.js">
       <Link>Assets\Html\bootstrap.bundle.min.js</Link>
     </Content>
-    <Content Include="..\SilentNotes.Shared\Assets\Html\bootstrap.dark.min.css">
-      <Link>Assets\Html\bootstrap.dark.min.css</Link>
-    </Content>
     <Content Include="..\SilentNotes.Shared\Assets\Html\bootstrap.min.css">
       <Link>Assets\Html\bootstrap.min.css</Link>
     </Content>
