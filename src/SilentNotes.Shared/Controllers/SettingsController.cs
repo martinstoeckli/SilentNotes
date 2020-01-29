@@ -52,6 +52,7 @@ namespace SilentNotes.Controllers
             Bindings.BindText("CloudStorageSettings", () => _viewModel.AccountSummary, null, _viewModel, nameof(_viewModel.AccountSummary), HtmlViewBindingMode.OneWayToView);
             Bindings.BindCheckbox("ShowCursorArrowKeys", null, (value) => _viewModel.ShowCursorArrowKeys = value, null, null, HtmlViewBindingMode.OneWayToViewmodel);
             Bindings.BindBackgroundImage("SelectedTheme", () => _viewModel.SelectedTheme.Image, _viewModel, nameof(_viewModel.SelectedTheme), HtmlViewBindingMode.OneWayToView);
+            Bindings.BindDropdown("SelectedThemeMode", null, (string value) => _viewModel.SelectedThemeMode = value, null, null, HtmlViewBindingMode.OneWayToViewmodel);
             Bindings.UnhandledViewBindingEvent += UnhandledViewBindingEventHandler;
 
             string html = _viewService.GenerateHtml(_viewModel);

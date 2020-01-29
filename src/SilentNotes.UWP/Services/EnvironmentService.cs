@@ -20,15 +20,16 @@ namespace SilentNotes.UWP.Services
         public EnvironmentService(OperatingSystem os)
         {
             Os = os;
+
+            // Detect dark mode already in the constructor, because the RequestedTheme can be
+            // overwritten at startup.
+            InDarkMode = Application.Current.RequestedTheme == ApplicationTheme.Dark;
         }
 
         /// <inheritdoc/>
-        public OperatingSystem Os { get; private set; }
+        public OperatingSystem Os { get; }
 
         /// <inheritdoc/>
-        public bool InDarkMode
-        {
-            get { return Application.Current.RequestedTheme == ApplicationTheme.Dark; }
-        }
+        public bool InDarkMode { get; }
     }
 }

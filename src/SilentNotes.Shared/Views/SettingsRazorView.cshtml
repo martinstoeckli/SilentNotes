@@ -95,6 +95,13 @@
                 </div>
             </div>
             <div class="form-row form-group">
+                <select class="form-control" id="ThemeMode" onchange="bind(event)" data-binding="SelectedThemeMode">
+                    <option value="Auto" @(Model.SelectedThemeMode == "Auto" ? "selected" : "")>@Model.Language["gui_theme_auto"]</option>
+                    <option value="Dark" @(Model.SelectedThemeMode == "Dark" ? "selected" : "")>@Model.Language["gui_theme_dark"]</option>
+                    <option value="Light" @(Model.SelectedThemeMode == "Light" ? "selected" : "")>@Model.Language["gui_theme_light"]</option>
+                </select>
+            </div>
+            <div class="form-row form-group">
                 <label class="col-form-label" for="Color">@Model.Language["gui_default_color"]</label>
                 <div id="color-control" class="form-control">
                     <div id="DefaultNoteColor" class="dropdown">

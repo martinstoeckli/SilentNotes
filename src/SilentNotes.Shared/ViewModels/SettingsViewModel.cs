@@ -177,6 +177,20 @@ namespace SilentNotes.ViewModels
             set { ChangePropertyIndirect(() => Model.AutoSyncMode.ToString(), (string v) => Model.AutoSyncMode = (AutoSynchronizationMode)Enum.Parse(typeof(AutoSynchronizationMode), value), value, true); }
         }
 
+        /// <summary>
+        /// Gets or sets the theme mode selected by the user.
+        /// </summary>
+        public string SelectedThemeMode
+        {
+            get { return Model.ThemeMode.ToString(); }
+
+            set 
+            {
+                ChangePropertyIndirect(() => Model.ThemeMode.ToString(), (string v) => Model.ThemeMode = (ThemeMode)Enum.Parse(typeof(ThemeMode), value), value, true);
+                _navigationService.Navigate(ControllerNames.Settings);
+            }
+        }
+
         /// <inheritdoc/>
         public override void OnStoringUnsavedData()
         {

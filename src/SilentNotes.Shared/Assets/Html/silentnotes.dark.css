@@ -50,6 +50,9 @@ a[data-tooltip]:hover:after { background: #f1f2f7; color: #575757; }
 .form-control { background-color: #555555; color: #ffffff; border-color: #555555; border-style: none; }
 .form-control:focus { background-color: #555555; color: #ffffff; }
 .form-control:disabled, .form-control[readonly] { background-color: #555555; }
+.form-control-plaintext { color: #bbbbbb; }
+select.form-control:focus { background-color: #555555; color: #ffffff; }
+select.form-control:focus::-ms-value { background-color: #555555; color: #ffffff; }
 .table { color: #dddddd; }
 .table td, .table th { border-top-color: #46525d; }
 .dropdown-menu { background-color: #555555; }

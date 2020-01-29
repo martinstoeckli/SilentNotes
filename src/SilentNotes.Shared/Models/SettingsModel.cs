@@ -59,6 +59,12 @@ namespace SilentNotes.Models
         public string SelectedTheme { get; set; }
 
         /// <summary>
+        /// Gets or sets a value describing whether the dark mode should be used.
+        /// </summary>
+        [XmlElement("theme_mode")]
+        public ThemeMode ThemeMode { get; set; }
+
+        /// <summary>
         /// Gets or sets the default encryption algorithm, used to encrypt the repository
         /// before sending it to the cloud.
         /// </summary>
