@@ -15,7 +15,6 @@ namespace SilentNotes.Controllers
     /// </summary>
     public abstract class ControllerBase : IController
     {
-        private readonly Color _defaultBackgroundColor = Color.FromArgb(255, 240, 240, 240);
         private bool _disposed = false;
 
         /// <summary>Gets the injected view service.</summary>
@@ -95,7 +94,11 @@ namespace SilentNotes.Controllers
         /// <param name="htmlView">The interface to the webview.</param>
         protected virtual void SetHtmlViewBackgroundColor(IHtmlView htmlView)
         {
-            htmlView.SetBackgroundColor(_defaultBackgroundColor);
+            IThemeService themeService = Ioc.GetOrCreate<IThemeService>();
+            Color defaultBackgroundColor = themeService.DarkMode
+                ? Color.FromArgb(255, 18, 18, 18)
+                : Color.FromArgb(255, 240, 240, 240);
+            htmlView.SetBackgroundColor(defaultBackgroundColor);
         }
 
         /// <inheritdoc/>
