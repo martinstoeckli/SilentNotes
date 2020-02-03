@@ -11,6 +11,7 @@
 
     <link href="bootstrap.min.css" rel="stylesheet" />
     <link href="silentnotes.css" rel="stylesheet" />
+    <link href="@(Model.Theme.DarkMode ? "silentnotes.dark.css" : "silentnotes.light.css")" rel="stylesheet" />
 
     <script src="jquery-3.4.1.min.js"></script>
     <script src="bootstrap.bundle.min.js"></script>
@@ -20,10 +21,12 @@
         .list-group {
             max-width: 300px;
         }
+
         .list-group-item {
             font-weight: bold;
             cursor: pointer;
         }
+
         .choice-icon {
             margin-right: 16px;
             width: 64px;

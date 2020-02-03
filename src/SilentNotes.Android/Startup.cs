@@ -37,7 +37,7 @@ namespace SilentNotes.Android
 
         private static void RegisterServices(Activity rootActivity)
         {
-            Ioc.RegisterFactory<IEnvironmentService>(() => new EnvironmentService(SilentNotes.Services.OperatingSystem.Android));
+            Ioc.RegisterFactory<IEnvironmentService>(() => new EnvironmentService(OperatingSystem.Android, rootActivity));
             Ioc.RegisterFactory<IHtmlView>(() => rootActivity as IHtmlView);
             Ioc.RegisterFactory<IBaseUrlService>(() => new BaseUrlService());
             Ioc.RegisterFactory<ILanguageService>(() => new LanguageService(new LanguageCodeService().GetSystemLanguageCode()));
@@ -71,7 +71,7 @@ namespace SilentNotes.Android
                 Ioc.GetOrCreate<IRepositoryStorageService>(),
                 Ioc.GetOrCreate<INavigationService>()));
             Ioc.RegisterFactory<IThemeService>(() => new ThemeService(
-                Ioc.GetOrCreate<ISettingsService>()));
+                Ioc.GetOrCreate<ISettingsService>(), Ioc.GetOrCreate<IEnvironmentService>()));
         }
 
         private static bool IsFirstTime()

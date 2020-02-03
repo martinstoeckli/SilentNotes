@@ -23,7 +23,7 @@ using SilentNotes.ViewModels;
 #line hidden
 
 
-[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.3.0.281")]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.4.0.308")]
 public partial class ChangePasswordRazorView : ChangePasswordRazorViewBase
 {
 
@@ -78,6 +78,19 @@ WriteLiteral(" href=\"silentnotes.css\"");
 
 WriteLiteral(" rel=\"stylesheet\"");
 
+WriteLiteral(" />\r\n    <link");
+
+WriteAttribute ("href", " href=\"", "\""
+
+#line 14 "ChangePasswordRazorView.cshtml"
+, Tuple.Create<string,object,bool> ("", Model.Theme.DarkMode ? "silentnotes.dark.css" : "silentnotes.light.css"
+
+#line default
+#line hidden
+, false)
+);
+WriteLiteral(" rel=\"stylesheet\"");
+
 WriteLiteral(" />\r\n\r\n    <script");
 
 WriteLiteral(" src=\"jquery-3.4.1.min.js\"");
@@ -94,22 +107,9 @@ WriteLiteral("></script>\r\n\r\n    <style");
 
 WriteLiteral(" type=\"text/css\"");
 
-WriteLiteral(@">
-        #content {
-            background-image: url(""opensafe-background.svg"");
-            background-repeat: no-repeat;
-            background-position: right -110px top -210px;
-            background-size: 480px;
-        }
-    </style>
-    <script>
-        $(function () {
-            addShortcuts();
-        });
-    </script>
-</head>
-<body>
-    <nav");
+WriteLiteral(">\r\n        .background-icon {\r\n            right: -110px;\r\n            top: -168p" +
+"x;\r\n        }\r\n    </style>\r\n    <script>\r\n        $(function () {\r\n            " +
+"addShortcuts();\r\n        });\r\n    </script>\r\n</head>\r\n<body>\r\n    <nav");
 
 WriteLiteral(" id=\"navigation\"");
 
@@ -125,7 +125,7 @@ WriteLiteral(" data-binding=\"GoBack\"");
 
 WriteAttribute ("title", " title=\"", "\""
 
-#line 35 "ChangePasswordRazorView.cshtml"
+#line 34 "ChangePasswordRazorView.cshtml"
                                                                       , Tuple.Create<string,object,bool> ("", Model.Language["back"]
 
 #line default
@@ -135,7 +135,7 @@ WriteAttribute ("title", " title=\"", "\""
 WriteLiteral(">");
 
 
-#line 35 "ChangePasswordRazorView.cshtml"
+#line 34 "ChangePasswordRazorView.cshtml"
                                                                                                                                         WriteLiteral(Model.Icon["arrow-left"]);
 
 #line default
@@ -146,10 +146,24 @@ WriteLiteral(" id=\"content\"");
 
 WriteLiteral(" class=\"container-fluid p-4\"");
 
-WriteLiteral(">\r\n        <h2>");
+WriteLiteral(">\r\n        <svg");
+
+WriteLiteral(" class=\"background-icon\"");
+
+WriteLiteral(" width=\'24\'");
+
+WriteLiteral(" height=\'24\'");
+
+WriteLiteral(" viewBox=\'0 0 24 24\'");
+
+WriteLiteral("><use");
+
+WriteLiteral(" xlink:href=\"#svg-safe-square-outline\"");
+
+WriteLiteral(" /></svg>\r\n\r\n        <h2>");
 
 
-#line 39 "ChangePasswordRazorView.cshtml"
+#line 40 "ChangePasswordRazorView.cshtml"
        Write(Model.Language["safe_change_password"]);
 
 
@@ -172,7 +186,7 @@ WriteLiteral(" for=\"Password\"");
 WriteLiteral(">");
 
 
-#line 43 "ChangePasswordRazorView.cshtml"
+#line 44 "ChangePasswordRazorView.cshtml"
                                                                  Write(Model.Language["safe_old_password"]);
 
 
@@ -203,7 +217,7 @@ WriteLiteral(" class=\"invalid-feedback\"");
 WriteLiteral(">");
 
 
-#line 46 "ChangePasswordRazorView.cshtml"
+#line 47 "ChangePasswordRazorView.cshtml"
                                              Write(Model.Language["password_wrong_error"]);
 
 
@@ -222,7 +236,7 @@ WriteLiteral(" for=\"Password\"");
 WriteLiteral(">");
 
 
-#line 51 "ChangePasswordRazorView.cshtml"
+#line 52 "ChangePasswordRazorView.cshtml"
                                                                  Write(Model.Language["safe_new_password"]);
 
 
@@ -253,7 +267,7 @@ WriteLiteral(" class=\"invalid-feedback\"");
 WriteLiteral(">");
 
 
-#line 54 "ChangePasswordRazorView.cshtml"
+#line 55 "ChangePasswordRazorView.cshtml"
                                              Write(Model.Language["password_short_error"]);
 
 
@@ -272,7 +286,7 @@ WriteLiteral(" for=\"PasswordConfirmation\"");
 WriteLiteral(">");
 
 
-#line 58 "ChangePasswordRazorView.cshtml"
+#line 59 "ChangePasswordRazorView.cshtml"
                                                                              Write(Model.Language["safe_confirm_password"]);
 
 
@@ -303,7 +317,7 @@ WriteLiteral(" class=\"invalid-feedback\"");
 WriteLiteral(">");
 
 
-#line 61 "ChangePasswordRazorView.cshtml"
+#line 62 "ChangePasswordRazorView.cshtml"
                                              Write(Model.Language["password_confirmation_error"]);
 
 
@@ -322,7 +336,7 @@ WriteLiteral(" data-binding=\"OkCommand\"");
 WriteLiteral(">");
 
 
-#line 65 "ChangePasswordRazorView.cshtml"
+#line 66 "ChangePasswordRazorView.cshtml"
                                                                                                                         Write(Model.Language["ok"]);
 
 
@@ -341,7 +355,7 @@ WriteLiteral(" data-binding=\"CancelCommand\"");
 WriteLiteral(">");
 
 
-#line 66 "ChangePasswordRazorView.cshtml"
+#line 67 "ChangePasswordRazorView.cshtml"
                                                                                                                Write(Model.Language["cancel"]);
 
 
@@ -354,13 +368,27 @@ WriteLiteral(" class=\"alert alert-success my-4\"");
 WriteLiteral(">");
 
 
-#line 69 "ChangePasswordRazorView.cshtml"
+#line 70 "ChangePasswordRazorView.cshtml"
                                          Write(Model.Language["safe_password_requirement"]);
 
 
 #line default
 #line hidden
-WriteLiteral("</div>\r\n    </div>\r\n</body>\r\n</html>\r\n");
+WriteLiteral("</div>\r\n    </div>\r\n\r\n    <div hidden>\r\n");
+
+
+#line 74 "ChangePasswordRazorView.cshtml"
+        
+
+#line default
+#line hidden
+
+#line 74 "ChangePasswordRazorView.cshtml"
+          WriteLiteral(Model.Icon.LoadIcon("safe-square-outline", new[] { new KeyValuePair<string, string>("id", "svg-safe-square-outline") }));
+
+#line default
+#line hidden
+WriteLiteral("\r\n    </div>\r\n</body>\r\n</html>\r\n");
 
 }
 }

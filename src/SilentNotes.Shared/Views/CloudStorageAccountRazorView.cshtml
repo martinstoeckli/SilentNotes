@@ -11,19 +11,11 @@
 
     <link href="bootstrap.min.css" rel="stylesheet" />
     <link href="silentnotes.css" rel="stylesheet" />
+    <link href="@(Model.Theme.DarkMode ? "silentnotes.dark.css" : "silentnotes.light.css")" rel="stylesheet" />
 
     <script src="jquery-3.4.1.min.js"></script>
     <script src="bootstrap.bundle.min.js"></script>
     <script src="silentnotes.js"></script>
-
-    <style type="text/css">
-        #content {
-            background-image: url("settings-background.svg");
-            background-repeat: no-repeat;
-            background-position: right -128px top -196px;
-            background-size: 480px;
-        }
-    </style>
     <script>
         $(function () {
             addShortcuts();
@@ -36,6 +28,8 @@
     </nav>
 
     <div id="content" class="container-fluid p-4">
+        <svg class="background-icon" width='24' height='24' viewBox='0 0 24 24'><use xlink:href="#svg-settings" /></svg>
+
         <h2>@Model.Language["cloud_service_credentials"]</h2>
         <form class="mb-4 col-md-9">
             <div class="form-row form-group">
@@ -69,6 +63,10 @@
             <button type="button" class="btn btn-primary mb-2 shortcut-enter" onclick="bind(event)" data-binding="OkCommand">@Model.Language["continue"]</button>
             <button type="button" class="btn btn-secondary mb-2 shortcut-escape" onclick="bind(event)" data-binding="CancelCommand">@Model.Language["cancel"]</button>
         </form>
+    </div>
+
+    <div hidden>
+        @{WriteLiteral(Model.Icon.LoadIcon("settings", new[] { new KeyValuePair<string, string>("id", "svg-settings") }));}
     </div>
 </body>
 </html>

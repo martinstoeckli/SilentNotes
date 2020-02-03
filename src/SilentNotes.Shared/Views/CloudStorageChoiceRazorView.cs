@@ -23,7 +23,7 @@ using SilentNotes.ViewModels;
 #line hidden
 
 
-[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.3.0.277")]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.4.0.308")]
 public partial class CloudStorageChoiceRazorView : CloudStorageChoiceRazorViewBase
 {
 
@@ -78,6 +78,19 @@ WriteLiteral(" href=\"silentnotes.css\"");
 
 WriteLiteral(" rel=\"stylesheet\"");
 
+WriteLiteral(" />\r\n    <link");
+
+WriteAttribute ("href", " href=\"", "\""
+
+#line 14 "CloudStorageChoiceRazorView.cshtml"
+, Tuple.Create<string,object,bool> ("", Model.Theme.DarkMode ? "silentnotes.dark.css" : "silentnotes.light.css"
+
+#line default
+#line hidden
+, false)
+);
+WriteLiteral(" rel=\"stylesheet\"");
+
 WriteLiteral(" />\r\n\r\n    <script");
 
 WriteLiteral(" src=\"jquery-3.4.1.min.js\"");
@@ -98,10 +111,12 @@ WriteLiteral(@">
         .list-group {
             max-width: 300px;
         }
+
         .list-group-item {
             font-weight: bold;
             cursor: pointer;
         }
+
         .choice-icon {
             margin-right: 16px;
             width: 64px;
@@ -128,7 +143,7 @@ WriteLiteral(" data-binding=\"GoBack\"");
 
 WriteAttribute ("title", " title=\"", "\""
 
-#line 38 "CloudStorageChoiceRazorView.cshtml"
+#line 41 "CloudStorageChoiceRazorView.cshtml"
                                                       , Tuple.Create<string,object,bool> ("", Model.Language["back"]
 
 #line default
@@ -138,7 +153,7 @@ WriteAttribute ("title", " title=\"", "\""
 WriteLiteral(">");
 
 
-#line 38 "CloudStorageChoiceRazorView.cshtml"
+#line 41 "CloudStorageChoiceRazorView.cshtml"
                                                                                                                         WriteLiteral(Model.Icon["arrow-left"]);
 
 #line default
@@ -152,7 +167,7 @@ WriteLiteral(" class=\"container-fluid p-4\"");
 WriteLiteral(">\r\n        <h1>");
 
 
-#line 42 "CloudStorageChoiceRazorView.cshtml"
+#line 45 "CloudStorageChoiceRazorView.cshtml"
        Write(Model.Language["cloud_service_choice"]);
 
 
@@ -165,13 +180,13 @@ WriteLiteral(" class=\"list-group\"");
 WriteLiteral(">\r\n");
 
 
-#line 45 "CloudStorageChoiceRazorView.cshtml"
+#line 48 "CloudStorageChoiceRazorView.cshtml"
             
 
 #line default
 #line hidden
 
-#line 45 "CloudStorageChoiceRazorView.cshtml"
+#line 48 "CloudStorageChoiceRazorView.cshtml"
              foreach (var serviceChoice in @Model.ServiceChoices)
             {
 
@@ -191,7 +206,7 @@ WriteLiteral(" data-binding=\"choose\"");
 WriteLiteral(" data-cloudstorageid=\"");
 
 
-#line 47 "CloudStorageChoiceRazorView.cshtml"
+#line 50 "CloudStorageChoiceRazorView.cshtml"
                                                                                                                                                  Write(serviceChoice.CloudStorageId);
 
 
@@ -205,7 +220,7 @@ WriteLiteral(" class=\"choice-icon\"");
 
 WriteAttribute ("src", " src=\"", "\""
 
-#line 48 "CloudStorageChoiceRazorView.cshtml"
+#line 51 "CloudStorageChoiceRazorView.cshtml"
            , Tuple.Create<string,object,bool> ("", serviceChoice.Icon
 
 #line default
@@ -217,7 +232,7 @@ WriteLiteral(" />\r\n");
 WriteLiteral("                    ");
 
 
-#line 49 "CloudStorageChoiceRazorView.cshtml"
+#line 52 "CloudStorageChoiceRazorView.cshtml"
                Write(serviceChoice.Title);
 
 
@@ -226,7 +241,7 @@ WriteLiteral("                    ");
 WriteLiteral("\r\n                </button>\r\n");
 
 
-#line 51 "CloudStorageChoiceRazorView.cshtml"
+#line 54 "CloudStorageChoiceRazorView.cshtml"
             }
 
 
@@ -247,7 +262,7 @@ WriteLiteral(" data-binding=\"GoBack\"");
 WriteLiteral(">");
 
 
-#line 54 "CloudStorageChoiceRazorView.cshtml"
+#line 57 "CloudStorageChoiceRazorView.cshtml"
                                                                                                            Write(Model.Language["cancel"]);
 
 

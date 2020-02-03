@@ -11,27 +11,30 @@
 
     <link href="bootstrap.min.css" rel="stylesheet" />
     <link href="silentnotes.css" rel="stylesheet" />
+    <link href="@(Model.Theme.DarkMode ? "silentnotes.dark.css" : "silentnotes.light.css")" rel="stylesheet" />
 
     <script src="jquery-3.4.1.min.js"></script>
     <script src="bootstrap.bundle.min.js"></script>
     <script src="silentnotes.js"></script>
 
     <style type="text/css">
-        #content {
-            background-image: url("settings-background.svg");
-            background-repeat: no-repeat;
-            background-position: right -128px top -196px;
-            background-size: 480px;
+        .background-icon {
+            right: -128px;
+            top: -154px;
         }
+
+        #theme-control {
+            height: 90px;
+        }
+
+        #color-control {
+            height: 50px;
+        }
+
         .theme-preview,
         .color-preview {
-            margin: 0;
-            width: 300px;
+            width: 340px;
             max-width: calc(100% - 36px);
-            height: 96px;
-        }
-        .color-preview {
-            height: 36px;
         }
 
         .theme-list,
@@ -47,9 +50,8 @@
             height: 128px;
         }
 
-        .color-btn.dark {
-            color: white;
-        }
+        .color-btn { color: black; }
+        .color-btn.dark { color: white; }
     </style>
     <script>
         $(function () {
@@ -63,11 +65,15 @@
     </nav>
 
     <div id="content" class="container-fluid p-4">
+        <svg class="background-icon" width='24' height='24' viewBox='0 0 24 24'><use xlink:href="#svg-settings" /></svg>
+
         <h2>@Model.Language["gui"]</h2>
         <form class="mb-4 col-md-9 col-lg-6">
-            <div class="form-row form-group form-check">
-                <input class="form-check-input" type="checkbox" id="ShowCursorArrowKeys" onclick="bind(event)" data-binding="ShowCursorArrowKeys" @(Model.ShowCursorArrowKeys ? "checked" : "")>
-                <label class="form-check-label" for="ShowCursorArrowKeys">@Model.Language["gui_show_arrow_keys"]</label>
+            <div class="form-row form-group">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="ShowCursorArrowKeys" onclick="bind(event)" data-binding="ShowCursorArrowKeys" @(Model.ShowCursorArrowKeys ? "checked" : "")>
+                    <label class="form-check-label" for="ShowCursorArrowKeys">@Model.Language["gui_show_arrow_keys"]</label>
+                </div>
             </div>
             <div class="form-row form-group">
                 <label class="col-form-label" for="font-size">@Model.Language["gui_font_size"]</label>
@@ -77,13 +83,12 @@
             </div>
             <div class="form-row form-group">
                 <label class="col-form-label" for="Theme">@Model.Language["gui_texture"]</label>
-                <div id="texture-chooser" class="form-control">
+                <div id="theme-control" class="form-control">
                     <div id="Theme" class="dropdown">
-                        <div data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <div class="theme-preview row" data-binding="SelectedTheme" style="background: url(@Model.SelectedTheme.Image);"></div>
-                        </div>
+                        <button class="theme-preview btn m-0 h-100" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-binding="SelectedTheme" style="background: url(@Model.SelectedTheme.Image);">
+                        </button>
                         <div class="dropdown-menu theme-list" aria-labelledby="themeChooser">
-                            @foreach (var theme in @Model.Themes)
+                            @foreach (var theme in @Model.Theme.Themes)
                             {
                                 <div class="dropdown-item theme-item" onclick="bind(event)" data-binding="SelectedThemePreview" data-theme="@(theme.Id)" style="background: url(@(theme.Image));"></div>
                             }
@@ -92,12 +97,30 @@
                 </div>
             </div>
             <div class="form-row form-group">
+                <select class="form-control" id="ThemeMode" onchange="bind(event)" data-binding="SelectedThemeMode">
+                    <option value="Auto" @(Model.SelectedThemeMode == "Auto" ? "selected" : "")>@Model.Language["gui_theme_auto"]</option>
+                    <option value="Dark" @(Model.SelectedThemeMode == "Dark" ? "selected" : "")>@Model.Language["gui_theme_dark"]</option>
+                    <option value="Light" @(Model.SelectedThemeMode == "Light" ? "selected" : "")>@Model.Language["gui_theme_light"]</option>
+                </select>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-10">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="ColorsForAllNotesDark" onclick="bind(event)" data-binding="UseColorForAllNotesInDarkMode" @(Model.UseColorForAllNotesInDarkMode ? "checked" : "")>
+                        <label class="form-check-label" for="ColorsForAllNotesDark">@Model.Language["gui_theme_color_all_dark"]</label>
+                    </div>
+                </div>
+                <div class="form-group col-2">
+                    <input class="form-control" type="color" oninput="bind(event)" data-binding="ColorForAllNotesInDarkModeHex" value="@(Model.ColorForAllNotesInDarkModeHex)">
+                </div>
+            </div>
+
+            <div class="form-row form-group">
                 <label class="col-form-label" for="Color">@Model.Language["gui_default_color"]</label>
-                <div id="color-chooser" class="form-control">
+                <div id="color-control" class="form-control">
                     <div id="DefaultNoteColor" class="dropdown">
-                        <div data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <div class="color-preview row" data-binding="DefaultNoteColor" style="background-color: @Model.DefaultNoteColorHex;"></div>
-                        </div>
+                        <button class="color-preview btn m-0 h-100" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-binding="DefaultNoteColor" style="background-color: @Model.DefaultNoteColorHex;">
+                        </button>
                         <div class="dropdown-menu color-list" aria-labelledby="colorChooser">
                             @foreach (var backgroundColor in @Model.NoteColorsHex)
                             {
@@ -139,6 +162,10 @@
             <button type="button" class="btn btn-secondary mb-2" onclick="bind(event)" data-binding="ChangeCloudSettingsCommand" title="@Model.Language["cloud_change_settings_desc"]">@Model.Language["cloud_change_settings"]</button>
             <button type="button" class="btn btn-secondary mb-2" onclick="bind(event)" data-binding="ClearCloudSettingsCommand" title="@Model.Language["cloud_clear_settings_desc"]">@Model.Language["cloud_clear_settings"]</button>
         </form>
+    </div>
+
+    <div hidden>
+        @{WriteLiteral(Model.Icon.LoadIcon("settings", new[] { new KeyValuePair<string, string>("id", "svg-settings") }));}
     </div>
 </body>
 </html>

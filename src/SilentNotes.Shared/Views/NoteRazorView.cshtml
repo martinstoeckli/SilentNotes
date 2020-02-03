@@ -11,6 +11,8 @@
 
     <link href="bootstrap.min.css" rel="stylesheet" />
     <link href="silentnotes.css" rel="stylesheet" />
+    <link href="@(Model.Theme.DarkMode ? "silentnotes.dark.css" : "silentnotes.light.css")" rel="stylesheet" />
+
     <link href="quill/quill.snow.css" rel="stylesheet">
     <link href="NoteView.css" rel="stylesheet">
 
@@ -26,9 +28,8 @@ body { background-color: transparent; }
 .note-viewer {
     font-size: @(Model.NoteBaseFontSize)px !important;
 }
-.color-btn.dark {
-    color: white;
-}
+.color-btn { color: black; }
+.color-btn.dark { color: white; }
 .locked {
     position: relative;
     height: 100%;

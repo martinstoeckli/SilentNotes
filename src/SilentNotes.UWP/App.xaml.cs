@@ -30,6 +30,11 @@ namespace SilentNotes.UWP
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+            Startup.InitializeApplication();
+
+            // To respond to the OS dark mode settings, the RequestedTheme should be removed from App.xaml.
+            IThemeService themeService = Ioc.GetOrCreate<IThemeService>();
+            RequestedTheme = themeService.DarkMode ? ApplicationTheme.Dark : ApplicationTheme.Light;
         }
 
         /// <summary>

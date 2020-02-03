@@ -19,7 +19,6 @@ namespace SilentNotes.ViewModels
     /// </summary>
     public class RecycleBinViewModel : ViewModelBase
     {
-        private readonly IThemeService _themeService;
         private readonly IRepositoryStorageService _repositoryService;
         private readonly IFeedbackService _feedbackService;
         private readonly ICryptor _noteCryptor;
@@ -33,14 +32,13 @@ namespace SilentNotes.ViewModels
             INavigationService navigationService,
             ILanguageService languageService,
             ISvgIconService svgIconService,
-            IBaseUrlService webviewBaseUrl,
             IThemeService themeService,
+            IBaseUrlService webviewBaseUrl,
             IFeedbackService feedbackService,
             ICryptoRandomSource randomSource,
             IRepositoryStorageService repositoryService)
-            : base(navigationService, languageService, svgIconService, webviewBaseUrl)
+            : base(navigationService, languageService, svgIconService, themeService, webviewBaseUrl)
         {
-            _themeService = themeService;
             _feedbackService = feedbackService;
             _repositoryService = repositoryService;
             _noteCryptor = new Cryptor(NoteModel.CryptorPackageName, randomSource);
@@ -61,14 +59,6 @@ namespace SilentNotes.ViewModels
         public List<NoteViewModel> RecycledNotes { get; private set; }
 
         /// <summary>
-        /// Gets the active theme.
-        /// </summary>
-        public ThemeModel Theme
-        {
-            get { return _themeService.SelectedTheme; }
-        }
-
-        /// <summary>
         /// Gets or sets the wrapped model.
         /// </summary>
         internal NoteRepositoryModel Model
@@ -85,7 +75,7 @@ namespace SilentNotes.ViewModels
                 foreach (NoteModel note in _model.Notes)
                 {
                     if (note.InRecyclingBin)
-                        RecycledNotes.Add(new NoteViewModel(_navigationService, Language, Icon, _webviewBaseUrl, null, _repositoryService, feedbackService, null, _noteCryptor, _model.Safes, note));
+                        RecycledNotes.Add(new NoteViewModel(_navigationService, Language, Icon, Theme, _webviewBaseUrl, null, _repositoryService, feedbackService, null, _noteCryptor, _model.Safes, note));
                 }
             }
         }

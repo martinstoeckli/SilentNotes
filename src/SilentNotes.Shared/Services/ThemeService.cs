@@ -3,6 +3,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using System;
 using System.Collections.Generic;
 using SilentNotes.Models;
 
@@ -15,31 +16,60 @@ namespace SilentNotes.Services
     {
         private const int DefaultTheme = 0;
         private readonly ISettingsService _settingsService;
+        private readonly IEnvironmentService _environmentService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ThemeService"/> class.
         /// </summary>
         /// <param name="settingsService">A settings service, which can get the current theme.</param>
-        public ThemeService(ISettingsService settingsService)
+        /// <param name="environmentService">A environment service, which can get device information.</param>
+        public ThemeService(ISettingsService settingsService, IEnvironmentService environmentService)
         {
             _settingsService = settingsService;
+            _environmentService = environmentService;
             Themes = new List<ThemeModel>();
             FillThemes(Themes);
         }
 
         private void FillThemes(List<ThemeModel> themes)
         {
-            themes.Add(new ThemeModel("cork", "cork.jpg", "#7d6346"));
-            themes.Add(new ThemeModel("forest", "forest.jpg", "#5e9a4c"));
-            themes.Add(new ThemeModel("stone", "stone.jpg", "#373033"));
-            themes.Add(new ThemeModel("blackstone", "blackstone.jpg", "#323232"));
-            themes.Add(new ThemeModel("grass", "grass.jpg", "#335726"));
+            themes.Add(new ThemeModel("cork", "cork.jpg", "#ddbc99"));
+            themes.Add(new ThemeModel("forest", "forest.jpg", "#598b3e"));
+            themes.Add(new ThemeModel("stone", "stone.jpg", "#8d7f83"));
+            themes.Add(new ThemeModel("blackstone", "blackstone.jpg", "#312f2f"));
+            themes.Add(new ThemeModel("grass", "grass.jpg", "#5a9d2a"));
             themes.Add(new ThemeModel("paper", "paper.jpg", "#fcf7f4"));
-            themes.Add(new ThemeModel("sky", "sky.jpg", "#4f718d"));
-            themes.Add(new ThemeModel("water", "water.jpg", "#2f637b"));
-            themes.Add(new ThemeModel("sand", "sand.jpg", "#7c6951"));
+            themes.Add(new ThemeModel("sky", "sky.jpg", "#80acd1"));
+            themes.Add(new ThemeModel("water", "water.jpg", "#4fb6df"));
+            themes.Add(new ThemeModel("sand", "sand.jpg", "#d1b189"));
             themes.Add(new ThemeModel("stars", "stars.jpg", "#000518"));
-            themes.Add(new ThemeModel("meadow", "meadow.jpg", "#2b4426"));
+            themes.Add(new ThemeModel("meadow", "meadow.jpg", "#3c821c"));
+        }
+
+        /// <inheritdoc/>
+        public bool DarkMode
+        {
+            get
+            {
+                SettingsModel settings = _settingsService.LoadSettingsOrDefault();
+                switch (settings.ThemeMode)
+                {
+                    case ThemeMode.Auto:
+                        return _environmentService.InDarkMode;
+                    case ThemeMode.Dark:
+                        return true;
+                    case ThemeMode.Light:
+                        return false;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(settings.ThemeMode));
+                }
+            }
+        }
+
+        /// <inheritdoc/>
+        public string CssDark
+        {
+            get { return DarkMode ? "dark" : string.Empty; }
         }
 
         /// <inheritdoc/>

@@ -18,26 +18,36 @@ namespace SilentNotes.UWP
     [SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1116:SplitParametersMustStartOnLineAfterDeclaration", Justification = "Keep readability.")]
     public class Startup
     {
+        private static bool _isFirstTime = true;
+
+        /// <summary>
+        /// Sets up the application and initializes the services.
+        /// </summary>
+        public static void InitializeApplication()
+        {
+            RegisterServices();
+            StartupShared.RegisterControllers();
+            StartupShared.RegisterRazorViews();
+            StartupShared.RegisterCloudStorageClientFactory();
+        }
+
         /// <summary>
         /// Sets up the application and initializes the services.
         /// </summary>
         /// <param name="mainPage">Main page of the application.</param>
-        public static void InitializeApplication(MainPage mainPage)
+        public static void InitializeApplicationWithMainPage(MainPage mainPage)
         {
             // do it only the first time
-            if (IsFirstTime())
+            if (_isFirstTime)
             {
-                RegisterServices(mainPage);
-                StartupShared.RegisterControllers();
-                StartupShared.RegisterRazorViews();
-                StartupShared.RegisterCloudStorageClientFactory();
+                _isFirstTime = false;
+                RegisterServicesWithMainPage(mainPage);
             }
         }
 
-        private static void RegisterServices(MainPage mainPage)
+        private static void RegisterServices()
         {
-            Ioc.RegisterFactory<IEnvironmentService>(() => new EnvironmentService(SilentNotes.Services.OperatingSystem.Windows));
-            Ioc.RegisterFactory<IHtmlView>(() => mainPage);
+            Ioc.RegisterFactory<IEnvironmentService>(() => new EnvironmentService(OperatingSystem.Windows));
             Ioc.RegisterFactory<IBaseUrlService>(() => new BaseUrlService());
             Ioc.RegisterFactory<ILanguageService>(() => new LanguageService(new LanguageCodeService().GetSystemLanguageCode()));
             Ioc.RegisterFactory<ISvgIconService>(() => new SvgIconService());
@@ -56,8 +66,6 @@ namespace SilentNotes.UWP
             Ioc.RegisterFactory<ICryptoRandomService>(() => new CryptoRandomService());
             Ioc.RegisterFactory<INoteRepositoryUpdater>(() => new NoteRepositoryUpdater());
             Ioc.RegisterFactory<IStoryBoardService>(() => new StoryBoardService());
-            Ioc.RegisterFactory<IFeedbackService>(() => new FeedbackService(
-                mainPage, Ioc.GetOrCreate<ILanguageService>()));
             Ioc.RegisterFactory<IDataProtectionService>(() => new DataProtectionService());
             Ioc.RegisterFactory<IInternetStateService>(() => new InternetStateService());
             Ioc.RegisterFactory<IAutoSynchronizationService>(() => new AutoSynchronizationService(
@@ -66,12 +74,14 @@ namespace SilentNotes.UWP
                 Ioc.GetOrCreate<IRepositoryStorageService>(),
                 Ioc.GetOrCreate<INavigationService>()));
             Ioc.RegisterFactory<IThemeService>(() => new ThemeService(
-                Ioc.GetOrCreate<ISettingsService>()));
+                Ioc.GetOrCreate<ISettingsService>(), Ioc.GetOrCreate<IEnvironmentService>()));
         }
 
-        private static bool IsFirstTime()
+        private static void RegisterServicesWithMainPage(MainPage mainPage)
         {
-            return !Ioc.IsRegistered<IEnvironmentService>();
+            Ioc.RegisterFactory<IHtmlView>(() => mainPage);
+            Ioc.RegisterFactory<IFeedbackService>(() => new FeedbackService(
+                mainPage, Ioc.GetOrCreate<ILanguageService>()));
         }
     }
 }

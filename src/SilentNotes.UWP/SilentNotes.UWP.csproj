@@ -115,6 +115,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\CryptoRandomService.cs" />
     <Compile Include="Services\DataProtectionService.cs" />
+    <Compile Include="Services\EnvironmentService.cs" />
     <Compile Include="Services\FeedbackService.cs" />
     <Compile Include="Services\LanguageCodeService.cs" />
     <Compile Include="Services\NativeBrowserService.cs" />
@@ -172,17 +173,11 @@
     <Content Include="..\SilentNotes.Shared\Assets\Html\jquery-3.4.1.min.js">
       <Link>Assets\Html\jquery-3.4.1.min.js</Link>
     </Content>
-    <Content Include="..\SilentNotes.Shared\Assets\Html\key-background.svg">
-      <Link>Assets\Html\key-background.svg</Link>
-    </Content>
     <Content Include="..\SilentNotes.Shared\Assets\Html\meadow.jpg">
       <Link>Assets\Html\meadow.jpg</Link>
     </Content>
     <Content Include="..\SilentNotes.Shared\Assets\Html\NoteView.css">
       <Link>Assets\Html\NoteView.css</Link>
-    </Content>
-    <Content Include="..\SilentNotes.Shared\Assets\Html\opensafe-background.svg">
-      <Link>Assets\Html\opensafe-background.svg</Link>
     </Content>
     <Content Include="..\SilentNotes.Shared\Assets\Html\paper.jpg">
       <Link>Assets\Html\paper.jpg</Link>
@@ -196,14 +191,17 @@
     <Content Include="..\SilentNotes.Shared\Assets\Html\sand.jpg">
       <Link>Assets\Html\sand.jpg</Link>
     </Content>
-    <Content Include="..\SilentNotes.Shared\Assets\Html\settings-background.svg">
-      <Link>Assets\Html\settings-background.svg</Link>
-    </Content>
     <Content Include="..\SilentNotes.Shared\Assets\Html\silentnotes.css">
       <Link>Assets\Html\silentnotes.css</Link>
     </Content>
+    <Content Include="..\SilentNotes.Shared\Assets\Html\silentnotes.dark.css">
+      <Link>Assets\Html\silentnotes.dark.css</Link>
+    </Content>
     <Content Include="..\SilentNotes.Shared\Assets\Html\silentnotes.js">
       <Link>Assets\Html\silentnotes.js</Link>
+    </Content>
+    <Content Include="..\SilentNotes.Shared\Assets\Html\silentnotes.light.css">
+      <Link>Assets\Html\silentnotes.light.css</Link>
     </Content>
     <Content Include="..\SilentNotes.Shared\Assets\Html\SilentNotes256.png">
       <Link>Assets\Html\SilentNotes256.png</Link>

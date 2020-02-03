@@ -36,7 +36,7 @@ namespace SilentNotes.UWP
             _webView.NewWindowRequested += NewWindowRequestedEventHandler;
             _webView.UnsupportedUriSchemeIdentified += UnsupportedUriSchemeIdentifiedEventHandler;
 
-            Startup.InitializeApplication(this);
+            Startup.InitializeApplicationWithMainPage(this);
         }
 
         private void Page_Loading(FrameworkElement sender, object args)

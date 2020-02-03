@@ -92,6 +92,7 @@
     <Compile Include="Services\NativeBrowserService.cs" />
     <Compile Include="Services\RepositoryStorageService.cs" />
     <Compile Include="Services\SettingsService.cs" />
+    <Compile Include="Services\EnvironmentService.cs" />
     <Compile Include="Services\VersionService.cs" />
     <Compile Include="Services\BaseUrlService.cs" />
     <Compile Include="Startup.cs" />
@@ -151,16 +152,6 @@
   <ItemGroup>
     <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\bootstrap.min.css">
       <Link>Assets\Html\bootstrap.min.css</Link>
-    </AndroidAsset>
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\settings-background.svg">
-      <Link>Assets\Html\settings-background.svg</Link>
-    </AndroidAsset>
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\key-background.svg">
-      <Link>Assets\Html\key-background.svg</Link>
     </AndroidAsset>
   </ItemGroup>
   <ItemGroup>
@@ -271,11 +262,6 @@
     </AndroidAsset>
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\opensafe-background.svg">
-      <Link>Assets\Html\opensafe-background.svg</Link>
-    </AndroidAsset>
-  </ItemGroup>
-  <ItemGroup>
     <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\blackstone.jpg">
       <Link>Assets\Html\blackstone.jpg</Link>
     </AndroidAsset>
@@ -288,6 +274,16 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\ic_launcher_foreground.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\silentnotes.light.css">
+      <Link>Assets\Html\silentnotes.light.css</Link>
+    </AndroidAsset>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\silentnotes.dark.css">
+      <Link>Assets\Html\silentnotes.dark.css</Link>
+    </AndroidAsset>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
 </Project>

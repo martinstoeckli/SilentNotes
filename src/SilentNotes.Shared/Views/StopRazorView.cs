@@ -23,7 +23,7 @@ using SilentNotes.ViewModels;
 #line hidden
 
 
-[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.3.0.277")]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.4.0.308")]
 public partial class StopRazorView : StopRazorViewBase
 {
 
@@ -78,6 +78,19 @@ WriteLiteral(" href=\"silentnotes.css\"");
 
 WriteLiteral(" rel=\"stylesheet\"");
 
+WriteLiteral(" />\r\n    <link");
+
+WriteAttribute ("href", " href=\"", "\""
+
+#line 14 "StopRazorView.cshtml"
+, Tuple.Create<string,object,bool> ("", Model.Theme.DarkMode ? "silentnotes.dark.css" : "silentnotes.light.css"
+
+#line default
+#line hidden
+, false)
+);
+WriteLiteral(" rel=\"stylesheet\"");
+
 WriteLiteral(" />\r\n\r\n    <script");
 
 WriteLiteral(" src=\"jquery-3.4.1.min.js\"");
@@ -120,13 +133,13 @@ WriteLiteral(" class=\"float-left mr-3\"");
 WriteLiteral(">\r\n");
 
 
-#line 33 "StopRazorView.cshtml"
+#line 34 "StopRazorView.cshtml"
                 
 
 #line default
 #line hidden
 
-#line 33 "StopRazorView.cshtml"
+#line 34 "StopRazorView.cshtml"
                   WriteLiteral(Model.Icon["alert"]);
 
 #line default
@@ -136,7 +149,7 @@ WriteLiteral("\r\n            </span>\r\n");
 WriteLiteral("            ");
 
 
-#line 35 "StopRazorView.cshtml"
+#line 36 "StopRazorView.cshtml"
        Write(Model.Language["error_loading_repository"]);
 
 

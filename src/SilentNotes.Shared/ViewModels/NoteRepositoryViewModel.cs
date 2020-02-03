@@ -28,7 +28,6 @@ namespace SilentNotes.ViewModels
         private readonly IRepositoryStorageService _repositoryService;
         private readonly IFeedbackService _feedbackService;
         private readonly ISettingsService _settingsService;
-        private readonly IThemeService _themeService;
         private readonly IEnvironmentService _environmentService;
         private readonly SearchableHtmlConverter _searchableTextConverter;
         private readonly ICryptor _noteCryptor;
@@ -43,21 +42,20 @@ namespace SilentNotes.ViewModels
             INavigationService navigationService,
             ILanguageService languageService,
             ISvgIconService svgIconService,
+            IThemeService themeService,
             IBaseUrlService webviewBaseUrl,
             IStoryBoardService storyBoardService,
             IFeedbackService feedbackService,
             ISettingsService settingsService,
-            IThemeService themeService,
             IEnvironmentService environmentService,
             ICryptoRandomSource randomSource,
             IRepositoryStorageService repositoryService)
-            : base(navigationService, languageService, svgIconService, webviewBaseUrl)
+            : base(navigationService, languageService, svgIconService, themeService, webviewBaseUrl)
         {
             _storyBoardService = storyBoardService;
             _repositoryService = repositoryService;
             _feedbackService = feedbackService;
             _settingsService = settingsService;
-            _themeService = themeService;
             _environmentService = environmentService;
             _noteCryptor = new Cryptor(NoteModel.CryptorPackageName, randomSource);
             _searchableTextConverter = new SearchableHtmlConverter();
@@ -105,14 +103,6 @@ namespace SilentNotes.ViewModels
         public override void OnGoBackPressed(out bool handled)
         {
             handled = false;
-        }
-
-        /// <summary>
-        /// Gets the active theme.
-        /// </summary>
-        public ThemeModel Theme
-        {
-            get { return _themeService.SelectedTheme; }
         }
 
         /// <summary>
@@ -231,7 +221,7 @@ namespace SilentNotes.ViewModels
             _model.Notes.Insert(0, noteModel);
 
             // Update view model list
-            NoteViewModel noteViewModel = new NoteViewModel(_navigationService, Language, Icon, _webviewBaseUrl, _searchableTextConverter, _repositoryService, _feedbackService, null, _noteCryptor, _model.Safes, noteModel);
+            NoteViewModel noteViewModel = new NoteViewModel(_navigationService, Language, Icon, Theme, _webviewBaseUrl, _searchableTextConverter, _repositoryService, _feedbackService, null, _noteCryptor, _model.Safes, noteModel);
             AllNotes.Insert(0, noteViewModel);
             FilteredNotes.Insert(0, noteViewModel);
 
@@ -435,7 +425,7 @@ namespace SilentNotes.ViewModels
                 // Wrap models in view models
                 foreach (NoteModel note in _model.Notes)
                 {
-                    NoteViewModel noteViewModel = new NoteViewModel(_navigationService, Language, Icon, _webviewBaseUrl, _searchableTextConverter, _repositoryService, _feedbackService, _settingsService, _noteCryptor, _model.Safes, note);
+                    NoteViewModel noteViewModel = new NoteViewModel(_navigationService, Language, Icon, Theme, _webviewBaseUrl, _searchableTextConverter, _repositoryService, _feedbackService, _settingsService, _noteCryptor, _model.Safes, note);
                     AllNotes.Add(noteViewModel);
                     if (!noteViewModel.InRecyclingBin)
                         FilteredNotes.Add(noteViewModel);

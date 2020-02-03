@@ -68,11 +68,11 @@ namespace SilentNotes.Controllers
                     Ioc.GetOrCreate<INavigationService>(),
                     Ioc.GetOrCreate<ILanguageService>(),
                     Ioc.GetOrCreate<ISvgIconService>(),
+                    Ioc.GetOrCreate<IThemeService>(),
                     Ioc.GetOrCreate<IBaseUrlService>(),
                     Ioc.GetOrCreate<IStoryBoardService>(),
                     Ioc.GetOrCreate<IFeedbackService>(),
                     Ioc.GetOrCreate<ISettingsService>(),
-                    Ioc.GetOrCreate<IThemeService>(),
                     Ioc.GetOrCreate<IEnvironmentService>(),
                     Ioc.GetOrCreate<ICryptoRandomService>(),
                     repositoryService);
@@ -113,6 +113,7 @@ namespace SilentNotes.Controllers
                     Ioc.GetOrCreate<INavigationService>(),
                     Ioc.GetOrCreate<ILanguageService>(),
                     Ioc.GetOrCreate<ISvgIconService>(),
+                    Ioc.GetOrCreate<IThemeService>(),
                     Ioc.GetOrCreate<IBaseUrlService>());
                 string html = _viewStop.GenerateHtml(_stopViewModel);
                 View.LoadHtml(html);

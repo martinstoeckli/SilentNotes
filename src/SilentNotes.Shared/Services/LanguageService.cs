@@ -149,6 +149,11 @@ namespace SilentNotes.Services
             resources["gui_texture"] = "Theme";
             resources["gui_default_color"] = "Default color for new notes";
             resources["gui_arrow_key"] = "Go one character to the left/right";
+            resources["gui_theme_auto"] = "Automatically light or dark mode.";
+            resources["gui_theme_dark"] = "Dark mode";
+            resources["gui_theme_light"] = "Light mode";
+            resources["gui_theme_color_all_dark"] = "Same color for all notes in dark mode";
+            resources["gui_theme_color_cannot_change"] = "Same color for all notes is set.";
         }
 
         private void LoadGermanResources(Dictionary<string, string> resources)
@@ -279,6 +284,11 @@ namespace SilentNotes.Services
             resources["gui_texture"] = "Design";
             resources["gui_default_color"] = "Standardfarbe für neue Notizen";
             resources["gui_arrow_key"] = "Ein Zeichen nach links/rechts bewegen";
+            resources["gui_theme_auto"] = "Automatisch helles oder dunkles Design";
+            resources["gui_theme_dark"] = "Dunkles Design";
+            resources["gui_theme_light"] = "Helles Design";
+            resources["gui_theme_color_all_dark"] = "Gleiche Farbe für alle Notizen in dunklem Design";
+            resources["gui_theme_color_cannot_change"] = "Gleiche Farbe für alle Notizen ist eingestellt.";
         }
 
         /// <inheritdoc/>

@@ -26,7 +26,6 @@ namespace SilentNotes.ViewModels
     {
         private const double ReferenceFontSize = 15.0; // Used as reference to calculate the font scale
         private readonly ISettingsService _settingsService;
-        private readonly IThemeService _themeService;
         private readonly IStoryBoardService _storyBoardService;
 
         /// <summary>
@@ -37,14 +36,13 @@ namespace SilentNotes.ViewModels
             INavigationService navigationService,
             ILanguageService languageService,
             ISvgIconService svgIconService,
+            IThemeService themeService,
             IBaseUrlService webviewBaseUrl,
             ISettingsService settingsService,
-            IThemeService themeService,
             IStoryBoardService storyBoardService)
-            : base(navigationService, languageService, svgIconService, webviewBaseUrl)
+            : base(navigationService, languageService, svgIconService, themeService, webviewBaseUrl)
         {
             _settingsService = settingsService;
-            _themeService = themeService;
             _storyBoardService = storyBoardService;
             Model = _settingsService.LoadSettingsOrDefault();
 
@@ -68,19 +66,11 @@ namespace SilentNotes.ViewModels
         }
 
         /// <summary>
-        /// Gets a list of all available themes.
-        /// </summary>
-        public List<ThemeModel> Themes
-        {
-            get { return _themeService.Themes; }
-        }
-
-        /// <summary>
         /// Gets or sets the theme selected by the user.
         /// </summary>
         public ThemeModel SelectedTheme
         {
-            get { return _themeService.FindThemeOrDefault(Model.SelectedTheme); }
+            get { return Theme.FindThemeOrDefault(Model.SelectedTheme); }
             set { ChangePropertyIndirect(() => Model.SelectedTheme, (string v) => Model.SelectedTheme = v, value.Id, true); }
         }
 
@@ -185,6 +175,40 @@ namespace SilentNotes.ViewModels
             get { return Model.AutoSyncMode.ToString(); }
 
             set { ChangePropertyIndirect(() => Model.AutoSyncMode.ToString(), (string v) => Model.AutoSyncMode = (AutoSynchronizationMode)Enum.Parse(typeof(AutoSynchronizationMode), value), value, true); }
+        }
+
+        /// <summary>
+        /// Gets or sets the theme mode selected by the user.
+        /// </summary>
+        public string SelectedThemeMode
+        {
+            get { return Model.ThemeMode.ToString(); }
+
+            set 
+            {
+                ChangePropertyIndirect(() => Model.ThemeMode.ToString(), (string v) => Model.ThemeMode = (ThemeMode)Enum.Parse(typeof(ThemeMode), value), value, true);
+                _navigationService.Navigate(ControllerNames.Settings);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the note color should be the same for all notes
+        /// in dark mode.
+        /// </summary>
+        public bool UseColorForAllNotesInDarkMode
+        {
+            get { return Model.UseColorForAllNotesInDarkMode; }
+            set { ChangePropertyIndirect(() => Model.UseColorForAllNotesInDarkMode, (bool v) => Model.UseColorForAllNotesInDarkMode = v, value, true); }
+        }
+
+        /// <summary>
+        /// Gets or sets the background color for new notes. It depends on <see cref="SettingsModel.UseColorForAllNotesInDarkMode"/>
+        /// whether this value is respected.
+        /// </summary>
+        public string ColorForAllNotesInDarkModeHex
+        {
+            get { return Model.ColorForAllNotesInDarkModeHex; }
+            set { ChangePropertyIndirect(() => Model.ColorForAllNotesInDarkModeHex, (string v) => Model.ColorForAllNotesInDarkModeHex = v, value, true); }
         }
 
         /// <inheritdoc/>

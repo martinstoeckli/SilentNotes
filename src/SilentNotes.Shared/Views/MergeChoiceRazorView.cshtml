@@ -11,6 +11,7 @@
 
     <link href="bootstrap.min.css" rel="stylesheet" />
     <link href="silentnotes.css" rel="stylesheet" />
+    <link href="@(Model.Theme.DarkMode ? "silentnotes.dark.css" : "silentnotes.light.css")" rel="stylesheet" />
 
     <script src="jquery-3.4.1.min.js"></script>
     <script src="bootstrap.bundle.min.js"></script>
@@ -20,14 +21,9 @@
         .list-group {
             max-width: 360px;
         }
+
         .list-group-item {
             cursor: pointer;
-        }
-        .arrow {
-            font-size: 18pt;
-            color: ForestGreen;
-        }
-        .btn-text {
         }
     </style>
     <script>
@@ -43,13 +39,13 @@
 
         <div class="list-group">
             <button type="button" class="list-group-item list-group-item-action d-flex" onclick="bind(event)" data-binding="UseMergedRepository">
-                <span class="arrow align-items-center mr-3">➜</span><span class="btn-text">@Model.Language["sync_repository_merge"]</span>
+                <span class="dialog-action-arrow align-items-center mr-3">➜</span><span class="btn-text">@Model.Language["sync_repository_merge"]</span>
             </button>
             <button type="button" class="list-group-item list-group-item-action d-flex" onclick="bind(event)" data-binding="UseCloudRepository">
-                <span class="arrow align-items-center mr-3">➜</span><span class="btn-text">@Model.Language["sync_repository_cloud"]</span>
+                <span class="dialog-action-arrow align-items-center mr-3">➜</span><span class="btn-text">@Model.Language["sync_repository_cloud"]</span>
             </button>
             <button type="button" class="list-group-item list-group-item-action d-flex" onclick="bind(event)" data-binding="UseLocalRepository">
-                <span class="arrow align-items-center mr-3">➜</span><span class="btn-text">@Model.Language["sync_repository_device"]</span>
+                <span class="dialog-action-arrow align-items-center mr-3">➜</span><span class="btn-text">@Model.Language["sync_repository_device"]</span>
             </button>
         </div>
     </div>

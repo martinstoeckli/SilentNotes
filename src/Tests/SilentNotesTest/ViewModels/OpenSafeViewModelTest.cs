@@ -38,6 +38,7 @@ namespace SilentNotesTest.ViewModels
                 navigationService.Object,
                 CommonMocksAndStubs.LanguageService(),
                 new Mock<ISvgIconService>().Object,
+                new Mock<IThemeService>().Object,
                 new Mock<IBaseUrlService>().Object,
                 feedbackService.Object,
                 CommonMocksAndStubs.CryptoRandomService(),
