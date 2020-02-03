@@ -124,10 +124,30 @@ namespace SilentNotes.ViewModels
         /// </summary>
         public string BackgroundColorHex
         {
-            get { return Model.BackgroundColorHex; }
+            get 
+            {
+                string result = Model.BackgroundColorHex;
+                if (Theme.DarkMode)
+                {
+                    SettingsModel settings = _settingsService.LoadSettingsOrDefault();
+                    if (settings.UseColorForAllNotesInDarkMode)
+                        result = settings.ColorForAllNotesInDarkModeHex;
+                }
+                return result;
+            }
 
             set
             {
+                if (Theme.DarkMode)
+                {
+                    SettingsModel settings = _settingsService.LoadSettingsOrDefault();
+                    if (settings.UseColorForAllNotesInDarkMode)
+                    {
+                        _feedbackService.ShowToast(Language.LoadText("gui_theme_color_cannot_change"));
+                        return;
+                    }
+                }
+
                 if (ChangePropertyIndirect(() => Model.BackgroundColorHex, (string v) => Model.BackgroundColorHex = v, value, true))
                     Model.RefreshModifiedAt();
             }

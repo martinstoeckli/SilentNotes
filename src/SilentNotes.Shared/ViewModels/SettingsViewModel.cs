@@ -191,6 +191,26 @@ namespace SilentNotes.ViewModels
             }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the note color should be the same for all notes
+        /// in dark mode.
+        /// </summary>
+        public bool UseColorForAllNotesInDarkMode
+        {
+            get { return Model.UseColorForAllNotesInDarkMode; }
+            set { ChangePropertyIndirect(() => Model.UseColorForAllNotesInDarkMode, (bool v) => Model.UseColorForAllNotesInDarkMode = v, value, true); }
+        }
+
+        /// <summary>
+        /// Gets or sets the background color for new notes. It depends on <see cref="SettingsModel.UseColorForAllNotesInDarkMode"/>
+        /// whether this value is respected.
+        /// </summary>
+        public string ColorForAllNotesInDarkModeHex
+        {
+            get { return Model.ColorForAllNotesInDarkModeHex; }
+            set { ChangePropertyIndirect(() => Model.ColorForAllNotesInDarkModeHex, (string v) => Model.ColorForAllNotesInDarkModeHex = v, value, true); }
+        }
+
         /// <inheritdoc/>
         public override void OnStoringUnsavedData()
         {

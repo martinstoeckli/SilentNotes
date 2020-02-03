@@ -23,6 +23,8 @@ h3 {
 a { text-decoration: none; }
 a:hover { text-decoration: underline; }
 
+input[type="color"] { padding: 1px; }
+
 #navigation {
 	margin: 0;
 	padding: 2px 6px 2px 6px;

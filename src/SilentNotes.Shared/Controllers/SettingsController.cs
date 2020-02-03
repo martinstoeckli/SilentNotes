@@ -53,6 +53,8 @@ namespace SilentNotes.Controllers
             Bindings.BindCheckbox("ShowCursorArrowKeys", null, (value) => _viewModel.ShowCursorArrowKeys = value, null, null, HtmlViewBindingMode.OneWayToViewmodel);
             Bindings.BindBackgroundImage("SelectedTheme", () => _viewModel.SelectedTheme.Image, _viewModel, nameof(_viewModel.SelectedTheme), HtmlViewBindingMode.OneWayToView);
             Bindings.BindDropdown("SelectedThemeMode", null, (string value) => _viewModel.SelectedThemeMode = value, null, null, HtmlViewBindingMode.OneWayToViewmodel);
+            Bindings.BindCheckbox("UseColorForAllNotesInDarkMode", null, (bool value) => _viewModel.UseColorForAllNotesInDarkMode = value, null, null, HtmlViewBindingMode.OneWayToViewmodel);
+            Bindings.BindText("ColorForAllNotesInDarkModeHex", null, (string value) => _viewModel.ColorForAllNotesInDarkModeHex = value, null, null, HtmlViewBindingMode.OneWayToViewmodel);
             Bindings.UnhandledViewBindingEvent += UnhandledViewBindingEventHandler;
 
             string html = _viewService.GenerateHtml(_viewModel);

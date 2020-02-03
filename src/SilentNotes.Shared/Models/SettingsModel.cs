@@ -37,6 +37,8 @@ namespace SilentNotes.Models
             ShowCursorArrowKeys = true;
             FontScale = 1.0;
             DefaultNoteColorHex = StartDefaultNoteColorHex;
+            UseColorForAllNotesInDarkMode = true;
+            ColorForAllNotesInDarkModeHex = "#323232";
         }
 
         /// <summary>
@@ -63,6 +65,20 @@ namespace SilentNotes.Models
         /// </summary>
         [XmlElement("theme_mode")]
         public ThemeMode ThemeMode { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the note color should be the same for all notes
+        /// in dark mode.
+        /// </summary>
+        [XmlElement("use_color_for_all_notes_dark")]
+        public bool UseColorForAllNotesInDarkMode { get; set; }
+
+        /// <summary>
+        /// Gets or sets the background color for new notes. It depends on <see cref="SettingsModel.UseColorForAllNotesInDarkMode"/>
+        /// whether this value is respected.
+        /// </summary>
+        [XmlElement("color_for_all_notes_dark")]
+        public string ColorForAllNotesInDarkModeHex { get; set; }
 
         /// <summary>
         /// Gets or sets the default encryption algorithm, used to encrypt the repository

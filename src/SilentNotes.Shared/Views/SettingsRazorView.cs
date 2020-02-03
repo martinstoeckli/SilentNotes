@@ -23,7 +23,7 @@ using SilentNotes.ViewModels;
 #line hidden
 
 
-[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.4.0.308")]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.4.0.309")]
 public partial class SettingsRazorView : SettingsRazorViewBase
 {
 
@@ -216,9 +216,13 @@ WriteLiteral(" class=\"mb-4 col-md-9 col-lg-6\"");
 
 WriteLiteral(">\r\n            <div");
 
-WriteLiteral(" class=\"form-row form-group form-check\"");
+WriteLiteral(" class=\"form-row form-group\"");
 
-WriteLiteral(">\r\n                <input");
+WriteLiteral(">\r\n                <div");
+
+WriteLiteral(" class=\"form-check\"");
+
+WriteLiteral(">\r\n                    <input");
 
 WriteLiteral(" class=\"form-check-input\"");
 
@@ -233,13 +237,13 @@ WriteLiteral(" data-binding=\"ShowCursorArrowKeys\"");
 WriteLiteral(" ");
 
 
-#line 73 "SettingsRazorView.cshtml"
-                                                                                                                                              Write(Model.ShowCursorArrowKeys ? "checked" : "");
+#line 74 "SettingsRazorView.cshtml"
+                                                                                                                                                  Write(Model.ShowCursorArrowKeys ? "checked" : "");
 
 
 #line default
 #line hidden
-WriteLiteral(">\r\n                <label");
+WriteLiteral(">\r\n                    <label");
 
 WriteLiteral(" class=\"form-check-label\"");
 
@@ -248,13 +252,13 @@ WriteLiteral(" for=\"ShowCursorArrowKeys\"");
 WriteLiteral(">");
 
 
-#line 74 "SettingsRazorView.cshtml"
-                                                                     Write(Model.Language["gui_show_arrow_keys"]);
+#line 75 "SettingsRazorView.cshtml"
+                                                                         Write(Model.Language["gui_show_arrow_keys"]);
 
 
 #line default
 #line hidden
-WriteLiteral("</label>\r\n            </div>\r\n            <div");
+WriteLiteral("</label>\r\n                </div>\r\n            </div>\r\n            <div");
 
 WriteLiteral(" class=\"form-row form-group\"");
 
@@ -267,7 +271,7 @@ WriteLiteral(" for=\"font-size\"");
 WriteLiteral(">");
 
 
-#line 77 "SettingsRazorView.cshtml"
+#line 79 "SettingsRazorView.cshtml"
                                                          Write(Model.Language["gui_font_size"]);
 
 
@@ -297,7 +301,7 @@ WriteLiteral(" step=\"1\"");
 
 WriteAttribute ("value", " value=\"", "\""
 
-#line 79 "SettingsRazorView.cshtml"
+#line 81 "SettingsRazorView.cshtml"
                                                                                                                              , Tuple.Create<string,object,bool> ("", Model.FontSizeStep
 
 #line default
@@ -317,7 +321,7 @@ WriteLiteral(" for=\"Theme\"");
 WriteLiteral(">");
 
 
-#line 83 "SettingsRazorView.cshtml"
+#line 85 "SettingsRazorView.cshtml"
                                                      Write(Model.Language["gui_texture"]);
 
 
@@ -351,7 +355,7 @@ WriteAttribute ("style", " style=\"", "\""
 , Tuple.Create<string,object,bool> ("", "background:", true)
 , Tuple.Create<string,object,bool> (" ", "url(", true)
 
-#line 86 "SettingsRazorView.cshtml"
+#line 88 "SettingsRazorView.cshtml"
                                                                                                                                                    , Tuple.Create<string,object,bool> ("", Model.SelectedTheme.Image
 
 #line default
@@ -368,13 +372,13 @@ WriteLiteral(" aria-labelledby=\"themeChooser\"");
 WriteLiteral(">\r\n");
 
 
-#line 89 "SettingsRazorView.cshtml"
+#line 91 "SettingsRazorView.cshtml"
                             
 
 #line default
 #line hidden
 
-#line 89 "SettingsRazorView.cshtml"
+#line 91 "SettingsRazorView.cshtml"
                              foreach (var theme in @Model.Theme.Themes)
                             {
 
@@ -392,7 +396,7 @@ WriteLiteral(" data-binding=\"SelectedThemePreview\"");
 WriteLiteral(" data-theme=\"");
 
 
-#line 91 "SettingsRazorView.cshtml"
+#line 93 "SettingsRazorView.cshtml"
                                                                                                                                         Write(theme.Id);
 
 
@@ -404,7 +408,7 @@ WriteAttribute ("style", " style=\"", "\""
 , Tuple.Create<string,object,bool> ("", "background:", true)
 , Tuple.Create<string,object,bool> (" ", "url(", true)
 
-#line 91 "SettingsRazorView.cshtml"
+#line 93 "SettingsRazorView.cshtml"
                                                                                                                                           , Tuple.Create<string,object,bool> ("", theme.Image
 
 #line default
@@ -415,7 +419,7 @@ WriteAttribute ("style", " style=\"", "\""
 WriteLiteral("></div>\r\n");
 
 
-#line 92 "SettingsRazorView.cshtml"
+#line 94 "SettingsRazorView.cshtml"
                             }
 
 
@@ -443,7 +447,7 @@ WriteLiteral(" value=\"Auto\"");
 WriteLiteral(" ");
 
 
-#line 99 "SettingsRazorView.cshtml"
+#line 101 "SettingsRazorView.cshtml"
                                      Write(Model.SelectedThemeMode == "Auto" ? "selected" : "");
 
 
@@ -452,7 +456,7 @@ WriteLiteral(" ");
 WriteLiteral(">");
 
 
-#line 99 "SettingsRazorView.cshtml"
+#line 101 "SettingsRazorView.cshtml"
                                                                                            Write(Model.Language["gui_theme_auto"]);
 
 
@@ -465,7 +469,7 @@ WriteLiteral(" value=\"Dark\"");
 WriteLiteral(" ");
 
 
-#line 100 "SettingsRazorView.cshtml"
+#line 102 "SettingsRazorView.cshtml"
                                      Write(Model.SelectedThemeMode == "Dark" ? "selected" : "");
 
 
@@ -474,7 +478,7 @@ WriteLiteral(" ");
 WriteLiteral(">");
 
 
-#line 100 "SettingsRazorView.cshtml"
+#line 102 "SettingsRazorView.cshtml"
                                                                                            Write(Model.Language["gui_theme_dark"]);
 
 
@@ -487,7 +491,7 @@ WriteLiteral(" value=\"Light\"");
 WriteLiteral(" ");
 
 
-#line 101 "SettingsRazorView.cshtml"
+#line 103 "SettingsRazorView.cshtml"
                                       Write(Model.SelectedThemeMode == "Light" ? "selected" : "");
 
 
@@ -496,13 +500,85 @@ WriteLiteral(" ");
 WriteLiteral(">");
 
 
-#line 101 "SettingsRazorView.cshtml"
+#line 103 "SettingsRazorView.cshtml"
                                                                                              Write(Model.Language["gui_theme_light"]);
 
 
 #line default
 #line hidden
 WriteLiteral("</option>\r\n                </select>\r\n            </div>\r\n            <div");
+
+WriteLiteral(" class=\"form-row\"");
+
+WriteLiteral(">\r\n                <div");
+
+WriteLiteral(" class=\"form-group col-10\"");
+
+WriteLiteral(">\r\n                    <div");
+
+WriteLiteral(" class=\"form-check\"");
+
+WriteLiteral(">\r\n                        <input");
+
+WriteLiteral(" class=\"form-check-input\"");
+
+WriteLiteral(" type=\"checkbox\"");
+
+WriteLiteral(" id=\"ColorsForAllNotesDark\"");
+
+WriteLiteral(" onclick=\"bind(event)\"");
+
+WriteLiteral(" data-binding=\"UseColorForAllNotesInDarkMode\"");
+
+WriteLiteral(" ");
+
+
+#line 109 "SettingsRazorView.cshtml"
+                                                                                                                                                                  Write(Model.UseColorForAllNotesInDarkMode ? "checked" : "");
+
+
+#line default
+#line hidden
+WriteLiteral(">\r\n                        <label");
+
+WriteLiteral(" class=\"form-check-label\"");
+
+WriteLiteral(" for=\"ColorsForAllNotesDark\"");
+
+WriteLiteral(">");
+
+
+#line 110 "SettingsRazorView.cshtml"
+                                                                               Write(Model.Language["gui_theme_color_all_dark"]);
+
+
+#line default
+#line hidden
+WriteLiteral("</label>\r\n                    </div>\r\n                </div>\r\n                <di" +
+"v");
+
+WriteLiteral(" class=\"form-group col-2\"");
+
+WriteLiteral(">\r\n                    <input");
+
+WriteLiteral(" class=\"form-control\"");
+
+WriteLiteral(" type=\"color\"");
+
+WriteLiteral(" oninput=\"bind(event)\"");
+
+WriteLiteral(" data-binding=\"ColorForAllNotesInDarkModeHex\"");
+
+WriteAttribute ("value", " value=\"", "\""
+
+#line 114 "SettingsRazorView.cshtml"
+                                                                                                 , Tuple.Create<string,object,bool> ("", Model.ColorForAllNotesInDarkModeHex
+
+#line default
+#line hidden
+, false)
+);
+WriteLiteral(">\r\n                </div>\r\n            </div>\r\n\r\n            <div");
 
 WriteLiteral(" class=\"form-row form-group\"");
 
@@ -515,7 +591,7 @@ WriteLiteral(" for=\"Color\"");
 WriteLiteral(">");
 
 
-#line 105 "SettingsRazorView.cshtml"
+#line 119 "SettingsRazorView.cshtml"
                                                      Write(Model.Language["gui_default_color"]);
 
 
@@ -548,7 +624,7 @@ WriteLiteral(" data-binding=\"DefaultNoteColor\"");
 WriteAttribute ("style", " style=\"", "\""
 , Tuple.Create<string,object,bool> ("", "background-color:", true)
 
-#line 108 "SettingsRazorView.cshtml"
+#line 122 "SettingsRazorView.cshtml"
                                                                                                                                                        , Tuple.Create<string,object,bool> (" ", Model.DefaultNoteColorHex
 
 #line default
@@ -565,13 +641,13 @@ WriteLiteral(" aria-labelledby=\"colorChooser\"");
 WriteLiteral(">\r\n");
 
 
-#line 111 "SettingsRazorView.cshtml"
+#line 125 "SettingsRazorView.cshtml"
                             
 
 #line default
 #line hidden
 
-#line 111 "SettingsRazorView.cshtml"
+#line 125 "SettingsRazorView.cshtml"
                              foreach (var backgroundColor in @Model.NoteColorsHex)
                             {
 
@@ -584,7 +660,7 @@ WriteAttribute ("class", " class=\"", "\""
 , Tuple.Create<string,object,bool> ("", "dropdown-item", true)
 , Tuple.Create<string,object,bool> (" ", "color-btn", true)
 
-#line 113 "SettingsRazorView.cshtml"
+#line 127 "SettingsRazorView.cshtml"
                             , Tuple.Create<string,object,bool> (" ", Model.GetDarkClass(backgroundColor)
 
 #line default
@@ -598,7 +674,7 @@ WriteLiteral(" data-binding=\"DefaultNoteColorPreview\"");
 WriteLiteral(" data-notecolorhex=\"");
 
 
-#line 113 "SettingsRazorView.cshtml"
+#line 127 "SettingsRazorView.cshtml"
                                                                                                                                                                                       Write(backgroundColor);
 
 
@@ -609,7 +685,7 @@ WriteLiteral("\"");
 WriteAttribute ("style", " style=\"", "\""
 , Tuple.Create<string,object,bool> ("", "background-color:", true)
 
-#line 113 "SettingsRazorView.cshtml"
+#line 127 "SettingsRazorView.cshtml"
                                                                                                                                                                                               , Tuple.Create<string,object,bool> (" ", backgroundColor
 
 #line default
@@ -619,7 +695,7 @@ WriteAttribute ("style", " style=\"", "\""
 WriteLiteral(">Lorem ipsum</div>\r\n");
 
 
-#line 114 "SettingsRazorView.cshtml"
+#line 128 "SettingsRazorView.cshtml"
                             }
 
 
@@ -629,7 +705,7 @@ WriteLiteral("                        </div>\r\n                    </div>\r\n  
 ">\r\n            </div>\r\n        </form>\r\n\r\n        <h2>");
 
 
-#line 121 "SettingsRazorView.cshtml"
+#line 135 "SettingsRazorView.cshtml"
        Write(Model.Language["encryption"]);
 
 
@@ -652,7 +728,7 @@ WriteLiteral(" for=\"EncryptionAlgorithm\"");
 WriteLiteral(">");
 
 
-#line 124 "SettingsRazorView.cshtml"
+#line 138 "SettingsRazorView.cshtml"
                                                                    Write(Model.Language["encryption_algorithm"]);
 
 
@@ -671,13 +747,13 @@ WriteLiteral(" data-binding=\"SelectedEncryptionAlgorithm\"");
 WriteLiteral(">\r\n");
 
 
-#line 126 "SettingsRazorView.cshtml"
+#line 140 "SettingsRazorView.cshtml"
                     
 
 #line default
 #line hidden
 
-#line 126 "SettingsRazorView.cshtml"
+#line 140 "SettingsRazorView.cshtml"
                      foreach (var algorithm in @Model.EncryptionAlgorithms)
                     {
 
@@ -688,7 +764,7 @@ WriteLiteral("                        <option");
 
 WriteAttribute ("value", " value=\"", "\""
 
-#line 128 "SettingsRazorView.cshtml"
+#line 142 "SettingsRazorView.cshtml"
 , Tuple.Create<string,object,bool> ("", algorithm.Value
 
 #line default
@@ -698,7 +774,7 @@ WriteAttribute ("value", " value=\"", "\""
 WriteLiteral(" ");
 
 
-#line 128 "SettingsRazorView.cshtml"
+#line 142 "SettingsRazorView.cshtml"
                                                      Write(Model.SelectedEncryptionAlgorithm == algorithm ? "selected" : "");
 
 
@@ -707,7 +783,7 @@ WriteLiteral(" ");
 WriteLiteral(">");
 
 
-#line 128 "SettingsRazorView.cshtml"
+#line 142 "SettingsRazorView.cshtml"
                                                                                                                         Write(algorithm.Description);
 
 
@@ -716,7 +792,7 @@ WriteLiteral(">");
 WriteLiteral("</option>\r\n");
 
 
-#line 129 "SettingsRazorView.cshtml"
+#line 143 "SettingsRazorView.cshtml"
                     }
 
 
@@ -725,7 +801,7 @@ WriteLiteral("</option>\r\n");
 WriteLiteral("                </select>\r\n            </div>\r\n        </form>\r\n\r\n        <h2>");
 
 
-#line 134 "SettingsRazorView.cshtml"
+#line 148 "SettingsRazorView.cshtml"
        Write(Model.Language["sync"]);
 
 
@@ -748,7 +824,7 @@ WriteLiteral(" for=\"AutoSyncMode\"");
 WriteLiteral(">");
 
 
-#line 137 "SettingsRazorView.cshtml"
+#line 151 "SettingsRazorView.cshtml"
                                                             Write(Model.Language["sync_auto"]);
 
 
@@ -771,7 +847,7 @@ WriteLiteral(" value=\"Never\"");
 WriteLiteral(" ");
 
 
-#line 139 "SettingsRazorView.cshtml"
+#line 153 "SettingsRazorView.cshtml"
                                       Write(Model.SelectedAutoSyncMode == "Never" ? "selected" : "");
 
 
@@ -780,7 +856,7 @@ WriteLiteral(" ");
 WriteLiteral(">");
 
 
-#line 139 "SettingsRazorView.cshtml"
+#line 153 "SettingsRazorView.cshtml"
                                                                                                 Write(Model.Language["sync_auto_never"]);
 
 
@@ -793,7 +869,7 @@ WriteLiteral(" value=\"CostFreeInternetOnly\"");
 WriteLiteral(" ");
 
 
-#line 140 "SettingsRazorView.cshtml"
+#line 154 "SettingsRazorView.cshtml"
                                                      Write(Model.SelectedAutoSyncMode == "CostFreeInternetOnly" ? "selected" : "");
 
 
@@ -802,7 +878,7 @@ WriteLiteral(" ");
 WriteLiteral(">");
 
 
-#line 140 "SettingsRazorView.cshtml"
+#line 154 "SettingsRazorView.cshtml"
                                                                                                                               Write(Model.Language["sync_auto_costfree"]);
 
 
@@ -815,7 +891,7 @@ WriteLiteral(" value=\"Always\"");
 WriteLiteral(" ");
 
 
-#line 141 "SettingsRazorView.cshtml"
+#line 155 "SettingsRazorView.cshtml"
                                        Write(Model.SelectedAutoSyncMode == "Always" ? "selected" : "");
 
 
@@ -824,7 +900,7 @@ WriteLiteral(" ");
 WriteLiteral(">");
 
 
-#line 141 "SettingsRazorView.cshtml"
+#line 155 "SettingsRazorView.cshtml"
                                                                                                   Write(Model.Language["sync_auto_always"]);
 
 
@@ -843,7 +919,7 @@ WriteLiteral(" for=\"CloudStorageSettings\"");
 WriteLiteral(">");
 
 
-#line 145 "SettingsRazorView.cshtml"
+#line 159 "SettingsRazorView.cshtml"
                                                                     Write(Model.Language["cloud_service"]);
 
 
@@ -862,7 +938,7 @@ WriteLiteral(" rows=\"4\"");
 WriteLiteral(" readonly>");
 
 
-#line 146 "SettingsRazorView.cshtml"
+#line 160 "SettingsRazorView.cshtml"
                                                                                                                           Write(Model.AccountSummary);
 
 
@@ -880,7 +956,7 @@ WriteLiteral(" data-binding=\"ChangeCloudSettingsCommand\"");
 
 WriteAttribute ("title", " title=\"", "\""
 
-#line 148 "SettingsRazorView.cshtml"
+#line 162 "SettingsRazorView.cshtml"
                                                                                                  , Tuple.Create<string,object,bool> ("", Model.Language["cloud_change_settings_desc"]
 
 #line default
@@ -890,7 +966,7 @@ WriteAttribute ("title", " title=\"", "\""
 WriteLiteral(">");
 
 
-#line 148 "SettingsRazorView.cshtml"
+#line 162 "SettingsRazorView.cshtml"
                                                                                                                                                                                   Write(Model.Language["cloud_change_settings"]);
 
 
@@ -908,7 +984,7 @@ WriteLiteral(" data-binding=\"ClearCloudSettingsCommand\"");
 
 WriteAttribute ("title", " title=\"", "\""
 
-#line 149 "SettingsRazorView.cshtml"
+#line 163 "SettingsRazorView.cshtml"
                                                                                                 , Tuple.Create<string,object,bool> ("", Model.Language["cloud_clear_settings_desc"]
 
 #line default
@@ -918,7 +994,7 @@ WriteAttribute ("title", " title=\"", "\""
 WriteLiteral(">");
 
 
-#line 149 "SettingsRazorView.cshtml"
+#line 163 "SettingsRazorView.cshtml"
                                                                                                                                                                                 Write(Model.Language["cloud_clear_settings"]);
 
 
@@ -927,13 +1003,13 @@ WriteLiteral(">");
 WriteLiteral("</button>\r\n        </form>\r\n    </div>\r\n\r\n    <div hidden>\r\n");
 
 
-#line 154 "SettingsRazorView.cshtml"
+#line 168 "SettingsRazorView.cshtml"
         
 
 #line default
 #line hidden
 
-#line 154 "SettingsRazorView.cshtml"
+#line 168 "SettingsRazorView.cshtml"
           WriteLiteral(Model.Icon.LoadIcon("settings", new[] { new KeyValuePair<string, string>("id", "svg-settings") }));
 
 #line default
