@@ -19,6 +19,7 @@ namespace SilentNotes.Models
         /// <summary>The package name used for encryption, see <see cref="CryptoHeader.PackageName"/></summary>
         public const string CryptorPackageName = "SilentNote";
         private Guid _id;
+        private string _htmlContent;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NoteModel"/> class.
@@ -41,10 +42,15 @@ namespace SilentNotes.Models
         }
 
         /// <summary>
-        /// Gets or sets the formatted html content of the note.
+        /// Gets or sets the formatted html content of the note, or its encrypted representation.
+        /// This property is never null, instead an empty string will be returned.
         /// </summary>
         [XmlElement(ElementName = "html_content")]
-        public string HtmlContent { get; set; }
+        public string HtmlContent 
+        {
+            get { return _htmlContent ?? (_htmlContent = string.Empty); }
+            set { _htmlContent = value; }
+        }
 
         /// <summary>
         /// Gets or sets the background color of the note as hex string, e.g. #ff0000

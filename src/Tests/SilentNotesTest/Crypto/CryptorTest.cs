@@ -168,6 +168,25 @@ namespace SilentNotesTest.Crypto
         }
 
         [Test]
+        public void TestSymmetricEncryptionOfEmptyStringWithCompression()
+        {
+            ICryptoRandomService randomGenerator = CommonMocksAndStubs.CryptoRandomService(88);
+            ICryptor encryptor = new Cryptor("sugus", randomGenerator);
+            byte[] binaryMessage = CryptoUtils.StringToBytes(string.Empty);
+            SecureString password = CryptoUtils.StringToSecureString("Der schnelle Uhu fliegt über den faulen Hund.");
+
+            byte[] cipher = encryptor.Encrypt(
+                binaryMessage,
+                password,
+                KeyDerivationCostType.Low,
+                BouncyCastleTwofishGcm.CryptoAlgorithmName,
+                Pbkdf2.CryptoKdfName,
+                Cryptor.CompressionGzip);
+            byte[] decryptedMessage = encryptor.Decrypt(cipher, password);
+            Assert.AreEqual(binaryMessage, decryptedMessage);
+        }
+
+        [Test]
         public void UnknownAlgorithmThrows()
         {
             ICryptoRandomService randomGenerator = CommonMocksAndStubs.CryptoRandomService();
