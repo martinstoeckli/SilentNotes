@@ -62,7 +62,7 @@ namespace SilentNotes.ViewModels
             GoBackCommand = new RelayCommand(GoBack);
 
             Model = noteFromRepository;
-            _unlockedContent = IsInSafe ? Unlock(Model.HtmlContent) : Model.HtmlContent;
+            _unlockedContent = IsInSafe ? UnlockIfSafeOpen(Model.HtmlContent) : Model.HtmlContent;
         }
 
         /// <summary>
@@ -215,8 +215,8 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Decrypts the note, if the belonging safe is open.
         /// </summary>
-        /// <returns>Decrypted note content.</returns>
-        private string Unlock(string lockedContent)
+        /// <returns>Decrypted note content, or null if the safe is closed.</returns>
+        private string UnlockIfSafeOpen(string lockedContent)
         {
             SafeModel safe = _safes.FindById(Model.SafeId);
             if ((safe != null) && safe.IsOpen)
