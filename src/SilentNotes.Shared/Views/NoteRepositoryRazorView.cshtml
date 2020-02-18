@@ -20,8 +20,8 @@
 
     <style type="text/css">
 body {
-    background-color: @Model.Theme.SelectedTheme.ImageTint;
-    background: url(@Model.Theme.SelectedTheme.Image);
+    @(Model.Theme.CssAttributeBackgroundColor)
+    @(Model.Theme.CssAttributeBackgroundImage)
 }
 
 .note-viewer {
@@ -65,13 +65,6 @@ body {
 .locked.dark svg {
     fill: rgba(204, 204, 204, 0.4);
 }
-.safe-handle svg {
-    position: relative;
-    left: 3px;
-    top: 3px;
-    width: 18px;
-    height: 18px;
-}
 .greenish, .greenish.dark {
 	fill: #0a480a;
 	background-color: #1bbb1b;
@@ -89,7 +82,7 @@ body {
         <div class="nav-item nav-filter ml-auto d-inline-flex align-self-center">
             <input oninput="bind(event)" data-binding="TxtFilter" autocomplete="off" autofocus />
             <svg id="filter-icon" width='24' height='24' viewBox='0 0 24 24' data-binding="FilterButtonMagnifier"><use xlink:href="#svg-magnify" /></svg>
-            <svg id="filter-cancel-icon" width='24' height='24' viewBox='0 0 24 24' class="hidden-at-startup" onclick="bind(event)" data-binding="FilterButtonCancel"><use xlink:href="#svg-close-circle-outline" /></svg>
+            <svg id="filter-cancel-icon" width='24' height='24' viewBox='0 0 24 24' class="hidden" onclick="bind(event)" data-binding="FilterButtonCancel"><use xlink:href="#svg-close-circle-outline" /></svg>
         </div>
 
         <button class="nav-item show-only-on-wide-browser" onclick="bind(event);" data-binding="AddNote" title="@Model.Language["note_create_new"]">@{WriteLiteral(Model.Icon["plus"]);}</button>

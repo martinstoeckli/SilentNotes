@@ -66,15 +66,6 @@ namespace SilentNotes.ViewModels
         }
 
         /// <summary>
-        /// Gets or sets the theme selected by the user.
-        /// </summary>
-        public ThemeModel SelectedTheme
-        {
-            get { return Theme.FindThemeOrDefault(Model.SelectedTheme); }
-            set { ChangePropertyIndirect(() => Model.SelectedTheme, (string v) => Model.SelectedTheme = v, value.Id, true); }
-        }
-
-        /// <summary>
         /// Gets or sets a value indicating whether the virtual arrow keys should be displayed.
         /// </summary>
         public bool ShowCursorArrowKeys
@@ -109,6 +100,69 @@ namespace SilentNotes.ViewModels
                 double step = double.Parse(value);
                 FontScale = (ReferenceFontSize + step) / ReferenceFontSize;
             }
+        }
+
+        /// <summary>
+        /// Gets or sets the theme selected by the user.
+        /// </summary>
+        public ThemeModel SelectedTheme
+        {
+            get { return Theme.FindThemeOrDefault(Model.SelectedTheme); }
+            set { ChangePropertyIndirect(() => Model.SelectedTheme, (string v) => Model.SelectedTheme = v, value.Id, true); }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the a solid color should be used instead of a
+        /// background image.
+        /// </summary>
+        public bool UseSolidColorTheme
+        {
+            get { return Model.UseSolidColorTheme; }
+            set { ChangePropertyIndirect(() => Model.UseSolidColorTheme, (bool v) => Model.UseSolidColorTheme = v, value, true); }
+        }
+
+        /// <summary>
+        /// Gets or sets the solid background color for the theme background. It depends on
+        /// <see cref="UseSolidColorTheme"/> whether this value is respected.
+        /// </summary>
+        public string ColorForSolidThemeHex
+        {
+            get { return Model.ColorForSolidTheme; }
+            set { ChangePropertyIndirect(() => Model.ColorForSolidTheme, (string v) => Model.ColorForSolidTheme = v, value, true); }
+        }
+
+        /// <summary>
+        /// Gets or sets the theme mode selected by the user.
+        /// </summary>
+        public string SelectedThemeMode
+        {
+            get { return Model.ThemeMode.ToString(); }
+
+            set
+            {
+                ChangePropertyIndirect(() => Model.ThemeMode.ToString(), (string v) => Model.ThemeMode = (ThemeMode)Enum.Parse(typeof(ThemeMode), value), value, true);
+                _navigationService.Navigate(ControllerNames.Settings);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the note color should be the same for all notes
+        /// in dark mode.
+        /// </summary>
+        public bool UseColorForAllNotesInDarkMode
+        {
+            get { return Model.UseColorForAllNotesInDarkMode; }
+            set { ChangePropertyIndirect(() => Model.UseColorForAllNotesInDarkMode, (bool v) => Model.UseColorForAllNotesInDarkMode = v, value, true); }
+        }
+
+        /// <summary>
+        /// Gets or sets the background color for new notes. It depends on <see cref="UseColorForAllNotesInDarkMode"/>
+        /// whether this value is respected.
+        /// </summary>
+        public string ColorForAllNotesInDarkModeHex
+        {
+            get { return Model.ColorForAllNotesInDarkModeHex; }
+            set { ChangePropertyIndirect(() => Model.ColorForAllNotesInDarkModeHex, (string v) => Model.ColorForAllNotesInDarkModeHex = v, value, true); }
         }
 
         /// <summary>
@@ -175,40 +229,6 @@ namespace SilentNotes.ViewModels
             get { return Model.AutoSyncMode.ToString(); }
 
             set { ChangePropertyIndirect(() => Model.AutoSyncMode.ToString(), (string v) => Model.AutoSyncMode = (AutoSynchronizationMode)Enum.Parse(typeof(AutoSynchronizationMode), value), value, true); }
-        }
-
-        /// <summary>
-        /// Gets or sets the theme mode selected by the user.
-        /// </summary>
-        public string SelectedThemeMode
-        {
-            get { return Model.ThemeMode.ToString(); }
-
-            set 
-            {
-                ChangePropertyIndirect(() => Model.ThemeMode.ToString(), (string v) => Model.ThemeMode = (ThemeMode)Enum.Parse(typeof(ThemeMode), value), value, true);
-                _navigationService.Navigate(ControllerNames.Settings);
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the note color should be the same for all notes
-        /// in dark mode.
-        /// </summary>
-        public bool UseColorForAllNotesInDarkMode
-        {
-            get { return Model.UseColorForAllNotesInDarkMode; }
-            set { ChangePropertyIndirect(() => Model.UseColorForAllNotesInDarkMode, (bool v) => Model.UseColorForAllNotesInDarkMode = v, value, true); }
-        }
-
-        /// <summary>
-        /// Gets or sets the background color for new notes. It depends on <see cref="SettingsModel.UseColorForAllNotesInDarkMode"/>
-        /// whether this value is respected.
-        /// </summary>
-        public string ColorForAllNotesInDarkModeHex
-        {
-            get { return Model.ColorForAllNotesInDarkModeHex; }
-            set { ChangePropertyIndirect(() => Model.ColorForAllNotesInDarkModeHex, (string v) => Model.ColorForAllNotesInDarkModeHex = v, value, true); }
         }
 
         /// <inheritdoc/>

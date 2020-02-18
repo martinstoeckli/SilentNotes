@@ -23,7 +23,7 @@ using SilentNotes.ViewModels;
 #line hidden
 
 
-[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.3.0.281")]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.4.0.311")]
 public partial class NoteRepositoryContentRazorView : NoteRepositoryContentRazorViewBase
 {
 
@@ -213,20 +213,20 @@ WriteAttribute ("class", " class=\"", "\""
 #line hidden
 WriteLiteralTo(__razor_attribute_value_writer, " ");
 
-WriteLiteralTo(__razor_attribute_value_writer, "hidden-at-startup");
+WriteLiteralTo(__razor_attribute_value_writer, "hidden");
 
 WriteLiteralTo(__razor_attribute_value_writer, " ");
 
 
 #line 18 "NoteRepositoryContentRazorView.cshtml"
-                                                                                                                                                      }
+                                                                                                                                           }
 
 #line default
 #line hidden
 }), false)
 
 #line 18 "NoteRepositoryContentRazorView.cshtml"
-                                                                                                                , Tuple.Create<string,object,bool> (" ", note.GetDarkClass()
+                                                                                                     , Tuple.Create<string,object,bool> (" ", note.GetDarkClass()
 
 #line default
 #line hidden
@@ -237,6 +237,10 @@ WriteLiteral(" onclick=\"bind(event);\"");
 WriteLiteral(" data-binding=\"AddToSafe\"");
 
 WriteLiteral("><svg");
+
+WriteLiteral(" width=\'18\'");
+
+WriteLiteral(" height=\'18\'");
 
 WriteLiteral(" viewBox=\'0 0 24 24\'");
 
@@ -259,20 +263,20 @@ WriteAttribute ("class", " class=\"", "\""
 #line hidden
 WriteLiteralTo(__razor_attribute_value_writer, " ");
 
-WriteLiteralTo(__razor_attribute_value_writer, "hidden-at-startup");
+WriteLiteralTo(__razor_attribute_value_writer, "hidden");
 
 WriteLiteralTo(__razor_attribute_value_writer, " ");
 
 
 #line 19 "NoteRepositoryContentRazorView.cshtml"
-                                                                                                                                                      }
+                                                                                                                                           }
 
 #line default
 #line hidden
 }), false)
 
 #line 19 "NoteRepositoryContentRazorView.cshtml"
-                                                                                                                , Tuple.Create<string,object,bool> (" ", note.GetDarkClass()
+                                                                                                     , Tuple.Create<string,object,bool> (" ", note.GetDarkClass()
 
 #line default
 #line hidden
@@ -284,9 +288,9 @@ WriteLiteral(" data-binding=\"RemoveFromSafe\"");
 
 WriteLiteral("><svg");
 
-WriteLiteral(" width=\'24\'");
+WriteLiteral(" width=\'18\'");
 
-WriteLiteral(" height=\'24\'");
+WriteLiteral(" height=\'18\'");
 
 WriteLiteral(" viewBox=\'0 0 24 24\'");
 
@@ -313,9 +317,9 @@ WriteLiteral(" data-binding=\"DeleteNote\"");
 
 WriteLiteral("><svg");
 
-WriteLiteral(" width=\'24\'");
+WriteLiteral(" width=\'19\'");
 
-WriteLiteral(" height=\'24\'");
+WriteLiteral(" height=\'19\'");
 
 WriteLiteral(" viewBox=\'0 0 24 24\'");
 

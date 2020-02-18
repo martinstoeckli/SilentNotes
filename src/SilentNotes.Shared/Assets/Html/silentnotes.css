@@ -114,9 +114,10 @@ input[type="color"] { padding: 1px; }
 }
 
 .note-handle {
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
 	position: absolute;
-	display: inline-block;
-	padding: 1px;
 	top: 14px;
 	right: 18px;
 	width: 26px;
@@ -124,7 +125,6 @@ input[type="color"] { padding: 1px; }
 	border-radius: 13px;
 	cursor: pointer;
 }
-
 .sortable-handle {
 	right: 18px;
 }
@@ -247,8 +247,8 @@ a[data-tooltip]:hover:after {
 	visibility: collapse;
 }
 
-.hidden-at-startup {
-	display: none;
+.hidden {
+	display: none !important;
 }
 
 /* Text formatting */

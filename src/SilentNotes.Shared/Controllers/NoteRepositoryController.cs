@@ -156,7 +156,7 @@ namespace SilentNotes.Controllers
             string bindingVisible = isInSafe ? "RemoveFromSafe" : "AddToSafe";
             string bindingInvisible = isInSafe ? "AddToSafe" : "RemoveFromSafe";
             string script = string.Format(
-                "$(\"[data-note='{2}']\").children(\"[data-binding='{0}']\").show(); $(\"[data-note='{2}']\").children(\"[data-binding='{1}']\").hide();",
+                "$(\"[data-note='{2}']\").children(\"[data-binding='{0}']\").removeClass('hidden'); $(\"[data-note='{2}']\").children(\"[data-binding='{1}']\").addClass('hidden');",
                 bindingVisible,
                 bindingInvisible,
                 noteId.ToString());
