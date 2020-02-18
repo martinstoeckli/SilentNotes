@@ -18,7 +18,23 @@ namespace SilentNotes.Services
         /// </summary>
         bool DarkMode { get; }
 
-        string CssDark { get; }
+        /// <summary>
+        /// Gets the keyword "dark" or "" depending on <see cref="DarkMode"/>, which can be used
+        /// inside the Html class attributes, to refer to the Css dark class.
+        /// </summary>
+        string CssClassDark { get; }
+
+        /// <summary>
+        /// Gets a Css attribute string like:
+        ///   background-color: #121212;
+        /// </summary>
+        string CssBackgroundColor { get; }
+
+        /// <summary>
+        /// Gets a Css attribute string like:
+        ///   background-image: url(images/image.png);
+        /// </summary>
+        string CssBackgroundImage { get; }
 
         /// <summary>
         /// Gets a list of all available themes.

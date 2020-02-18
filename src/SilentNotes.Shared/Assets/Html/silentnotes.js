@@ -119,9 +119,9 @@ function htmlViewBindingsSetValue(bindingName, value) {
 function htmlViewBindingsSetVisibility(bindingName, visible) {
 	var selector = '[data-binding="' + bindingName + '"]';
 	if (visible)
-		$(selector).show();
+		$(selector).removeClass('hidden');
 	else
-		$(selector).hide();
+		$(selector).addClass('hidden');
 }
 
 function htmlViewBindingsSetEnabled(bindingName, enabled) {

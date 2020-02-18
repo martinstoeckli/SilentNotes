@@ -21,7 +21,8 @@
         body::after {
             position: absolute;
             content: "";
-            background: url(@Model.Theme.SelectedTheme.Image);
+            @(Model.Theme.CssAttributeBackgroundColor)
+            @(Model.Theme.CssAttributeBackgroundImage)
             top: 0;
             left: 0;
             bottom: 0;

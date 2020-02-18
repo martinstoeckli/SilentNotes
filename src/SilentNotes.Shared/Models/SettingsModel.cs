@@ -36,6 +36,8 @@ namespace SilentNotes.Models
             AutoSyncMode = AutoSynchronizationMode.CostFreeInternetOnly;
             ShowCursorArrowKeys = true;
             FontScale = 1.0;
+            UseSolidColorTheme = false;
+            ColorForSolidTheme = "#121212";
             DefaultNoteColorHex = StartDefaultNoteColorHex;
             UseColorForAllNotesInDarkMode = true;
             ColorForAllNotesInDarkModeHex = "#323232";
@@ -55,10 +57,36 @@ namespace SilentNotes.Models
         public SerializeableCloudStorageCredentials Credentials { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the virtual arrow keys should be displayed.
+        /// </summary>
+        [XmlElement("show_cursor_keys")]
+        public bool ShowCursorArrowKeys { get; set; }
+
+        /// <summary>
+        /// Gets or sets a factor to enlarge or reduce the font size of the notes.
+        /// </summary>
+        [XmlElement("font-scale")]
+        public double FontScale { get; set; }
+
+        /// <summary>
         /// Gets or sets the id of the theme selected by the user.
         /// </summary>
         [XmlElement("selected_theme")]
         public string SelectedTheme { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the a solid color should be used instead of a
+        /// background image.
+        /// </summary>
+        [XmlElement("use_solid_color_theme")]
+        public bool UseSolidColorTheme { get; set; }
+
+        /// <summary>
+        /// Gets or sets the solid background color for the theme background. It depends on
+        /// <see cref="UseSolidColorTheme"/> whether this value is respected.
+        /// </summary>
+        [XmlElement("color_for_solid_theme")]
+        public string ColorForSolidTheme { get; set; }
 
         /// <summary>
         /// Gets or sets a value describing whether the dark mode should be used.
@@ -74,11 +102,35 @@ namespace SilentNotes.Models
         public bool UseColorForAllNotesInDarkMode { get; set; }
 
         /// <summary>
-        /// Gets or sets the background color for new notes. It depends on <see cref="SettingsModel.UseColorForAllNotesInDarkMode"/>
+        /// Gets or sets the background color for new notes. It depends on <see cref="UseColorForAllNotesInDarkMode"/>
         /// whether this value is respected.
         /// </summary>
         [XmlElement("color_for_all_notes_dark")]
         public string ColorForAllNotesInDarkModeHex { get; set; }
+
+        /// <summary>
+        /// Gets a list of available background colors for the notes.
+        /// </summary>
+        [XmlIgnore]
+        public List<string> NoteColorsHex
+        {
+            get
+            {
+                return
+                    _noteColorsHex ??
+                    (_noteColorsHex = new List<string>
+                    {
+                        "#fbf4c1", "#fdd8bb", "#facbc6", "#fcd5ef", "#d9d9fc", "#cee7fb", "#d0f8f9", "#d9f8c8",
+                        "#ae7f0a", "#871908", "#800080", "#0d5696", "#007a7a", "#33750f", "#333333",
+                    });
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the background color for new notes.
+        /// </summary>
+        [XmlElement("default_note_color")]
+        public string DefaultNoteColorHex { get; set; }
 
         /// <summary>
         /// Gets or sets the default encryption algorithm, used to encrypt the repository
@@ -143,42 +195,6 @@ namespace SilentNotes.Models
             get { return _transferCodeHistory ?? (_transferCodeHistory = new List<string>()); }
             set { _transferCodeHistory = value; }
         }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the virtual arrow keys should be displayed.
-        /// </summary>
-        [XmlElement("show_cursor_keys")]
-        public bool ShowCursorArrowKeys { get; set; }
-
-        /// <summary>
-        /// Gets or sets a factor to enlarge or reduce the font size of the notes.
-        /// </summary>
-        [XmlElement("font-scale")]
-        public double FontScale { get; set; }
-
-        /// <summary>
-        /// Gets a list of available background colors for the notes.
-        /// </summary>
-        [XmlIgnore]
-        public List<string> NoteColorsHex
-        {
-            get
-            {
-                return 
-                    _noteColorsHex ??
-                    (_noteColorsHex = new List<string>
-                    {
-                        "#fbf4c1", "#fdd8bb", "#facbc6", "#fcd5ef", "#d9d9fc", "#cee7fb", "#d0f8f9", "#d9f8c8",
-                        "#ae7f0a", "#871908", "#800080", "#0d5696", "#007a7a", "#33750f", "#333333",
-                    });
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the background color for new notes.
-        /// </summary>
-        [XmlElement("default_note_color")]
-        public string DefaultNoteColorHex { get; set; }
 
         /// <summary>
         /// Gets the name of the algorithm to use, if the selected algorithm is not yet stored.

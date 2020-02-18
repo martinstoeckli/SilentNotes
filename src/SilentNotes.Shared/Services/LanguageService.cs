@@ -152,6 +152,7 @@ namespace SilentNotes.Services
             resources["gui_theme_auto"] = "Automatically light or dark mode.";
             resources["gui_theme_dark"] = "Dark mode";
             resources["gui_theme_light"] = "Light mode";
+            resources["gui_theme_solid_color"] = "Solid color instead of background image";
             resources["gui_theme_color_all_dark"] = "Same color for all notes in dark mode";
             resources["gui_theme_color_cannot_change"] = "Same color for all notes is set.";
         }
@@ -287,6 +288,7 @@ namespace SilentNotes.Services
             resources["gui_theme_auto"] = "Automatisch helles oder dunkles Design";
             resources["gui_theme_dark"] = "Dunkles Design";
             resources["gui_theme_light"] = "Helles Design";
+            resources["gui_theme_solid_color"] = "Uni Farbe anstatt Hintergrundbild";
             resources["gui_theme_color_all_dark"] = "Gleiche Farbe für alle Notizen in dunklem Design";
             resources["gui_theme_color_cannot_change"] = "Gleiche Farbe für alle Notizen ist eingestellt.";
         }

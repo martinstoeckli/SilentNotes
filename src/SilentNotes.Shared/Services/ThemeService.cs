@@ -67,9 +67,34 @@ namespace SilentNotes.Services
         }
 
         /// <inheritdoc/>
-        public string CssDark
+        public string CssClassDark
         {
             get { return DarkMode ? "dark" : string.Empty; }
+        }
+
+        /// <inheritdoc/>
+        public string CssBackgroundColor 
+        {
+            get
+            {
+                SettingsModel settings = _settingsService.LoadSettingsOrDefault();
+                string backgroundColor = settings.UseSolidColorTheme
+                    ? settings.ColorForSolidTheme
+                    : SelectedTheme.ImageTint;
+                return string.Format("background-color: {0};", backgroundColor);
+            }
+        }
+
+        /// <inheritdoc/>
+        public string CssBackgroundImage 
+        {
+            get
+            {
+                SettingsModel settings = _settingsService.LoadSettingsOrDefault();
+                return settings.UseSolidColorTheme
+                    ? string.Empty
+                    : string.Format("background-image: url({0});", SelectedTheme.Image);
+            }
         }
 
         /// <inheritdoc/>
@@ -78,11 +103,7 @@ namespace SilentNotes.Services
         /// <inheritdoc/>
         public ThemeModel SelectedTheme
         {
-            get
-            {
-                SettingsModel settings = _settingsService.LoadSettingsOrDefault();
-                return FindThemeOrDefault(settings.SelectedTheme);
-            }
+            get { return FindThemeOrDefault(_settingsService.LoadSettingsOrDefault().SelectedTheme); }
         }
 
         /// <inheritdoc/>
