@@ -15,8 +15,8 @@ a:hover { color: #7ba7cc; }
 
 .dropdown-item svg { fill: #c0c0c0; }
 .sortable-ghost { background-color: rgba(38, 160, 218, 0.3); }
-.note-handle { background-color: rgba(160, 160, 160, 0.3); fill: #808080 }
-.note-handle.dark { background-color: rgba(204, 204, 204, 0.6); fill: #505050; }
+.note-handle { background-color: rgba(172, 172, 172, 0.5); fill: #707070 }
+.note-handle.dark { background-color: rgba(204, 204, 204, 0.7); fill: #606060; }
 .background-icon { fill: #424242; }
 .fab { background-color: #2090ea; }
 .fab svg { fill: white; }

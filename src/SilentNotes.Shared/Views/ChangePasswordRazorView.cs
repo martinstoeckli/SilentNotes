@@ -23,7 +23,7 @@ using SilentNotes.ViewModels;
 #line hidden
 
 
-[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.4.0.308")]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.4.0.311")]
 public partial class ChangePasswordRazorView : ChangePasswordRazorViewBase
 {
 
@@ -107,7 +107,7 @@ WriteLiteral("></script>\r\n\r\n    <style");
 
 WriteLiteral(" type=\"text/css\"");
 
-WriteLiteral(">\r\n        .background-icon {\r\n            right: -110px;\r\n            top: -168p" +
+WriteLiteral(">\r\n        .background-icon {\r\n            right: -110px;\r\n            top: -142p" +
 "x;\r\n        }\r\n    </style>\r\n    <script>\r\n        $(function () {\r\n            " +
 "addShortcuts();\r\n        });\r\n    </script>\r\n</head>\r\n<body>\r\n    <nav");
 

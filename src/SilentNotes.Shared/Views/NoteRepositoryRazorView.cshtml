@@ -20,8 +20,8 @@
 
     <style type="text/css">
 body {
-    @(Model.Theme.CssAttributeBackgroundColor)
-    @(Model.Theme.CssAttributeBackgroundImage)
+    @(Model.Theme.CssBackgroundColor)
+    @(Model.Theme.CssBackgroundImage)
 }
 
 .note-viewer {
@@ -116,7 +116,7 @@ body {
     <div hidden>
         @{WriteLiteral(Model.Icon.LoadIcon("magnify", new[] { new KeyValuePair<string, string>("id", "svg-magnify") }));}
         @{WriteLiteral(Model.Icon.LoadIcon("close-circle-outline", new[] { new KeyValuePair<string, string>("id", "svg-close-circle-outline") }));}
-        @{WriteLiteral(Model.Icon.LoadIcon("menu-swap", new[] { new KeyValuePair<string, string>("id", "svg-menu-swap") }));}
+        @{WriteLiteral(Model.Icon.LoadIcon("arrow-all", new[] { new KeyValuePair<string, string>("id", "svg-arrow-all") }));}
         @{WriteLiteral(Model.Icon.LoadIcon("lock", new[] { new KeyValuePair<string, string>("id", "svg-lock") }));}
         @{WriteLiteral(Model.Icon.LoadIcon("lock-open-variant", new[] { new KeyValuePair<string, string>("id", "svg-lock-open-variant") }));}
         @{WriteLiteral(Model.Icon.LoadIcon("lock-outline", new[] { new KeyValuePair<string, string>("id", "svg-lock-outline") }));}

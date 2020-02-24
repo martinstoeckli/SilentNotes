@@ -188,15 +188,15 @@ WriteAttribute ("class", " class=\"", "\""
 );
 WriteLiteral("><svg");
 
-WriteLiteral(" width=\'24\'");
+WriteLiteral(" width=\'22\'");
 
-WriteLiteral(" height=\'24\'");
+WriteLiteral(" height=\'22\'");
 
 WriteLiteral(" viewBox=\'0 0 24 24\'");
 
 WriteLiteral("><use");
 
-WriteLiteral(" xlink:href=\"#svg-menu-swap\"");
+WriteLiteral(" xlink:href=\"#svg-arrow-all\"");
 
 WriteLiteral(" /></svg></div>\r\n        <div");
 
