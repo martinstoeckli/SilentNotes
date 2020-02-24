@@ -142,8 +142,8 @@ input[type="color"] { padding: 1px; }
 	display: inline-block;
 	right: 0;
 	top: 0;
-	width: 480px;
-	height: 480px;
+	width: 360px;
+	height: 360px;
 	z-index: -1;
 }
 

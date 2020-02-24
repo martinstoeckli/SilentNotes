@@ -645,7 +645,7 @@ WriteLiteral("\r\n");
 #line hidden
 
 #line 119 "NoteRepositoryRazorView.cshtml"
-          WriteLiteral(Model.Icon.LoadIcon("menu-swap", new[] { new KeyValuePair<string, string>("id", "svg-menu-swap") }));
+          WriteLiteral(Model.Icon.LoadIcon("arrow-all", new[] { new KeyValuePair<string, string>("id", "svg-arrow-all") }));
 
 #line default
 #line hidden
