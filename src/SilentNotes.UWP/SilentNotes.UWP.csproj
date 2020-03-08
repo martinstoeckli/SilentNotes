@@ -143,6 +143,9 @@
     <Content Include="..\SilentNotes.Shared\Assets\Html\bootstrap.min.css">
       <Link>Assets\Html\bootstrap.min.css</Link>
     </Content>
+    <Content Include="..\SilentNotes.Shared\Assets\Html\checklist.js">
+      <Link>Assets\Html\checklist.js</Link>
+    </Content>
     <Content Include="..\SilentNotes.Shared\Assets\Html\cloud_service_dropbox.png">
       <Link>Assets\Html\cloud_service_dropbox.png</Link>
     </Content>
