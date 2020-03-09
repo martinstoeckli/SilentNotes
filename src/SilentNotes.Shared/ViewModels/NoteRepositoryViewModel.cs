@@ -68,6 +68,7 @@ namespace SilentNotes.ViewModels
             // Initialize commands and events
             ShowNoteCommand = new RelayCommand<Guid>(ShowNote);
             AddNoteCommand = new RelayCommand(AddNote);
+            AddChecklistCommand = new RelayCommand(AddChecklist);
             DeleteNoteCommand = new RelayCommand<Guid>(DeleteNote);
             ClearFilterCommand = new RelayCommand(ClearFilter);
             SynchronizeCommand = new RelayCommand(Synchronize);
@@ -200,9 +201,21 @@ namespace SilentNotes.ViewModels
 
         private void ShowNote(Guid noteId)
         {
-            bool noteExists = FilteredNotes.Any(item => item.Id == noteId);
-            if (noteExists)
-                _navigationService.Navigate(ControllerNames.Note, ControllerParameters.NoteId, noteId.ToString());
+            NoteViewModel note = FilteredNotes.FirstOrDefault(item => item.Id == noteId);
+            if (note != null)
+            {
+                switch (note.NoteType)
+                {
+                    case NoteType.Text:
+                        _navigationService.Navigate(ControllerNames.Note, ControllerParameters.NoteId, noteId.ToString());
+                        break;
+                    case NoteType.Checklist:
+                        _navigationService.Navigate(ControllerNames.Checklist, ControllerParameters.NoteId, noteId.ToString());
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(NoteType));
+                }
+            }
         }
 
         /// <summary>
@@ -212,11 +225,17 @@ namespace SilentNotes.ViewModels
 
         private void AddNote()
         {
+            AddNote(NoteType.Text);
+        }
+
+        private void AddNote(NoteType noteType)
+        {
             Modified = true;
             ClearFilter();
 
             // Create new note and update model list
             NoteModel noteModel = new NoteModel();
+            noteModel.NoteType = noteType;
             noteModel.BackgroundColorHex = _settingsService.LoadSettingsOrDefault().DefaultNoteColorHex;
             _model.Notes.Insert(0, noteModel);
 
@@ -226,6 +245,16 @@ namespace SilentNotes.ViewModels
             FilteredNotes.Insert(0, noteViewModel);
 
             ShowNote(noteViewModel.Id);
+        }
+
+        /// <summary>
+        /// Gets the command which handles the creation of a new checklist note.
+        /// </summary>
+        public ICommand AddChecklistCommand { get; private set; }
+
+        private void AddChecklist()
+        {
+            AddNote(NoteType.Checklist);
         }
 
         /// <summary>

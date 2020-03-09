@@ -1,20 +1,21 @@
 const editorId = '#myeditor';
+const doneClass = 'done';
 
-$(document).ready(function(){
+$(document).ready(function () {
     let editor = document.querySelector(editorId);
-    editor.addEventListener('click', function(ev) {
+    editor.addEventListener('click', function (ev) {
         if (isParagraph(ev.target)) {
             onParagraphClicked(ev, ev.target);
         }
     },
-    false);
+        false);
 });
 
 function onParagraphClicked(ev, paragraphNode) {
     let targetRect = paragraphNode.getBoundingClientRect();
     let targetMiddleX = (targetRect.left + targetRect.right) / 2;
     let clickedOnLeftSide = ev.clientX < targetMiddleX;
-    
+
     if (clickedOnLeftSide) {
         toggleCheckedState(paragraphNode);
     }
@@ -24,16 +25,18 @@ function onParagraphClicked(ev, paragraphNode) {
 }
 
 function toggleCheckedState(paragraphNode) {
-    paragraphNode.classList.toggle('done');
+    paragraphNode.classList.toggle(doneClass);
+    notifyTextChanged();
 }
 
 function setCheckedStateForAll(done) {
     if (done) {
-        $(editorId).find('p').addClass('done');
+        $(editorId).find('p').addClass(doneClass);
     }
     else {
-        $(editorId).find('p').removeClass('done');
+        $(editorId).find('p').removeClass(doneClass);
     }
+    notifyTextChanged();
 }
 
 function deleteParagraph(paragraphNode) {
@@ -41,14 +44,14 @@ function deleteParagraph(paragraphNode) {
     parent.removeChild(paragraphNode);
 }
 
-function bringPendingToTop() {
+function movePendingToTop() {
     let containerNode = $(editorId).find('p').first().parent();
     let children = $(containerNode).children();
     let insertAfter = -1;
     for (let index = 0; index < children.length; index++) {
         let child = children[index];
         let isParagraphElement = isParagraph(child);
-        let isPending = isParagraphElement && !child.classList.contains('done');
+        let isPending = isParagraphElement && !child.classList.contains(doneClass);
 
         if (isParagraphElement) {
             if (isPending) {
@@ -70,7 +73,7 @@ function bringPendingToTop() {
     }
 }
 
-function moveUpwards(toTop = false) {
+function moveUp(toTop = false) {
     let paragraphElement = findSelectedParagraph();
     let previousElement = paragraphElement.previousElementSibling;
     if (isParagraph(previousElement)) {
@@ -84,7 +87,7 @@ function moveUpwards(toTop = false) {
     }
 }
 
-function moveDownwards(toBottom = false) {
+function moveDown(toBottom = false) {
     let paragraphElement = findSelectedParagraph();
     let nextElement = paragraphElement.nextElementSibling;
     if (isParagraph(nextElement)) {
@@ -98,12 +101,10 @@ function moveDownwards(toBottom = false) {
     }
 }
 
-function findSelectedParagraph()
-{
+function findSelectedParagraph() {
     quill.focus();
     var range = quill.getSelection();
-    if (range)
-    {
+    if (range) {
         let node = quill.getLeaf(range.index)[0].domNode;
         while (!isParagraph(node)) {
             node = node.parentElement;
@@ -113,13 +114,44 @@ function findSelectedParagraph()
     return null;
 }
 
-function selectParagraph(paragraphElement)
-{
+function selectParagraph(paragraphElement) {
     let index = quill.getIndex(Quill.find(paragraphElement));
     quill.setSelection(index, 0, 'api');
 }
 
-function isParagraph(element)
-{
+function isParagraph(element) {
     return element && (element.nodeName.toLowerCase() === 'p');
+}
+
+function saveDoneStates() {
+    let result = [];
+    let containerNode = $(editorId).find('p').first().parent();
+    let children = $(containerNode).children();
+    for (let index = 0; index < children.length; index++) {
+        let child = children[index];
+        if (isParagraph(child)) {
+            let isDone = child.classList.contains(doneClass);
+            result.push(isDone);
+        }
+    }
+    return result;
+}
+
+function restoreDoneStates(doneStates) {
+    let containerNode = $(editorId).find('p').first().parent();
+    let children = $(containerNode).children();
+    for (let index = 0; index < children.length; index++) {
+        let child = children[index];
+        if (isParagraph(child)) {
+            let isDone2 = child.classList.contains(doneClass);
+            let isDone = doneStates.shift();
+            if (isDone === true) {
+                child.classList.add(doneClass);
+            }
+        }
+    }
+}
+
+function notifyTextChanged() {
+    location.href = 'HtmlViewBinding?event-type=text-change&data-binding=quill';
 }

@@ -290,5 +290,25 @@
       <Link>Assets\Html\checklist.js</Link>
     </AndroidAsset>
   </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\ChecklistView.css">
+      <Link>Assets\Html\ChecklistView.css</Link>
+    </AndroidAsset>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\checkbox-blank-outline.svg">
+      <Link>Assets\Html\checkbox-blank-outline.svg</Link>
+    </AndroidAsset>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\check-box-outline.svg">
+      <Link>Assets\Html\check-box-outline.svg</Link>
+    </AndroidAsset>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\delete-darkgrey.svg">
+      <Link>Assets\Html\delete-darkgrey.svg</Link>
+    </AndroidAsset>
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
 </Project>

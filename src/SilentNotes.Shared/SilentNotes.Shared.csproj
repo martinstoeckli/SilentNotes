@@ -43,6 +43,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>ChangePasswordRazorView.cshtml</DependentUpon>
     </Compile>
+    <Compile Update="Views\ChecklistRazorView.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ChecklistRazorView.cshtml</DependentUpon>
+    </Compile>
     <Compile Update="Views\CloudStorageChoiceRazorView.cs">
       <DependentUpon>CloudStorageChoiceRazorView.cshtml</DependentUpon>
       <DesignTime>True</DesignTime>
@@ -143,6 +148,10 @@
     <None Update="Views\ChangePasswordRazorView.cshtml">
       <Generator>RazorTemplatePreprocessor</Generator>
       <LastGenOutput>ChangePasswordRazorView.cs</LastGenOutput>
+    </None>
+    <None Update="Views\ChecklistRazorView.cshtml">
+      <Generator>RazorTemplatePreprocessor</Generator>
+      <LastGenOutput>ChecklistRazorView.cs</LastGenOutput>
     </None>
     <None Update="Views\CloudStorageChoiceRazorView.cshtml">
       <LastGenOutput>CloudStorageChoiceRazorView.cs</LastGenOutput>

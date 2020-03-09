@@ -15,10 +15,12 @@
 
     <link href="quill/quill.snow.css" rel="stylesheet">
     <link href="NoteView.css" rel="stylesheet">
+    <link href="ChecklistView.css" rel="stylesheet">
 
     <script src="jquery-3.4.1.min.js"></script>
     <script src="bootstrap.bundle.min.js"></script>
     <script src="silentnotes.js"></script>
+    <script src="checklist.js"></script>
     <script src="quill/quill.min.js"></script>
 
     <style type="text/css">
@@ -40,29 +42,6 @@ body { background-color: transparent; }
     </style>
     <script>
         var quill;
-
-        function toggleFormat(formatName) {
-            var selectionFormat = quill.getFormat();
-            var selectionFormatValue = selectionFormat[formatName];
-            selectionFormatValue = !selectionFormatValue;
-            quill.format(formatName, selectionFormatValue, 'user');
-        }
-
-        function toggleBlockFormat(formatName, blockType) {
-            var selectionFormat = quill.getFormat();
-            var selectionFormatValue = selectionFormat[formatName];
-            var newSelectionFormat; // undefined removes the block format
-            if (selectionFormatValue !== blockType)
-                newSelectionFormat = blockType;
-            quill.format(formatName, newSelectionFormat, 'user');
-        }
-
-        function toggleLink() {
-            var selectionFormat = quill.getFormat();
-            var selectionFormatValue = selectionFormat['link'];
-            var toolbar = quill.getModule('toolbar');
-            toolbar.handlers['link'].call(toolbar, !selectionFormatValue);
-        }
 
         function simulateArrowKey(key) {
             quill.focus();
@@ -94,13 +73,19 @@ body { background-color: transparent; }
         }
 
         $(function () {
+            // quill "imports" the existing html content and looses the class attributes,
+            // that's why we save and reapply the done states.
+            let doneStates = saveDoneStates();
             quill = new Quill('#myeditor', {
-                formats: ['header', 'bold', 'italic', 'underline', 'strike', 'list', 'code', 'code-block', 'blockquote', 'link'],
+                formats: ['header'],
                 modules: {
-                    toolbar: '#quill-toolbar',
+                    toolbar: {
+                        container: '#quill-toolbar',
+                    },
                 },
                 theme: 'snow',
             });
+            restoreDoneStates(doneStates);
 
             quill.on('text-change', function (delta, oldDelta, source) {
                 if (source === 'user') {
@@ -111,10 +96,6 @@ body { background-color: transparent; }
             $(quill.root).one("focusin", function () {
                 $('#arrowkeys').css("display", "inline-flex");
             });
-
-            // This way we can remove the tel:// protocol
-            var Link = Quill.import('formats/link');
-            Link.PROTOCOL_WHITELIST = ['http', 'https', 'mailto'];
         });
     </script>
 </head>
@@ -125,31 +106,25 @@ body { background-color: transparent; }
         <span id="quill-toolbar" class="d-inline-flex">
             @if (!Model.IsLocked)
             {
-                <select class="nav-item ql-header">
-                    <option value="1"></option>
-                    <option value="2"></option>
-                    <option value="3"></option>
-                    <option selected="selected"></option>
-                </select>
-
-                <button class="nav-item ql-bold" title="@Model.Language["note_bold"]"></button>
-                <button class="nav-item ql-italic" title="@Model.Language["note_italic"]"></button>
-                <span class="show-only-on-wide-browser">
-                    <button class="nav-item ql-underline" title="@Model.Language["note_underline"]"></button>
-                    <button class="nav-item ql-strike" title="@Model.Language["note_strike"]"></button>
-                    <button class="nav-item ql-list" value="ordered" title="@Model.Language["note_list_ordered"]"></button>
-                    <button class="nav-item ql-list" value="bullet" title="@Model.Language["note_list_unordered"]"></button>
-                </span>
+                <button class="nav-item ql-header" value="1" title="@Model.Language["note_header1"]"></button>
             }
         </span>
+
+        @if (!Model.IsLocked)
+        {
+            <button class="nav-item" onclick="moveUp(true); return false;" title="@Model.Language["checklist_move_to_top"]">@{WriteLiteral(Model.Icon["arrow-collapse-up"]);}</button>
+            <button class="nav-item" onclick="moveUp(false); return false;" title="@Model.Language["checklist_move_up"]">@{WriteLiteral(Model.Icon["arrow-up"]);}</button>
+            <button class="nav-item" onclick="moveDown(false); return false;" title="@Model.Language["checklist_move_down"]">@{WriteLiteral(Model.Icon["arrow-down"]);}</button>
+            <button class="nav-item" onclick="moveDown(true); return false;" title="@Model.Language["checklist_move_to_bottom"]">@{WriteLiteral(Model.Icon["arrow-collapse-down"]);}</button>
+        }
 
         <!-- Color dropdown -->
         <div class="dropdown">
             @if (!Model.IsLocked)
             {
-            <button class="nav-item" id="colorDropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="@Model.Language["note_colors"]">
-                @{WriteLiteral(Model.Icon["palette"]);}
-            </button>
+                <button class="nav-item" id="colorDropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="@Model.Language["note_colors"]">
+                    @{WriteLiteral(Model.Icon["palette"]);}
+                </button>
             }
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="colorDropdownMenu">
                 @foreach (var backgroundColor in @Model.BackgroundColorsHex)
@@ -162,23 +137,19 @@ body { background-color: transparent; }
         <!-- Dropdown Menu -->
         @if (!Model.IsLocked)
         {
-        <div class="dropdown">
-            <button class="nav-item" id="navOverflowMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                @{WriteLiteral(Model.Icon["dots-vertical"]);}
-            </button>
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navOverflowMenu">
-                <div class="dropdown-item show-only-on-narrow-browser" onclick="toggleFormat('underline');">@{WriteLiteral(Model.Icon["format-underline"]);} @Model.Language["note_underline"]</div>
-                <div class="dropdown-item show-only-on-narrow-browser" onclick="toggleFormat('strike');">@{WriteLiteral(Model.Icon["format-strikethrough-variant"]);} @Model.Language["note_strike"]</div>
-                <div class="dropdown-item show-only-on-narrow-browser" onclick="toggleBlockFormat('list', 'ordered');">@{WriteLiteral(Model.Icon["format-list-numbers"]);} @Model.Language["note_list_ordered"]</div>
-                <div class="dropdown-item show-only-on-narrow-browser" onclick="toggleBlockFormat('list', 'bullet');">@{WriteLiteral(Model.Icon["format-list-bulleted"]);} @Model.Language["note_list_unordered"]</div>
-                <div class="dropdown-item" onclick="toggleFormat('code-block');">@{WriteLiteral(Model.Icon["code-braces"]);} @Model.Language["note_code"]</div>
-                <div class="dropdown-item" onclick="toggleFormat('blockquote');">@{WriteLiteral(Model.Icon["format-quote-close"]);} @Model.Language["note_quotation"]</div>
-                <div class="dropdown-item" onclick="toggleLink()">@{WriteLiteral(Model.Icon["link-variant"]);} @Model.Language["note_link"]</div>
-                <div class="dropdown-divider"></div>
-                <div class="dropdown-item" onclick="bind(event);" data-binding="PushNoteToOnlineStorage">@{WriteLiteral(Model.Icon["cloud-upload"]);} @Model.Language["note_push_to_server"]</div>
-                <div class="dropdown-item" onclick="bind(event);" data-binding="PullNoteFromOnlineStorage">@{WriteLiteral(Model.Icon["cloud-download"]);} @Model.Language["note_pull_from_server"]</div>
+            <div class="dropdown">
+                <button class="nav-item" id="navOverflowMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    @{WriteLiteral(Model.Icon["dots-vertical"]);}
+                </button>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navOverflowMenu">
+                    <div class="dropdown-item" onclick="movePendingToTop(); return false;" data-binding="">@{WriteLiteral(Model.Icon["sort-bool-descending-variant"]);} @Model.Language["checklist_move_pending_to_top"]</div>
+                    <div class="dropdown-item" onclick="setCheckedStateForAll(true); return false;" data-binding="">@{WriteLiteral(Model.Icon["check-box-multiple-outline"]);} @Model.Language["checklist_check_all"]</div>
+                    <div class="dropdown-item" onclick="setCheckedStateForAll(false); return false;" data-binding="">@{WriteLiteral(Model.Icon["checkbox-multiple-blank-outline"]);} @Model.Language["checklist_uncheck_all"]</div>
+                    <div class="dropdown-divider"></div>
+                    <div class="dropdown-item" onclick="bind(event);" data-binding="PushNoteToOnlineStorage">@{WriteLiteral(Model.Icon["cloud-upload"]);} @Model.Language["note_push_to_server"]</div>
+                    <div class="dropdown-item" onclick="bind(event);" data-binding="PullNoteFromOnlineStorage">@{WriteLiteral(Model.Icon["cloud-download"]);} @Model.Language["note_pull_from_server"]</div>
+                </div>
             </div>
-        </div>
         }
     </nav>
 
@@ -209,8 +180,9 @@ body { background-color: transparent; }
         </div>
     }
 
-    <div hidden>
-        @{WriteLiteral(Model.Icon.LoadIcon("lock-outline", new[] { new KeyValuePair<string, string>("id", "svg-lock-outline") }));}
-    </div>
+<div hidden>
+    @{WriteLiteral(Model.Icon.LoadIcon("lock-outline", new[] { new KeyValuePair<string, string>("id", "svg-lock-outline") }));}
+    @{WriteLiteral(Model.Icon.LoadIcon("delete", new[] { new KeyValuePair<string, string>("id", "svg-delete") }));}
+</div>
 </body>
 </html>

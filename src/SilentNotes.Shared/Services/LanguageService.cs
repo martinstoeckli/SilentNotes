@@ -49,9 +49,19 @@ namespace SilentNotes.Services
             resources["note_code"] = "Code block";
             resources["note_quotation"] = "Quotation";
             resources["note_link"] = "Link";
+            resources["note_header1"] = "Header 1";
             resources["note_pull_from_server"] = "Manually download note";
             resources["note_push_to_server"] = "Manually upload note";
             resources["feedback_note_to_recycle"] = "The note has been moved to the recycle bin and can be restored from there.";
+
+            resources["checklist_create_new"] = "Create new checklist";
+            resources["checklist_move_to_top"] = "Move to top";
+            resources["checklist_move_up"] = "Move up";
+            resources["checklist_move_down"] = "Move down";
+            resources["checklist_move_to_bottom"] = "Move to bottom";
+            resources["checklist_move_pending_to_top"] = "Move all pending items to top";
+            resources["checklist_check_all"] = "Check all (done)";
+            resources["checklist_uncheck_all"] = "Uncheck all (pending)";
 
             resources["safe_new"] = "Create safe";
             resources["safe_open"] = "Open safe";
@@ -185,9 +195,19 @@ namespace SilentNotes.Services
             resources["note_code"] = "Code Block";
             resources["note_quotation"] = "Zitat";
             resources["note_link"] = "Link";
+            resources["note_header1"] = "Überschrift 1";
             resources["note_pull_from_server"] = "Notiz manuell herunterladen";
             resources["note_push_to_server"] = "Notiz manuell hochladen";
             resources["feedback_note_to_recycle"] = "Die Notiz ist in den Papierkorb verschoben worden und kann von dort wieder hergestellt werden.";
+
+            resources["checklist_create_new"] = "Neue Checkliste erstellen";
+            resources["checklist_move_to_top"] = "Schiebe ganz nach oben";
+            resources["checklist_move_up"] = "Schiebe nach oben";
+            resources["checklist_move_down"] = "Schiebe nach unten";
+            resources["checklist_move_to_bottom"] = "Schiebe ganz nach unten";
+            resources["checklist_move_pending_to_top"] = "Schiebe unerledigte nach oben";
+            resources["checklist_check_all"] = "Setze alle (erledigt)";
+            resources["checklist_uncheck_all"] = "Leere alle (unerledigt)";
 
             resources["safe_new"] = "Tresor einrichten";
             resources["safe_open"] = "Tresor öffnen";

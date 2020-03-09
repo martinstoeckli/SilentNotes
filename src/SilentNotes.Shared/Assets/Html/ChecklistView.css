@@ -1,0 +1,31 @@
+.ql-editor p {
+    position: relative;
+    padding: 0.5em 3em 0.5em 3em;
+    background: lightgrey;
+    pointer-events: none;
+}
+.ql-editor p::before {
+    display: inline-block;
+    position: absolute;
+    left: 0.8em;
+    vertical-align: middle;
+    content: url('checkbox-blank-outline.svg');
+    pointer-events: all;
+    cursor: pointer;
+}
+.ql-editor p::after {
+    display: inline-block;
+    position: absolute;
+    bottom: 0;
+    right: 0.8em;
+    vertical-align: middle;
+    content: url('delete-darkgrey.svg');
+    pointer-events: all;
+    cursor: pointer;
+}
+.ql-editor p.done {
+    background: #CCFF99;
+}
+.ql-editor p.done::before {
+    content: url('check-box-outline.svg');
+}

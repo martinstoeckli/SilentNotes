@@ -85,7 +85,6 @@ body {
             <svg id="filter-cancel-icon" width='24' height='24' viewBox='0 0 24 24' class="hidden" onclick="bind(event)" data-binding="FilterButtonCancel"><use xlink:href="#svg-close-circle-outline" /></svg>
         </div>
 
-        <button class="nav-item show-only-on-wide-browser" onclick="bind(event);" data-binding="AddNote" title="@Model.Language["note_create_new"]">@{WriteLiteral(Model.Icon["plus"]);}</button>
         <button class="nav-item" onclick="bind(event);" data-binding="Synchronize" title="@Model.Language["sync_notes"]">@{WriteLiteral(Model.Icon["cloud-sync"]);}</button>
 
         <div class="dropdown">
@@ -93,21 +92,28 @@ body {
                 @{WriteLiteral(Model.Icon["dots-vertical"]);}
             </button>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navOverflowMenu">
-                <div class="dropdown-item show-only-on-narrow-browser" onclick="bind(event);" data-binding="AddNote">@{WriteLiteral(Model.Icon["plus"]);} @Model.Language["note_create_new"]</div>
-                <div class="dropdown-item" onclick="bind(event);" data-binding="ShowTransferCode">@{WriteLiteral(Model.Icon["key"]);} @Model.Language["show_transfer_code"]</div>
+                <div class="dropdown-item" onclick="bind(event);" data-binding="AddNote"><svg><use xlink:href="#svg-note-text-outline" /></svg> @Model.Language["note_create_new"]</div>
+                <div class="dropdown-item" onclick="bind(event);" data-binding="AddChecklist"><svg><use xlink:href="#svg-order-bool-ascending-variant" /></svg> @Model.Language["checklist_create_new"]</div>
                 <div class="dropdown-item" onclick="bind(event);" data-binding="ShowRecycleBin">@{WriteLiteral(Model.Icon["delete-empty"]);} @Model.Language["show_recyclebin"]</div>
                 <div class="dropdown-divider"></div>
                 <div class="dropdown-item" @if (Model.IsAnySafeOpen) { @("hidden") ; } onclick="bind(event);" data-binding="OpenSafe">@{WriteLiteral(Model.Icon["safe-square-outline"]);} @Model.Language["safe_open"]</div>
                 <div class="dropdown-item" @if (!Model.IsAnySafeOpen) { @("hidden") ; } onclick="bind(event);" data-binding="CloseSafe">@{WriteLiteral(Model.Icon["safe-square-outline"]);} @Model.Language["safe_close"]</div>
                 <div class="dropdown-item" onclick="bind(event);" data-binding="ChangeSafePassword">@{WriteLiteral(Model.Icon["lock-reset"]);} @Model.Language["safe_change_password"]</div>
                 <div class="dropdown-divider"></div>
+                <div class="dropdown-item" onclick="bind(event);" data-binding="ShowTransferCode">@{WriteLiteral(Model.Icon["key"]);} @Model.Language["show_transfer_code"]</div>
                 <div class="dropdown-item" onclick="bind(event);" data-binding="ShowSettings">@{WriteLiteral(Model.Icon["settings"]);} @Model.Language["show_settings"]</div>
                 <div class="dropdown-item" onclick="bind(event);" data-binding="ShowInfo">@{WriteLiteral(Model.Icon["information"]);} @Model.Language["show_info"]</div>
             </div>
         </div>
     </nav>
 
-    <div class="fab"><a onclick="bind(event);" data-binding="Fab" href="#">@{WriteLiteral(Model.Icon["plus"]);}</a></div>
+    <div class="fab dropup">
+        <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#">@{WriteLiteral(Model.Icon["plus"]);}</a>
+        <div class="dropdown-menu">
+            <a onclick="bind(event);" data-binding="AddChecklist" href="#"><svg><use xlink:href="#svg-order-bool-ascending-variant" /></svg></a>
+            <a onclick="bind(event);" data-binding="AddNote" href="#"><svg><use xlink:href="#svg-note-text-outline" /></svg></a>
+        </div>
+    </div>
 
     <div id="content" class="p-2">
         <ul id="note-repository"></ul>
@@ -121,6 +127,8 @@ body {
         @{WriteLiteral(Model.Icon.LoadIcon("lock-open-variant", new[] { new KeyValuePair<string, string>("id", "svg-lock-open-variant") }));}
         @{WriteLiteral(Model.Icon.LoadIcon("lock-outline", new[] { new KeyValuePair<string, string>("id", "svg-lock-outline") }));}
         @{WriteLiteral(Model.Icon.LoadIcon("delete", new[] { new KeyValuePair<string, string>("id", "svg-delete") }));}
+        @{WriteLiteral(Model.Icon.LoadIcon("note-text-outline", new[] { new KeyValuePair<string, string>("id", "svg-note-text-outline") }));}
+        @{WriteLiteral(Model.Icon.LoadIcon("order-bool-ascending-variant", new[] { new KeyValuePair<string, string>("id", "svg-order-bool-ascending-variant") }));}
     </div>
 </body>
 </html>

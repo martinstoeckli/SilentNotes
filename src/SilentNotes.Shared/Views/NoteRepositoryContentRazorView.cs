@@ -155,12 +155,19 @@ WriteAttribute ("class", " class=\"", "\""
 #line default
 #line hidden
 , false)
+
+#line 14 "NoteRepositoryContentRazorView.cshtml"
+                     , Tuple.Create<string,object,bool> (" ", note.NoteType
+
+#line default
+#line hidden
+, false)
 );
 WriteLiteral(">");
 
 
 #line 14 "NoteRepositoryContentRazorView.cshtml"
-                                                                WriteLiteral(note.UnlockedHtmlContent);
+                                                                               WriteLiteral(note.UnlockedHtmlContent);
 
 #line default
 #line hidden

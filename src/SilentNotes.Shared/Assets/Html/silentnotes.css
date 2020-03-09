@@ -176,6 +176,35 @@ input[type="color"] { padding: 1px; }
 	width: 36px;
 	height: 36px;
 }
+.fab div.dropdown-menu {
+	margin: 0 0 6px 8px;
+	padding: 0;
+	width: 40px;
+	min-width: 40px;
+	background: none;
+	border: none;
+}
+.fab div.dropdown-menu a {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	margin: 0 0 16px 0;
+	padding: 0;
+	width: 40px;
+	height: 40px;
+	background-color: white;
+	border-radius: 50%;
+	box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+	cursor: pointer;
+}
+.fab div.dropdown-menu svg {
+	width: 24px;
+	height: 24px;
+	fill: #757575;
+}
+.fab.dropup .dropdown-toggle::after {
+	display: none;
+}
 
 .dialog-action-arrow { font-size: 18pt; }
 

@@ -27,6 +27,9 @@ namespace SilentNotes
             Ioc.RegisterFactoryWithKey<IController>(ControllerNames.Note, () => new NoteController(
                 Ioc.GetOrCreate<IRepositoryStorageService>(),
                 Ioc.GetOrCreateWithKey<IRazorViewService>(ViewNames.Note)));
+            Ioc.RegisterFactoryWithKey<IController>(ControllerNames.Checklist, () => new NoteController(
+                Ioc.GetOrCreate<IRepositoryStorageService>(),
+                Ioc.GetOrCreateWithKey<IRazorViewService>(ViewNames.Checklist)));
             Ioc.RegisterFactoryWithKey<IController>(ControllerNames.Info, () => new InfoController(
                 Ioc.GetOrCreateWithKey<IRazorViewService>(ViewNames.Info)));
             Ioc.RegisterFactoryWithKey<IController>(ControllerNames.RecycleBin, () => new RecycleBinController(
@@ -62,6 +65,7 @@ namespace SilentNotes
             Ioc.RegisterFactoryWithKey<IRazorViewService>(ViewNames.NoteRepository, () => new RazorViewService<NoteRepositoryRazorView>());
             Ioc.RegisterFactoryWithKey<IRazorViewService>(ViewNames.NoteRepositoryContent, () => new RazorViewService<NoteRepositoryContentRazorView>());
             Ioc.RegisterFactoryWithKey<IRazorViewService>(ViewNames.Note, () => new RazorViewService<NoteRazorView>());
+            Ioc.RegisterFactoryWithKey<IRazorViewService>(ViewNames.Checklist, () => new RazorViewService<ChecklistRazorView>());
             Ioc.RegisterFactoryWithKey<IRazorViewService>(ViewNames.Info, () => new RazorViewService<InfoRazorView>());
             Ioc.RegisterFactoryWithKey<IRazorViewService>(ViewNames.RecycleBin, () => new RazorViewService<RecycleBinRazorView>());
             Ioc.RegisterFactoryWithKey<IRazorViewService>(ViewNames.RecycleBinContent, () => new RazorViewService<RecycleBinContentRazorView>());

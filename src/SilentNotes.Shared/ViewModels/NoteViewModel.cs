@@ -74,6 +74,14 @@ namespace SilentNotes.ViewModels
         }
 
         /// <summary>
+        /// Gets the type of the note.
+        /// </summary>
+        public NoteType NoteType 
+        {
+            get { return Model.NoteType; }
+        }
+
+        /// <summary>
         /// Gets a searchable representation of the <see cref="UnlockedHtmlContent"/>. This searchable
         /// text is generated on demand only, to mark it as dirty use <see cref="MarkSearchableContentAsDirty"/>.
         /// </summary>
