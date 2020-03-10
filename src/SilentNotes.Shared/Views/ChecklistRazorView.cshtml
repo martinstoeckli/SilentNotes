@@ -75,7 +75,7 @@ body { background-color: transparent; }
         $(function () {
             // quill "imports" the existing html content and looses the class attributes,
             // that's why we save and reapply the done states.
-            let doneStates = saveDoneStates();
+            var doneStates = saveDoneStates();
             quill = new Quill('#myeditor', {
                 formats: ['header'],
                 modules: {

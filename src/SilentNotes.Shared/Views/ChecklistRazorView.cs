@@ -169,7 +169,7 @@ WriteLiteral("px !important;\r\n}\r\n.color-btn { color: black; }\r\n.color-btn.
 " {\r\n            quill.setText(text, \'user\');\r\n        }\r\n\r\n        $(function ()" +
 " {\r\n            // quill \"imports\" the existing html content and looses the clas" +
 "s attributes,\r\n            // that\'s why we save and reapply the done states.\r\n " +
-"           let doneStates = saveDoneStates();\r\n            quill = new Quill(\'#m" +
+"           var doneStates = saveDoneStates();\r\n            quill = new Quill(\'#m" +
 "yeditor\', {\r\n                formats: [\'header\'],\r\n                modules: {\r\n " +
 "                   toolbar: {\r\n                        container: \'#quill-toolba" +
 "r\',\r\n                    },\r\n                },\r\n                theme: \'snow\',\r" +
