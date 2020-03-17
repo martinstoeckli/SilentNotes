@@ -3,6 +3,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -68,6 +69,7 @@ namespace SilentNotes.Services
                 { "check-box-multiple-outline", "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M20,2H8A2,2 0 0,0 6,4V16A2,2 0 0,0 8,18H20A2,2 0 0,0 22,16V4A2,2 0 0,0 20,2M20,16H8V4H20V16M16,20V22H4A2,2 0 0,1 2,20V7H4V20H16M18.53,8.06L17.47,7L12.59,11.88L10.47,9.76L9.41,10.82L12.59,14L18.53,8.06Z' /></svg>" },
                 { "check-box-outline", "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M19,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3M19,5V19H5V5H19M10,17L6,13L7.41,11.58L10,14.17L16.59,7.58L18,9' /></svg>" },
                 { "checkbox-blank-outline", "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M19,3H5C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z' /></svg>" },
+                { "checkbox-blank-off-outline", "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M22.11 21.46L2.39 1.73L1.11 3L3 4.9V19C3 20.11 3.9 21 5 21H19.1L20.84 22.73L22.11 21.46M5 19V6.89L17.11 19H5M8.2 5L6.2 3H19C20.1 3 21 3.89 21 5V17.8L19 15.8V5H8.2Z' /></svg>" },
                 { "arrow-collapse-up", "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M4.08,11.92L12,4L19.92,11.92L18.5,13.33L13,7.83V22H11V7.83L5.5,13.33L4.08,11.92M12,4H22V2H2V4H12Z' /></svg>" },
                 { "arrow-collapse-down", "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M19.92,12.08L12,20L4.08,12.08L5.5,10.67L11,16.17V2H13V16.17L18.5,10.66L19.92,12.08M12,20H2V22H22V20H12Z' /></svg>" },
                 { "arrow-up", "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M13,20H11V8L5.5,13.5L4.08,12.08L12,4.16L19.92,12.08L18.5,13.5L13,8V20Z' /></svg>" },
@@ -98,7 +100,20 @@ namespace SilentNotes.Services
         }
 
         /// <inheritdoc/>
-        public string LoadIconSvgPath(string id)
+        public string LoadIconAsCssUrl(string id, IEnumerable<KeyValuePair<string, string>> attributes = null)
+        {
+            var enrichedAttributes = attributes != null
+                ? new List<KeyValuePair<string, string>>(attributes)
+                : new List<KeyValuePair<string, string>>();
+            enrichedAttributes.Insert(0, new KeyValuePair<string, string>("xmlns", "http://www.w3.org/2000/svg"));
+
+            string svg = LoadIcon(id, enrichedAttributes);
+            string encodedSvg = Uri.EscapeUriString(svg);
+            return string.Format("url(\"data:image/svg+xml,{0}\")", encodedSvg);
+        }
+
+        /// <inheritdoc/>
+        private string LoadIconSvgPath(string id)
         {
             string result = LoadIcon(id);
             int startPos = result.IndexOf("<path");

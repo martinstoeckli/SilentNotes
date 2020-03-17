@@ -31,5 +31,16 @@ namespace SilentNotes.Services
         /// be customized.</param>
         /// <returns>A string containing the SVG vector graphic.</returns>
         string LoadIcon(string id, IEnumerable<KeyValuePair<string, string>> attributes = null);
+
+        /// <summary>
+        /// Loads a given vector graphic icon and encodes it, so it can be used inside a CSS url().
+        /// The icons are usually without color information, but they can be styled with the CSS
+        /// styles "fill" and "stroke" of the SVG element.
+        /// </summary>
+        /// <param name="id">Id of the vector graphic.</param>
+        /// <param name="attributes">Optional attributes, which can be added to the icon, so it can
+        /// be customized.</param>
+        /// <returns>A string containing the SVG url, like: url("data:image/svg+xml,...").</returns>
+        string LoadIconAsCssUrl(string id, IEnumerable<KeyValuePair<string, string>> attributes = null);
     }
 }

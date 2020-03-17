@@ -62,6 +62,7 @@ namespace SilentNotes.Services
             resources["checklist_move_pending_to_top"] = "Move all pending items to top";
             resources["checklist_check_all"] = "Check all (done)";
             resources["checklist_uncheck_all"] = "Uncheck all (pending)";
+            resources["checklist_disable_all"] = "Disable all";
 
             resources["safe_new"] = "Create safe";
             resources["safe_open"] = "Open safe";
@@ -208,6 +209,7 @@ namespace SilentNotes.Services
             resources["checklist_move_pending_to_top"] = "Schiebe unerledigte nach oben";
             resources["checklist_check_all"] = "Setze alle (erledigt)";
             resources["checklist_uncheck_all"] = "Leere alle (unerledigt)";
+            resources["checklist_disable_all"] = "Deaktiviere alle";
 
             resources["safe_new"] = "Tresor einrichten";
             resources["safe_open"] = "Tresor öffnen";

@@ -276,6 +276,7 @@ a[data-tooltip]:hover:after {
 	visibility: collapse;
 }
 
+/* used by htmlViewBindingsSetVisibility() */
 .hidden {
 	display: none !important;
 }
@@ -359,6 +360,62 @@ a[data-tooltip]:hover:after {
 .note-viewer.dark blockquote {
 	border-left: 3px solid rgba(211, 211, 211, 0.6) !important;
 }
-
 .note-viewer a { text-decoration: none !important; }
 .note-viewer a:hover { text-decoration: underline !important; }
+
+/* Checklist in editor. The content: url() is set in view to avoid external resource and to configure the color. */
+
+.detail-view.checklist .ql-editor p {
+	position: relative;
+	padding: 0.5em 3em 0.5em 3em;
+	pointer-events: none;
+}
+.detail-view.checklist .ql-editor p::before {
+	display: inline-block;
+	position: absolute;
+	left: 0.8em;
+	vertical-align: middle;
+	pointer-events: all;
+	cursor: pointer;
+}
+.detail-view.checklist .ql-editor p::after {
+	display: inline-block;
+	position: absolute;
+	bottom: 0;
+	right: 0.8em;
+	vertical-align: middle;
+	pointer-events: all;
+	cursor: pointer;
+	opacity: .65;
+}
+.detail-view.dark.checklist .ql-editor p::after {
+	opacity: .7;
+}
+.detail-view.checklist .ql-editor p.disabled {
+	text-decoration: line-through;
+}
+.detail-view.checklist .ql-editor p.disabled::before {
+	opacity: .2;
+}
+
+/* Checklist in overview. The content: url() is set in view to avoid external resource and to configure the color. */
+
+.note-viewer.over-view.checklist p {
+	position: relative;
+	padding: 0.2em 2em 0.2em 2em;
+	overflow: hidden;
+	min-height: 2em;
+	max-height: 3em;
+}
+.note-viewer.over-view.checklist p::before {
+	display: inline-block;
+	position: absolute;
+	left: 0.1em;
+	vertical-align: middle;
+}
+.note-viewer.over-view.checklist p.disabled {
+	text-decoration: line-through;
+}
+.note-viewer.over-view.checklist p.disabled::before {
+	opacity: .2;
+}

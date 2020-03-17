@@ -74,11 +74,11 @@ namespace SilentNotes.ViewModels
         }
 
         /// <summary>
-        /// Gets the type of the note.
+        /// Gets the type of the note as css class.
         /// </summary>
-        public NoteType NoteType 
+        public string CssClassNoteType 
         {
-            get { return Model.NoteType; }
+            get { return Model.NoteType.ToString().ToLowerInvariant(); }
         }
 
         /// <summary>
@@ -167,6 +167,14 @@ namespace SilentNotes.ViewModels
         public List<string> BackgroundColorsHex
         {
             get { return _settingsService.LoadSettingsOrDefault().NoteColorsHex; }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the background color of the note is a dark color or not.
+        /// </summary>
+        public bool IsDark
+        {
+            get { return ColorExtensions.HexToColor(BackgroundColorHex).IsDark(); }
         }
 
         /// <summary>

@@ -5,6 +5,7 @@
  */
 const editorId = '#myeditor';
 const doneClass = 'done';
+const disabledClass = 'disabled';
 
 $(document).ready(function () {
 	var editor = document.querySelector(editorId);
@@ -29,57 +30,99 @@ function onParagraphClicked(ev, paragraphNode) {
 	}
 }
 
+/**
+ * Sets the next state of a checklist item. The states are "pending", "done" and "disabled".
+ */
 function toggleCheckedState(paragraphNode) {
-	paragraphNode.classList.toggle(doneClass);
+	var isDone = paragraphNode.classList.contains(doneClass);
+	var isDisabled = paragraphNode.classList.contains(disabledClass);
+	paragraphNode.classList.remove(doneClass, disabledClass);
+
+	if (isDone) {
+		paragraphNode.classList.add(disabledClass);
+	}
+	else if (isDisabled) {
+		// already blank
+	}
+	else {
+		paragraphNode.classList.add(doneClass);
+	}
 	notifyTextChanged();
 }
 
-function setCheckedStateForAll(done) {
+/**
+ * Sets the state for all checklist items.
+ */
+function setCheckedStateForAll(done, disabled) {
+	$(editorId).find('p').removeClass(doneClass);
+	$(editorId).find('p').removeClass(disabledClass);
+
 	if (done) {
 		$(editorId).find('p').addClass(doneClass);
 	}
-	else {
-		$(editorId).find('p').removeClass(doneClass);
+	else if (disabled) {
+		$(editorId).find('p').addClass(disabledClass);
 	}
 	notifyTextChanged();
 }
 
+/**
+ * Deletes a checklist item.
+ */
 function deleteParagraph(paragraphNode) {
 	var parent = paragraphNode.parentNode;
 	parent.removeChild(paragraphNode);
 	notifyTextChanged();
 }
 
+/**
+ * Reorders the checklist items, so that pending items are on top and deactivated at the bottom.
+ */
 function movePendingToTop() {
 	var containerNode = $(editorId).find('p').first().parent();
 	var children = $(containerNode).children();
-	var insertAfter = -1;
+	var insertPendingAfter = -1;
+	var insertDoneAfter = -1;
 	for (var index = 0; index < children.length; index++) {
 		var child = children[index];
 		var isParagraphElement = isParagraph(child);
-		var isPending = isParagraphElement && !child.classList.contains(doneClass);
+		var isDone = isParagraphElement && child.classList.contains(doneClass);
+		var isDisabled = isParagraphElement && child.classList.contains(disabledClass);
+		var isPending = isParagraphElement && !isDone && !isDisabled;
 
 		if (isParagraphElement) {
 			if (isPending) {
-				var shouldMove = (index - insertAfter > 1);
-				if (shouldMove) {
-					var insertBefore = insertAfter + 1;
-					var parent = child.parentNode;
-					parent.insertBefore(child, $(containerNode).children()[insertBefore]);
-					insertAfter = insertBefore;
-				}
-				else {
-					insertAfter = index;
-				}
+				var shouldMove = (index - insertPendingAfter > 1);
+				if (shouldMove)
+					moveChild(child, insertPendingAfter);
+				insertPendingAfter++;
+				insertDoneAfter++;
+			}
+			else if (isDone) {
+				var shouldMove = (index - insertDoneAfter > 1);
+				if (shouldMove)
+					moveChild(child, insertDoneAfter);
+				insertDoneAfter++;
 			}
 		}
 		else {
-			insertAfter = index; // non paragraph elements start new checklist
+			// non paragraph elements start new checklist
+			insertPendingAfter = index;
+			insertDoneAfter = index;
 		}
 	}
 	notifyTextChanged();
 }
 
+function moveChild(child, afterIndex) {
+	var parent = child.parentNode;
+	var insertBeforeChild = $(parent).children()[afterIndex + 1];
+	parent.insertBefore(child, insertBeforeChild);
+}
+
+/**
+ * Moves a checklist upwards.
+ */
 function moveUp(toTop) {
 	var paragraphElement = findSelectedParagraph();
 	var previousElement = paragraphElement.previousElementSibling;
@@ -95,6 +138,9 @@ function moveUp(toTop) {
 	notifyTextChanged();
 }
 
+/**
+ * Moves a checklist item downwards.
+ */
 function moveDown(toBottom) {
 	var paragraphElement = findSelectedParagraph();
 	var nextElement = paragraphElement.nextElementSibling;
@@ -128,29 +174,36 @@ function selectParagraph(paragraphElement) {
 	quill.setSelection(index, 0, 'api');
 }
 
-function saveDoneStates() {
+function saveCheckStates() {
 	var result = [];
 	var containerNode = $(editorId).find('p').first().parent();
 	var children = $(containerNode).children();
 	for (var index = 0; index < children.length; index++) {
 		var child = children[index];
 		if (isParagraph(child)) {
-			var isDone = child.classList.contains(doneClass);
-			result.push(isDone);
+			if (child.classList.contains(doneClass)) {
+				result.push(doneClass);
+			}
+			else if (child.classList.contains(disabledClass)) {
+				result.push(disabledClass);
+			}
+			else {
+				result.push('none');
+			}
 		}
 	}
 	return result;
 }
 
-function restoreDoneStates(doneStates) {
+function restoreCheckStates(doneStates) {
 	var containerNode = $(editorId).find('p').first().parent();
 	var children = $(containerNode).children();
 	for (var index = 0; index < children.length; index++) {
 		var child = children[index];
 		if (isParagraph(child)) {
-			var isDone = doneStates.shift();
-			if (isDone === true) {
-				child.classList.add(doneClass);
+			var state = doneStates.shift();
+			if (state !== 'none') {
+				child.classList.add(state);
 			}
 		}
 	}

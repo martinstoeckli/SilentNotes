@@ -148,16 +148,17 @@ WriteLiteral("                <div");
 
 WriteAttribute ("class", " class=\"", "\""
 , Tuple.Create<string,object,bool> ("", "note-viewer", true)
+, Tuple.Create<string,object,bool> (" ", "over-view", true)
 
 #line 14 "NoteRepositoryContentRazorView.cshtml"
-, Tuple.Create<string,object,bool> (" ", note.GetDarkClass()
+          , Tuple.Create<string,object,bool> (" ", note.GetDarkClass()
 
 #line default
 #line hidden
 , false)
 
 #line 14 "NoteRepositoryContentRazorView.cshtml"
-                     , Tuple.Create<string,object,bool> (" ", note.NoteType
+                               , Tuple.Create<string,object,bool> (" ", note.CssClassNoteType
 
 #line default
 #line hidden
@@ -167,7 +168,7 @@ WriteLiteral(">");
 
 
 #line 14 "NoteRepositoryContentRazorView.cshtml"
-                                                                               WriteLiteral(note.UnlockedHtmlContent);
+                                                                                                 WriteLiteral(note.UnlockedHtmlContent);
 
 #line default
 #line hidden

@@ -99,7 +99,7 @@ WriteLiteral(" rel=\"stylesheet\"");
 
 WriteLiteral(">\r\n    <link");
 
-WriteLiteral(" href=\"NoteView.css\"");
+WriteLiteral(" href=\"note-view.css\"");
 
 WriteLiteral(" rel=\"stylesheet\"");
 
@@ -839,9 +839,17 @@ WriteLiteral(" id=\"myeditor\"");
 
 WriteAttribute ("class", " class=\"", "\""
 , Tuple.Create<string,object,bool> ("", "note-viewer", true)
+, Tuple.Create<string,object,bool> (" ", "detail-view", true)
 
 #line 192 "NoteRazorView.cshtml"
-          , Tuple.Create<string,object,bool> (" ", Model.GetDarkClass()
+                      , Tuple.Create<string,object,bool> (" ", Model.GetDarkClass()
+
+#line default
+#line hidden
+, false)
+
+#line 192 "NoteRazorView.cshtml"
+                                            , Tuple.Create<string,object,bool> (" ", Model.CssClassNoteType
 
 #line default
 #line hidden
@@ -853,7 +861,7 @@ WriteLiteral(">");
 
 
 #line 192 "NoteRazorView.cshtml"
-                                                                                                WriteLiteral(Model.UnlockedHtmlContent);
+                                                                                                                                    WriteLiteral(Model.UnlockedHtmlContent);
 
 #line default
 #line hidden

@@ -204,7 +204,7 @@ namespace SilentNotes.ViewModels
             NoteViewModel note = FilteredNotes.FirstOrDefault(item => item.Id == noteId);
             if (note != null)
             {
-                switch (note.NoteType)
+                switch (note.Model.NoteType)
                 {
                     case NoteType.Text:
                         _navigationService.Navigate(ControllerNames.Note, ControllerParameters.NoteId, noteId.ToString());

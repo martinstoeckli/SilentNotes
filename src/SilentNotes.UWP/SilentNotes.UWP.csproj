@@ -143,17 +143,8 @@
     <Content Include="..\SilentNotes.Shared\Assets\Html\bootstrap.min.css">
       <Link>Assets\Html\bootstrap.min.css</Link>
     </Content>
-    <Content Include="..\SilentNotes.Shared\Assets\Html\check-box-outline.svg">
-      <Link>Assets\Html\check-box-outline.svg</Link>
-    </Content>
-    <Content Include="..\SilentNotes.Shared\Assets\Html\checkbox-blank-outline.svg">
-      <Link>Assets\Html\checkbox-blank-outline.svg</Link>
-    </Content>
     <Content Include="..\SilentNotes.Shared\Assets\Html\checklist.js">
       <Link>Assets\Html\checklist.js</Link>
-    </Content>
-    <Content Include="..\SilentNotes.Shared\Assets\Html\ChecklistView.css">
-      <Link>Assets\Html\ChecklistView.css</Link>
     </Content>
     <Content Include="..\SilentNotes.Shared\Assets\Html\cloud_service_dropbox.png">
       <Link>Assets\Html\cloud_service_dropbox.png</Link>
@@ -176,9 +167,6 @@
     <Content Include="..\SilentNotes.Shared\Assets\Html\cork.jpg">
       <Link>Assets\Html\cork.jpg</Link>
     </Content>
-    <Content Include="..\SilentNotes.Shared\Assets\Html\delete-darkgrey.svg">
-      <Link>Assets\Html\delete-darkgrey.svg</Link>
-    </Content>
     <Content Include="..\SilentNotes.Shared\Assets\Html\forest.jpg">
       <Link>Assets\Html\forest.jpg</Link>
     </Content>
@@ -191,8 +179,8 @@
     <Content Include="..\SilentNotes.Shared\Assets\Html\meadow.jpg">
       <Link>Assets\Html\meadow.jpg</Link>
     </Content>
-    <Content Include="..\SilentNotes.Shared\Assets\Html\NoteView.css">
-      <Link>Assets\Html\NoteView.css</Link>
+    <Content Include="..\SilentNotes.Shared\Assets\Html\note-view.css">
+      <Link>Assets\Html\note-view.css</Link>
     </Content>
     <Content Include="..\SilentNotes.Shared\Assets\Html\paper.jpg">
       <Link>Assets\Html\paper.jpg</Link>

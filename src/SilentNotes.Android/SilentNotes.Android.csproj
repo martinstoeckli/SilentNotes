@@ -155,19 +155,11 @@
     </AndroidAsset>
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\NoteView.css">
-      <Link>Assets\Html\NoteView.css</Link>
-    </AndroidAsset>
     <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\quill\quill.min.js">
       <Link>Assets\Html\quill\quill.min.js</Link>
     </AndroidAsset>
     <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\quill\quill.snow.css">
       <Link>Assets\Html\quill\quill.snow.css</Link>
-    </AndroidAsset>
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\NoteRepositoryView.css">
-      <Link>Assets\Html\NoteRepositoryView.css</Link>
     </AndroidAsset>
   </ItemGroup>
   <ItemGroup>
@@ -291,23 +283,8 @@
     </AndroidAsset>
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\ChecklistView.css">
-      <Link>Assets\Html\ChecklistView.css</Link>
-    </AndroidAsset>
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\checkbox-blank-outline.svg">
-      <Link>Assets\Html\checkbox-blank-outline.svg</Link>
-    </AndroidAsset>
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\check-box-outline.svg">
-      <Link>Assets\Html\check-box-outline.svg</Link>
-    </AndroidAsset>
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\delete-darkgrey.svg">
-      <Link>Assets\Html\delete-darkgrey.svg</Link>
+    <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\note-view.css">
+      <Link>Assets\Html\note-view.css</Link>
     </AndroidAsset>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />

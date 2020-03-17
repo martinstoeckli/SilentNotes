@@ -14,8 +14,7 @@
     <link href="@(Model.Theme.DarkMode ? "silentnotes.dark.css" : "silentnotes.light.css")" rel="stylesheet" />
 
     <link href="quill/quill.snow.css" rel="stylesheet">
-    <link href="NoteView.css" rel="stylesheet">
-    <link href="ChecklistView.css" rel="stylesheet">
+    <link href="note-view.css" rel="stylesheet">
 
     <script src="jquery-3.4.1.min.js"></script>
     <script src="bootstrap.bundle.min.js"></script>
@@ -30,6 +29,25 @@ body { background-color: transparent; }
 .note-viewer {
     font-size: @(Model.NoteBaseFontSize)px !important;
 }
+@if (!Model.IsDark)
+{
+    <text>
+.detail-view.checklist .ql-editor p::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("checkbox-blank-outline", new[] { new KeyValuePair<string, string>("fill", "#000000") }));}; }
+.detail-view.checklist .ql-editor p.done::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("check-box-outline", new[] { new KeyValuePair<string, string>("fill", "#000000") }));}; }
+.detail-view.checklist .ql-editor p.disabled::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("checkbox-blank-outline", new[] { new KeyValuePair<string, string>("fill", "#000000") }));}; }
+.detail-view.checklist .ql-editor p::after { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("delete", new[] { new KeyValuePair<string, string>("fill", "#000000") }));}; }
+    </text>
+}
+else
+{
+    <text>
+.detail-view.checklist .ql-editor p::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("checkbox-blank-outline", new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") }));}; }
+.detail-view.checklist .ql-editor p.done::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("check-box-outline", new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") }));}; }
+.detail-view.checklist .ql-editor p.disabled::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("checkbox-blank-outline", new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") }));}; }
+.detail-view.checklist .ql-editor p::after { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("delete", new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") }));}; }
+    </text>
+}
+
 .color-btn { color: black; }
 .color-btn.dark { color: white; }
 .locked {
@@ -74,8 +92,8 @@ body { background-color: transparent; }
 
         $(function () {
             // quill "imports" the existing html content and looses the class attributes,
-            // that's why we save and reapply the done states.
-            var doneStates = saveDoneStates();
+            // that's why we save and reapply the check states.
+            var checkStates = saveCheckStates();
             quill = new Quill('#myeditor', {
                 formats: ['header'],
                 modules: {
@@ -85,7 +103,7 @@ body { background-color: transparent; }
                 },
                 theme: 'snow',
             });
-            restoreDoneStates(doneStates);
+            restoreCheckStates(checkStates);
 
             quill.on('text-change', function (delta, oldDelta, source) {
                 if (source === 'user') {
@@ -143,8 +161,9 @@ body { background-color: transparent; }
                 </button>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navOverflowMenu">
                     <div class="dropdown-item" onclick="movePendingToTop(); return false;" data-binding="">@{WriteLiteral(Model.Icon["sort-bool-descending-variant"]);} @Model.Language["checklist_move_pending_to_top"]</div>
-                    <div class="dropdown-item" onclick="setCheckedStateForAll(true); return false;" data-binding="">@{WriteLiteral(Model.Icon["check-box-multiple-outline"]);} @Model.Language["checklist_check_all"]</div>
-                    <div class="dropdown-item" onclick="setCheckedStateForAll(false); return false;" data-binding="">@{WriteLiteral(Model.Icon["checkbox-multiple-blank-outline"]);} @Model.Language["checklist_uncheck_all"]</div>
+                    <div class="dropdown-item" onclick="setCheckedStateForAll(false, false); return false;" data-binding="">@{WriteLiteral(Model.Icon["checkbox-multiple-blank-outline"]);} @Model.Language["checklist_uncheck_all"]</div>
+                    <div class="dropdown-item" onclick="setCheckedStateForAll(true, false); return false;" data-binding="">@{WriteLiteral(Model.Icon["check-box-multiple-outline"]);} @Model.Language["checklist_check_all"]</div>
+                    <div class="dropdown-item" onclick="setCheckedStateForAll(false, true); return false;" data-binding="">@{WriteLiteral(Model.Icon["checkbox-blank-off-outline"]);} @Model.Language["checklist_disable_all"]</div>
                     <div class="dropdown-divider"></div>
                     <div class="dropdown-item" onclick="bind(event);" data-binding="PushNoteToOnlineStorage">@{WriteLiteral(Model.Icon["cloud-upload"]);} @Model.Language["note_push_to_server"]</div>
                     <div class="dropdown-item" onclick="bind(event);" data-binding="PullNoteFromOnlineStorage">@{WriteLiteral(Model.Icon["cloud-download"]);} @Model.Language["note_pull_from_server"]</div>
@@ -160,7 +179,7 @@ body { background-color: transparent; }
         }
         else
         {
-            <div id="myeditor" class="note-viewer @Model.GetDarkClass()" data-binding="quill">@{WriteLiteral(Model.UnlockedHtmlContent);}</div>
+            <div id="myeditor" class="note-viewer detail-view @Model.GetDarkClass() @Model.CssClassNoteType" data-binding="quill">@{WriteLiteral(Model.UnlockedHtmlContent);}</div>
         }
     </div>
 
