@@ -29,24 +29,14 @@ body { background-color: transparent; }
 .note-viewer {
     font-size: @(Model.NoteBaseFontSize)px !important;
 }
-@if (!Model.IsDark)
-{
-    <text>
 .detail-view.checklist .ql-editor p::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("checkbox-blank-outline", new[] { new KeyValuePair<string, string>("fill", "#000000") }));}; }
 .detail-view.checklist .ql-editor p.done::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("check-box-outline", new[] { new KeyValuePair<string, string>("fill", "#000000") }));}; }
 .detail-view.checklist .ql-editor p.disabled::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("checkbox-blank-outline", new[] { new KeyValuePair<string, string>("fill", "#000000") }));}; }
 .detail-view.checklist .ql-editor p::after { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("delete", new[] { new KeyValuePair<string, string>("fill", "#000000") }));}; }
-    </text>
-}
-else
-{
-    <text>
-.detail-view.checklist .ql-editor p::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("checkbox-blank-outline", new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") }));}; }
-.detail-view.checklist .ql-editor p.done::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("check-box-outline", new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") }));}; }
-.detail-view.checklist .ql-editor p.disabled::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("checkbox-blank-outline", new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") }));}; }
-.detail-view.checklist .ql-editor p::after { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("delete", new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") }));}; }
-    </text>
-}
+.detail-view.checklist.dark .ql-editor p::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("checkbox-blank-outline", new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") }));}; }
+.detail-view.checklist.dark .ql-editor p.done::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("check-box-outline", new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") }));}; }
+.detail-view.checklist.dark .ql-editor p.disabled::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("checkbox-blank-outline", new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") }));}; }
+.detail-view.checklist.dark .ql-editor p::after { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("delete", new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") }));}; }
 
 .color-btn { color: black; }
 .color-btn.dark { color: white; }
@@ -57,6 +47,22 @@ else
 .locked svg {
     fill: rgba(160, 160, 160, 0.4);
 }
+#pretty-time-ago {
+    position: fixed;
+    display: inline-block;
+    margin: 0;
+    padding: 0.1em 0.8em 0.15em 0.8em;
+    right: 0;
+    bottom: 0;
+    color: black;
+    background-color: rgba(128, 128, 128, 0.2);
+	pointer-events: none; /* do not prevent clicks on recyclebin */
+}
+#pretty-time-ago.dark {
+    color: white;
+    background-color: rgba(211, 211, 211, 0.3);
+}
+
     </style>
     <script>
         var quill;
@@ -182,6 +188,8 @@ else
             <div id="myeditor" class="note-viewer detail-view @Model.GetDarkClass() @Model.CssClassNoteType" data-binding="quill">@{WriteLiteral(Model.UnlockedHtmlContent);}</div>
         }
     </div>
+
+    <div id="pretty-time-ago" class="@Model.GetDarkClass()" data-binding="PrettyTimeAgo">@Model.PrettyTimeAgo</div>
 
     @if (Model.ShowCursorArrowKeys)
     {

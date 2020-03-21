@@ -368,6 +368,7 @@ a[data-tooltip]:hover:after {
 .detail-view.checklist .ql-editor p {
 	position: relative;
 	padding: 0.5em 3em 0.5em 3em;
+	border-radius: 4px;
 	pointer-events: none;
 }
 .detail-view.checklist .ql-editor p::before {
@@ -406,6 +407,7 @@ a[data-tooltip]:hover:after {
 	overflow: hidden;
 	min-height: 2em;
 	max-height: 3em;
+	border-radius: 4px;
 }
 .note-viewer.over-view.checklist p::before {
 	display: inline-block;

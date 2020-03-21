@@ -110,9 +110,14 @@ function bind(event) {
 function htmlViewBindingsSetValue(bindingName, value) {
 	var selector = '[data-binding="' + bindingName + '"]';
 	$(selector).each(function () {
-		var oldValue = $(this).val();
-		if (value != oldValue)
-			$(this).val(value);
+		if (this.value !== undefined) {
+			var oldValue = $(this).val();
+			if (value != oldValue)
+				$(this).val(value);
+		}
+		else {
+			$(this).text(value);
+		}
 	});
 }
 

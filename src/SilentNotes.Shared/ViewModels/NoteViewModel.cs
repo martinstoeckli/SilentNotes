@@ -22,6 +22,7 @@ namespace SilentNotes.ViewModels
     /// </summary>
     public class NoteViewModel : ViewModelBase
     {
+        static TimeAgo _timeAgo;
         private readonly IRepositoryStorageService _repositoryService;
         private readonly IFeedbackService _feedbackService;
         private readonly ISettingsService _settingsService;
@@ -123,6 +124,7 @@ namespace SilentNotes.ViewModels
                 {
                     MarkSearchableContentAsDirty();
                     Model.RefreshModifiedAt();
+                    OnPropertyChanged(nameof(PrettyTimeAgo));
                 }
             }
         }
@@ -365,6 +367,33 @@ namespace SilentNotes.ViewModels
                 SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
                 return settings != null ? settings.ShowCursorArrowKeys : true;
             }
+        }
+
+        public string PrettyTimeAgo
+        {
+            get 
+            {
+                string prettyTime = GetOrCreateTimeAgo().PrettyPrint(Model.ModifiedAt, DateTime.UtcNow);
+                return Language.LoadTextFmt("modified_at", prettyTime);
+            }
+        }
+
+        private TimeAgo GetOrCreateTimeAgo()
+        {
+            if (_timeAgo == null)
+            {
+                var localization = new TimeAgo.Localization
+                {
+                    Today = Language.LoadText("today"),
+                    Yesterday = Language.LoadText("yesterday"),
+                    NumberOfDaysAgo = Language.LoadText("days_ago"),
+                    NumberOfWeeksAgo = Language.LoadText("weeks_ago"),
+                    NumberOfMonthsAgo = Language.LoadText("months_ago"),
+                    NumberOfYearsAgo = Language.LoadText("years_ago"),
+                };
+                _timeAgo = new TimeAgo(localization);
+            }
+            return _timeAgo;
         }
 
         /// <summary>

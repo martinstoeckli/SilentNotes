@@ -92,6 +92,7 @@ namespace SilentNotes.Controllers
             Bindings.BindCommand("PullNoteFromOnlineStorage", _viewModel.PullNoteFromOnlineStorageCommand);
             Bindings.BindCommand("PushNoteToOnlineStorage", _viewModel.PushNoteToOnlineStorageCommand);
             Bindings.BindCommand("GoBack", _viewModel.GoBackCommand);
+            Bindings.BindText("PrettyTimeAgo", () => _viewModel.PrettyTimeAgo, null, _viewModel, nameof(_viewModel.PrettyTimeAgo), HtmlViewBindingMode.OneWayToView);
             Bindings.UnhandledViewBindingEvent += UnhandledViewBindingEventHandler;
 
             string html = _viewService.GenerateHtml(_viewModel);
@@ -165,8 +166,8 @@ namespace SilentNotes.Controllers
                 "htmlViewBindingsSetCss('Content', 'background-color', '{0}');", colorHex);
             string darkClass = _viewModel.GetDarkClass();
             script += string.IsNullOrEmpty(darkClass)
-                ? "htmlViewBindingsRemoveClass('quill', 'dark');"
-                : "htmlViewBindingsAddClass('quill', 'dark');";
+                ? "htmlViewBindingsRemoveClass('quill', 'dark'); htmlViewBindingsRemoveClass('PrettyTimeAgo', 'dark');"
+                : "htmlViewBindingsAddClass('quill', 'dark'); htmlViewBindingsAddClass('PrettyTimeAgo', 'dark');";
             View.ExecuteJavaScript(script);
         }
     }

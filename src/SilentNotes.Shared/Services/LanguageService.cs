@@ -28,6 +28,14 @@ namespace SilentNotes.Services
             resources["back"] = "Back";
             resources["continue"] = "Continue";
 
+            resources["today"] = "today";
+            resources["yesterday"] = "yesterday";
+            resources["days_ago"] = "{0} days ago";
+            resources["weeks_ago"] = "{0} weeks ago";
+            resources["months_ago"] = "{0} month ago";
+            resources["years_ago"] = "{0} years ago";
+            resources["modified_at"] = "Modified {0}";
+
             resources["error_loading_repository"] = "Could not read the notes. The application was stopped, to avoid further damage of already existing notes.";
             resources["welcome_note"] = "<h1>Welcome 💛</h1><p>SilentNotes respects your privacy. It doesn't collect personal data, runs free of adds and is open source.</p>";
             resources["welcome_note_2"] = "<h1>Ordering notes</h1><p>Drag the double-arrow icon on a note to change the order.</p>";
@@ -174,6 +182,14 @@ namespace SilentNotes.Services
             resources["cancel"] = "Abbrechen";
             resources["back"] = "Zurück";
             resources["continue"] = "Weiter";
+
+            resources["today"] = "heute";
+            resources["yesterday"] = "gestern";
+            resources["days_ago"] = "vor {0} Tagen";
+            resources["weeks_ago"] = "vor {0} Wochen";
+            resources["months_ago"] = "vor {0} Monaten";
+            resources["years_ago"] = "vor {0} Jahren";
+            resources["modified_at"] = "Geändert {0}";
 
             resources["error_loading_repository"] = "Die Notizen konnten nicht gelesen werden. Die Anwendung wurde gestoppt um bereits existierende Notizen nicht weiter zu beschädigen.";
             resources["welcome_note"] = "<h1>Willkommen 💛</h1><p>SilentNotes respektiert Ihre Privatsphäre, es sammelt keine Benutzerdaten, verzichtet auf Werbung und ist Open Source.";
