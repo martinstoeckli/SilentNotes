@@ -1,0 +1,215 @@
+﻿@using SilentNotes.ViewModels
+@model NoteViewModel
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <base href="@Model.HtmlBase">
+    <title>SilentNotes</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no">
+
+    <link href="bootstrap.min.css" rel="stylesheet" />
+    <link href="silentnotes.css" rel="stylesheet" />
+    <link href="@(Model.Theme.DarkMode ? "silentnotes.dark.css" : "silentnotes.light.css")" rel="stylesheet" />
+
+    <link href="quill/quill.snow.css" rel="stylesheet">
+    <link href="note-view.css" rel="stylesheet">
+
+    <script src="jquery-3.4.1.min.js"></script>
+    <script src="bootstrap.bundle.min.js"></script>
+    <script src="silentnotes.js"></script>
+    <script src="checklist.js"></script>
+    <script src="quill/quill.min.js"></script>
+
+    <style type="text/css">
+body { background-color: transparent; }
+#content { background-color: @Model.BackgroundColorHex; }
+
+.note-viewer {
+    font-size: @(Model.NoteBaseFontSize)px !important;
+}
+.detail-view.checklist .ql-editor p::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("checkbox-blank-outline", new[] { new KeyValuePair<string, string>("fill", "#000000") }));}; }
+.detail-view.checklist .ql-editor p.done::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("check-box-outline", new[] { new KeyValuePair<string, string>("fill", "#000000") }));}; }
+.detail-view.checklist .ql-editor p.disabled::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("checkbox-blank-outline", new[] { new KeyValuePair<string, string>("fill", "#000000") }));}; }
+.detail-view.checklist .ql-editor p::after { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("delete", new[] { new KeyValuePair<string, string>("fill", "#000000") }));}; }
+.detail-view.checklist.dark .ql-editor p::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("checkbox-blank-outline", new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") }));}; }
+.detail-view.checklist.dark .ql-editor p.done::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("check-box-outline", new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") }));}; }
+.detail-view.checklist.dark .ql-editor p.disabled::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("checkbox-blank-outline", new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") }));}; }
+.detail-view.checklist.dark .ql-editor p::after { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("delete", new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") }));}; }
+
+.color-btn { color: black; }
+.color-btn.dark { color: white; }
+.locked {
+    position: relative;
+    height: 100%;
+}
+.locked svg {
+    fill: rgba(160, 160, 160, 0.4);
+}
+#pretty-time-ago {
+    position: fixed;
+    display: inline-block;
+    margin: 0;
+    padding: 0.1em 0.8em 0.15em 0.8em;
+    right: 0;
+    bottom: 0;
+    color: black;
+    background-color: rgba(128, 128, 128, 0.2);
+	pointer-events: none; /* do not prevent clicks on recyclebin */
+}
+#pretty-time-ago.dark {
+    color: white;
+    background-color: rgba(211, 211, 211, 0.3);
+}
+
+    </style>
+    <script>
+        var quill;
+
+        function simulateArrowKey(key) {
+            quill.focus();
+            var range = quill.getSelection();
+            if (range) {
+                switch (key) {
+                    case 37: // left
+                        if (range.length <= 0)
+                            quill.setSelection(range.index - 1, 0);
+                        else
+                            quill.setSelection(range.index, range.length - 1);
+                        break;
+                    case 39: // right
+                        if (range.length <= 0)
+                            quill.setSelection(range.index + 1, 0);
+                        else
+                            quill.setSelection(range.index, range.length + 1);
+                        break;
+                }
+            }
+        }
+
+        function getNoteHtmlContent() {
+            return quill.root.innerHTML;
+        }
+
+        function setNoteHtmlContent(text) {
+            quill.setText(text, 'user');
+        }
+
+        $(function () {
+            // quill "imports" the existing html content and looses the class attributes,
+            // that's why we save and reapply the check states.
+            var checkStates = saveCheckStates();
+            quill = new Quill('#myeditor', {
+                formats: ['header'],
+                modules: {
+                    toolbar: {
+                        container: '#quill-toolbar',
+                    },
+                },
+                theme: 'snow',
+            });
+            restoreCheckStates(checkStates);
+
+            quill.on('text-change', function (delta, oldDelta, source) {
+                if (source === 'user') {
+                    location.href = 'HtmlViewBinding?event-type=text-change&data-binding=quill';
+                }
+            });
+
+            $(quill.root).one("focusin", function () {
+                $('#arrowkeys').css("display", "inline-flex");
+            });
+        });
+    </script>
+</head>
+<body>
+    <nav id="navigation" class="d-flex">
+        <button class="nav-item mr-auto" onclick="bind(event);" data-binding="GoBack" title="@Model.Language["back"]">@{WriteLiteral(Model.Icon["arrow-left"]);}</button>
+
+        <span id="quill-toolbar" class="d-inline-flex">
+            @if (!Model.IsLocked)
+            {
+                <button class="nav-item ql-header" value="1" title="@Model.Language["note_header1"]"></button>
+            }
+        </span>
+
+        @if (!Model.IsLocked)
+        {
+            <button class="nav-item" onclick="moveUp(true); return false;" title="@Model.Language["checklist_move_to_top"]">@{WriteLiteral(Model.Icon["arrow-collapse-up"]);}</button>
+            <button class="nav-item" onclick="moveUp(false); return false;" title="@Model.Language["checklist_move_up"]">@{WriteLiteral(Model.Icon["arrow-up"]);}</button>
+            <button class="nav-item" onclick="moveDown(false); return false;" title="@Model.Language["checklist_move_down"]">@{WriteLiteral(Model.Icon["arrow-down"]);}</button>
+            <button class="nav-item" onclick="moveDown(true); return false;" title="@Model.Language["checklist_move_to_bottom"]">@{WriteLiteral(Model.Icon["arrow-collapse-down"]);}</button>
+        }
+
+        <!-- Color dropdown -->
+        <div class="dropdown">
+            @if (!Model.IsLocked)
+            {
+                <button class="nav-item" id="colorDropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="@Model.Language["note_colors"]">
+                    @{WriteLiteral(Model.Icon["palette"]);}
+                </button>
+            }
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="colorDropdownMenu">
+                @foreach (var backgroundColor in @Model.BackgroundColorsHex)
+                {
+                    <div class="dropdown-item color-btn @Model.GetDarkClass(backgroundColor)" onclick="bind(event);" data-binding="backgroundcolorhex" data-backgroundcolorhex="@backgroundColor" style="background-color: @backgroundColor">Lorem ipsum</div>
+                }
+            </div>
+        </div>
+
+        <!-- Dropdown Menu -->
+        @if (!Model.IsLocked)
+        {
+            <div class="dropdown">
+                <button class="nav-item" id="navOverflowMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    @{WriteLiteral(Model.Icon["dots-vertical"]);}
+                </button>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navOverflowMenu">
+                    <div class="dropdown-item" onclick="movePendingToTop(); return false;" data-binding="">@{WriteLiteral(Model.Icon["sort-bool-descending-variant"]);} @Model.Language["checklist_move_pending_to_top"]</div>
+                    <div class="dropdown-item" onclick="setCheckedStateForAll(false, false); return false;" data-binding="">@{WriteLiteral(Model.Icon["checkbox-multiple-blank-outline"]);} @Model.Language["checklist_uncheck_all"]</div>
+                    <div class="dropdown-item" onclick="setCheckedStateForAll(true, false); return false;" data-binding="">@{WriteLiteral(Model.Icon["check-box-multiple-outline"]);} @Model.Language["checklist_check_all"]</div>
+                    <div class="dropdown-item" onclick="setCheckedStateForAll(false, true); return false;" data-binding="">@{WriteLiteral(Model.Icon["checkbox-blank-off-outline"]);} @Model.Language["checklist_disable_all"]</div>
+                    <div class="dropdown-divider"></div>
+                    <div class="dropdown-item" onclick="bind(event);" data-binding="PushNoteToOnlineStorage">@{WriteLiteral(Model.Icon["cloud-upload"]);} @Model.Language["note_push_to_server"]</div>
+                    <div class="dropdown-item" onclick="bind(event);" data-binding="PullNoteFromOnlineStorage">@{WriteLiteral(Model.Icon["cloud-download"]);} @Model.Language["note_pull_from_server"]</div>
+                </div>
+            </div>
+        }
+    </nav>
+
+    <div id="content" class="" data-binding="Content">
+        @if (Model.IsLocked)
+        {
+            <span class="locked d-flex justify-content-center align-items-center @Model.GetDarkClass()"><svg width='128' height='128' viewBox='0 0 24 24'><use xlink:href="#svg-lock-outline" /></svg></span>
+        }
+        else
+        {
+            <div id="myeditor" class="note-viewer detail-view @Model.GetDarkClass() @Model.CssClassNoteType" data-binding="quill">@{WriteLiteral(Model.UnlockedHtmlContent);}</div>
+        }
+    </div>
+
+    <div id="pretty-time-ago" class="@Model.GetDarkClass()" data-binding="PrettyTimeAgo">@Model.PrettyTimeAgo</div>
+
+    @if (Model.ShowCursorArrowKeys)
+    {
+        <div id="arrowkeys" class="@Model.GetDarkClass()" title="@Model.Language["gui_arrow_key"]">
+            @{WriteLiteral(Model.Icon.LoadIcon("arrow-left-bold-box-outline",
+                        new[] {
+              new KeyValuePair<string, string>("class", "arrowkey"),
+              new KeyValuePair<string, string>("onmousedown", "event.preventDefault();"),
+              new KeyValuePair<string, string>("onclick", "simulateArrowKey(37);") }));}
+            @{WriteLiteral(Model.Icon.LoadIcon("arrow-right-bold-box-outline",
+                        new[] {
+              new KeyValuePair<string, string>("class", "arrowkey"),
+              new KeyValuePair<string, string>("onmousedown", "event.preventDefault();"),
+              new KeyValuePair<string, string>("onclick", "simulateArrowKey(39);") }));}
+        </div>
+    }
+
+<div hidden>
+    @{WriteLiteral(Model.Icon.LoadIcon("lock-outline", new[] { new KeyValuePair<string, string>("id", "svg-lock-outline") }));}
+    @{WriteLiteral(Model.Icon.LoadIcon("delete", new[] { new KeyValuePair<string, string>("id", "svg-delete") }));}
+</div>
+</body>
+</html>

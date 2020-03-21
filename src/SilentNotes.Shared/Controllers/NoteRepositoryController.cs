@@ -78,6 +78,7 @@ namespace SilentNotes.Controllers
                     repositoryService);
 
                 Bindings.BindCommand("AddNote", _viewModel.AddNoteCommand);
+                Bindings.BindCommand("AddChecklist", _viewModel.AddChecklistCommand);
                 Bindings.BindCommand("Synchronize", _viewModel.SynchronizeCommand);
                 Bindings.BindCommand("ShowTransferCode", _viewModel.ShowTransferCodeCommand);
                 Bindings.BindCommand("ShowRecycleBin", _viewModel.ShowRecycleBinCommand);
@@ -87,7 +88,6 @@ namespace SilentNotes.Controllers
                 Bindings.BindCommand("CloseSafe", _viewModel.CloseSafeCommand);
                 Bindings.BindCommand("ChangeSafePassword", _viewModel.ChangeSafePasswordCommand);
                 Bindings.BindCommand("FilterButtonCancel", _viewModel.ClearFilterCommand);
-                Bindings.BindCommand("Fab", _viewModel.AddNoteCommand);
                 Bindings.BindText("TxtFilter", () => _viewModel.Filter, (value) => _viewModel.Filter = value, _viewModel, nameof(_viewModel.Filter), HtmlViewBindingMode.TwoWay);
                 Bindings.BindVisibility("FilterButtonMagnifier", () => string.IsNullOrEmpty(_viewModel.Filter), _viewModel, nameof(_viewModel.FilterButtonMagnifierVisible), HtmlViewBindingMode.OneWayToView);
                 Bindings.BindVisibility("FilterButtonCancel", () => !string.IsNullOrEmpty(_viewModel.Filter), _viewModel, nameof(_viewModel.FilterButtonCancelVisible), HtmlViewBindingMode.OneWayToView);

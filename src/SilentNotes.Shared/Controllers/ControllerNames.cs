@@ -16,6 +16,7 @@ namespace SilentNotes.Controllers
     {
         public const string NoteRepository = "noterepository";
         public const string Note = "note";
+        public const string Checklist = "checklist";
         public const string Info = "info";
         public const string RecycleBin = "recyclebin";
         public const string Settings = "settings";

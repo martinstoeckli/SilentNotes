@@ -42,6 +42,12 @@ namespace SilentNotes.Models
         }
 
         /// <summary>
+        /// Gets or sets the type of the note.
+        /// </summary>
+        [XmlAttribute(AttributeName = "note_type")]
+        public NoteType NoteType { get; set; }
+
+        /// <summary>
         /// Gets or sets the formatted html content of the note, or its encrypted representation.
         /// This property is never null, instead an empty string will be returned.
         /// </summary>

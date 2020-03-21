@@ -28,6 +28,14 @@ namespace SilentNotes.Services
             resources["back"] = "Back";
             resources["continue"] = "Continue";
 
+            resources["today"] = "today";
+            resources["yesterday"] = "yesterday";
+            resources["days_ago"] = "{0} days ago";
+            resources["weeks_ago"] = "{0} weeks ago";
+            resources["months_ago"] = "{0} month ago";
+            resources["years_ago"] = "{0} years ago";
+            resources["modified_at"] = "Modified {0}";
+
             resources["error_loading_repository"] = "Could not read the notes. The application was stopped, to avoid further damage of already existing notes.";
             resources["welcome_note"] = "<h1>Welcome 💛</h1><p>SilentNotes respects your privacy. It doesn't collect personal data, runs free of adds and is open source.</p>";
             resources["welcome_note_2"] = "<h1>Ordering notes</h1><p>Drag the double-arrow icon on a note to change the order.</p>";
@@ -49,9 +57,20 @@ namespace SilentNotes.Services
             resources["note_code"] = "Code block";
             resources["note_quotation"] = "Quotation";
             resources["note_link"] = "Link";
+            resources["note_header1"] = "Header 1";
             resources["note_pull_from_server"] = "Manually download note";
             resources["note_push_to_server"] = "Manually upload note";
             resources["feedback_note_to_recycle"] = "The note has been moved to the recycle bin and can be restored from there.";
+
+            resources["checklist_create_new"] = "Create new checklist";
+            resources["checklist_move_to_top"] = "Move to top";
+            resources["checklist_move_up"] = "Move up";
+            resources["checklist_move_down"] = "Move down";
+            resources["checklist_move_to_bottom"] = "Move to bottom";
+            resources["checklist_move_pending_to_top"] = "Move all pending items to top";
+            resources["checklist_check_all"] = "Check all (done)";
+            resources["checklist_uncheck_all"] = "Uncheck all (pending)";
+            resources["checklist_disable_all"] = "Disable all";
 
             resources["safe_new"] = "Create safe";
             resources["safe_open"] = "Open safe";
@@ -164,6 +183,14 @@ namespace SilentNotes.Services
             resources["back"] = "Zurück";
             resources["continue"] = "Weiter";
 
+            resources["today"] = "heute";
+            resources["yesterday"] = "gestern";
+            resources["days_ago"] = "vor {0} Tagen";
+            resources["weeks_ago"] = "vor {0} Wochen";
+            resources["months_ago"] = "vor {0} Monaten";
+            resources["years_ago"] = "vor {0} Jahren";
+            resources["modified_at"] = "Geändert {0}";
+
             resources["error_loading_repository"] = "Die Notizen konnten nicht gelesen werden. Die Anwendung wurde gestoppt um bereits existierende Notizen nicht weiter zu beschädigen.";
             resources["welcome_note"] = "<h1>Willkommen 💛</h1><p>SilentNotes respektiert Ihre Privatsphäre, es sammelt keine Benutzerdaten, verzichtet auf Werbung und ist Open Source.";
             resources["welcome_note_2"] = "<h1>Notizen ordnen</h1><p>Ziehen Sie das Doppelpfeil-Icon einer Notiz um die Reihenfolge zu ändern.</p>";
@@ -185,9 +212,20 @@ namespace SilentNotes.Services
             resources["note_code"] = "Code Block";
             resources["note_quotation"] = "Zitat";
             resources["note_link"] = "Link";
+            resources["note_header1"] = "Überschrift 1";
             resources["note_pull_from_server"] = "Notiz manuell herunterladen";
             resources["note_push_to_server"] = "Notiz manuell hochladen";
             resources["feedback_note_to_recycle"] = "Die Notiz ist in den Papierkorb verschoben worden und kann von dort wieder hergestellt werden.";
+
+            resources["checklist_create_new"] = "Neue Checkliste erstellen";
+            resources["checklist_move_to_top"] = "Schiebe ganz nach oben";
+            resources["checklist_move_up"] = "Schiebe nach oben";
+            resources["checklist_move_down"] = "Schiebe nach unten";
+            resources["checklist_move_to_bottom"] = "Schiebe ganz nach unten";
+            resources["checklist_move_pending_to_top"] = "Schiebe unerledigte nach oben";
+            resources["checklist_check_all"] = "Setze alle (erledigt)";
+            resources["checklist_uncheck_all"] = "Leere alle (unerledigt)";
+            resources["checklist_disable_all"] = "Deaktiviere alle";
 
             resources["safe_new"] = "Tresor einrichten";
             resources["safe_open"] = "Tresor öffnen";

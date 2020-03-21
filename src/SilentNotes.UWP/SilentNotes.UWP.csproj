@@ -143,6 +143,9 @@
     <Content Include="..\SilentNotes.Shared\Assets\Html\bootstrap.min.css">
       <Link>Assets\Html\bootstrap.min.css</Link>
     </Content>
+    <Content Include="..\SilentNotes.Shared\Assets\Html\checklist.js">
+      <Link>Assets\Html\checklist.js</Link>
+    </Content>
     <Content Include="..\SilentNotes.Shared\Assets\Html\cloud_service_dropbox.png">
       <Link>Assets\Html\cloud_service_dropbox.png</Link>
     </Content>
@@ -176,8 +179,8 @@
     <Content Include="..\SilentNotes.Shared\Assets\Html\meadow.jpg">
       <Link>Assets\Html\meadow.jpg</Link>
     </Content>
-    <Content Include="..\SilentNotes.Shared\Assets\Html\NoteView.css">
-      <Link>Assets\Html\NoteView.css</Link>
+    <Content Include="..\SilentNotes.Shared\Assets\Html\note-view.css">
+      <Link>Assets\Html\note-view.css</Link>
     </Content>
     <Content Include="..\SilentNotes.Shared\Assets\Html\paper.jpg">
       <Link>Assets\Html\paper.jpg</Link>

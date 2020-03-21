@@ -16,6 +16,7 @@ namespace SilentNotes.Views
         public const string NoteRepository = "noterepositoryview";
         public const string NoteRepositoryContent = "noterepositorycontentview";
         public const string Note = "noteview";
+        public const string Checklist = "checklistview";
         public const string Info = "infoview";
         public const string RecycleBin = "recyclebinview";
         public const string RecycleBinContent = "recyclebincontentview";

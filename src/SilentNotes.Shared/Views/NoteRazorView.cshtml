@@ -14,7 +14,7 @@
     <link href="@(Model.Theme.DarkMode ? "silentnotes.dark.css" : "silentnotes.light.css")" rel="stylesheet" />
 
     <link href="quill/quill.snow.css" rel="stylesheet">
-    <link href="NoteView.css" rel="stylesheet">
+    <link href="note-view.css" rel="stylesheet">
 
     <script src="jquery-3.4.1.min.js"></script>
     <script src="bootstrap.bundle.min.js"></script>
@@ -104,19 +104,7 @@ body { background-color: transparent; }
 
             quill.on('text-change', function (delta, oldDelta, source) {
                 if (source === 'user') {
-                    var params = [];
-                    params['event-type'] = 'text-change';
-                    params['data-binding'] = 'quill';
-
-                    var parts = [];
-                    for (var key in params) {
-                        var value = params[key];
-                        if (value)
-                            parts.push(key + '=' + encodeURIComponent(value));
-                    }
-
-                    var url = 'HtmlViewBinding?' + parts.join('&');
-                    location.href = url;
+                    location.href = 'HtmlViewBinding?event-type=text-change&data-binding=quill';
                 }
             });
 
@@ -201,7 +189,7 @@ body { background-color: transparent; }
         }
         else
         {
-            <div id="myeditor" class="note-viewer @Model.GetDarkClass()" data-binding="quill">@{WriteLiteral(Model.UnlockedHtmlContent);}</div>
+            <div id="myeditor" class="note-viewer detail-view @Model.GetDarkClass() @Model.CssClassNoteType" data-binding="quill">@{WriteLiteral(Model.UnlockedHtmlContent);}</div>
         }
     </div>
 

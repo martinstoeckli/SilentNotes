@@ -22,6 +22,7 @@ namespace SilentNotes.ViewModels
     /// </summary>
     public class NoteViewModel : ViewModelBase
     {
+        static TimeAgo _timeAgo;
         private readonly IRepositoryStorageService _repositoryService;
         private readonly IFeedbackService _feedbackService;
         private readonly ISettingsService _settingsService;
@@ -74,6 +75,14 @@ namespace SilentNotes.ViewModels
         }
 
         /// <summary>
+        /// Gets the type of the note as css class.
+        /// </summary>
+        public string CssClassNoteType 
+        {
+            get { return Model.NoteType.ToString().ToLowerInvariant(); }
+        }
+
+        /// <summary>
         /// Gets a searchable representation of the <see cref="UnlockedHtmlContent"/>. This searchable
         /// text is generated on demand only, to mark it as dirty use <see cref="MarkSearchableContentAsDirty"/>.
         /// </summary>
@@ -115,6 +124,7 @@ namespace SilentNotes.ViewModels
                 {
                     MarkSearchableContentAsDirty();
                     Model.RefreshModifiedAt();
+                    OnPropertyChanged(nameof(PrettyTimeAgo));
                 }
             }
         }
@@ -159,6 +169,14 @@ namespace SilentNotes.ViewModels
         public List<string> BackgroundColorsHex
         {
             get { return _settingsService.LoadSettingsOrDefault().NoteColorsHex; }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the background color of the note is a dark color or not.
+        /// </summary>
+        public bool IsDark
+        {
+            get { return ColorExtensions.HexToColor(BackgroundColorHex).IsDark(); }
         }
 
         /// <summary>
@@ -349,6 +367,33 @@ namespace SilentNotes.ViewModels
                 SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
                 return settings != null ? settings.ShowCursorArrowKeys : true;
             }
+        }
+
+        public string PrettyTimeAgo
+        {
+            get 
+            {
+                string prettyTime = GetOrCreateTimeAgo().PrettyPrint(Model.ModifiedAt, DateTime.UtcNow);
+                return Language.LoadTextFmt("modified_at", prettyTime);
+            }
+        }
+
+        private TimeAgo GetOrCreateTimeAgo()
+        {
+            if (_timeAgo == null)
+            {
+                var localization = new TimeAgo.Localization
+                {
+                    Today = Language.LoadText("today"),
+                    Yesterday = Language.LoadText("yesterday"),
+                    NumberOfDaysAgo = Language.LoadText("days_ago"),
+                    NumberOfWeeksAgo = Language.LoadText("weeks_ago"),
+                    NumberOfMonthsAgo = Language.LoadText("months_ago"),
+                    NumberOfYearsAgo = Language.LoadText("years_ago"),
+                };
+                _timeAgo = new TimeAgo(localization);
+            }
+            return _timeAgo;
         }
 
         /// <summary>

@@ -44,6 +44,19 @@ a[data-tooltip]:hover:after { background: #f1f2f7; color: #575757; }
 .note-viewer.dark a { color: rgba(173, 216, 230, 0.90) !important; }
 .note-viewer.dark a:hover { color: rgba(173, 216, 230, 0.90) !important; }
 
+.note-viewer.over-view.checklist p,
+.detail-view.checklist .ql-editor p { background-color: rgba(128, 128, 128, 0.2); }
+.note-viewer.dark.over-view.checklist p,
+.detail-view.dark.checklist .ql-editor p { background-color: rgba(211, 211, 211, 0.3); }
+.note-viewer.over-view.checklist p.done,
+.detail-view.checklist .ql-editor p.done { background: #ccf0a8; }
+.note-viewer.dark.over-view.checklist p.done,
+.detail-view.dark.checklist .ql-editor p.done { background: #467c46; }
+.note-viewer.over-view.checklist p.disabled,
+.detail-view.checklist .ql-editor p.disabled { color: rgba(0, 0, 0, 0.2); }
+.note-viewer.dark.over-view.checklist p.disabled,
+.detail-view.dark.checklist .ql-editor p.disabled { color: rgba(255, 255, 255, 0.2); }
+
 
 /* overridings which exist only in dark mode */
 
