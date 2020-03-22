@@ -23,7 +23,7 @@ using SilentNotes.ViewModels;
 #line hidden
 
 
-[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.4.0.311")]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.5.0.521")]
 public partial class OpenSafeRazorView : OpenSafeRazorViewBase
 {
 
@@ -206,19 +206,15 @@ WriteLiteral(" onclick=\"bind(event);\"");
 
 WriteLiteral(" data-binding=\"ResetSafeCommand\"");
 
-WriteLiteral(">");
+WriteLiteral("><svg><use");
+
+WriteLiteral(" xlink:href=\"#svg-safe-square-outline\"");
+
+WriteLiteral(" /></svg> ");
 
 
 #line 41 "OpenSafeRazorView.cshtml"
-                                                                                                                                                WriteLiteral(Model.Icon["close-circle-outline"]);
-
-#line default
-#line hidden
-WriteLiteral(" ");
-
-
-#line 41 "OpenSafeRazorView.cshtml"
-                                                                                                                                                                                              Write(Model.Language["safe_reset"]);
+                                                                                                                                                                                                  Write(Model.Language["safe_reset"]);
 
 
 #line default

@@ -2,7 +2,7 @@
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <BaseIntermediateOutputPath>$(TEMP)\SilentNotesAndroid\obj\</BaseIntermediateOutputPath>
-    <TargetFrameworkVersion>v9.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v10.0</TargetFrameworkVersion>
     <AssemblyName>SilentNotes</AssemblyName>
     <RootNamespace>SilentNotes.Android</RootNamespace>
   </PropertyGroup>
