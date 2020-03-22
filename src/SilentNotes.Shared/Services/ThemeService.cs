@@ -14,7 +14,7 @@ namespace SilentNotes.Services
     /// </summary>
     public class ThemeService : IThemeService
     {
-        private const int DefaultTheme = 0;
+        private const int DefaultTheme = 2;
         private readonly ISettingsService _settingsService;
         private readonly IEnvironmentService _environmentService;
 

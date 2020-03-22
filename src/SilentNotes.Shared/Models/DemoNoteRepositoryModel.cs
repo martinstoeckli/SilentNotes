@@ -24,23 +24,10 @@ namespace SilentNotes.Models
             Id = new Guid("093b917a-f69f-4dd3-91b7-ad175fe0a4c1");
             OrderModifiedAt = DateTime.Parse("2018-12-18T13:25:20.8042714Z");
 
-            Notes.Add(new NoteModel {
-                Id = new Guid("d20dd71b-7cde-4894-8c69-1eaecf6930f6"),
-                BackgroundColorHex = "#d0f8f9",
-                InRecyclingBin = true,
-                CreatedAt = DateTime.Parse("2017-09-10T09:59:01.6635731Z"),
-                ModifiedAt = DateTime.Parse("2017-09-10T10:06:46.4459616Z"),
-                HtmlContent = @"<h1>Windows10 tips</h1><p>*** Set background color ***
-
-1) Open command line > 'cmd.exe'
-2) Type > control /name Microsoft.Personalization /page pageWallpaper
-3) User defined color rgb: 210 230 240
-</p>"
-            });
-
             Notes.Add(new NoteModel
             {
                 Id = new Guid("57f1b162-85e7-4402-8731-05b9c06c6915"),
+                NoteType = NoteType.Text,
                 BackgroundColorHex = "#fbf4c1",
                 InRecyclingBin = false,
                 CreatedAt = DateTime.Parse("2017-09-10T09:25:16.6787213Z"),
@@ -50,7 +37,19 @@ namespace SilentNotes.Models
 
             Notes.Add(new NoteModel
             {
+                Id = new Guid("62099c1c-e0b5-418f-bd5f-722f72fc8d77"),
+                NoteType = NoteType.Checklist,
+                BackgroundColorHex = "#d0f8f9",
+                InRecyclingBin = false,
+                CreatedAt = DateTime.Parse("2017-09-10T09:25:16.6787213Z"),
+                ModifiedAt = DateTime.Parse("2018-12-18T12:52:39.8746458Z"),
+                HtmlContent = @"<h1>Shopping list</h1><p class='done'>Milk</p><p class='done'>Toast</p><p>Sun cream</p><p>Garbage bags</p><h1>Bakery</h1><p>Torte</p>"
+            });
+
+            Notes.Add(new NoteModel
+            {
                 Id = new Guid("a2b16ab9-9f7f-4389-916f-f2ef9a2f3a3a"),
+                NoteType = NoteType.Text,
                 BackgroundColorHex = "#fdd8bb",
                 InRecyclingBin = false,
                 CreatedAt = DateTime.Parse("2017-09-10T09:44:14.5098885Z"),
@@ -61,7 +60,8 @@ namespace SilentNotes.Models
             Notes.Add(new NoteModel
             {
                 Id = new Guid("c35de588-b92f-49a4-a19e-319f045619f5"),
-                BackgroundColorHex = "#d0f8f9",
+                NoteType = NoteType.Text,
+                BackgroundColorHex = "#d9f8c8",
                 InRecyclingBin = false,
                 CreatedAt = DateTime.Parse("2017-09-10T09:51:49.7504749Z"),
                 ModifiedAt = DateTime.Parse("2018-12-18T12:51:34.2026179Z"),
@@ -71,7 +71,8 @@ namespace SilentNotes.Models
             Notes.Add(new NoteModel
             {
                 Id = new Guid("33f00756-6c8b-416d-abe4-2e27d9f58615"),
-                BackgroundColorHex = "#d9f8c8",
+                NoteType = NoteType.Text,
+                BackgroundColorHex = "#fbf4c1",
                 InRecyclingBin = false,
                 CreatedAt = DateTime.Parse("2017-09-10T09:35:52.9190418Z"),
                 ModifiedAt = DateTime.Parse("2018-12-18T12:54:18.333087Z"),
@@ -81,6 +82,7 @@ namespace SilentNotes.Models
             Notes.Add(new NoteModel
             {
                 Id = new Guid("8f9e539d-172c-41e8-99ab-60effec84284"),
+                NoteType = NoteType.Text,
                 BackgroundColorHex = "#d0f8f9",
                 InRecyclingBin = false,
                 CreatedAt = DateTime.Parse("2018-12-18T12:53:09.3660557Z"),
@@ -98,17 +100,8 @@ Temperature  4 out of 10
 
             Notes.Add(new NoteModel
             {
-                Id = new Guid("70a25de4-2141-4164-aefc-b9b2624a112c"),
-                BackgroundColorHex = "#fbf4c1",
-                InRecyclingBin = false,
-                CreatedAt = DateTime.Parse("2017-09-10T09:39:12.8056002Z"),
-                ModifiedAt = DateTime.Parse("2018-12-18T13:25:41.3363938Z"),
-                HtmlContent = @"<h1>Shopping list</h1><ul><li>Milk</li><li>Toast</li><li>Sun cream</li><li>Garbage bags</li></ul>"
-            });
-
-            Notes.Add(new NoteModel
-            {
                 Id = new Guid("a5076c29-0503-4d06-b1d0-4759868be7c6"),
+                NoteType = NoteType.Text,
                 BackgroundColorHex = "#fdd8bb",
                 InRecyclingBin = false,
                 CreatedAt = DateTime.Parse("2017-09-10T09:25:16.6787213Z"),
