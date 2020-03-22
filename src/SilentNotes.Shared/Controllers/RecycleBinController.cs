@@ -47,6 +47,7 @@ namespace SilentNotes.Controllers
                 Ioc.GetOrCreate<IThemeService>(),
                 Ioc.GetOrCreate<IBaseUrlService>(),
                 Ioc.GetOrCreate<IFeedbackService>(),
+                Ioc.GetOrCreate<ISettingsService>(),
                 Ioc.GetOrCreate<ICryptoRandomService>(),
                 Ioc.GetOrCreate<IRepositoryStorageService>());
 

@@ -5,7 +5,15 @@
     {
         <li class="wraplist-item">
             <div class="note-card">
-                <div>@{WriteLiteral(note.UnlockedHtmlContent);}</div>
+                @if (@note.IsLocked)
+                {
+                    <span class="locked @Model.Theme.CssClassDark"><svg width='24' height='24' viewBox='0 0 24 24'><use xlink:href="#svg-lock-outline" /></svg></span>
+                }
+                else
+                {
+                    <div class="note-viewer over-view @Model.Theme.CssClassDark @note.CssClassNoteType">@{WriteLiteral(note.UnlockedHtmlContent);}</div>
+                }
+
                 <span class="restore undelete" onclick="bind(event);" data-binding="restore_note" data-note="@note.Id.ToString()" title="@Model.Language["note_undelete"]">
                     @{WriteLiteral(Model.Icon.LoadIcon("file-restore"));}
                 </span>

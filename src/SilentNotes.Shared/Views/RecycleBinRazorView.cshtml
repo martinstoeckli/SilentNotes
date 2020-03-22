@@ -18,41 +18,58 @@
     <script src="silentnotes.js"></script>
 
     <style type="text/css">
-        body::after {
-            position: absolute;
-            content: "";
-            @(Model.Theme.CssBackgroundColor)
-            @(Model.Theme.CssBackgroundImage)
-            top: 0;
-            left: 0;
-            bottom: 0;
-            right: 0;
-            z-index: -1;
-            -webkit-filter: grayscale(0.8);
-            filter: grayscale(0.8);
-        }
+body::after {
+    position: absolute;
+    content: "";
+    @(Model.Theme.CssBackgroundColor)
+    @(Model.Theme.CssBackgroundImage)
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: -1;
+    -webkit-filter: grayscale(0.8);
+    filter: grayscale(0.8);
+}
 
-        .wraplist-item {
-            position: relative;
-        }
-        .note-card {
-            max-height: 220px;
-        }
-        .restore {
-            position: absolute;
-            width: 72px;
-            height: 72px;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            margin: auto;
-            cursor: pointer;
-        }
-        .restore svg {
-            width: 100%;
-            height: 100%;
-        }
+.wraplist-item {
+    position: relative;
+}
+.note-card {
+    max-height: 220px;
+}
+.restore {
+    position: absolute;
+    width: 72px;
+    height: 72px;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    cursor: pointer;
+}
+.restore svg {
+    width: 100%;
+    height: 100%;
+}
+.note-viewer a {
+    pointer-events: none; /* ignore clicks on links */
+    cursor: default;
+}
+.locked svg {
+    fill: rgba(160, 160, 160, 0.4);
+}
+.locked.dark svg {
+    fill: rgba(204, 204, 204, 0.4);
+}
+
+.note-viewer.over-view.checklist p::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("checkbox-blank-outline", new[] { new KeyValuePair<string, string>("fill", "#000000") }));}; }
+.note-viewer.dark.over-view.checklist p::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("checkbox-blank-outline", new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") }));}; }
+.note-viewer.over-view.checklist p.done::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("check-box-outline", new[] { new KeyValuePair<string, string>("fill", "#000000") }));}; }
+.note-viewer.dark.over-view.checklist p.done::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("check-box-outline", new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") }));}; }
+.note-viewer.over-view.checklist p.disabled::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("checkbox-blank-outline", new[] { new KeyValuePair<string, string>("fill", "#000000") }));}; }
+.note-viewer.dark.over-view.checklist p.disabled::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("checkbox-blank-outline", new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") }));}; }
     </style>
     <script>
         $(function () {
@@ -68,6 +85,10 @@
 
     <div id="content" class="p-2">
         <ul id="recycled-notes"></ul>
+    </div>
+
+    <div hidden>
+        @{WriteLiteral(Model.Icon.LoadIcon("lock-outline", new[] { new KeyValuePair<string, string>("id", "svg-lock-outline") }));}
     </div>
 </body>
 </html>
