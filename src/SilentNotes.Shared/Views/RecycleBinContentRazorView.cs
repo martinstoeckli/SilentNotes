@@ -23,7 +23,7 @@ using SilentNotes.ViewModels;
 #line hidden
 
 
-[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.4.0.308")]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.5.0.521")]
 public partial class RecycleBinContentRazorView : RecycleBinContentRazorViewBase
 {
 
@@ -68,15 +68,95 @@ WriteLiteral(">\r\n            <div");
 
 WriteLiteral(" class=\"note-card\"");
 
-WriteLiteral(">\r\n                <div>");
+WriteLiteral(">\r\n");
 
 
 #line 8 "RecycleBinContentRazorView.cshtml"
-                       WriteLiteral(note.UnlockedHtmlContent);
+                
 
 #line default
 #line hidden
-WriteLiteral("</div>\r\n                <span");
+
+#line 8 "RecycleBinContentRazorView.cshtml"
+                 if (@note.IsLocked)
+                {
+
+
+#line default
+#line hidden
+WriteLiteral("                    <span");
+
+WriteAttribute ("class", " class=\"", "\""
+, Tuple.Create<string,object,bool> ("", "locked", true)
+
+#line 10 "RecycleBinContentRazorView.cshtml"
+, Tuple.Create<string,object,bool> (" ", Model.Theme.CssClassDark
+
+#line default
+#line hidden
+, false)
+);
+WriteLiteral("><svg");
+
+WriteLiteral(" width=\'24\'");
+
+WriteLiteral(" height=\'24\'");
+
+WriteLiteral(" viewBox=\'0 0 24 24\'");
+
+WriteLiteral("><use");
+
+WriteLiteral(" xlink:href=\"#svg-lock-outline\"");
+
+WriteLiteral(" /></svg></span>\r\n");
+
+
+#line 11 "RecycleBinContentRazorView.cshtml"
+                }
+                else
+                {
+
+
+#line default
+#line hidden
+WriteLiteral("                    <div");
+
+WriteAttribute ("class", " class=\"", "\""
+, Tuple.Create<string,object,bool> ("", "note-viewer", true)
+, Tuple.Create<string,object,bool> (" ", "over-view", true)
+
+#line 14 "RecycleBinContentRazorView.cshtml"
+              , Tuple.Create<string,object,bool> (" ", Model.Theme.CssClassDark
+
+#line default
+#line hidden
+, false)
+
+#line 14 "RecycleBinContentRazorView.cshtml"
+                                        , Tuple.Create<string,object,bool> (" ", note.CssClassNoteType
+
+#line default
+#line hidden
+, false)
+);
+WriteLiteral(">");
+
+
+#line 14 "RecycleBinContentRazorView.cshtml"
+                                                                                                          WriteLiteral(note.UnlockedHtmlContent);
+
+#line default
+#line hidden
+WriteLiteral("</div>\r\n");
+
+
+#line 15 "RecycleBinContentRazorView.cshtml"
+                }
+
+
+#line default
+#line hidden
+WriteLiteral("\r\n                <span");
 
 WriteLiteral(" class=\"restore undelete\"");
 
@@ -87,7 +167,7 @@ WriteLiteral(" data-binding=\"restore_note\"");
 WriteLiteral(" data-note=\"");
 
 
-#line 9 "RecycleBinContentRazorView.cshtml"
+#line 17 "RecycleBinContentRazorView.cshtml"
                                                                                                         Write(note.Id.ToString());
 
 
@@ -97,7 +177,7 @@ WriteLiteral("\"");
 
 WriteAttribute ("title", " title=\"", "\""
 
-#line 9 "RecycleBinContentRazorView.cshtml"
+#line 17 "RecycleBinContentRazorView.cshtml"
                                                                                                   , Tuple.Create<string,object,bool> ("", Model.Language["note_undelete"]
 
 #line default
@@ -107,13 +187,13 @@ WriteAttribute ("title", " title=\"", "\""
 WriteLiteral(">\r\n");
 
 
-#line 10 "RecycleBinContentRazorView.cshtml"
+#line 18 "RecycleBinContentRazorView.cshtml"
                     
 
 #line default
 #line hidden
 
-#line 10 "RecycleBinContentRazorView.cshtml"
+#line 18 "RecycleBinContentRazorView.cshtml"
                       WriteLiteral(Model.Icon.LoadIcon("file-restore"));
 
 #line default
@@ -121,7 +201,7 @@ WriteLiteral(">\r\n");
 WriteLiteral("\r\n                </span>\r\n            </div>\r\n        </li>\r\n");
 
 
-#line 14 "RecycleBinContentRazorView.cshtml"
+#line 22 "RecycleBinContentRazorView.cshtml"
     }
 
 

@@ -23,7 +23,7 @@ using SilentNotes.ViewModels;
 #line hidden
 
 
-[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.4.0.311")]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.5.0.521")]
 public partial class RecycleBinRazorView : RecycleBinRazorViewBase
 {
 
@@ -107,69 +107,120 @@ WriteLiteral("></script>\r\n\r\n    <style");
 
 WriteLiteral(" type=\"text/css\"");
 
-WriteLiteral(">\r\n        body::after {\r\n            position: absolute;\r\n            content: \"" +
-"\";\r\n");
+WriteLiteral(">\r\nbody::after {\r\n    position: absolute;\r\n    content: \"\";\r\n");
 
-WriteLiteral("            ");
+WriteLiteral("    ");
 
 
 #line 24 "RecycleBinRazorView.cshtml"
-        Write(Model.Theme.CssBackgroundColor);
+Write(Model.Theme.CssBackgroundColor);
 
 
 #line default
 #line hidden
 WriteLiteral("\r\n");
 
-WriteLiteral("            ");
+WriteLiteral("    ");
 
 
 #line 25 "RecycleBinRazorView.cshtml"
-        Write(Model.Theme.CssBackgroundImage);
+Write(Model.Theme.CssBackgroundImage);
 
 
 #line default
 #line hidden
 WriteLiteral(@"
-            top: 0;
-            left: 0;
-            bottom: 0;
-            right: 0;
-            z-index: -1;
-            -webkit-filter: grayscale(0.8);
-            filter: grayscale(0.8);
-        }
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: -1;
+    -webkit-filter: grayscale(0.8);
+    filter: grayscale(0.8);
+}
 
-        .wraplist-item {
-            position: relative;
-        }
-        .note-card {
-            max-height: 220px;
-        }
-        .restore {
-            position: absolute;
-            width: 72px;
-            height: 72px;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            margin: auto;
-            cursor: pointer;
-        }
-        .restore svg {
-            width: 100%;
-            height: 100%;
-        }
-    </style>
-    <script>
-        $(function () {
-            addShortcuts();
-        });
-    </script>
-</head>
-<body>
-    <nav");
+.wraplist-item {
+    position: relative;
+}
+.note-card {
+    max-height: 220px;
+}
+.restore {
+    position: absolute;
+    width: 72px;
+    height: 72px;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    cursor: pointer;
+}
+.restore svg {
+    width: 100%;
+    height: 100%;
+}
+.note-viewer a {
+    pointer-events: none; /* ignore clicks on links */
+    cursor: default;
+}
+.locked svg {
+    fill: rgba(160, 160, 160, 0.4);
+}
+.locked.dark svg {
+    fill: rgba(204, 204, 204, 0.4);
+}
+
+.note-viewer.over-view.checklist p::before { content: ");
+
+
+#line 67 "RecycleBinRazorView.cshtml"
+                                                        WriteLiteral(Model.Icon.LoadIconAsCssUrl("checkbox-blank-outline", new[] { new KeyValuePair<string, string>("fill", "#000000") }));
+
+#line default
+#line hidden
+WriteLiteral("; }\r\n.note-viewer.dark.over-view.checklist p::before { content: ");
+
+
+#line 68 "RecycleBinRazorView.cshtml"
+                                                             WriteLiteral(Model.Icon.LoadIconAsCssUrl("checkbox-blank-outline", new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") }));
+
+#line default
+#line hidden
+WriteLiteral("; }\r\n.note-viewer.over-view.checklist p.done::before { content: ");
+
+
+#line 69 "RecycleBinRazorView.cshtml"
+                                                             WriteLiteral(Model.Icon.LoadIconAsCssUrl("check-box-outline", new[] { new KeyValuePair<string, string>("fill", "#000000") }));
+
+#line default
+#line hidden
+WriteLiteral("; }\r\n.note-viewer.dark.over-view.checklist p.done::before { content: ");
+
+
+#line 70 "RecycleBinRazorView.cshtml"
+                                                                  WriteLiteral(Model.Icon.LoadIconAsCssUrl("check-box-outline", new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") }));
+
+#line default
+#line hidden
+WriteLiteral("; }\r\n.note-viewer.over-view.checklist p.disabled::before { content: ");
+
+
+#line 71 "RecycleBinRazorView.cshtml"
+                                                                 WriteLiteral(Model.Icon.LoadIconAsCssUrl("checkbox-blank-outline", new[] { new KeyValuePair<string, string>("fill", "#000000") }));
+
+#line default
+#line hidden
+WriteLiteral("; }\r\n.note-viewer.dark.over-view.checklist p.disabled::before { content: ");
+
+
+#line 72 "RecycleBinRazorView.cshtml"
+                                                                      WriteLiteral(Model.Icon.LoadIconAsCssUrl("checkbox-blank-outline", new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") }));
+
+#line default
+#line hidden
+WriteLiteral("; }\r\n    </style>\r\n    <script>\r\n        $(function () {\r\n            addShortcut" +
+"s();\r\n        });\r\n    </script>\r\n</head>\r\n<body>\r\n    <nav");
 
 WriteLiteral(" id=\"navigation\"");
 
@@ -185,7 +236,7 @@ WriteLiteral(" data-binding=\"GoBack\"");
 
 WriteAttribute ("title", " title=\"", "\""
 
-#line 65 "RecycleBinRazorView.cshtml"
+#line 82 "RecycleBinRazorView.cshtml"
                                                                       , Tuple.Create<string,object,bool> ("", Model.Language["back"]
 
 #line default
@@ -195,7 +246,7 @@ WriteAttribute ("title", " title=\"", "\""
 WriteLiteral(">");
 
 
-#line 65 "RecycleBinRazorView.cshtml"
+#line 82 "RecycleBinRazorView.cshtml"
                                                                                                                                         WriteLiteral(Model.Icon["arrow-left"]);
 
 #line default
@@ -210,7 +261,7 @@ WriteLiteral(" data-binding=\"EmptyRecycleBin\"");
 
 WriteAttribute ("title", " title=\"", "\""
 
-#line 66 "RecycleBinRazorView.cshtml"
+#line 83 "RecycleBinRazorView.cshtml"
                                                       , Tuple.Create<string,object,bool> ("", Model.Language["empty_recyclebin"]
 
 #line default
@@ -220,7 +271,7 @@ WriteAttribute ("title", " title=\"", "\""
 WriteLiteral(">");
 
 
-#line 66 "RecycleBinRazorView.cshtml"
+#line 83 "RecycleBinRazorView.cshtml"
                                                                                                                                     WriteLiteral(Model.Icon["delete-forever"]);
 
 #line default
@@ -235,7 +286,21 @@ WriteLiteral(">\r\n        <ul");
 
 WriteLiteral(" id=\"recycled-notes\"");
 
-WriteLiteral("></ul>\r\n    </div>\r\n</body>\r\n</html>\r\n");
+WriteLiteral("></ul>\r\n    </div>\r\n\r\n    <div hidden>\r\n");
+
+
+#line 91 "RecycleBinRazorView.cshtml"
+        
+
+#line default
+#line hidden
+
+#line 91 "RecycleBinRazorView.cshtml"
+          WriteLiteral(Model.Icon.LoadIcon("lock-outline", new[] { new KeyValuePair<string, string>("id", "svg-lock-outline") }));
+
+#line default
+#line hidden
+WriteLiteral("\r\n    </div>\r\n</body>\r\n</html>\r\n");
 
 }
 }

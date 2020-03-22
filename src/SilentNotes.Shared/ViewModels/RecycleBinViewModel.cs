@@ -21,6 +21,7 @@ namespace SilentNotes.ViewModels
     {
         private readonly IRepositoryStorageService _repositoryService;
         private readonly IFeedbackService _feedbackService;
+        private readonly ISettingsService _settingsService;
         private readonly ICryptor _noteCryptor;
         private NoteRepositoryModel _model;
 
@@ -35,11 +36,13 @@ namespace SilentNotes.ViewModels
             IThemeService themeService,
             IBaseUrlService webviewBaseUrl,
             IFeedbackService feedbackService,
+            ISettingsService settingsService,
             ICryptoRandomSource randomSource,
             IRepositoryStorageService repositoryService)
             : base(navigationService, languageService, svgIconService, themeService, webviewBaseUrl)
         {
             _feedbackService = feedbackService;
+            _settingsService = settingsService;
             _repositoryService = repositoryService;
             _noteCryptor = new Cryptor(NoteModel.CryptorPackageName, randomSource);
             RecycledNotes = new List<NoteViewModel>();
@@ -75,7 +78,7 @@ namespace SilentNotes.ViewModels
                 foreach (NoteModel note in _model.Notes)
                 {
                     if (note.InRecyclingBin)
-                        RecycledNotes.Add(new NoteViewModel(_navigationService, Language, Icon, Theme, _webviewBaseUrl, null, _repositoryService, feedbackService, null, _noteCryptor, _model.Safes, note));
+                        RecycledNotes.Add(new NoteViewModel(_navigationService, Language, Icon, Theme, _webviewBaseUrl, null, _repositoryService, feedbackService, _settingsService, _noteCryptor, _model.Safes, note));
                 }
             }
         }
