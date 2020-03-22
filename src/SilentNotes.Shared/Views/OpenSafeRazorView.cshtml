@@ -38,7 +38,7 @@
                 @{WriteLiteral(Model.Icon["dots-vertical"]);}
             </button>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navOverflowMenu">
-                <div class="dropdown-item @if (!Model.SafeExists) { @("disabled") ; }" onclick="bind(event);" data-binding="ResetSafeCommand">@{WriteLiteral(Model.Icon["close-circle-outline"]);} @Model.Language["safe_reset"]</div>
+                <div class="dropdown-item @if (!Model.SafeExists) { @("disabled") ; }" onclick="bind(event);" data-binding="ResetSafeCommand"><svg><use xlink:href="#svg-safe-square-outline" /></svg> @Model.Language["safe_reset"]</div>
             </div>
         </div>
     </nav>

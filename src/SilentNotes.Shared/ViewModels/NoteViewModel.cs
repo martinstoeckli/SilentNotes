@@ -369,6 +369,18 @@ namespace SilentNotes.ViewModels
             }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether the synchronization mode is set to <see cref="AutoSynchronizationMode.Never"/>.
+        /// </summary>
+        public bool ShowManualSynchronization
+        {
+            get
+            {
+                SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
+                return settings != null ? settings.AutoSyncMode == AutoSynchronizationMode.Never : true;
+            }
+        }
+
         public string PrettyTimeAgo
         {
             get 

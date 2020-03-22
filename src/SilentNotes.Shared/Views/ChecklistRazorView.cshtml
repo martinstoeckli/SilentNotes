@@ -170,9 +170,12 @@ body { background-color: transparent; }
                     <div class="dropdown-item" onclick="setCheckedStateForAll(false, false); return false;" data-binding="">@{WriteLiteral(Model.Icon["checkbox-multiple-blank-outline"]);} @Model.Language["checklist_uncheck_all"]</div>
                     <div class="dropdown-item" onclick="setCheckedStateForAll(true, false); return false;" data-binding="">@{WriteLiteral(Model.Icon["check-box-multiple-outline"]);} @Model.Language["checklist_check_all"]</div>
                     <div class="dropdown-item" onclick="setCheckedStateForAll(false, true); return false;" data-binding="">@{WriteLiteral(Model.Icon["checkbox-blank-off-outline"]);} @Model.Language["checklist_disable_all"]</div>
-                    <div class="dropdown-divider"></div>
-                    <div class="dropdown-item" onclick="bind(event);" data-binding="PushNoteToOnlineStorage">@{WriteLiteral(Model.Icon["cloud-upload"]);} @Model.Language["note_push_to_server"]</div>
-                    <div class="dropdown-item" onclick="bind(event);" data-binding="PullNoteFromOnlineStorage">@{WriteLiteral(Model.Icon["cloud-download"]);} @Model.Language["note_pull_from_server"]</div>
+                    @if (Model.ShowManualSynchronization)
+                    {
+                        <div class="dropdown-divider"></div>
+                        <div class="dropdown-item" onclick="bind(event);" data-binding="PushNoteToOnlineStorage">@{WriteLiteral(Model.Icon["cloud-upload"]);} @Model.Language["note_push_to_server"]</div>
+                        <div class="dropdown-item" onclick="bind(event);" data-binding="PullNoteFromOnlineStorage">@{WriteLiteral(Model.Icon["cloud-download"]);} @Model.Language["note_pull_from_server"]</div>
+                    }
                 </div>
             </div>
         }
