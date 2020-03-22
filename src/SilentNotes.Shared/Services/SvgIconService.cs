@@ -108,8 +108,11 @@ namespace SilentNotes.Services
             enrichedAttributes.Insert(0, new KeyValuePair<string, string>("xmlns", "http://www.w3.org/2000/svg"));
 
             string svg = LoadIcon(id, enrichedAttributes);
-            string encodedSvg = Uri.EscapeUriString(svg);
-            return string.Format("url(\"data:image/svg+xml,{0}\")", encodedSvg);
+
+            // base64 encoding seems to be the only safe choice for cross browser compatibility.
+            // Especially AndroidQ WebView hat problems with only Uri.EscapeUriString().
+            string encodedSvg = Convert.ToBase64String(Encoding.UTF8.GetBytes(svg));
+            return string.Format(@"url(""data:image/svg+xml;base64,{0}"")", encodedSvg);
         }
 
         /// <inheritdoc/>
