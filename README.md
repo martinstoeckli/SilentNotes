@@ -10,6 +10,7 @@ More information you can find on [SilentNote's homepage](https://www.martinstoec
 
 * ✔ Take your notes wherever you are on your Android and Windows devices.
 * ✔ Write the notes in an easily operated WYSIWYG editor.
+* ✔ Create To-Do lists to keep an overview of your pending tasks.
 * ✔ Protect your notes with a user defined password.
 * ✔ Quickly find the right note with the full-text search, just by typing a few letters.
 * ✔ Store the notes to an online-storage of your choice, this allows to synchronize them between devices and offers an easy backup.
