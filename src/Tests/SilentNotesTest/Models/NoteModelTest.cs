@@ -24,6 +24,7 @@ namespace SilentNotesTest.Models
             NoteModel note1 = new NoteModel
             {
                 Id = Guid.NewGuid(),
+                NoteType = NoteType.Checklist,
                 HtmlContent = "<html>",
                 BackgroundColorHex = "#000000",
                 InRecyclingBin = true,
@@ -35,6 +36,7 @@ namespace SilentNotesTest.Models
             NoteModel note2 = note1.Clone();
 
             Assert.AreEqual(note1.Id, note2.Id);
+            Assert.AreEqual(note1.NoteType, note2.NoteType);
             Assert.AreEqual(note1.HtmlContent, note2.HtmlContent);
             Assert.AreEqual(note1.BackgroundColorHex, note2.BackgroundColorHex);
             Assert.AreEqual(note1.InRecyclingBin, note2.InRecyclingBin);
