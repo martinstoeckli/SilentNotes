@@ -32,6 +32,26 @@ namespace SilentNotes.Models
         }
 
         /// <summary>
+        /// Makes <paramref name="target"/> a deep copy of the note.
+        /// </summary>
+        /// <param name="target">Copy all properties to this note.</param>
+        public void CloneTo(NoteModel target)
+        {
+            if (target == null)
+                throw new ArgumentNullException(nameof(target));
+
+            target.Id = this.Id;
+            target.NoteType = this.NoteType;
+            target.HtmlContent = this.HtmlContent;
+            target.BackgroundColorHex = this.BackgroundColorHex;
+            target.InRecyclingBin = this.InRecyclingBin;
+            target.CreatedAt = this.CreatedAt;
+            target.ModifiedAt = this.ModifiedAt;
+            target.MaintainedAt = this.MaintainedAt;
+            target.SafeId = this.SafeId;
+        }
+
+        /// <summary>
         /// Gets or sets the id of the note.
         /// </summary>
         [XmlAttribute(AttributeName = "id")]
@@ -133,25 +153,6 @@ namespace SilentNotes.Models
             NoteModel result = new NoteModel();
             CloneTo(result);
             return result;
-        }
-
-        /// <summary>
-        /// Makes <paramref name="target"/> a deep copy of the note.
-        /// </summary>
-        /// <param name="target">Copy all properties to this note.</param>
-        public void CloneTo(NoteModel target)
-        {
-            if (target == null)
-                throw new ArgumentNullException(nameof(target));
-
-            target.Id = this.Id;
-            target.HtmlContent = this.HtmlContent;
-            target.BackgroundColorHex = this.BackgroundColorHex;
-            target.InRecyclingBin = this.InRecyclingBin;
-            target.CreatedAt = this.CreatedAt;
-            target.ModifiedAt = this.ModifiedAt;
-            target.MaintainedAt = this.MaintainedAt;
-            target.SafeId = this.SafeId;
         }
     }
 }
