@@ -140,7 +140,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
             try
             {
                 // Call the list command
-                Uri directoryUri = new Uri(credentials.Url);
+                Uri directoryUri = new Uri(IncludeTrailingSlash(credentials.Url));
                 string responseData = null;
                 using (WebClient webClient = new CustomFtpWebClient(request =>
                     {
