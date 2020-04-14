@@ -358,18 +358,6 @@ namespace SilentNotes.ViewModels
         }
 
         /// <summary>
-        /// Gets a value indicating whether the virtual arrow keys should be displayed.
-        /// </summary>
-        public bool ShowCursorArrowKeys
-        {
-            get
-            {
-                SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
-                return settings != null ? settings.ShowCursorArrowKeys : true;
-            }
-        }
-
-        /// <summary>
         /// Gets a value indicating whether the synchronization mode is set to <see cref="AutoSynchronizationMode.Never"/>.
         /// </summary>
         public bool ShowManualSynchronization

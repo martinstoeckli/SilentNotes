@@ -66,15 +66,6 @@ namespace SilentNotes.ViewModels
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the virtual arrow keys should be displayed.
-        /// </summary>
-        public bool ShowCursorArrowKeys
-        {
-            get { return Model.ShowCursorArrowKeys; }
-            set { ChangePropertyIndirect<bool>(() => Model.ShowCursorArrowKeys, (v) => Model.ShowCursorArrowKeys = v, value, true); }
-        }
-
-        /// <summary>
         /// Gets or sets a factor to enlarge or reduce the font size of the notes.
         /// </summary>
         public double FontScale
