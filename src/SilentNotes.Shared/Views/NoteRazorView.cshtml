@@ -64,27 +64,6 @@ body { background-color: transparent; }
             toolbar.handlers['link'].call(toolbar, !selectionFormatValue);
         }
 
-        function simulateArrowKey(key) {
-            quill.focus();
-            var range = quill.getSelection();
-            if (range) {
-                switch (key) {
-                    case 37: // left
-                        if (range.length <= 0)
-                            quill.setSelection(range.index - 1, 0);
-                        else
-                            quill.setSelection(range.index, range.length - 1);
-                        break;
-                    case 39: // right
-                        if (range.length <= 0)
-                            quill.setSelection(range.index + 1, 0);
-                        else
-                            quill.setSelection(range.index, range.length + 1);
-                        break;
-                }
-            }
-        }
-
         function getNoteHtmlContent() {
             return quill.root.innerHTML;
         }
@@ -106,10 +85,6 @@ body { background-color: transparent; }
                 if (source === 'user') {
                     location.href = 'HtmlViewBinding?event-type=text-change&data-binding=quill';
                 }
-            });
-
-            $(quill.root).one("focusin", function () {
-                $('#arrowkeys').css("display", "inline-flex");
             });
 
             // This way we can remove the tel:// protocol
@@ -195,22 +170,6 @@ body { background-color: transparent; }
             <div id="myeditor" class="note-viewer detail-view @Model.GetDarkClass() @Model.CssClassNoteType" data-binding="quill">@{WriteLiteral(Model.UnlockedHtmlContent);}</div>
         }
     </div>
-
-    @if (Model.ShowCursorArrowKeys)
-    {
-        <div id="arrowkeys" class="@Model.GetDarkClass()" title="@Model.Language["gui_arrow_key"]">
-            @{WriteLiteral(Model.Icon.LoadIcon("arrow-left-bold-box-outline",
-                        new[] {
-              new KeyValuePair<string, string>("class", "arrowkey"),
-              new KeyValuePair<string, string>("onmousedown", "event.preventDefault();"),
-              new KeyValuePair<string, string>("onclick", "simulateArrowKey(37);") }));}
-            @{WriteLiteral(Model.Icon.LoadIcon("arrow-right-bold-box-outline",
-                        new[] {
-              new KeyValuePair<string, string>("class", "arrowkey"),
-              new KeyValuePair<string, string>("onmousedown", "event.preventDefault();"),
-              new KeyValuePair<string, string>("onclick", "simulateArrowKey(39);") }));}
-        </div>
-    }
 
     <div hidden>
         @{WriteLiteral(Model.Icon.LoadIcon("lock-outline", new[] { new KeyValuePair<string, string>("id", "svg-lock-outline") }));}

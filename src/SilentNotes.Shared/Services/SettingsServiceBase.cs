@@ -67,7 +67,6 @@ namespace SilentNotes.Services
             if (result == null)
             {
                 result = new SettingsModel();
-                result.ShowCursorArrowKeys = _environmentSettings.Os == OperatingSystem.Android;
                 modelWasUpdated = true;
             }
 

@@ -163,11 +163,9 @@ namespace SilentNotes.Services
             resources["encryption_algo_twofishgcm"] = "Twofish256-GCM";
 
             resources["gui"] = "User interface";
-            resources["gui_show_arrow_keys"] = "Show cursor arrow keys when editing";
             resources["gui_font_size"] = "Font size (smaller ‹ normal › larger)";
             resources["gui_texture"] = "Theme";
             resources["gui_default_color"] = "Default color for new notes";
-            resources["gui_arrow_key"] = "Go one character to the left/right";
             resources["gui_theme_auto"] = "Automatically light or dark mode.";
             resources["gui_theme_dark"] = "Dark mode";
             resources["gui_theme_light"] = "Light mode";

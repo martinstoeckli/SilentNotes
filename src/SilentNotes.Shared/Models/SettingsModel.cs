@@ -34,7 +34,6 @@ namespace SilentNotes.Models
         {
             Revision = NewestSupportedRevision;
             AutoSyncMode = AutoSynchronizationMode.CostFreeInternetOnly;
-            ShowCursorArrowKeys = true;
             FontScale = 1.0;
             UseSolidColorTheme = false;
             ColorForSolidTheme = "#121212";
@@ -55,12 +54,6 @@ namespace SilentNotes.Models
         /// </summary>
         [XmlElement("cloud_storage_credentials")]
         public SerializeableCloudStorageCredentials Credentials { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the virtual arrow keys should be displayed.
-        /// </summary>
-        [XmlElement("show_cursor_keys")]
-        public bool ShowCursorArrowKeys { get; set; }
 
         /// <summary>
         /// Gets or sets a factor to enlarge or reduce the font size of the notes.
