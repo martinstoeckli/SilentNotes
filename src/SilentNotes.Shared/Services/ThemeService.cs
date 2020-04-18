@@ -37,6 +37,7 @@ namespace SilentNotes.Services
             themes.Add(new ThemeModel("forest", "forest.jpg", "#598b3e"));
             themes.Add(new ThemeModel("stone", "stone.jpg", "#8d7f83"));
             themes.Add(new ThemeModel("blackstone", "blackstone.jpg", "#312f2f"));
+            themes.Add(new ThemeModel("smarties", "smarties.jpg", "#bcaaa4"));
             themes.Add(new ThemeModel("grass", "grass.jpg", "#5a9d2a"));
             themes.Add(new ThemeModel("paper", "paper.jpg", "#fcf7f4"));
             themes.Add(new ThemeModel("sky", "sky.jpg", "#80acd1"));
