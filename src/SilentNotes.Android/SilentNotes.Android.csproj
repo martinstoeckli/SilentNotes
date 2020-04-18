@@ -292,5 +292,10 @@
       <Link>Assets\Html\cloud_service_nextcloud.png</Link>
     </AndroidAsset>
   </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\smarties.jpg">
+      <Link>Assets\Html\smarties.jpg</Link>
+    </AndroidAsset>
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
 </Project>

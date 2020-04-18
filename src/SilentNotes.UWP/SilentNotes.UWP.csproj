@@ -215,6 +215,9 @@
     <Content Include="..\SilentNotes.Shared\Assets\Html\sky.jpg">
       <Link>Assets\Html\sky.jpg</Link>
     </Content>
+    <Content Include="..\SilentNotes.Shared\Assets\Html\smarties.jpg">
+      <Link>Assets\Html\smarties.jpg</Link>
+    </Content>
     <Content Include="..\SilentNotes.Shared\Assets\Html\sortable\Sortable.min.js">
       <Link>Assets\Html\Sortable.min.js</Link>
     </Content>
