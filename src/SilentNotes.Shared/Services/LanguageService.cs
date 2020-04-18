@@ -113,7 +113,7 @@ namespace SilentNotes.Services
             resources["license"] = "SilentNotes respects your privacy, it does not collect user information and requires no unnecessary privileges. The notes never leave the device unencrypted.";
             resources["newer_version"] = "A newer version {0} of SilentNotes available, please install the update.";
 
-            resources["cloud_url"] = "Server address";
+            resources["cloud_url"] = "Server directory URL";
             resources["cloud_username"] = "User name";
             resources["cloud_password"] = "Password";
             resources["cloud_secure"] = "Use secure connection (SSL)";
@@ -266,7 +266,7 @@ namespace SilentNotes.Services
             resources["license"] = "SilentNotes respektiert Ihre Privatsphäre, es sammelt keine Benutzerinformationen und benötigt keine unnötigen Rechte. Die Notizen verlassen das Gerät nie unverschlüsselt.";
             resources["newer_version"] = "Eine neuere Version {0} von SilentNotes ist verfügbar, bitten installieren Sie das Update.";
 
-            resources["cloud_url"] = "Server Addresse";
+            resources["cloud_url"] = "Server Verzeichnis URL";
             resources["cloud_username"] = "Benutzername";
             resources["cloud_password"] = "Passwort";
             resources["cloud_secure"] = "Verwende sichere Verbindung (SSL)";

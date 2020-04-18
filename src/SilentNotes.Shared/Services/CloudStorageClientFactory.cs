@@ -22,6 +22,7 @@ namespace SilentNotes.Services
         public const string CloudStorageIdDropbox = "dropbox";
         public const string CloudStorageIdGoogleDrive = "googledrive";
         public const string CloudStorageIdOneDrive = "onedrive";
+        public const string CloudStorageIdNextcloudWebdav = "nextcloud-webdav";
         public const string CloudStorageIdGmx = "gmx";
 
         private const string _obfuscationKey = "4ed05d88-0193-4b14-9b0b-6977825de265";
@@ -42,6 +43,7 @@ namespace SilentNotes.Services
             Ioc.RegisterFactoryWithKey<ICloudStorageClient>(CloudStorageIdOneDrive, () => new OnedriveCloudStorageClient(
                 DeobfuscateClientId("b2JmdXNjYXRpb24kdHdvZmlzaF9nY20kMm91Sjk4dVloa3FzVTJMbFV3YzlYZz09JHBia2RmMiRIWDNzazgzdExLUExDRldjeis0RUtnPT0kMTAwMCQhu6dFgd6/j2A9388wATVBekdrXdLcCUHg1gMjKNJlrmAeWWKhJ+Wewi4eALJkqHyF1Np3"),
                 "ch.martinstoeckli.silentnotes://oauth2redirect/"));
+            Ioc.RegisterFactoryWithKey<ICloudStorageClient>(CloudStorageIdNextcloudWebdav, () => new WebdavCloudStorageClient());
             Ioc.RegisterFactoryWithKey<ICloudStorageClient>(CloudStorageIdGmx, () => new GmxCloudStorageClient());
         }
 
@@ -62,6 +64,7 @@ namespace SilentNotes.Services
             yield return CloudStorageIdDropbox;
             yield return CloudStorageIdGoogleDrive;
             yield return CloudStorageIdOneDrive;
+            yield return CloudStorageIdNextcloudWebdav;
             yield return CloudStorageIdGmx;
         }
 
@@ -80,6 +83,8 @@ namespace SilentNotes.Services
                     return new CloudStorageMetadata { Title = "Google Drive", AssetImageName = "cloud_service_googledrive.png" };
                 case CloudStorageIdOneDrive:
                     return new CloudStorageMetadata { Title = "OneDrive (Microsoft)", AssetImageName = "cloud_service_onedrive.png" };
+                case CloudStorageIdNextcloudWebdav:
+                    return new CloudStorageMetadata { Title = "Nextcloud (WebDAV)", AssetImageName = "cloud_service_nextcloud.png" };
                 case CloudStorageIdGmx:
                     return new CloudStorageMetadata { Title = "GMX", AssetImageName = "cloud_service_gmx.png" };
                 default:
