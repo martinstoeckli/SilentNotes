@@ -106,7 +106,7 @@ namespace SilentNotes.Android
 
         private static bool CanStartupWithLastNavigation(Navigation navigation)
         {
-            var allowedStartupNavigations = new[] { ControllerNames.NoteRepository, ControllerNames.Note, ControllerNames.Settings, ControllerNames.Info };
+            var allowedStartupNavigations = new[] { ControllerNames.NoteRepository, ControllerNames.Note, ControllerNames.Checklist, ControllerNames.Settings, ControllerNames.Info };
             return allowedStartupNavigations.Contains(navigation?.ControllerId);
         }
 
