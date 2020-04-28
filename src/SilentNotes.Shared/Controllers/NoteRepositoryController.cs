@@ -54,9 +54,9 @@ namespace SilentNotes.Controllers
         }
 
         /// <inheritdoc/>
-        public override void ShowInView(IHtmlView htmlView, KeyValueList<string, string> variables)
+        public override void ShowInView(IHtmlView htmlView, KeyValueList<string, string> variables, Navigation redirectedFrom)
         {
-            base.ShowInView(htmlView, variables);
+            base.ShowInView(htmlView, variables,redirectedFrom);
             View.NavigationCompleted += NavigationCompletedEventHandler;
             IRepositoryStorageService repositoryService = Ioc.GetOrCreate<IRepositoryStorageService>();
             _scrollToNote = variables?.GetValueOrDefault(ControllerParameters.NoteId);

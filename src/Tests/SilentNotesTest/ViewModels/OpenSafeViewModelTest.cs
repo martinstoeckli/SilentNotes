@@ -43,7 +43,8 @@ namespace SilentNotesTest.ViewModels
                 feedbackService.Object,
                 CommonMocksAndStubs.CryptoRandomService(),
                 new Mock<ISettingsService>().Object,
-                repositoryStorageService.Object);
+                repositoryStorageService.Object,
+                null);
 
             viewModel.ResetSafeCommand.Execute(null);
 
@@ -58,7 +59,7 @@ namespace SilentNotesTest.ViewModels
 
             // Is marked as modified and navigated away, so it will be stored.
             Assert.IsTrue(viewModel.Modified);
-            navigationService.Verify(m => m.Navigate(It.Is<string>(v => v == ControllerNames.OpenSafe), It.IsAny<KeyValueList<string, string>>()));
+            navigationService.Verify(m => m.Navigate(It.Is<Navigation>(v => v.ControllerId == ControllerNames.OpenSafe)));
             feedbackService.Verify(m => m.ShowMessageAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<MessageBoxButtons>(), It.Is<bool>(v => v == true)), Times.Once);
         }
     }

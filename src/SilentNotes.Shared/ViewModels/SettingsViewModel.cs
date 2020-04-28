@@ -132,7 +132,7 @@ namespace SilentNotes.ViewModels
             set
             {
                 ChangePropertyIndirect(() => Model.ThemeMode.ToString(), (string v) => Model.ThemeMode = (ThemeMode)Enum.Parse(typeof(ThemeMode), value), value, true);
-                _navigationService.Navigate(ControllerNames.Settings);
+                _navigationService.Navigate(new Navigation(ControllerNames.Settings));
             }
         }
 
@@ -239,7 +239,7 @@ namespace SilentNotes.ViewModels
 
         private void GoBack()
         {
-            _navigationService.Navigate(ControllerNames.NoteRepository);
+            _navigationService.Navigate(new Navigation(ControllerNames.NoteRepository));
         }
 
         /// <inheritdoc/>

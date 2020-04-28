@@ -75,7 +75,7 @@ namespace SilentNotes.ViewModels
 
         private void GoBack()
         {
-            _navigationService.Navigate(ControllerNames.NoteRepository);
+            _navigationService.Navigate(new Navigation(ControllerNames.NoteRepository));
         }
 
         /// <inheritdoc/>
@@ -119,7 +119,7 @@ namespace SilentNotes.ViewModels
             }
 
             Modified = true;
-            _navigationService.Navigate(ControllerNames.NoteRepository);
+            _navigationService.Navigate(new Navigation(ControllerNames.NoteRepository));
         }
 
         public bool InvalidOldPasswordError

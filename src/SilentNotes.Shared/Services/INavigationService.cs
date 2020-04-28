@@ -3,6 +3,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using System;
 using System.Collections.Generic;
 using SilentNotes.Controllers;
 
@@ -18,20 +19,9 @@ namespace SilentNotes.Services
         /// <summary>
         /// Navigates to this controller.
         /// </summary>
-        /// <param name="controllerId">The id of the controller to navigate to.</param>
-        /// <param name="variables">Optional collection of variables.</param>
+        /// <param name="navigateTo">Navigates to this target.</param>
         /// <exception cref="RoutingServiceRouteNotFoundException">Is thrown if no such route exists.</exception>
-        void Navigate(string controllerId, KeyValueList<string, string> variables = null);
-
-        /// <summary>
-        /// Navigates to this controller. This is jus a convenience function for <see cref="Navigate(string, NameValueCollection)"/>,
-        /// for controllers with a single variable.
-        /// </summary>
-        /// <param name="controllerId">The id of the controller to navigate to.</param>
-        /// <param name="variableName">Name of the variable.</param>
-        /// <param name="variableValue">Value of the variable.</param>
-        /// <exception cref="RoutingServiceRouteNotFoundException">Is thrown if no such route exists.</exception>
-        void Navigate(string controllerId, string variableName, string variableValue);
+        void Navigate(Navigation navigateTo);
 
         /// <summary>
         /// Reloads the current page by navigating to the currently open controller again, using
@@ -57,6 +47,36 @@ namespace SilentNotes.Services
     /// </summary>
     public class Navigation
     {
+        private KeyValueList<string, string> _variables;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Navigation"/> class.
+        /// </summary>
+        public Navigation()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Navigation"/> class.
+        /// </summary>
+        /// <param name="controllerId">Sets the <see cref="ControllerId"/>.</param>
+        public Navigation(string controllerId)
+        {
+            ControllerId = controllerId;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Navigation"/> class.
+        /// </summary>
+        /// <param name="controllerId">Sets the <see cref="ControllerId"/>.</param>
+        /// <param name="variableName">Add a variable with this name.</param>
+        /// <param name="variableValue">Adds a variable with this value.</param>
+        public Navigation(string controllerId, string variableName, string variableValue)
+        {
+            ControllerId = controllerId;
+            Variables[variableName] = variableValue;
+        }
+
         /// <summary>
         /// Gets or sets the id of the controller.
         /// </summary>
@@ -65,6 +85,10 @@ namespace SilentNotes.Services
         /// <summary>
         /// Gets or sets an optional collection of variables for the navigation.
         /// </summary>
-        public KeyValueList<string, string> Variables { get; set; }
+        public KeyValueList<string, string> Variables
+        {
+            get { return _variables ?? (_variables = new KeyValueList<string, string>(StringComparer.InvariantCultureIgnoreCase)); }
+            set { _variables = value; } 
+        }
     }
 }

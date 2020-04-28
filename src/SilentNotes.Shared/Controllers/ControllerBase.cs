@@ -76,10 +76,24 @@ namespace SilentNotes.Controllers
         /// </summary>
         protected HtmlViewBindings Bindings { get; private set; }
 
+        /// <summary>
+        /// Gets the orignal target of a navigation, if the navigation was redirected to this controller.
+        /// If no redirection is in place, the property is null.
+        /// </summary>
+        protected Navigation RedirectedFrom { get; private set; }
+
         /// <inheritdoc/>
-        public virtual void ShowInView(IHtmlView htmlView, KeyValueList<string, string> variables)
+        public virtual bool NeedsNavigationRedirect(Navigation original, out Navigation redirectTo)
+        {
+            redirectTo = null;
+            return false;
+        }
+
+        /// <inheritdoc/>
+        public virtual void ShowInView(IHtmlView htmlView, KeyValueList<string, string> variables, Navigation redirectedFrom)
         {
             View = htmlView;
+            RedirectedFrom = redirectedFrom;
             SetHtmlViewBackgroundColor(htmlView);
             Bindings?.Dispose();
             Bindings = new HtmlViewBindings(htmlView);

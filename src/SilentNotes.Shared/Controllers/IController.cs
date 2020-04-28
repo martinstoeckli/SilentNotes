@@ -5,6 +5,7 @@
 
 using System;
 using SilentNotes.HtmlView;
+using SilentNotes.Services;
 
 namespace SilentNotes.Controllers
 {
@@ -15,11 +16,24 @@ namespace SilentNotes.Controllers
     public interface IController : IDisposable
     {
         /// <summary>
+        /// A controller can decide, that another controller (e.g. authorization) must be called
+        /// before it can do its own work.
+        /// </summary>
+        /// <param name="original">The original navigation which calls this controller.</param>
+        /// <param name="redirectTo">Retrieves the navigation which should take place instead of the
+        /// original one, or null.</param>
+        /// <returns>Return true if a redirect is necessary, otherwise false.</returns>
+        bool NeedsNavigationRedirect(Navigation original, out Navigation redirectTo);
+
+        /// <summary>
         /// Shows the content of a viewmodel in the (Html)view.
         /// </summary>
         /// <param name="htmlView">Interface to a WebView control which will dislay the Html.</param>
         /// <param name="variables">Collection of routing variables.</param>
-        void ShowInView(IHtmlView htmlView, KeyValueList<string, string> variables);
+        /// <param name="redirectedFrom">If the original navigation target did a redirect, this
+        /// parameter contains the original navigation, otherwise null. This way the controller can
+        /// call the original navigation target after doing its work.</param>
+        void ShowInView(IHtmlView htmlView, KeyValueList<string, string> variables, Navigation redirectedFrom);
 
         /// <summary>
         /// This method can be used to make changes persistent. It is usually called when the view

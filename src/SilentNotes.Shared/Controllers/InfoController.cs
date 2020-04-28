@@ -27,9 +27,9 @@ namespace SilentNotes.Controllers
         }
 
         /// <inheritdoc/>
-        public override void ShowInView(IHtmlView htmlView, KeyValueList<string, string> variables)
+        public override void ShowInView(IHtmlView htmlView, KeyValueList<string, string> variables, Navigation redirectedFrom)
         {
-            base.ShowInView(htmlView, variables);
+            base.ShowInView(htmlView, variables, redirectedFrom);
             _viewModel = new InfoViewModel(
                 Ioc.GetOrCreate<INavigationService>(),
                 Ioc.GetOrCreate<ILanguageService>(),

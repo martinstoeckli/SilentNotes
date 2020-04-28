@@ -15,12 +15,7 @@ namespace SilentNotes.Services
     public class DummyNavigationService : INavigationService
     {
         /// <inheritdoc/>
-        public void Navigate(string controllerId, string variableName, string variableValue)
-        {
-        }
-
-        /// <inheritdoc/>
-        public void Navigate(string controllerId, KeyValueList<string, string> variables = null)
+        public void Navigate(Navigation navigateTo)
         {
         }
 

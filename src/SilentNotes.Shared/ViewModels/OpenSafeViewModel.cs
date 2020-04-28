@@ -25,6 +25,7 @@ namespace SilentNotes.ViewModels
         private readonly ICryptoRandomService _randomService;
         private readonly ISettingsService _settingsService;
         private readonly IRepositoryStorageService _repositoryService;
+        private readonly Navigation _navigationTarget; // Optional target, which should be navigated to after successfully opening the safe.
         private SecureString _password;
         private SecureString _passwordConfirmation;
         private bool _invalidPasswordError;
@@ -43,13 +44,15 @@ namespace SilentNotes.ViewModels
             IFeedbackService feedbackService,
             ICryptoRandomService randomService,
             ISettingsService settingsService,
-            IRepositoryStorageService repositoryService)
+            IRepositoryStorageService repositoryService,
+            Navigation navigationTarget)
             : base(navigationService, languageService, svgIconService, themeService, webviewBaseUrl)
         {
             _feedbackService = feedbackService ?? throw new ArgumentNullException(nameof(feedbackService));
             _randomService = randomService;
             _settingsService = settingsService;
             _repositoryService = repositoryService;
+            _navigationTarget = navigationTarget;
 
             _repositoryService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepository);
             Model = noteRepository;
@@ -78,7 +81,7 @@ namespace SilentNotes.ViewModels
 
         private void GoBack()
         {
-            _navigationService.Navigate(ControllerNames.NoteRepository);
+            _navigationService.Navigate(new Navigation(ControllerNames.NoteRepository));
         }
 
         /// <inheritdoc/>
@@ -128,9 +131,13 @@ namespace SilentNotes.ViewModels
                 InvalidPasswordConfirmationError = false;
                 _feedbackService.ShowToast(Language.LoadText("password_wrong_error"));
             }
+            else if (_navigationTarget != null)
+            {
+                _navigationService.Navigate(_navigationTarget);
+            }
             else
             {
-                _navigationService.Navigate(ControllerNames.NoteRepository);
+                _navigationService.Navigate(new Navigation(ControllerNames.NoteRepository));
             }
         }
 
@@ -178,7 +185,7 @@ namespace SilentNotes.ViewModels
                 Modified = true;
 
                 // Continue with the create safe dialog
-                _navigationService.Navigate(ControllerNames.OpenSafe);
+                _navigationService.Navigate(new Navigation(ControllerNames.OpenSafe));
             }
         }
 

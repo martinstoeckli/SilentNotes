@@ -54,7 +54,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
                 if (cloudStorageClient is IOAuth2CloudStorageClient oauthStorageClient)
                 {
                     // Show waiting page
-                    _navigationService.Navigate(ControllerNames.CloudStorageOauthWaiting);
+                    _navigationService.Navigate(new Navigation(ControllerNames.CloudStorageOauthWaiting));
 
                     // Open OAuth2 login page in external browser
                     string oauthState = CryptoUtils.GenerateRandomBase62String(16, _randomSource);
@@ -67,7 +67,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
                 }
                 else
                 {
-                    _navigationService.Navigate(ControllerNames.CloudStorageAccount);
+                    _navigationService.Navigate(new Navigation(ControllerNames.CloudStorageAccount));
                 }
             }
             return Task.CompletedTask;

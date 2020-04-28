@@ -207,10 +207,12 @@ namespace SilentNotes.ViewModels
                 switch (note.Model.NoteType)
                 {
                     case NoteType.Text:
-                        _navigationService.Navigate(ControllerNames.Note, ControllerParameters.NoteId, noteId.ToString());
+                        _navigationService.Navigate(new Navigation(
+                            ControllerNames.Note, ControllerParameters.NoteId, noteId.ToString()));
                         break;
                     case NoteType.Checklist:
-                        _navigationService.Navigate(ControllerNames.Checklist, ControllerParameters.NoteId, noteId.ToString());
+                        _navigationService.Navigate(new Navigation(
+                            ControllerNames.Checklist, ControllerParameters.NoteId, noteId.ToString()));
                         break;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(NoteType));
@@ -313,7 +315,7 @@ namespace SilentNotes.ViewModels
 
         private void ShowRecycleBin()
         {
-            _navigationService.Navigate(ControllerNames.RecycleBin);
+            _navigationService.Navigate(new Navigation(ControllerNames.RecycleBin));
         }
 
         /// <summary>
@@ -323,7 +325,7 @@ namespace SilentNotes.ViewModels
 
         private void ShowSettings()
         {
-            _navigationService.Navigate(ControllerNames.Settings);
+            _navigationService.Navigate(new Navigation(ControllerNames.Settings));
         }
 
         /// <summary>
@@ -333,7 +335,7 @@ namespace SilentNotes.ViewModels
 
         private void ShowTransferCode()
         {
-            _navigationService.Navigate(ControllerNames.TransferCodeHistory);
+            _navigationService.Navigate(new Navigation(ControllerNames.TransferCodeHistory));
         }
 
         /// <summary>
@@ -343,7 +345,7 @@ namespace SilentNotes.ViewModels
 
         private void ShowInfo()
         {
-            _navigationService.Navigate(ControllerNames.Info);
+            _navigationService.Navigate(new Navigation(ControllerNames.Info));
         }
 
         /// <summary>
@@ -353,7 +355,7 @@ namespace SilentNotes.ViewModels
 
         private void OpenSafe()
         {
-            _navigationService.Navigate(ControllerNames.OpenSafe);
+            _navigationService.Navigate(new Navigation(ControllerNames.OpenSafe));
         }
 
         /// <summary>
@@ -365,7 +367,7 @@ namespace SilentNotes.ViewModels
         {
             foreach (SafeModel safe in Model.Safes)
                 safe.Close();
-            _navigationService.Navigate(ControllerNames.NoteRepository);
+            _navigationService.Navigate(new Navigation(ControllerNames.NoteRepository));
         }
 
         /// <summary>
@@ -384,10 +386,10 @@ namespace SilentNotes.ViewModels
         private void ChangeSafePassword()
         {
             if (Model.Safes.Count > 0)
-                _navigationService.Navigate(ControllerNames.ChangePassword);
+                _navigationService.Navigate(new Navigation(ControllerNames.ChangePassword));
             else
                 // First create a safe before the password can be changed.
-                _navigationService.Navigate(ControllerNames.OpenSafe);
+                _navigationService.Navigate(new Navigation(ControllerNames.OpenSafe));
         }
 
         public void AddNoteToSafe(Guid noteId)

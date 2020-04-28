@@ -38,7 +38,8 @@ namespace SilentNotes.Controllers
         /// <inheritdoc/>
         protected override void OverrideableDispose()
         {
-            View.Navigating -= NavigatingEventHandler;
+            if (View != null)
+                View.Navigating -= NavigatingEventHandler;
             base.OverrideableDispose();
         }
 
@@ -49,9 +50,30 @@ namespace SilentNotes.Controllers
         }
 
         /// <inheritdoc/>
-        public override void ShowInView(IHtmlView htmlView, KeyValueList<string, string> variables)
+        public override bool NeedsNavigationRedirect(Navigation original, out Navigation redirectTo)
         {
-            base.ShowInView(htmlView, variables);
+            if (original.Variables.TryGetValue(ControllerParameters.NoteId, out string noteId))
+            {
+                // Get the note from the repository
+                _repositoryService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepository);
+                NoteModel note = noteRepository.Notes.FindById(new Guid(noteId));
+
+                // Find its safe and check if it needs to be opened
+                SafeModel safe = noteRepository.Safes.FindById(note?.SafeId);
+                if ((safe != null) && (!safe.IsOpen))
+                {
+                    redirectTo = new Navigation(ControllerNames.OpenSafe, ControllerParameters.NoteId, noteId);
+                    return true;
+                }
+            }
+            redirectTo = null;
+            return false;
+        }
+
+        /// <inheritdoc/>
+        public override void ShowInView(IHtmlView htmlView, KeyValueList<string, string> variables, Navigation redirectedFrom)
+        {
+            base.ShowInView(htmlView, variables, redirectedFrom);
             ISettingsService settingsService = Ioc.GetOrCreate<ISettingsService>();
             View.NavigationCompleted += NavigationCompletedEventHandler;
             _repositoryService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepository);
@@ -70,7 +92,7 @@ namespace SilentNotes.Controllers
             {
                 // Get the note from the repository
                 Guid noteId = new Guid(variables[ControllerParameters.NoteId]);
-                note = noteRepository.Notes.Find(item => noteId == item.Id);
+                note = noteRepository.Notes.FindById(noteId);
             }
 
             ICryptor cryptor = new Cryptor(NoteModel.CryptorPackageName, Ioc.GetOrCreate<ICryptoRandomService>());

@@ -28,14 +28,22 @@ namespace SilentNotes.Services
         }
 
         /// <inheritdoc/>
-        public virtual void Navigate(string controllerId, KeyValueList<string, string> variables = null)
+        public void Navigate(Navigation navigateTo)
         {
             CleanupCurrentController();
-            CurrentNavigation = new Navigation { ControllerId = controllerId, Variables = variables };
 
-            // Setup new controller
+            Navigation redirectedFrom = null;
+            CurrentNavigation = navigateTo;
             CurrentController = Ioc.CreateWithKey<IController>(CurrentNavigation.ControllerId);
-            CurrentController.ShowInView(_htmlView, CurrentNavigation.Variables);
+
+            // Check if a redirection is necessary
+            if (CurrentController.NeedsNavigationRedirect(CurrentNavigation, out Navigation redirectTo))
+            {
+                redirectedFrom = CurrentNavigation;
+                CurrentNavigation = redirectTo;
+                CurrentController = Ioc.CreateWithKey<IController>(CurrentNavigation.ControllerId);
+            }
+            CurrentController.ShowInView(_htmlView, CurrentNavigation.Variables, redirectedFrom);
         }
 
         private void CleanupCurrentController()
@@ -53,19 +61,11 @@ namespace SilentNotes.Services
         }
 
         /// <inheritdoc/>
-        public void Navigate(string controllerId, string variableName, string variableValue)
-        {
-            var variables = new KeyValueList<string, string>(StringComparer.InvariantCultureIgnoreCase);
-            variables[variableName] = variableValue;
-            Navigate(controllerId, variables);
-        }
-
-        /// <inheritdoc/>
         public void RepeatNavigationIf(IEnumerable<string> ifAnyOfThisControllers)
         {
             if ((CurrentNavigation != null) && ifAnyOfThisControllers.Contains(CurrentNavigation.ControllerId))
             {
-                Navigate(CurrentNavigation.ControllerId, CurrentNavigation.Variables);
+                Navigate(CurrentNavigation);
             }
         }
 
