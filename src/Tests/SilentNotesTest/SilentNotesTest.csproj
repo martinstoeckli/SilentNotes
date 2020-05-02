@@ -55,8 +55,8 @@
   </PropertyGroup>
   <Import Project="$(SolutionDir)\SolutionWideDefines.props" />
   <ItemGroup>
-    <Reference Include="BouncyCastle.Crypto, Version=1.8.5.0, Culture=neutral, PublicKeyToken=0e99375e54769942, processorArchitecture=MSIL">
-      <HintPath>C:\Users\Tinu\AppData\Local\Temp\SilentNotes.NugetPackages\Portable.BouncyCastle.1.8.5\lib\net40\BouncyCastle.Crypto.dll</HintPath>
+    <Reference Include="BouncyCastle.Crypto, Version=1.8.6.0, Culture=neutral, PublicKeyToken=0e99375e54769942, processorArchitecture=MSIL">
+      <HintPath>C:\Users\Tinu\AppData\Local\Temp\SilentNotes.NugetPackages\Portable.BouncyCastle.1.8.6.7\lib\net40\BouncyCastle.Crypto.dll</HintPath>
     </Reference>
     <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <HintPath>C:\Users\Tinu\AppData\Local\Temp\SilentNotes.NugetPackages\Castle.Core.4.4.0\lib\net45\Castle.Core.dll</HintPath>
