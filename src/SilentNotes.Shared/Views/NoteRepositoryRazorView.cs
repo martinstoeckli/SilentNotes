@@ -362,7 +362,7 @@ WriteLiteral(" class=\"dropdown-item\"");
 
 WriteLiteral(" onclick=\"bind(event);\"");
 
-WriteLiteral(" data-binding=\"AddNote\"");
+WriteLiteral(" data-binding=\"NewNote\"");
 
 WriteLiteral("><svg><use");
 
@@ -383,7 +383,7 @@ WriteLiteral(" class=\"dropdown-item\"");
 
 WriteLiteral(" onclick=\"bind(event);\"");
 
-WriteLiteral(" data-binding=\"AddChecklist\"");
+WriteLiteral(" data-binding=\"NewChecklist\"");
 
 WriteLiteral("><svg><use");
 
@@ -647,7 +647,7 @@ WriteLiteral(">\r\n            <a");
 
 WriteLiteral(" onclick=\"bind(event);\"");
 
-WriteLiteral(" data-binding=\"AddNote\"");
+WriteLiteral(" data-binding=\"NewNote\"");
 
 WriteLiteral(" href=\"#\"");
 
@@ -659,7 +659,7 @@ WriteLiteral(" /></svg></a>\r\n            <a");
 
 WriteLiteral(" onclick=\"bind(event);\"");
 
-WriteLiteral(" data-binding=\"AddChecklist\"");
+WriteLiteral(" data-binding=\"NewChecklist\"");
 
 WriteLiteral(" href=\"#\"");
 

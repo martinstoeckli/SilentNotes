@@ -99,8 +99,8 @@ body {
                 @{WriteLiteral(Model.Icon["dots-vertical"]);}
             </button>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navOverflowMenu">
-                <div class="dropdown-item" onclick="bind(event);" data-binding="AddNote"><svg><use xlink:href="#svg-note-text-outline" /></svg> @Model.Language["note_create_new"]</div>
-                <div class="dropdown-item" onclick="bind(event);" data-binding="AddChecklist"><svg><use xlink:href="#svg-order-bool-ascending-variant" /></svg> @Model.Language["checklist_create_new"]</div>
+                <div class="dropdown-item" onclick="bind(event);" data-binding="NewNote"><svg><use xlink:href="#svg-note-text-outline" /></svg> @Model.Language["note_create_new"]</div>
+                <div class="dropdown-item" onclick="bind(event);" data-binding="NewChecklist"><svg><use xlink:href="#svg-order-bool-ascending-variant" /></svg> @Model.Language["checklist_create_new"]</div>
                 <div class="dropdown-item" onclick="bind(event);" data-binding="ShowRecycleBin">@{WriteLiteral(Model.Icon["delete-empty"]);} @Model.Language["show_recyclebin"]</div>
                 <div class="dropdown-divider"></div>
                 <div class="dropdown-item" @if (Model.IsAnySafeOpen) { @("hidden") ; } onclick="bind(event);" data-binding="OpenSafe">@{WriteLiteral(Model.Icon["safe-square-outline"]);} @Model.Language["safe_open"]</div>
@@ -117,8 +117,8 @@ body {
     <div class="fab dropup">
         <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#">@{WriteLiteral(Model.Icon["plus"]);}</a>
         <div class="dropdown-menu">
-            <a onclick="bind(event);" data-binding="AddNote" href="#"><svg><use xlink:href="#svg-note-text-outline" /></svg></a>
-            <a onclick="bind(event);" data-binding="AddChecklist" href="#"><svg><use xlink:href="#svg-order-bool-ascending-variant" /></svg></a>
+            <a onclick="bind(event);" data-binding="NewNote" href="#"><svg><use xlink:href="#svg-note-text-outline" /></svg></a>
+            <a onclick="bind(event);" data-binding="NewChecklist" href="#"><svg><use xlink:href="#svg-order-bool-ascending-variant" /></svg></a>
         </div>
     </div>
 

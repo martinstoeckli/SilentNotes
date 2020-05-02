@@ -175,6 +175,16 @@ namespace SilentNotes.ViewModels
         }
 
         /// <summary>
+        /// Gets or sets the note insertion mode selected by the user.
+        /// </summary>
+        public string SelectedNoteInsertionMode
+        {
+            get { return Model.DefaultNoteInsertion.ToString(); }
+
+            set { ChangePropertyIndirect(() => Model.DefaultNoteInsertion.ToString(), (string v) => Model.DefaultNoteInsertion = (NoteInsertionMode)Enum.Parse(typeof(NoteInsertionMode), value), value, true); }
+        }
+
+        /// <summary>
         /// Gets the dark class for a given background color, depending of whether the background
         /// color is a light or a dark color.
         /// </summary>

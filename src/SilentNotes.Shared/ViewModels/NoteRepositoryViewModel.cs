@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Windows.Input;
@@ -67,8 +68,8 @@ namespace SilentNotes.ViewModels
 
             // Initialize commands and events
             ShowNoteCommand = new RelayCommand<Guid>(ShowNote);
-            AddNoteCommand = new RelayCommand(AddNote);
-            AddChecklistCommand = new RelayCommand(AddChecklist);
+            NewNoteCommand = new RelayCommand(NewNote);
+            NewChecklistCommand = new RelayCommand(NewChecklist);
             DeleteNoteCommand = new RelayCommand<Guid>(DeleteNote);
             ClearFilterCommand = new RelayCommand(ClearFilter);
             SynchronizeCommand = new RelayCommand(Synchronize);
@@ -223,14 +224,14 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets the command which handles the creation of a new note.
         /// </summary>
-        public ICommand AddNoteCommand { get; private set; }
+        public ICommand NewNoteCommand { get; private set; }
 
-        private void AddNote()
+        private void NewNote()
         {
-            AddNote(NoteType.Text);
+            NewNote(NoteType.Text);
         }
 
-        private void AddNote(NoteType noteType)
+        private void NewNote(NoteType noteType)
         {
             Modified = true;
             ClearFilter();
@@ -240,12 +241,25 @@ namespace SilentNotes.ViewModels
             noteModel.NoteType = noteType;
             noteModel.HtmlContent = "<h1> </h1>"; // Start with header format.
             noteModel.BackgroundColorHex = _settingsService.LoadSettingsOrDefault().DefaultNoteColorHex;
-            _model.Notes.Insert(0, noteModel);
 
             // Update view model list
             NoteViewModel noteViewModel = new NoteViewModel(_navigationService, Language, Icon, Theme, _webviewBaseUrl, _searchableTextConverter, _repositoryService, _feedbackService, null, _noteCryptor, _model.Safes, noteModel);
-            AllNotes.Insert(0, noteViewModel);
-            FilteredNotes.Insert(0, noteViewModel);
+            NoteInsertionMode insertionMode = _settingsService.LoadSettingsOrDefault().DefaultNoteInsertion;
+            switch (insertionMode)
+            {
+                case NoteInsertionMode.AtTop:
+                    _model.Notes.Insert(0, noteModel);
+                    AllNotes.Insert(0, noteViewModel);
+                    FilteredNotes.Insert(0, noteViewModel);
+                    break;
+                case NoteInsertionMode.AtBottom:
+                    _model.Notes.Add(noteModel);
+                    AllNotes.Add(noteViewModel);
+                    FilteredNotes.Add(noteViewModel);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(insertionMode));
+            }
 
             ShowNote(noteViewModel.Id);
         }
@@ -253,11 +267,11 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets the command which handles the creation of a new checklist note.
         /// </summary>
-        public ICommand AddChecklistCommand { get; private set; }
+        public ICommand NewChecklistCommand { get; private set; }
 
-        private void AddChecklist()
+        private void NewChecklist()
         {
-            AddNote(NoteType.Checklist);
+            NewNote(NoteType.Checklist);
         }
 
         /// <summary>

@@ -124,7 +124,7 @@
                 <label class="col-form-label" for="Color">@Model.Language["gui_default_color"]</label>
                 <div id="color-control" class="form-control">
                     <div id="DefaultNoteColor" class="dropdown">
-                        <button class="color-preview btn m-0 h-100" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-binding="DefaultNoteColor" style="background-color: @Model.DefaultNoteColorHex;">
+                        <button id="Color" class="color-preview btn m-0 h-100" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-binding="DefaultNoteColor" style="background-color: @Model.DefaultNoteColorHex;">
                         </button>
                         <div class="dropdown-menu color-list" aria-labelledby="colorChooser">
                             @foreach (var backgroundColor in @Model.NoteColorsHex)
@@ -134,6 +134,13 @@
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="form-row form-group">
+                <label class="col-form-label" for="NoteInsertionMode">@Model.Language["gui_note_insertion"]</label>
+                <select class="form-control" id="NoteInsertionMode" onchange="bind(event)" data-binding="SelectedNoteInsertionMode">
+                    <option value="AtTop" @(Model.SelectedNoteInsertionMode == "AtTop" ? "selected" : "")>@Model.Language["gui_note_insertion_top"]</option>
+                    <option value="AtBottom" @(Model.SelectedNoteInsertionMode == "AtBottom" ? "selected" : "")>@Model.Language["gui_note_insertion_bottom"]</option>
+                </select>
             </div>
         </form>
 
