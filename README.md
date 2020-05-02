@@ -13,16 +13,17 @@ More information you can find on [SilentNote's homepage](https://www.martinstoec
 * ✔ Create To-Do lists to keep an overview of your pending tasks.
 * ✔ Protect your notes with a user defined password.
 * ✔ Quickly find the right note with the full-text search, just by typing a few letters.
-* ✔ Store the notes to an online-storage of your choice, this allows to synchronize them between devices and offers an easy backup.
-* ✔ Currently supported are the `FTP` protocol, the `WebDav` protocol and `Dropbox`.
+* ✔ Store the notes to an online-storage of your choice (self hosting), this allows to synchronize them between devices and offers an easy backup.
+* ✔ Currently supported are the `FTP` protocol, the `WebDav` protocol, `Dropbox`, Google-Drive and One-Drive.
 * ✔ The notes never leave the device unencrypted, they are end-to-end encrypted and can only be read on your devices.
+* ✔ A dark theme is available for more comfortable working in dark environment.
 * ✔ Use basic formatting to structure your notes and make them more readable.
 * ✔ Get a note back from the recycle-bin if it was deleted by accident.
 * ✔ SilentNotes does not collect user information and requires no unnecessary privileges.
 
 ## Security
 
-Whenever an application promises security and confidentiality, users just have to trust the developer team. Not only is it challenging to do encryption right, but also users cannot be sure whether they pay with their personal data, to benefit from new technologies. We believe that the best way out of this dilemma is to publish the entire code, this is why SilentNotes was turned into an open source project.
+Whenever an application promises security and confidentiality, users just have to trust the developer team. Not only is it challenging to do encryption right, users are more and more accustomed to pay with their personal data, to benefit from new technologies. We believe that the best way to build trust is to publish the entire source code, this is why SilentNotes was turned into an open source project.
 
 ## Credits
 
