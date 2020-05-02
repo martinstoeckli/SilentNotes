@@ -16,7 +16,7 @@ namespace SilentNotes.Controllers
         /// This parameter can be passed to the <see cref="NoteController"/> and contains the id of
         /// the note to display.
         /// </summary>
-        public const string NoteId = "id";
+        public const string NoteId = "noteid";
 
         /// <summary>
         /// This parameter can be passed to the <see cref="NoteController"/> and contains text

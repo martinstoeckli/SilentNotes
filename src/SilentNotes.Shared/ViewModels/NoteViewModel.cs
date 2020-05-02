@@ -293,7 +293,8 @@ namespace SilentNotes.ViewModels
         /// <inheritdoc/>
         private void GoBack()
         {
-            _navigationService.Navigate(ControllerNames.NoteRepository, ControllerParameters.NoteId, Model.Id.ToString());
+            _navigationService.Navigate(new Navigation(
+                ControllerNames.NoteRepository, ControllerParameters.NoteId, Model.Id.ToString()));
         }
 
         /// <inheritdoc/>
@@ -328,9 +329,9 @@ namespace SilentNotes.ViewModels
 
             // Refresh view
             if (Model.InRecyclingBin)
-                _navigationService.Navigate(ControllerNames.RecycleBin);
+                _navigationService.Navigate(new Navigation(ControllerNames.RecycleBin));
             else
-                _navigationService.Navigate(ControllerNames.Note, ControllerParameters.NoteId, Model.Id.ToString());
+                _navigationService.Navigate(new Navigation(ControllerNames.Note, ControllerParameters.NoteId, Model.Id.ToString()));
         }
 
         /// <summary>

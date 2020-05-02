@@ -33,7 +33,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         public override Task Run()
         {
             if (StoryBoard.Mode.ShouldUseGui())
-                _navigationService.Navigate(ControllerNames.FirstTimeSync);
+                _navigationService.Navigate(new Navigation(ControllerNames.FirstTimeSync));
             return Task.CompletedTask;
         }
     }

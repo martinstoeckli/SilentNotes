@@ -80,7 +80,8 @@ namespace SilentNotes.Android
             if (IsStartedBySendIntent())
             {
                 // Another app sent content to SilentNotes
-                navigation.Navigate(ControllerNames.Note, ControllerParameters.SendToSilentnotesText, GetSendIntentText());
+                navigation.Navigate(new Navigation(
+                    ControllerNames.Note, ControllerParameters.SendToSilentnotesText, GetSendIntentText()));
             }
             else if (IsStartedByOAuthRedirectIndent(storyBoardService))
             {
@@ -95,9 +96,9 @@ namespace SilentNotes.Android
             {
                 // Normal startup
                 if (CanStartupWithLastNavigation(_lastNavigation))
-                    navigation.Navigate(_lastNavigation.ControllerId, _lastNavigation.Variables);
+                    navigation.Navigate(_lastNavigation);
                 else
-                    navigation.Navigate(ControllerNames.NoteRepository);
+                    navigation.Navigate(new Navigation(ControllerNames.NoteRepository));
 
                 IAutoSynchronizationService syncService = Ioc.GetOrCreate<IAutoSynchronizationService>();
                 syncService.SynchronizeAtStartup(); // no awaiting, run in background

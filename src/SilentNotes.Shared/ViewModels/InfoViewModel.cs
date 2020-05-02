@@ -53,7 +53,7 @@ namespace SilentNotes.ViewModels
 
         private void GoBack()
         {
-            _navigationService.Navigate(ControllerNames.NoteRepository);
+            _navigationService.Navigate(new Navigation(ControllerNames.NoteRepository));
         }
 
         /// <inheritdoc/>

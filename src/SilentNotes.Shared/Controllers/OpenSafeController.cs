@@ -33,9 +33,9 @@ namespace SilentNotes.Controllers
         }
 
         /// <inheritdoc/>
-        public override void ShowInView(IHtmlView htmlView, KeyValueList<string, string> variables)
+        public override void ShowInView(IHtmlView htmlView, KeyValueList<string, string> variables, Navigation redirectedFrom)
         {
-            base.ShowInView(htmlView, variables);
+            base.ShowInView(htmlView, variables, redirectedFrom);
             _viewModel = new OpenSafeViewModel(
                 Ioc.GetOrCreate<INavigationService>(),
                 Ioc.GetOrCreate<ILanguageService>(),
@@ -45,7 +45,8 @@ namespace SilentNotes.Controllers
                 Ioc.GetOrCreate<IFeedbackService>(),
                 Ioc.GetOrCreate<ICryptoRandomService>(),
                 Ioc.GetOrCreate<ISettingsService>(),
-                Ioc.GetOrCreate<IRepositoryStorageService>());
+                Ioc.GetOrCreate<IRepositoryStorageService>(),
+                RedirectedFrom);
 
             Bindings.BindCommand("GoBack", _viewModel.GoBackCommand);
             Bindings.BindCommand("OkCommand", _viewModel.OkCommand);

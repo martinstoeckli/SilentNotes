@@ -43,7 +43,7 @@ namespace SilentNotes.UWP
         {
             // Is triggered when the <see cref="MainPage"/> is loading.
             INavigationService navigation = Ioc.GetOrCreate<INavigationService>();
-            navigation.Navigate(ControllerNames.NoteRepository, null);
+            navigation.Navigate(new Navigation(ControllerNames.NoteRepository));
         }
 
         private void NavigatingStartingEventHandler(WebView sender, WebViewNavigationStartingEventArgs args)

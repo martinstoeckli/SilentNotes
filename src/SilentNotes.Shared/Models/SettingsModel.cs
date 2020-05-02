@@ -126,6 +126,12 @@ namespace SilentNotes.Models
         public string DefaultNoteColorHex { get; set; }
 
         /// <summary>
+        /// Gets or sets the place where a new note will be inserted by default.
+        /// </summary>
+        [XmlElement("default_note_insertion")]
+        public NoteInsertionMode DefaultNoteInsertion { get; set; }
+
+        /// <summary>
         /// Gets or sets the default encryption algorithm, used to encrypt the repository
         /// before sending it to the cloud.
         /// </summary>

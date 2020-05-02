@@ -132,7 +132,7 @@ namespace SilentNotes.ViewModels
             set
             {
                 ChangePropertyIndirect(() => Model.ThemeMode.ToString(), (string v) => Model.ThemeMode = (ThemeMode)Enum.Parse(typeof(ThemeMode), value), value, true);
-                _navigationService.Navigate(ControllerNames.Settings);
+                _navigationService.Navigate(new Navigation(ControllerNames.Settings));
             }
         }
 
@@ -172,6 +172,16 @@ namespace SilentNotes.ViewModels
             get { return Model.DefaultNoteColorHex; }
 
             set { ChangePropertyIndirect(() => Model.DefaultNoteColorHex, (string v) => Model.DefaultNoteColorHex = v, value, true); }
+        }
+
+        /// <summary>
+        /// Gets or sets the note insertion mode selected by the user.
+        /// </summary>
+        public string SelectedNoteInsertionMode
+        {
+            get { return Model.DefaultNoteInsertion.ToString(); }
+
+            set { ChangePropertyIndirect(() => Model.DefaultNoteInsertion.ToString(), (string v) => Model.DefaultNoteInsertion = (NoteInsertionMode)Enum.Parse(typeof(NoteInsertionMode), value), value, true); }
         }
 
         /// <summary>
@@ -239,7 +249,7 @@ namespace SilentNotes.ViewModels
 
         private void GoBack()
         {
-            _navigationService.Navigate(ControllerNames.NoteRepository);
+            _navigationService.Navigate(new Navigation(ControllerNames.NoteRepository));
         }
 
         /// <inheritdoc/>

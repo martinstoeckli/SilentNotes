@@ -32,9 +32,9 @@ namespace SilentNotes.Controllers
         }
 
         /// <inheritdoc/>
-        public override void ShowInView(IHtmlView htmlView, KeyValueList<string, string> variables)
+        public override void ShowInView(IHtmlView htmlView, KeyValueList<string, string> variables, Navigation redirectedFrom)
         {
-            base.ShowInView(htmlView, variables);
+            base.ShowInView(htmlView, variables, redirectedFrom);
             _viewModel = new SettingsViewModel(
                 Ioc.GetOrCreate<INavigationService>(),
                 Ioc.GetOrCreate<ILanguageService>(),
@@ -54,6 +54,7 @@ namespace SilentNotes.Controllers
             Bindings.BindCheckbox("UseSolidColorTheme", null, (bool value) => _viewModel.UseSolidColorTheme = value, null, null, HtmlViewBindingMode.OneWayToViewmodel);
             Bindings.BindText("ColorForSolidThemeHex", null, (string value) => _viewModel.ColorForSolidThemeHex = value, null, null, HtmlViewBindingMode.OneWayToViewmodel);
             Bindings.BindDropdown("SelectedThemeMode", null, (string value) => _viewModel.SelectedThemeMode = value, null, null, HtmlViewBindingMode.OneWayToViewmodel);
+            Bindings.BindDropdown("SelectedNoteInsertionMode", null, (string value) => _viewModel.SelectedNoteInsertionMode = value, null, null, HtmlViewBindingMode.OneWayToViewmodel);
             Bindings.BindCheckbox("UseColorForAllNotesInDarkMode", null, (bool value) => _viewModel.UseColorForAllNotesInDarkMode = value, null, null, HtmlViewBindingMode.OneWayToViewmodel);
             Bindings.BindText("ColorForAllNotesInDarkModeHex", null, (string value) => _viewModel.ColorForAllNotesInDarkModeHex = value, null, null, HtmlViewBindingMode.OneWayToViewmodel);
             Bindings.UnhandledViewBindingEvent += UnhandledViewBindingEventHandler;

@@ -41,7 +41,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
             if (StoryBoard.Mode.ShouldUseGui())
             {
                 _feedbackService.ShowBusyIndicator(false);
-                _navigationService.Navigate(ControllerNames.TransferCode);
+                _navigationService.Navigate(new Navigation(ControllerNames.TransferCode));
             }
             return Task.CompletedTask;
         }
