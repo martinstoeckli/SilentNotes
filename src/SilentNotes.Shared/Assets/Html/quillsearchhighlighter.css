@@ -1,0 +1,10 @@
+.qs-highlight {
+	position: relative;
+	display: inline-block;
+	left: 2em;
+	top: 2em;
+	z-index: 1030;
+	width: 56px;
+	height: 56px;
+	background-color: rgba(32, 144, 234, 0.5);
+}
