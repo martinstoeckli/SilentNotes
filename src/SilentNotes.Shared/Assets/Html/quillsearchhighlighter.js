@@ -3,75 +3,115 @@ class QuillSearchHighlighter {
   inputElement = null;
   searchHighlights = [];
 
+  /**
+   * Initializes a new instance of the QuillSearchHighlighter class.
+   * @param {Quill} quill - The quill editor.
+   * @param {Object} inputElement - The Html input element which receives the search string.
+   */
   constructor(quill, inputElement) {
-    this.quill = quill;
-    this.inputElement = inputElement;
+    var _this = this;
+    _this.quill = quill;
+    _this.inputElement = inputElement;
   }
 
+  /**
+   * Connects to the quill editor- and to global events.
+   */
   startListening() {
-    var self = this;
-    var timer; // scroll and resize events are called several times, the timer avoids duplicates
+    var _this = this;
+    var timer; // scroll and resize events are called multiple times, the timer avoids duplicates
 
-    this.inputElement.addEventListener('input', function(e) {
+    _this.inputElement.addEventListener('input', function(e) {
       window.clearTimeout(timer);
       timer = window.setTimeout(
-        function() { self.searchAndHighlight(self.inputElement.value, true); }, 1); 
+        function() { _this.searchAndHighlight(_this.inputElement.value, true, true); }, 1); 
     });
 
-    this.quill.root.addEventListener('scroll', function(e) {
+    _this.quill.root.addEventListener('scroll', function(e) {
       window.clearTimeout(timer);
       timer = window.setTimeout(
-        function() { self.searchAndHighlight(self.inputElement.value, true); }, 1); 
+        function() { _this.searchAndHighlight(_this.inputElement.value, false, false); }, 1); 
     });
 
     window.addEventListener('resize', function(e) {
       window.clearTimeout(timer);
       timer = window.setTimeout(
-        function() { self.searchAndHighlight(self.inputElement.value, true); }, 1); 
+        function() { _this.searchAndHighlight(_this.inputElement.value, false, false); }, 1); 
     });
   }
 
-  searchAndHighlight(needle, focusToInput) {
-    this.clearSearchHighlights();
-    var quillText = this.getQuillText();
+  /**
+   * Adds highlight divs to the quill editor, for each found position of a given substring.
+   * @param {string} needle - The substring to search for
+   * @param {boolean} createSelection - Create a quill selection if the substring was found and
+   * bring it into the visible range.
+   * @param {boolean} focusToInput - Give back the focus to the input element, so the user can
+   * continue typing.
+   */
+  searchAndHighlight(needle, createSelection, focusToInput) {
+    var _this = this;
+    _this.clearSearchHighlights();
+    if (!needle || needle.length < 2)
+      return;
 
-    var index = quillText.indexOf(needle);
-    if (index >= 0) {
-        this.quill.setSelection(index, needle.length);
-        var bounds = this.quill.getBounds(index, needle.length);
+    needle = needle.toLocaleLowerCase();
+    var quillText = _this.getLowerQuillText();
 
-        var highlight = document.createElement('div');
-        highlight.classList.add('qs-highlight');
-        this.searchHighlights.push(highlight);
-
-        var quillParent = this.quill.root.parentElement;
-        quillParent.appendChild(highlight);
-
-        highlight.style.position = 'absolute';
-        highlight.style.width = bounds.width + 'px';
-        highlight.style.height = bounds.height + 'px';
-        highlight.style.left = bounds.left + 'px';
-        highlight.style.top = bounds.top + 'px';
+    var findings = [];
+    var fromIndex = 0;
+    var index = quillText.indexOf(needle, fromIndex);
+    while (index >= 0) {
+      findings.push(index);
+      index = quillText.indexOf(needle, index + 1);
     }
+
+    findings.forEach(function(finding){
+      //     _this.quill.setSelection(index, needle.length);
+      var bounds = _this.quill.getBounds(finding, needle.length);
+
+      var highlight = document.createElement('div');
+      highlight.classList.add('qs-highlight');
+      _this.searchHighlights.push(highlight);
+
+      var quillParent = _this.quill.root.parentElement;
+      quillParent.appendChild(highlight);
+
+      highlight.style.position = 'absolute';
+      highlight.style.width = bounds.width + 'px';
+      highlight.style.height = bounds.height + 'px';
+      highlight.style.left = bounds.left + 'px';
+      highlight.style.top = bounds.top + 'px';
+    });
+
     if (focusToInput) {
-      this.inputElement.focus();
+      _this.inputElement.focus();
     }
   }
 
+  /**
+   * Removes and frees all highlight divs from the quill editor.
+   */
   clearSearchHighlights() {
-    this.searchHighlights.forEach(function(item, index, array) {
+    var _this = this;
+    _this.searchHighlights.forEach(function(item, index, array) {
         item.remove();
     })            
   }
 
-  getQuillText() {
-    return this.quill.getContents().filter(function (op) {
+  /**
+   * Gets the pure text content of the quill editor in lower case.
+   * The returned text can be used to get the position of a given subtext,
+   * images are translated to a single space character to leave the index intact.
+   */
+  getLowerQuillText() {
+    var _this = this;
+    return _this.quill.getContents().filter(function (op) {
       return typeof op.insert === 'string' || op.insert.image;
     }).map(function (op) {
       if (op.insert.image) {
           return op.insert.image = ' ';
       }
-      return op.insert;
+      return op.insert.toLocaleLowerCase();
     }).join('');
   }
 }

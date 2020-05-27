@@ -1,6 +1,7 @@
 .qs-highlight {
 	position: relative;
 	display: inline-block;
+	pointer-events: none;
 	left: 2em;
 	top: 2em;
 	z-index: 1030;
