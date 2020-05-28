@@ -1,17 +1,14 @@
 class QuillSearchHighlighter {
-  quill = null;
-  inputElement = null;
-  searchHighlights = [];
-
   /**
    * Initializes a new instance of the QuillSearchHighlighter class.
    * @param {Quill} quill - The quill editor.
-   * @param {Object} inputElement - The Html input element which receives the search string.
+   * @param {*} inputElement - The Html input element which receives the search string.
    */
   constructor(quill, inputElement) {
     var _this = this;
     _this.quill = quill;
     _this.inputElement = inputElement;
+    _this.searchHighlights = [];
   }
 
   /**
@@ -43,12 +40,12 @@ class QuillSearchHighlighter {
   /**
    * Adds highlight divs to the quill editor, for each found position of a given substring.
    * @param {string} needle - The substring to search for
-   * @param {boolean} createSelection - Create a quill selection if the substring was found and
-   * bring it into the visible range.
-   * @param {boolean} focusToInput - Give back the focus to the input element, so the user can
-   * continue typing.
+   * @param {boolean} selection - Create a selection if the substring was found and bring it
+   * into the visible range.
+   * @param {boolean} focusBackToInput - Give back the focus to the input element, so the user
+   * can continue typing.
    */
-  searchAndHighlight(needle, createSelection, focusToInput) {
+  searchAndHighlight(needle, scrollToFirst, focusBackToInput) {
     var _this = this;
     _this.clearSearchHighlights();
     if (!needle || needle.length < 2)
@@ -57,6 +54,7 @@ class QuillSearchHighlighter {
     needle = needle.toLocaleLowerCase();
     var quillText = _this.getLowerQuillText();
 
+    // Search for matches
     var findings = [];
     var fromIndex = 0;
     var index = quillText.indexOf(needle, fromIndex);
@@ -65,25 +63,24 @@ class QuillSearchHighlighter {
       index = quillText.indexOf(needle, index + 1);
     }
 
+    // Bring first match into view
+    if (scrollToFirst && findings.length >= 1) {
+      var bounds = _this.quill.getBounds(findings[0], needle.length);
+      _this.quill.setSelection(findings[0], length);
+    }
+
+    // Create highlights divs inside visible range
     findings.forEach(function(finding){
-      //     _this.quill.setSelection(index, needle.length);
       var bounds = _this.quill.getBounds(finding, needle.length);
-
-      var highlight = document.createElement('div');
-      highlight.classList.add('qs-highlight');
-      _this.searchHighlights.push(highlight);
-
-      var quillParent = _this.quill.root.parentElement;
-      quillParent.appendChild(highlight);
-
-      highlight.style.position = 'absolute';
-      highlight.style.width = bounds.width + 'px';
-      highlight.style.height = bounds.height + 'px';
-      highlight.style.left = bounds.left + 'px';
-      highlight.style.top = bounds.top + 'px';
+      if (_this.isInVisibleArea(bounds)) {
+        var highlight = _this.createSearchHighlight(bounds);
+        _this.searchHighlights.push(highlight);
+        var quillParent = _this.quill.root.parentElement;
+        quillParent.appendChild(highlight);
+      }
     });
 
-    if (focusToInput) {
+    if (focusBackToInput) {
       _this.inputElement.focus();
     }
   }
@@ -96,6 +93,20 @@ class QuillSearchHighlighter {
     _this.searchHighlights.forEach(function(item, index, array) {
         item.remove();
     })            
+  }
+
+  /**
+   * Creates a transparent div to highlight a search result.
+   * @param {*} bounds - The bounding box of the div
+   */
+  createSearchHighlight(bounds) {
+    var result = document.createElement('div');
+    result.classList.add('qs-highlight');
+    result.style.width = bounds.width + 'px';
+    result.style.height = bounds.height + 'px';
+    result.style.left = bounds.left + 'px';
+    result.style.top = bounds.top + 'px';
+    return result;
   }
 
   /**
@@ -113,5 +124,17 @@ class QuillSearchHighlighter {
       }
       return op.insert.toLocaleLowerCase();
     }).join('');
+  }
+
+  /**
+   * Checks whether a bounding box is in the visible area (scrolling) of the quill editor.
+   * @param {*} bounds - The bounding box to check
+   */
+  isInVisibleArea(bounds) {
+    var _this = this;
+    var editorElement = _this.quill.root;
+    var result = (bounds.bottom > editorElement.clientTop)
+      && (bounds.top < editorElement.clientTop + editorElement.clientHeight);
+    return result;
   }
 }
