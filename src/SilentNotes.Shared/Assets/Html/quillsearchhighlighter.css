@@ -1,0 +1,6 @@
+.qs-highlight {
+	position: absolute;
+	display: inline-block;
+	pointer-events: none;
+	background-color: rgba(32, 144, 234, 0.5);
+}

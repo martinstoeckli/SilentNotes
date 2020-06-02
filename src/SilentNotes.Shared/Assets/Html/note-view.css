@@ -100,3 +100,25 @@
 
 .ql-snow .ql-tooltip a { color: #007bff !important; text-decoration: none !important; }
 .ql-snow .ql-tooltip a:hover { color: #007bff !important; text-decoration: none !important; }
+
+#search-dialog {
+	position: fixed;
+	display: inline-flex;
+	height: 42px;
+	align-items: center;
+	margin: 0;
+	padding: 4px 6px;
+	top: calc(42px + 0px);
+	right: 0;
+	z-index: 1020;
+	background-color: #323232; color: #fff; border-color: #323232;
+	border-bottom-left-radius: 4px;
+}
+.nav-filter 
+{
+	padding: 1px 4px;
+	border-radius: 4px;
+}
+.nav-filter input { border: none; }
+.nav-filter input:focus { outline: none; }
+

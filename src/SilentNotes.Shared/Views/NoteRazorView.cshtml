@@ -15,11 +15,13 @@
 
     <link href="quill/quill.snow.css" rel="stylesheet">
     <link href="note-view.css" rel="stylesheet">
+    <link href="quillsearchhighlighter.css" rel="stylesheet">
 
     <script src="jquery-3.4.1.min.js"></script>
     <script src="bootstrap.bundle.min.js"></script>
     <script src="silentnotes.js"></script>
     <script src="quill/quill.min.js"></script>
+    <script src="quillsearchhighlighter.js"></script>
 
     <style type="text/css">
 body { background-color: transparent; }
@@ -40,6 +42,7 @@ body { background-color: transparent; }
     </style>
     <script>
         var quill;
+        var searchHighlighter;
 
         function toggleFormat(formatName) {
             var selectionFormat = quill.getFormat();
@@ -72,6 +75,27 @@ body { background-color: transparent; }
             quill.setText(text, 'user');
         }
 
+        function toggleSearchDialog() {
+            var makeVisible = $('#search-dialog').hasClass('hidden');
+            showSearchDialog(makeVisible);
+        }
+
+        function showSearchDialog(visible) {
+            if (visible) {
+                // Open dialog
+                $('#search-dialog').removeClass('hidden');
+                $('#TxtFilter').focus();
+                searchHighlighter.startListening();
+            }
+            else {
+                // Close dialog
+                searchHighlighter.stopListening();
+                searchHighlighter.clearSearchHighlights();
+                $('#search-dialog').addClass('hidden');
+                $('#TxtFilter').val('');
+            }
+        }
+
         $(function () {
             quill = new Quill('#myeditor', {
                 formats: ['header', 'bold', 'italic', 'underline', 'strike', 'list', 'code', 'code-block', 'blockquote', 'link'],
@@ -90,6 +114,8 @@ body { background-color: transparent; }
             // This way we can remove the tel:// protocol
             var Link = Quill.import('formats/link');
             Link.PROTOCOL_WHITELIST = ['http', 'https', 'mailto'];
+
+            searchHighlighter = new QuillSearchHighlighter(quill, document.getElementById("TxtFilter"));
         });
     </script>
 </head>
@@ -107,6 +133,8 @@ body { background-color: transparent; }
                     <option selected="selected"></option>
                 </select>
 
+                <button class="nav-item" onclick="toggleSearchDialog();" >@{WriteLiteral(Model.Icon["magnify"]);}</button>
+
                 <button class="nav-item ql-bold" title="@Model.Language["note_bold"]"></button>
                 <button class="nav-item ql-italic" title="@Model.Language["note_italic"]"></button>
                 <span class="show-only-on-wide-browser">
@@ -122,9 +150,9 @@ body { background-color: transparent; }
         <div class="dropdown">
             @if (!Model.IsLocked)
             {
-            <button class="nav-item" id="colorDropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="@Model.Language["note_colors"]">
-                @{WriteLiteral(Model.Icon["palette"]);}
-            </button>
+                <button class="nav-item" id="colorDropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="@Model.Language["note_colors"]">
+                    @{WriteLiteral(Model.Icon["palette"]);}
+                </button>
             }
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="colorDropdownMenu">
                 @foreach (var backgroundColor in @Model.BackgroundColorsHex)
@@ -137,26 +165,26 @@ body { background-color: transparent; }
         <!-- Dropdown Menu -->
         @if (!Model.IsLocked)
         {
-        <div class="dropdown">
-            <button class="nav-item" id="navOverflowMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                @{WriteLiteral(Model.Icon["dots-vertical"]);}
-            </button>
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navOverflowMenu">
-                <div class="dropdown-item show-only-on-narrow-browser" onclick="toggleFormat('underline');">@{WriteLiteral(Model.Icon["format-underline"]);} @Model.Language["note_underline"]</div>
-                <div class="dropdown-item show-only-on-narrow-browser" onclick="toggleFormat('strike');">@{WriteLiteral(Model.Icon["format-strikethrough-variant"]);} @Model.Language["note_strike"]</div>
-                <div class="dropdown-item show-only-on-narrow-browser" onclick="toggleBlockFormat('list', 'ordered');">@{WriteLiteral(Model.Icon["format-list-numbers"]);} @Model.Language["note_list_ordered"]</div>
-                <div class="dropdown-item show-only-on-narrow-browser" onclick="toggleBlockFormat('list', 'bullet');">@{WriteLiteral(Model.Icon["format-list-bulleted"]);} @Model.Language["note_list_unordered"]</div>
-                <div class="dropdown-item" onclick="toggleFormat('code-block');">@{WriteLiteral(Model.Icon["code-braces"]);} @Model.Language["note_code"]</div>
-                <div class="dropdown-item" onclick="toggleFormat('blockquote');">@{WriteLiteral(Model.Icon["format-quote-close"]);} @Model.Language["note_quotation"]</div>
-                <div class="dropdown-item" onclick="toggleLink()">@{WriteLiteral(Model.Icon["link-variant"]);} @Model.Language["note_link"]</div>
-                @if (Model.ShowManualSynchronization)
-                {
-                    <div class="dropdown-divider"></div>
-                    <div class="dropdown-item" onclick="bind(event);" data-binding="PushNoteToOnlineStorage">@{WriteLiteral(Model.Icon["cloud-upload"]);} @Model.Language["note_push_to_server"]</div>
-                    <div class="dropdown-item" onclick="bind(event);" data-binding="PullNoteFromOnlineStorage">@{WriteLiteral(Model.Icon["cloud-download"]);} @Model.Language["note_pull_from_server"]</div>
-                }
+            <div class="dropdown">
+                <button class="nav-item" id="navOverflowMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    @{WriteLiteral(Model.Icon["dots-vertical"]);}
+                </button>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navOverflowMenu">
+                    <div class="dropdown-item show-only-on-narrow-browser" onclick="toggleFormat('underline');">@{WriteLiteral(Model.Icon["format-underline"]);} @Model.Language["note_underline"]</div>
+                    <div class="dropdown-item show-only-on-narrow-browser" onclick="toggleFormat('strike');">@{WriteLiteral(Model.Icon["format-strikethrough-variant"]);} @Model.Language["note_strike"]</div>
+                    <div class="dropdown-item show-only-on-narrow-browser" onclick="toggleBlockFormat('list', 'ordered');">@{WriteLiteral(Model.Icon["format-list-numbers"]);} @Model.Language["note_list_ordered"]</div>
+                    <div class="dropdown-item show-only-on-narrow-browser" onclick="toggleBlockFormat('list', 'bullet');">@{WriteLiteral(Model.Icon["format-list-bulleted"]);} @Model.Language["note_list_unordered"]</div>
+                    <div class="dropdown-item" onclick="toggleFormat('code-block');">@{WriteLiteral(Model.Icon["code-braces"]);} @Model.Language["note_code"]</div>
+                    <div class="dropdown-item" onclick="toggleFormat('blockquote');">@{WriteLiteral(Model.Icon["format-quote-close"]);} @Model.Language["note_quotation"]</div>
+                    <div class="dropdown-item" onclick="toggleLink()">@{WriteLiteral(Model.Icon["link-variant"]);} @Model.Language["note_link"]</div>
+                    @if (Model.ShowManualSynchronization)
+                    {
+                        <div class="dropdown-divider"></div>
+                        <div class="dropdown-item" onclick="bind(event);" data-binding="PushNoteToOnlineStorage">@{WriteLiteral(Model.Icon["cloud-upload"]);} @Model.Language["note_push_to_server"]</div>
+                        <div class="dropdown-item" onclick="bind(event);" data-binding="PullNoteFromOnlineStorage">@{WriteLiteral(Model.Icon["cloud-download"]);} @Model.Language["note_pull_from_server"]</div>
+                    }
+                </div>
             </div>
-        </div>
         }
     </nav>
 
@@ -171,8 +199,16 @@ body { background-color: transparent; }
         }
     </div>
 
+    <div id="search-dialog" class="hidden" data-binding="search">
+        <div class="nav-filter">
+            <input id="TxtFilter" autocomplete="off" />
+            <svg id="filter-cancel-icon" width='24' height='24' viewBox='0 0 24 24' class="" onclick="showSearchDialog(false);" data-binding="FilterButtonCancel"><use xlink:href="#svg-close-circle-outline" /></svg>
+        </div>
+    </div>
+
     <div hidden>
         @{WriteLiteral(Model.Icon.LoadIcon("lock-outline", new[] { new KeyValuePair<string, string>("id", "svg-lock-outline") }));}
+        @{WriteLiteral(Model.Icon.LoadIcon("close-circle-outline", new[] { new KeyValuePair<string, string>("id", "svg-close-circle-outline") }));}
     </div>
 </body>
 </html>
