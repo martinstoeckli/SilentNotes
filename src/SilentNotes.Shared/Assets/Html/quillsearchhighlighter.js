@@ -9,6 +9,8 @@ class QuillSearchHighlighter {
     _this.quill = quill;
     _this.inputElement = inputElement;
     _this.searchHighlights = [];
+    _this.searchDelay = 1; // prevents subsequent events
+    _this.isListening = null;
   }
 
   /**
@@ -16,25 +18,40 @@ class QuillSearchHighlighter {
    */
   startListening() {
     var _this = this;
-    var timer; // scroll and resize events are called multiple times, the timer avoids duplicates
 
-    _this.inputElement.addEventListener('input', function(e) {
-      window.clearTimeout(timer);
-      timer = window.setTimeout(
-        function() { _this.searchAndHighlight(_this.inputElement.value, true, true); }, 1); 
-    });
+    // Just reconnect?
+    var isFirstTime = _this.isListening === null;
+    _this.isListening = true;
 
-    _this.quill.root.addEventListener('scroll', function(e) {
-      window.clearTimeout(timer);
-      timer = window.setTimeout(
-        function() { _this.searchAndHighlight(_this.inputElement.value, false, false); }, 1); 
-    });
+    if (isFirstTime) {
+      var timer; // scroll and resize events are called multiple times, the timer avoids duplicates
+      _this.inputElement.addEventListener('input', function(e) {
+        if (_this.isListening) {
+          _this.searchAndHighlight(_this.inputElement.value, true, true);
+        }
+      });
 
-    window.addEventListener('resize', function(e) {
-      window.clearTimeout(timer);
-      timer = window.setTimeout(
-        function() { _this.searchAndHighlight(_this.inputElement.value, false, false); }, 1); 
-    });
+      _this.quill.root.addEventListener('scroll', function(e) {
+        if (_this.isListening) {
+          window.clearTimeout(timer);
+          timer = window.setTimeout(
+          function() { _this.searchAndHighlight(_this.inputElement.value, false, false); }, _this.searchDelay); 
+        }
+      });
+
+      window.addEventListener('resize', function(e) {
+        if (_this.isListening) {
+          window.clearTimeout(timer);
+          timer = window.setTimeout(
+          function() { _this.searchAndHighlight(_this.inputElement.value, false, false); }, _this.searchDelay); 
+        }
+      });
+    }
+  }
+
+  stopListening() {
+    var _this = this;
+    _this.isListening = false;
   }
 
   /**
@@ -65,7 +82,6 @@ class QuillSearchHighlighter {
 
     // Bring first match into view
     if (scrollToFirst && findings.length >= 1) {
-      var bounds = _this.quill.getBounds(findings[0], needle.length);
       _this.quill.setSelection(findings[0], length);
     }
 
@@ -90,7 +106,7 @@ class QuillSearchHighlighter {
    */
   clearSearchHighlights() {
     var _this = this;
-    _this.searchHighlights.forEach(function(item, index, array) {
+    _this.searchHighlights.forEach(function(item) {
         item.remove();
     })            
   }

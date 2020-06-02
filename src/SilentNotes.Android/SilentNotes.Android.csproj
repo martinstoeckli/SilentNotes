@@ -36,7 +36,7 @@
     <EnableLLVM>false</EnableLLVM>
     <BundleAssemblies>false</BundleAssemblies>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-    <AndroidSupportedAbis>armeabi-v7a;x86;arm64-v8a</AndroidSupportedAbis>
+    <AndroidSupportedAbis>armeabi-v7a;x86_64;arm64-v8a</AndroidSupportedAbis>
     <AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
     <AndroidDexTool>d8</AndroidDexTool>
     <AndroidUseSharedRuntime>true</AndroidUseSharedRuntime>
@@ -295,6 +295,16 @@
   <ItemGroup>
     <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\smarties.jpg">
       <Link>Assets\Html\smarties.jpg</Link>
+    </AndroidAsset>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\quillsearchhighlighter.css">
+      <Link>Assets\Html\quillsearchhighlighter.css</Link>
+    </AndroidAsset>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\quillsearchhighlighter.js">
+      <Link>Assets\Html\quillsearchhighlighter.js</Link>
     </AndroidAsset>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />

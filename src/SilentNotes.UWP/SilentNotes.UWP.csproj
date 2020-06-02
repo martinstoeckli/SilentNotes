@@ -189,6 +189,12 @@
     <Content Include="..\SilentNotes.Shared\Assets\Html\paper.jpg">
       <Link>Assets\Html\paper.jpg</Link>
     </Content>
+    <Content Include="..\SilentNotes.Shared\Assets\Html\quillsearchhighlighter.css">
+      <Link>Assets\Html\quillsearchhighlighter.css</Link>
+    </Content>
+    <Content Include="..\SilentNotes.Shared\Assets\Html\quillsearchhighlighter.js">
+      <Link>Assets\Html\quillsearchhighlighter.js</Link>
+    </Content>
     <Content Include="..\SilentNotes.Shared\Assets\Html\quill\quill.min.js">
       <Link>Assets\Html\quill\quill.min.js</Link>
     </Content>
