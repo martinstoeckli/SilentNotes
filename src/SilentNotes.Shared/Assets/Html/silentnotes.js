@@ -1,3 +1,32 @@
+/**
+ * Collection of helper functions based on: http://youmightnotneedjquery.com/
+ */
+function ready(fn) {
+	if (document.readyState != 'loading') {
+		fn();
+	} else {
+		document.addEventListener('DOMContentLoaded', fn);
+	}
+}
+
+function findAll(selector) {
+	return document.querySelectorAll(selector);
+}
+
+function findFirst(selector) {
+	var matches = findAll(selector);
+	if (matches.length >= 0)
+		return matches[0];
+	return null;
+}
+
+function typeOf(obj) {
+	return Object.prototype.toString.call(obj).replace(/^\[object (.+)\]$/, '$1').toLowerCase();
+}
+
+/**
+ * Functions specific to SilentNotes
+ */
 function addShortcuts() {
     $('body').keyup(function(evt) {
         if (evt.which === 13) {

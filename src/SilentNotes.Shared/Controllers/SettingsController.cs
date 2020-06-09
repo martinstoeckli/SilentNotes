@@ -3,6 +3,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using System;
 using SilentNotes.HtmlView;
 using SilentNotes.Services;
 using SilentNotes.ViewModels;
@@ -61,6 +62,21 @@ namespace SilentNotes.Controllers
 
             string html = _viewService.GenerateHtml(_viewModel);
             View.LoadHtml(html);
+            View.NavigationCompleted += NavigationCompletedHandler;
+        }
+
+        private void NavigationCompletedHandler(object sender, EventArgs e)
+        {
+            View.NavigationCompleted -= NavigationCompletedHandler;
+
+            VueJsDataBinding vueBinding = new VueJsDataBinding(
+                _viewModel,
+                View,
+                new [] 
+                {
+                    new BindingDescription { PropertyName = nameof(_viewModel.FontSizeStep), Mode = HtmlViewBindingMode.TwoWayPlusOneTimeToView } 
+                });
+            vueBinding.StartListening();
         }
 
         private void SetEncryptionAlgorithmToViewmodel(string value)

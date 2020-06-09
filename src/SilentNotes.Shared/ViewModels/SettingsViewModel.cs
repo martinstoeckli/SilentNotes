@@ -71,7 +71,12 @@ namespace SilentNotes.ViewModels
         public double FontScale
         {
             get { return Model.FontScale; }
-            set { ChangePropertyIndirect<double>(() => Model.FontScale, (v) => Model.FontScale = v, value, true); }
+
+            set 
+            {
+                if (ChangePropertyIndirect<double>(() => Model.FontScale, (v) => Model.FontScale = v, value, true))
+                    OnPropertyChanged(nameof(FontSizeStep));
+            }
         }
 
         /// <summary>
