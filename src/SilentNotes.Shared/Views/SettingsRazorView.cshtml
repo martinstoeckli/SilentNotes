@@ -55,31 +55,12 @@
         .color-btn.dark { color: white; }
     </style>
     <script>
-        function vuePropertyChanged(propertyName, value) {
-            var encodedValue = encodeURIComponent(value);
-            var url = 'vuePropertyChanged?name=' + propertyName + '&value=' + encodedValue;
-            location.href = url;
-        }
-
-        var vm;
-        ready(function () {
-            var _this = this;
-            vm = new Vue({
-                el: '#page',
-                data: {
-                    FontSizeStep: 3,
-                },
-                watch: {
-                    FontSizeStep: function (val) { vuePropertyChanged('FontSizeStep', val); },
-                }
-            });
-            //addShortcuts();
-        });
+        @{WriteLiteral(Model.VueDataBindingScript);}
     </script>
 </head>
-<body><div id="page">
+<body><div id="vueDataBinding">
     <nav id="navigation" class="d-flex">
-        <button class="nav-item mr-auto shortcut-escape" onclick="bind(event);" data-binding="GoBack" title="@Model.Language["back"]">@{WriteLiteral(Model.Icon["arrow-left"]);}</button>
+        <button class="nav-item mr-auto shortcut-escape" v-on:click="GoBackCommand" title="@Model.Language["back"]">@{WriteLiteral(Model.Icon["arrow-left"]);}</button>
     </nav>
 
     <div id="content" class="container-fluid p-4">
@@ -88,9 +69,9 @@
         <h2>@Model.Language["gui"]</h2>
         <form class="mb-4 col-md-9 col-lg-6">
             <div class="form-row form-group">
-                <label class="col-form-label" for="font-size">@Model.Language["gui_font_size"]</label>
+                <label class="col-form-label" for="FontSizeStep">@Model.Language["gui_font_size"]</label>
                 <div class="form-control">
-                    <input class="custom-range col-sm-6" type="range" id="font-size" v-model="FontSizeStep" min="-3" max="3" step="1">
+                    <input class="custom-range col-sm-6" type="range" id="FontSizeStep" v-model="FontSizeStep" min="-3" max="3" step="1">
                 </div>
             </div>
             <div class="form-row form-group">
@@ -111,30 +92,30 @@
             <div class="form-row">
                 <div class="form-group col-10">
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="UseSolidColorTheme" onclick="bind(event)" data-binding="UseSolidColorTheme" @(Model.UseSolidColorTheme ? "checked" : "")>
+                        <input class="form-check-input" type="checkbox" id="UseSolidColorTheme" v-model="UseSolidColorTheme">
                         <label class="form-check-label" for="UseSolidColorTheme">@Model.Language["gui_theme_solid_color"]</label>
                     </div>
                 </div>
                 <div class="form-group col-2">
-                    <input class="form-control" type="color" oninput="bind(event)" data-binding="ColorForSolidThemeHex" value="@(Model.ColorForSolidThemeHex)">
+                    <input class="form-control" type="color" v-model="ColorForSolidThemeHex">
                 </div>
             </div>
             <div class="form-row form-group">
-                <select class="form-control" id="ThemeMode" onchange="bind(event)" data-binding="SelectedThemeMode">
-                    <option value="Auto" @(Model.SelectedThemeMode == "Auto" ? "selected" : "")>@Model.Language["gui_theme_auto"]</option>
-                    <option value="Dark" @(Model.SelectedThemeMode == "Dark" ? "selected" : "")>@Model.Language["gui_theme_dark"]</option>
-                    <option value="Light" @(Model.SelectedThemeMode == "Light" ? "selected" : "")>@Model.Language["gui_theme_light"]</option>
+                <select class="form-control" v-model="SelectedThemeMode">
+                    <option value="Auto">@Model.Language["gui_theme_auto"]</option>
+                    <option value="Dark">@Model.Language["gui_theme_dark"]</option>
+                    <option value="Light">@Model.Language["gui_theme_light"]</option>
                 </select>
             </div>
             <div class="form-row">
                 <div class="form-group col-10">
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="UseColorForAllNotesInDarkMode" onclick="bind(event)" data-binding="UseColorForAllNotesInDarkMode" @(Model.UseColorForAllNotesInDarkMode ? "checked" : "")>
+                        <input class="form-check-input" type="checkbox" id="UseColorForAllNotesInDarkMode" v-model="UseColorForAllNotesInDarkMode">
                         <label class="form-check-label" for="UseColorForAllNotesInDarkMode">@Model.Language["gui_theme_color_all_dark"]</label>
                     </div>
                 </div>
                 <div class="form-group col-2">
-                    <input class="form-control" type="color" oninput="bind(event)" data-binding="ColorForAllNotesInDarkModeHex" value="@(Model.ColorForAllNotesInDarkModeHex)">
+                    <input class="form-control" type="color" v-model="ColorForAllNotesInDarkModeHex">
                 </div>
             </div>
 
@@ -154,10 +135,10 @@
                 </div>
             </div>
             <div class="form-row form-group">
-                <label class="col-form-label" for="NoteInsertionMode">@Model.Language["gui_note_insertion"]</label>
-                <select class="form-control" id="NoteInsertionMode" onchange="bind(event)" data-binding="SelectedNoteInsertionMode">
-                    <option value="AtTop" @(Model.SelectedNoteInsertionMode == "AtTop" ? "selected" : "")>@Model.Language["gui_note_insertion_top"]</option>
-                    <option value="AtBottom" @(Model.SelectedNoteInsertionMode == "AtBottom" ? "selected" : "")>@Model.Language["gui_note_insertion_bottom"]</option>
+                <label class="col-form-label" for="SelectedNoteInsertionMode">@Model.Language["gui_note_insertion"]</label>
+                <select class="form-control" id="SelectedNoteInsertionMode" v-model="SelectedNoteInsertionMode">
+                    <option value="AtTop">@Model.Language["gui_note_insertion_top"]</option>
+                    <option value="AtBottom">@Model.Language["gui_note_insertion_bottom"]</option>
                 </select>
             </div>
         </form>
@@ -165,11 +146,11 @@
         <h2>@Model.Language["encryption"]</h2>
         <form class="mb-4 col-md-9 col-lg-6">
             <div class="form-row form-group">
-                <label class="col-form-label" for="EncryptionAlgorithm">@Model.Language["encryption_algorithm"]</label>
-                <select class="form-control" id="EncryptionAlgorithm" onchange="bind(event)" data-binding="SelectedEncryptionAlgorithm">
+                <label class="col-form-label" for="SelectedEncryptionAlgorithm">@Model.Language["encryption_algorithm"]</label>
+                <select class="form-control" id="SelectedEncryptionAlgorithm" v-model="SelectedEncryptionAlgorithm">
                     @foreach (var algorithm in @Model.EncryptionAlgorithms)
                     {
-                        <option value="@algorithm.Value" @(Model.SelectedEncryptionAlgorithm == algorithm ? "selected" : "")>@algorithm.Description</option>
+                        <option value="@algorithm.Value">@algorithm.Description</option>
                     }
                 </select>
             </div>
@@ -178,19 +159,19 @@
         <h2>@Model.Language["sync"]</h2>
         <form class="mb-4 col-md-9 col-lg-6">
             <div class="form-row form-group">
-                <label class="col-form-label" for="AutoSyncMode">@Model.Language["sync_auto"]</label>
-                <select class="form-control" id="AutoSyncMode" onchange="bind(event)" data-binding="SelectedAutoSyncMode">
-                    <option value="Never" @(Model.SelectedAutoSyncMode == "Never" ? "selected" : "")>@Model.Language["sync_auto_never"]</option>
-                    <option value="CostFreeInternetOnly" @(Model.SelectedAutoSyncMode == "CostFreeInternetOnly" ? "selected" : "")>@Model.Language["sync_auto_costfree"]</option>
-                    <option value="Always" @(Model.SelectedAutoSyncMode == "Always" ? "selected" : "")>@Model.Language["sync_auto_always"]</option>
+                <label class="col-form-label" for="SelectedAutoSyncMode">@Model.Language["sync_auto"]</label>
+                <select class="form-control" id="SelectedAutoSyncMode" v-model="SelectedAutoSyncMode">
+                    <option value="Never">@Model.Language["sync_auto_never"]</option>
+                    <option value="CostFreeInternetOnly">@Model.Language["sync_auto_costfree"]</option>
+                    <option value="Always">@Model.Language["sync_auto_always"]</option>
                 </select>
             </div>
             <div class="form-row form-group">
                 <label class="col-form-label" for="CloudStorageSettings">@Model.Language["cloud_service"]</label>
-                <textarea class="form-control" id="CloudStorageSettings" data-binding="CloudStorageSettings" rows="4" readonly>@Model.AccountSummary</textarea>
+                <textarea class="form-control" id="CloudStorageSettings" v-model="AccountSummary" rows="4" readonly></textarea>
             </div>
-            <button type="button" class="btn btn-secondary mb-2" onclick="bind(event)" data-binding="ChangeCloudSettingsCommand" title="@Model.Language["cloud_change_settings_desc"]">@Model.Language["cloud_change_settings"]</button>
-            <button type="button" class="btn btn-secondary mb-2" onclick="bind(event)" data-binding="ClearCloudSettingsCommand" title="@Model.Language["cloud_clear_settings_desc"]">@Model.Language["cloud_clear_settings"]</button>
+            <button type="button" class="btn btn-secondary mb-2" v-on:click="ChangeCloudSettingsCommand" title="@Model.Language["cloud_change_settings_desc"]">@Model.Language["cloud_change_settings"]</button>
+            <button type="button" class="btn btn-secondary mb-2" v-on:click="ClearCloudSettingsCommand" title="@Model.Language["cloud_clear_settings_desc"]">@Model.Language["cloud_clear_settings"]</button>
         </form>
     </div>
 

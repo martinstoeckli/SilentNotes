@@ -45,44 +45,15 @@ namespace SilentNotes.Controllers
                 Ioc.GetOrCreate<ISettingsService>(),
                 Ioc.GetOrCreate<IStoryBoardService>());
 
-            Bindings.BindCommand("GoBack", _viewModel.GoBackCommand);
-            Bindings.BindCommand("ChangeCloudSettingsCommand", _viewModel.ChangeCloudSettingsCommand);
-            Bindings.BindCommand("ClearCloudSettingsCommand", _viewModel.ClearCloudSettingsCommand);
-            Bindings.BindDropdown("SelectedEncryptionAlgorithm", null, SetEncryptionAlgorithmToViewmodel, null, null, HtmlViewBindingMode.OneWayToViewmodel);
-            Bindings.BindDropdown("SelectedAutoSyncMode", null, (string value) => _viewModel.SelectedAutoSyncMode = value, null, null, HtmlViewBindingMode.OneWayToViewmodel);
-            Bindings.BindText("CloudStorageSettings", () => _viewModel.AccountSummary, null, _viewModel, nameof(_viewModel.AccountSummary), HtmlViewBindingMode.OneWayToView);
             Bindings.BindBackgroundImage("SelectedTheme", () => _viewModel.SelectedTheme.Image, _viewModel, nameof(_viewModel.SelectedTheme), HtmlViewBindingMode.OneWayToView);
-            Bindings.BindCheckbox("UseSolidColorTheme", null, (bool value) => _viewModel.UseSolidColorTheme = value, null, null, HtmlViewBindingMode.OneWayToViewmodel);
-            Bindings.BindText("ColorForSolidThemeHex", null, (string value) => _viewModel.ColorForSolidThemeHex = value, null, null, HtmlViewBindingMode.OneWayToViewmodel);
-            Bindings.BindDropdown("SelectedThemeMode", null, (string value) => _viewModel.SelectedThemeMode = value, null, null, HtmlViewBindingMode.OneWayToViewmodel);
-            Bindings.BindDropdown("SelectedNoteInsertionMode", null, (string value) => _viewModel.SelectedNoteInsertionMode = value, null, null, HtmlViewBindingMode.OneWayToViewmodel);
-            Bindings.BindCheckbox("UseColorForAllNotesInDarkMode", null, (bool value) => _viewModel.UseColorForAllNotesInDarkMode = value, null, null, HtmlViewBindingMode.OneWayToViewmodel);
-            Bindings.BindText("ColorForAllNotesInDarkModeHex", null, (string value) => _viewModel.ColorForAllNotesInDarkModeHex = value, null, null, HtmlViewBindingMode.OneWayToViewmodel);
             Bindings.UnhandledViewBindingEvent += UnhandledViewBindingEventHandler;
+
+            VueBindings = new VueDataBinding(_viewModel, View);
+            _viewModel.VueDataBindingScript = VueBindings.BuildVueScript();
+            VueBindings.StartListening();
 
             string html = _viewService.GenerateHtml(_viewModel);
             View.LoadHtml(html);
-            View.NavigationCompleted += NavigationCompletedHandler;
-        }
-
-        private void NavigationCompletedHandler(object sender, EventArgs e)
-        {
-            View.NavigationCompleted -= NavigationCompletedHandler;
-
-            VueJsDataBinding vueBinding = new VueJsDataBinding(
-                _viewModel,
-                View,
-                new [] 
-                {
-                    new BindingDescription { PropertyName = nameof(_viewModel.FontSizeStep), Mode = HtmlViewBindingMode.TwoWayPlusOneTimeToView } 
-                });
-            vueBinding.StartListening();
-        }
-
-        private void SetEncryptionAlgorithmToViewmodel(string value)
-        {
-            _viewModel.SelectedEncryptionAlgorithm = _viewModel.EncryptionAlgorithms.Find(
-                (item) => item.Value == value);
         }
 
         private void UnhandledViewBindingEventHandler(object sender, HtmlViewBindingNotifiedEventArgs e)
@@ -96,9 +67,6 @@ namespace SilentNotes.Controllers
                 case "DefaultNoteColorPreview":
                     _viewModel.DefaultNoteColorHex = e.Parameters["data-notecolorhex"];
                     SetDefaultNoteColorToView(_viewModel.DefaultNoteColorHex);
-                    break;
-                case "FontSize":
-                    _viewModel.FontSizeStep = e.Parameters["value"];
                     break;
             }
         }
