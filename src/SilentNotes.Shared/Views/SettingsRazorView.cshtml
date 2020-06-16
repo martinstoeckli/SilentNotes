@@ -78,12 +78,12 @@
                 <label class="col-form-label" for="Theme">@Model.Language["gui_texture"]</label>
                 <div id="theme-control" class="form-control">
                     <div id="Theme" class="dropdown">
-                        <button class="theme-preview btn m-0 h-100" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-binding="SelectedTheme" style="background: url(@Model.SelectedTheme.Image);">
+                        <button class="theme-preview btn m-0 h-100" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-bind:style="{ backgroundImage: 'url(' + SelectedThemeImage + ')' }">
                         </button>
                         <div class="dropdown-menu theme-list" aria-labelledby="themeChooser">
                             @foreach (var theme in @Model.Theme.Themes)
                             {
-                                <div class="dropdown-item theme-item" onclick="bind(event)" data-binding="SelectedThemePreview" data-theme="@(theme.Id)" style="background: url(@(theme.Image));"></div>
+                                <div class="dropdown-item theme-item" v-on:click="SelectedTheme='@(theme.Id)'" style="background: url(@(theme.Image));"></div>
                             }
                         </div>
                     </div>
@@ -123,12 +123,12 @@
                 <label class="col-form-label" for="Color">@Model.Language["gui_default_color"]</label>
                 <div id="color-control" class="form-control">
                     <div id="DefaultNoteColor" class="dropdown">
-                        <button id="Color" class="color-preview btn m-0 h-100" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-binding="DefaultNoteColor" style="background-color: @Model.DefaultNoteColorHex;">
+                        <button id="Color" class="color-preview btn m-0 h-100" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-bind:style="{ backgroundColor: DefaultNoteColorHex }">
                         </button>
                         <div class="dropdown-menu color-list" aria-labelledby="colorChooser">
                             @foreach (var backgroundColor in @Model.NoteColorsHex)
                             {
-                                <div class="dropdown-item color-btn @Model.GetDarkClass(backgroundColor)" onclick="bind(event);" data-binding="DefaultNoteColorPreview" data-notecolorhex="@backgroundColor" style="background-color: @backgroundColor">Lorem ipsum</div>
+                                <div class="dropdown-item color-btn @Model.GetDarkClass(backgroundColor)" v-on:click="DefaultNoteColorHex='@backgroundColor'" style="background-color: @backgroundColor">Lorem ipsum</div>
                             }
                         </div>
                     </div>
@@ -168,7 +168,7 @@
             </div>
             <div class="form-row form-group">
                 <label class="col-form-label" for="CloudStorageSettings">@Model.Language["cloud_service"]</label>
-                <textarea class="form-control" id="CloudStorageSettings" v-model="AccountSummary" rows="4" readonly></textarea>
+                <textarea class="form-control" id="CloudStorageSettings" v-once v-model="AccountSummary" rows="4" readonly></textarea>
             </div>
             <button type="button" class="btn btn-secondary mb-2" v-on:click="ChangeCloudSettingsCommand" title="@Model.Language["cloud_change_settings_desc"]">@Model.Language["cloud_change_settings"]</button>
             <button type="button" class="btn btn-secondary mb-2" v-on:click="ClearCloudSettingsCommand" title="@Model.Language["cloud_clear_settings_desc"]">@Model.Language["cloud_clear_settings"]</button>

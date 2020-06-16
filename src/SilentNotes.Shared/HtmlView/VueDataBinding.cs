@@ -413,11 +413,11 @@ vueReady(function () {
                 VueDataBindingAttribute bindingAttribute = prop.GetCustomAttribute<VueDataBindingAttribute>();
                 if (bindingAttribute != null)
                 {
+                    VueBindingMode bindingMode = bindingAttribute.BindingMode;
                     if (prop.PropertyType == typeof(ICommand))
-                    {
-                        bindingAttribute.BindingMode = VueBindingMode.Command;
-                    }
-                    yield return new VueBindingDescription(prop.Name, bindingAttribute.BindingMode);
+                        bindingMode = VueBindingMode.Command;
+
+                    yield return new VueBindingDescription(prop.Name, bindingMode);
                 }
             }
         }

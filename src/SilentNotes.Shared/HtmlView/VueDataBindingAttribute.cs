@@ -16,15 +16,6 @@ namespace SilentNotes.HtmlView
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VueDataBindingAttribute"/> class.
-        /// The binding mode is set to <see cref="VueBindingMode.TwoWay"/>.
-        /// </summary>
-        public VueDataBindingAttribute()
-            : this(VueBindingMode.TwoWay)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VueDataBindingAttribute"/> class.
         /// </summary>
         /// <param name="bindingMode">Sets the <see cref="BindingMode"/>.</param>
         public VueDataBindingAttribute(VueBindingMode bindingMode)

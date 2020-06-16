@@ -45,37 +45,12 @@ namespace SilentNotes.Controllers
                 Ioc.GetOrCreate<ISettingsService>(),
                 Ioc.GetOrCreate<IStoryBoardService>());
 
-            Bindings.BindBackgroundImage("SelectedTheme", () => _viewModel.SelectedTheme.Image, _viewModel, nameof(_viewModel.SelectedTheme), HtmlViewBindingMode.OneWayToView);
-            Bindings.UnhandledViewBindingEvent += UnhandledViewBindingEventHandler;
-
             VueBindings = new VueDataBinding(_viewModel, View);
             _viewModel.VueDataBindingScript = VueBindings.BuildVueScript();
             VueBindings.StartListening();
 
             string html = _viewService.GenerateHtml(_viewModel);
             View.LoadHtml(html);
-        }
-
-        private void UnhandledViewBindingEventHandler(object sender, HtmlViewBindingNotifiedEventArgs e)
-        {
-            switch (e.BindingName)
-            {
-                case "SelectedThemePreview":
-                    string themeId = e.Parameters["data-theme"];
-                    _viewModel.SelectedTheme = _viewModel.Theme.Themes.Find(item => item.Id == themeId);
-                    break;
-                case "DefaultNoteColorPreview":
-                    _viewModel.DefaultNoteColorHex = e.Parameters["data-notecolorhex"];
-                    SetDefaultNoteColorToView(_viewModel.DefaultNoteColorHex);
-                    break;
-            }
-        }
-
-        private void SetDefaultNoteColorToView(string colorHex)
-        {
-            string script = string.Format(
-                "htmlViewBindingsSetCss('DefaultNoteColor', 'background-color', '{0}');", colorHex);
-            View.ExecuteJavaScript(script);
         }
     }
 }

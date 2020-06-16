@@ -308,20 +308,8 @@ WriteLiteral(" aria-haspopup=\"true\"");
 
 WriteLiteral(" aria-expanded=\"false\"");
 
-WriteLiteral(" data-binding=\"SelectedTheme\"");
+WriteLiteral(" v-bind:style=\"{ backgroundImage: \'url(\' + SelectedThemeImage + \')\' }\"");
 
-WriteAttribute ("style", " style=\"", "\""
-, Tuple.Create<string,object,bool> ("", "background:", true)
-, Tuple.Create<string,object,bool> (" ", "url(", true)
-
-#line 81 "SettingsRazorView.cshtml"
-                                                                                                                                                   , Tuple.Create<string,object,bool> ("", Model.SelectedTheme.Image
-
-#line default
-#line hidden
-, false)
-, Tuple.Create<string,object,bool> ("", ");", true)
-);
 WriteLiteral(">\r\n                        </button>\r\n                        <div");
 
 WriteLiteral(" class=\"dropdown-menu theme-list\"");
@@ -348,27 +336,23 @@ WriteLiteral("                                <div");
 
 WriteLiteral(" class=\"dropdown-item theme-item\"");
 
-WriteLiteral(" onclick=\"bind(event)\"");
-
-WriteLiteral(" data-binding=\"SelectedThemePreview\"");
-
-WriteLiteral(" data-theme=\"");
-
+WriteAttribute ("v-on:click", " v-on:click=\"", "\""
+, Tuple.Create<string,object,bool> ("", "SelectedTheme=\'", true)
 
 #line 86 "SettingsRazorView.cshtml"
-                                                                                                                                        Write(theme.Id);
-
+                                                           , Tuple.Create<string,object,bool> ("", theme.Id
 
 #line default
 #line hidden
-WriteLiteral("\"");
-
+, false)
+, Tuple.Create<string,object,bool> ("", "\'", true)
+);
 WriteAttribute ("style", " style=\"", "\""
 , Tuple.Create<string,object,bool> ("", "background:", true)
 , Tuple.Create<string,object,bool> (" ", "url(", true)
 
 #line 86 "SettingsRazorView.cshtml"
-                                                                                                                                          , Tuple.Create<string,object,bool> ("", theme.Image
+                                                                                                , Tuple.Create<string,object,bool> ("", theme.Image
 
 #line default
 #line hidden
@@ -577,19 +561,8 @@ WriteLiteral(" aria-haspopup=\"true\"");
 
 WriteLiteral(" aria-expanded=\"false\"");
 
-WriteLiteral(" data-binding=\"DefaultNoteColor\"");
+WriteLiteral(" v-bind:style=\"{ backgroundColor: DefaultNoteColorHex }\"");
 
-WriteAttribute ("style", " style=\"", "\""
-, Tuple.Create<string,object,bool> ("", "background-color:", true)
-
-#line 126 "SettingsRazorView.cshtml"
-                                                                                                                                                                  , Tuple.Create<string,object,bool> (" ", Model.DefaultNoteColorHex
-
-#line default
-#line hidden
-, false)
-, Tuple.Create<string,object,bool> ("", ";", true)
-);
 WriteLiteral(">\r\n                        </button>\r\n                        <div");
 
 WriteLiteral(" class=\"dropdown-menu color-list\"");
@@ -625,26 +598,22 @@ WriteAttribute ("class", " class=\"", "\""
 #line hidden
 , false)
 );
-WriteLiteral(" onclick=\"bind(event);\"");
-
-WriteLiteral(" data-binding=\"DefaultNoteColorPreview\"");
-
-WriteLiteral(" data-notecolorhex=\"");
-
+WriteAttribute ("v-on:click", " v-on:click=\"", "\""
+, Tuple.Create<string,object,bool> ("", "DefaultNoteColorHex=\'", true)
 
 #line 131 "SettingsRazorView.cshtml"
-                                                                                                                                                                                      Write(backgroundColor);
-
+                                                                                                    , Tuple.Create<string,object,bool> ("", backgroundColor
 
 #line default
 #line hidden
-WriteLiteral("\"");
-
+, false)
+, Tuple.Create<string,object,bool> ("", "\'", true)
+);
 WriteAttribute ("style", " style=\"", "\""
 , Tuple.Create<string,object,bool> ("", "background-color:", true)
 
 #line 131 "SettingsRazorView.cshtml"
-                                                                                                                                                                                              , Tuple.Create<string,object,bool> (" ", backgroundColor
+                                                                                                                                               , Tuple.Create<string,object,bool> (" ", backgroundColor
 
 #line default
 #line hidden
@@ -902,6 +871,8 @@ WriteLiteral("</label>\r\n                <textarea");
 WriteLiteral(" class=\"form-control\"");
 
 WriteLiteral(" id=\"CloudStorageSettings\"");
+
+WriteLiteral(" v-once");
 
 WriteLiteral(" v-model=\"AccountSummary\"");
 
