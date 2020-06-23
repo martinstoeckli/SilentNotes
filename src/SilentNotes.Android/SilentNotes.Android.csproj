@@ -249,11 +249,6 @@
     </AndroidAsset>
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\jquery-3.4.1.min.js">
-      <Link>Assets\Html\jquery-3.4.1.min.js</Link>
-    </AndroidAsset>
-  </ItemGroup>
-  <ItemGroup>
     <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\blackstone.jpg">
       <Link>Assets\Html\blackstone.jpg</Link>
     </AndroidAsset>
@@ -305,6 +300,16 @@
   <ItemGroup>
     <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\quillsearchhighlighter.js">
       <Link>Assets\Html\quillsearchhighlighter.js</Link>
+    </AndroidAsset>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\jquery-3.5.1.slim.min.js">
+      <Link>Assets\Html\jquery-3.5.1.slim.min.js</Link>
+    </AndroidAsset>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\vue.min.js">
+      <Link>Assets\Html\vue.min.js</Link>
     </AndroidAsset>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />

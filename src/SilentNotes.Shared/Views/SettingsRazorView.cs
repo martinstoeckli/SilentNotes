@@ -97,7 +97,7 @@ WriteLiteral(" src=\"vue.min.js\"");
 
 WriteLiteral("></script>\r\n    <script");
 
-WriteLiteral(" src=\"jquery-3.4.1.min.js\"");
+WriteLiteral(" src=\"jquery-3.5.1.slim.min.js\"");
 
 WriteLiteral("></script>\r\n    <script");
 
@@ -174,14 +174,14 @@ WriteLiteral(" class=\"d-flex\"");
 
 WriteLiteral(">\r\n        <button");
 
-WriteLiteral(" class=\"nav-item mr-auto shortcut-escape\"");
+WriteLiteral(" class=\"nav-item mr-auto\"");
 
 WriteLiteral(" v-on:click=\"GoBackCommand\"");
 
 WriteAttribute ("title", " title=\"", "\""
 
 #line 63 "SettingsRazorView.cshtml"
-                                                    , Tuple.Create<string,object,bool> ("", Model.Language["back"]
+                                    , Tuple.Create<string,object,bool> ("", Model.Language["back"]
 
 #line default
 #line hidden
@@ -191,7 +191,7 @@ WriteLiteral(">");
 
 
 #line 63 "SettingsRazorView.cshtml"
-                                                                                                                      WriteLiteral(Model.Icon["arrow-left"]);
+                                                                                                      WriteLiteral(Model.Icon["arrow-left"]);
 
 #line default
 #line hidden

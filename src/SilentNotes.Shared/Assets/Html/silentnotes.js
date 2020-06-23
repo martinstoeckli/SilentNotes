@@ -20,10 +20,6 @@ function findFirst(selector) {
 	return null;
 }
 
-function typeOf(obj) {
-	return Object.prototype.toString.call(obj).replace(/^\[object (.+)\]$/, '$1').toLowerCase();
-}
-
 /**
  * Functions specific to SilentNotes
  */

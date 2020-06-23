@@ -27,10 +27,11 @@ namespace SilentNotes.HtmlView
         private const string VuePropertyChanged = "vuePropertyChanged";
         private const string VueCommandExecuted = "vueCommandExecuted";
 
-        protected readonly object _dotnetViewModel;
-        protected readonly INotifyPropertyChanged _viewModelNotifier;
-        protected readonly IHtmlView _htmlView;
-        protected readonly VueBindingDescriptions _bindingDescriptions;
+        private readonly object _dotnetViewModel;
+        private readonly INotifyPropertyChanged _viewModelNotifier;
+        private readonly IHtmlView _htmlView;
+        private readonly VueBindingDescriptions _bindingDescriptions;
+        private readonly List<VueBindingShortcut> _bindingShortcuts;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VueDataBinding"/> class.
@@ -38,7 +39,8 @@ namespace SilentNotes.HtmlView
         /// <param name="dotnetViewModel">A C# viewmodel, which must support the <see cref="INotifyPropertyChanged"/>
         /// interface.</param>
         /// <param name="htmlView">A html view interface.</param>
-        public VueDataBinding(object dotnetViewModel, IHtmlView htmlView)
+        /// <param name="shortcuts">Optional enumeration of keyboard shortcuts.</param>
+        public VueDataBinding(object dotnetViewModel, IHtmlView htmlView, IEnumerable<VueBindingShortcut> shortcuts = null)
         {
             if (dotnetViewModel == null)
                 throw new ArgumentNullException(nameof(dotnetViewModel));
@@ -53,8 +55,10 @@ namespace SilentNotes.HtmlView
 
             // Search for properties which require data binding
             _bindingDescriptions = new VueBindingDescriptions(DetectMarkedViewmodelAttributes(_dotnetViewModel));
+            _bindingShortcuts = new List<VueBindingShortcut>(shortcuts);
         }
 
+        /// <inheritdoc/>
         public void Dispose()
         {
             StopListening();
@@ -88,6 +92,14 @@ function [vueCommandExecuted](commandName) {
     location.href = url;
 }
 
+function vueFindCommandByShortcut(e)
+{
+    if (event.isComposing)
+        return null;
+    [VUE_SHORTCUTS]
+    return null;
+}
+
 var [vm];
 vueReady(function () {
     var _this = this;
@@ -101,7 +113,20 @@ vueReady(function () {
         },
         watch: {
             [VUE_WATCHES]
-        }
+        },
+        mounted() {
+            this._shortcutListener = function(e) {
+                var command = vueFindCommandByShortcut(e)
+                if (command) {
+                    e.preventDefault();
+                    vueCommandExecuted(command);
+                }
+            };
+            document.addEventListener('keydown', this._shortcutListener.bind(this));
+        },
+        beforeDestroy() {
+            document.removeEventListener('keydown', this._shortcutListener);
+        },
     });
 });
 ");
@@ -146,12 +171,26 @@ vueReady(function () {
                 }
             }
 
+            List<string> vueShortcuts = new List<string>();
+            foreach (VueBindingShortcut shortcut in _bindingShortcuts)
+            {
+                // Return command if keydown event (e) matches a known shortcut
+                vueShortcuts.Add(string.Format(
+                    "if (e.key === '{0}' && e.ctrlKey == {1} && e.shiftKey == {2} && e.altKey == {3}) return '{4}';",
+                    shortcut.Key,
+                    shortcut.Ctrl.ToString().ToLowerInvariant(),
+                    shortcut.Shift.ToString().ToLowerInvariant(),
+                    shortcut.Alt.ToString().ToLowerInvariant(),
+                    shortcut.CommandName));
+            }
+
             vueScript.Replace("[vm]", VueInstanceName);
             vueScript.Replace("[vuePropertyChanged]", VuePropertyChanged);
             vueScript.Replace("[vueCommandExecuted]", VueCommandExecuted);
-            vueScript.Replace("[VUE_DATA_DECLARATIONS]",  string.Join("\n", vueDatas));
+            vueScript.Replace("[VUE_DATA_DECLARATIONS]", string.Join("\n", vueDatas));
             vueScript.Replace("[VUE_METHOD_DECLARATIONS]", string.Join("\n", vueMethods));
             vueScript.Replace("[VUE_WATCHES]", string.Join("\n", vueWatches));
+            vueScript.Replace("[VUE_SHORTCUTS]", string.Join("\n", vueShortcuts));
             string result = vueScript.ToString();
             return result;
         }
@@ -339,6 +378,11 @@ vueReady(function () {
             return false;
         }
 
+        /// <summary>
+        /// This method is called by the JavaScript, triggered by the Vue model.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="uri">The navigation uri, which should be filtered for binding commands.</param>
         private void NavigatingEventHandler(object sender, string uri)
         {
             if (!IsListening || !IsVueBindingUri(uri))
@@ -364,6 +408,12 @@ vueReady(function () {
             }
         }
 
+        /// <summary>
+        /// This method is called when the viewmodel modified a property and raised an
+        /// INotifyPropertyChanged event.
+        /// </summary>
+        /// <param name="sender">Sender of the event.</param>
+        /// <param name="e">Event arguments.</param>
         private void ViewmodelPropertyChangedHandler(object sender, PropertyChangedEventArgs e)
         {
             if (!IsListening)
