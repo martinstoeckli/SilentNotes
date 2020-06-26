@@ -23,7 +23,7 @@
         @{WriteLiteral(Model.VueDataBindingScript);}
     </script>
 </head>
-<body><div id="vueDataBinding" v-on:keyup.esc="GoBackCommand">
+<body><div id="vueDataBinding">
     <nav id="navigation" class="d-flex">
         <button class="nav-item mr-auto" v-on:click="GoBackCommand" title="@Model.Language["back"]">@{WriteLiteral(Model.Icon["arrow-left"]);}</button>
     </nav>
@@ -40,7 +40,7 @@
                 <table class="my-3 table table-sm">
                     <tr>
                         <th class="">@Model.Language["version"]</th>
-                        <td>{{ VersionFmt }}</td>
+                        <td v-once>{{ VersionFmt }}</td>
                     </tr>
                     <tr>
                         <th class="">@Model.Language["copyright"]</th>

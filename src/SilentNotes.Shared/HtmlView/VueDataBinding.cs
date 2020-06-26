@@ -55,7 +55,7 @@ namespace SilentNotes.HtmlView
 
             // Search for properties which require data binding
             _bindingDescriptions = new VueBindingDescriptions(DetectMarkedViewmodelAttributes(_dotnetViewModel));
-            _bindingShortcuts = new List<VueBindingShortcut>(shortcuts);
+            _bindingShortcuts = shortcuts != null ? new List<VueBindingShortcut>(shortcuts) : null;
         }
 
         /// <inheritdoc/>
@@ -172,16 +172,19 @@ vueReady(function () {
             }
 
             List<string> vueShortcuts = new List<string>();
-            foreach (VueBindingShortcut shortcut in _bindingShortcuts)
+            if (_bindingShortcuts != null)
             {
-                // Return command if keydown event (e) matches a known shortcut
-                vueShortcuts.Add(string.Format(
-                    "if (e.key === '{0}' && e.ctrlKey == {1} && e.shiftKey == {2} && e.altKey == {3}) return '{4}';",
-                    shortcut.Key,
-                    shortcut.Ctrl.ToString().ToLowerInvariant(),
-                    shortcut.Shift.ToString().ToLowerInvariant(),
-                    shortcut.Alt.ToString().ToLowerInvariant(),
-                    shortcut.CommandName));
+                foreach (VueBindingShortcut shortcut in _bindingShortcuts)
+                {
+                    // Return command if keydown event (e) matches a known shortcut
+                    vueShortcuts.Add(string.Format(
+                        "if (e.key === '{0}' && e.ctrlKey == {1} && e.shiftKey == {2} && e.altKey == {3}) return '{4}';",
+                        shortcut.Key,
+                        shortcut.Ctrl.ToString().ToLowerInvariant(),
+                        shortcut.Shift.ToString().ToLowerInvariant(),
+                        shortcut.Alt.ToString().ToLowerInvariant(),
+                        shortcut.CommandName));
+                }
             }
 
             vueScript.Replace("[vm]", VueInstanceName);

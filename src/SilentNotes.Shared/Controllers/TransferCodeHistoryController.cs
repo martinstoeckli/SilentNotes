@@ -43,10 +43,10 @@ namespace SilentNotes.Controllers
                 Ioc.GetOrCreate<IBaseUrlService>(),
                 Ioc.GetOrCreate<ISettingsService>());
 
-            Bindings.BindCommand("GoBack", _viewModel.GoBackCommand);
-            Bindings.BindCommand("ShowTransfercodeHistoryCommand", _viewModel.ShowTransfercodeHistoryCommand);
-            Bindings.BindVisibility("ShowTransfercodeHistoryCommand", () => _viewModel.ShowTransfercodeHistoryVisible, _viewModel, nameof(_viewModel.ShowTransfercodeHistoryVisible), HtmlViewBindingMode.OneWayToViewPlusOneTimeToView);
-            Bindings.BindVisibility("TransfercodeHistory", () => _viewModel.TransfercodeHistoryVisible, _viewModel, nameof(_viewModel.TransfercodeHistoryVisible), HtmlViewBindingMode.OneWayToViewPlusOneTimeToView);
+            VueBindingShortcut escShortcut = new VueBindingShortcut(VueBindingShortcut.KeyEscape, nameof(InfoViewModel.GoBackCommand));
+            VueBindings = new VueDataBinding(_viewModel, View, new[] { escShortcut });
+            _viewModel.VueDataBindingScript = VueBindings.BuildVueScript();
+            VueBindings.StartListening();
 
             string html = _viewService.GenerateHtml(_viewModel);
             View.LoadHtml(html);

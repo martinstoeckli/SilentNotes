@@ -125,8 +125,6 @@ WriteLiteral("\r\n    </script>\r\n</head>\r\n<body><div");
 
 WriteLiteral(" id=\"vueDataBinding\"");
 
-WriteLiteral(" v-on:keyup.esc=\"GoBackCommand\"");
-
 WriteLiteral(">\r\n    <nav");
 
 WriteLiteral(" id=\"navigation\"");
@@ -197,8 +195,8 @@ WriteLiteral(">");
 
 #line default
 #line hidden
-WriteLiteral("</th>\r\n                        <td>{{ VersionFmt }}</td>\r\n                    </t" +
-"r>\r\n                    <tr>\r\n                        <th");
+WriteLiteral("</th>\r\n                        <td v-once>{{ VersionFmt }}</td>\r\n                " +
+"    </tr>\r\n                    <tr>\r\n                        <th");
 
 WriteLiteral(" class=\"\"");
 
