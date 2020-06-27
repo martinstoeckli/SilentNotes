@@ -31,12 +31,12 @@ body {
     pointer-events: none; /* ignore clicks on links */
     cursor: default;
 }
-.note-viewer.over-view.checklist p::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("checkbox-blank-outline", new[] { new KeyValuePair<string, string>("fill", "#000000") }));}; }
-.note-viewer.dark.over-view.checklist p::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("checkbox-blank-outline", new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") }));}; }
-.note-viewer.over-view.checklist p.done::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("check-box-outline", new[] { new KeyValuePair<string, string>("fill", "#000000") }));}; }
-.note-viewer.dark.over-view.checklist p.done::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("check-box-outline", new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") }));}; }
-.note-viewer.over-view.checklist p.disabled::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("checkbox-blank-outline", new[] { new KeyValuePair<string, string>("fill", "#000000") }));}; }
-.note-viewer.dark.over-view.checklist p.disabled::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("checkbox-blank-outline", new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") }));}; }
+div .note-viewer.over-view.checklist p::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("checkbox-blank-outline", new[] { new KeyValuePair<string, string>("fill", "#000000") }));}; }
+div.dark .note-viewer.over-view.checklist p::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("checkbox-blank-outline", new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") }));}; }
+div .note-viewer.over-view.checklist p.done::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("check-box-outline", new[] { new KeyValuePair<string, string>("fill", "#000000") }));}; }
+div.dark .note-viewer.over-view.checklist p.done::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("check-box-outline", new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") }));}; }
+div .note-viewer.over-view.checklist p.disabled::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("checkbox-blank-outline", new[] { new KeyValuePair<string, string>("fill", "#000000") }));}; }
+div.dark .note-viewer.over-view.checklist p.disabled::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("checkbox-blank-outline", new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") }));}; }
 
 .nav-filter {
     margin: 0 1em 0 0;

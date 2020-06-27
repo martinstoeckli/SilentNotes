@@ -25,6 +25,15 @@ namespace SilentNotes.HtmlView
         OneWayToView,
 
         /// <summary>
+        /// Changes in the view are updating the viewmodel, but not the other way.
+        /// This binding can be triggered in the Html view by calling:
+        /// <example><code>
+        ///   vuePropertyChanged('MyPropertyName', newValue);
+        /// </code></example>
+        /// </summary>
+        OneWayToViewmodel,
+
+        /// <summary>
         /// Executes an <see cref="ICommand"/>.
         /// </summary>
         Command,

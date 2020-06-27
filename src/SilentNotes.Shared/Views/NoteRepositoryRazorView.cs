@@ -143,52 +143,52 @@ WriteLiteral("\r\n}\r\n\r\n.note-viewer {\r\n    font-size: ");
 #line default
 #line hidden
 WriteLiteral("px !important;\r\n}\r\n.note-viewer a {\r\n    pointer-events: none; /* ignore clicks o" +
-"n links */\r\n    cursor: default;\r\n}\r\n.note-viewer.over-view.checklist p::before " +
-"{ content: ");
+"n links */\r\n    cursor: default;\r\n}\r\ndiv .note-viewer.over-view.checklist p::bef" +
+"ore { content: ");
 
 
 #line 34 "NoteRepositoryRazorView.cshtml"
-                                                        WriteLiteral(Model.Icon.LoadIconAsCssUrl("checkbox-blank-outline", new[] { new KeyValuePair<string, string>("fill", "#000000") }));
+                                                            WriteLiteral(Model.Icon.LoadIconAsCssUrl("checkbox-blank-outline", new[] { new KeyValuePair<string, string>("fill", "#000000") }));
 
 #line default
 #line hidden
-WriteLiteral("; }\r\n.note-viewer.dark.over-view.checklist p::before { content: ");
+WriteLiteral("; }\r\ndiv.dark .note-viewer.over-view.checklist p::before { content: ");
 
 
 #line 35 "NoteRepositoryRazorView.cshtml"
-                                                             WriteLiteral(Model.Icon.LoadIconAsCssUrl("checkbox-blank-outline", new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") }));
+                                                                 WriteLiteral(Model.Icon.LoadIconAsCssUrl("checkbox-blank-outline", new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") }));
 
 #line default
 #line hidden
-WriteLiteral("; }\r\n.note-viewer.over-view.checklist p.done::before { content: ");
+WriteLiteral("; }\r\ndiv .note-viewer.over-view.checklist p.done::before { content: ");
 
 
 #line 36 "NoteRepositoryRazorView.cshtml"
-                                                             WriteLiteral(Model.Icon.LoadIconAsCssUrl("check-box-outline", new[] { new KeyValuePair<string, string>("fill", "#000000") }));
+                                                                 WriteLiteral(Model.Icon.LoadIconAsCssUrl("check-box-outline", new[] { new KeyValuePair<string, string>("fill", "#000000") }));
 
 #line default
 #line hidden
-WriteLiteral("; }\r\n.note-viewer.dark.over-view.checklist p.done::before { content: ");
+WriteLiteral("; }\r\ndiv.dark .note-viewer.over-view.checklist p.done::before { content: ");
 
 
 #line 37 "NoteRepositoryRazorView.cshtml"
-                                                                  WriteLiteral(Model.Icon.LoadIconAsCssUrl("check-box-outline", new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") }));
+                                                                      WriteLiteral(Model.Icon.LoadIconAsCssUrl("check-box-outline", new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") }));
 
 #line default
 #line hidden
-WriteLiteral("; }\r\n.note-viewer.over-view.checklist p.disabled::before { content: ");
+WriteLiteral("; }\r\ndiv .note-viewer.over-view.checklist p.disabled::before { content: ");
 
 
 #line 38 "NoteRepositoryRazorView.cshtml"
-                                                                 WriteLiteral(Model.Icon.LoadIconAsCssUrl("checkbox-blank-outline", new[] { new KeyValuePair<string, string>("fill", "#000000") }));
+                                                                     WriteLiteral(Model.Icon.LoadIconAsCssUrl("checkbox-blank-outline", new[] { new KeyValuePair<string, string>("fill", "#000000") }));
 
 #line default
 #line hidden
-WriteLiteral("; }\r\n.note-viewer.dark.over-view.checklist p.disabled::before { content: ");
+WriteLiteral("; }\r\ndiv.dark .note-viewer.over-view.checklist p.disabled::before { content: ");
 
 
 #line 39 "NoteRepositoryRazorView.cshtml"
-                                                                      WriteLiteral(Model.Icon.LoadIconAsCssUrl("checkbox-blank-outline", new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") }));
+                                                                          WriteLiteral(Model.Icon.LoadIconAsCssUrl("checkbox-blank-outline", new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") }));
 
 #line default
 #line hidden

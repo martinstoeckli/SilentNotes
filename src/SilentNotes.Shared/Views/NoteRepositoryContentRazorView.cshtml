@@ -4,14 +4,14 @@
     @foreach (var note in @Model.FilteredNotes)
     {
     <li class="wraplist-item sortable-item" data-note="@note.Id.ToString()">
-        <div class="note-card" style="background-color:@note.BackgroundColorHex" onclick="bind(event);" data-binding="ShowNote">
+        <div class="note-card @note.GetDarkClass()" style="background-color:@note.BackgroundColorHex" onclick="bind(event);" data-binding="ShowNote">
             @if (@note.IsLocked)
             {
                 <span class="locked @note.GetDarkClass()"><svg width='24' height='24' viewBox='0 0 24 24'><use xlink:href="#svg-lock-outline" /></svg></span>
             }
             else
             {
-                <div class="note-viewer over-view @note.GetDarkClass() @note.CssClassNoteType">@{WriteLiteral(note.UnlockedHtmlContent);}</div>
+                <div class="note-viewer over-view @note.CssClassNoteType">@{WriteLiteral(note.UnlockedHtmlContent);}</div>
             }
         </div>
         <div class="note-handle sortable-handle @note.GetDarkClass()"><svg width='22' height='22' viewBox='0 0 24 24'><use xlink:href="#svg-arrow-all" /></svg></div>

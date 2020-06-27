@@ -111,11 +111,10 @@ namespace SilentNotes.Controllers
                 note);
             SetHtmlViewBackgroundColor(htmlView);
 
-            Bindings.BindCommand("PullNoteFromOnlineStorage", _viewModel.PullNoteFromOnlineStorageCommand);
-            Bindings.BindCommand("PushNoteToOnlineStorage", _viewModel.PushNoteToOnlineStorageCommand);
-            Bindings.BindCommand("GoBack", _viewModel.GoBackCommand);
-            Bindings.BindText("PrettyTimeAgo", () => _viewModel.PrettyTimeAgo, null, _viewModel, nameof(_viewModel.PrettyTimeAgo), HtmlViewBindingMode.OneWayToView);
-            Bindings.UnhandledViewBindingEvent += UnhandledViewBindingEventHandler;
+            VueBindings = new VueDataBinding(_viewModel, View);
+            VueBindings.UnhandledViewBindingEvent += UnhandledViewBindingEventHandler;
+            _viewModel.VueDataBindingScript = VueBindings.BuildVueScript();
+            VueBindings.StartListening();
 
             string html = _viewService.GenerateHtml(_viewModel);
             View.LoadHtml(html);
@@ -151,6 +150,15 @@ namespace SilentNotes.Controllers
             return false;
         }
 
+        private async void UnhandledViewBindingEventHandler(object sender, VueBindingUnhandledViewBindingEventArgs e)
+        {
+            if (string.Equals(e.PropertyName, nameof(_viewModel.UnlockedHtmlContent)))
+            {
+                string content = await View.ExecuteJavaScriptReturnString("getNoteHtmlContent();");
+                _viewModel.UnlockedHtmlContent = content;
+            }
+        }
+
         private void NavigationCompletedEventHandler(object sender, EventArgs e)
         {
             View.NavigationCompleted -= NavigationCompletedEventHandler;
@@ -164,33 +172,6 @@ namespace SilentNotes.Controllers
                 string script = string.Format("setNoteHtmlContent('{0}');", encodedNewText);
                 View.ExecuteJavaScript(script);
             }
-        }
-
-        private async void UnhandledViewBindingEventHandler(object sender, HtmlViewBindingNotifiedEventArgs e)
-        {
-            switch (e.BindingName?.ToLowerInvariant())
-            {
-                case "backgroundcolorhex":
-                    _viewModel.BackgroundColorHex = e.Parameters["data-backgroundcolorhex"];
-                    SetHtmlViewBackgroundColor(View);
-                    SetViewBackgroundColor(_viewModel.BackgroundColorHex);
-                    break;
-                case "quill":
-                    string content = await View.ExecuteJavaScriptReturnString("getNoteHtmlContent();");
-                    _viewModel.UnlockedHtmlContent = content;
-                    break;
-            }
-        }
-
-        private void SetViewBackgroundColor(string colorHex)
-        {
-            string script = string.Format(
-                "htmlViewBindingsSetCss('Content', 'background-color', '{0}');", colorHex);
-            string darkClass = _viewModel.GetDarkClass();
-            script += string.IsNullOrEmpty(darkClass)
-                ? "htmlViewBindingsRemoveClass('quill', 'dark'); htmlViewBindingsRemoveClass('PrettyTimeAgo', 'dark');"
-                : "htmlViewBindingsAddClass('quill', 'dark'); htmlViewBindingsAddClass('PrettyTimeAgo', 'dark');";
-            View.ExecuteJavaScript(script);
         }
     }
 }

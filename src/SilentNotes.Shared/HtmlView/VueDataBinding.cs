@@ -22,11 +22,6 @@ namespace SilentNotes.HtmlView
     /// </summary>
     public class VueDataBinding : IDisposable
     {
-        /// <summary>The Vue instance in the View must be named like this.</summary>
-        private const string VueInstanceName = "vm";
-        private const string VuePropertyChanged = "vuePropertyChanged";
-        private const string VueCommandExecuted = "vueCommandExecuted";
-
         private readonly object _dotnetViewModel;
         private readonly INotifyPropertyChanged _viewModelNotifier;
         private readonly IHtmlView _htmlView;
@@ -81,14 +76,14 @@ function vueReady(fn) {
     }
 }
 
-function [vuePropertyChanged](propertyName, value) {
+function vuePropertyChanged(propertyName, value) {
     var encodedValue = encodeURIComponent(value);
-    var url = '[vuePropertyChanged]?name=' + propertyName + '&value=' + encodedValue;
+    var url = 'vuePropertyChanged?name=' + propertyName + '&value=' + encodedValue;
     location.href = url;
 }
 
-function [vueCommandExecuted](commandName) {
-    var url = '[vueCommandExecuted]?name=' + commandName;
+function vueCommandExecuted(commandName) {
+    var url = 'vueCommandExecuted?name=' + commandName;
     location.href = url;
 }
 
@@ -100,10 +95,10 @@ function vueFindCommandByShortcut(e)
     return null;
 }
 
-var [vm];
+var vm;
 vueReady(function () {
     var _this = this;
-    [vm] = new Vue({
+    vm = new Vue({
         el: '#vueDataBinding',
         data: {
             [VUE_DATA_DECLARATIONS]
@@ -134,7 +129,7 @@ vueReady(function () {
             List<string> vueDatas = new List<string>();
             foreach (VueBindingDescription binding in _bindingDescriptions)
             {
-                if ((binding.BindingMode == VueBindingMode.OneWayToView) || (binding.BindingMode == VueBindingMode.TwoWay))
+                if ((binding.BindingMode == VueBindingMode.TwoWay) || (binding.BindingMode == VueBindingMode.OneWayToView))
                 {
                     TryGetFromViewmodel(binding, out object propertyValue);
                     TryFormatForView(binding, propertyValue, out string formattedValue);
@@ -187,9 +182,6 @@ vueReady(function () {
                 }
             }
 
-            vueScript.Replace("[vm]", VueInstanceName);
-            vueScript.Replace("[vuePropertyChanged]", VuePropertyChanged);
-            vueScript.Replace("[vueCommandExecuted]", VueCommandExecuted);
             vueScript.Replace("[VUE_DATA_DECLARATIONS]", string.Join("\n", vueDatas));
             vueScript.Replace("[VUE_METHOD_DECLARATIONS]", string.Join("\n", vueMethods));
             vueScript.Replace("[VUE_WATCHES]", string.Join("\n", vueWatches));
@@ -239,6 +231,16 @@ vueReady(function () {
                 IsListening = false;
             }
         }
+
+        /// <summary>
+        /// This event is triggered when the Html view notified about a user action, but there is
+        /// no binding which handles the event. This event can be triggered deliberately in the
+        /// HTML view by calling:
+        /// <example><code>
+        ///   vuePropertyChanged('UnknownPropertyName', newValue);
+        /// </code></example>
+        /// </summary>
+        public event EventHandler<VueBindingUnhandledViewBindingEventArgs> UnhandledViewBindingEvent;
 
         internal bool TryFormatForView(VueBindingDescription binding, object value, out string formattedValue)
         {
@@ -340,7 +342,7 @@ vueReady(function () {
                 try
                 {
                     string script = string.Format(
-                        "var newValue = {2}; if ({0}.{1} != newValue) {0}.{1} = newValue;", VueInstanceName, binding.PropertyName, formattedValue);
+                        "var newValue = {2}; if ({0}.{1} != newValue) {0}.{1} = newValue;", "vm", binding.PropertyName, formattedValue);
                     _htmlView.ExecuteJavaScript(script);
                     return true;
                 }
@@ -397,17 +399,26 @@ vueReady(function () {
             string value = queryArguments.Get("value");
 
             VueBindingDescription binding = _bindingDescriptions.FindByPropertyName(propertyName);
-            switch (binding.BindingMode)
+            if (binding != null)
             {
-                case VueBindingMode.TwoWay:
-                case VueBindingMode.OneWayToView:
-                    TrySetToViewmodel(binding, value);
-                    break;
-                case VueBindingMode.Command:
-                    TryExecuteCommand(binding);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(binding.BindingMode));
+                switch (binding.BindingMode)
+                {
+                    case VueBindingMode.TwoWay:
+                    case VueBindingMode.OneWayToViewmodel:
+                        TrySetToViewmodel(binding, value);
+                        break;
+                    case VueBindingMode.Command:
+                        TryExecuteCommand(binding);
+                        break;
+                    case VueBindingMode.OneWayToView:
+                        break; // Should never happen
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(binding.BindingMode));
+                }
+            }
+            else
+            {
+                UnhandledViewBindingEvent?.Invoke(this, new VueBindingUnhandledViewBindingEventArgs(propertyName, value));
             }
         }
 
@@ -433,7 +444,7 @@ vueReady(function () {
         private bool IsVueBindingUri(string uri)
         {
             return !string.IsNullOrEmpty(uri)
-                && (uri.Contains(VuePropertyChanged) || uri.Contains(VueCommandExecuted))
+                && (uri.Contains("vuePropertyChanged?") || uri.Contains("vueCommandExecuted?"))
                 && !WebviewUtils.IsExternalUri(uri);
         }
 

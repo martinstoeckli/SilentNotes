@@ -23,7 +23,7 @@ using SilentNotes.ViewModels;
 #line hidden
 
 
-[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.4.0.311")]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.6.0.1061")]
 public partial class NoteRepositoryContentRazorView : NoteRepositoryContentRazorViewBase
 {
 
@@ -77,13 +77,21 @@ WriteLiteral("\"");
 
 WriteLiteral(">\r\n        <div");
 
-WriteLiteral(" class=\"note-card\"");
+WriteAttribute ("class", " class=\"", "\""
+, Tuple.Create<string,object,bool> ("", "note-card", true)
 
+#line 7 "NoteRepositoryContentRazorView.cshtml"
+, Tuple.Create<string,object,bool> (" ", note.GetDarkClass()
+
+#line default
+#line hidden
+, false)
+);
 WriteAttribute ("style", " style=\"", "\""
 , Tuple.Create<string,object,bool> ("", "background-color:", true)
 
 #line 7 "NoteRepositoryContentRazorView.cshtml"
-                , Tuple.Create<string,object,bool> ("", note.BackgroundColorHex
+                                     , Tuple.Create<string,object,bool> ("", note.BackgroundColorHex
 
 #line default
 #line hidden
@@ -151,14 +159,7 @@ WriteAttribute ("class", " class=\"", "\""
 , Tuple.Create<string,object,bool> (" ", "over-view", true)
 
 #line 14 "NoteRepositoryContentRazorView.cshtml"
-          , Tuple.Create<string,object,bool> (" ", note.GetDarkClass()
-
-#line default
-#line hidden
-, false)
-
-#line 14 "NoteRepositoryContentRazorView.cshtml"
-                               , Tuple.Create<string,object,bool> (" ", note.CssClassNoteType
+          , Tuple.Create<string,object,bool> (" ", note.CssClassNoteType
 
 #line default
 #line hidden
@@ -168,7 +169,7 @@ WriteLiteral(">");
 
 
 #line 14 "NoteRepositoryContentRazorView.cshtml"
-                                                                                                 WriteLiteral(note.UnlockedHtmlContent);
+                                                                            WriteLiteral(note.UnlockedHtmlContent);
 
 #line default
 #line hidden
