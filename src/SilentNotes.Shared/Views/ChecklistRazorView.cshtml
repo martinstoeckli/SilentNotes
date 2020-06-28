@@ -15,6 +15,7 @@
 
     <link href="quill/quill.snow.css" rel="stylesheet">
     <link href="note-view.css" rel="stylesheet">
+    <link href="quillsearchhighlighter.css" rel="stylesheet">
 
     <script src="vue.min.js"></script>
     <script src="jquery-3.5.1.slim.min.js"></script>
@@ -22,6 +23,7 @@
     <script src="silentnotes.js"></script>
     <script src="checklist.js"></script>
     <script src="quill/quill.min.js"></script>
+    <script src="quillsearchhighlighter.js"></script>
 
     <style type="text/css">
 body { background-color: transparent; }
@@ -66,6 +68,7 @@ div.dark .detail-view.checklist .ql-editor p::after { content: @{WriteLiteral(Mo
     </style>
     <script>
         var quill;
+        var searchHighlighter;
 
         function getNoteHtmlContent() {
             return quill.root.innerHTML;
@@ -73,6 +76,27 @@ div.dark .detail-view.checklist .ql-editor p::after { content: @{WriteLiteral(Mo
 
         function setNoteHtmlContent(text) {
             quill.setText(text, 'user');
+        }
+
+        function toggleSearchDialog() {
+            var makeVisible = $('#search-dialog').hasClass('hidden');
+            showSearchDialog(makeVisible);
+        }
+
+        function showSearchDialog(visible) {
+            if (visible) {
+                // Open dialog
+                $('#search-dialog').removeClass('hidden');
+                $('#TxtFilter').focus();
+                searchHighlighter.startListening();
+            }
+            else {
+                // Close dialog
+                searchHighlighter.stopListening();
+                searchHighlighter.clearSearchHighlights();
+                $('#search-dialog').addClass('hidden');
+                $('#TxtFilter').val('');
+            }
         }
 
         $(function () {
@@ -95,6 +119,12 @@ div.dark .detail-view.checklist .ql-editor p::after { content: @{WriteLiteral(Mo
                     vuePropertyChanged('UnlockedHtmlContent', null);
                 }
             });
+
+            $(quill.root).one("focusin", function () {
+                vm.PrettyTimeAgoVisible = false;
+            });
+
+            searchHighlighter = new QuillSearchHighlighter(quill, document.getElementById("TxtFilter"));
         });
 
         @{WriteLiteral(Model.VueDataBindingScript);}
@@ -104,20 +134,21 @@ div.dark .detail-view.checklist .ql-editor p::after { content: @{WriteLiteral(Mo
     <nav id="navigation" class="d-flex">
         <button class="nav-item mr-auto" v-on:click="GoBackCommand" title="@Model.Language["back"]">@{WriteLiteral(Model.Icon["arrow-left"]);}</button>
 
+        @if (!Model.IsLocked)
+        {
+            <button class="nav-item" onclick="toggleSearchDialog(); return false;" title="@Model.Language["search"]">@{WriteLiteral(Model.Icon["magnify"]);}</button>
+            <button class="nav-item" onclick="moveUp(true); return false;" title="@Model.Language["checklist_move_to_top"]">@{WriteLiteral(Model.Icon["arrow-collapse-up"]);}</button>
+            <button class="nav-item" onclick="moveUp(false); return false;" title="@Model.Language["checklist_move_up"]">@{WriteLiteral(Model.Icon["arrow-up"]);}</button>
+            <button class="nav-item" onclick="moveDown(false); return false;" title="@Model.Language["checklist_move_down"]">@{WriteLiteral(Model.Icon["arrow-down"]);}</button>
+            <button class="nav-item" onclick="moveDown(true); return false;" title="@Model.Language["checklist_move_to_bottom"]">@{WriteLiteral(Model.Icon["arrow-collapse-down"]);}</button>
+        }
+
         <span id="quill-toolbar" class="d-inline-flex">
             @if (!Model.IsLocked)
             {
                 <button class="nav-item ql-header" value="1" title="@Model.Language["note_header1"]"></button>
             }
         </span>
-
-        @if (!Model.IsLocked)
-        {
-            <button class="nav-item" onclick="moveUp(true); return false;" title="@Model.Language["checklist_move_to_top"]">@{WriteLiteral(Model.Icon["arrow-collapse-up"]);}</button>
-            <button class="nav-item" onclick="moveUp(false); return false;" title="@Model.Language["checklist_move_up"]">@{WriteLiteral(Model.Icon["arrow-up"]);}</button>
-            <button class="nav-item" onclick="moveDown(false); return false;" title="@Model.Language["checklist_move_down"]">@{WriteLiteral(Model.Icon["arrow-down"]);}</button>
-            <button class="nav-item" onclick="moveDown(true); return false;" title="@Model.Language["checklist_move_to_bottom"]">@{WriteLiteral(Model.Icon["arrow-collapse-down"]);}</button>
-        }
 
         <!-- Color dropdown -->
         <div class="dropdown">
@@ -169,11 +200,19 @@ div.dark .detail-view.checklist .ql-editor p::after { content: @{WriteLiteral(Mo
         }
     </div>
 
-    <div id="pretty-time-ago" v-bind:class="{ dark: IsDark }">{{ PrettyTimeAgo }}</div>
+    <div id="pretty-time-ago" v-if="PrettyTimeAgoVisible" v-bind:class="{ dark: IsDark }">{{ PrettyTimeAgo }}</div>
+
+    <div id="search-dialog" class="hidden">
+        <div class="nav-filter">
+            <input id="TxtFilter" autocomplete="off" />
+            <svg id="filter-cancel-icon" width='24' height='24' viewBox='0 0 24 24' class="" onclick="showSearchDialog(false);"><use xlink:href="#svg-close-circle-outline" /></svg>
+        </div>
+    </div>
 
     <div hidden>
         @{WriteLiteral(Model.Icon.LoadIcon("lock-outline", new[] { new KeyValuePair<string, string>("id", "svg-lock-outline") }));}
         @{WriteLiteral(Model.Icon.LoadIcon("delete", new[] { new KeyValuePair<string, string>("id", "svg-delete") }));}
+        @{WriteLiteral(Model.Icon.LoadIcon("close-circle-outline", new[] { new KeyValuePair<string, string>("id", "svg-close-circle-outline") }));}
     </div>
 </div></body>
 </html>

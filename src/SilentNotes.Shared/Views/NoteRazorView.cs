@@ -287,13 +287,22 @@ WriteLiteral("                <button");
 
 WriteLiteral(" class=\"nav-item\"");
 
-WriteLiteral(" onclick=\"toggleSearchDialog();\"");
+WriteLiteral(" onclick=\"toggleSearchDialog(); return false;\"");
 
+WriteAttribute ("title", " title=\"", "\""
+
+#line 138 "NoteRazorView.cshtml"
+                                                       , Tuple.Create<string,object,bool> ("", Model.Language["search"]
+
+#line default
+#line hidden
+, false)
+);
 WriteLiteral(">");
 
 
 #line 138 "NoteRazorView.cshtml"
-                                                                           WriteLiteral(Model.Icon["magnify"]);
+                                                                                                                           WriteLiteral(Model.Icon["magnify"]);
 
 #line default
 #line hidden

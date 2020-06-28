@@ -27,6 +27,7 @@ namespace SilentNotes.Services
             resources["cancel"] = "Cancel";
             resources["back"] = "Back";
             resources["continue"] = "Continue";
+            resources["search"] = "Search";
 
             resources["today"] = "today";
             resources["yesterday"] = "yesterday";
@@ -183,6 +184,7 @@ namespace SilentNotes.Services
             resources["cancel"] = "Abbrechen";
             resources["back"] = "Zurück";
             resources["continue"] = "Weiter";
+            resources["search"] = "Suchen";
 
             resources["today"] = "heute";
             resources["yesterday"] = "gestern";

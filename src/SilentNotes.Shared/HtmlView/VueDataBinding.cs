@@ -27,6 +27,8 @@ namespace SilentNotes.HtmlView
         private readonly IHtmlView _htmlView;
         private readonly VueBindingDescriptions _bindingDescriptions;
         private readonly List<VueBindingShortcut> _bindingShortcuts;
+        private readonly List<KeyValuePair<string, string>> _additionalVueDatas;
+        private readonly List<KeyValuePair<string, string>> _additionalVueMethods;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VueDataBinding"/> class.
@@ -51,6 +53,8 @@ namespace SilentNotes.HtmlView
             // Search for properties which require data binding
             _bindingDescriptions = new VueBindingDescriptions(DetectMarkedViewmodelAttributes(_dotnetViewModel));
             _bindingShortcuts = shortcuts != null ? new List<VueBindingShortcut>(shortcuts) : null;
+            _additionalVueDatas = new List<KeyValuePair<string, string>>();
+            _additionalVueMethods = new List<KeyValuePair<string, string>>();
         }
 
         /// <inheritdoc/>
@@ -109,17 +113,17 @@ vueReady(function () {
         watch: {
             [VUE_WATCHES]
         },
-        mounted() {
+        mounted: function() {
             this._shortcutListener = function(e) {
                 var command = vueFindCommandByShortcut(e)
                 if (command) {
                     e.preventDefault();
-                    vueCommandExecuted(command);
+                    this[command]();
                 }
             };
             document.addEventListener('keydown', this._shortcutListener.bind(this));
         },
-        beforeDestroy() {
+        beforeDestroy: function() {
             document.removeEventListener('keydown', this._shortcutListener);
         },
     });
@@ -141,6 +145,10 @@ vueReady(function () {
                         formattedValue));
                 }
             }
+            foreach (var additionalVueData in _additionalVueDatas)
+            {
+                vueDatas.Add(string.Format("{0}: {1},", additionalVueData.Key, additionalVueData.Value));
+            }
 
             List<string> vueMethods = new List<string>();
             foreach (VueBindingDescription binding in _bindingDescriptions)
@@ -152,6 +160,10 @@ vueReady(function () {
                         "{0}: function() {{ vueCommandExecuted('{0}'); }},",
                         binding.PropertyName));
                 }
+            }
+            foreach (var additionalVueMethod in _additionalVueMethods)
+            {
+                vueMethods.Add(string.Format("{0}: function() {{ {1} }},", additionalVueMethod.Key, additionalVueMethod.Value));
             }
 
             List<string> vueWatches = new List<string>();
@@ -230,6 +242,30 @@ vueReady(function () {
                 _htmlView.Navigating -= NavigatingEventHandler;
                 IsListening = false;
             }
+        }
+
+        /// <summary>
+        /// Adds an additional entry to the Vue.data collection, which is not automatically created
+        /// because it has an attribute in the viewmodel, but should be available in Vue instance
+        /// anyway for the view itself.
+        /// </summary>
+        /// <param name="name">Name of the data entry.</param>
+        /// <param name="value">Value of the data entry.</param>
+        public void DeclareAdditionalVueData(string name, string value)
+        {
+            _additionalVueDatas.Add(new KeyValuePair<string, string>(name, value));
+        }
+
+        /// <summary>
+        /// Adds an additional entry to the Vue.methods collection, which is not automatically created
+        /// because it has an attribute in the viewmodel, but should be available in Vue instance
+        /// anyway for the view itself (e.g. for shortcuts).
+        /// </summary>
+        /// <param name="name">Name of the data entry.</param>
+        /// <param name="javascript">Java script command.</param>
+        public void DeclareAdditionalVueMethod(string name, string javascript)
+        {
+            _additionalVueMethods.Add(new KeyValuePair<string, string>(name, javascript));
         }
 
         /// <summary>
