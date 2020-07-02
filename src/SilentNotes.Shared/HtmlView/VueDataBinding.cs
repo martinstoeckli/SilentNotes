@@ -72,22 +72,17 @@ namespace SilentNotes.HtmlView
         public string BuildVueScript()
         {
             StringBuilder vueScript = new StringBuilder(@"
-function vueReady(fn) {
-    if (document.readyState != 'loading') {
-        fn();
-    } else {
-        document.addEventListener('DOMContentLoaded', fn);
-    }
-}
-
 function vuePropertyChanged(propertyName, value) {
     var encodedValue = encodeURIComponent(value);
     var url = 'vuePropertyChanged?name=' + propertyName + '&value=' + encodedValue;
     location.href = url;
 }
 
-function vueCommandExecuted(commandName) {
+function vueCommandExecuted(commandName, value) {
     var url = 'vueCommandExecuted?name=' + commandName;
+    if (value) {
+        url += '&value=' + encodeURIComponent(value);
+    }
     location.href = url;
 }
 
@@ -96,6 +91,28 @@ function vueFindCommandByShortcut(e)
     if (event.isComposing)
         return null;
     [VUE_SHORTCUTS]
+    return null;
+}
+
+// A jQuery $().ready() replacement
+function vueReady(fn) {
+    if (document.readyState != 'loading') {
+        fn();
+    } else {
+        document.addEventListener('DOMContentLoaded', fn);
+    }
+}
+
+// A jQuery $(selector) replacement
+function vueFindAll(selector) {
+    return document.querySelectorAll(selector);
+}
+
+// A jQuery $(selector).first() replacement
+function vueFindFirst(selector) {
+    var matches = vueFindAll(selector);
+    if (matches.length >= 0)
+        return matches[0];
     return null;
 }
 
@@ -133,10 +150,18 @@ vueReady(function () {
             List<string> vueDatas = new List<string>();
             foreach (VueBindingDescription binding in _bindingDescriptions)
             {
-                if ((binding.BindingMode == VueBindingMode.TwoWay) || (binding.BindingMode == VueBindingMode.OneWayToView))
+                if ((binding.BindingMode == VueBindingMode.TwoWay) || (binding.BindingMode == VueBindingMode.OneWayToView) || (binding.BindingMode == VueBindingMode.OneWayToViewmodel))
                 {
-                    TryGetFromViewmodel(binding, out object propertyValue);
-                    TryFormatForView(binding, propertyValue, out string formattedValue);
+                    string formattedValue;
+                    if (binding.BindingMode == VueBindingMode.OneWayToViewmodel)
+                    {
+                        formattedValue = "null";
+                    }
+                    else
+                    {
+                        TryGetFromViewmodel(binding, out object propertyValue);
+                        TryFormatForView(binding, propertyValue, out formattedValue);
+                    }
 
                     // MyProperty: 42,
                     vueDatas.Add(string.Format(
@@ -169,7 +194,7 @@ vueReady(function () {
             List<string> vueWatches = new List<string>();
             foreach (VueBindingDescription binding in _bindingDescriptions)
             {
-                if (binding.BindingMode == VueBindingMode.TwoWay)
+                if ((binding.BindingMode == VueBindingMode.TwoWay) || (binding.BindingMode == VueBindingMode.OneWayToViewmodel))
                 {
                     // MyProperty: function(newVal, oldVal) { vuePropertyChanged('MyProperty', newVal); },
                     vueWatches.Add(string.Format(
@@ -246,7 +271,7 @@ vueReady(function () {
 
         /// <summary>
         /// Adds an additional entry to the Vue.data collection, which is not automatically created
-        /// because it has an attribute in the viewmodel, but should be available in Vue instance
+        /// because it has no attribute in the viewmodel, but should be available in Vue instance
         /// anyway for the view itself.
         /// </summary>
         /// <param name="name">Name of the data entry.</param>
@@ -258,7 +283,7 @@ vueReady(function () {
 
         /// <summary>
         /// Adds an additional entry to the Vue.methods collection, which is not automatically created
-        /// because it has an attribute in the viewmodel, but should be available in Vue instance
+        /// because it has no attribute in the viewmodel, but should be available in Vue instance
         /// anyway for the view itself (e.g. for shortcuts).
         /// </summary>
         /// <param name="name">Name of the data entry.</param>
@@ -407,13 +432,13 @@ vueReady(function () {
             return false;
         }
 
-        private bool TryExecuteCommand(VueBindingDescription binding)
+        private bool TryExecuteCommand(VueBindingDescription binding, string value)
         {
             PropertyInfo propertyInfo = _dotnetViewModel.GetType().GetProperty(binding.PropertyName);
             if ((propertyInfo != null) && (propertyInfo.PropertyType == typeof(ICommand)))
             {
                 ICommand command = propertyInfo.GetValue(_dotnetViewModel, null) as ICommand;
-                command.Execute(null);
+                command.Execute(value);
                 return true;
             }
             return false;
@@ -444,7 +469,7 @@ vueReady(function () {
                         TrySetToViewmodel(binding, value);
                         break;
                     case VueBindingMode.Command:
-                        TryExecuteCommand(binding);
+                        TryExecuteCommand(binding, value);
                         break;
                     case VueBindingMode.OneWayToView:
                         break; // Should never happen
@@ -454,7 +479,15 @@ vueReady(function () {
             }
             else
             {
-                UnhandledViewBindingEvent?.Invoke(this, new VueBindingUnhandledViewBindingEventArgs(propertyName, value));
+                // Collect individually named arguments
+                var arguments = new KeyValueList<string, string>(StringComparer.InvariantCultureIgnoreCase);
+                foreach (string item in queryArguments)
+                {
+                    if (!string.Equals("name", item, StringComparison.InvariantCultureIgnoreCase) &&
+                        !string.Equals("value", item, StringComparison.InvariantCultureIgnoreCase))
+                    arguments[item] = queryArguments[item];
+                }
+                UnhandledViewBindingEvent?.Invoke(this, new VueBindingUnhandledViewBindingEventArgs(propertyName, value, arguments));
             }
         }
 
@@ -472,8 +505,20 @@ vueReady(function () {
             VueBindingDescription binding = _bindingDescriptions.FindByPropertyName(e.PropertyName);
             if (binding != null)
             {
-                if (TryGetFromViewmodel(binding, out object propertyValue))
-                    TrySetToView(binding, propertyValue);
+                switch (binding.BindingMode)
+                {
+                    case VueBindingMode.TwoWay:
+                    case VueBindingMode.OneWayToView:
+                        if (TryGetFromViewmodel(binding, out object propertyValue))
+                            TrySetToView(binding, propertyValue);
+                        break;
+                    case VueBindingMode.OneWayToViewmodel:
+                        break;
+                    case VueBindingMode.Command:
+                        break; // Should never happen
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(binding.BindingMode));
+                }
             }
         }
 

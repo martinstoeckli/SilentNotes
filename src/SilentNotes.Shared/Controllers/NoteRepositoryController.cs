@@ -4,6 +4,7 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using SilentNotes.HtmlView;
 using SilentNotes.Services;
@@ -40,6 +41,7 @@ namespace SilentNotes.Controllers
         /// <inheritdoc/>
         protected override void OverrideableDispose()
         {
+            _viewModel.PropertyChanged -= ViewmodelPropertyChangedEventHandler;
             View.NavigationCompleted -= NavigationCompletedEventHandler;
             base.OverrideableDispose();
         }
@@ -77,28 +79,18 @@ namespace SilentNotes.Controllers
                     Ioc.GetOrCreate<ICryptoRandomService>(),
                     repositoryService);
 
-                Bindings.BindCommand("NewNote", _viewModel.NewNoteCommand);
-                Bindings.BindCommand("NewChecklist", _viewModel.NewChecklistCommand);
-                Bindings.BindCommand("Synchronize", _viewModel.SynchronizeCommand);
-                Bindings.BindCommand("ShowTransferCode", _viewModel.ShowTransferCodeCommand);
-                Bindings.BindCommand("ShowRecycleBin", _viewModel.ShowRecycleBinCommand);
-                Bindings.BindCommand("ShowSettings", _viewModel.ShowSettingsCommand);
-                Bindings.BindCommand("ShowInfo", _viewModel.ShowInfoCommand);
-                Bindings.BindCommand("OpenSafe", _viewModel.OpenSafeCommand);
-                Bindings.BindCommand("CloseSafe", _viewModel.CloseSafeCommand);
-                Bindings.BindCommand("ChangeSafePassword", _viewModel.ChangeSafePasswordCommand);
-                Bindings.BindCommand("FilterButtonCancel", _viewModel.ClearFilterCommand);
-                Bindings.BindText("TxtFilter", () => _viewModel.Filter, (value) => _viewModel.Filter = value, _viewModel, nameof(_viewModel.Filter), HtmlViewBindingMode.TwoWay);
-                Bindings.BindVisibility("FilterButtonMagnifier", () => string.IsNullOrEmpty(_viewModel.Filter), _viewModel, nameof(_viewModel.FilterButtonMagnifierVisible), HtmlViewBindingMode.OneWayToView);
-                Bindings.BindVisibility("FilterButtonCancel", () => !string.IsNullOrEmpty(_viewModel.Filter), _viewModel, nameof(_viewModel.FilterButtonCancelVisible), HtmlViewBindingMode.OneWayToView);
-                Bindings.BindGeneric<object>(
-                    NotesChangedEventHandler,
-                    null,
-                    null,
-                    null,
-                    new HtmlViewBindingViewmodelNotifier(_viewModel, "Notes"),
-                    HtmlViewBindingMode.OneWayToView);
-                Bindings.UnhandledViewBindingEvent += UnhandledViewBindingEventHandler;
+                VueBindingShortcut syncShortcut = new VueBindingShortcut("s", nameof(_viewModel.SynchronizeCommand)) { Ctrl = true };
+                VueBindingShortcut newNoteShortcut = new VueBindingShortcut("n", nameof(_viewModel.NewNoteCommand)) { Ctrl = true };
+                VueBindingShortcut newChecklistShortcut = new VueBindingShortcut("l", nameof(_viewModel.NewChecklistCommand)) { Ctrl = true };
+                VueBindingShortcut recyclingShortcut = new VueBindingShortcut("r", nameof(_viewModel.ShowRecycleBinCommand)) { Ctrl = true };
+                VueBindingShortcut tresorShortcut = new VueBindingShortcut("t", nameof(_viewModel.OpenSafeCommand)) { Ctrl = true };
+                VueBindingShortcut infoShortcut = new VueBindingShortcut("i", nameof(_viewModel.ShowInfoCommand)) { Ctrl = true };
+                VueBindings = new VueDataBinding(_viewModel, View, new[] { syncShortcut, newNoteShortcut, newChecklistShortcut, recyclingShortcut, tresorShortcut, infoShortcut });
+                _viewModel.VueDataBindingScript = VueBindings.BuildVueScript();
+                VueBindings.UnhandledViewBindingEvent += UnhandledViewBindingEventHandler;
+                VueBindings.StartListening();
+
+                _viewModel.PropertyChanged += ViewmodelPropertyChangedEventHandler;
 
                 // Load html page and content (notes)
                 string html = _viewService.GenerateHtml(_viewModel);
@@ -117,6 +109,21 @@ namespace SilentNotes.Controllers
                     Ioc.GetOrCreate<IBaseUrlService>());
                 string html = _viewStop.GenerateHtml(_stopViewModel);
                 View.LoadHtml(html);
+            }
+        }
+
+        private void ViewmodelPropertyChangedEventHandler(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "Notes")
+            {
+                // Update the note list in the (HTML) view.
+                string html = _viewContentService.GenerateHtml(_viewModel);
+                View.ReplaceNode("note-repository", html);
+                View.ExecuteJavaScript("makeSortable();");
+            }
+            else if (e.PropertyName == "ClearFilter")
+            {
+                View.ExecuteJavaScript("vm.Filter = '';");
             }
         }
 
@@ -140,15 +147,7 @@ namespace SilentNotes.Controllers
             if (string.IsNullOrEmpty(noteId))
                 return null;
             else
-                return string.Format("$('[data-note=\"{0}\"]').get(0).scrollIntoView();", noteId);
-        }
-
-        private void NotesChangedEventHandler(object obj)
-        {
-            // Update the note list in the (HTML) view.
-            string html = _viewContentService.GenerateHtml(_viewModel);
-            View.ReplaceNode("note-repository", html);
-            View.ExecuteJavaScript("makeSortable();");
+                return string.Format("vueFindFirst('[data-note=\"{0}\"]').scrollIntoView();", noteId);
         }
 
         private void SetVisibilityAddRemoveTresor(Guid noteId, bool isInSafe)
@@ -163,36 +162,25 @@ namespace SilentNotes.Controllers
             View.ExecuteJavaScript(script);
         }
 
-        private void UnhandledViewBindingEventHandler(object sender, HtmlViewBindingNotifiedEventArgs e)
+        private void UnhandledViewBindingEventHandler(object sender, VueBindingUnhandledViewBindingEventArgs e)
         {
             Guid noteId;
-            switch (e.EventType?.ToLowerInvariant())
+            switch (e.PropertyName)
             {
-                case "list-orderchanged":
-                    int oldIndex = int.Parse(e.Parameters["oldIndex"]);
-                    int newIndex = int.Parse(e.Parameters["newIndex"]);
-                    _viewModel.MoveNote(oldIndex, newIndex);
-                    break;
-            }
-            switch (e.BindingName?.ToLowerInvariant())
-            {
-                case "shownote":
-                    noteId = new Guid(e.Parameters["parent.data-note"]);
-                    _viewModel.ShowNoteCommand.Execute(noteId);
-                    break;
-                case "addtosafe":
-                    noteId = new Guid(e.Parameters["parent.data-note"]);
+                case "AddToSafeCommand":
+                    noteId = new Guid(e.Value);
                     _viewModel.AddNoteToSafe(noteId);
                     SetVisibilityAddRemoveTresor(noteId, true);
                     break;
-                case "removefromsafe":
-                    noteId = new Guid(e.Parameters["parent.data-note"]);
+                case "RemoveFromSafeCommand":
+                    noteId = new Guid(e.Value);
                     _viewModel.RemoveNoteFromSafe(noteId);
                     SetVisibilityAddRemoveTresor(noteId, false);
                     break;
-                case "deletenote":
-                    noteId = new Guid(e.Parameters["parent.data-note"]);
-                    _viewModel.DeleteNoteCommand.Execute(noteId);
+                case "OrderChangedCommand":
+                    int oldIndex = int.Parse(e.Parameters["oldIndex"]);
+                    int newIndex = int.Parse(e.Parameters["newIndex"]);
+                    _viewModel.MoveNote(oldIndex, newIndex);
                     break;
             }
         }

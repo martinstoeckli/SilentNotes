@@ -97,9 +97,7 @@ WriteAttribute ("style", " style=\"", "\""
 #line hidden
 , false)
 );
-WriteLiteral(" onclick=\"bind(event);\"");
-
-WriteLiteral(" data-binding=\"ShowNote\"");
+WriteLiteral(" onclick=\"showNote(event);\"");
 
 WriteLiteral(">\r\n");
 
@@ -241,7 +239,7 @@ WriteLiteralTo(__razor_attribute_value_writer, " ");
 #line hidden
 , false)
 );
-WriteLiteral(" onclick=\"bind(event);\"");
+WriteLiteral(" onclick=\"addToSafe(event);\"");
 
 WriteLiteral(" data-binding=\"AddToSafe\"");
 
@@ -291,7 +289,7 @@ WriteLiteralTo(__razor_attribute_value_writer, " ");
 #line hidden
 , false)
 );
-WriteLiteral(" onclick=\"bind(event);\"");
+WriteLiteral(" onclick=\"removeFromSafe(event);\"");
 
 WriteLiteral(" data-binding=\"RemoveFromSafe\"");
 
@@ -320,9 +318,7 @@ WriteAttribute ("class", " class=\"", "\""
 #line hidden
 , false)
 );
-WriteLiteral(" onclick=\"bind(event);\"");
-
-WriteLiteral(" data-binding=\"DeleteNote\"");
+WriteLiteral(" onclick=\"deleteNote(event);\"");
 
 WriteLiteral("><svg");
 

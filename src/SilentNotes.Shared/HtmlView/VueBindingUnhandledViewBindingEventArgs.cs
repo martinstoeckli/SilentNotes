@@ -15,10 +15,12 @@ namespace SilentNotes.HtmlView
         /// </summary>
         /// <param name="propertyName">Sets the <see cref="PropertyName"/>.</param>
         /// <param name="value">Sets the <see cref="Value"/>.</param>
-        public VueBindingUnhandledViewBindingEventArgs(string propertyName, string value)
+        /// <param name="parameters">Sets the <see cref="Parameters"/> containing the query params.</param>
+        public VueBindingUnhandledViewBindingEventArgs(string propertyName, string value, KeyValueList<string, string> parameters)
         {
             PropertyName = propertyName;
             Value = value;
+            Parameters = parameters;
         }
 
         /// <summary>Gets the name of the unknown property.</summary>
@@ -26,5 +28,8 @@ namespace SilentNotes.HtmlView
 
         /// <summary>Gets the value which was passed from the Html view.</summary>
         public string Value { get; }
+
+        /// <summary>Gets a list of individually named parameters.</summary>
+        public KeyValueList<string, string> Parameters { get; private set; }
     }
 }

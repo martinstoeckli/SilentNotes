@@ -6,12 +6,12 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Windows.Input;
 using SilentNotes.Controllers;
 using SilentNotes.Crypto;
+using SilentNotes.HtmlView;
 using SilentNotes.Models;
 using SilentNotes.Services;
 using SilentNotes.StoryBoards;
@@ -67,10 +67,10 @@ namespace SilentNotes.ViewModels
             Model = noteRepository;
 
             // Initialize commands and events
-            ShowNoteCommand = new RelayCommand<Guid>(ShowNote);
+            ShowNoteCommand = new RelayCommand<object>(ShowNote);
             NewNoteCommand = new RelayCommand(NewNote);
             NewChecklistCommand = new RelayCommand(NewChecklist);
-            DeleteNoteCommand = new RelayCommand<Guid>(DeleteNote);
+            DeleteNoteCommand = new RelayCommand<object>(DeleteNote);
             ClearFilterCommand = new RelayCommand(ClearFilter);
             SynchronizeCommand = new RelayCommand(Synchronize);
             ShowTransferCodeCommand = new RelayCommand(ShowTransferCode);
@@ -81,8 +81,7 @@ namespace SilentNotes.ViewModels
             CloseSafeCommand = new RelayCommand(CloseSafe);
             ChangeSafePasswordCommand = new RelayCommand(ChangeSafePassword);
 
-            OnPropertyChanged(nameof(FilterButtonMagnifierVisible));
-            OnPropertyChanged(nameof(FilterButtonCancelVisible));
+            OnPropertyChanged(nameof(IsFiltered));
             Modified = false;
         }
 
@@ -139,7 +138,9 @@ namespace SilentNotes.ViewModels
 
         /// <summary>
         /// Gets or sets the search filter.
+        /// A two-way-binding can end up in an endless loop, when typing very fast.
         /// </summary>
+        [VueDataBinding(VueBindingMode.OneWayToViewmodel)]
         public string Filter
         {
             get { return _filter; }
@@ -148,12 +149,17 @@ namespace SilentNotes.ViewModels
             {
                 if (ChangeProperty(ref _filter, value, false))
                 {
-                    OnPropertyChanged(nameof(FilterButtonMagnifierVisible));
-                    OnPropertyChanged(nameof(FilterButtonCancelVisible));
+                    OnPropertyChanged(nameof(IsFiltered));
                     ApplyFilter(_filter);
                     OnPropertyChanged("Notes");
                 }
             }
+        }
+
+        [VueDataBinding(VueBindingMode.OneWayToView)]
+        public bool IsFiltered
+        {
+            get { return !string.IsNullOrEmpty(Filter); }
         }
 
         private void ApplyFilter(string filter)
@@ -170,38 +176,26 @@ namespace SilentNotes.ViewModels
         }
 
         /// <summary>
-        /// Gets a value indicating whether the magnifier button in the filter box is visible.
-        /// </summary>
-        public bool FilterButtonMagnifierVisible
-        {
-            get { return string.IsNullOrEmpty(Filter); }
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether the cancel button in the filter box is visible.
-        /// </summary>
-        public bool FilterButtonCancelVisible
-        {
-            get { return !string.IsNullOrEmpty(Filter); }
-        }
-
-        /// <summary>
         /// Gets the command which clears the search filter.
         /// </summary>
+        [VueDataBinding(VueBindingMode.Command)]
         public ICommand ClearFilterCommand { get; private set; }
 
         private void ClearFilter()
         {
             Filter = null;
+            OnPropertyChanged("ClearFilter");
         }
 
         /// <summary>
         /// Gets the command which handles the click event on a note.
         /// </summary>
+        [VueDataBinding(VueBindingMode.Command)]
         public ICommand ShowNoteCommand { get; private set; }
 
-        private void ShowNote(Guid noteId)
+        private void ShowNote(object value)
         {
+            Guid noteId = (value is Guid) ? (Guid)value : new Guid(value.ToString());
             NoteViewModel note = FilteredNotes.FirstOrDefault(item => item.Id == noteId);
             if (note != null)
             {
@@ -224,6 +218,7 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets the command which handles the creation of a new note.
         /// </summary>
+        [VueDataBinding(VueBindingMode.Command)]
         public ICommand NewNoteCommand { get; private set; }
 
         private void NewNote()
@@ -261,12 +256,13 @@ namespace SilentNotes.ViewModels
                     throw new ArgumentOutOfRangeException(nameof(insertionMode));
             }
 
-            ShowNote(noteViewModel.Id);
+            ShowNoteCommand.Execute(noteViewModel.Id);
         }
 
         /// <summary>
         /// Gets the command which handles the creation of a new checklist note.
         /// </summary>
+        [VueDataBinding(VueBindingMode.Command)]
         public ICommand NewChecklistCommand { get; private set; }
 
         private void NewChecklist()
@@ -277,10 +273,12 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets the command which handles the moving of a note to the recyclebin.
         /// </summary>
+        [VueDataBinding(VueBindingMode.Command)]
         public ICommand DeleteNoteCommand { get; private set; }
 
-        private void DeleteNote(Guid noteId)
+        private void DeleteNote(object value)
         {
+            Guid noteId = (value is Guid) ? (Guid)value : new Guid(value.ToString());
             NoteViewModel selectedNote = AllNotes.Find(item => item.Id == noteId);
             if (selectedNote == null)
                 return;
@@ -300,6 +298,7 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets the command which handles the synchronization with the web server.
         /// </summary>
+        [VueDataBinding(VueBindingMode.Command)]
         public ICommand SynchronizeCommand { get; private set; }
 
         private async void Synchronize()
@@ -325,6 +324,7 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets the command which opens the recycling bin dialog.
         /// </summary>
+        [VueDataBinding(VueBindingMode.Command)]
         public ICommand ShowRecycleBinCommand { get; private set; }
 
         private void ShowRecycleBin()
@@ -335,6 +335,7 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets the command which opens the settings dialog.
         /// </summary>
+        [VueDataBinding(VueBindingMode.Command)]
         public ICommand ShowSettingsCommand { get; private set; }
 
         private void ShowSettings()
@@ -345,6 +346,7 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets the command which shows the current transfer code.
         /// </summary>
+        [VueDataBinding(VueBindingMode.Command)]
         public ICommand ShowTransferCodeCommand { get; private set; }
 
         private void ShowTransferCode()
@@ -355,6 +357,7 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets the command which shows the info dialog.
         /// </summary>
+        [VueDataBinding(VueBindingMode.Command)]
         public ICommand ShowInfoCommand { get; private set; }
 
         private void ShowInfo()
@@ -365,6 +368,7 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets the command which opens encrypted notes.
         /// </summary>
+        [VueDataBinding(VueBindingMode.Command)]
         public ICommand OpenSafeCommand { get; private set; }
 
         private void OpenSafe()
@@ -375,6 +379,7 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets the command which closes encrypted notes.
         /// </summary>
+        [VueDataBinding(VueBindingMode.Command)]
         public ICommand CloseSafeCommand { get; private set; }
 
         private void CloseSafe()
@@ -395,6 +400,7 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets the command which allows to change the password to encrypt the notes.
         /// </summary>
+        [VueDataBinding(VueBindingMode.Command)]
         public ICommand ChangeSafePasswordCommand { get; private set; }
 
         private void ChangeSafePassword()

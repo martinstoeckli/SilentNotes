@@ -143,19 +143,6 @@
             </div>
         </form>
 
-        <h2>@Model.Language["encryption"]</h2>
-        <form class="mb-4 col-md-9 col-lg-6">
-            <div class="form-row form-group">
-                <label class="col-form-label" for="SelectedEncryptionAlgorithm">@Model.Language["encryption_algorithm"]</label>
-                <select class="form-control" id="SelectedEncryptionAlgorithm" v-model="SelectedEncryptionAlgorithm">
-                    @foreach (var algorithm in @Model.EncryptionAlgorithms)
-                    {
-                        <option value="@algorithm.Value">@algorithm.Description</option>
-                    }
-                </select>
-            </div>
-        </form>
-
         <h2>@Model.Language["sync"]</h2>
         <form class="mb-4 col-md-9 col-lg-6">
             <div class="form-row form-group">
@@ -172,6 +159,19 @@
             </div>
             <button type="button" class="btn btn-secondary mb-2" v-on:click="ChangeCloudSettingsCommand" title="@Model.Language["cloud_change_settings_desc"]">@Model.Language["cloud_change_settings"]</button>
             <button type="button" class="btn btn-secondary mb-2" v-on:click="ClearCloudSettingsCommand" title="@Model.Language["cloud_clear_settings_desc"]">@Model.Language["cloud_clear_settings"]</button>
+        </form>
+
+        <h2>@Model.Language["encryption"]</h2>
+        <form class="mb-4 col-md-9 col-lg-6">
+            <div class="form-row form-group">
+                <label class="col-form-label" for="SelectedEncryptionAlgorithm">@Model.Language["encryption_algorithm"]</label>
+                <select class="form-control" id="SelectedEncryptionAlgorithm" v-model="SelectedEncryptionAlgorithm">
+                    @foreach (var algorithm in @Model.EncryptionAlgorithms)
+                    {
+                        <option value="@algorithm.Value">@algorithm.Description</option>
+                    }
+                </select>
+            </div>
         </form>
     </div>
 

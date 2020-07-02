@@ -1,26 +1,4 @@
 /**
- * Collection of helper functions based on: http://youmightnotneedjquery.com/
- */
-function ready(fn) {
-	if (document.readyState != 'loading') {
-		fn();
-	} else {
-		document.addEventListener('DOMContentLoaded', fn);
-	}
-}
-
-function findAll(selector) {
-	return document.querySelectorAll(selector);
-}
-
-function findFirst(selector) {
-	var matches = findAll(selector);
-	if (matches.length >= 0)
-		return matches[0];
-	return null;
-}
-
-/**
  * Functions specific to SilentNotes
  */
 function addShortcuts() {
@@ -92,7 +70,7 @@ function closeDropdownOrSignalBackPressed()
 function onSortableOrderChanged(oldIndex, newIndex)
 {
 	if (oldIndex !== newIndex)
-		location.href = "HtmlViewBinding?event-type=list-orderchanged&oldIndex=" + oldIndex + "&newIndex=" + newIndex;
+		location.href = "vueCommandExecuted?name=OrderChangedCommand&oldIndex=" + oldIndex + "&newIndex=" + newIndex;
 }
 
 function isMobile()
