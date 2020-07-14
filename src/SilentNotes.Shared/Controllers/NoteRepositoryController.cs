@@ -79,13 +79,16 @@ namespace SilentNotes.Controllers
                     Ioc.GetOrCreate<ICryptoRandomService>(),
                     repositoryService);
 
-                VueBindingShortcut syncShortcut = new VueBindingShortcut("s", nameof(_viewModel.SynchronizeCommand)) { Ctrl = true };
-                VueBindingShortcut newNoteShortcut = new VueBindingShortcut("n", nameof(_viewModel.NewNoteCommand)) { Ctrl = true };
-                VueBindingShortcut newChecklistShortcut = new VueBindingShortcut("l", nameof(_viewModel.NewChecklistCommand)) { Ctrl = true };
-                VueBindingShortcut recyclingShortcut = new VueBindingShortcut("r", nameof(_viewModel.ShowRecycleBinCommand)) { Ctrl = true };
-                VueBindingShortcut tresorShortcut = new VueBindingShortcut("t", nameof(_viewModel.OpenSafeCommand)) { Ctrl = true };
-                VueBindingShortcut infoShortcut = new VueBindingShortcut("i", nameof(_viewModel.ShowInfoCommand)) { Ctrl = true };
-                VueBindings = new VueDataBinding(_viewModel, View, new[] { syncShortcut, newNoteShortcut, newChecklistShortcut, recyclingShortcut, tresorShortcut, infoShortcut });
+                VueBindingShortcut[] shortcuts = new[]
+                {
+                    new VueBindingShortcut("s", nameof(_viewModel.SynchronizeCommand)) { Ctrl = true },
+                    new VueBindingShortcut("n", nameof(_viewModel.NewNoteCommand)) { Ctrl = true },
+                    new VueBindingShortcut("l", nameof(_viewModel.NewChecklistCommand)) { Ctrl = true },
+                    new VueBindingShortcut("r", nameof(_viewModel.ShowRecycleBinCommand)) { Ctrl = true },
+                    new VueBindingShortcut("t", nameof(_viewModel.OpenSafeCommand)) { Ctrl = true },
+                    new VueBindingShortcut("i", nameof(_viewModel.ShowInfoCommand)) { Ctrl = true },
+                };
+                VueBindings = new VueDataBinding(_viewModel, View, shortcuts);
                 _viewModel.VueDataBindingScript = VueBindings.BuildVueScript();
                 VueBindings.UnhandledViewBindingEvent += UnhandledViewBindingEventHandler;
                 VueBindings.StartListening();

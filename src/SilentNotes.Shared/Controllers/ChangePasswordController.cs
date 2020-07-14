@@ -47,15 +47,14 @@ namespace SilentNotes.Controllers
                 Ioc.GetOrCreate<ISettingsService>(),
                 Ioc.GetOrCreate<IRepositoryStorageService>());
 
-            Bindings.BindCommand("GoBack", _viewModel.GoBackCommand);
-            Bindings.BindCommand("OkCommand", _viewModel.OkCommand);
-            Bindings.BindCommand("CancelCommand", _viewModel.CancelCommand);
-            Bindings.BindText("OldPassword", null, (v) => _viewModel.OldPassword = SecureStringExtensions.StringToSecureString(v), null, null, HtmlViewBindingMode.OneWayToViewmodel);
-            Bindings.BindText("Password", null, (v) => _viewModel.Password = SecureStringExtensions.StringToSecureString(v), null, null, HtmlViewBindingMode.OneWayToViewmodel);
-            Bindings.BindText("PasswordConfirmation", null, (v) => _viewModel.PasswordConfirmation = SecureStringExtensions.StringToSecureString(v), null, null, HtmlViewBindingMode.OneWayToViewmodel);
-            Bindings.BindInvalid("OldPassword", () => _viewModel.InvalidOldPasswordError, _viewModel, nameof(_viewModel.InvalidOldPasswordError), HtmlViewBindingMode.OneWayToView);
-            Bindings.BindInvalid("Password", () => _viewModel.InvalidPasswordError, _viewModel, nameof(_viewModel.InvalidPasswordError), HtmlViewBindingMode.OneWayToView);
-            Bindings.BindInvalid("PasswordConfirmation", () => _viewModel.InvalidPasswordConfirmationError, _viewModel, nameof(_viewModel.InvalidPasswordConfirmationError), HtmlViewBindingMode.OneWayToView);
+            VueBindingShortcut[] shortcuts = new[]
+            {
+                new VueBindingShortcut(VueBindingShortcut.KeyEscape, nameof(ChangePasswordViewModel.GoBackCommand)),
+                new VueBindingShortcut(VueBindingShortcut.KeyEnter, nameof(ChangePasswordViewModel.OkCommand)),
+            };
+            VueBindings = new VueDataBinding(_viewModel, View, shortcuts);
+            _viewModel.VueDataBindingScript = VueBindings.BuildVueScript();
+            VueBindings.StartListening();
 
             string html = _viewService.GenerateHtml(_viewModel);
             View.LoadHtml(html);

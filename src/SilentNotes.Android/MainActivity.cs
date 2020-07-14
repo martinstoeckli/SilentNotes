@@ -64,6 +64,8 @@ namespace SilentNotes.Android
             settings.AllowFileAccess = false; // no local files but from the asset directory
             settings.SetPluginState(WebSettings.PluginState.Off); // no plugins allowed
             settings.CacheMode = CacheModes.NoCache; // is already local content
+            settings.JavaScriptCanOpenWindowsAutomatically = false; // same as default
+            settings.SetSupportMultipleWindows(false); // same as default
         }
 
         /// <inheritdoc/>

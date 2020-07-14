@@ -70,7 +70,7 @@ function closeDropdownOrSignalBackPressed()
 function onSortableOrderChanged(oldIndex, newIndex)
 {
 	if (oldIndex !== newIndex)
-		location.href = "vueCommandExecuted?name=OrderChangedCommand&oldIndex=" + oldIndex + "&newIndex=" + newIndex;
+		location.href = "vueCommandExecute?name=OrderChangedCommand&oldIndex=" + oldIndex + "&newIndex=" + newIndex;
 }
 
 function isMobile()

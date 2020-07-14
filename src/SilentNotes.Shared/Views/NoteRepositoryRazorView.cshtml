@@ -84,19 +84,19 @@ div.dark .note-viewer.over-view.checklist p.disabled::before { content: @{WriteL
     </style>
     <script>
         function showNote(e) {
-            vueCommandExecuted('ShowNoteCommand', e.currentTarget.parentNode.attributes['data-note'].value);
+            vueCommandExecute('ShowNoteCommand', e.currentTarget.parentNode.attributes['data-note'].value);
         }
 
         function deleteNote(e) {
-            vueCommandExecuted('DeleteNoteCommand', e.currentTarget.parentNode.attributes['data-note'].value);
+            vueCommandExecute('DeleteNoteCommand', e.currentTarget.parentNode.attributes['data-note'].value);
         }
 
         function addToSafe(e) {
-            vueCommandExecuted('AddToSafeCommand', e.currentTarget.parentNode.attributes['data-note'].value);
+            vueCommandExecute('AddToSafeCommand', e.currentTarget.parentNode.attributes['data-note'].value);
         }
 
         function removeFromSafe(e) {
-            vueCommandExecuted('RemoveFromSafeCommand', e.currentTarget.parentNode.attributes['data-note'].value);
+            vueCommandExecute('RemoveFromSafeCommand', e.currentTarget.parentNode.attributes['data-note'].value);
         }
 
         @{WriteLiteral(Model.VueDataBindingScript);}
@@ -106,8 +106,8 @@ div.dark .note-viewer.over-view.checklist p.disabled::before { content: @{WriteL
     <nav id="navigation" class="d-flex">
         <div class="nav-item nav-filter ml-auto d-inline-flex align-self-center">
             <input v-model="Filter" autocomplete="off" autofocus />
-            <svg v-if="!IsFiltered" width='24' height='24' viewBox='0 0 24 24'><use xlink:href="#svg-magnify" /></svg>
-            <svg v-if="IsFiltered" width='24' height='24' viewBox='0 0 24 24' v-on:click="ClearFilterCommand"><use xlink:href="#svg-close-circle-outline" /></svg>
+            <svg id="filter-icon" v-if="!IsFiltered" width='24' height='24' viewBox='0 0 24 24'><use xlink:href="#svg-magnify" /></svg>
+            <svg id="filter-cancel-icon" v-if="IsFiltered" width='24' height='24' viewBox='0 0 24 24' v-on:click="ClearFilterCommand"><use xlink:href="#svg-close-circle-outline" /></svg>
         </div>
 
         <button class="nav-item" v-on:click="SynchronizeCommand" title="@Model.Language["sync_notes"]">@{WriteLiteral(Model.Icon["cloud-sync"]);}</button>

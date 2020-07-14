@@ -93,6 +93,10 @@ WriteLiteral(" rel=\"stylesheet\"");
 
 WriteLiteral(" />\r\n\r\n    <script");
 
+WriteLiteral(" src=\"vue.min.js\"");
+
+WriteLiteral("></script>\r\n    <script");
+
 WriteLiteral(" src=\"jquery-3.5.1.slim.min.js\"");
 
 WriteLiteral("></script>\r\n    <script");
@@ -103,8 +107,25 @@ WriteLiteral("></script>\r\n    <script");
 
 WriteLiteral(" src=\"silentnotes.js\"");
 
-WriteLiteral("></script>\r\n    <script>\r\n        $(function () {\r\n            addShortcuts();\r\n " +
-"       });\r\n    </script>\r\n</head>\r\n<body>\r\n    <nav");
+WriteLiteral("></script>\r\n    <script>\r\n");
+
+
+#line 21 "CloudStorageAccountRazorView.cshtml"
+        
+
+#line default
+#line hidden
+
+#line 21 "CloudStorageAccountRazorView.cshtml"
+          WriteLiteral(Model.VueDataBindingScript);
+
+#line default
+#line hidden
+WriteLiteral("\r\n    </script>\r\n</head>\r\n<body><div");
+
+WriteLiteral(" id=\"vueDataBinding\"");
+
+WriteLiteral(">\r\n    <nav");
 
 WriteLiteral(" id=\"navigation\"");
 
@@ -114,14 +135,12 @@ WriteLiteral(">\r\n        <button");
 
 WriteLiteral(" class=\"nav-item mr-auto\"");
 
-WriteLiteral(" onclick=\"bind(event);\"");
-
-WriteLiteral(" data-binding=\"GoBack\"");
+WriteLiteral(" v-on:click=\"GoBackCommand\"");
 
 WriteAttribute ("title", " title=\"", "\""
 
-#line 27 "CloudStorageAccountRazorView.cshtml"
-                                                      , Tuple.Create<string,object,bool> ("", Model.Language["back"]
+#line 26 "CloudStorageAccountRazorView.cshtml"
+                                    , Tuple.Create<string,object,bool> ("", Model.Language["back"]
 
 #line default
 #line hidden
@@ -130,8 +149,8 @@ WriteAttribute ("title", " title=\"", "\""
 WriteLiteral(">");
 
 
-#line 27 "CloudStorageAccountRazorView.cshtml"
-                                                                                                                        WriteLiteral(Model.Icon["arrow-left"]);
+#line 26 "CloudStorageAccountRazorView.cshtml"
+                                                                                                      WriteLiteral(Model.Icon["arrow-left"]);
 
 #line default
 #line hidden
@@ -158,7 +177,7 @@ WriteLiteral(" xlink:href=\"#svg-settings\"");
 WriteLiteral(" /></svg>\r\n\r\n        <h2>");
 
 
-#line 33 "CloudStorageAccountRazorView.cshtml"
+#line 32 "CloudStorageAccountRazorView.cshtml"
        Write(Model.Language["cloud_service_credentials"]);
 
 
@@ -181,7 +200,7 @@ WriteLiteral(" for=\"CloudServiceName\"");
 WriteLiteral(">");
 
 
-#line 36 "CloudStorageAccountRazorView.cshtml"
+#line 35 "CloudStorageAccountRazorView.cshtml"
                                                                          Write(Model.Language["cloud_service"]);
 
 
@@ -203,7 +222,7 @@ WriteLiteral(" id=\"CloudServiceName\"");
 
 WriteAttribute ("value", " value=\"", "\""
 
-#line 38 "CloudStorageAccountRazorView.cshtml"
+#line 37 "CloudStorageAccountRazorView.cshtml"
                                                                      , Tuple.Create<string,object,bool> ("", Model.CloudServiceName
 
 #line default
@@ -217,20 +236,20 @@ WriteLiteral(" class=\"form-row form-group\"");
 WriteLiteral(" ");
 
 
-#line 41 "CloudStorageAccountRazorView.cshtml"
+#line 40 "CloudStorageAccountRazorView.cshtml"
                                               if (!Model.NeedsUrl) { 
 
 #line default
 #line hidden
 
-#line 41 "CloudStorageAccountRazorView.cshtml"
+#line 40 "CloudStorageAccountRazorView.cshtml"
                                                                  Write("hidden");
 
 
 #line default
 #line hidden
 
-#line 41 "CloudStorageAccountRazorView.cshtml"
+#line 40 "CloudStorageAccountRazorView.cshtml"
                                                                                  ; }
 
 #line default
@@ -244,7 +263,7 @@ WriteLiteral(" for=\"Url\"");
 WriteLiteral(">");
 
 
-#line 42 "CloudStorageAccountRazorView.cshtml"
+#line 41 "CloudStorageAccountRazorView.cshtml"
                                                             Write(Model.Language["cloud_url"]);
 
 
@@ -260,21 +279,10 @@ WriteLiteral(" type=\"url\"");
 
 WriteLiteral(" class=\"form-control\"");
 
-WriteLiteral(" oninput=\"bind(event)\"");
-
-WriteLiteral(" data-binding=\"Url\"");
+WriteLiteral(" v-model=\"Url\"");
 
 WriteLiteral(" id=\"Url\"");
 
-WriteAttribute ("value", " value=\"", "\""
-
-#line 44 "CloudStorageAccountRazorView.cshtml"
-                                                                             , Tuple.Create<string,object,bool> ("", Model.Url
-
-#line default
-#line hidden
-, false)
-);
 WriteLiteral(">\r\n                </div>\r\n            </div>\r\n            <div");
 
 WriteLiteral(" class=\"form-row form-group\"");
@@ -282,20 +290,20 @@ WriteLiteral(" class=\"form-row form-group\"");
 WriteLiteral(" ");
 
 
-#line 47 "CloudStorageAccountRazorView.cshtml"
+#line 46 "CloudStorageAccountRazorView.cshtml"
                                               if (!Model.NeedsUsername) { 
 
 #line default
 #line hidden
 
-#line 47 "CloudStorageAccountRazorView.cshtml"
+#line 46 "CloudStorageAccountRazorView.cshtml"
                                                                       Write("hidden");
 
 
 #line default
 #line hidden
 
-#line 47 "CloudStorageAccountRazorView.cshtml"
+#line 46 "CloudStorageAccountRazorView.cshtml"
                                                                                       ; }
 
 #line default
@@ -309,7 +317,7 @@ WriteLiteral(" for=\"Username\"");
 WriteLiteral(">");
 
 
-#line 48 "CloudStorageAccountRazorView.cshtml"
+#line 47 "CloudStorageAccountRazorView.cshtml"
                                                                  Write(Model.Language["cloud_username"]);
 
 
@@ -325,21 +333,10 @@ WriteLiteral(" type=\"text\"");
 
 WriteLiteral(" class=\"form-control\"");
 
-WriteLiteral(" oninput=\"bind(event)\"");
-
-WriteLiteral(" data-binding=\"Username\"");
+WriteLiteral(" v-model=\"Username\"");
 
 WriteLiteral(" id=\"Username\"");
 
-WriteAttribute ("value", " value=\"", "\""
-
-#line 50 "CloudStorageAccountRazorView.cshtml"
-                                                                                        , Tuple.Create<string,object,bool> ("", Model.Username
-
-#line default
-#line hidden
-, false)
-);
 WriteLiteral(">\r\n                </div>\r\n            </div>\r\n            <div");
 
 WriteLiteral(" class=\"form-row form-group\"");
@@ -347,20 +344,20 @@ WriteLiteral(" class=\"form-row form-group\"");
 WriteLiteral(" ");
 
 
-#line 53 "CloudStorageAccountRazorView.cshtml"
+#line 52 "CloudStorageAccountRazorView.cshtml"
                                               if (!Model.NeedsPassword) { 
 
 #line default
 #line hidden
 
-#line 53 "CloudStorageAccountRazorView.cshtml"
+#line 52 "CloudStorageAccountRazorView.cshtml"
                                                                       Write("hidden");
 
 
 #line default
 #line hidden
 
-#line 53 "CloudStorageAccountRazorView.cshtml"
+#line 52 "CloudStorageAccountRazorView.cshtml"
                                                                                       ; }
 
 #line default
@@ -374,7 +371,7 @@ WriteLiteral(" for=\"Password\"");
 WriteLiteral(">");
 
 
-#line 54 "CloudStorageAccountRazorView.cshtml"
+#line 53 "CloudStorageAccountRazorView.cshtml"
                                                                  Write(Model.Language["cloud_password"]);
 
 
@@ -390,13 +387,9 @@ WriteLiteral(" type=\"password\"");
 
 WriteLiteral(" class=\"form-control\"");
 
-WriteLiteral(" oninput=\"bind(event)\"");
-
-WriteLiteral(" data-binding=\"Password\"");
+WriteLiteral(" v-model=\"Password\"");
 
 WriteLiteral(" id=\"Password\"");
-
-WriteLiteral(" value=\"\"");
 
 WriteLiteral(">\r\n                </div>\r\n            </div>\r\n            <div");
 
@@ -405,20 +398,20 @@ WriteLiteral(" class=\"form-row form-group form-check\"");
 WriteLiteral(" ");
 
 
-#line 59 "CloudStorageAccountRazorView.cshtml"
+#line 58 "CloudStorageAccountRazorView.cshtml"
                                                          if (!Model.NeedsSecureFlag) { 
 
 #line default
 #line hidden
 
-#line 59 "CloudStorageAccountRazorView.cshtml"
+#line 58 "CloudStorageAccountRazorView.cshtml"
                                                                                    Write("hidden");
 
 
 #line default
 #line hidden
 
-#line 59 "CloudStorageAccountRazorView.cshtml"
+#line 58 "CloudStorageAccountRazorView.cshtml"
                                                                                                    ; }
 
 #line default
@@ -431,19 +424,8 @@ WriteLiteral(" type=\"checkbox\"");
 
 WriteLiteral(" id=\"Secure\"");
 
-WriteLiteral(" onclick=\"bind(event)\"");
+WriteLiteral(" v-model=\"Secure\"");
 
-WriteLiteral(" data-binding=\"Secure\"");
-
-WriteLiteral(" ");
-
-
-#line 60 "CloudStorageAccountRazorView.cshtml"
-                                                                                                                    Write(Model.Secure ? "checked" : "");
-
-
-#line default
-#line hidden
 WriteLiteral(">\r\n                <label");
 
 WriteLiteral(" class=\"form-check-label\"");
@@ -453,7 +435,7 @@ WriteLiteral(" for=\"Secure\"");
 WriteLiteral(">");
 
 
-#line 61 "CloudStorageAccountRazorView.cshtml"
+#line 60 "CloudStorageAccountRazorView.cshtml"
                                                         Write(Model.Language["cloud_secure"]);
 
 
@@ -465,15 +447,13 @@ WriteLiteral(" type=\"button\"");
 
 WriteLiteral(" class=\"btn btn-primary mb-2 shortcut-enter\"");
 
-WriteLiteral(" onclick=\"bind(event)\"");
-
-WriteLiteral(" data-binding=\"OkCommand\"");
+WriteLiteral(" v-on:click=\"OkCommand\"");
 
 WriteLiteral(">");
 
 
-#line 63 "CloudStorageAccountRazorView.cshtml"
-                                                                                                                        Write(Model.Language["continue"]);
+#line 62 "CloudStorageAccountRazorView.cshtml"
+                                                                                                Write(Model.Language["continue"]);
 
 
 #line default
@@ -484,15 +464,13 @@ WriteLiteral(" type=\"button\"");
 
 WriteLiteral(" class=\"btn btn-secondary mb-2 shortcut-escape\"");
 
-WriteLiteral(" onclick=\"bind(event)\"");
-
-WriteLiteral(" data-binding=\"CancelCommand\"");
+WriteLiteral(" v-on:click=\"CancelCommand\"");
 
 WriteLiteral(">");
 
 
-#line 64 "CloudStorageAccountRazorView.cshtml"
-                                                                                                                               Write(Model.Language["cancel"]);
+#line 63 "CloudStorageAccountRazorView.cshtml"
+                                                                                                       Write(Model.Language["cancel"]);
 
 
 #line default
@@ -500,18 +478,18 @@ WriteLiteral(">");
 WriteLiteral("</button>\r\n        </form>\r\n    </div>\r\n\r\n    <div hidden>\r\n");
 
 
-#line 69 "CloudStorageAccountRazorView.cshtml"
+#line 68 "CloudStorageAccountRazorView.cshtml"
         
 
 #line default
 #line hidden
 
-#line 69 "CloudStorageAccountRazorView.cshtml"
+#line 68 "CloudStorageAccountRazorView.cshtml"
           WriteLiteral(Model.Icon.LoadIcon("settings", new[] { new KeyValuePair<string, string>("id", "svg-settings") }));
 
 #line default
 #line hidden
-WriteLiteral("\r\n    </div>\r\n</body>\r\n</html>\r\n");
+WriteLiteral("\r\n    </div>\r\n</div></body>\r\n</html>\r\n");
 
 }
 }

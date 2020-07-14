@@ -6,6 +6,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using SilentNotes.HtmlView;
 using SilentNotes.Services;
 using SilentNotes.StoryBoards.SynchronizationStory;
 
@@ -40,6 +41,7 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets the command when the user presses the continue button.
         /// </summary>
+        [VueDataBinding(VueBindingMode.Command)]
         public ICommand ContinueCommand { get; private set; }
 
         private async void Continue()
@@ -51,6 +53,7 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets the command to go back to the note overview.
         /// </summary>
+        [VueDataBinding(VueBindingMode.Command)]
         public ICommand GoBackCommand { get; private set; }
 
         private async void GoBack()

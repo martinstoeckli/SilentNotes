@@ -93,6 +93,10 @@ WriteLiteral(" rel=\"stylesheet\"");
 
 WriteLiteral(" />\r\n\r\n    <script");
 
+WriteLiteral(" src=\"vue.min.js\"");
+
+WriteLiteral("></script>\r\n    <script");
+
 WriteLiteral(" src=\"jquery-3.5.1.slim.min.js\"");
 
 WriteLiteral("></script>\r\n    <script");
@@ -124,10 +128,25 @@ WriteLiteral(@">
         }
     </style>
     <script>
-    </script>
-</head>
-<body>
-    <nav");
+");
+
+
+#line 38 "CloudStorageChoiceRazorView.cshtml"
+        
+
+#line default
+#line hidden
+
+#line 38 "CloudStorageChoiceRazorView.cshtml"
+          WriteLiteral(Model.VueDataBindingScript);
+
+#line default
+#line hidden
+WriteLiteral("\r\n    </script>\r\n</head>\r\n<body><div");
+
+WriteLiteral(" id=\"vueDataBinding\"");
+
+WriteLiteral(">\r\n    <nav");
 
 WriteLiteral(" id=\"navigation\"");
 
@@ -137,14 +156,12 @@ WriteLiteral(">\r\n        <button");
 
 WriteLiteral(" class=\"nav-item mr-auto\"");
 
-WriteLiteral(" onclick=\"bind(event);\"");
-
-WriteLiteral(" data-binding=\"GoBack\"");
+WriteLiteral(" v-on:click=\"GoBackCommand\"");
 
 WriteAttribute ("title", " title=\"", "\""
 
-#line 41 "CloudStorageChoiceRazorView.cshtml"
-                                                      , Tuple.Create<string,object,bool> ("", Model.Language["back"]
+#line 43 "CloudStorageChoiceRazorView.cshtml"
+                                    , Tuple.Create<string,object,bool> ("", Model.Language["back"]
 
 #line default
 #line hidden
@@ -153,8 +170,8 @@ WriteAttribute ("title", " title=\"", "\""
 WriteLiteral(">");
 
 
-#line 41 "CloudStorageChoiceRazorView.cshtml"
-                                                                                                                        WriteLiteral(Model.Icon["arrow-left"]);
+#line 43 "CloudStorageChoiceRazorView.cshtml"
+                                                                                                      WriteLiteral(Model.Icon["arrow-left"]);
 
 #line default
 #line hidden
@@ -167,7 +184,7 @@ WriteLiteral(" class=\"container-fluid p-4\"");
 WriteLiteral(">\r\n        <h1>");
 
 
-#line 45 "CloudStorageChoiceRazorView.cshtml"
+#line 47 "CloudStorageChoiceRazorView.cshtml"
        Write(Model.Language["cloud_service_choice"]);
 
 
@@ -180,13 +197,13 @@ WriteLiteral(" class=\"list-group\"");
 WriteLiteral(">\r\n");
 
 
-#line 48 "CloudStorageChoiceRazorView.cshtml"
+#line 50 "CloudStorageChoiceRazorView.cshtml"
             
 
 #line default
 #line hidden
 
-#line 48 "CloudStorageChoiceRazorView.cshtml"
+#line 50 "CloudStorageChoiceRazorView.cshtml"
              foreach (var serviceChoice in @Model.ServiceChoices)
             {
 
@@ -199,28 +216,25 @@ WriteLiteral(" type=\"button\"");
 
 WriteLiteral(" class=\"list-group-item list-group-item-action\"");
 
-WriteLiteral(" onclick=\"bind(event)\"");
+WriteAttribute ("v-on:click", " v-on:click=\"", "\""
+, Tuple.Create<string,object,bool> ("", "vueCommandExecute(\'ChooseCommand\',", true)
+, Tuple.Create<string,object,bool> (" ", "\'", true)
 
-WriteLiteral(" data-binding=\"choose\"");
-
-WriteLiteral(" data-cloudstorageid=\"");
-
-
-#line 50 "CloudStorageChoiceRazorView.cshtml"
-                                                                                                                                                 Write(serviceChoice.CloudStorageId);
-
+#line 52 "CloudStorageChoiceRazorView.cshtml"
+                                                                                              , Tuple.Create<string,object,bool> ("", serviceChoice.CloudStorageId
 
 #line default
 #line hidden
-WriteLiteral("\"");
-
+, false)
+, Tuple.Create<string,object,bool> ("", "\')", true)
+);
 WriteLiteral(">\r\n                    <img");
 
 WriteLiteral(" class=\"choice-icon\"");
 
 WriteAttribute ("src", " src=\"", "\""
 
-#line 51 "CloudStorageChoiceRazorView.cshtml"
+#line 53 "CloudStorageChoiceRazorView.cshtml"
            , Tuple.Create<string,object,bool> ("", serviceChoice.Icon
 
 #line default
@@ -232,7 +246,7 @@ WriteLiteral(" />\r\n");
 WriteLiteral("                    ");
 
 
-#line 52 "CloudStorageChoiceRazorView.cshtml"
+#line 54 "CloudStorageChoiceRazorView.cshtml"
                Write(serviceChoice.Title);
 
 
@@ -241,34 +255,13 @@ WriteLiteral("                    ");
 WriteLiteral("\r\n                </button>\r\n");
 
 
-#line 54 "CloudStorageChoiceRazorView.cshtml"
+#line 56 "CloudStorageChoiceRazorView.cshtml"
             }
 
 
 #line default
 #line hidden
-WriteLiteral("        </div>\r\n\r\n        <button");
-
-WriteLiteral(" type=\"button\"");
-
-WriteLiteral(" class=\"btn btn-secondary my-4\"");
-
-WriteLiteral(" hidden");
-
-WriteLiteral(" onclick=\"bind(event)\"");
-
-WriteLiteral(" data-binding=\"GoBack\"");
-
-WriteLiteral(">");
-
-
-#line 57 "CloudStorageChoiceRazorView.cshtml"
-                                                                                                           Write(Model.Language["cancel"]);
-
-
-#line default
-#line hidden
-WriteLiteral("</button>\r\n    </div>\r\n</body>\r\n</html>\r\n");
+WriteLiteral("        </div>\r\n    </div>\r\n</div></body>\r\n</html>\r\n");
 
 }
 }

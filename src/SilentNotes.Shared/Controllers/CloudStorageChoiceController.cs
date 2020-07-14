@@ -44,22 +44,16 @@ namespace SilentNotes.Controllers
                 Ioc.GetOrCreate<IStoryBoardService>(),
                 Ioc.GetOrCreate<ICloudStorageClientFactory>());
 
-            Bindings.BindCommand("GoBack", _viewModel.GoBackCommand);
-            Bindings.UnhandledViewBindingEvent += BindingsEventHandler;
+            VueBindingShortcut[] shortcuts = new[]
+            {
+                new VueBindingShortcut(VueBindingShortcut.KeyEscape, nameof(CloudStorageChoiceViewModel.GoBackCommand)),
+            };
+            VueBindings = new VueDataBinding(_viewModel, View, shortcuts);
+            _viewModel.VueDataBindingScript = VueBindings.BuildVueScript();
+            VueBindings.StartListening();
 
             string html = _viewService.GenerateHtml(_viewModel);
             View.LoadHtml(html);
-        }
-
-        private void BindingsEventHandler(object sender, HtmlViewBindingNotifiedEventArgs e)
-        {
-            switch (e.BindingName.ToLowerInvariant())
-            {
-                case "choose":
-                    string cloudStorageId = e.Parameters["data-cloudstorageid"];
-                    _viewModel.ChooseCommand.Execute(cloudStorageId);
-                    break;
-            }
         }
     }
 }

@@ -13,18 +13,17 @@
     <link href="silentnotes.css" rel="stylesheet" />
     <link href="@(Model.Theme.DarkMode ? "silentnotes.dark.css" : "silentnotes.light.css")" rel="stylesheet" />
 
+    <script src="vue.min.js"></script>
     <script src="jquery-3.5.1.slim.min.js"></script>
     <script src="bootstrap.bundle.min.js"></script>
     <script src="silentnotes.js"></script>
     <script>
-        $(function () {
-            addShortcuts();
-        });
+        @{WriteLiteral(Model.VueDataBindingScript);}
     </script>
 </head>
-<body>
+<body><div id="vueDataBinding">
     <nav id="navigation" class="d-flex">
-        <button class="nav-item mr-auto" onclick="bind(event);" data-binding="GoBack" title="@Model.Language["back"]">@{WriteLiteral(Model.Icon["arrow-left"]);}</button>
+        <button class="nav-item mr-auto" v-on:click="GoBackCommand" title="@Model.Language["back"]">@{WriteLiteral(Model.Icon["arrow-left"]);}</button>
     </nav>
 
     <div id="content" class="container-fluid p-4">
@@ -41,32 +40,32 @@
             <div class="form-row form-group" @if (!Model.NeedsUrl) { @("hidden") ; }>
                 <label class="col-form-label col-md-3" for="Url">@Model.Language["cloud_url"]</label>
                 <div class="col-md-9">
-                    <input type="url" class="form-control" oninput="bind(event)" data-binding="Url" id="Url" value="@Model.Url">
+                    <input type="url" class="form-control" v-model="Url" id="Url">
                 </div>
             </div>
             <div class="form-row form-group" @if (!Model.NeedsUsername) { @("hidden") ; }>
                 <label class="col-form-label col-md-3" for="Username">@Model.Language["cloud_username"]</label>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" oninput="bind(event)" data-binding="Username" id="Username" value="@Model.Username">
+                    <input type="text" class="form-control" v-model="Username" id="Username">
                 </div>
             </div>
             <div class="form-row form-group" @if (!Model.NeedsPassword) { @("hidden") ; }>
                 <label class="col-form-label col-md-3" for="Password">@Model.Language["cloud_password"]</label>
                 <div class="col-md-9">
-                    <input type="password" class="form-control" oninput="bind(event)" data-binding="Password" id="Password" value="">
+                    <input type="password" class="form-control" v-model="Password" id="Password">
                 </div>
             </div>
             <div class="form-row form-group form-check" @if (!Model.NeedsSecureFlag) { @("hidden") ; }>
-                <input class="form-check-input" type="checkbox" id="Secure" onclick="bind(event)" data-binding="Secure" @(Model.Secure ? "checked" : "")>
+                <input class="form-check-input" type="checkbox" id="Secure" v-model="Secure">
                 <label class="form-check-label" for="Secure">@Model.Language["cloud_secure"]</label>
             </div>
-            <button type="button" class="btn btn-primary mb-2 shortcut-enter" onclick="bind(event)" data-binding="OkCommand">@Model.Language["continue"]</button>
-            <button type="button" class="btn btn-secondary mb-2 shortcut-escape" onclick="bind(event)" data-binding="CancelCommand">@Model.Language["cancel"]</button>
+            <button type="button" class="btn btn-primary mb-2 shortcut-enter" v-on:click="OkCommand">@Model.Language["continue"]</button>
+            <button type="button" class="btn btn-secondary mb-2 shortcut-escape" v-on:click="CancelCommand">@Model.Language["cancel"]</button>
         </form>
     </div>
 
     <div hidden>
         @{WriteLiteral(Model.Icon.LoadIcon("settings", new[] { new KeyValuePair<string, string>("id", "svg-settings") }));}
     </div>
-</body>
+</div></body>
 </html>

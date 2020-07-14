@@ -243,19 +243,19 @@ WriteLiteral(@"; }
     </style>
     <script>
         function showNote(e) {
-            vueCommandExecuted('ShowNoteCommand', e.currentTarget.parentNode.attributes['data-note'].value);
+            vueCommandExecute('ShowNoteCommand', e.currentTarget.parentNode.attributes['data-note'].value);
         }
 
         function deleteNote(e) {
-            vueCommandExecuted('DeleteNoteCommand', e.currentTarget.parentNode.attributes['data-note'].value);
+            vueCommandExecute('DeleteNoteCommand', e.currentTarget.parentNode.attributes['data-note'].value);
         }
 
         function addToSafe(e) {
-            vueCommandExecuted('AddToSafeCommand', e.currentTarget.parentNode.attributes['data-note'].value);
+            vueCommandExecute('AddToSafeCommand', e.currentTarget.parentNode.attributes['data-note'].value);
         }
 
         function removeFromSafe(e) {
-            vueCommandExecuted('RemoveFromSafeCommand', e.currentTarget.parentNode.attributes['data-note'].value);
+            vueCommandExecute('RemoveFromSafeCommand', e.currentTarget.parentNode.attributes['data-note'].value);
         }
 
 ");
@@ -294,6 +294,8 @@ WriteLiteral(" autocomplete=\"off\"");
 
 WriteLiteral(" autofocus />\r\n            <svg");
 
+WriteLiteral(" id=\"filter-icon\"");
+
 WriteLiteral(" v-if=\"!IsFiltered\"");
 
 WriteLiteral(" width=\'24\'");
@@ -307,6 +309,8 @@ WriteLiteral("><use");
 WriteLiteral(" xlink:href=\"#svg-magnify\"");
 
 WriteLiteral(" /></svg>\r\n            <svg");
+
+WriteLiteral(" id=\"filter-cancel-icon\"");
 
 WriteLiteral(" v-if=\"IsFiltered\"");
 

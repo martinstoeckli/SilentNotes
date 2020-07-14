@@ -45,8 +45,11 @@ namespace SilentNotes.Controllers
                 Ioc.GetOrCreate<ISettingsService>(),
                 Ioc.GetOrCreate<IStoryBoardService>());
 
-            VueBindingShortcut escShortcut = new VueBindingShortcut(VueBindingShortcut.KeyEscape, nameof(InfoViewModel.GoBackCommand));
-            VueBindings = new VueDataBinding(_viewModel, View, new[] { escShortcut });
+            VueBindingShortcut[] shortcuts = new[]
+            {
+                new VueBindingShortcut(VueBindingShortcut.KeyEscape, nameof(SettingsViewModel.GoBackCommand)),
+            };
+            VueBindings = new VueDataBinding(_viewModel, View, shortcuts);
             _viewModel.VueDataBindingScript = VueBindings.BuildVueScript();
             VueBindings.StartListening();
 

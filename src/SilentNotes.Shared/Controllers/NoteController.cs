@@ -111,9 +111,12 @@ namespace SilentNotes.Controllers
                 note);
             SetHtmlViewBackgroundColor(htmlView);
 
-            VueBindingShortcut toggleSearchDialogShortcut = new VueBindingShortcut("f", "ToggleSearchDialogCommand") { Ctrl = true };
-            VueBindingShortcut closeSearchDialogShortcut = new VueBindingShortcut(VueBindingShortcut.KeyEscape, "CloseSearchDialogCommand");
-            VueBindings = new VueDataBinding(_viewModel, View, new[] { toggleSearchDialogShortcut, closeSearchDialogShortcut });
+            VueBindingShortcut[] shortcuts = new[]
+            {
+                new VueBindingShortcut("f", "ToggleSearchDialogCommand") { Ctrl = true },
+                new VueBindingShortcut(VueBindingShortcut.KeyEscape, "CloseSearchDialogCommand"),
+            };
+            VueBindings = new VueDataBinding(_viewModel, View, shortcuts);
             VueBindings.DeclareAdditionalVueData("PrettyTimeAgoVisible", "true");
             VueBindings.DeclareAdditionalVueMethod("ToggleSearchDialogCommand", "toggleSearchDialog();");
             VueBindings.DeclareAdditionalVueMethod("CloseSearchDialogCommand", "showSearchDialog(false);");

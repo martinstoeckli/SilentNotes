@@ -81,7 +81,6 @@ namespace SilentNotes.ViewModels
             CloseSafeCommand = new RelayCommand(CloseSafe);
             ChangeSafePasswordCommand = new RelayCommand(ChangeSafePassword);
 
-            OnPropertyChanged(nameof(IsFiltered));
             Modified = false;
         }
 

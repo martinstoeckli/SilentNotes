@@ -787,8 +787,6 @@ WriteLiteral(" class=\"form-control\"");
 
 WriteLiteral(" id=\"CloudStorageSettings\"");
 
-WriteLiteral(" v-once");
-
 WriteLiteral(" v-model=\"AccountSummary\"");
 
 WriteLiteral(" rows=\"4\"");

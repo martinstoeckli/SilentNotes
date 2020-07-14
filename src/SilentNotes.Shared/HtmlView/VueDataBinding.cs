@@ -8,10 +8,12 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Reflection;
+using System.Security;
 using System.Text;
 using System.Web;
 using System.Windows.Input;
 using SilentNotes.Workers;
+using VanillaCloudStorageClient;
 
 namespace SilentNotes.HtmlView
 {
@@ -19,6 +21,18 @@ namespace SilentNotes.HtmlView
     /// Acts as data binding between a C# viewmodel and a Vue model inside an HTML page.
     /// This allows to use an HTML page as view and still have a data binding. Bindable properties
     /// are automatically detected when marked with the <see cref="VueDataBindingAttribute"/>.
+    /// <examples>
+    /// Commands in the viewmodel can be marked with an attribute like:
+    /// <code>
+    /// [VueDataBinding(VueBindingMode.Command)]
+    /// public ICommand MyCommand { get; }
+    /// </code>
+    /// This commands can be called in the HTML view directly or with a parameter:
+    /// <code>
+    /// v-on:click="MyCommand"
+    /// v-on:click="vueCommandExecute('MyCommand', 'MyParam')"
+    /// </code>
+    /// </examples>
     /// </summary>
     public class VueDataBinding : IDisposable
     {
@@ -29,6 +43,9 @@ namespace SilentNotes.HtmlView
         private readonly List<VueBindingShortcut> _bindingShortcuts;
         private readonly List<KeyValuePair<string, string>> _additionalVueDatas;
         private readonly List<KeyValuePair<string, string>> _additionalVueMethods;
+
+        /// <summary>Name of the property, whose changed event should be ignored, or null.</summary>
+        private string _suppressedViewmodelPropertyChangedEvent;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VueDataBinding"/> class.
@@ -43,6 +60,7 @@ namespace SilentNotes.HtmlView
                 throw new ArgumentNullException(nameof(dotnetViewModel));
             if (htmlView == null)
                 throw new ArgumentNullException(nameof(htmlView));
+            _suppressedViewmodelPropertyChangedEvent = null;
 
             _dotnetViewModel = dotnetViewModel;
             _viewModelNotifier = dotnetViewModel as INotifyPropertyChanged;
@@ -78,8 +96,8 @@ function vuePropertyChanged(propertyName, value) {
     location.href = url;
 }
 
-function vueCommandExecuted(commandName, value) {
-    var url = 'vueCommandExecuted?name=' + commandName;
+function vueCommandExecute(commandName, value) {
+    var url = 'vueCommandExecute?name=' + commandName;
     if (value) {
         url += '&value=' + encodeURIComponent(value);
     }
@@ -147,6 +165,8 @@ vueReady(function () {
 });
 ");
 
+            // Prepare vue data entries of the form:
+            // MyProperty: 42,
             List<string> vueDatas = new List<string>();
             foreach (VueBindingDescription binding in _bindingDescriptions)
             {
@@ -163,7 +183,6 @@ vueReady(function () {
                         TryFormatForView(binding, propertyValue, out formattedValue);
                     }
 
-                    // MyProperty: 42,
                     vueDatas.Add(string.Format(
                         "{0}: {1},",
                         binding.PropertyName,
@@ -175,14 +194,15 @@ vueReady(function () {
                 vueDatas.Add(string.Format("{0}: {1},", additionalVueData.Key, additionalVueData.Value));
             }
 
+            // Prepare vue methods of the form:
+            // MyMethod: function() { vueCommandExecute('MyMethod'); },
             List<string> vueMethods = new List<string>();
             foreach (VueBindingDescription binding in _bindingDescriptions)
             {
                 if (binding.BindingMode == VueBindingMode.Command)
                 {
-                    // MyMethod: function() { vueCommandExecuted('MyMethod'); },
                     vueMethods.Add(string.Format(
-                        "{0}: function() {{ vueCommandExecuted('{0}'); }},",
+                        "{0}: function() {{ vueCommandExecute('{0}'); }},",
                         binding.PropertyName));
                 }
             }
@@ -191,24 +211,26 @@ vueReady(function () {
                 vueMethods.Add(string.Format("{0}: function() {{ {1} }},", additionalVueMethod.Key, additionalVueMethod.Value));
             }
 
+            // Prepare vue watches of the form:
+            // MyProperty: function(newVal, oldVal) { vuePropertyChanged('MyProperty', newVal); },
             List<string> vueWatches = new List<string>();
             foreach (VueBindingDescription binding in _bindingDescriptions)
             {
                 if ((binding.BindingMode == VueBindingMode.TwoWay) || (binding.BindingMode == VueBindingMode.OneWayToViewmodel))
                 {
-                    // MyProperty: function(newVal, oldVal) { vuePropertyChanged('MyProperty', newVal); },
                     vueWatches.Add(string.Format(
                         "{0}: function(newVal) {{ vuePropertyChanged('{0}', newVal); }},",
                         binding.PropertyName));
                 }
             }
 
+            // Prepare vue shortcuts.
+            // Return command if keydown event (e) matches a known shortcut
             List<string> vueShortcuts = new List<string>();
             if (_bindingShortcuts != null)
             {
                 foreach (VueBindingShortcut shortcut in _bindingShortcuts)
                 {
-                    // Return command if keydown event (e) matches a known shortcut
                     vueShortcuts.Add(string.Format(
                         "if (e.key === '{0}' && e.ctrlKey == {1} && e.shiftKey == {2} && e.altKey == {3}) return '{4}';",
                         shortcut.Key,
@@ -219,6 +241,7 @@ vueReady(function () {
                 }
             }
 
+            // Insert prepared parts.
             vueScript.Replace("[VUE_DATA_DECLARATIONS]", string.Join("\n", vueDatas));
             vueScript.Replace("[VUE_METHOD_DECLARATIONS]", string.Join("\n", vueMethods));
             vueScript.Replace("[VUE_WATCHES]", string.Join("\n", vueWatches));
@@ -270,21 +293,21 @@ vueReady(function () {
         }
 
         /// <summary>
-        /// Adds an additional entry to the Vue.data collection, which is not automatically created
-        /// because it has no attribute in the viewmodel, but should be available in Vue instance
-        /// anyway for the view itself.
+        /// Adds an additional entry to the Vue.data collection, which will be available in Vue
+        /// instance for the view itself. This can be used if the viewmodel doesn't have such an
+        /// attribute and therefore the data binding wouldn't generate this entry.
         /// </summary>
         /// <param name="name">Name of the data entry.</param>
-        /// <param name="value">Value of the data entry.</param>
+        /// <param name="value">Start value of the data entry.</param>
         public void DeclareAdditionalVueData(string name, string value)
         {
             _additionalVueDatas.Add(new KeyValuePair<string, string>(name, value));
         }
 
         /// <summary>
-        /// Adds an additional entry to the Vue.methods collection, which is not automatically created
-        /// because it has no attribute in the viewmodel, but should be available in Vue instance
-        /// anyway for the view itself (e.g. for shortcuts).
+        /// Adds an additional entry to the Vue.methods collection, which will be available in the
+        /// Vue instance for the view itself. This can be used if the viewmodel doesn't have such an
+        /// attribute the therefore the data binding wouldn't generate this entry.
         /// </summary>
         /// <param name="name">Name of the data entry.</param>
         /// <param name="javascript">Java script command.</param>
@@ -329,6 +352,13 @@ vueReady(function () {
                     formattedValue = value.ToString();
                     return true;
                 }
+                else if (propertyType == typeof(SecureString))
+                {
+                    // HTML doesn't know the concept of a SecureString, so this is the moment we have to switch.
+                    string unprotectedValue = SecureStringExtensions.SecureStringToString((SecureString)value);
+                    formattedValue = "'" + WebviewUtils.EscapeJavaScriptString(unprotectedValue) + "'";
+                    return true;
+                }
             }
             formattedValue = null;
             return false;
@@ -360,6 +390,11 @@ vueReady(function () {
                     else if (propertyType == typeof(int))
                     {
                         value = int.Parse(formattedValue);
+                        return true;
+                    }
+                    else if (propertyType == typeof(SecureString))
+                    {
+                        value = SecureStringExtensions.StringToSecureString(formattedValue);
                         return true;
                     }
                 }
@@ -466,7 +501,18 @@ vueReady(function () {
                 {
                     case VueBindingMode.TwoWay:
                     case VueBindingMode.OneWayToViewmodel:
-                        TrySetToViewmodel(binding, value);
+                        try
+                        {
+                            // We are inside a changed event from the view, so we do not want to
+                            // handle events from the viewmodel to update the view again, because
+                            // this could lead to circles.
+                            _suppressedViewmodelPropertyChangedEvent = binding.PropertyName;
+                            TrySetToViewmodel(binding, value);
+                        }
+                        finally
+                        {
+                            _suppressedViewmodelPropertyChangedEvent = null;
+                        }
                         break;
                     case VueBindingMode.Command:
                         TryExecuteCommand(binding, value);
@@ -503,29 +549,33 @@ vueReady(function () {
                 return;
 
             VueBindingDescription binding = _bindingDescriptions.FindByPropertyName(e.PropertyName);
-            if (binding != null)
+            if (binding == null)
+                return;
+
+            bool isSuppressedEvent = string.Equals(binding.PropertyName, _suppressedViewmodelPropertyChangedEvent);
+            if (isSuppressedEvent)
+                return;
+
+            switch (binding.BindingMode)
             {
-                switch (binding.BindingMode)
-                {
-                    case VueBindingMode.TwoWay:
-                    case VueBindingMode.OneWayToView:
-                        if (TryGetFromViewmodel(binding, out object propertyValue))
-                            TrySetToView(binding, propertyValue);
-                        break;
-                    case VueBindingMode.OneWayToViewmodel:
-                        break;
-                    case VueBindingMode.Command:
-                        break; // Should never happen
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(binding.BindingMode));
-                }
+                case VueBindingMode.TwoWay:
+                case VueBindingMode.OneWayToView:
+                    if (TryGetFromViewmodel(binding, out object propertyValue))
+                        TrySetToView(binding, propertyValue);
+                    break;
+                case VueBindingMode.OneWayToViewmodel:
+                    break;
+                case VueBindingMode.Command:
+                    break; // Should never happen
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(binding.BindingMode));
             }
         }
 
         private bool IsVueBindingUri(string uri)
         {
             return !string.IsNullOrEmpty(uri)
-                && (uri.Contains("vuePropertyChanged?") || uri.Contains("vueCommandExecuted?"))
+                && (uri.Contains("vuePropertyChanged?") || uri.Contains("vueCommandExecute?"))
                 && !WebviewUtils.IsExternalUri(uri);
         }
 
