@@ -44,10 +44,14 @@ namespace SilentNotes.Controllers
                 Ioc.GetOrCreate<IStoryBoardService>(),
                 Ioc.GetOrCreate<IFeedbackService>());
 
-            Bindings.BindCommand("OkCommand", _viewModel.OkCommand);
-            Bindings.BindCommand("GoBack", _viewModel.GoBackCommand);
-            Bindings.BindCommand("CancelCommand", _viewModel.CancelCommand);
-            Bindings.BindText("Code", () => _viewModel.Code, (v) => _viewModel.Code = v, null, null, HtmlViewBindingMode.OneWayToViewmodel);
+            VueBindingShortcut[] shortcuts = new[]
+            {
+                new VueBindingShortcut(VueBindingShortcut.KeyEscape, nameof(TransferCodeViewModel.CancelCommand)),
+                new VueBindingShortcut(VueBindingShortcut.KeyEnter, nameof(TransferCodeViewModel.OkCommand)),
+            };
+            VueBindings = new VueDataBinding(_viewModel, View, shortcuts);
+            _viewModel.VueDataBindingScript = VueBindings.BuildVueScript();
+            VueBindings.StartListening();
 
             string html = _viewService.GenerateHtml(_viewModel);
             View.LoadHtml(html);

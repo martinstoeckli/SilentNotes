@@ -15,28 +15,30 @@
 
     <link href="quill/quill.snow.css" rel="stylesheet">
     <link href="note-view.css" rel="stylesheet">
+    <link href="quillsearchhighlighter.css" rel="stylesheet">
 
-    <script src="jquery-3.4.1.min.js"></script>
+    <script src="vue.min.js"></script>
+    <script src="jquery-3.5.1.slim.min.js"></script>
     <script src="bootstrap.bundle.min.js"></script>
     <script src="silentnotes.js"></script>
     <script src="checklist.js"></script>
     <script src="quill/quill.min.js"></script>
+    <script src="quillsearchhighlighter.js"></script>
 
     <style type="text/css">
 body { background-color: transparent; }
-#content { background-color: @Model.BackgroundColorHex; }
 
 .note-viewer {
     font-size: @(Model.NoteBaseFontSize)px !important;
 }
-.detail-view.checklist .ql-editor p::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("checkbox-blank-outline", new[] { new KeyValuePair<string, string>("fill", "#000000") }));}; }
-.detail-view.checklist .ql-editor p.done::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("check-box-outline", new[] { new KeyValuePair<string, string>("fill", "#000000") }));}; }
-.detail-view.checklist .ql-editor p.disabled::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("checkbox-blank-outline", new[] { new KeyValuePair<string, string>("fill", "#000000") }));}; }
-.detail-view.checklist .ql-editor p::after { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("delete", new[] { new KeyValuePair<string, string>("fill", "#000000") }));}; }
-.detail-view.checklist.dark .ql-editor p::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("checkbox-blank-outline", new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") }));}; }
-.detail-view.checklist.dark .ql-editor p.done::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("check-box-outline", new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") }));}; }
-.detail-view.checklist.dark .ql-editor p.disabled::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("checkbox-blank-outline", new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") }));}; }
-.detail-view.checklist.dark .ql-editor p::after { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("delete", new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") }));}; }
+div .detail-view.checklist .ql-editor p::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("checkbox-blank-outline", new[] { new KeyValuePair<string, string>("fill", "#000000") }));}; }
+div .detail-view.checklist .ql-editor p.done::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("check-box-outline", new[] { new KeyValuePair<string, string>("fill", "#000000") }));}; }
+div .detail-view.checklist .ql-editor p.disabled::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("checkbox-blank-outline", new[] { new KeyValuePair<string, string>("fill", "#000000") }));}; }
+div .detail-view.checklist .ql-editor p::after { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("delete", new[] { new KeyValuePair<string, string>("fill", "#000000") }));}; }
+div.dark .detail-view.checklist .ql-editor p::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("checkbox-blank-outline", new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") }));}; }
+div.dark .detail-view.checklist .ql-editor p.done::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("check-box-outline", new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") }));}; }
+div.dark .detail-view.checklist .ql-editor p.disabled::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("checkbox-blank-outline", new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") }));}; }
+div.dark .detail-view.checklist .ql-editor p::after { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("delete", new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") }));}; }
 
 .color-btn { color: black; }
 .color-btn.dark { color: white; }
@@ -66,6 +68,7 @@ body { background-color: transparent; }
     </style>
     <script>
         var quill;
+        var searchHighlighter;
 
         function getNoteHtmlContent() {
             return quill.root.innerHTML;
@@ -73,6 +76,37 @@ body { background-color: transparent; }
 
         function setNoteHtmlContent(text) {
             quill.setText(text, 'user');
+        }
+
+        function toggleSearchDialog() {
+            var makeVisible = $('#search-dialog').hasClass('hidden');
+            showSearchDialog(makeVisible);
+        }
+
+        function showSearchDialog(visible) {
+            if (visible) {
+                // Open dialog
+                $('#search-dialog').removeClass('hidden');
+                $('#TxtFilter').focus();
+                searchHighlighter.startListening();
+            }
+            else {
+                // Close dialog
+                searchHighlighter.stopListening();
+                searchHighlighter.clearSearchHighlights();
+                $('#search-dialog').addClass('hidden');
+                $('#TxtFilter').val('');
+            }
+        }
+
+        function scrollToTop() {
+            var element = quill.root;
+            element.scrollTop = 0;
+        }
+
+        function scrollToBottom() {
+            var element = quill.root;
+            element.scrollTop = element.scrollHeight;
         }
 
         $(function () {
@@ -92,15 +126,32 @@ body { background-color: transparent; }
 
             quill.on('text-change', function (delta, oldDelta, source) {
                 if (source === 'user') {
-                    location.href = 'HtmlViewBinding?event-type=text-change&data-binding=quill';
+                    vuePropertyChanged('UnlockedHtmlContent', null);
                 }
             });
+
+            $(quill.root).one("focusin", function () {
+                vm.PrettyTimeAgoVisible = false;
+            });
+
+            searchHighlighter = new QuillSearchHighlighter(quill, document.getElementById("TxtFilter"));
         });
+
+        @{WriteLiteral(Model.VueDataBindingScript);}
     </script>
 </head>
-<body>
+<body><div id="vueDataBinding">
     <nav id="navigation" class="d-flex">
-        <button class="nav-item mr-auto" onclick="bind(event);" data-binding="GoBack" title="@Model.Language["back"]">@{WriteLiteral(Model.Icon["arrow-left"]);}</button>
+        <button class="nav-item mr-auto" v-on:click="GoBackCommand" title="@Model.Language["back"]">@{WriteLiteral(Model.Icon["arrow-left"]);}</button>
+
+        @if (!Model.IsLocked)
+        {
+            <button class="nav-item" onclick="toggleSearchDialog(); return false;" title="@Model.Language["search"]">@{WriteLiteral(Model.Icon["magnify"]);}</button>
+            <button class="nav-item" onclick="moveUp(true); return false;" title="@Model.Language["checklist_move_to_top"]">@{WriteLiteral(Model.Icon["arrow-collapse-up"]);}</button>
+            <button class="nav-item" onclick="moveUp(false); return false;" title="@Model.Language["checklist_move_up"]">@{WriteLiteral(Model.Icon["arrow-up"]);}</button>
+            <button class="nav-item" onclick="moveDown(false); return false;" title="@Model.Language["checklist_move_down"]">@{WriteLiteral(Model.Icon["arrow-down"]);}</button>
+            <button class="nav-item" onclick="moveDown(true); return false;" title="@Model.Language["checklist_move_to_bottom"]">@{WriteLiteral(Model.Icon["arrow-collapse-down"]);}</button>
+        }
 
         <span id="quill-toolbar" class="d-inline-flex">
             @if (!Model.IsLocked)
@@ -108,14 +159,6 @@ body { background-color: transparent; }
                 <button class="nav-item ql-header" value="1" title="@Model.Language["note_header1"]"></button>
             }
         </span>
-
-        @if (!Model.IsLocked)
-        {
-            <button class="nav-item" onclick="moveUp(true); return false;" title="@Model.Language["checklist_move_to_top"]">@{WriteLiteral(Model.Icon["arrow-collapse-up"]);}</button>
-            <button class="nav-item" onclick="moveUp(false); return false;" title="@Model.Language["checklist_move_up"]">@{WriteLiteral(Model.Icon["arrow-up"]);}</button>
-            <button class="nav-item" onclick="moveDown(false); return false;" title="@Model.Language["checklist_move_down"]">@{WriteLiteral(Model.Icon["arrow-down"]);}</button>
-            <button class="nav-item" onclick="moveDown(true); return false;" title="@Model.Language["checklist_move_to_bottom"]">@{WriteLiteral(Model.Icon["arrow-collapse-down"]);}</button>
-        }
 
         <!-- Color dropdown -->
         <div class="dropdown">
@@ -128,7 +171,7 @@ body { background-color: transparent; }
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="colorDropdownMenu">
                 @foreach (var backgroundColor in @Model.BackgroundColorsHex)
                 {
-                    <div class="dropdown-item color-btn @Model.GetDarkClass(backgroundColor)" onclick="bind(event);" data-binding="backgroundcolorhex" data-backgroundcolorhex="@backgroundColor" style="background-color: @backgroundColor">Lorem ipsum</div>
+                    <div class="dropdown-item color-btn @Model.GetDarkClass(backgroundColor)" v-on:click="BackgroundColorHex='@(backgroundColor)'" style="background-color: @backgroundColor">Lorem ipsum</div>
                 }
             </div>
         </div>
@@ -141,37 +184,45 @@ body { background-color: transparent; }
                     @{WriteLiteral(Model.Icon["dots-vertical"]);}
                 </button>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navOverflowMenu">
-                    <div class="dropdown-item" onclick="movePendingToTop(); return false;" data-binding="">@{WriteLiteral(Model.Icon["sort-bool-descending-variant"]);} @Model.Language["checklist_move_pending_to_top"]</div>
-                    <div class="dropdown-item" onclick="setCheckedStateForAll(false, false); return false;" data-binding="">@{WriteLiteral(Model.Icon["checkbox-multiple-blank-outline"]);} @Model.Language["checklist_uncheck_all"]</div>
-                    <div class="dropdown-item" onclick="setCheckedStateForAll(true, false); return false;" data-binding="">@{WriteLiteral(Model.Icon["check-box-multiple-outline"]);} @Model.Language["checklist_check_all"]</div>
-                    <div class="dropdown-item" onclick="setCheckedStateForAll(false, true); return false;" data-binding="">@{WriteLiteral(Model.Icon["checkbox-blank-off-outline"]);} @Model.Language["checklist_disable_all"]</div>
+                    <div class="dropdown-item" onclick="movePendingToTop(); return false;">@{WriteLiteral(Model.Icon["sort-bool-descending-variant"]);} @Model.Language["checklist_move_pending_to_top"]</div>
+                    <div class="dropdown-item" onclick="setCheckedStateForAll(false, false); return false;">@{WriteLiteral(Model.Icon["checkbox-multiple-blank-outline"]);} @Model.Language["checklist_uncheck_all"]</div>
+                    <div class="dropdown-item" onclick="setCheckedStateForAll(true, false); return false;">@{WriteLiteral(Model.Icon["check-box-multiple-outline"]);} @Model.Language["checklist_check_all"]</div>
+                    <div class="dropdown-item" onclick="setCheckedStateForAll(false, true); return false;">@{WriteLiteral(Model.Icon["checkbox-blank-off-outline"]);} @Model.Language["checklist_disable_all"]</div>
                     @if (Model.ShowManualSynchronization)
                     {
                         <div class="dropdown-divider"></div>
-                        <div class="dropdown-item" onclick="bind(event);" data-binding="PushNoteToOnlineStorage">@{WriteLiteral(Model.Icon["cloud-upload"]);} @Model.Language["note_push_to_server"]</div>
-                        <div class="dropdown-item" onclick="bind(event);" data-binding="PullNoteFromOnlineStorage">@{WriteLiteral(Model.Icon["cloud-download"]);} @Model.Language["note_pull_from_server"]</div>
+                        <div class="dropdown-item" v-on:click="PushNoteToOnlineStorageCommand">@{WriteLiteral(Model.Icon["cloud-upload"]);} @Model.Language["note_push_to_server"]</div>
+                        <div class="dropdown-item" v-on:click="PullNoteFromOnlineStorageCommand">@{WriteLiteral(Model.Icon["cloud-download"]);} @Model.Language["note_pull_from_server"]</div>
                     }
                 </div>
             </div>
         }
     </nav>
 
-    <div id="content" class="" data-binding="Content">
+    <div id="content" v-bind:class="{ dark: IsDark }" v-bind:style="{ backgroundColor: BackgroundColorHex }">
         @if (Model.IsLocked)
         {
-            <span class="locked d-flex justify-content-center align-items-center @Model.GetDarkClass()"><svg width='128' height='128' viewBox='0 0 24 24'><use xlink:href="#svg-lock-outline" /></svg></span>
+            <span class="locked d-flex justify-content-center align-items-center" v-bind:class="{ dark: IsDark }"><svg width='128' height='128' viewBox='0 0 24 24'><use xlink:href="#svg-lock-outline" /></svg></span>
         }
         else
         {
-            <div id="myeditor" class="note-viewer detail-view @Model.GetDarkClass() @Model.CssClassNoteType" data-binding="quill">@{WriteLiteral(Model.UnlockedHtmlContent);}</div>
+            <div id="myeditor" class="note-viewer detail-view @Model.CssClassNoteType">@{WriteLiteral(Model.UnlockedHtmlContent);}</div>
         }
     </div>
 
-    <div id="pretty-time-ago" class="@Model.GetDarkClass()" data-binding="PrettyTimeAgo">@Model.PrettyTimeAgo</div>
+    <div id="pretty-time-ago" v-if="PrettyTimeAgoVisible" v-bind:class="{ dark: IsDark }">{{ PrettyTimeAgo }}</div>
 
-<div hidden>
-    @{WriteLiteral(Model.Icon.LoadIcon("lock-outline", new[] { new KeyValuePair<string, string>("id", "svg-lock-outline") }));}
-    @{WriteLiteral(Model.Icon.LoadIcon("delete", new[] { new KeyValuePair<string, string>("id", "svg-delete") }));}
-</div>
-</body>
+    <div id="search-dialog" class="hidden">
+        <div class="nav-filter">
+            <input id="TxtFilter" autocomplete="off" />
+            <svg id="filter-cancel-icon" width='24' height='24' viewBox='0 0 24 24' class="" onclick="showSearchDialog(false);"><use xlink:href="#svg-close-circle-outline" /></svg>
+        </div>
+    </div>
+
+    <div hidden>
+        @{WriteLiteral(Model.Icon.LoadIcon("lock-outline", new[] { new KeyValuePair<string, string>("id", "svg-lock-outline") }));}
+        @{WriteLiteral(Model.Icon.LoadIcon("delete", new[] { new KeyValuePair<string, string>("id", "svg-delete") }));}
+        @{WriteLiteral(Model.Icon.LoadIcon("close-circle-outline", new[] { new KeyValuePair<string, string>("id", "svg-close-circle-outline") }));}
+    </div>
+</div></body>
 </html>

@@ -135,6 +135,12 @@ namespace SilentNotes.ViewModels
         }
 
         /// <summary>
+        /// Gets or sets a piece of JavaScript which initializes the Vue.js model and can be
+        /// inserted into the HTML page. This script shouldn't be escaped.
+        /// </summary>
+        public string VueDataBindingScript { get; set; }
+
+        /// <summary>
         /// Gets a bindable indexed property to load localized text resources.
         /// In Xaml one can use it like this:
         /// <code>

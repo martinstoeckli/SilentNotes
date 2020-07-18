@@ -1,22 +1,20 @@
-class QuillSearchHighlighter {
-  /**
-   * Initializes a new instance of the QuillSearchHighlighter class.
-   * @param {Quill} quill - The quill editor.
-   * @param {*} inputElement - The Html input element which receives the search string.
-   */
-  constructor(quill, inputElement) {
-    var _this = this;
-    _this.quill = quill;
-    _this.inputElement = inputElement;
-    _this.searchHighlights = [];
-    _this.searchDelay = 1; // prevents subsequent events
-    _this.isListening = null;
-  }
+/**
+ * Initializes a new instance of the QuillSearchHighlighter class.
+ * @param {Quill} quill - The quill editor.
+ * @param {*} inputElement - The Html input element which receives the search string.
+ */
+function QuillSearchHighlighter(quill, inputElement) {
+  var _this = this;
+  _this.quill = quill;
+  _this.inputElement = inputElement;
+  _this.searchHighlights = [];
+  _this.searchDelay = 1; // prevents subsequent events
+  _this.isListening = null;
 
   /**
    * Connects to the quill editor- and to global events.
    */
-  startListening() {
+  _this.startListening = function() {
     var _this = this;
 
     // Just reconnect?
@@ -49,7 +47,7 @@ class QuillSearchHighlighter {
     }
   }
 
-  stopListening() {
+  _this.stopListening = function() {
     var _this = this;
     _this.isListening = false;
   }
@@ -62,7 +60,7 @@ class QuillSearchHighlighter {
    * @param {boolean} focusBackToInput - Give back the focus to the input element, so the user
    * can continue typing.
    */
-  searchAndHighlight(needle, scrollToFirst, focusBackToInput) {
+  _this.searchAndHighlight = function(needle, scrollToFirst, focusBackToInput) {
     var _this = this;
     _this.clearSearchHighlights();
     if (!needle || needle.length < 2)
@@ -104,7 +102,7 @@ class QuillSearchHighlighter {
   /**
    * Removes and frees all highlight divs from the quill editor.
    */
-  clearSearchHighlights() {
+  _this.clearSearchHighlights = function() {
     var _this = this;
     _this.searchHighlights.forEach(function(item) {
         item.remove();
@@ -115,7 +113,7 @@ class QuillSearchHighlighter {
    * Creates a transparent div to highlight a search result.
    * @param {*} bounds - The bounding box of the div
    */
-  createSearchHighlight(bounds) {
+  _this.createSearchHighlight = function(bounds) {
     var result = document.createElement('div');
     result.classList.add('qs-highlight');
     result.style.width = bounds.width + 'px';
@@ -130,7 +128,7 @@ class QuillSearchHighlighter {
    * The returned text can be used to get the position of a given subtext,
    * images are translated to a single space character to leave the index intact.
    */
-  getLowerQuillText() {
+  _this.getLowerQuillText = function() {
     var _this = this;
     return _this.quill.getContents().filter(function (op) {
       return typeof op.insert === 'string' || op.insert.image;
@@ -146,7 +144,7 @@ class QuillSearchHighlighter {
    * Checks whether a bounding box is in the visible area (scrolling) of the quill editor.
    * @param {*} bounds - The bounding box to check
    */
-  isInVisibleArea(bounds) {
+  _this.isInVisibleArea = function(bounds) {
     var _this = this;
     var editorElement = _this.quill.root;
     var result = (bounds.bottom > editorElement.clientTop)

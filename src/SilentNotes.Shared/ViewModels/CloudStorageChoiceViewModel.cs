@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using SilentNotes.HtmlView;
 using SilentNotes.Services;
 using SilentNotes.StoryBoards.SynchronizationStory;
 using VanillaCloudStorageClient;
@@ -40,7 +41,7 @@ namespace SilentNotes.ViewModels
 
             ServiceChoices = new List<CloudStorageChoiceItemViewModel>();
             GoBackCommand = new RelayCommand(GoBack);
-            ChooseCommand = new RelayCommand<string>(Choose);
+            ChooseCommand = new RelayCommand<object>(Choose);
 
             ListChoices(ServiceChoices);
         }
@@ -72,10 +73,12 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets the command when the user selects an item.
         /// </summary>
+        [VueDataBinding(VueBindingMode.Command)]
         public ICommand ChooseCommand { get; private set; }
 
-        private async void Choose(string cloudStorageId)
+        private async void Choose(object value)
         {
+            string cloudStorageId = value.ToString();
             SerializeableCloudStorageCredentials credentials = new SerializeableCloudStorageCredentials { CloudStorageId = cloudStorageId };
             _storyBoardService.ActiveStory?.StoreToSession(SynchronizationStorySessionKey.CloudStorageCredentials, credentials);
             await (_storyBoardService.ActiveStory?.ContinueWith(SynchronizationStoryStepId.ShowCloudStorageAccount)
@@ -85,6 +88,7 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets the command to go back to the note overview.
         /// </summary>
+        [VueDataBinding(VueBindingMode.Command)]
         public ICommand GoBackCommand { get; private set; }
 
         private async void GoBack()

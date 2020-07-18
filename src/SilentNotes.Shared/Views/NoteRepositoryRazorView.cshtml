@@ -13,7 +13,8 @@
     <link href="silentnotes.css" rel="stylesheet" />
     <link href="@(Model.Theme.DarkMode ? "silentnotes.dark.css" : "silentnotes.light.css")" rel="stylesheet" />
 
-    <script src="jquery-3.4.1.min.js"></script>
+    <script src="vue.min.js"></script>
+    <script src="jquery-3.5.1.slim.min.js"></script>
     <script src="bootstrap.bundle.min.js"></script>
     <script src="silentnotes.js"></script>
     <script src="Sortable.min.js"></script>
@@ -31,12 +32,12 @@ body {
     pointer-events: none; /* ignore clicks on links */
     cursor: default;
 }
-.note-viewer.over-view.checklist p::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("checkbox-blank-outline", new[] { new KeyValuePair<string, string>("fill", "#000000") }));}; }
-.note-viewer.dark.over-view.checklist p::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("checkbox-blank-outline", new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") }));}; }
-.note-viewer.over-view.checklist p.done::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("check-box-outline", new[] { new KeyValuePair<string, string>("fill", "#000000") }));}; }
-.note-viewer.dark.over-view.checklist p.done::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("check-box-outline", new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") }));}; }
-.note-viewer.over-view.checklist p.disabled::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("checkbox-blank-outline", new[] { new KeyValuePair<string, string>("fill", "#000000") }));}; }
-.note-viewer.dark.over-view.checklist p.disabled::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("checkbox-blank-outline", new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") }));}; }
+div .note-viewer.over-view.checklist p::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("checkbox-blank-outline", new[] { new KeyValuePair<string, string>("fill", "#000000") }));}; }
+div.dark .note-viewer.over-view.checklist p::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("checkbox-blank-outline", new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") }));}; }
+div .note-viewer.over-view.checklist p.done::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("check-box-outline", new[] { new KeyValuePair<string, string>("fill", "#000000") }));}; }
+div.dark .note-viewer.over-view.checklist p.done::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("check-box-outline", new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") }));}; }
+div .note-viewer.over-view.checklist p.disabled::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("checkbox-blank-outline", new[] { new KeyValuePair<string, string>("fill", "#000000") }));}; }
+div.dark .note-viewer.over-view.checklist p.disabled::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("checkbox-blank-outline", new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") }));}; }
 
 .nav-filter {
     margin: 0 1em 0 0;
@@ -82,34 +83,61 @@ body {
 .fab { right: 3.2em; } /* should not cover icons */
     </style>
     <script>
+        function showNote(e) {
+            vueCommandExecute('ShowNoteCommand', e.currentTarget.parentNode.attributes['data-note'].value);
+        }
+
+        function deleteNote(e) {
+            vueCommandExecute('DeleteNoteCommand', e.currentTarget.parentNode.attributes['data-note'].value);
+        }
+
+        function addToSafe(e) {
+            vueCommandExecute('AddToSafeCommand', e.currentTarget.parentNode.attributes['data-note'].value);
+        }
+
+        function removeFromSafe(e) {
+            vueCommandExecute('RemoveFromSafeCommand', e.currentTarget.parentNode.attributes['data-note'].value);
+        }
+
+        function scrollToTop() {
+            var element = document.querySelector('#content');
+            element.scrollTop = 0;
+        }
+
+        function scrollToBottom() {
+            var element = document.querySelector('#content');
+            element.scrollTop = element.scrollHeight;
+        }
+
+        @{WriteLiteral(Model.VueDataBindingScript);}
     </script>
 </head>
-<body>
+<body><div id="vueDataBinding">
     <nav id="navigation" class="d-flex">
         <div class="nav-item nav-filter ml-auto d-inline-flex align-self-center">
-            <input oninput="bind(event)" data-binding="TxtFilter" autocomplete="off" autofocus />
-            <svg id="filter-icon" width='24' height='24' viewBox='0 0 24 24' data-binding="FilterButtonMagnifier"><use xlink:href="#svg-magnify" /></svg>
-            <svg id="filter-cancel-icon" width='24' height='24' viewBox='0 0 24 24' class="hidden" onclick="bind(event)" data-binding="FilterButtonCancel"><use xlink:href="#svg-close-circle-outline" /></svg>
+            <input v-model="Filter" autocomplete="off" v-focus />
+            <svg id="filter-icon" v-if="!IsFiltered" width='24' height='24' viewBox='0 0 24 24'><use xlink:href="#svg-magnify" /></svg>
+            <svg id="filter-cancel-icon" v-if="IsFiltered" width='24' height='24' viewBox='0 0 24 24' v-on:click="ClearFilterCommand"><use xlink:href="#svg-close-circle-outline" /></svg>
         </div>
 
-        <button class="nav-item" onclick="bind(event);" data-binding="Synchronize" title="@Model.Language["sync_notes"]">@{WriteLiteral(Model.Icon["cloud-sync"]);}</button>
+        <button class="nav-item" v-on:click="SynchronizeCommand" title="@Model.Language["sync_notes"]">@{WriteLiteral(Model.Icon["cloud-sync"]);}</button>
 
         <div class="dropdown">
             <button class="nav-item" id="navOverflowMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 @{WriteLiteral(Model.Icon["dots-vertical"]);}
             </button>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navOverflowMenu">
-                <div class="dropdown-item" onclick="bind(event);" data-binding="NewNote"><svg><use xlink:href="#svg-note-text-outline" /></svg> @Model.Language["note_create_new"]</div>
-                <div class="dropdown-item" onclick="bind(event);" data-binding="NewChecklist"><svg><use xlink:href="#svg-order-bool-ascending-variant" /></svg> @Model.Language["checklist_create_new"]</div>
-                <div class="dropdown-item" onclick="bind(event);" data-binding="ShowRecycleBin">@{WriteLiteral(Model.Icon["delete-empty"]);} @Model.Language["show_recyclebin"]</div>
+                <div class="dropdown-item" v-on:click="NewNoteCommand"><svg><use xlink:href="#svg-note-text-outline" /></svg> @Model.Language["note_create_new"]</div>
+                <div class="dropdown-item" v-on:click="NewChecklistCommand"><svg><use xlink:href="#svg-order-bool-ascending-variant" /></svg> @Model.Language["checklist_create_new"]</div>
+                <div class="dropdown-item" v-on:click="ShowRecycleBinCommand">@{WriteLiteral(Model.Icon["delete-empty"]);} @Model.Language["show_recyclebin"]</div>
                 <div class="dropdown-divider"></div>
-                <div class="dropdown-item" @if (Model.IsAnySafeOpen) { @("hidden") ; } onclick="bind(event);" data-binding="OpenSafe">@{WriteLiteral(Model.Icon["safe-square-outline"]);} @Model.Language["safe_open"]</div>
-                <div class="dropdown-item" @if (!Model.IsAnySafeOpen) { @("hidden") ; } onclick="bind(event);" data-binding="CloseSafe">@{WriteLiteral(Model.Icon["safe-square-outline"]);} @Model.Language["safe_close"]</div>
-                <div class="dropdown-item" onclick="bind(event);" data-binding="ChangeSafePassword">@{WriteLiteral(Model.Icon["lock-reset"]);} @Model.Language["safe_change_password"]</div>
+                <div class="dropdown-item" @if (Model.IsAnySafeOpen) { @("hidden") ; } v-on:click="OpenSafeCommand">@{WriteLiteral(Model.Icon["safe-square-outline"]);} @Model.Language["safe_open"]</div>
+                <div class="dropdown-item" @if (!Model.IsAnySafeOpen) { @("hidden") ; } v-on:click="CloseSafeCommand">@{WriteLiteral(Model.Icon["safe-square-outline"]);} @Model.Language["safe_close"]</div>
+                <div class="dropdown-item" v-on:click="ChangeSafePasswordCommand">@{WriteLiteral(Model.Icon["lock-reset"]);} @Model.Language["safe_change_password"]</div>
                 <div class="dropdown-divider"></div>
-                <div class="dropdown-item" onclick="bind(event);" data-binding="ShowTransferCode">@{WriteLiteral(Model.Icon["key"]);} @Model.Language["show_transfer_code"]</div>
-                <div class="dropdown-item" onclick="bind(event);" data-binding="ShowSettings">@{WriteLiteral(Model.Icon["settings"]);} @Model.Language["show_settings"]</div>
-                <div class="dropdown-item" onclick="bind(event);" data-binding="ShowInfo">@{WriteLiteral(Model.Icon["information"]);} @Model.Language["show_info"]</div>
+                <div class="dropdown-item" v-on:click="ShowTransferCodeCommand">@{WriteLiteral(Model.Icon["key"]);} @Model.Language["show_transfer_code"]</div>
+                <div class="dropdown-item" v-on:click="ShowSettingsCommand">@{WriteLiteral(Model.Icon["settings"]);} @Model.Language["show_settings"]</div>
+                <div class="dropdown-item" v-on:click="ShowInfoCommand">@{WriteLiteral(Model.Icon["information"]);} @Model.Language["show_info"]</div>
             </div>
         </div>
     </nav>
@@ -117,8 +145,8 @@ body {
     <div class="fab dropup">
         <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#">@{WriteLiteral(Model.Icon["plus"]);}</a>
         <div class="dropdown-menu">
-            <a onclick="bind(event);" data-binding="NewNote" href="#"><svg><use xlink:href="#svg-note-text-outline" /></svg></a>
-            <a onclick="bind(event);" data-binding="NewChecklist" href="#"><svg><use xlink:href="#svg-order-bool-ascending-variant" /></svg></a>
+            <a v-on:click="NewNoteCommand" href="#"><svg><use xlink:href="#svg-note-text-outline" /></svg></a>
+            <a v-on:click="NewChecklistCommand" href="#"><svg><use xlink:href="#svg-order-bool-ascending-variant" /></svg></a>
         </div>
     </div>
 
@@ -137,5 +165,5 @@ body {
         @{WriteLiteral(Model.Icon.LoadIcon("note-text-outline", new[] { new KeyValuePair<string, string>("id", "svg-note-text-outline") }));}
         @{WriteLiteral(Model.Icon.LoadIcon("order-bool-ascending-variant", new[] { new KeyValuePair<string, string>("id", "svg-order-bool-ascending-variant") }));}
     </div>
-</body>
+</div></body>
 </html>

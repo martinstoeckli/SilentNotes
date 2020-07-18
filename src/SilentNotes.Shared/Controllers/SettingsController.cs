@@ -3,6 +3,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using System;
 using SilentNotes.HtmlView;
 using SilentNotes.Services;
 using SilentNotes.ViewModels;
@@ -44,54 +45,16 @@ namespace SilentNotes.Controllers
                 Ioc.GetOrCreate<ISettingsService>(),
                 Ioc.GetOrCreate<IStoryBoardService>());
 
-            Bindings.BindCommand("GoBack", _viewModel.GoBackCommand);
-            Bindings.BindCommand("ChangeCloudSettingsCommand", _viewModel.ChangeCloudSettingsCommand);
-            Bindings.BindCommand("ClearCloudSettingsCommand", _viewModel.ClearCloudSettingsCommand);
-            Bindings.BindDropdown("SelectedEncryptionAlgorithm", null, SetEncryptionAlgorithmToViewmodel, null, null, HtmlViewBindingMode.OneWayToViewmodel);
-            Bindings.BindDropdown("SelectedAutoSyncMode", null, (string value) => _viewModel.SelectedAutoSyncMode = value, null, null, HtmlViewBindingMode.OneWayToViewmodel);
-            Bindings.BindText("CloudStorageSettings", () => _viewModel.AccountSummary, null, _viewModel, nameof(_viewModel.AccountSummary), HtmlViewBindingMode.OneWayToView);
-            Bindings.BindBackgroundImage("SelectedTheme", () => _viewModel.SelectedTheme.Image, _viewModel, nameof(_viewModel.SelectedTheme), HtmlViewBindingMode.OneWayToView);
-            Bindings.BindCheckbox("UseSolidColorTheme", null, (bool value) => _viewModel.UseSolidColorTheme = value, null, null, HtmlViewBindingMode.OneWayToViewmodel);
-            Bindings.BindText("ColorForSolidThemeHex", null, (string value) => _viewModel.ColorForSolidThemeHex = value, null, null, HtmlViewBindingMode.OneWayToViewmodel);
-            Bindings.BindDropdown("SelectedThemeMode", null, (string value) => _viewModel.SelectedThemeMode = value, null, null, HtmlViewBindingMode.OneWayToViewmodel);
-            Bindings.BindDropdown("SelectedNoteInsertionMode", null, (string value) => _viewModel.SelectedNoteInsertionMode = value, null, null, HtmlViewBindingMode.OneWayToViewmodel);
-            Bindings.BindCheckbox("UseColorForAllNotesInDarkMode", null, (bool value) => _viewModel.UseColorForAllNotesInDarkMode = value, null, null, HtmlViewBindingMode.OneWayToViewmodel);
-            Bindings.BindText("ColorForAllNotesInDarkModeHex", null, (string value) => _viewModel.ColorForAllNotesInDarkModeHex = value, null, null, HtmlViewBindingMode.OneWayToViewmodel);
-            Bindings.UnhandledViewBindingEvent += UnhandledViewBindingEventHandler;
+            VueBindingShortcut[] shortcuts = new[]
+            {
+                new VueBindingShortcut(VueBindingShortcut.KeyEscape, nameof(SettingsViewModel.GoBackCommand)),
+            };
+            VueBindings = new VueDataBinding(_viewModel, View, shortcuts);
+            _viewModel.VueDataBindingScript = VueBindings.BuildVueScript();
+            VueBindings.StartListening();
 
             string html = _viewService.GenerateHtml(_viewModel);
             View.LoadHtml(html);
-        }
-
-        private void SetEncryptionAlgorithmToViewmodel(string value)
-        {
-            _viewModel.SelectedEncryptionAlgorithm = _viewModel.EncryptionAlgorithms.Find(
-                (item) => item.Value == value);
-        }
-
-        private void UnhandledViewBindingEventHandler(object sender, HtmlViewBindingNotifiedEventArgs e)
-        {
-            switch (e.BindingName)
-            {
-                case "SelectedThemePreview":
-                    string themeId = e.Parameters["data-theme"];
-                    _viewModel.SelectedTheme = _viewModel.Theme.Themes.Find(item => item.Id == themeId);
-                    break;
-                case "DefaultNoteColorPreview":
-                    _viewModel.DefaultNoteColorHex = e.Parameters["data-notecolorhex"];
-                    SetDefaultNoteColorToView(_viewModel.DefaultNoteColorHex);
-                    break;
-                case "FontSize":
-                    _viewModel.FontSizeStep = e.Parameters["value"];
-                    break;
-            }
-        }
-
-        private void SetDefaultNoteColorToView(string colorHex)
-        {
-            string script = string.Format(
-                "htmlViewBindingsSetCss('DefaultNoteColor', 'background-color', '{0}');", colorHex);
-            View.ExecuteJavaScript(script);
         }
     }
 }

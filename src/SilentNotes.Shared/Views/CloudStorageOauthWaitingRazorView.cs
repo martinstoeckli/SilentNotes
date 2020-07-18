@@ -23,7 +23,7 @@ using SilentNotes.ViewModels;
 #line hidden
 
 
-[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.4.0.308")]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.6.0.1061")]
 public partial class CloudStorageOauthWaitingRazorView : CloudStorageOauthWaitingRazorViewBase
 {
 
@@ -93,7 +93,11 @@ WriteLiteral(" rel=\"stylesheet\"");
 
 WriteLiteral(" />\r\n\r\n    <script");
 
-WriteLiteral(" src=\"jquery-3.4.1.min.js\"");
+WriteLiteral(" src=\"vue.min.js\"");
+
+WriteLiteral("></script>\r\n    <script");
+
+WriteLiteral(" src=\"jquery-3.5.1.slim.min.js\"");
 
 WriteLiteral("></script>\r\n    <script");
 
@@ -107,7 +111,25 @@ WriteLiteral("></script>\r\n\r\n    <style");
 
 WriteLiteral(" type=\"text/css\"");
 
-WriteLiteral(">\r\n    </style>\r\n    <script>\r\n    </script>\r\n</head>\r\n<body>\r\n    <nav");
+WriteLiteral(">\r\n    </style>\r\n    <script>\r\n");
+
+
+#line 24 "CloudStorageOauthWaitingRazorView.cshtml"
+        
+
+#line default
+#line hidden
+
+#line 24 "CloudStorageOauthWaitingRazorView.cshtml"
+          WriteLiteral(Model.VueDataBindingScript);
+
+#line default
+#line hidden
+WriteLiteral("\r\n    </script>\r\n</head>\r\n<body><div");
+
+WriteLiteral(" id=\"vueDataBinding\"");
+
+WriteLiteral(">\r\n    <nav");
 
 WriteLiteral(" id=\"navigation\"");
 
@@ -117,14 +139,12 @@ WriteLiteral(">\r\n        <button");
 
 WriteLiteral(" class=\"nav-item mr-auto\"");
 
-WriteLiteral(" onclick=\"bind(event);\"");
-
-WriteLiteral(" data-binding=\"GoBack\"");
+WriteLiteral(" v-on:click=\"GoBackCommand\"");
 
 WriteAttribute ("title", " title=\"", "\""
 
-#line 27 "CloudStorageOauthWaitingRazorView.cshtml"
-                                                      , Tuple.Create<string,object,bool> ("", Model.Language["back"]
+#line 29 "CloudStorageOauthWaitingRazorView.cshtml"
+                                    , Tuple.Create<string,object,bool> ("", Model.Language["back"]
 
 #line default
 #line hidden
@@ -133,8 +153,8 @@ WriteAttribute ("title", " title=\"", "\""
 WriteLiteral(">");
 
 
-#line 27 "CloudStorageOauthWaitingRazorView.cshtml"
-                                                                                                                        WriteLiteral(Model.Icon["arrow-left"]);
+#line 29 "CloudStorageOauthWaitingRazorView.cshtml"
+                                                                                                      WriteLiteral(Model.Icon["arrow-left"]);
 
 #line default
 #line hidden
@@ -151,13 +171,13 @@ WriteLiteral(" class=\"alert alert-success m-4\"");
 WriteLiteral(">");
 
 
-#line 31 "CloudStorageOauthWaitingRazorView.cshtml"
+#line 33 "CloudStorageOauthWaitingRazorView.cshtml"
                                         Write(Model.Language["cloud_oauth_code_desc"]);
 
 
 #line default
 #line hidden
-WriteLiteral("</div>\r\n    </div>\r\n</body>\r\n</html>\r\n");
+WriteLiteral("</div>\r\n    </div>\r\n</div></body>\r\n</html>\r\n");
 
 }
 }

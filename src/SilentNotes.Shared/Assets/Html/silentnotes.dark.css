@@ -25,37 +25,37 @@ a:hover { color: #7ba7cc; }
 .restore svg { fill: #8dc37a; }
 a[data-tooltip]:hover:after { background: #f1f2f7; color: #575757; }
 
-.note-viewer { color: black !important; }
-.note-viewer.dark { color: white !important; }
-.note-viewer h1 { color: rgba(70, 130, 180, 1) !important; }
-.note-viewer.dark h1 { color: rgba(173, 216, 230, 1) !important; }
-.note-viewer h2 { color: rgba(70, 130, 180, 0.85) !important; }
-.note-viewer.dark h2 { color: rgba(173, 216, 230, 0.94) !important; }
-.note-viewer h3 { color: rgba(70, 130, 180, 0.7) !important; }
-.note-viewer.dark h3 { color: rgba(173, 216, 230, 0.88) !important; }
-.note-viewer ol > li::before { color: steelblue; }
-.note-viewer.dark ol > li::before { color: lightblue; }
-.note-viewer ul > li::before { color: steelblue !important; }
-.note-viewer.dark ul > li::before { color: lightblue !important; }
-.note-viewer pre { background-color: rgba(128, 128, 128, 0.2) !important; color: black !important; }
-.note-viewer.dark pre { background-color: rgba(211, 211, 211, 0.3) !important; color: white !important; }
-.note-viewer a { color: rgba(70, 130, 180, 0.80) !important; }
-.note-viewer a:hover { color: rgba(70, 130, 180, 0.80) !important; }
-.note-viewer.dark a { color: rgba(173, 216, 230, 0.90) !important; }
-.note-viewer.dark a:hover { color: rgba(173, 216, 230, 0.90) !important; }
+div .note-viewer { color: black !important; }
+div.dark .note-viewer { color: white !important; }
+div .note-viewer h1 { color: rgba(70, 130, 180, 1) !important; }
+div.dark .note-viewer h1 { color: rgba(173, 216, 230, 1) !important; }
+div .note-viewer h2 { color: rgba(70, 130, 180, 0.85) !important; }
+div.dark .note-viewer h2 { color: rgba(173, 216, 230, 0.94) !important; }
+div .note-viewer h3 { color: rgba(70, 130, 180, 0.7) !important; }
+div.dark .note-viewer h3 { color: rgba(173, 216, 230, 0.88) !important; }
+div .note-viewer ol > li::before { color: steelblue; }
+div.dark .note-viewer ol > li::before { color: lightblue; }
+div .note-viewer ul > li::before { color: steelblue !important; }
+div.dark .note-viewer ul > li::before { color: lightblue !important; }
+div .note-viewer pre { background-color: rgba(128, 128, 128, 0.2) !important; color: black !important; }
+div.dark .note-viewer pre { background-color: rgba(211, 211, 211, 0.3) !important; color: white !important; }
+div .note-viewer a { color: rgba(70, 130, 180, 0.80) !important; }
+div .note-viewer a:hover { color: rgba(70, 130, 180, 0.80) !important; }
+div.dark .note-viewer a { color: rgba(173, 216, 230, 0.90) !important; }
+div.dark .note-viewer a:hover { color: rgba(173, 216, 230, 0.90) !important; }
 
-.note-viewer.over-view.checklist p,
-.detail-view.checklist .ql-editor p { background-color: rgba(128, 128, 128, 0.2); }
-.note-viewer.dark.over-view.checklist p,
-.detail-view.dark.checklist .ql-editor p { background-color: rgba(211, 211, 211, 0.3); }
-.note-viewer.over-view.checklist p.done,
-.detail-view.checklist .ql-editor p.done { background: #ccf0a8; }
-.note-viewer.dark.over-view.checklist p.done,
-.detail-view.dark.checklist .ql-editor p.done { background: #467c46; }
-.note-viewer.over-view.checklist p.disabled,
-.detail-view.checklist .ql-editor p.disabled { color: rgba(0, 0, 0, 0.2); }
-.note-viewer.dark.over-view.checklist p.disabled,
-.detail-view.dark.checklist .ql-editor p.disabled { color: rgba(255, 255, 255, 0.2); }
+div .note-viewer.over-view.checklist p,
+div .detail-view.checklist .ql-editor p { background-color: rgba(128, 128, 128, 0.2); }
+div.dark .note-viewer.over-view.checklist p,
+div.dark .detail-view.checklist .ql-editor p { background-color: rgba(211, 211, 211, 0.3); }
+div .note-viewer.over-view.checklist p.done,
+div .detail-view.checklist .ql-editor p.done { background: #ccf0a8; }
+div.dark .note-viewer.over-view.checklist p.done,
+div.dark .detail-view.checklist .ql-editor p.done { background: #467c46; }
+div .note-viewer.over-view.checklist p.disabled,
+div .detail-view.checklist .ql-editor p.disabled { color: rgba(0, 0, 0, 0.5); text-decoration-color: rgba(0, 0, 0, 0.25); }
+div.dark .note-viewer.over-view.checklist p.disabled,
+div.dark .detail-view.checklist .ql-editor p.disabled { color: rgba(255, 255, 255, 0.5); text-decoration-color: rgba(255, 255, 255, 0.25); }
 
 
 /* overridings which exist only in dark mode */

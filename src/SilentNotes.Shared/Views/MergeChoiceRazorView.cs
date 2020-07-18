@@ -23,7 +23,7 @@ using SilentNotes.ViewModels;
 #line hidden
 
 
-[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.4.0.308")]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.6.0.1062")]
 public partial class MergeChoiceRazorView : MergeChoiceRazorViewBase
 {
 
@@ -93,7 +93,11 @@ WriteLiteral(" rel=\"stylesheet\"");
 
 WriteLiteral(" />\r\n\r\n    <script");
 
-WriteLiteral(" src=\"jquery-3.4.1.min.js\"");
+WriteLiteral(" src=\"vue.min.js\"");
+
+WriteLiteral("></script>\r\n    <script");
+
+WriteLiteral(" src=\"jquery-3.5.1.slim.min.js\"");
 
 WriteLiteral("></script>\r\n    <script");
 
@@ -109,7 +113,25 @@ WriteLiteral(" type=\"text/css\"");
 
 WriteLiteral(">\r\n        .list-group {\r\n            max-width: 360px;\r\n        }\r\n\r\n        .li" +
 "st-group-item {\r\n            cursor: pointer;\r\n        }\r\n    </style>\r\n    <scr" +
-"ipt>\r\n    </script>\r\n</head>\r\n<body>\r\n    <nav");
+"ipt>\r\n");
+
+
+#line 31 "MergeChoiceRazorView.cshtml"
+        
+
+#line default
+#line hidden
+
+#line 31 "MergeChoiceRazorView.cshtml"
+          WriteLiteral(Model.VueDataBindingScript);
+
+#line default
+#line hidden
+WriteLiteral("\r\n    </script>\r\n</head>\r\n<body><div");
+
+WriteLiteral(" id=\"vueDataBinding\"");
+
+WriteLiteral(">\r\n    <nav");
 
 WriteLiteral(" id=\"navigation\"");
 
@@ -119,14 +141,12 @@ WriteLiteral(">\r\n        <button");
 
 WriteLiteral(" class=\"nav-item mr-auto\"");
 
-WriteLiteral(" onclick=\"bind(event);\"");
-
-WriteLiteral(" data-binding=\"GoBack\"");
+WriteLiteral(" v-on:click=\"GoBackCommand\"");
 
 WriteAttribute ("title", " title=\"", "\""
 
-#line 34 "MergeChoiceRazorView.cshtml"
-                                                      , Tuple.Create<string,object,bool> ("", Model.Language["back"]
+#line 36 "MergeChoiceRazorView.cshtml"
+                                    , Tuple.Create<string,object,bool> ("", Model.Language["back"]
 
 #line default
 #line hidden
@@ -135,8 +155,8 @@ WriteAttribute ("title", " title=\"", "\""
 WriteLiteral(">");
 
 
-#line 34 "MergeChoiceRazorView.cshtml"
-                                                                                                                        WriteLiteral(Model.Icon["arrow-left"]);
+#line 36 "MergeChoiceRazorView.cshtml"
+                                                                                                      WriteLiteral(Model.Icon["arrow-left"]);
 
 #line default
 #line hidden
@@ -149,7 +169,7 @@ WriteLiteral(" class=\"container-fluid p-4\"");
 WriteLiteral(">\r\n        <h1>");
 
 
-#line 38 "MergeChoiceRazorView.cshtml"
+#line 40 "MergeChoiceRazorView.cshtml"
        Write(Model.Language["cloud_service_choice"]);
 
 
@@ -163,11 +183,9 @@ WriteLiteral(">\r\n            <button");
 
 WriteLiteral(" type=\"button\"");
 
+WriteLiteral(" v-on:click=\"UseMergedRepositoryCommand\"");
+
 WriteLiteral(" class=\"list-group-item list-group-item-action d-flex\"");
-
-WriteLiteral(" onclick=\"bind(event)\"");
-
-WriteLiteral(" data-binding=\"UseMergedRepository\"");
 
 WriteLiteral(">\r\n                <span");
 
@@ -180,7 +198,7 @@ WriteLiteral(" class=\"btn-text\"");
 WriteLiteral(">");
 
 
-#line 42 "MergeChoiceRazorView.cshtml"
+#line 44 "MergeChoiceRazorView.cshtml"
                                                                                                     Write(Model.Language["sync_repository_merge"]);
 
 
@@ -190,11 +208,9 @@ WriteLiteral("</span>\r\n            </button>\r\n            <button");
 
 WriteLiteral(" type=\"button\"");
 
+WriteLiteral(" v-on:click=\"UseCloudRepositoryCommand\"");
+
 WriteLiteral(" class=\"list-group-item list-group-item-action d-flex\"");
-
-WriteLiteral(" onclick=\"bind(event)\"");
-
-WriteLiteral(" data-binding=\"UseCloudRepository\"");
 
 WriteLiteral(">\r\n                <span");
 
@@ -207,7 +223,7 @@ WriteLiteral(" class=\"btn-text\"");
 WriteLiteral(">");
 
 
-#line 45 "MergeChoiceRazorView.cshtml"
+#line 47 "MergeChoiceRazorView.cshtml"
                                                                                                     Write(Model.Language["sync_repository_cloud"]);
 
 
@@ -217,11 +233,9 @@ WriteLiteral("</span>\r\n            </button>\r\n            <button");
 
 WriteLiteral(" type=\"button\"");
 
+WriteLiteral(" v-on:click=\"UseLocalRepositoryCommand\"");
+
 WriteLiteral(" class=\"list-group-item list-group-item-action d-flex\"");
-
-WriteLiteral(" onclick=\"bind(event)\"");
-
-WriteLiteral(" data-binding=\"UseLocalRepository\"");
 
 WriteLiteral(">\r\n                <span");
 
@@ -234,13 +248,14 @@ WriteLiteral(" class=\"btn-text\"");
 WriteLiteral(">");
 
 
-#line 48 "MergeChoiceRazorView.cshtml"
+#line 50 "MergeChoiceRazorView.cshtml"
                                                                                                     Write(Model.Language["sync_repository_device"]);
 
 
 #line default
 #line hidden
-WriteLiteral("</span>\r\n            </button>\r\n        </div>\r\n    </div>\r\n</body>\r\n</html>\r\n");
+WriteLiteral("</span>\r\n            </button>\r\n        </div>\r\n    </div>\r\n</div></body>\r\n</html" +
+">\r\n");
 
 }
 }

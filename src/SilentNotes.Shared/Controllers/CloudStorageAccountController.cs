@@ -51,13 +51,14 @@ namespace SilentNotes.Controllers
                 Ioc.GetOrCreate<ICloudStorageClientFactory>(),
                 credentials);
 
-            Bindings.BindCommand("GoBack", _viewModel.GoBackCommand);
-            Bindings.BindCommand("OkCommand", _viewModel.OkCommand);
-            Bindings.BindCommand("CancelCommand", _viewModel.CancelCommand);
-            Bindings.BindText("Url", null, (v) => _viewModel.Url = v, null, null, HtmlViewBindingMode.OneWayToViewmodel);
-            Bindings.BindText("Username", null, (v) => _viewModel.Username = v, null, null, HtmlViewBindingMode.OneWayToViewmodel);
-            Bindings.BindText("Password", () => SecureStringExtensions.SecureStringToString(_viewModel.Password), (v) => _viewModel.Password = SecureStringExtensions.StringToSecureString(v), _viewModel, nameof(_viewModel.Password), HtmlViewBindingMode.TwoWayPlusOneTimeToView);
-            Bindings.BindCheckbox("Secure", null, (v) => _viewModel.Secure = v, null, null, HtmlViewBindingMode.OneWayToViewmodel);
+            VueBindingShortcut[] shortcuts = new[]
+            {
+                new VueBindingShortcut(VueBindingShortcut.KeyEscape, nameof(CloudStorageAccountViewModel.CancelCommand)),
+                new VueBindingShortcut(VueBindingShortcut.KeyEnter, nameof(CloudStorageAccountViewModel.OkCommand)),
+            };
+            VueBindings = new VueDataBinding(_viewModel, View, shortcuts);
+            _viewModel.VueDataBindingScript = VueBindings.BuildVueScript();
+            VueBindings.StartListening();
 
             string html = _viewService.GenerateHtml(_viewModel);
             View.LoadHtml(html);

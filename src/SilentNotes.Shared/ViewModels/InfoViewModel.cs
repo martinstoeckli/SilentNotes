@@ -6,6 +6,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Input;
 using SilentNotes.Controllers;
+using SilentNotes.HtmlView;
 using SilentNotes.Services;
 
 namespace SilentNotes.ViewModels
@@ -41,6 +42,7 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets the current version of the assembly/application
         /// </summary>
+        [VueDataBinding(VueBindingMode.OneWayToView)]
         public string VersionFmt
         {
             get { return _versionService.GetApplicationVersion(); }
@@ -49,6 +51,7 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets the command to go back to the note overview.
         /// </summary>
+        [VueDataBinding(VueBindingMode.Command)]
         public ICommand GoBackCommand { get; private set; }
 
         private void GoBack()
@@ -66,6 +69,7 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets the command to open the applications homepage.
         /// </summary>
+        [VueDataBinding(VueBindingMode.Command)]
         public ICommand OpenHomepageCommand { get; private set; }
 
         private void OpenHomepage()

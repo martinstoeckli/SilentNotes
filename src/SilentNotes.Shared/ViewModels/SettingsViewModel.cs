@@ -11,6 +11,7 @@ using System.Text;
 using System.Windows.Input;
 using SilentNotes.Controllers;
 using SilentNotes.Crypto.SymmetricEncryption;
+using SilentNotes.HtmlView;
 using SilentNotes.Models;
 using SilentNotes.Services;
 using SilentNotes.StoryBoards;
@@ -68,15 +69,21 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets or sets a factor to enlarge or reduce the font size of the notes.
         /// </summary>
-        public double FontScale
+        private double FontScale
         {
             get { return Model.FontScale; }
-            set { ChangePropertyIndirect<double>(() => Model.FontScale, (v) => Model.FontScale = v, value, true); }
+
+            set 
+            {
+                if (ChangePropertyIndirect<double>(() => Model.FontScale, (v) => Model.FontScale = v, value, true))
+                    OnPropertyChanged(nameof(FontSizeStep));
+            }
         }
 
         /// <summary>
         /// Gets or sets the <see cref="FontScale"/> expressed for the -3...+3 slider.
         /// </summary>
+        [VueDataBinding(VueBindingMode.TwoWay)]
         public string FontSizeStep
         {
             get
@@ -96,16 +103,29 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets or sets the theme selected by the user.
         /// </summary>
-        public ThemeModel SelectedTheme
+        [VueDataBinding(VueBindingMode.TwoWay)]
+        public string SelectedTheme
         {
-            get { return Theme.FindThemeOrDefault(Model.SelectedTheme); }
-            set { ChangePropertyIndirect(() => Model.SelectedTheme, (string v) => Model.SelectedTheme = v, value.Id, true); }
+            get { return Theme.FindThemeOrDefault(Model.SelectedTheme).Id; }
+
+            set
+            {
+                if (ChangePropertyIndirect(() => Model.SelectedTheme, (string v) => Model.SelectedTheme = v, value, true))
+                    OnPropertyChanged(nameof(SelectedThemeImage));
+            }
+        }
+
+        [VueDataBinding(VueBindingMode.OneWayToView)]
+        public string SelectedThemeImage
+        {
+            get { return Theme.FindThemeOrDefault(Model.SelectedTheme).Image; }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether the a solid color should be used instead of a
         /// background image.
         /// </summary>
+        [VueDataBinding(VueBindingMode.TwoWay)]
         public bool UseSolidColorTheme
         {
             get { return Model.UseSolidColorTheme; }
@@ -116,6 +136,7 @@ namespace SilentNotes.ViewModels
         /// Gets or sets the solid background color for the theme background. It depends on
         /// <see cref="UseSolidColorTheme"/> whether this value is respected.
         /// </summary>
+        [VueDataBinding(VueBindingMode.TwoWay)]
         public string ColorForSolidThemeHex
         {
             get { return Model.ColorForSolidTheme; }
@@ -125,6 +146,7 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets or sets the theme mode selected by the user.
         /// </summary>
+        [VueDataBinding(VueBindingMode.TwoWay)]
         public string SelectedThemeMode
         {
             get { return Model.ThemeMode.ToString(); }
@@ -140,6 +162,7 @@ namespace SilentNotes.ViewModels
         /// Gets or sets a value indicating whether the note color should be the same for all notes
         /// in dark mode.
         /// </summary>
+        [VueDataBinding(VueBindingMode.TwoWay)]
         public bool UseColorForAllNotesInDarkMode
         {
             get { return Model.UseColorForAllNotesInDarkMode; }
@@ -150,6 +173,7 @@ namespace SilentNotes.ViewModels
         /// Gets or sets the background color for new notes. It depends on <see cref="UseColorForAllNotesInDarkMode"/>
         /// whether this value is respected.
         /// </summary>
+        [VueDataBinding(VueBindingMode.TwoWay)]
         public string ColorForAllNotesInDarkModeHex
         {
             get { return Model.ColorForAllNotesInDarkModeHex; }
@@ -167,6 +191,7 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets or sets the default background color as hex string, e.g. #ff0000
         /// </summary>
+        [VueDataBinding(VueBindingMode.TwoWay)]
         public string DefaultNoteColorHex
         {
             get { return Model.DefaultNoteColorHex; }
@@ -177,6 +202,7 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets or sets the note insertion mode selected by the user.
         /// </summary>
+        [VueDataBinding(VueBindingMode.TwoWay)]
         public string SelectedNoteInsertionMode
         {
             get { return Model.DefaultNoteInsertion.ToString(); }
@@ -207,7 +233,8 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets or sets the encryption algorithm selected by the user.
         /// </summary>
-        public DropdownItemViewModel SelectedEncryptionAlgorithm
+        [VueDataBinding(VueBindingMode.TwoWay)]
+        public string SelectedEncryptionAlgorithm
         {
             get
             {
@@ -216,15 +243,16 @@ namespace SilentNotes.ViewModels
                 // Search for the default algorithm, if no matching algorithm could be found.
                 if (result == null)
                     result = EncryptionAlgorithms.Find(item => item.Value == SettingsModel.GetDefaultEncryptionAlgorithmName());
-                return result;
+                return result.Value;
             }
 
-            set { ChangePropertyIndirect(() => Model.SelectedEncryptionAlgorithm, (string v) => Model.SelectedEncryptionAlgorithm = v, value.Value, true); }
+            set { ChangePropertyIndirect(() => Model.SelectedEncryptionAlgorithm, (string v) => Model.SelectedEncryptionAlgorithm = v, value, true); }
         }
 
         /// <summary>
         /// Gets or sets the auto sync mode selected by the user.
         /// </summary>
+        [VueDataBinding(VueBindingMode.TwoWay)]
         public string SelectedAutoSyncMode
         {
             get { return Model.AutoSyncMode.ToString(); }
@@ -245,6 +273,7 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets the command to go back to the note overview.
         /// </summary>
+        [VueDataBinding(VueBindingMode.Command)]
         public ICommand GoBackCommand { get; private set; }
 
         private void GoBack()
@@ -262,6 +291,7 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets the command to reset the cloud settings.
         /// </summary>
+        [VueDataBinding(VueBindingMode.Command)]
         public ICommand ClearCloudSettingsCommand { get; private set; }
 
         private void ClearCloudSettings()
@@ -272,6 +302,7 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets the command to replace the cloud settings with new ones.
         /// </summary>
+        [VueDataBinding(VueBindingMode.Command)]
         public ICommand ChangeCloudSettingsCommand { get; private set; }
 
         private async void ChangeCloudSettings()
@@ -291,6 +322,7 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets a summary of the cloud storage account.
         /// </summary>
+        [VueDataBinding(VueBindingMode.OneWayToView)]
         public string AccountSummary
         {
             get

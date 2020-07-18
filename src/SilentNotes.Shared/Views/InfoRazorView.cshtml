@@ -13,21 +13,19 @@
     <link href="silentnotes.css" rel="stylesheet" />
     <link href="@(Model.Theme.DarkMode ? "silentnotes.dark.css" : "silentnotes.light.css")" rel="stylesheet" />
 
-    <script src="jquery-3.4.1.min.js"></script>
-    <script src="bootstrap.bundle.min.js"></script>
+    <script src="vue.min.js"></script>
+    <script src="jquery-3.5.1.slim.min.js"></script>
     <script src="silentnotes.js"></script>
 
     <style type="text/css">
     </style>
     <script>
-        $(function () {
-            addShortcuts();
-        });
+        @{WriteLiteral(Model.VueDataBindingScript);}
     </script>
 </head>
-<body>
+<body><div id="vueDataBinding">
     <nav id="navigation" class="d-flex">
-        <button class="nav-item mr-auto shortcut-escape" onclick="bind(event);" data-binding="GoBack" title="@Model.Language["back"]">@{WriteLiteral(Model.Icon["arrow-left"]);}</button>
+        <button class="nav-item mr-auto" v-on:click="GoBackCommand" title="@Model.Language["back"]">@{WriteLiteral(Model.Icon["arrow-left"]);}</button>
     </nav>
 
     <div id="content" class="container-fluid p-4">
@@ -42,7 +40,7 @@
                 <table class="my-3 table table-sm">
                     <tr>
                         <th class="">@Model.Language["version"]</th>
-                        <td>@Model.VersionFmt</td>
+                        <td v-once>{{ VersionFmt }}</td>
                     </tr>
                     <tr>
                         <th class="">@Model.Language["copyright"]</th>
@@ -50,7 +48,7 @@
                     </tr>
                     <tr>
                         <th class="">@Model.Language["website"]</th>
-                        <td><a onclick="bind(event)" data-binding="OpenHomepage" class="a" href="#">https://www.martinstoeckli.ch/silentnotes</a></td>
+                        <td><a v-on:click="OpenHomepageCommand" class="a" href="#">https://www.martinstoeckli.ch/silentnotes</a></td>
                     </tr>
                     <tr>
                         <th class="">@Model.Language["opensource"]</th>
@@ -62,5 +60,5 @@
             </div>
         </div>
     </div>
-</body>
+</div></body>
 </html>

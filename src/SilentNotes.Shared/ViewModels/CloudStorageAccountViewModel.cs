@@ -8,6 +8,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Security;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using SilentNotes.HtmlView;
 using SilentNotes.Services;
 using SilentNotes.StoryBoards.SynchronizationStory;
 using VanillaCloudStorageClient;
@@ -54,6 +55,7 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets the command to go back to the note overview.
         /// </summary>
+        [VueDataBinding(VueBindingMode.Command)]
         public ICommand GoBackCommand { get; private set; }
 
         private async void GoBack()
@@ -72,6 +74,7 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets the command to go back to the note overview.
         /// </summary>
+        [VueDataBinding(VueBindingMode.Command)]
         public ICommand CancelCommand { get; private set; }
 
         private void Cancel()
@@ -82,6 +85,7 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets the command to create the service.
         /// </summary>
+        [VueDataBinding(VueBindingMode.Command)]
         public ICommand OkCommand { get; private set; }
 
         private async void Ok()
@@ -96,6 +100,7 @@ namespace SilentNotes.ViewModels
         public string CloudServiceName { get; private set; }
 
         /// <inheritdoc />
+        [VueDataBinding(VueBindingMode.TwoWay)]
         public string Url
         {
             get { return Model.Url; }
@@ -103,6 +108,7 @@ namespace SilentNotes.ViewModels
         }
 
         /// <inheritdoc />
+        [VueDataBinding(VueBindingMode.TwoWay)]
         public string Username
         {
             get { return Model.Username; }
@@ -110,6 +116,7 @@ namespace SilentNotes.ViewModels
         }
 
         /// <inheritdoc />
+        [VueDataBinding(VueBindingMode.TwoWay)]
         public SecureString Password
         {
             get { return Model.Password; }
@@ -119,6 +126,7 @@ namespace SilentNotes.ViewModels
                 SecureString oldValue = Model.Password;
                 if (!SecureStringExtensions.AreEqual(oldValue, value))
                 {
+                    Model.Password?.Clear();
                     Model.Password = value;
                     OnPropertyChanged(nameof(Password));
                     Modified = true;
@@ -126,6 +134,7 @@ namespace SilentNotes.ViewModels
             }
         }
 
+        [VueDataBinding(VueBindingMode.TwoWay)]
         public bool Secure
         {
             get { return Model.Secure; }

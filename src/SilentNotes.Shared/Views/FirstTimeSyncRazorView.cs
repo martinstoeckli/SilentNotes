@@ -23,7 +23,7 @@ using SilentNotes.ViewModels;
 #line hidden
 
 
-[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.4.0.308")]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.6.0.1062")]
 public partial class FirstTimeSyncRazorView : FirstTimeSyncRazorViewBase
 {
 
@@ -93,7 +93,11 @@ WriteLiteral(" rel=\"stylesheet\"");
 
 WriteLiteral(" />\r\n\r\n    <script");
 
-WriteLiteral(" src=\"jquery-3.4.1.min.js\"");
+WriteLiteral(" src=\"vue.min.js\"");
+
+WriteLiteral("></script>\r\n    <script");
+
+WriteLiteral(" src=\"jquery-3.5.1.slim.min.js\"");
 
 WriteLiteral("></script>\r\n    <script");
 
@@ -107,8 +111,25 @@ WriteLiteral("></script>\r\n\r\n    <style");
 
 WriteLiteral(" type=\"text/css\"");
 
-WriteLiteral(">\r\n    </style>\r\n    <script>\r\n        $(function () {\r\n            addShortcuts(" +
-");\r\n        });\r\n    </script>\r\n</head>\r\n<body>\r\n    <nav");
+WriteLiteral(">\r\n    </style>\r\n    <script>\r\n");
+
+
+#line 24 "FirstTimeSyncRazorView.cshtml"
+        
+
+#line default
+#line hidden
+
+#line 24 "FirstTimeSyncRazorView.cshtml"
+          WriteLiteral(Model.VueDataBindingScript);
+
+#line default
+#line hidden
+WriteLiteral("\r\n    </script>\r\n</head>\r\n<body><div");
+
+WriteLiteral(" id=\"vueDataBinding\"");
+
+WriteLiteral(">\r\n    <nav");
 
 WriteLiteral(" id=\"navigation\"");
 
@@ -116,16 +137,14 @@ WriteLiteral(" class=\"d-flex\"");
 
 WriteLiteral(">\r\n        <button");
 
-WriteLiteral(" class=\"nav-item mr-auto shortcut-escape\"");
+WriteLiteral(" class=\"nav-item mr-auto\"");
 
-WriteLiteral(" onclick=\"bind(event);\"");
-
-WriteLiteral(" data-binding=\"GoBack\"");
+WriteLiteral(" v-on:click=\"GoBackCommand\"");
 
 WriteAttribute ("title", " title=\"", "\""
 
-#line 30 "FirstTimeSyncRazorView.cshtml"
-                                                                      , Tuple.Create<string,object,bool> ("", Model.Language["back"]
+#line 29 "FirstTimeSyncRazorView.cshtml"
+                                    , Tuple.Create<string,object,bool> ("", Model.Language["back"]
 
 #line default
 #line hidden
@@ -134,8 +153,8 @@ WriteAttribute ("title", " title=\"", "\""
 WriteLiteral(">");
 
 
-#line 30 "FirstTimeSyncRazorView.cshtml"
-                                                                                                                                        WriteLiteral(Model.Icon["arrow-left"]);
+#line 29 "FirstTimeSyncRazorView.cshtml"
+                                                                                                      WriteLiteral(Model.Icon["arrow-left"]);
 
 #line default
 #line hidden
@@ -148,7 +167,7 @@ WriteLiteral(" class=\"container-fluid p-4\"");
 WriteLiteral(">\r\n        <h1>");
 
 
-#line 34 "FirstTimeSyncRazorView.cshtml"
+#line 33 "FirstTimeSyncRazorView.cshtml"
        Write(Model.Language["cloud_first_synchronization_title"]);
 
 
@@ -157,7 +176,7 @@ WriteLiteral(">\r\n        <h1>");
 WriteLiteral("</h1>\r\n\r\n        <p>");
 
 
-#line 36 "FirstTimeSyncRazorView.cshtml"
+#line 35 "FirstTimeSyncRazorView.cshtml"
       Write(Model.Language["cloud_first_synchronization_text"]);
 
 
@@ -167,22 +186,20 @@ WriteLiteral("</p>\r\n\r\n        <button");
 
 WriteLiteral(" type=\"button\"");
 
-WriteLiteral(" class=\"btn btn-primary my-4 shortcut-enter\"");
+WriteLiteral(" class=\"btn btn-primary my-4\"");
 
-WriteLiteral(" onclick=\"bind(event)\"");
-
-WriteLiteral(" data-binding=\"Continue\"");
+WriteLiteral(" v-on:click=\"ContinueCommand\"");
 
 WriteLiteral(">");
 
 
-#line 38 "FirstTimeSyncRazorView.cshtml"
-                                                                                                                   Write(Model.Language["continue"]);
+#line 37 "FirstTimeSyncRazorView.cshtml"
+                                                                                   Write(Model.Language["continue"]);
 
 
 #line default
 #line hidden
-WriteLiteral("</button>\r\n    </div>\r\n</body>\r\n</html>\r\n");
+WriteLiteral("</button>\r\n    </div>\r\n</div></body>\r\n</html>\r\n");
 
 }
 }

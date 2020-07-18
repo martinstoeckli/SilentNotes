@@ -54,8 +54,8 @@ namespace SilentNotes.Controllers
         protected virtual void OverrideableDispose()
         {
             // This unsubscribes events form the view.
-            Bindings?.Dispose();
-            Bindings = null;
+            VueBindings?.Dispose();
+            VueBindings = null;
 
             GetViewModel()?.OnClosing();
         }
@@ -72,9 +72,9 @@ namespace SilentNotes.Controllers
         protected abstract IViewModel GetViewModel();
 
         /// <summary>
-        /// Gets a list of bindings or null if not yet set.
+        /// Gets or sets a list of bindings for Vue.js, or null if not set.
         /// </summary>
-        protected HtmlViewBindings Bindings { get; private set; }
+        protected VueDataBinding VueBindings { get; set; }
 
         /// <summary>
         /// Gets the orignal target of a navigation, if the navigation was redirected to this controller.
@@ -95,8 +95,8 @@ namespace SilentNotes.Controllers
             View = htmlView;
             RedirectedFrom = redirectedFrom;
             SetHtmlViewBackgroundColor(htmlView);
-            Bindings?.Dispose();
-            Bindings = new HtmlViewBindings(htmlView);
+            VueBindings?.Dispose();
+            VueBindings = null;
         }
 
         /// <summary>

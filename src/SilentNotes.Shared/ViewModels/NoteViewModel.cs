@@ -10,6 +10,7 @@ using System.Drawing;
 using System.Windows.Input;
 using SilentNotes.Controllers;
 using SilentNotes.Crypto;
+using SilentNotes.HtmlView;
 using SilentNotes.Models;
 using SilentNotes.Services;
 using SilentNotes.StoryBoards.PullPushStory;
@@ -132,6 +133,7 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets or sets the background color as hex string, e.g. #ff0000
         /// </summary>
+        [VueDataBinding(VueBindingMode.TwoWay)]
         public string BackgroundColorHex
         {
             get 
@@ -153,13 +155,17 @@ namespace SilentNotes.ViewModels
                     SettingsModel settings = _settingsService.LoadSettingsOrDefault();
                     if (settings.UseColorForAllNotesInDarkMode)
                     {
+                        OnPropertyChanged(nameof(BackgroundColorHex)); // Redraw unchanged color (Vue binding)
                         _feedbackService.ShowToast(Language.LoadText("gui_theme_color_cannot_change"));
                         return;
                     }
                 }
 
                 if (ChangePropertyIndirect(() => Model.BackgroundColorHex, (string v) => Model.BackgroundColorHex = v, value, true))
+                {
                     Model.RefreshModifiedAt();
+                    OnPropertyChanged(nameof(IsDark));
+                }
             }
         }
 
@@ -174,6 +180,7 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets a value indicating whether the background color of the note is a dark color or not.
         /// </summary>
+        [VueDataBinding(VueBindingMode.OneWayToView)]
         public bool IsDark
         {
             get { return ColorExtensions.HexToColor(BackgroundColorHex).IsDark(); }
@@ -288,6 +295,7 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets the command to go back to the note overview.
         /// </summary>
+        [VueDataBinding(VueBindingMode.Command)]
         public ICommand GoBackCommand { get; private set; }
 
         /// <inheritdoc/>
@@ -307,6 +315,7 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets the command which can overwrite the local note with the note from the online-storage.
         /// </summary>
+        [VueDataBinding(VueBindingMode.Command)]
         public ICommand PullNoteFromOnlineStorageCommand { get; private set; }
 
         private async void PullNoteFromOnlineStorage()
@@ -337,6 +346,7 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets the command which can overwrite the note of the online-storage with the locale note.
         /// </summary>
+        [VueDataBinding(VueBindingMode.Command)]
         public ICommand PushNoteToOnlineStorageCommand { get; private set; }
 
         private async void PushNoteToOnlineStorage()
@@ -370,6 +380,7 @@ namespace SilentNotes.ViewModels
             }
         }
 
+        [VueDataBinding(VueBindingMode.OneWayToView)]
         public string PrettyTimeAgo
         {
             get 

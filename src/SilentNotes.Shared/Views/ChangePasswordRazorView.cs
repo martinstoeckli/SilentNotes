@@ -23,7 +23,7 @@ using SilentNotes.ViewModels;
 #line hidden
 
 
-[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.4.0.311")]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.6.0.1062")]
 public partial class ChangePasswordRazorView : ChangePasswordRazorViewBase
 {
 
@@ -93,7 +93,11 @@ WriteLiteral(" rel=\"stylesheet\"");
 
 WriteLiteral(" />\r\n\r\n    <script");
 
-WriteLiteral(" src=\"jquery-3.4.1.min.js\"");
+WriteLiteral(" src=\"vue.min.js\"");
+
+WriteLiteral("></script>\r\n    <script");
+
+WriteLiteral(" src=\"jquery-3.5.1.slim.min.js\"");
 
 WriteLiteral("></script>\r\n    <script");
 
@@ -108,8 +112,25 @@ WriteLiteral("></script>\r\n\r\n    <style");
 WriteLiteral(" type=\"text/css\"");
 
 WriteLiteral(">\r\n        .background-icon {\r\n            right: -110px;\r\n            top: -142p" +
-"x;\r\n        }\r\n    </style>\r\n    <script>\r\n        $(function () {\r\n            " +
-"addShortcuts();\r\n        });\r\n    </script>\r\n</head>\r\n<body>\r\n    <nav");
+"x;\r\n        }\r\n    </style>\r\n    <script>\r\n");
+
+
+#line 28 "ChangePasswordRazorView.cshtml"
+        
+
+#line default
+#line hidden
+
+#line 28 "ChangePasswordRazorView.cshtml"
+          WriteLiteral(Model.VueDataBindingScript);
+
+#line default
+#line hidden
+WriteLiteral("\r\n    </script>\r\n</head>\r\n<body><div");
+
+WriteLiteral(" id=\"vueDataBinding\"");
+
+WriteLiteral(">\r\n    <nav");
 
 WriteLiteral(" id=\"navigation\"");
 
@@ -117,16 +138,14 @@ WriteLiteral(" class=\"d-flex\"");
 
 WriteLiteral(">\r\n        <button");
 
-WriteLiteral(" class=\"nav-item mr-auto shortcut-escape\"");
+WriteLiteral(" class=\"nav-item mr-auto\"");
 
-WriteLiteral(" onclick=\"bind(event);\"");
-
-WriteLiteral(" data-binding=\"GoBack\"");
+WriteLiteral(" v-on:click=\"GoBackCommand\"");
 
 WriteAttribute ("title", " title=\"", "\""
 
-#line 34 "ChangePasswordRazorView.cshtml"
-                                                                      , Tuple.Create<string,object,bool> ("", Model.Language["back"]
+#line 33 "ChangePasswordRazorView.cshtml"
+                                    , Tuple.Create<string,object,bool> ("", Model.Language["back"]
 
 #line default
 #line hidden
@@ -135,8 +154,8 @@ WriteAttribute ("title", " title=\"", "\""
 WriteLiteral(">");
 
 
-#line 34 "ChangePasswordRazorView.cshtml"
-                                                                                                                                        WriteLiteral(Model.Icon["arrow-left"]);
+#line 33 "ChangePasswordRazorView.cshtml"
+                                                                                                      WriteLiteral(Model.Icon["arrow-left"]);
 
 #line default
 #line hidden
@@ -163,7 +182,7 @@ WriteLiteral(" xlink:href=\"#svg-safe-square-outline\"");
 WriteLiteral(" /></svg>\r\n\r\n        <h2>");
 
 
-#line 40 "ChangePasswordRazorView.cshtml"
+#line 39 "ChangePasswordRazorView.cshtml"
        Write(Model.Language["safe_change_password"]);
 
 
@@ -181,13 +200,13 @@ WriteLiteral(">\r\n                <label");
 
 WriteLiteral(" class=\"col-form-label col-md-3\"");
 
-WriteLiteral(" for=\"Password\"");
+WriteLiteral(" for=\"OldPassword\"");
 
 WriteLiteral(">");
 
 
-#line 44 "ChangePasswordRazorView.cshtml"
-                                                                 Write(Model.Language["safe_old_password"]);
+#line 43 "ChangePasswordRazorView.cshtml"
+                                                                    Write(Model.Language["safe_old_password"]);
 
 
 #line default
@@ -200,24 +219,22 @@ WriteLiteral(">\r\n                    <input");
 
 WriteLiteral(" type=\"password\"");
 
+WriteLiteral(" v-model=\"OldPassword\"");
+
+WriteLiteral(" v-bind:class=\"{ \'is-invalid\': InvalidOldPasswordError }\"");
+
 WriteLiteral(" class=\"form-control\"");
-
-WriteLiteral(" oninput=\"bind(event)\"");
-
-WriteLiteral(" data-binding=\"OldPassword\"");
 
 WriteLiteral(" id=\"OldPassword\"");
 
-WriteLiteral(" value=\"\"");
-
-WriteLiteral(" autofocus>\r\n                    <div");
+WriteLiteral(" v-focus>\r\n                    <div");
 
 WriteLiteral(" class=\"invalid-feedback\"");
 
 WriteLiteral(">");
 
 
-#line 47 "ChangePasswordRazorView.cshtml"
+#line 46 "ChangePasswordRazorView.cshtml"
                                              Write(Model.Language["password_wrong_error"]);
 
 
@@ -236,7 +253,7 @@ WriteLiteral(" for=\"Password\"");
 WriteLiteral(">");
 
 
-#line 52 "ChangePasswordRazorView.cshtml"
+#line 51 "ChangePasswordRazorView.cshtml"
                                                                  Write(Model.Language["safe_new_password"]);
 
 
@@ -250,24 +267,22 @@ WriteLiteral(">\r\n                    <input");
 
 WriteLiteral(" type=\"password\"");
 
+WriteLiteral(" v-model=\"Password\"");
+
+WriteLiteral(" v-bind:class=\"{ \'is-invalid\': InvalidPasswordError }\"");
+
 WriteLiteral(" class=\"form-control\"");
-
-WriteLiteral(" oninput=\"bind(event)\"");
-
-WriteLiteral(" data-binding=\"Password\"");
 
 WriteLiteral(" id=\"Password\"");
 
-WriteLiteral(" value=\"\"");
-
-WriteLiteral(" autofocus>\r\n                    <div");
+WriteLiteral(">\r\n                    <div");
 
 WriteLiteral(" class=\"invalid-feedback\"");
 
 WriteLiteral(">");
 
 
-#line 55 "ChangePasswordRazorView.cshtml"
+#line 54 "ChangePasswordRazorView.cshtml"
                                              Write(Model.Language["password_short_error"]);
 
 
@@ -286,7 +301,7 @@ WriteLiteral(" for=\"PasswordConfirmation\"");
 WriteLiteral(">");
 
 
-#line 59 "ChangePasswordRazorView.cshtml"
+#line 58 "ChangePasswordRazorView.cshtml"
                                                                              Write(Model.Language["safe_confirm_password"]);
 
 
@@ -300,15 +315,13 @@ WriteLiteral(">\r\n                    <input");
 
 WriteLiteral(" type=\"password\"");
 
+WriteLiteral(" v-model=\"PasswordConfirmation\"");
+
+WriteLiteral(" v-bind:class=\"{ \'is-invalid\': InvalidPasswordConfirmationError }\"");
+
 WriteLiteral(" class=\"form-control\"");
 
-WriteLiteral(" oninput=\"bind(event)\"");
-
-WriteLiteral(" data-binding=\"PasswordConfirmation\"");
-
 WriteLiteral(" id=\"PasswordConfirmation\"");
-
-WriteLiteral(" value=\"\"");
 
 WriteLiteral(">\r\n                    <div");
 
@@ -317,7 +330,7 @@ WriteLiteral(" class=\"invalid-feedback\"");
 WriteLiteral(">");
 
 
-#line 62 "ChangePasswordRazorView.cshtml"
+#line 61 "ChangePasswordRazorView.cshtml"
                                              Write(Model.Language["password_confirmation_error"]);
 
 
@@ -327,17 +340,15 @@ WriteLiteral("</div>\r\n                </div>\r\n            </div>\r\n\r\n    
 
 WriteLiteral(" type=\"button\"");
 
-WriteLiteral(" class=\"btn btn-primary mb-2 shortcut-enter\"");
+WriteLiteral(" class=\"btn btn-primary mb-2\"");
 
-WriteLiteral(" onclick=\"bind(event)\"");
-
-WriteLiteral(" data-binding=\"OkCommand\"");
+WriteLiteral(" v-on:click=\"OkCommand\"");
 
 WriteLiteral(">");
 
 
-#line 66 "ChangePasswordRazorView.cshtml"
-                                                                                                                        Write(Model.Language["ok"]);
+#line 65 "ChangePasswordRazorView.cshtml"
+                                                                                 Write(Model.Language["ok"]);
 
 
 #line default
@@ -348,15 +359,13 @@ WriteLiteral(" type=\"button\"");
 
 WriteLiteral(" class=\"btn btn-secondary mb-2\"");
 
-WriteLiteral(" onclick=\"bind(event)\"");
-
-WriteLiteral(" data-binding=\"CancelCommand\"");
+WriteLiteral(" v-on:click=\"CancelCommand\"");
 
 WriteLiteral(">");
 
 
-#line 67 "ChangePasswordRazorView.cshtml"
-                                                                                                               Write(Model.Language["cancel"]);
+#line 66 "ChangePasswordRazorView.cshtml"
+                                                                                       Write(Model.Language["cancel"]);
 
 
 #line default
@@ -368,7 +377,7 @@ WriteLiteral(" class=\"alert alert-success my-4\"");
 WriteLiteral(">");
 
 
-#line 70 "ChangePasswordRazorView.cshtml"
+#line 69 "ChangePasswordRazorView.cshtml"
                                          Write(Model.Language["safe_password_requirement"]);
 
 
@@ -377,18 +386,18 @@ WriteLiteral(">");
 WriteLiteral("</div>\r\n    </div>\r\n\r\n    <div hidden>\r\n");
 
 
-#line 74 "ChangePasswordRazorView.cshtml"
+#line 73 "ChangePasswordRazorView.cshtml"
         
 
 #line default
 #line hidden
 
-#line 74 "ChangePasswordRazorView.cshtml"
+#line 73 "ChangePasswordRazorView.cshtml"
           WriteLiteral(Model.Icon.LoadIcon("safe-square-outline", new[] { new KeyValuePair<string, string>("id", "svg-safe-square-outline") }));
 
 #line default
 #line hidden
-WriteLiteral("\r\n    </div>\r\n</body>\r\n</html>\r\n");
+WriteLiteral("\r\n    </div>\r\n</div></body>\r\n</html>\r\n");
 
 }
 }

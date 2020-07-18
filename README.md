@@ -30,4 +30,4 @@ Whenever an application promises security and confidentiality, users just have t
 * The [QuillJS](https://quilljs.com/) library made it possible to offer WYSIWYG note editing across platforms.
 * Cryptograhic tasks are solved with the [Bouncy Castle](https://bouncycastle.org/) crypto API.
 * The clean and minimalistic [Flurl](https://flurl.dev/) library helped a lot to keep the HTTP requests readable.
-* The ordering of notes is done with the [SortableJS](https://github.com/SortableJS/Sortable) library.
+* A databinding system between C# and the HTML views was developed, using the [vue.js](https://vuejs.org/) framework.

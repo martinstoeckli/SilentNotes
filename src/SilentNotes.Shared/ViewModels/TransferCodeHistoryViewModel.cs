@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Input;
 using SilentNotes.Controllers;
+using SilentNotes.HtmlView;
 using SilentNotes.Models;
 using SilentNotes.Services;
 using SilentNotes.Workers;
@@ -56,6 +57,7 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets or sets a value indicating whether the show history button is visible.
         /// </summary>
+        [VueDataBinding(VueBindingMode.OneWayToView)]
         public bool ShowTransfercodeHistoryVisible
         {
             get { return _showTransfercodeHistoryVisible; }
@@ -65,6 +67,7 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets or sets a value indicating whether the transfercode history is visible.
         /// </summary>
+        [VueDataBinding(VueBindingMode.OneWayToView)]
         public bool TransfercodeHistoryVisible
         {
             get { return _showTransfercodeHistory; }
@@ -94,6 +97,7 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets the command to go back to the note overview.
         /// </summary>
+        [VueDataBinding(VueBindingMode.Command)]
         public ICommand GoBackCommand { get; private set; }
 
         private void GoBack()
@@ -111,6 +115,7 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets the command to show the history.
         /// </summary>
+        [VueDataBinding(VueBindingMode.Command)]
         public ICommand ShowTransfercodeHistoryCommand { get; private set; }
 
         private void ShowTransfercodeHistory()

@@ -6,6 +6,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using SilentNotes.HtmlView;
 using SilentNotes.Services;
 using SilentNotes.StoryBoards.SynchronizationStory;
 using SilentNotes.Workers;
@@ -46,11 +47,13 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets or sets the transfer code.
         /// </summary>
+        [VueDataBinding(VueBindingMode.OneWayToViewmodel)]
         public string Code { get; set; }
 
         /// <summary>
         /// Gets the command to go back to the note overview.
         /// </summary>
+        [VueDataBinding(VueBindingMode.Command)]
         public ICommand OkCommand { get; private set; }
 
         private async void Ok()
@@ -71,6 +74,7 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets the command to go back to the note overview.
         /// </summary>
+        [VueDataBinding(VueBindingMode.Command)]
         public ICommand GoBackCommand { get; private set; }
 
         private void GoBack()
@@ -88,6 +92,7 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets the command to go back to the note overview.
         /// </summary>
+        [VueDataBinding(VueBindingMode.Command)]
         public ICommand CancelCommand { get; private set; }
 
         private void Cancel()

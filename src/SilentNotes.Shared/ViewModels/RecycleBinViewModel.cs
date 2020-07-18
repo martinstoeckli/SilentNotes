@@ -9,6 +9,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Windows.Input;
 using SilentNotes.Controllers;
 using SilentNotes.Crypto;
+using SilentNotes.HtmlView;
 using SilentNotes.Models;
 using SilentNotes.Services;
 
@@ -52,7 +53,7 @@ namespace SilentNotes.ViewModels
 
             // Initialize commands
             GoBackCommand = new RelayCommand(GoBack);
-            RestoreNoteCommand = new RelayCommand<Guid>(RestoreNote);
+            RestoreNoteCommand = new RelayCommand<object>(RestoreNote);
             EmptyRecycleBinCommand = new RelayCommand(EmptyRecycleBin);
         }
 
@@ -96,6 +97,7 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets the command to go back to the note overview.
         /// </summary>
+        [VueDataBinding(VueBindingMode.Command)]
         public ICommand GoBackCommand { get; private set; }
 
         private void GoBack()
@@ -113,6 +115,7 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets the command which handles the clearing of the recyclebin.
         /// </summary>
+        [VueDataBinding(VueBindingMode.Command)]
         public ICommand EmptyRecycleBinCommand { get; private set; }
 
         private async void EmptyRecycleBin()
@@ -136,16 +139,20 @@ namespace SilentNotes.ViewModels
                     Model.Notes.Remove(note);
                 }
             }
-            OnPropertyChanged("Notes");
+
+            // Reload empty page (but only if user confirmed command)
+            _navigationService.Navigate(new Navigation(ControllerNames.RecycleBin));
         }
 
         /// <summary>
         /// Gets the command which undeletes a note from the recycle bin.
         /// </summary>
+        [VueDataBinding(VueBindingMode.Command)]
         public ICommand RestoreNoteCommand { get; private set; }
 
-        private void RestoreNote(Guid noteId)
+        private void RestoreNote(object value)
         {
+            Guid noteId = (value is Guid) ? (Guid)value : new Guid(value.ToString());
             NoteViewModel viewModel = RecycledNotes.Find(item => noteId == item.Id);
             if (viewModel != null)
             {

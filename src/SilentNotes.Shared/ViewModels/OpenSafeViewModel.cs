@@ -10,6 +10,7 @@ using System.Linq;
 using System.Security;
 using System.Windows.Input;
 using SilentNotes.Controllers;
+using SilentNotes.HtmlView;
 using SilentNotes.Models;
 using SilentNotes.Services;
 using VanillaCloudStorageClient;
@@ -77,6 +78,7 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets the command to go back to the note overview.
         /// </summary>
+        [VueDataBinding(VueBindingMode.Command)]
         public ICommand GoBackCommand { get; private set; }
 
         private void GoBack()
@@ -94,6 +96,7 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets the command to go back to the note overview.
         /// </summary>
+        [VueDataBinding(VueBindingMode.Command)]
         public ICommand CancelCommand { get; private set; }
 
         private void Cancel()
@@ -104,6 +107,7 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets the command to create the service.
         /// </summary>
+        [VueDataBinding(VueBindingMode.Command)]
         public ICommand OkCommand { get; private set; }
 
         private void Ok()
@@ -165,6 +169,7 @@ namespace SilentNotes.ViewModels
         /// Gets the command to reset the safe(s). This command can only be called from the safe-open
         /// dialog, so there cannot be any open notes at this time.
         /// </summary>
+        [VueDataBinding(VueBindingMode.Command)]
         public ICommand ResetSafeCommand { get; private set; }
 
         private async void ResetSafe()
@@ -197,12 +202,14 @@ namespace SilentNotes.ViewModels
             get { return Model.Safes.Count >= 1; }
         }
 
+        [VueDataBinding(VueBindingMode.OneWayToView)]
         public bool InvalidPasswordError
         {
             get { return _invalidPasswordError; }
             set { ChangeProperty(ref _invalidPasswordError, value, false); }
         }
 
+        [VueDataBinding(VueBindingMode.OneWayToView)]
         public bool InvalidPasswordConfirmationError
         {
             get { return _invalidPasswordConfirmationError; }
@@ -212,6 +219,7 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets or sets the user entered password.
         /// </summary>
+        [VueDataBinding(VueBindingMode.OneWayToViewmodel)]
         public SecureString Password
         {
             get { return _password; }
@@ -226,6 +234,7 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets or sets the user entered password confirmation.
         /// </summary>
+        [VueDataBinding(VueBindingMode.OneWayToViewmodel)]
         public SecureString PasswordConfirmation
         {
             get { return _passwordConfirmation; }

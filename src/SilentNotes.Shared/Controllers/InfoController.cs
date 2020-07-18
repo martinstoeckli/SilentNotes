@@ -39,8 +39,13 @@ namespace SilentNotes.Controllers
                 Ioc.GetOrCreate<IVersionService>(),
                 Ioc.GetOrCreate<INativeBrowserService>());
 
-            Bindings.BindCommand("GoBack", _viewModel.GoBackCommand);
-            Bindings.BindCommand("OpenHomepage", _viewModel.OpenHomepageCommand);
+            VueBindingShortcut[] shortcuts = new[]
+            {
+                new VueBindingShortcut(VueBindingShortcut.KeyEscape, nameof(InfoViewModel.GoBackCommand)),
+            };
+            VueBindings = new VueDataBinding(_viewModel, View, shortcuts);
+            _viewModel.VueDataBindingScript = VueBindings.BuildVueScript();
+            VueBindings.StartListening();
 
             string html = _viewService.GenerateHtml(_viewModel);
             View.LoadHtml(html);
