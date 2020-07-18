@@ -13,6 +13,7 @@
     <link href="silentnotes.css" rel="stylesheet" />
     <link href="@(Model.Theme.DarkMode ? "silentnotes.dark.css" : "silentnotes.light.css")" rel="stylesheet" />
 
+    <script src="vue.min.js"></script>
     <script src="jquery-3.5.1.slim.min.js"></script>
     <script src="bootstrap.bundle.min.js"></script>
     <script src="silentnotes.js"></script>
@@ -24,21 +25,19 @@
         }
     </style>
     <script>
-        $(function () {
-            addShortcuts();
-        });
+        @{WriteLiteral(Model.VueDataBindingScript);}
     </script>
 </head>
-<body>
+<body><div id="vueDataBinding">
     <nav id="navigation" class="d-flex">
-        <button class="nav-item mr-auto shortcut-escape" onclick="bind(event);" data-binding="GoBack" title="@Model.Language["back"]">@{WriteLiteral(Model.Icon["arrow-left"]);}</button>
+        <button class="nav-item mr-auto" v-on:click="GoBackCommand" title="@Model.Language["back"]">@{WriteLiteral(Model.Icon["arrow-left"]);}</button>
 
         <div class="dropdown">
             <button class="nav-item" id="navOverflowMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 @{WriteLiteral(Model.Icon["dots-vertical"]);}
             </button>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navOverflowMenu">
-                <div class="dropdown-item @if (!Model.SafeExists) { @("disabled") ; }" onclick="bind(event);" data-binding="ResetSafeCommand"><svg><use xlink:href="#svg-safe-square-outline" /></svg> @Model.Language["safe_reset"]</div>
+                <div class="dropdown-item @if (!Model.SafeExists) { @("disabled") ; }" v-on:click="ResetSafeCommand"><svg><use xlink:href="#svg-safe-square-outline" /></svg> @Model.Language["safe_reset"]</div>
             </div>
         </div>
     </nav>
@@ -61,20 +60,20 @@
             <div class="form-row form-group">
                 <label class="col-form-label col-md-3" for="Password">@Model.Language["cloud_password"]</label>
                 <div class="col-md-9">
-                    <input type="password" class="form-control" oninput="bind(event)" data-binding="Password" id="Password" value="" autofocus>
+                    <input type="password" v-model="Password" v-bind:class="{ 'is-invalid': InvalidPasswordError }" class="form-control" id="Password" v-focus>
                     <div class="invalid-feedback">@Model.Language["password_short_error"]</div>
                 </div>
             </div>
             <div class="form-row form-group mb-4" @if (Model.SafeExists) { @("hidden") ; }>
                 <label class="col-form-label col-md-3" for="PasswordConfirmation">@Model.Language["safe_confirm_password"]</label>
                 <div class="col-md-9">
-                    <input type="password" class="form-control" oninput="bind(event)" data-binding="PasswordConfirmation" id="PasswordConfirmation" value="">
+                    <input type="password" v-model="PasswordConfirmation" v-bind:class="{ 'is-invalid': InvalidPasswordConfirmationError }" class="form-control" id="PasswordConfirmation">
                     <div class="invalid-feedback">@Model.Language["password_confirmation_error"]</div>
                 </div>
             </div>
 
-            <button type="button" class="btn btn-primary mb-2 shortcut-enter" onclick="bind(event)" data-binding="OkCommand">@Model.Language["ok"]</button>
-            <button type="button" class="btn btn-secondary mb-2" onclick="bind(event)" data-binding="CancelCommand">@Model.Language["cancel"]</button>
+            <button type="button" class="btn btn-primary mb-2" v-on:click="OkCommand">@Model.Language["ok"]</button>
+            <button type="button" class="btn btn-secondary mb-2" v-on:click="CancelCommand">@Model.Language["cancel"]</button>
         </form>
 
         @if (!Model.SafeExists)
@@ -86,5 +85,5 @@
     <div hidden>
         @{WriteLiteral(Model.Icon.LoadIcon("safe-square-outline", new[] { new KeyValuePair<string, string>("id", "svg-safe-square-outline") }));}
     </div>
-</body>
+</div></body>
 </html>

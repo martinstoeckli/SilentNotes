@@ -23,7 +23,7 @@ using SilentNotes.ViewModels;
 #line hidden
 
 
-[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.6.0.1061")]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.6.0.1062")]
 public partial class ChangePasswordRazorView : ChangePasswordRazorViewBase
 {
 
@@ -227,7 +227,7 @@ WriteLiteral(" class=\"form-control\"");
 
 WriteLiteral(" id=\"OldPassword\"");
 
-WriteLiteral(" autofocus>\r\n                    <div");
+WriteLiteral(" v-focus>\r\n                    <div");
 
 WriteLiteral(" class=\"invalid-feedback\"");
 

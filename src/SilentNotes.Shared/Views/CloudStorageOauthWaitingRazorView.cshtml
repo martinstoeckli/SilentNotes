@@ -13,6 +13,7 @@
     <link href="silentnotes.css" rel="stylesheet" />
     <link href="@(Model.Theme.DarkMode ? "silentnotes.dark.css" : "silentnotes.light.css")" rel="stylesheet" />
 
+    <script src="vue.min.js"></script>
     <script src="jquery-3.5.1.slim.min.js"></script>
     <script src="bootstrap.bundle.min.js"></script>
     <script src="silentnotes.js"></script>
@@ -20,15 +21,16 @@
     <style type="text/css">
     </style>
     <script>
+        @{WriteLiteral(Model.VueDataBindingScript);}
     </script>
 </head>
-<body>
+<body><div id="vueDataBinding">
     <nav id="navigation" class="d-flex">
-        <button class="nav-item mr-auto" onclick="bind(event);" data-binding="GoBack" title="@Model.Language["back"]">@{WriteLiteral(Model.Icon["arrow-left"]);}</button>
+        <button class="nav-item mr-auto" v-on:click="GoBackCommand" title="@Model.Language["back"]">@{WriteLiteral(Model.Icon["arrow-left"]);}</button>
     </nav>
 
     <div id="content" class="container-fluid p-4">
         <div class="alert alert-success m-4">@Model.Language["cloud_oauth_code_desc"]</div>
     </div>
-</body>
+</div></body>
 </html>

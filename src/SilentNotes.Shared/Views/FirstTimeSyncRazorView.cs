@@ -23,7 +23,7 @@ using SilentNotes.ViewModels;
 #line hidden
 
 
-[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.6.0.1061")]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.6.0.1062")]
 public partial class FirstTimeSyncRazorView : FirstTimeSyncRazorViewBase
 {
 
@@ -186,7 +186,7 @@ WriteLiteral("</p>\r\n\r\n        <button");
 
 WriteLiteral(" type=\"button\"");
 
-WriteLiteral(" class=\"btn btn-primary my-4 shortcut-enter\"");
+WriteLiteral(" class=\"btn btn-primary my-4\"");
 
 WriteLiteral(" v-on:click=\"ContinueCommand\"");
 
@@ -194,7 +194,7 @@ WriteLiteral(">");
 
 
 #line 37 "FirstTimeSyncRazorView.cshtml"
-                                                                                                  Write(Model.Language["continue"]);
+                                                                                   Write(Model.Language["continue"]);
 
 
 #line default

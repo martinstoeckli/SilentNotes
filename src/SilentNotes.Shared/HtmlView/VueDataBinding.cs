@@ -161,6 +161,13 @@ vueReady(function () {
         beforeDestroy: function() {
             document.removeEventListener('keydown', this._shortcutListener);
         },
+        directives: {
+          focus: {
+            inserted: function (el) {
+              el.focus()
+            }
+          }
+        }
     });
 });
 ");

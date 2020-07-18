@@ -5,6 +5,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Input;
+using SilentNotes.HtmlView;
 using SilentNotes.Services;
 using SilentNotes.StoryBoards.SynchronizationStory;
 
@@ -42,6 +43,7 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets the command to merge the repositories.
         /// </summary>
+        [VueDataBinding(VueBindingMode.Command)]
         public ICommand UseMergedRepositoryCommand { get; private set; }
 
         private void UseMergedRepository()
@@ -52,6 +54,7 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets the command to use the cloud repository.
         /// </summary>
+        [VueDataBinding(VueBindingMode.Command)]
         public ICommand UseCloudRepositoryCommand { get; private set; }
 
         private void UseCloudRepository()
@@ -62,6 +65,7 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets the command to use the local repository.
         /// </summary>
+        [VueDataBinding(VueBindingMode.Command)]
         public ICommand UseLocalRepositoryCommand { get; private set; }
 
         private void UseLocalRepository()
@@ -72,6 +76,7 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets the command to go back to the note overview.
         /// </summary>
+        [VueDataBinding(VueBindingMode.Command)]
         public ICommand GoBackCommand { get; private set; }
 
         private void GoBack()
@@ -89,6 +94,7 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets the command to cancel the synchronization.
         /// </summary>
+        [VueDataBinding(VueBindingMode.Command)]
         public ICommand CancelCommand { get; private set; }
 
         private void Cancel()

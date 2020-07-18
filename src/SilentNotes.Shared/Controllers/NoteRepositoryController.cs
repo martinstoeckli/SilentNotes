@@ -85,7 +85,6 @@ namespace SilentNotes.Controllers
                     new VueBindingShortcut("n", nameof(_viewModel.NewNoteCommand)) { Ctrl = true },
                     new VueBindingShortcut("l", nameof(_viewModel.NewChecklistCommand)) { Ctrl = true },
                     new VueBindingShortcut("r", nameof(_viewModel.ShowRecycleBinCommand)) { Ctrl = true },
-                    new VueBindingShortcut("t", nameof(_viewModel.OpenSafeCommand)) { Ctrl = true },
                     new VueBindingShortcut("i", nameof(_viewModel.ShowInfoCommand)) { Ctrl = true },
                 };
                 VueBindings = new VueDataBinding(_viewModel, View, shortcuts);

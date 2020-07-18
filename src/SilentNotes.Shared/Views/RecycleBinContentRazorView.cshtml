@@ -3,7 +3,7 @@
 <ul id="recycled-notes" class="wraplist">
     @foreach (var note in @Model.RecycledNotes)
     {
-        <li class="wraplist-item">
+        <li id="@note.Id.ToString()" class="wraplist-item">
             <div class="note-card">
                 @if (@note.IsLocked)
                 {
@@ -14,8 +14,8 @@
                     <div class="note-viewer over-view @Model.Theme.CssClassDark @note.CssClassNoteType">@{WriteLiteral(note.UnlockedHtmlContent);}</div>
                 }
 
-                <span class="restore undelete" onclick="bind(event);" data-binding="restore_note" data-note="@note.Id.ToString()" title="@Model.Language["note_undelete"]">
-                    @{WriteLiteral(Model.Icon.LoadIcon("file-restore"));}
+                <span class="restore undelete" v-on:click="restoreNote(event);" title="@Model.Language["note_undelete"]">
+                    <svg width='24' height='24' viewBox='0 0 24 24'><use xlink:href="#svg-file-restore" /></svg>
                 </span>
             </div>
         </li>

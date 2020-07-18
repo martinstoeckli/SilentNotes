@@ -54,6 +54,7 @@ namespace SilentNotes.Controllers
             VueBindingShortcut[] shortcuts = new[]
             {
                 new VueBindingShortcut(VueBindingShortcut.KeyEscape, nameof(CloudStorageAccountViewModel.CancelCommand)),
+                new VueBindingShortcut(VueBindingShortcut.KeyEnter, nameof(CloudStorageAccountViewModel.OkCommand)),
             };
             VueBindings = new VueDataBinding(_viewModel, View, shortcuts);
             _viewModel.VueDataBindingScript = VueBindings.BuildVueScript();

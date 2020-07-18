@@ -43,10 +43,13 @@ namespace SilentNotes.Controllers
                 Ioc.GetOrCreate<IBaseUrlService>(),
                 Ioc.GetOrCreate<IStoryBoardService>());
 
-            Bindings.BindCommand("GoBack", _viewModel.GoBackCommand);
-            Bindings.BindCommand("UseMergedRepository", _viewModel.UseMergedRepositoryCommand);
-            Bindings.BindCommand("UseCloudRepository", _viewModel.UseCloudRepositoryCommand);
-            Bindings.BindCommand("UseLocalRepository", _viewModel.UseLocalRepositoryCommand);
+            VueBindingShortcut[] shortcuts = new[]
+            {
+                new VueBindingShortcut(VueBindingShortcut.KeyEscape, nameof(MergeChoiceViewModel.CancelCommand)),
+            };
+            VueBindings = new VueDataBinding(_viewModel, View, shortcuts);
+            _viewModel.VueDataBindingScript = VueBindings.BuildVueScript();
+            VueBindings.StartListening();
 
             string html = _viewService.GenerateHtml(_viewModel);
             View.LoadHtml(html);

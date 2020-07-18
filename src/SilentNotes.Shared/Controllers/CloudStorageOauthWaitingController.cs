@@ -44,7 +44,9 @@ namespace SilentNotes.Controllers
                 Ioc.GetOrCreate<IStoryBoardService>(),
                 Ioc.GetOrCreate<IFeedbackService>());
 
-            Bindings.BindCommand("GoBack", _viewModel.GoBackCommand);
+            VueBindings = new VueDataBinding(_viewModel, View);
+            _viewModel.VueDataBindingScript = VueBindings.BuildVueScript();
+            VueBindings.StartListening();
 
             string html = _viewService.GenerateHtml(_viewModel);
             View.LoadHtml(html);

@@ -23,7 +23,7 @@ using SilentNotes.ViewModels;
 #line hidden
 
 
-[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.6.0.1061")]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.6.0.1062")]
 public partial class NoteRepositoryRazorView : NoteRepositoryRazorViewBase
 {
 
@@ -292,7 +292,7 @@ WriteLiteral(" v-model=\"Filter\"");
 
 WriteLiteral(" autocomplete=\"off\"");
 
-WriteLiteral(" autofocus />\r\n            <svg");
+WriteLiteral(" v-focus />\r\n            <svg");
 
 WriteLiteral(" id=\"filter-icon\"");
 

@@ -23,7 +23,7 @@ using SilentNotes.ViewModels;
 #line hidden
 
 
-[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.5.0.521")]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.6.0.1062")]
 public partial class RecycleBinContentRazorView : RecycleBinContentRazorViewBase
 {
 
@@ -62,6 +62,15 @@ WriteLiteral(">\r\n");
 #line hidden
 WriteLiteral("        <li");
 
+WriteAttribute ("id", " id=\"", "\""
+
+#line 6 "RecycleBinContentRazorView.cshtml"
+, Tuple.Create<string,object,bool> ("", note.Id.ToString()
+
+#line default
+#line hidden
+, false)
+);
 WriteLiteral(" class=\"wraplist-item\"");
 
 WriteLiteral(">\r\n            <div");
@@ -160,45 +169,30 @@ WriteLiteral("\r\n                <span");
 
 WriteLiteral(" class=\"restore undelete\"");
 
-WriteLiteral(" onclick=\"bind(event);\"");
-
-WriteLiteral(" data-binding=\"restore_note\"");
-
-WriteLiteral(" data-note=\"");
-
-
-#line 17 "RecycleBinContentRazorView.cshtml"
-                                                                                                        Write(note.Id.ToString());
-
-
-#line default
-#line hidden
-WriteLiteral("\"");
+WriteLiteral(" v-on:click=\"restoreNote(event);\"");
 
 WriteAttribute ("title", " title=\"", "\""
 
 #line 17 "RecycleBinContentRazorView.cshtml"
-                                                                                                  , Tuple.Create<string,object,bool> ("", Model.Language["note_undelete"]
+                                                , Tuple.Create<string,object,bool> ("", Model.Language["note_undelete"]
 
 #line default
 #line hidden
 , false)
 );
-WriteLiteral(">\r\n");
+WriteLiteral(">\r\n                    <svg");
 
+WriteLiteral(" width=\'24\'");
 
-#line 18 "RecycleBinContentRazorView.cshtml"
-                    
+WriteLiteral(" height=\'24\'");
 
-#line default
-#line hidden
+WriteLiteral(" viewBox=\'0 0 24 24\'");
 
-#line 18 "RecycleBinContentRazorView.cshtml"
-                      WriteLiteral(Model.Icon.LoadIcon("file-restore"));
+WriteLiteral("><use");
 
-#line default
-#line hidden
-WriteLiteral("\r\n                </span>\r\n            </div>\r\n        </li>\r\n");
+WriteLiteral(" xlink:href=\"#svg-file-restore\"");
+
+WriteLiteral(" /></svg>\r\n                </span>\r\n            </div>\r\n        </li>\r\n");
 
 
 #line 22 "RecycleBinContentRazorView.cshtml"
