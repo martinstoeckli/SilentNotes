@@ -56,8 +56,6 @@ namespace SilentNotes.Controllers
             // This unsubscribes events form the view.
             VueBindings?.Dispose();
             VueBindings = null;
-            Bindings?.Dispose();
-            Bindings = null;
 
             GetViewModel()?.OnClosing();
         }
@@ -74,13 +72,7 @@ namespace SilentNotes.Controllers
         protected abstract IViewModel GetViewModel();
 
         /// <summary>
-        /// Gets a list of bindings or null if not yet set.
-        /// </summary>
-        protected HtmlViewBindings Bindings { get; private set; }
-
-        /// <summary>
         /// Gets or sets a list of bindings for Vue.js, or null if not set.
-        /// This is intended to replace the <see cref="HtmlViewBindings"/> step by step.
         /// </summary>
         protected VueDataBinding VueBindings { get; set; }
 
@@ -105,8 +97,6 @@ namespace SilentNotes.Controllers
             SetHtmlViewBackgroundColor(htmlView);
             VueBindings?.Dispose();
             VueBindings = null;
-            Bindings?.Dispose();
-            Bindings = new HtmlViewBindings(htmlView);
         }
 
         /// <summary>

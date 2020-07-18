@@ -219,5 +219,5 @@ function isParagraph(element) {
  * but not if the paragraph is empty.
  */
 function notifyTextChanged() {
-	location.href = 'HtmlViewBinding?event-type=text-change&data-binding=quill';
+	vuePropertyChanged('UnlockedHtmlContent', null);
 }

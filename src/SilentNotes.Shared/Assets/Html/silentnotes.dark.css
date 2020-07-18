@@ -53,9 +53,9 @@ div .detail-view.checklist .ql-editor p.done { background: #ccf0a8; }
 div.dark .note-viewer.over-view.checklist p.done,
 div.dark .detail-view.checklist .ql-editor p.done { background: #467c46; }
 div .note-viewer.over-view.checklist p.disabled,
-div .detail-view.checklist .ql-editor p.disabled { color: rgba(0, 0, 0, 0.2); }
+div .detail-view.checklist .ql-editor p.disabled { color: rgba(0, 0, 0, 0.5); text-decoration-color: rgba(0, 0, 0, 0.25); }
 div.dark .note-viewer.over-view.checklist p.disabled,
-div.dark .detail-view.checklist .ql-editor p.disabled { color: rgba(255, 255, 255, 0.2); }
+div.dark .detail-view.checklist .ql-editor p.disabled { color: rgba(255, 255, 255, 0.5); text-decoration-color: rgba(255, 255, 255, 0.25); }
 
 
 /* overridings which exist only in dark mode */

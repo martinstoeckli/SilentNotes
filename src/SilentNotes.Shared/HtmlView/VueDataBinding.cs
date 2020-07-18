@@ -22,6 +22,7 @@ namespace SilentNotes.HtmlView
     /// This allows to use an HTML page as view and still have a data binding. Bindable properties
     /// are automatically detected when marked with the <see cref="VueDataBindingAttribute"/>.
     /// <examples>
+    /// 
     /// Commands in the viewmodel can be marked with an attribute like:
     /// <code>
     /// [VueDataBinding(VueBindingMode.Command)]
@@ -31,6 +32,16 @@ namespace SilentNotes.HtmlView
     /// <code>
     /// v-on:click="MyCommand"
     /// v-on:click="vueCommandExecute('MyCommand', 'MyParam')"
+    /// </code>
+    /// 
+    /// Properties in the viewmodel can be marked with an attribute like:
+    /// <code>
+    /// [VueDataBinding(VueBindingMode.TwoWay)]
+    /// public string MyInput { get; set; }
+    /// </code>
+    /// This property can be assigned to a control in the HTML view like this:
+    /// <code>
+    /// v-model="MyInput"
     /// </code>
     /// </examples>
     /// </summary>
@@ -121,17 +132,12 @@ function vueReady(fn) {
     }
 }
 
-// A jQuery $(selector) replacement
-function vueFindAll(selector) {
-    return document.querySelectorAll(selector);
+function vueFind(selector) {
+    return document.querySelector(selector);
 }
 
-// A jQuery $(selector).first() replacement
-function vueFindFirst(selector) {
-    var matches = vueFindAll(selector);
-    if (matches.length >= 0)
-        return matches[0];
-    return null;
+function vueFindById(id) {
+    return document.getElementById(id);
 }
 
 var vm;
@@ -167,7 +173,7 @@ vueReady(function () {
               el.focus()
             }
           }
-        }
+        },
     });
 });
 ");

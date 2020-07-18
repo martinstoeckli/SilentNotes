@@ -99,6 +99,16 @@ div.dark .detail-view.checklist .ql-editor p::after { content: @{WriteLiteral(Mo
             }
         }
 
+        function scrollToTop() {
+            var element = quill.root;
+            element.scrollTop = 0;
+        }
+
+        function scrollToBottom() {
+            var element = quill.root;
+            element.scrollTop = element.scrollHeight;
+        }
+
         $(function () {
             // quill "imports" the existing html content and looses the class attributes,
             // that's why we save and reapply the check states.

@@ -96,6 +96,16 @@ body { background-color: transparent; }
             }
         }
 
+        function scrollToTop() {
+            var element = quill.root;
+            element.scrollTop = 0;
+        }
+
+        function scrollToBottom() {
+            var element = quill.root;
+            element.scrollTop = element.scrollHeight;
+        }
+
         $(function () {
             quill = new Quill('#myeditor', {
                 formats: ['header', 'bold', 'italic', 'underline', 'strike', 'list', 'code', 'code-block', 'blockquote', 'link'],

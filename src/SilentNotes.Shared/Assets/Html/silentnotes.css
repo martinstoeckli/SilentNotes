@@ -276,7 +276,6 @@ a[data-tooltip]:hover:after {
 	visibility: collapse;
 }
 
-/* used by htmlViewBindingsSetVisibility() */
 .hidden {
 	display: none !important;
 }

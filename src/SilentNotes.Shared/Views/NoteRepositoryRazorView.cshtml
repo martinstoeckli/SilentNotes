@@ -99,6 +99,16 @@ div.dark .note-viewer.over-view.checklist p.disabled::before { content: @{WriteL
             vueCommandExecute('RemoveFromSafeCommand', e.currentTarget.parentNode.attributes['data-note'].value);
         }
 
+        function scrollToTop() {
+            var element = document.querySelector('#content');
+            element.scrollTop = 0;
+        }
+
+        function scrollToBottom() {
+            var element = document.querySelector('#content');
+            element.scrollTop = element.scrollHeight;
+        }
+
         @{WriteLiteral(Model.VueDataBindingScript);}
     </script>
 </head>

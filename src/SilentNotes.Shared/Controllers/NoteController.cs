@@ -115,11 +115,15 @@ namespace SilentNotes.Controllers
             {
                 new VueBindingShortcut("f", "ToggleSearchDialogCommand") { Ctrl = true },
                 new VueBindingShortcut(VueBindingShortcut.KeyEscape, "CloseSearchDialogCommand"),
+                new VueBindingShortcut(VueBindingShortcut.KeyHome, "ScrollToTop") { Ctrl = true },
+                new VueBindingShortcut(VueBindingShortcut.KeyEnd, "ScrollToBottom") { Ctrl = true },
             };
             VueBindings = new VueDataBinding(_viewModel, View, shortcuts);
             VueBindings.DeclareAdditionalVueData("PrettyTimeAgoVisible", "true");
             VueBindings.DeclareAdditionalVueMethod("ToggleSearchDialogCommand", "toggleSearchDialog();");
             VueBindings.DeclareAdditionalVueMethod("CloseSearchDialogCommand", "showSearchDialog(false);");
+            VueBindings.DeclareAdditionalVueMethod("ScrollToTop", "scrollToTop();");
+            VueBindings.DeclareAdditionalVueMethod("ScrollToBottom", "scrollToBottom();");
             VueBindings.UnhandledViewBindingEvent += UnhandledViewBindingEventHandler;
             _viewModel.VueDataBindingScript = VueBindings.BuildVueScript();
             VueBindings.StartListening();

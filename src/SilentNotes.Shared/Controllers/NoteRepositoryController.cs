@@ -86,18 +86,19 @@ namespace SilentNotes.Controllers
                     new VueBindingShortcut("l", nameof(_viewModel.NewChecklistCommand)) { Ctrl = true },
                     new VueBindingShortcut("r", nameof(_viewModel.ShowRecycleBinCommand)) { Ctrl = true },
                     new VueBindingShortcut("i", nameof(_viewModel.ShowInfoCommand)) { Ctrl = true },
+                    new VueBindingShortcut(VueBindingShortcut.KeyHome, "ScrollToTop") { Ctrl = true },
+                    new VueBindingShortcut(VueBindingShortcut.KeyEnd, "ScrollToBottom") { Ctrl = true },
                 };
                 VueBindings = new VueDataBinding(_viewModel, View, shortcuts);
+                VueBindings.DeclareAdditionalVueMethod("ScrollToTop", "scrollToTop();");
+                VueBindings.DeclareAdditionalVueMethod("ScrollToBottom", "scrollToBottom();");
                 _viewModel.VueDataBindingScript = VueBindings.BuildVueScript();
                 VueBindings.UnhandledViewBindingEvent += UnhandledViewBindingEventHandler;
                 VueBindings.StartListening();
 
                 _viewModel.PropertyChanged += ViewmodelPropertyChangedEventHandler;
 
-                // Load html page and content (notes)
                 string html = _viewService.GenerateHtml(_viewModel);
-                string htmlNotes = _viewContentService.GenerateHtml(_viewModel);
-                html = html.Replace("<ul id=\"note-repository\"></ul>", htmlNotes); // Replace node "note-repository" with content
                 View.LoadHtml(html);
             }
             else
@@ -140,16 +141,14 @@ namespace SilentNotes.Controllers
         {
             View.NavigationCompleted -= NavigationCompletedEventHandler;
 
-            string scrollToNoteScript = BuildScrollToNoteScript(_scrollToNote);
-            View.ExecuteJavaScript("makeSortable();" + scrollToNoteScript);
-        }
+            // Loading the notes not until here, makes the vue.js initialization faster.
+            ViewmodelPropertyChangedEventHandler(this, new PropertyChangedEventArgs("Notes")); ;
 
-        private static string BuildScrollToNoteScript(string noteId)
-        {
-            if (string.IsNullOrEmpty(noteId))
-                return null;
-            else
-                return string.Format("vueFindFirst('[data-note=\"{0}\"]').scrollIntoView();", noteId);
+            if (!string.IsNullOrEmpty(_scrollToNote))
+            {
+                string scrollToNoteScript = string.Format("document.querySelector('[data-note=\"{0}\"]').scrollIntoView();", _scrollToNote);
+                View.ExecuteJavaScript(scrollToNoteScript);
+            }
         }
 
         private void SetVisibilityAddRemoveTresor(Guid noteId, bool isInSafe)
