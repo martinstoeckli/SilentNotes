@@ -233,7 +233,6 @@ namespace SilentNotes.ViewModels
             // Create new note and update model list
             NoteModel noteModel = new NoteModel();
             noteModel.NoteType = noteType;
-            noteModel.HtmlContent = "<h1> </h1>"; // Start with header format.
             noteModel.BackgroundColorHex = _settingsService.LoadSettingsOrDefault().DefaultNoteColorHex;
 
             // Update view model list

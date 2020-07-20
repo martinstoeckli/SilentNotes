@@ -126,6 +126,12 @@ body { background-color: transparent; }
             Link.PROTOCOL_WHITELIST = ['http', 'https', 'mailto'];
 
             searchHighlighter = new QuillSearchHighlighter(quill, document.getElementById("TxtFilter"));
+
+            var noteContent = getNoteHtmlContent();
+            var noteIsNew = noteContent.length > 1 && noteContent.length < 42 && noteContent.replace(/<[^>]*>/g, '').trim().length == 0;
+            if (noteIsNew) {
+                toggleBlockFormat('header', 1);
+            }
         });
 
         @{WriteLiteral(Model.VueDataBindingScript);}
@@ -145,8 +151,6 @@ body { background-color: transparent; }
                     <option selected="selected"></option>
                 </select>
 
-                <button class="nav-item" onclick="toggleSearchDialog(); return false;" title="@Model.Language["search"]">@{WriteLiteral(Model.Icon["magnify"]);}</button>
-
                 <button class="nav-item ql-bold" title="@Model.Language["note_bold"]"></button>
                 <button class="nav-item ql-italic" title="@Model.Language["note_italic"]"></button>
                 <span class="show-only-on-wide-browser">
@@ -155,6 +159,7 @@ body { background-color: transparent; }
                     <button class="nav-item ql-list" value="ordered" title="@Model.Language["note_list_ordered"]"></button>
                     <button class="nav-item ql-list" value="bullet" title="@Model.Language["note_list_unordered"]"></button>
                 </span>
+                <button class="nav-item" onclick="toggleSearchDialog(); return false;" title="@Model.Language["search"]">@{WriteLiteral(Model.Icon["magnify"]);}</button>
             }
         </span>
 

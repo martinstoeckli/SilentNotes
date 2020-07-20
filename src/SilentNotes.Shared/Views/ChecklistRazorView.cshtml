@@ -70,6 +70,22 @@ div.dark .detail-view.checklist .ql-editor p::after { content: @{WriteLiteral(Mo
         var quill;
         var searchHighlighter;
 
+        function toggleFormat(formatName) {
+            var selectionFormat = quill.getFormat();
+            var selectionFormatValue = selectionFormat[formatName];
+            selectionFormatValue = !selectionFormatValue;
+            quill.format(formatName, selectionFormatValue, 'user');
+        }
+
+        function toggleBlockFormat(formatName, blockType) {
+            var selectionFormat = quill.getFormat();
+            var selectionFormatValue = selectionFormat[formatName];
+            var newSelectionFormat; // undefined removes the block format
+            if (selectionFormatValue !== blockType)
+                newSelectionFormat = blockType;
+            quill.format(formatName, newSelectionFormat, 'user');
+        }
+
         function getNoteHtmlContent() {
             return quill.root.innerHTML;
         }
@@ -135,6 +151,12 @@ div.dark .detail-view.checklist .ql-editor p::after { content: @{WriteLiteral(Mo
             });
 
             searchHighlighter = new QuillSearchHighlighter(quill, document.getElementById("TxtFilter"));
+
+            var noteContent = getNoteHtmlContent();
+            var noteIsNew = noteContent.length > 1 && noteContent.length < 42 && noteContent.replace(/<[^>]*>/g, '').trim().length == 0;
+            if (noteIsNew) {
+                toggleBlockFormat('header', 1);
+            }
         });
 
         @{WriteLiteral(Model.VueDataBindingScript);}
@@ -146,7 +168,6 @@ div.dark .detail-view.checklist .ql-editor p::after { content: @{WriteLiteral(Mo
 
         @if (!Model.IsLocked)
         {
-            <button class="nav-item" onclick="toggleSearchDialog(); return false;" title="@Model.Language["search"]">@{WriteLiteral(Model.Icon["magnify"]);}</button>
             <button class="nav-item" onclick="moveUp(true); return false;" title="@Model.Language["checklist_move_to_top"]">@{WriteLiteral(Model.Icon["arrow-collapse-up"]);}</button>
             <button class="nav-item" onclick="moveUp(false); return false;" title="@Model.Language["checklist_move_up"]">@{WriteLiteral(Model.Icon["arrow-up"]);}</button>
             <button class="nav-item" onclick="moveDown(false); return false;" title="@Model.Language["checklist_move_down"]">@{WriteLiteral(Model.Icon["arrow-down"]);}</button>
@@ -157,6 +178,7 @@ div.dark .detail-view.checklist .ql-editor p::after { content: @{WriteLiteral(Mo
             @if (!Model.IsLocked)
             {
                 <button class="nav-item ql-header" value="1" title="@Model.Language["note_header1"]"></button>
+                <button class="nav-item ql-header" value="2" title="@Model.Language["note_header2"]"></button>
             }
         </span>
 
@@ -164,6 +186,7 @@ div.dark .detail-view.checklist .ql-editor p::after { content: @{WriteLiteral(Mo
         <div class="dropdown">
             @if (!Model.IsLocked)
             {
+                <button class="nav-item" onclick="toggleSearchDialog(); return false;" title="@Model.Language["search"]">@{WriteLiteral(Model.Icon["magnify"]);}</button>
                 <button class="nav-item" id="colorDropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="@Model.Language["note_colors"]">
                     @{WriteLiteral(Model.Icon["palette"]);}
                 </button>

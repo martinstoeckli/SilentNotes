@@ -29,6 +29,7 @@ namespace SilentNotes.Models
             BackgroundColorHex = SettingsModel.StartDefaultNoteColorHex;
             CreatedAt = DateTime.UtcNow;
             ModifiedAt = CreatedAt;
+            HtmlContent = string.Empty;
         }
 
         /// <summary>
