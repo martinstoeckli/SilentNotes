@@ -222,44 +222,57 @@ WriteLiteral("; }\r\n\r\n.color-btn { color: black; }\r\n.color-btn.dark { color
 ", 0.2);\r\n\tpointer-events: none; /* do not prevent clicks on recyclebin */\r\n}\r\n#p" +
 "retty-time-ago.dark {\r\n    color: white;\r\n    background-color: rgba(211, 211, 2" +
 "11, 0.3);\r\n}\r\n\r\n    </style>\r\n    <script>\r\n        var quill;\r\n        var sear" +
-"chHighlighter;\r\n\r\n        function getNoteHtmlContent() {\r\n            return qu" +
-"ill.root.innerHTML;\r\n        }\r\n\r\n        function setNoteHtmlContent(text) {\r\n " +
-"           quill.setText(text, \'user\');\r\n        }\r\n\r\n        function toggleSea" +
-"rchDialog() {\r\n            var makeVisible = $(\'#search-dialog\').hasClass(\'hidde" +
-"n\');\r\n            showSearchDialog(makeVisible);\r\n        }\r\n\r\n        function " +
-"showSearchDialog(visible) {\r\n            if (visible) {\r\n                // Open" +
-" dialog\r\n                $(\'#search-dialog\').removeClass(\'hidden\');\r\n           " +
-"     $(\'#TxtFilter\').focus();\r\n                searchHighlighter.startListening(" +
-");\r\n            }\r\n            else {\r\n                // Close dialog\r\n        " +
-"        searchHighlighter.stopListening();\r\n                searchHighlighter.cl" +
-"earSearchHighlights();\r\n                $(\'#search-dialog\').addClass(\'hidden\');\r" +
-"\n                $(\'#TxtFilter\').val(\'\');\r\n            }\r\n        }\r\n\r\n        f" +
-"unction scrollToTop() {\r\n            var element = quill.root;\r\n            elem" +
-"ent.scrollTop = 0;\r\n        }\r\n\r\n        function scrollToBottom() {\r\n          " +
-"  var element = quill.root;\r\n            element.scrollTop = element.scrollHeigh" +
-"t;\r\n        }\r\n\r\n        $(function () {\r\n            // quill \"imports\" the exi" +
-"sting html content and looses the class attributes,\r\n            // that\'s why w" +
-"e save and reapply the check states.\r\n            var checkStates = saveCheckSta" +
-"tes();\r\n            quill = new Quill(\'#myeditor\', {\r\n                formats: [" +
-"\'header\'],\r\n                modules: {\r\n                    toolbar: {\r\n        " +
-"                container: \'#quill-toolbar\',\r\n                    },\r\n          " +
-"      },\r\n                theme: \'snow\',\r\n            });\r\n            restoreCh" +
-"eckStates(checkStates);\r\n\r\n            quill.on(\'text-change\', function (delta, " +
-"oldDelta, source) {\r\n                if (source === \'user\') {\r\n                 " +
-"   vuePropertyChanged(\'UnlockedHtmlContent\', null);\r\n                }\r\n        " +
-"    });\r\n\r\n            $(quill.root).one(\"focusin\", function () {\r\n             " +
-"   vm.PrettyTimeAgoVisible = false;\r\n            });\r\n\r\n            searchHighli" +
-"ghter = new QuillSearchHighlighter(quill, document.getElementById(\"TxtFilter\"));" +
-"\r\n        });\r\n\r\n");
+"chHighlighter;\r\n\r\n        function toggleFormat(formatName) {\r\n            var s" +
+"electionFormat = quill.getFormat();\r\n            var selectionFormatValue = sele" +
+"ctionFormat[formatName];\r\n            selectionFormatValue = !selectionFormatVal" +
+"ue;\r\n            quill.format(formatName, selectionFormatValue, \'user\');\r\n      " +
+"  }\r\n\r\n        function toggleBlockFormat(formatName, blockType) {\r\n            " +
+"var selectionFormat = quill.getFormat();\r\n            var selectionFormatValue =" +
+" selectionFormat[formatName];\r\n            var newSelectionFormat; // undefined " +
+"removes the block format\r\n            if (selectionFormatValue !== blockType)\r\n " +
+"               newSelectionFormat = blockType;\r\n            quill.format(formatN" +
+"ame, newSelectionFormat, \'user\');\r\n        }\r\n\r\n        function getNoteHtmlCont" +
+"ent() {\r\n            return quill.root.innerHTML;\r\n        }\r\n\r\n        function" +
+" setNoteHtmlContent(text) {\r\n            quill.setText(text, \'user\');\r\n        }" +
+"\r\n\r\n        function toggleSearchDialog() {\r\n            var makeVisible = $(\'#s" +
+"earch-dialog\').hasClass(\'hidden\');\r\n            showSearchDialog(makeVisible);\r\n" +
+"        }\r\n\r\n        function showSearchDialog(visible) {\r\n            if (visib" +
+"le) {\r\n                // Open dialog\r\n                $(\'#search-dialog\').remov" +
+"eClass(\'hidden\');\r\n                $(\'#TxtFilter\').focus();\r\n                sea" +
+"rchHighlighter.startListening();\r\n            }\r\n            else {\r\n           " +
+"     // Close dialog\r\n                searchHighlighter.stopListening();\r\n      " +
+"          searchHighlighter.clearSearchHighlights();\r\n                $(\'#search" +
+"-dialog\').addClass(\'hidden\');\r\n                $(\'#TxtFilter\').val(\'\');\r\n       " +
+"     }\r\n        }\r\n\r\n        function scrollToTop() {\r\n            var element =" +
+" quill.root;\r\n            element.scrollTop = 0;\r\n        }\r\n\r\n        function " +
+"scrollToBottom() {\r\n            var element = quill.root;\r\n            element.s" +
+"crollTop = element.scrollHeight;\r\n        }\r\n\r\n        $(function () {\r\n        " +
+"    // quill \"imports\" the existing html content and looses the class attributes" +
+",\r\n            // that\'s why we save and reapply the check states.\r\n            " +
+"var checkStates = saveCheckStates();\r\n            quill = new Quill(\'#myeditor\'," +
+" {\r\n                formats: [\'header\'],\r\n                modules: {\r\n          " +
+"          toolbar: {\r\n                        container: \'#quill-toolbar\',\r\n    " +
+"                },\r\n                },\r\n                theme: \'snow\',\r\n        " +
+"    });\r\n            restoreCheckStates(checkStates);\r\n\r\n            quill.on(\'t" +
+"ext-change\', function (delta, oldDelta, source) {\r\n                if (source ==" +
+"= \'user\') {\r\n                    vuePropertyChanged(\'UnlockedHtmlContent\', null)" +
+";\r\n                }\r\n            });\r\n\r\n            $(quill.root).one(\"focusin\"" +
+", function () {\r\n                vm.PrettyTimeAgoVisible = false;\r\n            }" +
+");\r\n\r\n            searchHighlighter = new QuillSearchHighlighter(quill, document" +
+".getElementById(\"TxtFilter\"));\r\n\r\n            var noteContent = getNoteHtmlConte" +
+"nt();\r\n            var noteIsNew = noteContent.length > 1 && noteContent.length " +
+"< 42 && noteContent.replace(/<[^>]*>/g, \'\').trim().length == 0;\r\n            if " +
+"(noteIsNew) {\r\n                toggleBlockFormat(\'header\', 1);\r\n            }\r\n " +
+"       });\r\n\r\n");
 
 
-#line 140 "ChecklistRazorView.cshtml"
+#line 162 "ChecklistRazorView.cshtml"
         
 
 #line default
 #line hidden
 
-#line 140 "ChecklistRazorView.cshtml"
+#line 162 "ChecklistRazorView.cshtml"
           WriteLiteral(Model.VueDataBindingScript);
 
 #line default
@@ -282,7 +295,7 @@ WriteLiteral(" v-on:click=\"GoBackCommand\"");
 
 WriteAttribute ("title", " title=\"", "\""
 
-#line 145 "ChecklistRazorView.cshtml"
+#line 167 "ChecklistRazorView.cshtml"
                                     , Tuple.Create<string,object,bool> ("", Model.Language["back"]
 
 #line default
@@ -292,7 +305,7 @@ WriteAttribute ("title", " title=\"", "\""
 WriteLiteral(">");
 
 
-#line 145 "ChecklistRazorView.cshtml"
+#line 167 "ChecklistRazorView.cshtml"
                                                                                                       WriteLiteral(Model.Icon["arrow-left"]);
 
 #line default
@@ -300,13 +313,13 @@ WriteLiteral(">");
 WriteLiteral("</button>\r\n\r\n");
 
 
-#line 147 "ChecklistRazorView.cshtml"
+#line 169 "ChecklistRazorView.cshtml"
         
 
 #line default
 #line hidden
 
-#line 147 "ChecklistRazorView.cshtml"
+#line 169 "ChecklistRazorView.cshtml"
          if (!Model.IsLocked)
         {
 
@@ -321,7 +334,7 @@ WriteLiteral(" onclick=\"toggleSearchDialog(); return false;\"");
 
 WriteAttribute ("title", " title=\"", "\""
 
-#line 149 "ChecklistRazorView.cshtml"
+#line 171 "ChecklistRazorView.cshtml"
                                                    , Tuple.Create<string,object,bool> ("", Model.Language["search"]
 
 #line default
@@ -331,7 +344,7 @@ WriteAttribute ("title", " title=\"", "\""
 WriteLiteral(">");
 
 
-#line 149 "ChecklistRazorView.cshtml"
+#line 171 "ChecklistRazorView.cshtml"
                                                                                                                        WriteLiteral(Model.Icon["magnify"]);
 
 #line default
@@ -346,7 +359,7 @@ WriteLiteral(" onclick=\"moveUp(true); return false;\"");
 
 WriteAttribute ("title", " title=\"", "\""
 
-#line 150 "ChecklistRazorView.cshtml"
+#line 172 "ChecklistRazorView.cshtml"
                                            , Tuple.Create<string,object,bool> ("", Model.Language["checklist_move_to_top"]
 
 #line default
@@ -356,7 +369,7 @@ WriteAttribute ("title", " title=\"", "\""
 WriteLiteral(">");
 
 
-#line 150 "ChecklistRazorView.cshtml"
+#line 172 "ChecklistRazorView.cshtml"
                                                                                                                               WriteLiteral(Model.Icon["arrow-collapse-up"]);
 
 #line default
@@ -371,7 +384,7 @@ WriteLiteral(" onclick=\"moveUp(false); return false;\"");
 
 WriteAttribute ("title", " title=\"", "\""
 
-#line 151 "ChecklistRazorView.cshtml"
+#line 173 "ChecklistRazorView.cshtml"
                                             , Tuple.Create<string,object,bool> ("", Model.Language["checklist_move_up"]
 
 #line default
@@ -381,7 +394,7 @@ WriteAttribute ("title", " title=\"", "\""
 WriteLiteral(">");
 
 
-#line 151 "ChecklistRazorView.cshtml"
+#line 173 "ChecklistRazorView.cshtml"
                                                                                                                            WriteLiteral(Model.Icon["arrow-up"]);
 
 #line default
@@ -396,7 +409,7 @@ WriteLiteral(" onclick=\"moveDown(false); return false;\"");
 
 WriteAttribute ("title", " title=\"", "\""
 
-#line 152 "ChecklistRazorView.cshtml"
+#line 174 "ChecklistRazorView.cshtml"
                                               , Tuple.Create<string,object,bool> ("", Model.Language["checklist_move_down"]
 
 #line default
@@ -406,7 +419,7 @@ WriteAttribute ("title", " title=\"", "\""
 WriteLiteral(">");
 
 
-#line 152 "ChecklistRazorView.cshtml"
+#line 174 "ChecklistRazorView.cshtml"
                                                                                                                                WriteLiteral(Model.Icon["arrow-down"]);
 
 #line default
@@ -421,7 +434,7 @@ WriteLiteral(" onclick=\"moveDown(true); return false;\"");
 
 WriteAttribute ("title", " title=\"", "\""
 
-#line 153 "ChecklistRazorView.cshtml"
+#line 175 "ChecklistRazorView.cshtml"
                                              , Tuple.Create<string,object,bool> ("", Model.Language["checklist_move_to_bottom"]
 
 #line default
@@ -431,7 +444,7 @@ WriteAttribute ("title", " title=\"", "\""
 WriteLiteral(">");
 
 
-#line 153 "ChecklistRazorView.cshtml"
+#line 175 "ChecklistRazorView.cshtml"
                                                                                                                                    WriteLiteral(Model.Icon["arrow-collapse-down"]);
 
 #line default
@@ -439,7 +452,7 @@ WriteLiteral(">");
 WriteLiteral("</button>\r\n");
 
 
-#line 154 "ChecklistRazorView.cshtml"
+#line 176 "ChecklistRazorView.cshtml"
         }
 
 
@@ -454,13 +467,13 @@ WriteLiteral(" class=\"d-inline-flex\"");
 WriteLiteral(">\r\n");
 
 
-#line 157 "ChecklistRazorView.cshtml"
+#line 179 "ChecklistRazorView.cshtml"
             
 
 #line default
 #line hidden
 
-#line 157 "ChecklistRazorView.cshtml"
+#line 179 "ChecklistRazorView.cshtml"
              if (!Model.IsLocked)
             {
 
@@ -475,7 +488,7 @@ WriteLiteral(" value=\"1\"");
 
 WriteAttribute ("title", " title=\"", "\""
 
-#line 159 "ChecklistRazorView.cshtml"
+#line 181 "ChecklistRazorView.cshtml"
                              , Tuple.Create<string,object,bool> ("", Model.Language["note_header1"]
 
 #line default
@@ -485,7 +498,7 @@ WriteAttribute ("title", " title=\"", "\""
 WriteLiteral("></button>\r\n");
 
 
-#line 160 "ChecklistRazorView.cshtml"
+#line 182 "ChecklistRazorView.cshtml"
             }
 
 
@@ -498,13 +511,13 @@ WriteLiteral(" class=\"dropdown\"");
 WriteLiteral(">\r\n");
 
 
-#line 165 "ChecklistRazorView.cshtml"
+#line 187 "ChecklistRazorView.cshtml"
             
 
 #line default
 #line hidden
 
-#line 165 "ChecklistRazorView.cshtml"
+#line 187 "ChecklistRazorView.cshtml"
              if (!Model.IsLocked)
             {
 
@@ -525,7 +538,7 @@ WriteLiteral(" aria-expanded=\"false\"");
 
 WriteAttribute ("title", " title=\"", "\""
 
-#line 167 "ChecklistRazorView.cshtml"
+#line 189 "ChecklistRazorView.cshtml"
                                                                                                   , Tuple.Create<string,object,bool> ("", Model.Language["note_colors"]
 
 #line default
@@ -535,13 +548,13 @@ WriteAttribute ("title", " title=\"", "\""
 WriteLiteral(">\r\n");
 
 
-#line 168 "ChecklistRazorView.cshtml"
+#line 190 "ChecklistRazorView.cshtml"
                     
 
 #line default
 #line hidden
 
-#line 168 "ChecklistRazorView.cshtml"
+#line 190 "ChecklistRazorView.cshtml"
                       WriteLiteral(Model.Icon["palette"]);
 
 #line default
@@ -549,7 +562,7 @@ WriteLiteral(">\r\n");
 WriteLiteral("\r\n                </button>\r\n");
 
 
-#line 170 "ChecklistRazorView.cshtml"
+#line 192 "ChecklistRazorView.cshtml"
             }
 
 
@@ -564,13 +577,13 @@ WriteLiteral(" aria-labelledby=\"colorDropdownMenu\"");
 WriteLiteral(">\r\n");
 
 
-#line 172 "ChecklistRazorView.cshtml"
+#line 194 "ChecklistRazorView.cshtml"
                 
 
 #line default
 #line hidden
 
-#line 172 "ChecklistRazorView.cshtml"
+#line 194 "ChecklistRazorView.cshtml"
                  foreach (var backgroundColor in @Model.BackgroundColorsHex)
                 {
 
@@ -583,7 +596,7 @@ WriteAttribute ("class", " class=\"", "\""
 , Tuple.Create<string,object,bool> ("", "dropdown-item", true)
 , Tuple.Create<string,object,bool> (" ", "color-btn", true)
 
-#line 174 "ChecklistRazorView.cshtml"
+#line 196 "ChecklistRazorView.cshtml"
                 , Tuple.Create<string,object,bool> (" ", Model.GetDarkClass(backgroundColor)
 
 #line default
@@ -593,7 +606,7 @@ WriteAttribute ("class", " class=\"", "\""
 WriteAttribute ("v-on:click", " v-on:click=\"", "\""
 , Tuple.Create<string,object,bool> ("", "BackgroundColorHex=\'", true)
 
-#line 174 "ChecklistRazorView.cshtml"
+#line 196 "ChecklistRazorView.cshtml"
                                                                                         , Tuple.Create<string,object,bool> ("", backgroundColor
 
 #line default
@@ -604,7 +617,7 @@ WriteAttribute ("v-on:click", " v-on:click=\"", "\""
 WriteAttribute ("style", " style=\"", "\""
 , Tuple.Create<string,object,bool> ("", "background-color:", true)
 
-#line 174 "ChecklistRazorView.cshtml"
+#line 196 "ChecklistRazorView.cshtml"
                                                                                                                                     , Tuple.Create<string,object,bool> (" ", backgroundColor
 
 #line default
@@ -614,7 +627,7 @@ WriteAttribute ("style", " style=\"", "\""
 WriteLiteral(">Lorem ipsum</div>\r\n");
 
 
-#line 175 "ChecklistRazorView.cshtml"
+#line 197 "ChecklistRazorView.cshtml"
                 }
 
 
@@ -623,13 +636,13 @@ WriteLiteral(">Lorem ipsum</div>\r\n");
 WriteLiteral("            </div>\r\n        </div>\r\n\r\n        <!-- Dropdown Menu -->\r\n");
 
 
-#line 180 "ChecklistRazorView.cshtml"
+#line 202 "ChecklistRazorView.cshtml"
         
 
 #line default
 #line hidden
 
-#line 180 "ChecklistRazorView.cshtml"
+#line 202 "ChecklistRazorView.cshtml"
          if (!Model.IsLocked)
         {
 
@@ -655,13 +668,13 @@ WriteLiteral(" aria-expanded=\"false\"");
 WriteLiteral(">\r\n");
 
 
-#line 184 "ChecklistRazorView.cshtml"
+#line 206 "ChecklistRazorView.cshtml"
                     
 
 #line default
 #line hidden
 
-#line 184 "ChecklistRazorView.cshtml"
+#line 206 "ChecklistRazorView.cshtml"
                       WriteLiteral(Model.Icon["dots-vertical"]);
 
 #line default
@@ -681,7 +694,7 @@ WriteLiteral(" onclick=\"movePendingToTop(); return false;\"");
 WriteLiteral(">");
 
 
-#line 187 "ChecklistRazorView.cshtml"
+#line 209 "ChecklistRazorView.cshtml"
                                                                                              WriteLiteral(Model.Icon["sort-bool-descending-variant"]);
 
 #line default
@@ -689,7 +702,7 @@ WriteLiteral(">");
 WriteLiteral(" ");
 
 
-#line 187 "ChecklistRazorView.cshtml"
+#line 209 "ChecklistRazorView.cshtml"
                                                                                                                                                    Write(Model.Language["checklist_move_pending_to_top"]);
 
 
@@ -704,7 +717,7 @@ WriteLiteral(" onclick=\"setCheckedStateForAll(false, false); return false;\"");
 WriteLiteral(">");
 
 
-#line 188 "ChecklistRazorView.cshtml"
+#line 210 "ChecklistRazorView.cshtml"
                                                                                                               WriteLiteral(Model.Icon["checkbox-multiple-blank-outline"]);
 
 #line default
@@ -712,7 +725,7 @@ WriteLiteral(">");
 WriteLiteral(" ");
 
 
-#line 188 "ChecklistRazorView.cshtml"
+#line 210 "ChecklistRazorView.cshtml"
                                                                                                                                                                        Write(Model.Language["checklist_uncheck_all"]);
 
 
@@ -727,7 +740,7 @@ WriteLiteral(" onclick=\"setCheckedStateForAll(true, false); return false;\"");
 WriteLiteral(">");
 
 
-#line 189 "ChecklistRazorView.cshtml"
+#line 211 "ChecklistRazorView.cshtml"
                                                                                                              WriteLiteral(Model.Icon["check-box-multiple-outline"]);
 
 #line default
@@ -735,7 +748,7 @@ WriteLiteral(">");
 WriteLiteral(" ");
 
 
-#line 189 "ChecklistRazorView.cshtml"
+#line 211 "ChecklistRazorView.cshtml"
                                                                                                                                                                  Write(Model.Language["checklist_check_all"]);
 
 
@@ -750,7 +763,7 @@ WriteLiteral(" onclick=\"setCheckedStateForAll(false, true); return false;\"");
 WriteLiteral(">");
 
 
-#line 190 "ChecklistRazorView.cshtml"
+#line 212 "ChecklistRazorView.cshtml"
                                                                                                              WriteLiteral(Model.Icon["checkbox-blank-off-outline"]);
 
 #line default
@@ -758,7 +771,7 @@ WriteLiteral(">");
 WriteLiteral(" ");
 
 
-#line 190 "ChecklistRazorView.cshtml"
+#line 212 "ChecklistRazorView.cshtml"
                                                                                                                                                                  Write(Model.Language["checklist_disable_all"]);
 
 
@@ -767,13 +780,13 @@ WriteLiteral(" ");
 WriteLiteral("</div>\r\n");
 
 
-#line 191 "ChecklistRazorView.cshtml"
+#line 213 "ChecklistRazorView.cshtml"
                     
 
 #line default
 #line hidden
 
-#line 191 "ChecklistRazorView.cshtml"
+#line 213 "ChecklistRazorView.cshtml"
                      if (Model.ShowManualSynchronization)
                     {
 
@@ -795,7 +808,7 @@ WriteLiteral(" v-on:click=\"PushNoteToOnlineStorageCommand\"");
 WriteLiteral(">");
 
 
-#line 194 "ChecklistRazorView.cshtml"
+#line 216 "ChecklistRazorView.cshtml"
                                                                                                  WriteLiteral(Model.Icon["cloud-upload"]);
 
 #line default
@@ -803,7 +816,7 @@ WriteLiteral(">");
 WriteLiteral(" ");
 
 
-#line 194 "ChecklistRazorView.cshtml"
+#line 216 "ChecklistRazorView.cshtml"
                                                                                                                                        Write(Model.Language["note_push_to_server"]);
 
 
@@ -820,7 +833,7 @@ WriteLiteral(" v-on:click=\"PullNoteFromOnlineStorageCommand\"");
 WriteLiteral(">");
 
 
-#line 195 "ChecklistRazorView.cshtml"
+#line 217 "ChecklistRazorView.cshtml"
                                                                                                    WriteLiteral(Model.Icon["cloud-download"]);
 
 #line default
@@ -828,7 +841,7 @@ WriteLiteral(">");
 WriteLiteral(" ");
 
 
-#line 195 "ChecklistRazorView.cshtml"
+#line 217 "ChecklistRazorView.cshtml"
                                                                                                                                            Write(Model.Language["note_pull_from_server"]);
 
 
@@ -837,7 +850,7 @@ WriteLiteral(" ");
 WriteLiteral("</div>\r\n");
 
 
-#line 196 "ChecklistRazorView.cshtml"
+#line 218 "ChecklistRazorView.cshtml"
                     }
 
 
@@ -846,7 +859,7 @@ WriteLiteral("</div>\r\n");
 WriteLiteral("                </div>\r\n            </div>\r\n");
 
 
-#line 199 "ChecklistRazorView.cshtml"
+#line 221 "ChecklistRazorView.cshtml"
         }
 
 
@@ -863,13 +876,13 @@ WriteLiteral(" v-bind:style=\"{ backgroundColor: BackgroundColorHex }\"");
 WriteLiteral(">\r\n");
 
 
-#line 203 "ChecklistRazorView.cshtml"
+#line 225 "ChecklistRazorView.cshtml"
         
 
 #line default
 #line hidden
 
-#line 203 "ChecklistRazorView.cshtml"
+#line 225 "ChecklistRazorView.cshtml"
          if (Model.IsLocked)
         {
 
@@ -897,7 +910,7 @@ WriteLiteral(" xlink:href=\"#svg-lock-outline\"");
 WriteLiteral(" /></svg></span>\r\n");
 
 
-#line 206 "ChecklistRazorView.cshtml"
+#line 228 "ChecklistRazorView.cshtml"
         }
         else
         {
@@ -913,7 +926,7 @@ WriteAttribute ("class", " class=\"", "\""
 , Tuple.Create<string,object,bool> ("", "note-viewer", true)
 , Tuple.Create<string,object,bool> (" ", "detail-view", true)
 
-#line 209 "ChecklistRazorView.cshtml"
+#line 231 "ChecklistRazorView.cshtml"
                       , Tuple.Create<string,object,bool> (" ", Model.CssClassNoteType
 
 #line default
@@ -923,7 +936,7 @@ WriteAttribute ("class", " class=\"", "\""
 WriteLiteral(">");
 
 
-#line 209 "ChecklistRazorView.cshtml"
+#line 231 "ChecklistRazorView.cshtml"
                                                                                          WriteLiteral(Model.UnlockedHtmlContent);
 
 #line default
@@ -931,7 +944,7 @@ WriteLiteral(">");
 WriteLiteral("</div>\r\n");
 
 
-#line 210 "ChecklistRazorView.cshtml"
+#line 232 "ChecklistRazorView.cshtml"
         }
 
 
@@ -982,13 +995,13 @@ WriteLiteral(" xlink:href=\"#svg-close-circle-outline\"");
 WriteLiteral(" /></svg>\r\n        </div>\r\n    </div>\r\n\r\n    <div hidden>\r\n");
 
 
-#line 223 "ChecklistRazorView.cshtml"
+#line 245 "ChecklistRazorView.cshtml"
         
 
 #line default
 #line hidden
 
-#line 223 "ChecklistRazorView.cshtml"
+#line 245 "ChecklistRazorView.cshtml"
           WriteLiteral(Model.Icon.LoadIcon("lock-outline", new[] { new KeyValuePair<string, string>("id", "svg-lock-outline") }));
 
 #line default
@@ -996,13 +1009,13 @@ WriteLiteral(" /></svg>\r\n        </div>\r\n    </div>\r\n\r\n    <div hidden>\
 WriteLiteral("\r\n");
 
 
-#line 224 "ChecklistRazorView.cshtml"
+#line 246 "ChecklistRazorView.cshtml"
         
 
 #line default
 #line hidden
 
-#line 224 "ChecklistRazorView.cshtml"
+#line 246 "ChecklistRazorView.cshtml"
           WriteLiteral(Model.Icon.LoadIcon("delete", new[] { new KeyValuePair<string, string>("id", "svg-delete") }));
 
 #line default
@@ -1010,13 +1023,13 @@ WriteLiteral("\r\n");
 WriteLiteral("\r\n");
 
 
-#line 225 "ChecklistRazorView.cshtml"
+#line 247 "ChecklistRazorView.cshtml"
         
 
 #line default
 #line hidden
 
-#line 225 "ChecklistRazorView.cshtml"
+#line 247 "ChecklistRazorView.cshtml"
           WriteLiteral(Model.Icon.LoadIcon("close-circle-outline", new[] { new KeyValuePair<string, string>("id", "svg-close-circle-outline") }));
 
 #line default

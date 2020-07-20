@@ -126,6 +126,12 @@ body { background-color: transparent; }
             Link.PROTOCOL_WHITELIST = ['http', 'https', 'mailto'];
 
             searchHighlighter = new QuillSearchHighlighter(quill, document.getElementById("TxtFilter"));
+
+            var noteContent = getNoteHtmlContent();
+            var noteIsNew = noteContent.length > 1 && noteContent.length < 42 && noteContent.replace(/<[^>]*>/g, '').trim().length == 0;
+            if (noteIsNew) {
+                toggleBlockFormat('header', 1);
+            }
         });
 
         @{WriteLiteral(Model.VueDataBindingScript);}

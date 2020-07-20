@@ -70,6 +70,22 @@ div.dark .detail-view.checklist .ql-editor p::after { content: @{WriteLiteral(Mo
         var quill;
         var searchHighlighter;
 
+        function toggleFormat(formatName) {
+            var selectionFormat = quill.getFormat();
+            var selectionFormatValue = selectionFormat[formatName];
+            selectionFormatValue = !selectionFormatValue;
+            quill.format(formatName, selectionFormatValue, 'user');
+        }
+
+        function toggleBlockFormat(formatName, blockType) {
+            var selectionFormat = quill.getFormat();
+            var selectionFormatValue = selectionFormat[formatName];
+            var newSelectionFormat; // undefined removes the block format
+            if (selectionFormatValue !== blockType)
+                newSelectionFormat = blockType;
+            quill.format(formatName, newSelectionFormat, 'user');
+        }
+
         function getNoteHtmlContent() {
             return quill.root.innerHTML;
         }
@@ -135,6 +151,12 @@ div.dark .detail-view.checklist .ql-editor p::after { content: @{WriteLiteral(Mo
             });
 
             searchHighlighter = new QuillSearchHighlighter(quill, document.getElementById("TxtFilter"));
+
+            var noteContent = getNoteHtmlContent();
+            var noteIsNew = noteContent.length > 1 && noteContent.length < 42 && noteContent.replace(/<[^>]*>/g, '').trim().length == 0;
+            if (noteIsNew) {
+                toggleBlockFormat('header', 1);
+            }
         });
 
         @{WriteLiteral(Model.VueDataBindingScript);}
