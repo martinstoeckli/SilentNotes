@@ -248,7 +248,9 @@ WriteLiteral(" class=\"nav-item nav-filter ml-auto d-inline-flex align-self-cent
 
 WriteLiteral(">\r\n            <input");
 
-WriteLiteral(" v-model=\"Filter\"");
+WriteLiteral(" id=\"Filter\"");
+
+WriteLiteral(" v-on:input=\"Filter = $event.target.value;\"");
 
 WriteLiteral(" autocomplete=\"off\"");
 

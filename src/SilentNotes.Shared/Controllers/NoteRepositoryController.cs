@@ -126,7 +126,10 @@ namespace SilentNotes.Controllers
             }
             else if (e.PropertyName == "ClearFilter")
             {
-                View.ExecuteJavaScript("vm.Filter = '';");
+                // Unfortunately on Android, vue v-model does not report each key press, instead it
+                // waits on keyboard composition. Thus we have to handle the binding with v-on:input
+                // which does not automatically update the input field when the vue property changes.
+                View.ExecuteJavaScript("document.getElementById('Filter').value = '';");
             }
         }
 
