@@ -75,6 +75,7 @@ div.dark .detail-view.checklist .ql-editor p::after { content: @{WriteLiteral(Mo
             var selectionFormatValue = selectionFormat[formatName];
             selectionFormatValue = !selectionFormatValue;
             quill.format(formatName, selectionFormatValue, 'user');
+            refreshActiveFormatState();
         }
 
         function toggleBlockFormat(formatName, blockType) {
@@ -84,6 +85,7 @@ div.dark .detail-view.checklist .ql-editor p::after { content: @{WriteLiteral(Mo
             if (selectionFormatValue !== blockType)
                 newSelectionFormat = blockType;
             quill.format(formatName, newSelectionFormat, 'user');
+            refreshActiveFormatState();
         }
 
         function getNoteHtmlContent() {
@@ -125,24 +127,39 @@ div.dark .detail-view.checklist .ql-editor p::after { content: @{WriteLiteral(Mo
             element.scrollTop = element.scrollHeight;
         }
 
+        function refreshActiveFormatState() {
+            var selectionFormat = quill.getFormat();
+            var formatValue = selectionFormat['header'];
+            vm.Header1Active = formatValue == 1;
+            vm.Header2Active = formatValue == 2;
+            vm.Header3Active = formatValue == 3;
+            formatValue = selectionFormat['list'];
+            vm.ListOrderedActive = formatValue == 'ordered';
+            vm.ListBulletActive = formatValue == 'bullet';
+            vm.CodeActive = selectionFormat['code-block'];
+            vm.QuoteActive = selectionFormat['blockquote'];
+            vm.UnderlineActive = selectionFormat['underline'];
+            vm.StrikeActive = selectionFormat['strike'];
+        }
+
         $(function () {
             // quill "imports" the existing html content and looses the class attributes,
             // that's why we save and reapply the check states.
             var checkStates = saveCheckStates();
             quill = new Quill('#myeditor', {
                 formats: ['header'],
-                modules: {
-                    toolbar: {
-                        container: '#quill-toolbar',
-                    },
-                },
-                theme: 'snow',
             });
             restoreCheckStates(checkStates);
 
             quill.on('text-change', function (delta, oldDelta, source) {
                 if (source === 'user') {
                     vuePropertyChanged('UnlockedHtmlContent', null);
+                }
+            });
+
+            quill.on('selection-change', function (range, oldRange, source) {
+                if (range) {
+                    refreshActiveFormatState();
                 }
             });
 
@@ -174,14 +191,6 @@ div.dark .detail-view.checklist .ql-editor p::after { content: @{WriteLiteral(Mo
             <button class="nav-item" onclick="moveDown(true); return false;" title="@Model.Language["checklist_move_to_bottom"]">@{WriteLiteral(Model.Icon["arrow-collapse-down"]);}</button>
         }
 
-        <span id="quill-toolbar" class="d-inline-flex">
-            @if (!Model.IsLocked)
-            {
-                <button class="nav-item ql-header" value="1" title="@Model.Language["note_header1"]"></button>
-                <button class="nav-item ql-header" value="2" title="@Model.Language["note_header2"]"></button>
-            }
-        </span>
-
         <!-- Color dropdown -->
         <div class="dropdown">
             @if (!Model.IsLocked)
@@ -211,6 +220,9 @@ div.dark .detail-view.checklist .ql-editor p::after { content: @{WriteLiteral(Mo
                     <div class="dropdown-item" onclick="setCheckedStateForAll(false, false); return false;">@{WriteLiteral(Model.Icon["checkbox-multiple-blank-outline"]);} @Model.Language["checklist_uncheck_all"]</div>
                     <div class="dropdown-item" onclick="setCheckedStateForAll(true, false); return false;">@{WriteLiteral(Model.Icon["check-box-multiple-outline"]);} @Model.Language["checklist_check_all"]</div>
                     <div class="dropdown-item" onclick="setCheckedStateForAll(false, true); return false;">@{WriteLiteral(Model.Icon["checkbox-blank-off-outline"]);} @Model.Language["checklist_disable_all"]</div>
+                    <div class="dropdown-divider"></div>
+                    <div class="dropdown-item" v-bind:class="{ active: Header1Active }" onclick="toggleBlockFormat('header', 1);">@{WriteLiteral(Model.Icon["format-header-1"]);} @Model.Language["note_header1"]</div>
+                    <div class="dropdown-item" v-bind:class="{ active: Header2Active }" onclick="toggleBlockFormat('header', 2);">@{WriteLiteral(Model.Icon["format-header-2"]);} @Model.Language["note_header2"]</div>
                     @if (Model.ShowManualSynchronization)
                     {
                         <div class="dropdown-divider"></div>

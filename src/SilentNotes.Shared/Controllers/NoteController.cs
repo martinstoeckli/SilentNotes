@@ -120,6 +120,15 @@ namespace SilentNotes.Controllers
             };
             VueBindings = new VueDataBinding(_viewModel, View, shortcuts);
             VueBindings.DeclareAdditionalVueData("PrettyTimeAgoVisible", "true");
+            VueBindings.DeclareAdditionalVueData("Header1Active", "false");
+            VueBindings.DeclareAdditionalVueData("Header2Active", "false");
+            VueBindings.DeclareAdditionalVueData("Header3Active", "false");
+            VueBindings.DeclareAdditionalVueData("ListOrderedActive", "false");
+            VueBindings.DeclareAdditionalVueData("ListBulletActive", "false");
+            VueBindings.DeclareAdditionalVueData("CodeActive", "false");
+            VueBindings.DeclareAdditionalVueData("QuoteActive", "false");
+            VueBindings.DeclareAdditionalVueData("UnderlineActive", "false");
+            VueBindings.DeclareAdditionalVueData("StrikeActive", "false");
             VueBindings.DeclareAdditionalVueMethod("ToggleSearchDialogCommand", "toggleSearchDialog();");
             VueBindings.DeclareAdditionalVueMethod("CloseSearchDialogCommand", "showSearchDialog(false);");
             VueBindings.DeclareAdditionalVueMethod("ScrollToTop", "scrollToTop();");
