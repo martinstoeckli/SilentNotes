@@ -77,6 +77,7 @@ namespace SilentNotes.Services
                 { "arrow-collapse-down", "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M19.92,12.08L12,20L4.08,12.08L5.5,10.67L11,16.17V2H13V16.17L18.5,10.66L19.92,12.08M12,20H2V22H22V20H12Z' /></svg>" },
                 { "arrow-up", "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M13,20H11V8L5.5,13.5L4.08,12.08L12,4.16L19.92,12.08L18.5,13.5L13,8V20Z' /></svg>" },
                 { "arrow-down", "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M11,4H13V16L18.5,10.5L19.92,11.92L12,19.84L4.08,11.92L5.5,10.5L11,16V4Z' /></svg>" },
+                { "export", "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M23,12L19,8V11H10V13H19V16M1,18V6C1,4.89 1.9,4 3,4H15A2,2 0 0,1 17,6V9H15V6H3V18H15V15H17V18A2,2 0 0,1 15,20H3A2,2 0 0,1 1,18Z' /></svg>" },
             };
         }
 

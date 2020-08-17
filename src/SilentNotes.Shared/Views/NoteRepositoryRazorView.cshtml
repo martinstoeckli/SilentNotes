@@ -130,6 +130,7 @@ div.dark .note-viewer.over-view.checklist p.disabled::before { content: @{WriteL
                 <div class="dropdown-item" v-on:click="NewNoteCommand"><svg><use xlink:href="#svg-note-text-outline" /></svg> @Model.Language["note_create_new"]</div>
                 <div class="dropdown-item" v-on:click="NewChecklistCommand"><svg><use xlink:href="#svg-order-bool-ascending-variant" /></svg> @Model.Language["checklist_create_new"]</div>
                 <div class="dropdown-item" v-on:click="ShowRecycleBinCommand">@{WriteLiteral(Model.Icon["delete-empty"]);} @Model.Language["show_recyclebin"]</div>
+                <div class="dropdown-item" v-on:click="ShowExportCommand">@{WriteLiteral(Model.Icon["export"]);} @Model.Language["show_export"]</div>
                 <div class="dropdown-divider"></div>
                 <div class="dropdown-item" @if (Model.IsAnySafeOpen) { @("hidden") ; } v-on:click="OpenSafeCommand">@{WriteLiteral(Model.Icon["safe-square-outline"]);} @Model.Language["safe_open"]</div>
                 <div class="dropdown-item" @if (!Model.IsAnySafeOpen) { @("hidden") ; } v-on:click="CloseSafeCommand">@{WriteLiteral(Model.Icon["safe-square-outline"]);} @Model.Language["safe_close"]</div>

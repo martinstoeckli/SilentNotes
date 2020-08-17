@@ -98,6 +98,8 @@ namespace SilentNotes.Services
             resources["empty_recyclebin"] = "Empty recycle bin";
             resources["empty_recyclebin_confirmation"] = "The recycle bin will be cleared. Are you sure you want to continue?";
 
+            resources["show_export"] = "Export notes";
+
             resources["show_transfer_code"] = "Show transfer code";
             resources["transfer_not_existing"] = "The transfer code will be available after the first synchronization.";
             resources["transfer_code"] = "Transfer code";
@@ -256,6 +258,8 @@ namespace SilentNotes.Services
             resources["show_settings"] = "Einstellungen";
             resources["empty_recyclebin"] = "Papierkorb leeren";
             resources["empty_recyclebin_confirmation"] = "Der Papierkorb wird geleert. Sind sie sicher, dass Sie weiterfahren wollen?";
+
+            resources["show_export"] = "Exportiere Notizen";
 
             resources["show_transfer_code"] = "Transfercode anzeigen";
             resources["transfer_not_existing"] = "Der Transfercode ist erst verfügbar nach der ersten Synchronisation.";

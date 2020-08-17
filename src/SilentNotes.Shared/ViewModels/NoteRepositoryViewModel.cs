@@ -76,6 +76,7 @@ namespace SilentNotes.ViewModels
             ShowTransferCodeCommand = new RelayCommand(ShowTransferCode);
             ShowSettingsCommand = new RelayCommand(ShowSettings);
             ShowRecycleBinCommand = new RelayCommand(ShowRecycleBin);
+            ShowExportCommand = new RelayCommand(ShowExport);
             ShowInfoCommand = new RelayCommand(ShowInfo);
             OpenSafeCommand = new RelayCommand(OpenSafe);
             CloseSafeCommand = new RelayCommand(CloseSafe);
@@ -328,6 +329,16 @@ namespace SilentNotes.ViewModels
         private void ShowRecycleBin()
         {
             _navigationService.Navigate(new Navigation(ControllerNames.RecycleBin));
+        }
+
+        /// <summary>
+        /// Gets the command which opens export dialog.
+        /// </summary>
+        [VueDataBinding(VueBindingMode.Command)]
+        public ICommand ShowExportCommand { get; private set; }
+
+        private void ShowExport()
+        {
         }
 
         /// <summary>
