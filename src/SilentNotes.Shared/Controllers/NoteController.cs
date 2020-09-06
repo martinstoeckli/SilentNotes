@@ -21,6 +21,7 @@ namespace SilentNotes.Controllers
         private readonly IRepositoryStorageService _repositoryService;
         private NoteViewModel _viewModel;
         private bool _startedWithSendToSilentnotes;
+        private string _startingSearchFilter;
         private string _sendToSilentnotesText;
 
         /// <summary>
@@ -39,7 +40,14 @@ namespace SilentNotes.Controllers
         protected override void OverrideableDispose()
         {
             if (View != null)
+            {
                 View.Navigating -= NavigatingEventHandler;
+            }
+            if (VueBindings != null)
+            {
+                VueBindings.UnhandledViewBindingEvent -= UnhandledViewBindingEventHandler;
+                VueBindings.ViewLoadedEvent -= ViewLoadedEventHandler;
+            }
             base.OverrideableDispose();
         }
 
@@ -75,10 +83,10 @@ namespace SilentNotes.Controllers
         {
             base.ShowInView(htmlView, variables, redirectedFrom);
             ISettingsService settingsService = Ioc.GetOrCreate<ISettingsService>();
-            View.NavigationCompleted += NavigationCompletedEventHandler;
             _repositoryService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepository);
 
             NoteModel note;
+            variables.TryGetValue(ControllerParameters.SearchFilter, out _startingSearchFilter);
             _startedWithSendToSilentnotes = variables.ContainsKey(ControllerParameters.SendToSilentnotesText);
             if (_startedWithSendToSilentnotes)
             {
@@ -134,6 +142,7 @@ namespace SilentNotes.Controllers
             VueBindings.DeclareAdditionalVueMethod("ScrollToTop", "scrollToTop();");
             VueBindings.DeclareAdditionalVueMethod("ScrollToBottom", "scrollToBottom();");
             VueBindings.UnhandledViewBindingEvent += UnhandledViewBindingEventHandler;
+            VueBindings.ViewLoadedEvent += ViewLoadedEventHandler;
             _viewModel.VueDataBindingScript = VueBindings.BuildVueScript();
             VueBindings.StartListening();
 
@@ -180,9 +189,9 @@ namespace SilentNotes.Controllers
             }
         }
 
-        private void NavigationCompletedEventHandler(object sender, EventArgs e)
+        private void ViewLoadedEventHandler(object sender, EventArgs e)
         {
-            View.NavigationCompleted -= NavigationCompletedEventHandler;
+            VueBindings.ViewLoadedEvent -= ViewLoadedEventHandler;
             View.Navigating += NavigatingEventHandler;
 
             if (_startedWithSendToSilentnotes)
@@ -191,6 +200,12 @@ namespace SilentNotes.Controllers
                 // the "quill" event which eventually sets the modified property.
                 string encodedNewText = WebviewUtils.EscapeJavaScriptString(_sendToSilentnotesText);
                 string script = string.Format("setNoteHtmlContent('{0}');", encodedNewText);
+                View.ExecuteJavaScript(script);
+            }
+            else if (!string.IsNullOrEmpty(_startingSearchFilter))
+            {
+                string encodedSearchFilter = WebviewUtils.EscapeJavaScriptString(_startingSearchFilter);
+                string script = string.Format("setStartingSearchFilter('{0}');", encodedSearchFilter);
                 View.ExecuteJavaScript(script);
             }
         }
