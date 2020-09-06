@@ -23,7 +23,7 @@ using SilentNotes.ViewModels;
 #line hidden
 
 
-[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.6.0.1062")]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.7.0.440")]
 public partial class NoteRepositoryRazorView : NoteRepositoryRazorViewBase
 {
 
@@ -254,7 +254,18 @@ WriteLiteral(" v-on:input=\"Filter = $event.target.value;\"");
 
 WriteLiteral(" autocomplete=\"off\"");
 
-WriteLiteral(" v-focus />\r\n            <svg");
+WriteLiteral(" v-focus");
+
+WriteAttribute ("value", " value=\"", "\""
+
+#line 118 "NoteRepositoryRazorView.cshtml"
+                                                                     , Tuple.Create<string,object,bool> ("", Model.Filter
+
+#line default
+#line hidden
+, false)
+);
+WriteLiteral("/>\r\n            <svg");
 
 WriteLiteral(" id=\"filter-icon\"");
 
