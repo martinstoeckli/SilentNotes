@@ -77,9 +77,12 @@ body { background-color: transparent; }
             quill.setText(text, 'user');
         }
 
+        function isSearchDialogHidden() {
+            return $('#search-dialog').hasClass('hidden');
+        }
+
         function toggleSearchDialog() {
-            var makeVisible = $('#search-dialog').hasClass('hidden');
-            showSearchDialog(makeVisible);
+            showSearchDialog(isSearchDialogHidden());
         }
 
         function showSearchDialog(visible) {
@@ -96,6 +99,11 @@ body { background-color: transparent; }
                 $('#search-dialog').addClass('hidden');
                 $('#TxtFilter').val('');
             }
+        }
+
+        function setStartingSearchFilter(filter) {
+            searchHighlighter.searchAndHighlight(filter, true, false); // this causes a focusin event
+            quill.root.blur();
         }
 
         function scrollToTop() {
@@ -123,7 +131,7 @@ body { background-color: transparent; }
             vm.StrikeActive = selectionFormat['strike'];
         }
 
-        $(function () {
+        function vueLoaded() {
             quill = new Quill('#myeditor', {
                 formats: ['header', 'bold', 'italic', 'underline', 'strike', 'list', 'code', 'code-block', 'blockquote', 'link'],
                 modules: {
@@ -149,13 +157,17 @@ body { background-color: transparent; }
             Link.PROTOCOL_WHITELIST = ['http', 'https', 'mailto'];
 
             searchHighlighter = new QuillSearchHighlighter(quill, document.getElementById("TxtFilter"));
+            $(quill.root).on("focusin", function () {
+                if (isSearchDialogHidden())
+                    searchHighlighter.clearSearchHighlights();
+            });
 
             var noteContent = getNoteHtmlContent();
             var noteIsNew = noteContent.length > 1 && noteContent.length < 42 && noteContent.replace(/<[^>]*>/g, '').trim().length == 0;
             if (noteIsNew) {
                 toggleBlockFormat('header', 1);
             }
-        });
+        };
 
         @{WriteLiteral(Model.VueDataBindingScript);}
     </script>

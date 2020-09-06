@@ -25,6 +25,8 @@ namespace SilentNotes.ViewModels
     /// </summary>
     public class NoteRepositoryViewModel : ViewModelBase
     {
+        private static string _lastFilter;
+
         private readonly IStoryBoardService _storyBoardService;
         private readonly IRepositoryStorageService _repositoryService;
         private readonly IFeedbackService _feedbackService;
@@ -83,6 +85,10 @@ namespace SilentNotes.ViewModels
             ChangeSafePasswordCommand = new RelayCommand(ChangeSafePassword);
 
             Modified = false;
+
+            // If a filter was set before e.g. opening a note, set the same filter again.
+            if (!string.IsNullOrEmpty(_lastFilter))
+                Filter = _lastFilter;
         }
 
         /// <inheritdoc/>
@@ -149,6 +155,7 @@ namespace SilentNotes.ViewModels
             {
                 if (ChangeProperty(ref _filter, value, false))
                 {
+                    _lastFilter = _filter;
                     OnPropertyChanged(nameof(IsFiltered));
                     ApplyFilter(_filter);
                     OnPropertyChanged("Notes");
@@ -199,21 +206,23 @@ namespace SilentNotes.ViewModels
             NoteViewModel note = FilteredNotes.FirstOrDefault(item => item.Id == noteId);
             if (note != null)
             {
+                Navigation navigation = null;
                 switch (note.Model.NoteType)
                 {
                     case NoteType.Text:
-                        _navigationService.Navigate(new Navigation(
-                            ControllerNames.Note, ControllerParameters.NoteId, noteId.ToString()));
+                        navigation = new Navigation(ControllerNames.Note, ControllerParameters.NoteId, noteId.ToString());
                         break;
                     case NoteType.Checklist:
-                        _navigationService.Navigate(new Navigation(
-                            ControllerNames.Checklist, ControllerParameters.NoteId, noteId.ToString()));
+                        navigation = new Navigation(ControllerNames.Checklist, ControllerParameters.NoteId, noteId.ToString());
                         break;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(NoteType));
                 }
-            }
+                if (!string.IsNullOrEmpty(_filter))
+                    navigation.Variables.AddOrReplace(ControllerParameters.SearchFilter, _filter);
+                _navigationService.Navigate(navigation);
         }
+    }
 
         /// <summary>
         /// Gets the command which handles the creation of a new note.

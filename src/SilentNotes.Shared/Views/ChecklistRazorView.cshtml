@@ -96,9 +96,12 @@ div.dark .detail-view.checklist .ql-editor p::after { content: @{WriteLiteral(Mo
             quill.setText(text, 'user');
         }
 
+        function isSearchDialogHidden() {
+            return $('#search-dialog').hasClass('hidden');
+        }
+
         function toggleSearchDialog() {
-            var makeVisible = $('#search-dialog').hasClass('hidden');
-            showSearchDialog(makeVisible);
+            showSearchDialog(isSearchDialogHidden());
         }
 
         function showSearchDialog(visible) {
@@ -115,6 +118,12 @@ div.dark .detail-view.checklist .ql-editor p::after { content: @{WriteLiteral(Mo
                 $('#search-dialog').addClass('hidden');
                 $('#TxtFilter').val('');
             }
+        }
+
+        function setStartingSearchFilter(filter) {
+            searchHighlighter.searchAndHighlight(filter, true, false); // this causes a focusin event
+            quill.root.blur();
+            vm.PrettyTimeAgoVisible = true; // the focusin event closed the date.
         }
 
         function scrollToTop() {
@@ -142,7 +151,7 @@ div.dark .detail-view.checklist .ql-editor p::after { content: @{WriteLiteral(Mo
             vm.StrikeActive = selectionFormat['strike'];
         }
 
-        $(function () {
+        function vueLoaded() {
             // quill "imports" the existing html content and looses the class attributes,
             // that's why we save and reapply the check states.
             var checkStates = saveCheckStates();
@@ -163,8 +172,10 @@ div.dark .detail-view.checklist .ql-editor p::after { content: @{WriteLiteral(Mo
                 }
             });
 
-            $(quill.root).one("focusin", function () {
+            $(quill.root).on("focusin", function () {
                 vm.PrettyTimeAgoVisible = false;
+                if (isSearchDialogHidden())
+                    searchHighlighter.clearSearchHighlights();
             });
 
             searchHighlighter = new QuillSearchHighlighter(quill, document.getElementById("TxtFilter"));
@@ -174,7 +185,7 @@ div.dark .detail-view.checklist .ql-editor p::after { content: @{WriteLiteral(Mo
             if (noteIsNew) {
                 toggleBlockFormat('header', 1);
             }
-        });
+        };
 
         @{WriteLiteral(Model.VueDataBindingScript);}
     </script>

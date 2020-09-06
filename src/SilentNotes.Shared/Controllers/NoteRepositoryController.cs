@@ -42,7 +42,11 @@ namespace SilentNotes.Controllers
         protected override void OverrideableDispose()
         {
             _viewModel.PropertyChanged -= ViewmodelPropertyChangedEventHandler;
-            View.NavigationCompleted -= NavigationCompletedEventHandler;
+            if (VueBindings != null)
+            {
+                VueBindings.UnhandledViewBindingEvent -= UnhandledViewBindingEventHandler;
+                VueBindings.ViewLoadedEvent -= ViewLoadedEventHandler;
+            }
             base.OverrideableDispose();
         }
 
@@ -59,7 +63,6 @@ namespace SilentNotes.Controllers
         public override void ShowInView(IHtmlView htmlView, KeyValueList<string, string> variables, Navigation redirectedFrom)
         {
             base.ShowInView(htmlView, variables,redirectedFrom);
-            View.NavigationCompleted += NavigationCompletedEventHandler;
             IRepositoryStorageService repositoryService = Ioc.GetOrCreate<IRepositoryStorageService>();
             _scrollToNote = variables?.GetValueOrDefault(ControllerParameters.NoteId);
 
@@ -94,6 +97,7 @@ namespace SilentNotes.Controllers
                 VueBindings.DeclareAdditionalVueMethod("ScrollToBottom", "scrollToBottom();");
                 _viewModel.VueDataBindingScript = VueBindings.BuildVueScript();
                 VueBindings.UnhandledViewBindingEvent += UnhandledViewBindingEventHandler;
+                VueBindings.ViewLoadedEvent += ViewLoadedEventHandler;
                 VueBindings.StartListening();
 
                 _viewModel.PropertyChanged += ViewmodelPropertyChangedEventHandler;
@@ -140,9 +144,9 @@ namespace SilentNotes.Controllers
             htmlView.SetBackgroundColor(ColorExtensions.HexToColor(themeService.SelectedTheme.ImageTint));
         }
 
-        private void NavigationCompletedEventHandler(object sender, EventArgs e)
+        private void ViewLoadedEventHandler(object sender, EventArgs e)
         {
-            View.NavigationCompleted -= NavigationCompletedEventHandler;
+            VueBindings.ViewLoadedEvent -= ViewLoadedEventHandler;
 
             // Loading the notes not until here, makes the vue.js initialization faster.
             ViewmodelPropertyChangedEventHandler(this, new PropertyChangedEventArgs("Notes")); ;

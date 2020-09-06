@@ -21,6 +21,10 @@ namespace SilentNotes.HtmlView
     /// Acts as data binding between a C# viewmodel and a Vue model inside an HTML page.
     /// This allows to use an HTML page as view and still have a data binding. Bindable properties
     /// are automatically detected when marked with the <see cref="VueDataBindingAttribute"/>.
+    /// 
+    /// If the HTML view wants to initialize its own code after the document is ready (DOMContentLoaded
+    /// event) and vue instance is initialized, it can execute its code inside a function named
+    /// "function vueLoaded() {...}". This allows for a well defined order of execution.
     /// <examples>
     /// 
     /// Commands in the viewmodel can be marked with an attribute like:
@@ -123,15 +127,6 @@ function vueFindCommandByShortcut(e)
     return null;
 }
 
-// A jQuery $().ready() replacement
-function vueReady(fn) {
-    if (document.readyState != 'loading') {
-        fn();
-    } else {
-        document.addEventListener('DOMContentLoaded', fn);
-    }
-}
-
 function vueFind(selector) {
     return document.querySelector(selector);
 }
@@ -141,7 +136,7 @@ function vueFindById(id) {
 }
 
 var vm;
-vueReady(function () {
+document.addEventListener('DOMContentLoaded', function () {
     var _this = this;
     vm = new Vue({
         el: '#vueDataBinding',
@@ -175,6 +170,11 @@ vueReady(function () {
           }
         },
     });
+
+    if (typeof vueLoaded === 'function') { 
+        vueLoaded(); // Html page can initialize itself
+    }
+    location.href = 'vueLoaded'; // C# code can initialize itself
 });
 ");
 
@@ -339,6 +339,11 @@ vueReady(function () {
         /// </summary>
         public event EventHandler<VueBindingUnhandledViewBindingEventArgs> UnhandledViewBindingEvent;
 
+        /// <summary>
+        /// This event is triggered when the HTML view is ready and the vue instance is initialized.
+        /// </summary>
+        public event EventHandler ViewLoadedEvent;
+
         internal bool TryFormatForView(VueBindingDescription binding, object value, out string formattedValue)
         {
             PropertyInfo propertyInfo = _dotnetViewModel.GetType().GetProperty(binding.PropertyName);
@@ -502,6 +507,12 @@ vueReady(function () {
             if (!IsListening || !IsVueBindingUri(uri))
                 return;
 
+            if (uri.Contains("vueLoaded"))
+            {
+                ViewLoadedEvent?.Invoke(this, new EventArgs());
+                return;
+            }
+
             string queryPart = GetUriQueryPart(uri);
             NameValueCollection queryArguments = HttpUtility.ParseQueryString(queryPart);
             string propertyName = queryArguments.Get("name");
@@ -588,7 +599,7 @@ vueReady(function () {
         private bool IsVueBindingUri(string uri)
         {
             return !string.IsNullOrEmpty(uri)
-                && (uri.Contains("vuePropertyChanged?") || uri.Contains("vueCommandExecute?"))
+                && (uri.Contains("vuePropertyChanged?") || uri.Contains("vueCommandExecute?") || uri.Contains("vueLoaded"))
                 && !WebviewUtils.IsExternalUri(uri);
         }
 
