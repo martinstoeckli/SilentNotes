@@ -78,6 +78,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActivityResultAwaiter.cs" />
     <Compile Include="AlertDialogHelper.cs" />
     <Compile Include="CloudStorageRedirectActivity.cs" />
     <Compile Include="HybridWebViewClient.cs" />

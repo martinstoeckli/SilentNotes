@@ -23,19 +23,19 @@ namespace SilentNotes.Android
         /// Sets up the application and initializes the services.
         /// </summary>
         /// <param name="rootActivity">The main activity of the Android app.</param>
-        public static void InitializeApplication(Activity rootActivity)
+        public static void InitializeApplication(Activity rootActivity, ActivityResultAwaiter rootActivityResultWaiter)
         {
             // do it only the first time
             if (IsFirstTime())
             {
-                RegisterServices(rootActivity);
+                RegisterServices(rootActivity, rootActivityResultWaiter);
                 StartupShared.RegisterControllers();
                 StartupShared.RegisterRazorViews();
                 StartupShared.RegisterCloudStorageClientFactory();
             }
         }
 
-        private static void RegisterServices(Activity rootActivity)
+        private static void RegisterServices(Activity rootActivity, ActivityResultAwaiter rootActivityResultWaiter)
         {
             Ioc.RegisterFactory<IEnvironmentService>(() => new EnvironmentService(OperatingSystem.Android, rootActivity));
             Ioc.RegisterFactory<IHtmlView>(() => rootActivity as IHtmlView);
@@ -72,7 +72,7 @@ namespace SilentNotes.Android
                 Ioc.GetOrCreate<INavigationService>()));
             Ioc.RegisterFactory<IThemeService>(() => new ThemeService(
                 Ioc.GetOrCreate<ISettingsService>(), Ioc.GetOrCreate<IEnvironmentService>()));
-            Ioc.RegisterFactory<IFolderPickerService>(() => new FolderPickerService());
+            Ioc.RegisterFactory<IFolderPickerService>(() => new FolderPickerService(rootActivityResultWaiter));
         }
 
         private static bool IsFirstTime()

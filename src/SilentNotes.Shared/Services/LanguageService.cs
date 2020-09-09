@@ -99,6 +99,11 @@ namespace SilentNotes.Services
             resources["empty_recyclebin_confirmation"] = "The recycle bin will be cleared. Are you sure you want to continue?";
 
             resources["show_export"] = "Export notes";
+            resources["export_desc"] = "The notes will be exported in the HTML format and therefore keep their formatting. Encrypted notes can only be exported if the safe is open.";
+            resources["export_unencrypted"] = "Export unprotected notes";
+            resources["export_encrypted"] = "Export decrypted notes from the safe";
+            resources["export_success"] = "Successfully exported notes.";
+            resources["export_error"] = "Could not export the notes.";
 
             resources["show_transfer_code"] = "Show transfer code";
             resources["transfer_not_existing"] = "The transfer code will be available after the first synchronization.";
@@ -260,6 +265,11 @@ namespace SilentNotes.Services
             resources["empty_recyclebin_confirmation"] = "Der Papierkorb wird geleert. Sind sie sicher, dass Sie weiterfahren wollen?";
 
             resources["show_export"] = "Exportiere Notizen";
+            resources["export_desc"] = "Die Notizen werden im HTML Format exportiert und behalten so ihre Formatierung bei. Verschlüsselte Notizen können nur exportiert werden, wenn der Tresor offen ist.";
+            resources["export_unencrypted"] = "Exportiere ungeschützte Notizen";
+            resources["export_encrypted"] = "Exportiere entschlüsselte Notizen aus dem Tresor";
+            resources["export_success"] = "Notizen wurden erfolgreich exportiert.";
+            resources["export_error"] = "Konnte die Notizen nicht exportieren.";
 
             resources["show_transfer_code"] = "Transfercode anzeigen";
             resources["transfer_not_existing"] = "Der Transfercode ist erst verfügbar nach der ersten Synchronisation.";

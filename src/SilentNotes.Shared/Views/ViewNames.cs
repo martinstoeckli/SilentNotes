@@ -31,5 +31,6 @@ namespace SilentNotes.Views
         public const string MergeChoice = "mergechoiceview";
         public const string OpenSafe = "opensafeview";
         public const string ChangePassword = "changepasswordview";
+        public const string Export = "exportview";
     }
 }

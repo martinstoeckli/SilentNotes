@@ -3,18 +3,10 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
 using SilentNotes.Services;
+using System.Threading.Tasks;
 
 namespace SilentNotes.Android.Services
 {
@@ -23,16 +15,31 @@ namespace SilentNotes.Android.Services
     /// </summary>
     public class FolderPickerService : IFolderPickerService
     {
-        /// <inheritdoc/>
-        public async Task<bool> PickFolder()
+        private readonly ActivityResultAwaiter _activityResultAwaiter;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FolderPickerService"/> class.
+        /// </summary>
+        /// <param name="activityResultAwaiter">Can start activities and get their result.</param>
+        public FolderPickerService(ActivityResultAwaiter activityResultAwaiter)
         {
-            throw new NotImplementedException();
+            _activityResultAwaiter = activityResultAwaiter;
         }
 
         /// <inheritdoc/>
-        public async Task<bool> TrySaveFileToFolder(string relativeFilePath, byte[] content)
+        public async Task<bool> PickFolder()
         {
-            throw new NotImplementedException();
+            Intent folderPickerIntent = new Intent(Intent.ActionOpenDocumentTree);
+            folderPickerIntent.AddFlags(ActivityFlags.GrantWriteUriPermission);
+
+            ActivityResult activityResult = await _activityResultAwaiter.StartActivityAndWaitForResult(folderPickerIntent);
+            return activityResult.ResultCode == Result.Ok;
+        }
+
+        /// <inheritdoc/>
+        public async Task<bool> TrySaveFileToPickedFolder(string relativeFilePath, byte[] content)
+        {
+            return await Task.FromResult(true);
         }
     }
 }

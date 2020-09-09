@@ -1,0 +1,130 @@
+﻿using Android.App;
+using Android.Content;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace SilentNotes.Android
+{
+    /// <summary>
+    /// This class offers awaitable methods to start an activity and wait for its result.
+    /// This way we can circumvent the Android OnActivityResult event and its difficult handling.
+    /// </summary>
+    public class ActivityResultAwaiter
+    {
+        private static int _requestCode = 497652123;
+        private readonly List<StartedActivityInfo> _startedActivityInfos;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ActivityResultAwaiter"/> class.
+        /// </summary>
+        /// <param name="starterActivity">Sets the <see cref="StarterActivity"/> property.</param>
+        public ActivityResultAwaiter(Activity starterActivity)
+        {
+            StarterActivity = starterActivity;
+            _startedActivityInfos = new List<StartedActivityInfo>();
+        }
+
+        /// <summary>
+        /// Gets or sets the Activity which should start the new activity, this can be the
+        /// root/main activity of the app.
+        /// </summary>
+        private Activity StarterActivity { get; set; }
+
+        /// <summary>
+        /// Instead of calling "StarterActivity.StartActivityForResult()" directly, we call this
+        /// awaitable method, which takes care about waiting for the Android event. If the Intent
+        /// is never finished, the method would not return, but usually this results in a cancel
+        /// result.
+        /// </summary>
+        /// <param name="intentToStart">New indent we want to start, this could for example be a
+        /// file dialog intent.</param>
+        /// <returns>Returns the result of the started and awaited intent.</returns>
+        public async Task<ActivityResult> StartActivityAndWaitForResult(Intent intentToStart)
+        {
+            unchecked
+            {
+                _requestCode++;
+            }
+            StartedActivityInfo activityInfo = new StartedActivityInfo
+            {
+                RequestCode = _requestCode,
+                WaitHandle = new ManualResetEvent(false)
+            };
+            _startedActivityInfos.Add(activityInfo);
+
+            // Prepare the waiting task
+            Task<ActivityResult> waiterTask = new Task<ActivityResult>(() =>
+            {
+                // Start the activity
+                StarterActivity.StartActivityForResult(intentToStart, activityInfo.RequestCode);
+                activityInfo.WaitHandle.WaitOne();
+                return activityInfo.Result;
+            });
+
+            // Start the waiting
+            waiterTask.Start();
+            return await waiterTask;
+        }
+
+        /// <summary>
+        /// The StarterActivity should overwrite the "OnActivityResult()" method and redirect its
+        /// parameter directly to this method. Afterwards it can call base.OnActivityResult().
+        /// </summary>
+        /// <param name="requestCode">The requestCode passed to the StarterActivity.</param>
+        /// <param name="resultCode">The resultCode passed to the StarterActivity.</param>
+        /// <param name="data">The data passed to the StarterActivity.</param>
+        public void OnActivityResult(int requestCode, Result resultCode, Intent data)
+        {
+            // Lets see if we have started an activity with this request code.
+            StartedActivityInfo activityInfo = _startedActivityInfos.Find(item => item.RequestCode == requestCode);
+            if (activityInfo != null)
+            {
+                _startedActivityInfos.Remove(activityInfo);
+
+                // Prepare the result and stop the waiting task.
+                string dataString = data.Data?.ToString();
+                activityInfo.Result = new ActivityResult(resultCode, dataString);
+                activityInfo.WaitHandle.Set();
+            }
+        }
+
+        /// <summary>
+        /// Private class holding the context of a started activity.
+        /// </summary>
+        private class StartedActivityInfo
+        {
+            public int RequestCode { get; set; }
+
+            public ManualResetEvent WaitHandle { get; set; }
+
+            public ActivityResult Result { get; set; }
+        }
+    }
+
+    /// <summary>
+    /// A class holding all relevant information about the result of the finished activity.
+    /// </summary>
+    public class ActivityResult
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ActivityResult"/> class.
+        /// </summary>
+        /// <param name="resultCode"></param>
+        public ActivityResult(Result resultCode, string data)
+        {
+            ResultCode = resultCode;
+            Data = data;
+        }
+
+        /// <summary>
+        /// Gets the result code of the finished activity.
+        /// </summary>
+        public Result ResultCode { get; }
+
+        /// <summary>
+        /// Gets the data string of the finished activity.
+        /// </summary>
+        public string Data { get; }
+    }
+}

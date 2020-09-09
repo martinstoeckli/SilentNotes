@@ -1,0 +1,61 @@
+﻿@using SilentNotes.ViewModels
+@model ExportViewModel
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <base href="@Model.HtmlBase">
+    <title>SilentNotes</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no">
+
+    <link href="bootstrap.min.css" rel="stylesheet" />
+    <link href="silentnotes.css" rel="stylesheet" />
+    <link href="@(Model.Theme.DarkMode ? "silentnotes.dark.css" : "silentnotes.light.css")" rel="stylesheet" />
+
+    <script src="vue.min.js"></script>
+    <script src="jquery-3.5.1.slim.min.js"></script>
+    <script src="silentnotes.js"></script>
+
+    <style type="text/css">
+        .background-icon {
+            right: -32px;
+            top: -108px;
+        }
+    </style>
+    <script>
+        @{WriteLiteral(Model.VueDataBindingScript);}
+    </script>
+</head>
+<body><div id="vueDataBinding">
+    <nav id="navigation" class="d-flex">
+        <button class="nav-item mr-auto" v-on:click="GoBackCommand" title="@Model.Language["back"]">@{WriteLiteral(Model.Icon["arrow-left"]);}</button>
+    </nav>
+
+    <div id="content" class="container-fluid p-4">
+        <svg class="background-icon" width='24' height='24' viewBox='0 0 24 24'><use xlink:href="#svg-export" /></svg>
+
+        <h2>@Model.Language["show_export"]</h2>
+
+        <p>@Model.Language["export_desc"]</p>
+
+        <form class="mb-4 col-md-9">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" v-model="ExportUnprotectedNotes" id="ExportUnprotectedNotes">
+              <label class="form-check-label" for="ExportUnprotectedNotes">@Model.Language["export_unencrypted"]</label>
+            </div>
+            <div class="form-check mb-4">
+              <input class="form-check-input" type="checkbox" v-model="ExportProtectedNotes" id="ExportProtectedNotes" @if (!Model.CanExportProtectedNotes) { @("disabled"); }>
+              <label class="form-check-label" for="ExportProtectedNotes">@Model.Language["export_encrypted"]</label>
+            </div>
+
+            <button type="button" class="btn btn-primary mb-2" v-on:click="OkCommand">@Model.Language["ok"]</button>
+            <button type="button" class="btn btn-secondary mb-2" v-on:click="CancelCommand">@Model.Language["cancel"]</button>
+        </form>
+    </div>
+
+    <div hidden>
+        @{WriteLiteral(Model.Icon.LoadIcon("export", new[] { new KeyValuePair<string, string>("id", "svg-export") }));}
+    </div>
+</div></body>
+</html>

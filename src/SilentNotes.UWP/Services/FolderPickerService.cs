@@ -22,25 +22,15 @@ namespace SilentNotes.UWP.Services
         {
             var folderPicker = new Windows.Storage.Pickers.FolderPicker();
             folderPicker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.Desktop;
+            folderPicker.SettingsIdentifier = "D6EDA6465535";
             folderPicker.FileTypeFilter.Add("*");
 
             _pickedFolder = await folderPicker.PickSingleFolderAsync();
             return _pickedFolder != null;
-
-            //if (folder != null)
-            //{
-            //    // Application now has read/write access to all contents in the picked folder
-            //    // (including other sub-folder contents)
-            //    Windows.Storage.AccessCache.StorageApplicationPermissions.
-            //    FutureAccessList.AddOrReplace("PickedFolderToken", folder);
-            //}
-            //else
-            //{
-            //}
         }
 
         /// <inheritdoc/>
-        public async Task<bool> TrySaveFileToFolder(string relativeFilePath, byte[] content)
+        public async Task<bool> TrySaveFileToPickedFolder(string relativeFilePath, byte[] content)
         {
             if (_pickedFolder == null)
                 return false;

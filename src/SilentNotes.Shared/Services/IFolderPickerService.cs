@@ -27,6 +27,6 @@ namespace SilentNotes.Services
         /// <param name="relativeFilePath">The file path relative to the picked folder.</param>
         /// <param name="content">The file content to store.</param>
         /// <returns>Returns true if the file could be stored, otherwise false.</returns>
-        Task<bool> TrySaveFileToFolder(string relativeFilePath, byte[] content);
+        Task<bool> TrySaveFileToPickedFolder(string relativeFilePath, byte[] content);
     }
 }

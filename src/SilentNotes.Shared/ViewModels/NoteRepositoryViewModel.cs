@@ -348,6 +348,7 @@ namespace SilentNotes.ViewModels
 
         private void ShowExport()
         {
+            _navigationService.Navigate(new Navigation(ControllerNames.Export));
         }
 
         /// <summary>
