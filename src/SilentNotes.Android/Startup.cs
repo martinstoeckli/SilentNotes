@@ -72,7 +72,7 @@ namespace SilentNotes.Android
                 Ioc.GetOrCreate<INavigationService>()));
             Ioc.RegisterFactory<IThemeService>(() => new ThemeService(
                 Ioc.GetOrCreate<ISettingsService>(), Ioc.GetOrCreate<IEnvironmentService>()));
-            Ioc.RegisterFactory<IFolderPickerService>(() => new FolderPickerService(rootActivityResultWaiter));
+            Ioc.RegisterFactory<IFolderPickerService>(() => new FolderPickerService(rootActivity, rootActivityResultWaiter));
         }
 
         private static bool IsFirstTime()

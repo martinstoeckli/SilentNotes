@@ -30,14 +30,14 @@ namespace SilentNotes.UWP.Services
         }
 
         /// <inheritdoc/>
-        public async Task<bool> TrySaveFileToPickedFolder(string relativeFilePath, byte[] content)
+        public async Task<bool> TrySaveFileToPickedFolder(string fileName, byte[] content)
         {
             if (_pickedFolder == null)
                 return false;
 
             try
             {
-                using (Stream stream = await _pickedFolder.OpenStreamForWriteAsync(relativeFilePath, Windows.Storage.CreationCollisionOption.ReplaceExisting))
+                using (Stream stream = await _pickedFolder.OpenStreamForWriteAsync(fileName, Windows.Storage.CreationCollisionOption.ReplaceExisting))
                 {
                     await stream.WriteAsync(content, 0, content.Length);
                 }

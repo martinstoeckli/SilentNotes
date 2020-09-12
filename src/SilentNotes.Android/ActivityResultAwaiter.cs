@@ -83,10 +83,35 @@ namespace SilentNotes.Android
                 _startedActivityInfos.Remove(activityInfo);
 
                 // Prepare the result and stop the waiting task.
-                string dataString = data.Data?.ToString();
-                activityInfo.Result = new ActivityResult(resultCode, dataString);
+                activityInfo.Result = new ActivityResult(resultCode, data);
                 activityInfo.WaitHandle.Set();
             }
+        }
+
+        /// <summary>
+        /// A class holding all relevant information about the result of the finished activity.
+        /// </summary>
+        public class ActivityResult
+        {
+            /// <summary>
+            /// Initializes a new instance of the <see cref="ActivityResult"/> class.
+            /// </summary>
+            /// <param name="resultCode"></param>
+            public ActivityResult(Result resultCode, Intent data)
+            {
+                ResultCode = resultCode;
+                Data = data;
+            }
+
+            /// <summary>
+            /// Gets the result code of the finished activity.
+            /// </summary>
+            public Result ResultCode { get; }
+
+            /// <summary>
+            /// Gets the data of the finished activity.
+            /// </summary>
+            public Intent Data { get; }
         }
 
         /// <summary>
@@ -100,31 +125,5 @@ namespace SilentNotes.Android
 
             public ActivityResult Result { get; set; }
         }
-    }
-
-    /// <summary>
-    /// A class holding all relevant information about the result of the finished activity.
-    /// </summary>
-    public class ActivityResult
-    {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ActivityResult"/> class.
-        /// </summary>
-        /// <param name="resultCode"></param>
-        public ActivityResult(Result resultCode, string data)
-        {
-            ResultCode = resultCode;
-            Data = data;
-        }
-
-        /// <summary>
-        /// Gets the result code of the finished activity.
-        /// </summary>
-        public Result ResultCode { get; }
-
-        /// <summary>
-        /// Gets the data string of the finished activity.
-        /// </summary>
-        public string Data { get; }
     }
 }

@@ -5,8 +5,13 @@
 
 using Android.App;
 using Android.Content;
+using AndroidX.DocumentFile.Provider;
+using Java.Net;
 using SilentNotes.Services;
+using System;
+using System.IO;
 using System.Threading.Tasks;
+using Uri = Android.Net.Uri;
 
 namespace SilentNotes.Android.Services
 {
@@ -15,14 +20,17 @@ namespace SilentNotes.Android.Services
     /// </summary>
     public class FolderPickerService : IFolderPickerService
     {
+        private readonly Context _context;
         private readonly ActivityResultAwaiter _activityResultAwaiter;
+        private Uri _pickedUri;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FolderPickerService"/> class.
         /// </summary>
         /// <param name="activityResultAwaiter">Can start activities and get their result.</param>
-        public FolderPickerService(ActivityResultAwaiter activityResultAwaiter)
+        public FolderPickerService(Context context, ActivityResultAwaiter activityResultAwaiter)
         {
+            _context = context;
             _activityResultAwaiter = activityResultAwaiter;
         }
 
@@ -30,16 +38,39 @@ namespace SilentNotes.Android.Services
         public async Task<bool> PickFolder()
         {
             Intent folderPickerIntent = new Intent(Intent.ActionOpenDocumentTree);
+            folderPickerIntent.AddFlags(ActivityFlags.GrantReadUriPermission);
             folderPickerIntent.AddFlags(ActivityFlags.GrantWriteUriPermission);
 
-            ActivityResult activityResult = await _activityResultAwaiter.StartActivityAndWaitForResult(folderPickerIntent);
-            return activityResult.ResultCode == Result.Ok;
+            var activityResult = await _activityResultAwaiter.StartActivityAndWaitForResult(folderPickerIntent);
+            if (activityResult.ResultCode == Result.Ok)
+            {
+                _pickedUri = activityResult.Data?.Data;
+                return true;
+            }
+            return false;
         }
 
         /// <inheritdoc/>
-        public async Task<bool> TrySaveFileToPickedFolder(string relativeFilePath, byte[] content)
+        public async Task<bool> TrySaveFileToPickedFolder(string fileName, byte[] content)
         {
-            return await Task.FromResult(true);
+            if (_pickedUri == null)
+                return false;
+
+            try
+            {
+                DocumentFile folder = DocumentFile.FromTreeUri(_context, _pickedUri);
+                string mimeType = URLConnection.GuessContentTypeFromName(fileName);
+                DocumentFile file = folder.CreateFile(mimeType, fileName);
+                using (Stream stream = _context.ContentResolver.OpenOutputStream(file.Uri, "w"))
+                {
+                    await stream.WriteAsync(content, 0, content.Length);
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
     }
 }

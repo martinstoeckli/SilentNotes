@@ -23,10 +23,11 @@ namespace SilentNotes.Services
 
         /// <summary>
         /// Tries to safe a file to the formerly picked folder, see also <see cref="PickFolder"/>.
+        /// If the file does not yet exist, it will be created, otherwise it will be overwritten.
         /// </summary>
-        /// <param name="relativeFilePath">The file path relative to the picked folder.</param>
+        /// <param name="fileName">The name of the file in the picked folder.</param>
         /// <param name="content">The file content to store.</param>
         /// <returns>Returns true if the file could be stored, otherwise false.</returns>
-        Task<bool> TrySaveFileToPickedFolder(string relativeFilePath, byte[] content);
+        Task<bool> TrySaveFileToPickedFolder(string fileName, byte[] content);
     }
 }
