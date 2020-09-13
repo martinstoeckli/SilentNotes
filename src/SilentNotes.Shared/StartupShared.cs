@@ -55,6 +55,8 @@ namespace SilentNotes
                 Ioc.CreateWithKey<IRazorViewService>(ViewNames.OpenSafe)));
             Ioc.RegisterFactoryWithKey<IController>(ControllerNames.ChangePassword, () => new ChangePasswordController(
                 Ioc.CreateWithKey<IRazorViewService>(ViewNames.ChangePassword)));
+            Ioc.RegisterFactoryWithKey<IController>(ControllerNames.Export, () => new ExportController(
+                Ioc.GetOrCreateWithKey<IRazorViewService>(ViewNames.Export)));
         }
 
         /// <summary>
@@ -80,6 +82,7 @@ namespace SilentNotes
             Ioc.RegisterFactoryWithKey<IRazorViewService>(ViewNames.MergeChoice, () => new RazorViewService<MergeChoiceRazorView>());
             Ioc.RegisterFactoryWithKey<IRazorViewService>(ViewNames.OpenSafe, () => new RazorViewService<OpenSafeRazorView>());
             Ioc.RegisterFactoryWithKey<IRazorViewService>(ViewNames.ChangePassword, () => new RazorViewService<ChangePasswordRazorView>());
+            Ioc.RegisterFactoryWithKey<IRazorViewService>(ViewNames.Export, () => new RazorViewService<ExportRazorView>());
         }
 
         /// <summary>

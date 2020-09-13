@@ -63,6 +63,11 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
     </Compile>
+    <Compile Update="Views\ExportRazorView.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ExportRazorView.cshtml</DependentUpon>
+    </Compile>
     <Compile Update="Views\FirstTimeSyncRazorView.cs">
       <DependentUpon>FirstTimeSyncRazorView.cshtml</DependentUpon>
       <DesignTime>True</DesignTime>
@@ -164,6 +169,10 @@
     <None Update="Views\CloudStorageAccountRazorView.cshtml">
       <LastGenOutput>CloudStorageAccountRazorView.cs</LastGenOutput>
       <Generator>RazorTemplatePreprocessor</Generator>
+    </None>
+    <None Update="Views\ExportRazorView.cshtml">
+      <Generator>RazorTemplatePreprocessor</Generator>
+      <LastGenOutput>ExportRazorView.cs</LastGenOutput>
     </None>
     <None Update="Views\FirstTimeSyncRazorView.cshtml">
       <LastGenOutput>FirstTimeSyncRazorView.cs</LastGenOutput>

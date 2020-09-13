@@ -11,6 +11,7 @@ using Android.Content;
 using Android.Content.PM;
 using Android.Graphics;
 using Android.OS;
+using Android.Runtime;
 using Android.Util;
 using Android.Webkit;
 using Java.IO;
@@ -33,6 +34,7 @@ namespace SilentNotes.Android
         DataMimeType = @"text/plain")]
     public class MainActivity : Activity, IHtmlView
     {
+        private ActivityResultAwaiter _activityResultAwaiter;
         private WebView _webView;
         private Navigation _lastNavigation;
 
@@ -47,6 +49,8 @@ namespace SilentNotes.Android
 
             // Clear the splash screen theme, which is declared as attribute of the activity.
             SetTheme(Resource.Style.MainTheme);
+
+            _activityResultAwaiter = new ActivityResultAwaiter(this);
 
             // Load main window of single page application.
             base.OnCreate(bundle);
@@ -74,7 +78,7 @@ namespace SilentNotes.Android
             base.OnStart();
 
             Ioc.Reset();
-            Startup.InitializeApplication(this);
+            Startup.InitializeApplication(this, _activityResultAwaiter);
 
             INavigationService navigation = Ioc.GetOrCreate<INavigationService>();
             IStoryBoardService storyBoardService = Ioc.GetOrCreate<IStoryBoardService>();
@@ -140,6 +144,13 @@ namespace SilentNotes.Android
             // We tell the webview to close any open dropdowns like the menu, if there is nothing
             // to close, the function will signal an application close which we intercept in OnNavigating.
             ExecuteJavaScript("closeDropdownOrSignalBackPressed();");
+        }
+
+        /// <inheritdoc/>
+        protected override void OnActivityResult(int requestCode, [GeneratedEnum] Result resultCode, Intent data)
+        {
+            _activityResultAwaiter.OnActivityResult(requestCode, resultCode, data);
+            base.OnActivityResult(requestCode, resultCode, data);
         }
 
         /// <inheritdoc/>

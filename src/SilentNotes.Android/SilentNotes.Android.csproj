@@ -74,10 +74,14 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Xamarin.AndroidX.Browser">
-      <Version>1.0.0-preview02</Version>
+      <Version>1.3.0.1-alpha01</Version>
+    </PackageReference>
+    <PackageReference Include="Xamarin.AndroidX.DocumentFile">
+      <Version>1.0.1.3</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActivityResultAwaiter.cs" />
     <Compile Include="AlertDialogHelper.cs" />
     <Compile Include="CloudStorageRedirectActivity.cs" />
     <Compile Include="HybridWebViewClient.cs" />
@@ -87,6 +91,7 @@
     <Compile Include="Services\CryptoRandomService.cs" />
     <Compile Include="Services\DataProtectionService.cs" />
     <Compile Include="Services\FeedbackService.cs" />
+    <Compile Include="Services\FolderPickerService.cs" />
     <Compile Include="Services\InternetStateService.cs" />
     <Compile Include="Services\LanguageCodeService.cs" />
     <Compile Include="Services\NativeBrowserService.cs" />

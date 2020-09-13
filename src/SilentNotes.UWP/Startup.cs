@@ -75,6 +75,7 @@ namespace SilentNotes.UWP
                 Ioc.GetOrCreate<INavigationService>()));
             Ioc.RegisterFactory<IThemeService>(() => new ThemeService(
                 Ioc.GetOrCreate<ISettingsService>(), Ioc.GetOrCreate<IEnvironmentService>()));
+            Ioc.RegisterFactory<IFolderPickerService>(() => new FolderPickerService());
         }
 
         private static void RegisterServicesWithMainPage(MainPage mainPage)

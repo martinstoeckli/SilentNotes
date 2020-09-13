@@ -121,6 +121,7 @@
     <Compile Include="StoryBoards\SynchronizationStory\StoreMergedRepositoryAndQuitStepTest.cs" />
     <Compile Include="CultureSwitcher4UnitTest.cs" />
     <Compile Include="UnmixableAlphabetTest.cs" />
+    <Compile Include="ViewModels\ExportViewModelTest.cs" />
     <Compile Include="ViewModels\NoteViewModelTest.cs" />
     <Compile Include="ViewModels\OpenSafeViewModelTest.cs" />
     <Compile Include="Workers\ByteArrayExtensionsTest.cs" />
