@@ -45,11 +45,11 @@
               <label class="form-check-label" for="ExportUnprotectedNotes">@Model.Language["export_unencrypted"]</label>
             </div>
             <div class="form-check mb-4">
-              <input class="form-check-input" type="checkbox" v-model="ExportProtectedNotes" id="ExportProtectedNotes" @if (!Model.CanExportProtectedNotes) { @("disabled"); }>
+              <input class="form-check-input" type="checkbox" v-model="ExportProtectedNotes" id="ExportProtectedNotes" v-bind:disabled="!HasExportableProtectedNotes">
               <label class="form-check-label" for="ExportProtectedNotes">@Model.Language["export_encrypted"]</label>
             </div>
 
-            <button type="button" class="btn btn-primary mb-2" v-on:click="OkCommand">@Model.Language["ok"]</button>
+            <button type="button" class="btn btn-primary mb-2" v-on:click="OkCommand" v-bind:disabled="OkCommandDisabled">@Model.Language["ok"]</button>
             <button type="button" class="btn btn-secondary mb-2" v-on:click="CancelCommand">@Model.Language["cancel"]</button>
         </form>
     </div>

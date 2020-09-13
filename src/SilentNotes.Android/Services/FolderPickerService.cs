@@ -40,6 +40,7 @@ namespace SilentNotes.Android.Services
             Intent folderPickerIntent = new Intent(Intent.ActionOpenDocumentTree);
             folderPickerIntent.AddFlags(ActivityFlags.GrantReadUriPermission);
             folderPickerIntent.AddFlags(ActivityFlags.GrantWriteUriPermission);
+            folderPickerIntent.PutExtra("android.content.extra.SHOW_ADVANCED", true);
 
             var activityResult = await _activityResultAwaiter.StartActivityAndWaitForResult(folderPickerIntent);
             if (activityResult.ResultCode == Result.Ok)

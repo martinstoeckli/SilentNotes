@@ -3,14 +3,18 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
+using System.IO.Compression;
+using System.Linq;
+using System.Windows.Input;
 using SilentNotes.Controllers;
+using SilentNotes.Crypto;
 using SilentNotes.HtmlView;
 using SilentNotes.Models;
 using SilentNotes.Services;
-using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Windows.Input;
 
 namespace SilentNotes.ViewModels
 {
@@ -19,6 +23,10 @@ namespace SilentNotes.ViewModels
         private readonly IFeedbackService _feedbackService;
         private readonly IRepositoryStorageService _repositoryService;
         private readonly IFolderPickerService _folderPickerService;
+        private readonly ICryptor _noteCryptor;
+        private bool _exportUnprotectedNotes;
+        private bool _exportProtectedNotes;
+        private bool _ignoreFutureNavigations; // Because Android restarts the main activity in the folder picker.
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InfoViewModel"/> class.
@@ -31,6 +39,7 @@ namespace SilentNotes.ViewModels
             IThemeService themeService,
             IBaseUrlService webviewBaseUrl,
             IFeedbackService feedbackService,
+            ICryptoRandomSource randomSource,
             IRepositoryStorageService repositoryService,
             IFolderPickerService folderPickerService)
             : base(navigationService, languageService, svgIconService, themeService, webviewBaseUrl)
@@ -38,11 +47,19 @@ namespace SilentNotes.ViewModels
             _feedbackService = feedbackService;
             _repositoryService = repositoryService;
             _folderPickerService = folderPickerService;
+            _noteCryptor = new Cryptor(NoteModel.CryptorPackageName, randomSource);
 
             GoBackCommand = new RelayCommand(GoBack);
             CancelCommand = new RelayCommand(Cancel);
             OkCommand = new RelayCommand(Ok);
             ExportUnprotectedNotes = true;
+        }
+
+        /// <inheritdoc/>
+        public override void OnClosing()
+        {
+            _ignoreFutureNavigations = true;
+            base.OnClosing();
         }
 
         /// <summary>
@@ -80,9 +97,9 @@ namespace SilentNotes.ViewModels
                 bool success;
                 try
                 {
-                    byte[] content = new byte[] { 88, 99 };
+                    byte[] zipContent = CreateZipArchive();
                     success = await _folderPickerService.TrySaveFileToPickedFolder(
-                        CreateFilename(), content);
+                        CreateFilename(), zipContent);
                 }
                 catch (Exception)
                 {
@@ -92,7 +109,8 @@ namespace SilentNotes.ViewModels
                 if (success)
                 {
                     _feedbackService.ShowToast(Language.LoadText("export_success"));
-                    _navigationService.Navigate(new Navigation(ControllerNames.NoteRepository));
+                    if (!_ignoreFutureNavigations)
+                        _navigationService.Navigate(new Navigation(ControllerNames.NoteRepository));
                 }
                 else
                 {
@@ -101,16 +119,124 @@ namespace SilentNotes.ViewModels
             }
         }
 
-        [VueDataBinding(VueBindingMode.TwoWay)]
-        public bool ExportUnprotectedNotes { get; set; }
-
-        [VueDataBinding(VueBindingMode.TwoWay)]
-        public bool ExportProtectedNotes { get; set; }
-
+        /// <summary>
+        /// Gets a value indicating whether the <see cref="OkCommand"/> is disabled.
+        /// </summary>
         [VueDataBinding(VueBindingMode.OneWayToView)]
-        public bool CanExportProtectedNotes
+        public bool OkCommandDisabled
         {
-            get 
+            get { return !ExportUnprotectedNotes && !ExportProtectedNotes; }
+        }
+
+        public byte[] CreateZipArchive()
+        {
+            _repositoryService.LoadRepositoryOrDefault(out NoteRepositoryModel repository);
+
+            byte[] result;
+            using (MemoryStream zipContent = new MemoryStream())
+            {
+                using (ZipArchive zipArchive = new ZipArchive(zipContent, ZipArchiveMode.Create))
+                {
+                    foreach (NoteModel note in EnumerateNotesToExport(repository, ExportUnprotectedNotes, ExportProtectedNotes))
+                    {
+                        NoteViewModel noteViewModel = new NoteViewModel(null, null, null, null, null, null, null, null, null, _noteCryptor, repository.Safes, note);
+
+                        string filename = CreateFilenameForNote(note.Id);
+                        string html = AddHtmlSkeleton(note.Id, noteViewModel.UnlockedHtmlContent);
+                        byte[] content = CryptoUtils.StringToBytes(html);
+
+                        ZipArchiveEntry zipEntry = zipArchive.CreateEntry(filename);
+                        using (Stream writer = zipEntry.Open())
+                        {
+                            writer.Write(content, 0, content.Length);
+                        }
+                    }
+                }
+                result = zipContent.ToArray();
+            }
+            return result;
+        }
+
+        internal static IEnumerable<NoteModel> EnumerateNotesToExport(
+            NoteRepositoryModel repository, bool exportUnprotectedNotes, bool exportProtectedNotes)
+        {
+            foreach (NoteModel note in repository.Notes)
+            {
+                // Ignore deleted notes
+                if (note.InRecyclingBin)
+                    continue;
+
+                if (!note.SafeIdSpecified)
+                {
+                    if (exportUnprotectedNotes)
+                        yield return note; // Unprotected note
+                }
+                else
+                {
+                    if (exportProtectedNotes && repository.Safes.FindById(note.SafeId).IsOpen)
+                        yield return note; // Protected note
+                }
+            }
+        }
+
+        private static string CreateFilenameForNote(Guid noteId)
+        {
+            return string.Format("{0}.html", noteId.ToString("D"));
+        }
+
+        private static string AddHtmlSkeleton(Guid noteId, string content)
+        {
+            const string HtmlSkeleton = @"<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <title>SilentNotes note {0}</title>
+  </head>
+  <body>
+{1}  
+  </body>
+</html>";
+            return string.Format(HtmlSkeleton, noteId.ToString("D"), content);
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the notes outside of a safe should be exported.
+        /// </summary>
+        [VueDataBinding(VueBindingMode.TwoWay)]
+        public bool ExportUnprotectedNotes 
+        {
+            get { return _exportUnprotectedNotes; }
+
+            set 
+            {
+                if (ChangeProperty(ref _exportUnprotectedNotes, value, false))
+                    OnPropertyChanged(nameof(OkCommandDisabled));
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the notes residing in a safe should be exported.
+        /// Only open safes are considered.
+        /// </summary>
+        [VueDataBinding(VueBindingMode.TwoWay)]
+        public bool ExportProtectedNotes
+        {
+            get { return _exportProtectedNotes; }
+
+            set
+            {
+                if (ChangeProperty(ref _exportProtectedNotes, value, false))
+                    OnPropertyChanged(nameof(OkCommandDisabled));
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether there are notes residing in an open safe.
+        /// </summary>
+        [VueDataBinding(VueBindingMode.OneWayToView)]
+        public bool HasExportableProtectedNotes
+        {
+            get
             {
                 _repositoryService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepository);
                 bool hasAtLeastOneOpenSafe = noteRepository.Safes.Any(safe => safe.IsOpen);

@@ -240,27 +240,8 @@ WriteLiteral(" v-model=\"ExportProtectedNotes\"");
 
 WriteLiteral(" id=\"ExportProtectedNotes\"");
 
-WriteLiteral(" ");
+WriteLiteral(" v-bind:disabled=\"!HasExportableProtectedNotes\"");
 
-
-#line 48 "ExportRazorView.cshtml"
-                                                                                                                        if (!Model.CanExportProtectedNotes) { 
-
-#line default
-#line hidden
-
-#line 48 "ExportRazorView.cshtml"
-                                                                                                                                                          Write("disabled");
-
-
-#line default
-#line hidden
-
-#line 48 "ExportRazorView.cshtml"
-                                                                                                                                                                           ; }
-
-#line default
-#line hidden
 WriteLiteral(">\r\n              <label");
 
 WriteLiteral(" class=\"form-check-label\"");
@@ -284,11 +265,13 @@ WriteLiteral(" class=\"btn btn-primary mb-2\"");
 
 WriteLiteral(" v-on:click=\"OkCommand\"");
 
+WriteLiteral(" v-bind:disabled=\"OkCommandDisabled\"");
+
 WriteLiteral(">");
 
 
 #line 52 "ExportRazorView.cshtml"
-                                                                                 Write(Model.Language["ok"]);
+                                                                                                                     Write(Model.Language["ok"]);
 
 
 #line default
