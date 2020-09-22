@@ -30,7 +30,7 @@ namespace SilentNotes.ViewModels
         private readonly ICryptor _cryptor;
         private readonly SafeListModel _safes;
         private SearchableHtmlConverter _searchableTextConverter;
-        private string _unlockedContent;
+        protected string _unlockedContent;
         private string _searchableContent;
 
         /// <summary>

@@ -127,6 +127,7 @@
     <Compile Include="Workers\ByteArrayExtensionsTest.cs" />
     <Compile Include="Workers\ColorExtensionsTest.cs" />
     <Compile Include="Workers\CompressUtilsTest.cs" />
+    <Compile Include="Workers\HtmlShortenerTest.cs" />
     <Compile Include="Workers\TimeAgoTest.cs" />
     <Compile Include="Workers\FloatingPointUtilsTest.cs" />
     <Compile Include="Workers\SearchableHtmlConverterTest.cs" />
