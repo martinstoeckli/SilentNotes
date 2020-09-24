@@ -130,14 +130,14 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
             // Find all "response" elements, independend of their namespaces
             var responseElements = responseXml
                 .Descendants()
-                .Where(descendant => descendant.Name.LocalName == "response");
+                .Where(descendant => string.Equals("response", descendant.Name.LocalName, StringComparison.OrdinalIgnoreCase));
 
             foreach (XElement responseElement in responseElements)
             {
                 // Find the "resourcetype" element, independend of its namespaces
                 XElement resourceTypeElement = responseElement
                     .Descendants()
-                    .Where(descendant => descendant.Name.LocalName == "resourcetype")
+                    .Where(descendant => string.Equals("resourcetype", descendant.Name.LocalName, StringComparison.OrdinalIgnoreCase))
                     .FirstOrDefault();
 
                 // Files have an empty resourcetype
@@ -147,7 +147,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
                     // Extract the "href" element, it contains the filename
                     XElement hrefElement = responseElement
                         .Elements()
-                        .Where(descendant => descendant.Name.LocalName == "href")
+                        .Where(descendant => string.Equals("href", descendant.Name.LocalName, StringComparison.OrdinalIgnoreCase))
                         .FirstOrDefault();
 
                     if (hrefElement != null)
