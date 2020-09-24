@@ -313,8 +313,8 @@
     </AndroidAsset>
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\vue.min.js">
-      <Link>Assets\Html\vue.min.js</Link>
+    <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\vue.global.prod.js">
+      <Link>Assets\Html\vue.global.prod.js</Link>
     </AndroidAsset>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />

@@ -138,10 +138,11 @@ function vueFindById(id) {
 var vm;
 document.addEventListener('DOMContentLoaded', function () {
     var _this = this;
-    vm = new Vue({
-        el: '#vueDataBinding',
-        data: {
-            [VUE_DATA_DECLARATIONS]
+    vm = Vue.createApp({
+        data: function() {
+            return {
+                [VUE_DATA_DECLARATIONS]
+            }
         },
         methods: {
             [VUE_METHOD_DECLARATIONS]
@@ -169,7 +170,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
           }
         },
-    });
+    }).mount('#vueDataBinding');
 
     if (typeof vueLoaded === 'function') { 
         vueLoaded(); // Html page can initialize itself

@@ -23,7 +23,7 @@ using SilentNotes.ViewModels;
 #line hidden
 
 
-[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.6.0.1061")]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.7.0.452")]
 public partial class TransferCodeHistoryRazorView : TransferCodeHistoryRazorViewBase
 {
 
@@ -93,7 +93,7 @@ WriteLiteral(" rel=\"stylesheet\"");
 
 WriteLiteral(" />\r\n\r\n    <script");
 
-WriteLiteral(" src=\"vue.min.js\"");
+WriteLiteral(" src=\"vue.global.prod.js\"");
 
 WriteLiteral("></script>\r\n    <script");
 
@@ -322,8 +322,6 @@ WriteLiteral(" type=\"button\"");
 
 WriteLiteral(" class=\"btn btn-secondary my-4\"");
 
-WriteLiteral(" v-once");
-
 WriteLiteral(" v-if=\"ShowTransfercodeHistoryVisible\"");
 
 WriteLiteral(" v-on:click=\"ShowTransfercodeHistoryCommand\"");
@@ -332,7 +330,7 @@ WriteLiteral(" >");
 
 
 #line 67 "TransferCodeHistoryRazorView.cshtml"
-                                                                                                                                                      Write(Model.Language["transfer_code_show_history"]);
+                                                                                                                                               Write(Model.Language["transfer_code_show_history"]);
 
 
 #line default
