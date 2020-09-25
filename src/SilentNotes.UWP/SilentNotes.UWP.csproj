@@ -235,8 +235,8 @@
     <Content Include="..\SilentNotes.Shared\Assets\Html\stone.jpg">
       <Link>Assets\Html\stone.jpg</Link>
     </Content>
-    <Content Include="..\SilentNotes.Shared\Assets\Html\vue.min.js">
-      <Link>Assets\Html\vue.min.js</Link>
+    <Content Include="..\SilentNotes.Shared\Assets\Html\vue.global.prod.js">
+      <Link>Assets\Html\vue.global.prod.js</Link>
     </Content>
     <Content Include="..\SilentNotes.Shared\Assets\Html\water.jpg">
       <Link>Assets\Html\water.jpg</Link>

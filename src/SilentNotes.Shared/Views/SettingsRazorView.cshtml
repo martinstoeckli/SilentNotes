@@ -13,7 +13,7 @@
     <link href="silentnotes.css" rel="stylesheet" />
     <link href="@(Model.Theme.DarkMode ? "silentnotes.dark.css" : "silentnotes.light.css")" rel="stylesheet" />
 
-    <script src="vue.min.js"></script>
+    <script src="vue.global.prod.js"></script>
     <script src="jquery-3.5.1.slim.min.js"></script>
     <script src="bootstrap.bundle.min.js"></script>
     <script src="silentnotes.js"></script>
@@ -157,8 +157,8 @@
                 <label class="col-form-label" for="CloudStorageSettings">@Model.Language["cloud_service"]</label>
                 <textarea class="form-control" id="CloudStorageSettings" v-model="AccountSummary" rows="4" readonly></textarea>
             </div>
-            <button type="button" class="btn btn-secondary mb-2" v-on:click="ChangeCloudSettingsCommand" title="@Model.Language["cloud_change_settings_desc"]">@Model.Language["cloud_change_settings"]</button>
-            <button type="button" class="btn btn-secondary mb-2" v-on:click="ClearCloudSettingsCommand" title="@Model.Language["cloud_clear_settings_desc"]">@Model.Language["cloud_clear_settings"]</button>
+            <button type="button" class="btn btn-secondary mb-2 mr-1" v-on:click="ChangeCloudSettingsCommand" title="@Model.Language["cloud_change_settings_desc"]">@Model.Language["cloud_change_settings"]</button>
+            <button type="button" class="btn btn-secondary mb-2 mr-1" v-on:click="ClearCloudSettingsCommand" title="@Model.Language["cloud_clear_settings_desc"]">@Model.Language["cloud_clear_settings"]</button>
         </form>
 
         <h2>@Model.Language["encryption"]</h2>

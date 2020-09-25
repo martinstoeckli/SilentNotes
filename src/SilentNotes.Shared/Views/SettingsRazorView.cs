@@ -23,7 +23,7 @@ using SilentNotes.ViewModels;
 #line hidden
 
 
-[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.6.0.1061")]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.7.0.452")]
 public partial class SettingsRazorView : SettingsRazorViewBase
 {
 
@@ -93,7 +93,7 @@ WriteLiteral(" rel=\"stylesheet\"");
 
 WriteLiteral(" />\r\n\r\n    <script");
 
-WriteLiteral(" src=\"vue.min.js\"");
+WriteLiteral(" src=\"vue.global.prod.js\"");
 
 WriteLiteral("></script>\r\n    <script");
 
@@ -795,14 +795,14 @@ WriteLiteral(" readonly></textarea>\r\n            </div>\r\n            <button
 
 WriteLiteral(" type=\"button\"");
 
-WriteLiteral(" class=\"btn btn-secondary mb-2\"");
+WriteLiteral(" class=\"btn btn-secondary mb-2 mr-1\"");
 
 WriteLiteral(" v-on:click=\"ChangeCloudSettingsCommand\"");
 
 WriteAttribute ("title", " title=\"", "\""
 
 #line 160 "SettingsRazorView.cshtml"
-                                                                         , Tuple.Create<string,object,bool> ("", Model.Language["cloud_change_settings_desc"]
+                                                                              , Tuple.Create<string,object,bool> ("", Model.Language["cloud_change_settings_desc"]
 
 #line default
 #line hidden
@@ -812,7 +812,7 @@ WriteLiteral(">");
 
 
 #line 160 "SettingsRazorView.cshtml"
-                                                                                                                                                          Write(Model.Language["cloud_change_settings"]);
+                                                                                                                                                               Write(Model.Language["cloud_change_settings"]);
 
 
 #line default
@@ -821,14 +821,14 @@ WriteLiteral("</button>\r\n            <button");
 
 WriteLiteral(" type=\"button\"");
 
-WriteLiteral(" class=\"btn btn-secondary mb-2\"");
+WriteLiteral(" class=\"btn btn-secondary mb-2 mr-1\"");
 
 WriteLiteral(" v-on:click=\"ClearCloudSettingsCommand\"");
 
 WriteAttribute ("title", " title=\"", "\""
 
 #line 161 "SettingsRazorView.cshtml"
-                                                                        , Tuple.Create<string,object,bool> ("", Model.Language["cloud_clear_settings_desc"]
+                                                                             , Tuple.Create<string,object,bool> ("", Model.Language["cloud_clear_settings_desc"]
 
 #line default
 #line hidden
@@ -838,7 +838,7 @@ WriteLiteral(">");
 
 
 #line 161 "SettingsRazorView.cshtml"
-                                                                                                                                                        Write(Model.Language["cloud_clear_settings"]);
+                                                                                                                                                             Write(Model.Language["cloud_clear_settings"]);
 
 
 #line default

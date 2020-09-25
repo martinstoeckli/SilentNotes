@@ -35,7 +35,7 @@ namespace SilentNotes.HtmlView
     /// This commands can be called in the HTML view directly or with a parameter:
     /// <code>
     /// v-on:click="MyCommand"
-    /// v-on:click="vueCommandExecute('MyCommand', 'MyParam')"
+    /// onclick="vueCommandExecute('MyCommand', 'MyParam')"
     /// </code>
     /// 
     /// Properties in the viewmodel can be marked with an attribute like:
@@ -138,10 +138,11 @@ function vueFindById(id) {
 var vm;
 document.addEventListener('DOMContentLoaded', function () {
     var _this = this;
-    vm = new Vue({
-        el: '#vueDataBinding',
-        data: {
-            [VUE_DATA_DECLARATIONS]
+    vm = Vue.createApp({
+        data: function() {
+            return {
+                [VUE_DATA_DECLARATIONS]
+            }
         },
         methods: {
             [VUE_METHOD_DECLARATIONS]
@@ -164,12 +165,12 @@ document.addEventListener('DOMContentLoaded', function () {
         },
         directives: {
           focus: {
-            inserted: function (el) {
+            mounted: function (el) {
               el.focus()
             }
           }
         },
-    });
+    }).mount('#vueDataBinding');
 
     if (typeof vueLoaded === 'function') { 
         vueLoaded(); // Html page can initialize itself
