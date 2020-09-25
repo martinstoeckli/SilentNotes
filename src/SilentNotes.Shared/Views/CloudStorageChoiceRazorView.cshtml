@@ -49,7 +49,7 @@
         <div class="list-group">
             @foreach (var serviceChoice in @Model.ServiceChoices)
             {
-                <button type="button" class="list-group-item list-group-item-action" v-on:click="vueCommandExecute('ChooseCommand', '@serviceChoice.CloudStorageId')">
+                <button type="button" class="list-group-item list-group-item-action" onclick="vueCommandExecute('ChooseCommand', '@serviceChoice.CloudStorageId')">
                     <img class="choice-icon" src="@serviceChoice.Icon" />
                     @serviceChoice.Title
                 </button>

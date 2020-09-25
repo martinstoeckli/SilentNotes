@@ -35,7 +35,7 @@ namespace SilentNotes.HtmlView
     /// This commands can be called in the HTML view directly or with a parameter:
     /// <code>
     /// v-on:click="MyCommand"
-    /// v-on:click="vueCommandExecute('MyCommand', 'MyParam')"
+    /// onclick="vueCommandExecute('MyCommand', 'MyParam')"
     /// </code>
     /// 
     /// Properties in the viewmodel can be marked with an attribute like:
@@ -165,7 +165,7 @@ document.addEventListener('DOMContentLoaded', function () {
         },
         directives: {
           focus: {
-            inserted: function (el) {
+            mounted: function (el) {
               el.focus()
             }
           }

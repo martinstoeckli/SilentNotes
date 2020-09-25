@@ -216,12 +216,12 @@ WriteLiteral(" type=\"button\"");
 
 WriteLiteral(" class=\"list-group-item list-group-item-action\"");
 
-WriteAttribute ("v-on:click", " v-on:click=\"", "\""
+WriteAttribute ("onclick", " onclick=\"", "\""
 , Tuple.Create<string,object,bool> ("", "vueCommandExecute(\'ChooseCommand\',", true)
 , Tuple.Create<string,object,bool> (" ", "\'", true)
 
 #line 52 "CloudStorageChoiceRazorView.cshtml"
-                                                                                              , Tuple.Create<string,object,bool> ("", serviceChoice.CloudStorageId
+                                                                                           , Tuple.Create<string,object,bool> ("", serviceChoice.CloudStorageId
 
 #line default
 #line hidden

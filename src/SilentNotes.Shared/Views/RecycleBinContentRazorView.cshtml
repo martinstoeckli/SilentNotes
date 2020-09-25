@@ -14,7 +14,7 @@
                     <div class="note-viewer over-view @Model.Theme.CssClassDark @note.CssClassNoteType">@{WriteLiteral(note.UnlockedHtmlContent);}</div>
                 }
 
-                <span class="restore undelete" v-on:click="restoreNote(event);" title="@Model.Language["note_undelete"]">
+                <span class="restore undelete" onclick="restoreNote(event);" title="@Model.Language["note_undelete"]">
                     <svg width='24' height='24' viewBox='0 0 24 24'><use xlink:href="#svg-file-restore" /></svg>
                 </span>
             </div>

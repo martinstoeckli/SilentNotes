@@ -445,7 +445,7 @@ WriteLiteral("</label>\r\n            </div>\r\n            <button");
 
 WriteLiteral(" type=\"button\"");
 
-WriteLiteral(" class=\"btn btn-primary mb-2\"");
+WriteLiteral(" class=\"btn btn-primary mb-2 mr-1\"");
 
 WriteLiteral(" v-on:click=\"OkCommand\"");
 
@@ -453,7 +453,7 @@ WriteLiteral(">");
 
 
 #line 62 "CloudStorageAccountRazorView.cshtml"
-                                                                                 Write(Model.Language["continue"]);
+                                                                                      Write(Model.Language["continue"]);
 
 
 #line default
@@ -462,7 +462,7 @@ WriteLiteral("</button>\r\n            <button");
 
 WriteLiteral(" type=\"button\"");
 
-WriteLiteral(" class=\"btn btn-secondary mb-2\"");
+WriteLiteral(" class=\"btn btn-secondary mb-2 mr-1\"");
 
 WriteLiteral(" v-on:click=\"CancelCommand\"");
 
@@ -470,7 +470,7 @@ WriteLiteral(">");
 
 
 #line 63 "CloudStorageAccountRazorView.cshtml"
-                                                                                       Write(Model.Language["cancel"]);
+                                                                                            Write(Model.Language["cancel"]);
 
 
 #line default
