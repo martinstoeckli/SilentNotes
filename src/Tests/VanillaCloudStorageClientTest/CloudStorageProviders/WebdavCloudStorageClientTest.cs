@@ -22,6 +22,7 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
         /// • <see cref="AuthorizationUsername"/>
         /// • <see cref="AuthorizationPassword"/>
         /// must then be set to valid credentials.
+        /// Possible test server for anonymous requests: http://webdavserver.com
         /// </summary>
         private const bool DoRealWebRequests = false;
         private const string AuthorizationUrl = "https://webdav.example.com/unittest/";
