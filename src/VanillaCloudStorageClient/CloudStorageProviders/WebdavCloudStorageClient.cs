@@ -31,13 +31,13 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
         /// <inheritdoc/>
         public override async Task UploadFileAsync(string filename, byte[] fileContent, CloudStorageCredentials credentials)
         {
-            credentials.ThrowIfInvalid(CredentialsRequirements);
+            credentials.ThrowIfInvalid(CredentialsRequirements, true);
 
             try
             {
                 HttpContent content = new ByteArrayContent(fileContent);
                 await Flurl.Request(credentials.Url, filename)
-                    .WithBasicAuth(credentials.Username, credentials.UnprotectedPassword)
+                    .WithBasicAuthOrAnonymous(credentials.Username, credentials.UnprotectedPassword)
                     .PutAsync(content);
             }
             catch (Exception ex)
@@ -49,12 +49,12 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
         /// <inheritdoc/>
         public override async Task<byte[]> DownloadFileAsync(string filename, CloudStorageCredentials credentials)
         {
-            credentials.ThrowIfInvalid(CredentialsRequirements);
+            credentials.ThrowIfInvalid(CredentialsRequirements, true);
 
             try
             {
                 return await Flurl.Request(credentials.Url, filename)
-                    .WithBasicAuth(credentials.Username, credentials.UnprotectedPassword)
+                    .WithBasicAuthOrAnonymous(credentials.Username, credentials.UnprotectedPassword)
                     .GetBytesAsync();
             }
             catch (Exception ex)
@@ -66,12 +66,12 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
         /// <inheritdoc/>
         public override async Task DeleteFileAsync(string filename, CloudStorageCredentials credentials)
         {
-            credentials.ThrowIfInvalid(CredentialsRequirements);
+            credentials.ThrowIfInvalid(CredentialsRequirements, true);
 
             try
             {
                 await Flurl.Request(credentials.Url, filename)
-                    .WithBasicAuth(credentials.Username, credentials.UnprotectedPassword)
+                    .WithBasicAuthOrAnonymous(credentials.Username, credentials.UnprotectedPassword)
                     .DeleteAsync();
             }
             catch (Exception ex)
@@ -83,7 +83,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
         /// <inheritdoc/>
         public override async Task<List<string>> ListFileNamesAsync(CloudStorageCredentials credentials)
         {
-            credentials.ThrowIfInvalid(CredentialsRequirements);
+            credentials.ThrowIfInvalid(CredentialsRequirements, true);
 
             try
             {
@@ -100,7 +100,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
                 XDocument responseXml;
                 Url url = new Url(IncludeTrailingSlash(credentials.Url));
                 using (Stream responseStream = await Flurl.Request(url)
-                    .WithBasicAuth(credentials.Username, credentials.UnprotectedPassword)
+                    .WithBasicAuthOrAnonymous(credentials.Username, credentials.UnprotectedPassword)
                     .WithHeader("Depth", "1")
                     .WithTimeout(20)
                     .SendAsync(new HttpMethod("PROPFIND"), content)
