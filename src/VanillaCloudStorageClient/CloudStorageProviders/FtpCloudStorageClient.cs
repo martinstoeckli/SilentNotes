@@ -52,7 +52,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
         /// <inheritdoc/>
         public override async Task UploadFileAsync(string filename, byte[] fileContent, CloudStorageCredentials credentials)
         {
-            credentials.ThrowIfInvalid(CredentialsRequirements);
+            credentials.ThrowIfInvalid(CredentialsRequirements, true);
 
             try
             {
@@ -78,7 +78,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
         /// <inheritdoc/>
         public override async Task<byte[]> DownloadFileAsync(string filename, CloudStorageCredentials credentials)
         {
-            credentials.ThrowIfInvalid(CredentialsRequirements);
+            credentials.ThrowIfInvalid(CredentialsRequirements, true);
 
             try
             {
@@ -108,7 +108,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
         /// <inheritdoc/>
         public override async Task DeleteFileAsync(string filename, CloudStorageCredentials credentials)
         {
-            credentials.ThrowIfInvalid(CredentialsRequirements);
+            credentials.ThrowIfInvalid(CredentialsRequirements, true);
 
             try
             {
@@ -135,7 +135,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
         /// <inheritdoc/>
         public override async Task<List<string>> ListFileNamesAsync(CloudStorageCredentials credentials)
         {
-            credentials.ThrowIfInvalid(CredentialsRequirements);
+            credentials.ThrowIfInvalid(CredentialsRequirements, true);
 
             try
             {
