@@ -88,6 +88,7 @@ body { background-color: transparent; }
         function showSearchDialog(visible) {
             if (visible) {
                 // Open dialog
+                $('#TxtFilter').val(''); // Can be set by setStartingSearchFilter()
                 $('#search-dialog').removeClass('hidden');
                 $('#TxtFilter').focus();
                 searchHighlighter.startListening();
@@ -102,8 +103,10 @@ body { background-color: transparent; }
         }
 
         function setStartingSearchFilter(filter) {
-            searchHighlighter.searchAndHighlight(filter, true, false); // this causes a focusin event
-            quill.root.blur();
+            $('#TxtFilter').val(filter);
+            searchHighlighter.searchAndHighlight(filter, true, false);
+            quill.root.blur(); // searchAndHighlight() caused a focusin event
+            searchHighlighter.startListening();
         }
 
         function scrollToTop() {
