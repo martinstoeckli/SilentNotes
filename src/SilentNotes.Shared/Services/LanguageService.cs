@@ -174,6 +174,7 @@ namespace SilentNotes.Services
 
             resources["gui"] = "User interface";
             resources["gui_font_size"] = "Font size (smaller ‹ normal › larger)";
+            resources["gui_note_max_size"] = "Maximum note hight (smaller ‹ normal › larger)";
             resources["gui_texture"] = "Theme";
             resources["gui_default_color"] = "Default color for new notes";
             resources["gui_theme_auto"] = "Automatically light or dark mode.";
@@ -341,6 +342,7 @@ namespace SilentNotes.Services
             resources["gui"] = "Benutzeroberfläche";
             resources["gui_show_arrow_keys"] = "Cursor Pfeiltasten beim Bearbeiten anzeigen";
             resources["gui_font_size"] = "Schriftgrösse (kleiner ‹ normal › grösser)";
+            resources["gui_note_max_size"] = "Maximale Notizenhöhe (kleiner ‹ normal › grösser)";
             resources["gui_texture"] = "Design";
             resources["gui_default_color"] = "Standardfarbe für neue Notizen";
             resources["gui_arrow_key"] = "Ein Zeichen nach links/rechts bewegen";

@@ -33,6 +33,10 @@ namespace SilentNotes.ViewModels
             {
                 // Create a short version with only the first part of the note.
                 HtmlShortener shortener = new HtmlShortener();
+                // todo: set good numbers, respecting font size and note height
+                shortener.WantedLength = 2000;
+                shortener.WantedTagNumber = 50;
+
                 string shortenedContent = shortener.Shorten(_unlockedContent);
                 if (shortenedContent.Length != _unlockedContent.Length)
                 {

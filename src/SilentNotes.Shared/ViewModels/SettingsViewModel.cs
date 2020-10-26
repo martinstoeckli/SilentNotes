@@ -25,9 +25,13 @@ namespace SilentNotes.ViewModels
     /// </summary>
     public class SettingsViewModel : ViewModelBase
     {
-        private const double ReferenceFontSize = 15.0; // Used as reference to calculate the font scale
+        public const double ReferenceFontSize = 15.0; // Used as reference to calculate the font scale
+        public const int ReferenceNoteMaxSize = 160;
+        public const int ReferenceNoteMinSize = 115;
         private readonly ISettingsService _settingsService;
         private readonly IStoryBoardService _storyBoardService;
+        private readonly SliderStepConverter _fontSizeConverter;
+        private readonly SliderStepConverter _noteMaxHeightConverter;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SettingsViewModel"/> class.
@@ -45,6 +49,8 @@ namespace SilentNotes.ViewModels
         {
             _settingsService = settingsService;
             _storyBoardService = storyBoardService;
+            _fontSizeConverter = new SliderStepConverter(ReferenceFontSize, 1.0);
+            _noteMaxHeightConverter = new SliderStepConverter(ReferenceNoteMaxSize, 20.0);
             Model = _settingsService.LoadSettingsOrDefault();
 
             EncryptionAlgorithms = new List<DropdownItemViewModel>();
@@ -67,36 +73,44 @@ namespace SilentNotes.ViewModels
         }
 
         /// <summary>
-        /// Gets or sets a factor to enlarge or reduce the font size of the notes.
-        /// </summary>
-        private double FontScale
-        {
-            get { return Model.FontScale; }
-
-            set 
-            {
-                if (ChangePropertyIndirect<double>(() => Model.FontScale, (v) => Model.FontScale = v, value, true))
-                    OnPropertyChanged(nameof(FontSizeStep));
-            }
-        }
-
-        /// <summary>
         /// Gets or sets the <see cref="FontScale"/> expressed for the -3...+3 slider.
         /// </summary>
         [VueDataBinding(VueBindingMode.TwoWay)]
-        public string FontSizeStep
+        public int FontSizeStep
         {
             get
             {
-                double step = (ReferenceFontSize * FontScale) - ReferenceFontSize;
-                double roundedStep = Math.Round(step, MidpointRounding.AwayFromZero);
-                return roundedStep.ToString("0");
+                return _fontSizeConverter.ModelFactorToSliderStep(Model.FontScale);
             }
 
             set
             {
-                double step = double.Parse(value);
-                FontScale = (ReferenceFontSize + step) / ReferenceFontSize;
+                ChangePropertyIndirect<int>(
+                    () => _fontSizeConverter.ModelFactorToSliderStep(Model.FontScale),
+                    (v) => Model.FontScale = _fontSizeConverter.SliderStepToModelFactor(v),
+                    value,
+                    true);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the <see cref="NoteMaxHeight"/> expressed for the -4...+4 slider.
+        /// </summary>
+        [VueDataBinding(VueBindingMode.TwoWay)]
+        public int NoteMaxHeightStep
+        {
+            get
+            {
+                return _noteMaxHeightConverter.ModelFactorToSliderStep(Model.NoteMaxHeightScale);
+            }
+
+            set
+            {
+                ChangePropertyIndirect<int>(
+                    () => _noteMaxHeightConverter.ModelFactorToSliderStep(Model.NoteMaxHeightScale),
+                    (v) => Model.NoteMaxHeightScale = _noteMaxHeightConverter.SliderStepToModelFactor(v),
+                    value,
+                    true);
             }
         }
 
