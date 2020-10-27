@@ -174,7 +174,7 @@ namespace SilentNotes.Services
 
             resources["gui"] = "User interface";
             resources["gui_font_size"] = "Font size (smaller ‹ normal › larger)";
-            resources["gui_note_max_size"] = "Maximum note hight (smaller ‹ normal › larger)";
+            resources["gui_note_max_size"] = "Maximum note height (smaller ‹ normal › larger)";
             resources["gui_texture"] = "Theme";
             resources["gui_default_color"] = "Default color for new notes";
             resources["gui_theme_auto"] = "Automatically light or dark mode.";
