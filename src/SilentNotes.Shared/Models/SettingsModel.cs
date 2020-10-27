@@ -38,6 +38,7 @@ namespace SilentNotes.Models
             UseSolidColorTheme = false;
             ColorForSolidTheme = "#121212";
             DefaultNoteColorHex = StartDefaultNoteColorHex;
+            NoteMaxHeightScale = 1.0;
             UseColorForAllNotesInDarkMode = true;
             ColorForAllNotesInDarkModeHex = "#323232";
         }
@@ -124,6 +125,12 @@ namespace SilentNotes.Models
         /// </summary>
         [XmlElement("default_note_color")]
         public string DefaultNoteColorHex { get; set; }
+
+        /// <summary>
+        /// Gets or sets a factor to enlarge or reduce the standard max height of the notes.
+        /// </summary>
+        [XmlElement("note_max_height_scale")]
+        public double NoteMaxHeightScale { get; set; }
 
         /// <summary>
         /// Gets or sets the place where a new note will be inserted by default.

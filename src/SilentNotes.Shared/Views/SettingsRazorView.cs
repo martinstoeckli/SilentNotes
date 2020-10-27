@@ -629,7 +629,46 @@ WriteLiteral(">Lorem ipsum</div>\r\n");
 #line default
 #line hidden
 WriteLiteral("                        </div>\r\n                    </div>\r\n                </div" +
-">\r\n            </div>\r\n            <div");
+">\r\n            </div>\r\n\r\n            <div");
+
+WriteLiteral(" class=\"form-row form-group\"");
+
+WriteLiteral(">\r\n                <label");
+
+WriteLiteral(" class=\"col-form-label\"");
+
+WriteLiteral(" for=\"NoteMaxHeightStep\"");
+
+WriteLiteral(">");
+
+
+#line 139 "SettingsRazorView.cshtml"
+                                                                 Write(Model.Language["gui_note_max_size"]);
+
+
+#line default
+#line hidden
+WriteLiteral("</label>\r\n                <div");
+
+WriteLiteral(" class=\"form-control\"");
+
+WriteLiteral(">\r\n                    <input");
+
+WriteLiteral(" class=\"custom-range col-sm-6\"");
+
+WriteLiteral(" type=\"range\"");
+
+WriteLiteral(" id=\"NoteMaxHeightStep\"");
+
+WriteLiteral(" v-model=\"NoteMaxHeightStep\"");
+
+WriteLiteral(" min=\"-4\"");
+
+WriteLiteral(" max=\"4\"");
+
+WriteLiteral(" step=\"1\"");
+
+WriteLiteral(">\r\n                </div>\r\n            </div>\r\n\r\n            <div");
 
 WriteLiteral(" class=\"form-row form-group\"");
 
@@ -642,7 +681,7 @@ WriteLiteral(" for=\"SelectedNoteInsertionMode\"");
 WriteLiteral(">");
 
 
-#line 138 "SettingsRazorView.cshtml"
+#line 146 "SettingsRazorView.cshtml"
                                                                          Write(Model.Language["gui_note_insertion"]);
 
 
@@ -663,7 +702,7 @@ WriteLiteral(" value=\"AtTop\"");
 WriteLiteral(">");
 
 
-#line 140 "SettingsRazorView.cshtml"
+#line 148 "SettingsRazorView.cshtml"
                                      Write(Model.Language["gui_note_insertion_top"]);
 
 
@@ -676,7 +715,7 @@ WriteLiteral(" value=\"AtBottom\"");
 WriteLiteral(">");
 
 
-#line 141 "SettingsRazorView.cshtml"
+#line 149 "SettingsRazorView.cshtml"
                                         Write(Model.Language["gui_note_insertion_bottom"]);
 
 
@@ -686,7 +725,7 @@ WriteLiteral("</option>\r\n                </select>\r\n            </div>\r\n  
 "    <h2>");
 
 
-#line 146 "SettingsRazorView.cshtml"
+#line 154 "SettingsRazorView.cshtml"
        Write(Model.Language["sync"]);
 
 
@@ -709,7 +748,7 @@ WriteLiteral(" for=\"SelectedAutoSyncMode\"");
 WriteLiteral(">");
 
 
-#line 149 "SettingsRazorView.cshtml"
+#line 157 "SettingsRazorView.cshtml"
                                                                     Write(Model.Language["sync_auto"]);
 
 
@@ -730,7 +769,7 @@ WriteLiteral(" value=\"Never\"");
 WriteLiteral(">");
 
 
-#line 151 "SettingsRazorView.cshtml"
+#line 159 "SettingsRazorView.cshtml"
                                      Write(Model.Language["sync_auto_never"]);
 
 
@@ -743,7 +782,7 @@ WriteLiteral(" value=\"CostFreeInternetOnly\"");
 WriteLiteral(">");
 
 
-#line 152 "SettingsRazorView.cshtml"
+#line 160 "SettingsRazorView.cshtml"
                                                     Write(Model.Language["sync_auto_costfree"]);
 
 
@@ -756,7 +795,7 @@ WriteLiteral(" value=\"Always\"");
 WriteLiteral(">");
 
 
-#line 153 "SettingsRazorView.cshtml"
+#line 161 "SettingsRazorView.cshtml"
                                       Write(Model.Language["sync_auto_always"]);
 
 
@@ -775,7 +814,7 @@ WriteLiteral(" for=\"CloudStorageSettings\"");
 WriteLiteral(">");
 
 
-#line 157 "SettingsRazorView.cshtml"
+#line 165 "SettingsRazorView.cshtml"
                                                                     Write(Model.Language["cloud_service"]);
 
 
@@ -801,7 +840,7 @@ WriteLiteral(" v-on:click=\"ChangeCloudSettingsCommand\"");
 
 WriteAttribute ("title", " title=\"", "\""
 
-#line 160 "SettingsRazorView.cshtml"
+#line 168 "SettingsRazorView.cshtml"
                                                                               , Tuple.Create<string,object,bool> ("", Model.Language["cloud_change_settings_desc"]
 
 #line default
@@ -811,7 +850,7 @@ WriteAttribute ("title", " title=\"", "\""
 WriteLiteral(">");
 
 
-#line 160 "SettingsRazorView.cshtml"
+#line 168 "SettingsRazorView.cshtml"
                                                                                                                                                                Write(Model.Language["cloud_change_settings"]);
 
 
@@ -827,7 +866,7 @@ WriteLiteral(" v-on:click=\"ClearCloudSettingsCommand\"");
 
 WriteAttribute ("title", " title=\"", "\""
 
-#line 161 "SettingsRazorView.cshtml"
+#line 169 "SettingsRazorView.cshtml"
                                                                              , Tuple.Create<string,object,bool> ("", Model.Language["cloud_clear_settings_desc"]
 
 #line default
@@ -837,7 +876,7 @@ WriteAttribute ("title", " title=\"", "\""
 WriteLiteral(">");
 
 
-#line 161 "SettingsRazorView.cshtml"
+#line 169 "SettingsRazorView.cshtml"
                                                                                                                                                              Write(Model.Language["cloud_clear_settings"]);
 
 
@@ -846,7 +885,7 @@ WriteLiteral(">");
 WriteLiteral("</button>\r\n        </form>\r\n\r\n        <h2>");
 
 
-#line 164 "SettingsRazorView.cshtml"
+#line 172 "SettingsRazorView.cshtml"
        Write(Model.Language["encryption"]);
 
 
@@ -869,7 +908,7 @@ WriteLiteral(" for=\"SelectedEncryptionAlgorithm\"");
 WriteLiteral(">");
 
 
-#line 167 "SettingsRazorView.cshtml"
+#line 175 "SettingsRazorView.cshtml"
                                                                            Write(Model.Language["encryption_algorithm"]);
 
 
@@ -886,13 +925,13 @@ WriteLiteral(" v-model=\"SelectedEncryptionAlgorithm\"");
 WriteLiteral(">\r\n");
 
 
-#line 169 "SettingsRazorView.cshtml"
+#line 177 "SettingsRazorView.cshtml"
                     
 
 #line default
 #line hidden
 
-#line 169 "SettingsRazorView.cshtml"
+#line 177 "SettingsRazorView.cshtml"
                      foreach (var algorithm in @Model.EncryptionAlgorithms)
                     {
 
@@ -903,7 +942,7 @@ WriteLiteral("                        <option");
 
 WriteAttribute ("value", " value=\"", "\""
 
-#line 171 "SettingsRazorView.cshtml"
+#line 179 "SettingsRazorView.cshtml"
 , Tuple.Create<string,object,bool> ("", algorithm.Value
 
 #line default
@@ -913,7 +952,7 @@ WriteAttribute ("value", " value=\"", "\""
 WriteLiteral(">");
 
 
-#line 171 "SettingsRazorView.cshtml"
+#line 179 "SettingsRazorView.cshtml"
                                                     Write(algorithm.Description);
 
 
@@ -922,7 +961,7 @@ WriteLiteral(">");
 WriteLiteral("</option>\r\n");
 
 
-#line 172 "SettingsRazorView.cshtml"
+#line 180 "SettingsRazorView.cshtml"
                     }
 
 
@@ -932,13 +971,13 @@ WriteLiteral("                </select>\r\n            </div>\r\n        </form>
 " <div hidden>\r\n");
 
 
-#line 179 "SettingsRazorView.cshtml"
+#line 187 "SettingsRazorView.cshtml"
         
 
 #line default
 #line hidden
 
-#line 179 "SettingsRazorView.cshtml"
+#line 187 "SettingsRazorView.cshtml"
           WriteLiteral(Model.Icon.LoadIcon("settings", new[] { new KeyValuePair<string, string>("id", "svg-settings") }));
 
 #line default

@@ -119,16 +119,38 @@ namespace SilentNotes.ViewModels
         {
             get
             {
-                double defaultBaseFontSize = 15.0; // Default size for scale 1.0
+                double defaultBaseFontSize = SettingsViewModel.ReferenceFontSize;
                 switch (_environmentService.Os)
                 {
                     case Services.OperatingSystem.Windows:
-                        defaultBaseFontSize = 13.0;
+                        defaultBaseFontSize = SettingsViewModel.ReferenceFontSize - 2;
                         break;
                 }
                 SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
-                double fontSize = settings != null ? defaultBaseFontSize * settings.FontScale : defaultBaseFontSize;
+                SliderStepConverter converter = new SliderStepConverter(defaultBaseFontSize, 1.0);
+                double fontSize = settings != null
+                    ? converter.ModelFactorToValue(settings.FontScale)
+                    : defaultBaseFontSize;
                 return FloatingPointUtils.FormatInvariant(fontSize);
+            }
+        }
+
+        public int NoteMinHeight
+        {
+            get 
+            {
+                // The minimum must not be bigger than the maximum.
+                return Math.Min(SettingsViewModel.ReferenceNoteMinSize, NoteMaxHeight);
+            }
+        }
+
+        public int NoteMaxHeight
+        {
+            get
+            {
+                SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
+                SliderStepConverter noteMaxHeightConverter = new SliderStepConverter(SettingsViewModel.ReferenceNoteMaxSize, 20.0);
+                return noteMaxHeightConverter.ModelFactorToValueAsInt(settings.NoteMaxHeightScale);
             }
         }
 

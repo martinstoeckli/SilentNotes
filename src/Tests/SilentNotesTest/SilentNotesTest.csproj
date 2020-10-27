@@ -124,6 +124,7 @@
     <Compile Include="ViewModels\ExportViewModelTest.cs" />
     <Compile Include="ViewModels\NoteViewModelTest.cs" />
     <Compile Include="ViewModels\OpenSafeViewModelTest.cs" />
+    <Compile Include="ViewModels\SliderStepConverterTest.cs" />
     <Compile Include="Workers\ByteArrayExtensionsTest.cs" />
     <Compile Include="Workers\ColorExtensionsTest.cs" />
     <Compile Include="Workers\CompressUtilsTest.cs" />

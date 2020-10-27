@@ -134,6 +134,14 @@
                     </div>
                 </div>
             </div>
+
+            <div class="form-row form-group">
+                <label class="col-form-label" for="NoteMaxHeightStep">@Model.Language["gui_note_max_size"]</label>
+                <div class="form-control">
+                    <input class="custom-range col-sm-6" type="range" id="NoteMaxHeightStep" v-model="NoteMaxHeightStep" min="-4" max="4" step="1">
+                </div>
+            </div>
+
             <div class="form-row form-group">
                 <label class="col-form-label" for="SelectedNoteInsertionMode">@Model.Language["gui_note_insertion"]</label>
                 <select class="form-control" id="SelectedNoteInsertionMode" v-model="SelectedNoteInsertionMode">
