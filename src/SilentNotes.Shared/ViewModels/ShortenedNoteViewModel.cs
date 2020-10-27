@@ -31,11 +31,11 @@ namespace SilentNotes.ViewModels
         {
             if (_unlockedContent != null)
             {
-                // Create a short version with only the first part of the note.
+                // Create a short version for large notes, with only the first part of the note.
+                // This is a performance improvement if there are large notes in the repository.
                 HtmlShortener shortener = new HtmlShortener();
-                // todo: set good numbers, respecting font size and note height
-                shortener.WantedLength = 2000;
-                shortener.WantedTagNumber = 50;
+                shortener.WantedLength = 600; // Should be enough even for settings with
+                shortener.WantedTagNumber = 20; // small font and very height notes.
 
                 string shortenedContent = shortener.Shorten(_unlockedContent);
                 if (shortenedContent.Length != _unlockedContent.Length)
