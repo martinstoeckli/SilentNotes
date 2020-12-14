@@ -163,7 +163,7 @@ namespace SilentNotes.Services
             resources["pushpull_pull_confirmation"] = "This local note will be overwritten with the note from the online-storage. Are you sure you want to continue?";
             resources["pushpull_push_confirmation"] = "The note of the online-storage will be overwritten with this locale note. Are you sure you want to continue?";
             resources["pushpull_success"] = "Successfully synchronized this note.";
-            resources["pushpull_error_need_sync_first"] = "Could not synchronize this note with the cloud, please do a one-time synchronization of all notes first.";
+            resources["pushpull_error_need_sync_first"] = "Could not synchronize this note with the cloud, please do once a manual synchronization of all notes.";
             resources["pushpull_error_no_cloud_note"] = "This note does not exist on the online-storage, please do a synchronization of all notes first.";
 
             resources["encryption"] = "Encryption";
@@ -330,7 +330,7 @@ namespace SilentNotes.Services
             resources["pushpull_pull_confirmation"] = "Diese lokale Notiz wird überschrieben mit der Notiz vom Online-Speicher. Sind sie sicher, dass Sie weiterfahren wollen?";
             resources["pushpull_push_confirmation"] = "Die Notiz vom Online-Speicher wird überschrieben mit dieser lokalen Notiz. Sind sie sicher, dass Sie weiterfahren wollen?";
             resources["pushpull_success"] = "Diese Notiz wurden erfolgreich synchronisiert.";
-            resources["pushpull_error_need_sync_first"] = "Konnte diese Notiz nicht mit dem Online-Speicher synchronisieren, bitte führen Sie zuerst einmalig eine normale Synchronisation aller Notizen durch.";
+            resources["pushpull_error_need_sync_first"] = "Konnte diese Notiz nicht mit dem Online-Speicher synchronisieren, bitte führen Sie einmalig eine manuelle Synchronisation aller Notizen durch.";
             resources["pushpull_error_no_cloud_note"] = "Diese Notiz existiert nicht auf dem Online-Speicher, bitte führen Sie vorher eine normale Synchronisation aller Notizen durch.";
 
             resources["encryption"] = "Verschlüsselung";
