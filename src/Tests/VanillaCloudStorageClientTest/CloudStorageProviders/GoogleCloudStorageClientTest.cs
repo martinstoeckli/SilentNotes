@@ -141,7 +141,7 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
             {
                 _httpTest.RespondWith(GetGoogleSearchFileFoundResponse());
                 HttpContent httpContent = new ByteArrayContent(fileContent);
-                _httpTest.RespondWith(httpContent);
+                _httpTest.RespondWith(() => httpContent);
             }
             Byte[] downloadedContent = Task.Run(async () => await DownloadFileWorksAsync(fileName)).Result;
             Assert.AreEqual(fileContent, downloadedContent);

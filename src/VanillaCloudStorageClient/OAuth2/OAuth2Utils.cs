@@ -108,10 +108,10 @@ namespace VanillaCloudStorageClient.OAuth2
 
             return new AuthorizationResponse
             {
-                Token = url.QueryParams["access_token"]?.ToString(),
-                Code = url.QueryParams["code"]?.ToString(),
-                State = url.QueryParams["state"]?.ToString(),
-                Error = AuthorizationResponseErrorExtensions.StringToAuthorizationResponseError(url.QueryParams["error"]?.ToString())
+                Token = url.QueryParams.FirstOrDefault("access_token")?.ToString(),
+                Code = url.QueryParams.FirstOrDefault("code")?.ToString(),
+                State = url.QueryParams.FirstOrDefault("state")?.ToString(),
+                Error = AuthorizationResponseErrorExtensions.StringToAuthorizationResponseError(url.QueryParams.FirstOrDefault("error")?.ToString())
             };
         }
     }

@@ -84,7 +84,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
 
                 // Now that we have got the session, the file can be uploaded
                 HttpContent content = new ByteArrayContent(fileContent);
-                HttpResponseMessage uploadResponse = await Flurl.Request(session.UploadUrl)
+                IFlurlResponse uploadResponse = await Flurl.Request(session.UploadUrl)
                     .WithHeader("Content-Length", fileContent.Length)
                     .WithHeader("Content-Range", string.Format("bytes 0-{0}/{1}", fileContent.Length - 1, fileContent.Length))
                     .PutAsync(content);
@@ -183,7 +183,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
             }
             catch (FlurlHttpException ex)
             {
-                if (ex.Call.HttpStatus == HttpStatusCode.NotFound)
+                if (ex.GetHttpStatusCode() == HttpStatusCode.NotFound)
                     return false;
                 else
                     throw ConvertToCloudStorageException(ex);

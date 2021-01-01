@@ -16,6 +16,6 @@
         LANG_DE:         Enforces a german localization (works only in DEBUG mode)
         DEMO:            Loads hard coded demo data (works only in DEBUG mode)
         -->
-        <DefineConstants>$(DefineConstants)</DefineConstants>
+        <DefineConstants>$(DefineConstants);ENV_DEVELOPMENT</DefineConstants>
     </PropertyGroup>
 </Project>

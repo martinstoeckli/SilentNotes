@@ -3,6 +3,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using System.Net;
 using Flurl.Http;
 
 namespace VanillaCloudStorageClient
@@ -24,6 +25,23 @@ namespace VanillaCloudStorageClient
             if (string.IsNullOrEmpty(username))
                 return clientOrRequest;
             return clientOrRequest.WithBasicAuth(username, password);
+        }
+
+        /// <summary>
+        /// Gets the status code of the exception as value of the <see cref="HttpStatusCode"/>
+        /// enumeration.
+        /// </summary>
+        /// <param name="flurlHttpException">Flurl exception to get the status code from.</param>
+        /// <param name="undefinedStatusCode">Defines the return value if the expection has an
+        /// undefined status code (null).</param>
+        /// <returns>Returns the status code of the exception.</returns>
+        public static HttpStatusCode GetHttpStatusCode(this FlurlHttpException flurlHttpException, HttpStatusCode undefinedStatusCode = HttpStatusCode.OK)
+        {
+            int? statusCode = flurlHttpException.StatusCode;
+            if (statusCode.HasValue)
+                return (HttpStatusCode)flurlHttpException.StatusCode;
+            else
+                return undefinedStatusCode;
         }
     }
 }

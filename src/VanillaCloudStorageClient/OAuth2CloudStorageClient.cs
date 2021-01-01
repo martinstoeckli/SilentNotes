@@ -172,8 +172,8 @@ namespace VanillaCloudStorageClient
         {
             HttpStatusCode[] possibleCodes = { HttpStatusCode.BadRequest, HttpStatusCode.Unauthorized, HttpStatusCode.Forbidden };
             if ((ex is FlurlHttpException flurlHttpException) &&
-                (flurlHttpException.Call?.HttpStatus != null) &&
-                possibleCodes.Contains(flurlHttpException.Call.HttpStatus.Value))
+                (flurlHttpException.StatusCode != null) &&
+                possibleCodes.Contains(flurlHttpException.GetHttpStatusCode()))
             {
                 string jsonResponse = await flurlHttpException.GetResponseStringAsync();
                 return (jsonResponse != null) && (jsonResponse.IndexOf("invalid_grant", StringComparison.InvariantCultureIgnoreCase) > 0);

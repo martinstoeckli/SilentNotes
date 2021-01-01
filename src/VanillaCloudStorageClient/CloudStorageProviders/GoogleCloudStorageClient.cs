@@ -79,7 +79,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
         {
             // The resumable upload type is the recommended approach for reliable file transfer,
             // not only for big files.
-            HttpResponseMessage sessionResponse = await Flurl.Request(UploadUrl)
+            IFlurlResponse sessionResponse = await Flurl.Request(UploadUrl)
                 .SetQueryParam("uploadType", "resumable")
                 .WithOAuthBearerToken(credentials.Token.AccessToken)
                 .WithHeader("X-Upload-Content-Type", "application/octet-stream")
@@ -89,11 +89,11 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
                     name = filename,
                     parents = new[] { DataFolder }
                 });
-            string sessionUri = sessionResponse.GetHeaderValue("Location");
+            string sessionUri = sessionResponse.Headers.FirstOrDefault("Location");
 
             // Now that we have got the session, the file can be uploaded
             HttpContent content = new ByteArrayContent(fileContent);
-            HttpResponseMessage uploadResponse = await Flurl.Request(sessionUri)
+            IFlurlResponse uploadResponse = await Flurl.Request(sessionUri)
                 .WithOAuthBearerToken(credentials.Token.AccessToken)
                 .PostAsync(content);
         }
@@ -103,17 +103,17 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
             // The resumable upload type is the recommended approach for reliable file transfer,
             // not only for big files.
             // Adding SetQueryParam("addParents", DataFolder) is not necessary because the id is unique
-            HttpResponseMessage sessionResponse = await Flurl.Request(UploadUrl, fileId)
+            IFlurlResponse sessionResponse = await Flurl.Request(UploadUrl, fileId)
                 .SetQueryParam("uploadType", "resumable")
                 .WithOAuthBearerToken(credentials.Token.AccessToken)
                 .WithHeader("X-Upload-Content-Type", "application/octet-stream")
                 .WithHeader("X-Upload-Content-Length", fileContent.Length)
                 .PatchAsync(null);
-            string sessionUri = sessionResponse.GetHeaderValue("Location");
+            string sessionUri = sessionResponse.Headers.FirstOrDefault("Location");
 
             // Now that we have got the session, the file can be uploaded
             HttpContent content = new ByteArrayContent(fileContent);
-            HttpResponseMessage uploadResponse = await Flurl.Request(sessionUri)
+            IFlurlResponse uploadResponse = await Flurl.Request(sessionUri)
                 .WithOAuthBearerToken(credentials.Token.AccessToken)
                 .PutAsync(content);
         }

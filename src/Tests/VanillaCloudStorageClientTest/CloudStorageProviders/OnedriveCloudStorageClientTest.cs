@@ -138,7 +138,7 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
             if (!DoRealWebRequests)
             {
                 HttpContent httpContent = new ByteArrayContent(fileContent);
-                _httpTest.RespondWith(httpContent);
+                _httpTest.RespondWith(() => httpContent);
             }
             Byte[] downloadedContent = Task.Run(async () => await DownloadFileWorksAsync(fileName)).Result;
             Assert.AreEqual(fileContent, downloadedContent);
@@ -150,7 +150,7 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
             if (!DoRealWebRequests)
             {
                 HttpContent content = null;
-                _httpTest.RespondWith(content, 404);
+                _httpTest.RespondWith(() => content, 404);
             }
             exists = Task.Run(async () => await FileExistsWorksAsync(fileName)).Result;
             Assert.IsFalse(exists);

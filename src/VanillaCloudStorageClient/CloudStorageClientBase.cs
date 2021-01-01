@@ -109,7 +109,7 @@ namespace VanillaCloudStorageClient
                 }
                 else
                 {
-                    switch (flurlException.Call.HttpStatus)
+                    switch (flurlException.GetHttpStatusCode())
                     {
                         case HttpStatusCode.Unauthorized:
                         case HttpStatusCode.Forbidden:
