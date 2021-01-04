@@ -81,6 +81,10 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
             Assert.AreEqual(fileContent, downloadedContent);
 
             // 5) Test delete
+            if (!DoRealWebRequests)
+            {
+                _httpTest.RespondWith(() => new ByteArrayContent(new byte[0]));
+            }
             Assert.DoesNotThrowAsync(() => DeleteFileWorksAsync(fileName));
 
             // 6) Was really deleted?

@@ -139,6 +139,7 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
             // 4) Test download
             if (!DoRealWebRequests)
             {
+                _httpTest = new HttpTest();
                 _httpTest.RespondWith(GetGoogleSearchFileFoundResponse());
                 HttpContent httpContent = new ByteArrayContent(fileContent);
                 _httpTest.RespondWith(() => httpContent);
