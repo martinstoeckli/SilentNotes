@@ -53,7 +53,6 @@ namespace VanillaCloudStorageClient.OAuth2
                     code_challenge = HashCodeVerifier(codeVerifier),
                     code_challenge_method = "S256"
                 });
-
             }
             return result;
         }

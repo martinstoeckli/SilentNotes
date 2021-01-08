@@ -44,6 +44,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
                 RedirectUrl = oauthRedirectUrl,
                 Flow = AuthorizationFlow.Code,
                 Scope = "https://www.googleapis.com/auth/drive.appdata",
+                ClientSecretHandling = ClientSecretHandling.SendEmptyParam,
             })
         {
         }

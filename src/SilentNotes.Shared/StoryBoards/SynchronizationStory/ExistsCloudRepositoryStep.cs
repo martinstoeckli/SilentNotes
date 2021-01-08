@@ -64,19 +64,22 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
                         // Refresh-token cannot be used to get new access-tokens anymore, a new
                         // authorization by the user is required.
                         stopBecauseNewOAuthLoginIsRequired = true;
-                        switch (StoryBoard.Mode)
-                        {
-                            case StoryBoardMode.GuiAndToasts:
-                                await StoryBoard.ContinueWith(SynchronizationStoryStepId.ShowCloudStorageAccount);
-                                break;
-                            case StoryBoardMode.ToastsOnly:
-                                _feedbackService.ShowToast(_languageService["sync_error_generic"]);
-                                break;
-                        }
                     }
                 }
 
-                if (!stopBecauseNewOAuthLoginIsRequired)
+                if (stopBecauseNewOAuthLoginIsRequired)
+                {
+                    switch (StoryBoard.Mode)
+                    {
+                        case StoryBoardMode.GuiAndToasts:
+                            await StoryBoard.ContinueWith(SynchronizationStoryStepId.ShowCloudStorageAccount);
+                            break;
+                        case StoryBoardMode.ToastsOnly:
+                            _feedbackService.ShowToast(_languageService["sync_error_oauth_refresh"]);
+                            break;
+                    }
+                }
+                else
                 {
                     bool repositoryExists = await cloudStorageClient.ExistsFileAsync(Config.RepositoryFileName, credentials);
 

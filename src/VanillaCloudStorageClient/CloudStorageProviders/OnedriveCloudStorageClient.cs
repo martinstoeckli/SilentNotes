@@ -49,6 +49,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
                 RedirectUrl = oauthRedirectUrl,
                 Flow = AuthorizationFlow.Code,
                 Scope = "offline_access Files.ReadWrite.AppFolder", // offline_access returns refresh token
+                ClientSecretHandling = ClientSecretHandling.SendEmptyParam,
             })
         {
         }

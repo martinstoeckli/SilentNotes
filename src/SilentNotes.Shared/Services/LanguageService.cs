@@ -157,6 +157,7 @@ namespace SilentNotes.Services
             resources["sync_error_privileges"] = "Please check username and password, and make sure you have enough privileges on the server.";
             resources["sync_error_repository"] = "Could not read the notes from the server, because the file has an invalid format.";
             resources["sync_error_revision"] = "Please update SilentNotes, the online-notes are stored in a more recent format.";
+            resources["sync_error_oauth_refresh"] = "The online-storage requires a new login, please do once a manual synchronization.";
             resources["sync_repository_merge"] = "Merge notes from local device and server [recommended].";
             resources["sync_repository_cloud"] = "Use notes from the server, delete notes on the local device.";
             resources["sync_repository_device"] = "Use notes from the local device, delete notes on the server.";
@@ -324,6 +325,7 @@ namespace SilentNotes.Services
             resources["sync_error_privileges"] = "Bitte überprüfen Sie Benutzername und Passwort, und stellen Sie sicher, dass Sie genügend Rechte auf dem Server besitzen.";
             resources["sync_error_repository"] = "Konnte die Notizen vom Online-Speicher nicht lesen, da die Datei ein ungültiges Format aufweist.";
             resources["sync_error_revision"] = "Bitte aktualisieren Sie SilentNotes, die Online-Notizen sind in einem neueren Format gespeichert.";
+            resources["sync_error_oauth_refresh"] = "Der Online-Speicher verlangt eine neue Anmeldung, bitte führen Sie einmalig eine manuelle Synchronisation durch.";
             resources["sync_repository_merge"] = "Zusammenführen der Notizen vom Online-Speicher und vom lokalem Gerät [empfohlen].";
             resources["sync_repository_cloud"] = "Verwende nur Notizen vom Online-Speicher, lösche Notizen auf dem lokalen Gerät.";
             resources["sync_repository_device"] = "Verwende nur Notizen vom lokalen Gerät, lösche Notizen auf dem Online-Speicher.";

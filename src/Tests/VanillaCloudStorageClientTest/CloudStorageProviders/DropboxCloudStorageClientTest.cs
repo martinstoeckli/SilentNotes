@@ -26,8 +26,13 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
         private const bool DoRealWebRequests = false;
         private const string ClientId = "cid";
         private const string RedirectUrl = "com.example.myapp://oauth2redirect/";
-        private const string DropboxAccessToken = "GetItWithTheReallyDoMethods";
+
+        private const string DropboxRedirectedUrl = "GetItWith:ReallyDoOpenAuthorizationPageInBrowser";
+        private const string DropboxAccessToken = "GetItWith:ReallyDoFetchToken_or_ReallyDoRefreshToken";
+        private const string DropboxRefreshToken = "GetItWith:ReallyDoFetchToken";
+
         private const string State = "7ysv8L9s4LB9CZpA";
+        private const string CodeVerifier = "abcdefghijklmnopqrstuvwxyabcdefghijklmnopqrstuvwxy";
         private HttpTest _httpTest;
 
         [SetUp]
@@ -49,12 +54,48 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
         public void ReallyDoOpenAuthorizationPageInBrowser()
         {
             IOAuth2CloudStorageClient client = new DropboxCloudStorageClient(ClientId, RedirectUrl);
-            string requestUrl = client.BuildAuthorizationRequestUrl(State, null);
+            string requestUrl = client.BuildAuthorizationRequestUrl(State, CodeVerifier);
 
             Process browserProcess = new Process();
             browserProcess.StartInfo.UseShellExecute = true;
             browserProcess.StartInfo.FileName = requestUrl;
             browserProcess.Start();
+        }
+
+        [Test]
+        [Ignore("Gets a real access-token")]
+        public async Task ReallyDoFetchToken()
+        {
+            if (!DoRealWebRequests)
+                return;
+
+            // Fetch token
+            IOAuth2CloudStorageClient client = new DropboxCloudStorageClient(ClientId, RedirectUrl);
+            CloudStorageToken token = await client.FetchTokenAsync(DropboxRedirectedUrl, State, CodeVerifier);
+
+            Assert.IsNotNull(token.AccessToken);
+            Assert.IsNotNull(token.RefreshToken);
+        }
+
+        [Test]
+        [Ignore("Refreshes a real token")]
+        public async Task ReallyDoRefreshToken()
+        {
+            if (!DoRealWebRequests)
+                return;
+
+            CloudStorageToken oldToken = new CloudStorageToken
+            {
+                RefreshToken = DropboxRefreshToken,
+            };
+
+            // Refresh token
+            IOAuth2CloudStorageClient client = new DropboxCloudStorageClient(ClientId, RedirectUrl);
+            CloudStorageToken newToken = await client.RefreshTokenAsync(oldToken);
+
+            Assert.IsNotNull(newToken.AccessToken);
+            Assert.AreNotEqual(oldToken.AccessToken, newToken.AccessToken);
+            Assert.AreEqual(oldToken.RefreshToken, newToken.RefreshToken);
         }
 
         [Test]
