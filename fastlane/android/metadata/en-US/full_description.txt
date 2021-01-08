@@ -1,0 +1,11 @@
+<i>SilentNotes</i> is a note taking app which respects your privacy. The notes can be written in WYSIWYG editor with some basic formats like headers, lists and other formats. The full-text search will find your notes quickly. Take your notes wherever you are, and share them between your Android and Windows devices.
+
+* Quickly find the right note with the full-text search, just by typing a few letters.
+* Store the notes to an online-storage of your choice, this allows synchronizing them between devices and offers an easy backup.
+* Currently supported are the FTP protocol, the WebDav protocol and Dropbox.
+* The notes never leave the device unencrypted, they are end-to-end encrypted and can only be read on your devices.
+* Use basic formatting to structure your notes and make them more readable.
+* SilentNotes does not collect user information and requires no unnecessary privileges.
+
+You can find the Windows version of this app on its homepage.
+
