@@ -180,7 +180,7 @@ namespace VanillaCloudStorageClient
             }
         }
 
-        private async Task<bool> IsInvalidGrantException(Exception ex)
+        private static async Task<bool> IsInvalidGrantException(Exception ex)
         {
             // 400 specified by ietf.org, 401 specified by DropBox
             HttpStatusCode[] possibleCodes = { HttpStatusCode.BadRequest, HttpStatusCode.Unauthorized, HttpStatusCode.Forbidden };

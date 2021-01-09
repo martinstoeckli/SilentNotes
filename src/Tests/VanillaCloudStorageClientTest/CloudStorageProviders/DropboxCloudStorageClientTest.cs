@@ -99,7 +99,7 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
         }
 
         [Test]
-        public void FileLifecycleWorks()
+        public async Task FileLifecycleWorks()
         {
             string fileName = "unittest.dat";
             byte[] fileContent = new byte[16];
@@ -113,7 +113,7 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
             {
                 _httpTest.RespondWith(GetDropboxFileListResponse());
             }
-            List<string> res = Task.Run(async () => await ListFileNamesWorksAsync()).Result;
+            List<string> res = await ListFileNamesWorksAsync();
             Assert.IsTrue(res.Count >= 1);
             Assert.IsTrue(res.Contains("unittest.dat"));
 
@@ -122,7 +122,7 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
             {
                 _httpTest.RespondWith(GetDropboxFileListResponse());
             }
-            bool exists = Task.Run(async () => await FileExistsWorksAsync(fileName)).Result;
+            bool exists = await FileExistsWorksAsync(fileName);
             Assert.IsTrue(exists);
 
             // 4) Test download
@@ -131,7 +131,7 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
                 HttpContent httpContent = new ByteArrayContent(fileContent);
                 _httpTest.RespondWith(() => httpContent);
             }
-            Byte[] downloadedContent = Task.Run(async () => await DownloadFileWorksAsync(fileName)).Result;
+            Byte[] downloadedContent = await DownloadFileWorksAsync(fileName);
             Assert.AreEqual(fileContent, downloadedContent);
 
             // 5) Test delete
@@ -146,7 +146,7 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
             {
                 _httpTest.RespondWith(GetDropboxEmptyFileListResponse());
             }
-            exists = Task.Run(async () => await FileExistsWorksAsync(fileName)).Result;
+            exists = await FileExistsWorksAsync(fileName);
             Assert.IsFalse(exists);
         }
 

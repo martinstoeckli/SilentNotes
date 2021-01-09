@@ -25,7 +25,7 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
         private const string ClientId = "cid";
         private const string RedirectUrl = "com.example.myapp://oauth2redirect/";
 
-        private const string OnedriveRedirectedUrl = "GetItWith:ReallyDoOpenAuthorizationPageInBrowser";
+        private const string OnedriveRedirectedUrl = "ch.martinstoeckli.silentnotes://oauth2redirect/?code=M.R3_BAY.6d2c377a-4ea9-dece-9c0b-82397f777c9c&state=7ysv8L9s4LB9CZpA";
         private const string OnedriveAccessToken = "GetItWith:ReallyDoFetchToken_or_ReallyDoRefreshToken";
         private const string OnedriveRefreshToken = "GetItWith:ReallyDoFetchToken";
 
@@ -62,27 +62,22 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
 
         [Test]
         [Ignore("Gets a real access-token")]
-        public void ReallyDoFetchToken()
+        public async Task ReallyDoFetchToken()
         {
             if (!DoRealWebRequests)
                 return;
 
             // Fetch token
             IOAuth2CloudStorageClient client = new OnedriveCloudStorageClient(ClientId, RedirectUrl);
-            CloudStorageToken token = Task.Run(async () => await FetchTokenAsync(client, OnedriveRedirectedUrl)).Result;
+            CloudStorageToken token = await client.FetchTokenAsync(OnedriveRedirectedUrl, State, CodeVerifier);
 
             Assert.IsNotNull(token.AccessToken);
             Assert.IsNotNull(token.RefreshToken);
         }
 
-        private async Task<CloudStorageToken> FetchTokenAsync(IOAuth2CloudStorageClient client, string redirectedUrl)
-        {
-            return await client.FetchTokenAsync(redirectedUrl, State, CodeVerifier);
-        }
-
         [Test]
         [Ignore("Refreshes a real token")]
-        public void ReallyDoRefreshToken()
+        public async Task ReallyDoRefreshToken()
         {
             if (!DoRealWebRequests)
                 return;
@@ -94,20 +89,15 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
 
             // Refresh token
             IOAuth2CloudStorageClient client = new OnedriveCloudStorageClient(ClientId, RedirectUrl);
-            CloudStorageToken newToken = Task.Run(async () => await RefreshTokenAsync(client, oldToken)).Result;
+            CloudStorageToken newToken = await client.RefreshTokenAsync(oldToken);
 
             Assert.IsNotNull(newToken.AccessToken);
             Assert.AreNotEqual(oldToken.AccessToken, newToken.AccessToken);
             Assert.AreEqual(oldToken.RefreshToken, newToken.RefreshToken);
         }
 
-        private async Task<CloudStorageToken> RefreshTokenAsync(IOAuth2CloudStorageClient client, CloudStorageToken token)
-        {
-            return await client.RefreshTokenAsync(token);
-        }
-
         [Test]
-        public void FileLifecycleWorks()
+        public async Task FileLifecycleWorks()
         {
             string fileName = "unittest.dat";
             byte[] fileContent = new byte[16];
@@ -126,12 +116,12 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
             {
                 _httpTest.RespondWith(GetOnedriveFileListResponse());
             }
-            List<string> res = Task.Run(async () => await ListFileNamesWorksAsync()).Result;
+            List<string> res = await ListFileNamesWorksAsync();
             Assert.IsTrue(res.Count >= 1);
             Assert.IsTrue(res.Contains("unittest.dat"));
 
             // 3) Test exists
-            bool exists = Task.Run(async () => await FileExistsWorksAsync(fileName)).Result;
+            bool exists = await FileExistsWorksAsync(fileName);
             Assert.IsTrue(exists);
 
             // 4) Test download
@@ -140,7 +130,7 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
                 HttpContent httpContent = new ByteArrayContent(fileContent);
                 _httpTest.RespondWith(() => httpContent);
             }
-            Byte[] downloadedContent = Task.Run(async () => await DownloadFileWorksAsync(fileName)).Result;
+            Byte[] downloadedContent = await DownloadFileWorksAsync(fileName);
             Assert.AreEqual(fileContent, downloadedContent);
 
             // 5) Test delete
@@ -156,7 +146,7 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
                 HttpContent content = null;
                 _httpTest.RespondWith(() => content, 404);
             }
-            exists = Task.Run(async () => await FileExistsWorksAsync(fileName)).Result;
+            exists = await FileExistsWorksAsync(fileName);
             Assert.IsFalse(exists);
         }
 

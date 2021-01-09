@@ -24,7 +24,11 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
         private const bool DoRealWebRequests = false;
         private const string ClientId = "cid";
         private const string RedirectUrl = "com.example.myapp://oauth2redirect/";
-        private const string GoogleAccessToken = "GetItWithTheReallyDoMethods";
+
+        private const string GoogledriveRedirectedUrl = "GetItWith:ReallyDoOpenAuthorizationPageInBrowser";
+        private const string GoogledriveAccessToken = "GetItWith:ReallyDoFetchToken_or_ReallyDoRefreshToken";
+        private const string GoogledriveRefreshToken = "GetItWith:ReallyDoFetchToken";
+
         private const string State = "7ysv8L9s4LB9CZpA";
         private const string CodeVerifier = "abcdefghijklmnopqrstuvwxyabcdefghijklmnopqrstuvwxy";
         private HttpTest _httpTest;
@@ -58,54 +62,42 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
 
         [Test]
         [Ignore("Gets a real access-token")]
-        public void ReallyDoFetchToken()
+        public async Task ReallyDoFetchToken()
         {
             if (!DoRealWebRequests)
                 return;
 
-            const string redirectedUrl = "InsertRedirectedUrl";
-
             // Fetch token
             IOAuth2CloudStorageClient client = new GoogleCloudStorageClient(ClientId, RedirectUrl);
-            CloudStorageToken token = Task.Run(async () => await FetchTokenAsync(client, redirectedUrl)).Result;
+            CloudStorageToken token = await client.FetchTokenAsync(GoogledriveRedirectedUrl, State, CodeVerifier);
 
             Assert.IsNotNull(token.AccessToken);
             Assert.IsNotNull(token.RefreshToken);
         }
 
-        private async Task<CloudStorageToken> FetchTokenAsync(IOAuth2CloudStorageClient client, string redirectedUrl)
-        {
-            return await client.FetchTokenAsync(redirectedUrl, State, CodeVerifier);
-        }
-
         [Test]
         [Ignore("Refreshes a real token")]
-        public void ReallyDoRefreshToken()
+        public async Task ReallyDoRefreshToken()
         {
             if (!DoRealWebRequests)
                 return;
 
             CloudStorageToken oldToken = new CloudStorageToken
             {
-                RefreshToken = "InsertRefreshToken",
+                RefreshToken = GoogledriveRefreshToken,
             };
 
             // Refresh token
             IOAuth2CloudStorageClient client = new GoogleCloudStorageClient(ClientId, RedirectUrl);
-            CloudStorageToken newToken = Task.Run(async () => await RefreshTokenAsync(client, oldToken)).Result;
+            CloudStorageToken newToken = await client.RefreshTokenAsync(oldToken);
 
             Assert.IsNotNull(newToken.AccessToken);
             Assert.AreNotEqual(oldToken.AccessToken, newToken.AccessToken);
             Assert.AreEqual(oldToken.RefreshToken, newToken.RefreshToken);
         }
 
-        private async Task<CloudStorageToken> RefreshTokenAsync(IOAuth2CloudStorageClient client, CloudStorageToken token)
-        {
-            return await client.RefreshTokenAsync(token);
-        }
-
         [Test]
-        public void FileLifecycleWorks()
+        public async Task FileLifecycleWorks()
         {
             string fileName = "unittest.dat";
             byte[] fileContent = new byte[16];
@@ -124,7 +116,7 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
             {
                 _httpTest.RespondWith(GetGoogleFileListResponse());
             }
-            List<string> res = Task.Run(async () => await ListFileNamesWorksAsync()).Result;
+            List<string> res = await ListFileNamesWorksAsync();
             Assert.IsTrue(res.Count >= 1);
             Assert.IsTrue(res.Contains("unittest.dat"));
 
@@ -133,7 +125,7 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
             {
                 _httpTest.RespondWith(GetGoogleSearchFileFoundResponse());
             }
-            bool exists = Task.Run(async () => await FileExistsWorksAsync(fileName)).Result;
+            bool exists = await FileExistsWorksAsync(fileName);
             Assert.IsTrue(exists);
 
             // 4) Test download
@@ -144,7 +136,7 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
                 HttpContent httpContent = new ByteArrayContent(fileContent);
                 _httpTest.RespondWith(() => httpContent);
             }
-            Byte[] downloadedContent = Task.Run(async () => await DownloadFileWorksAsync(fileName)).Result;
+            Byte[] downloadedContent = await DownloadFileWorksAsync(fileName);
             Assert.AreEqual(fileContent, downloadedContent);
 
             // 5) Test delete
@@ -159,35 +151,35 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
             {
                 _httpTest.RespondWith(GetGoogleSearchFileNotFoundResponse());
             }
-            exists = Task.Run(async () => await FileExistsWorksAsync(fileName)).Result;
+            exists = await FileExistsWorksAsync(fileName);
             Assert.IsFalse(exists);
         }
 
         private async Task UploadFileWorksAsync(string fileName, byte[] fileContent)
         {
             ICloudStorageClient client = new GoogleCloudStorageClient(ClientId, RedirectUrl);
-            var credentials = new CloudStorageCredentials { Token = new CloudStorageToken { AccessToken = GoogleAccessToken } };
+            var credentials = new CloudStorageCredentials { Token = new CloudStorageToken { AccessToken = GoogledriveAccessToken } };
             await client.UploadFileAsync(fileName, fileContent, credentials);
         }
 
         private async Task<byte[]> DownloadFileWorksAsync(string fileName)
         {
             ICloudStorageClient client = new GoogleCloudStorageClient(ClientId, RedirectUrl);
-            var credentials = new CloudStorageCredentials { Token = new CloudStorageToken { AccessToken = GoogleAccessToken } };
+            var credentials = new CloudStorageCredentials { Token = new CloudStorageToken { AccessToken = GoogledriveAccessToken } };
             return await client.DownloadFileAsync(fileName, credentials);
         }
 
         private async Task DeleteFileWorksAsync(string fileName)
         {
             ICloudStorageClient client = new GoogleCloudStorageClient(ClientId, RedirectUrl);
-            var credentials = new CloudStorageCredentials { Token = new CloudStorageToken { AccessToken = GoogleAccessToken } };
+            var credentials = new CloudStorageCredentials { Token = new CloudStorageToken { AccessToken = GoogledriveAccessToken } };
             await client.DeleteFileAsync(fileName, credentials);
         }
 
         private async Task<List<string>> ListFileNamesWorksAsync()
         {
             ICloudStorageClient client = new GoogleCloudStorageClient(ClientId, string.Empty);
-            var credentials = new CloudStorageCredentials { Token = new CloudStorageToken { AccessToken = GoogleAccessToken } };
+            var credentials = new CloudStorageCredentials { Token = new CloudStorageToken { AccessToken = GoogledriveAccessToken } };
             List<string> result = await client.ListFileNamesAsync(credentials);
             return result;
         }
@@ -195,7 +187,7 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
         private async Task<bool> FileExistsWorksAsync(string filename)
         {
             ICloudStorageClient client = new GoogleCloudStorageClient(ClientId, string.Empty);
-            var credentials = new CloudStorageCredentials { Token = new CloudStorageToken { AccessToken = GoogleAccessToken } };
+            var credentials = new CloudStorageCredentials { Token = new CloudStorageToken { AccessToken = GoogledriveAccessToken } };
             return await client.ExistsFileAsync(filename, credentials);
         }
 
