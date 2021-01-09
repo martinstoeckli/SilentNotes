@@ -1,0 +1,8 @@
+SilentNotes version 5.4.0
+
+* Improved startup time, if very large notes exist in the repository.
+* Allows for anonymous access to FTP and WebDav directories.
+* Made height of notes configurable.
+* Fixed the problem that the search highlighting did not react, if a note was opened with a preset search.
+* Updated to Vue.js 3.0
+* Made WebDav access more tolerant to server responses.

@@ -1,0 +1,8 @@
+SilentNotes Version 5.4.0
+
+* Schnelleres Aufstarten der App, falls sehr grosse Notizen im Repository enthalten sind.
+* Unterstützt nun anonyme Anmeldung bei FTP und WebDav Verzeichnissen.
+* Die Höhe der Notizen ist nun konfigurierbar.
+* Problem korrigiert, dass die Suchhervorhebung nicht reagiert hat, wenn die Notiz mit einer vordefinierten Suche geöffnet wurde.
+* Update auf Vue.js 3.0
+* Der WebDav Zugriff ist jetzt toleranter gegenüber Antworten des Servers.

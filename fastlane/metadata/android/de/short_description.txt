@@ -1,1 +1,1 @@
-Notizenapp mit optionalem Ende-zu-Ende verschlüsseltem Sync zu Deinem PC
+Notizenapp mit optionaler Ende-zu-Ende verschlüsselter Synchronisation zu PC.
