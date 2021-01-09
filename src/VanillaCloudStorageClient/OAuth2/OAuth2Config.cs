@@ -58,6 +58,33 @@ namespace VanillaCloudStorageClient.OAuth2
         /// the token-flow or the code-flow.
         /// </summary>
         public AuthorizationFlow Flow { get; set; }
+
+        /// <summary>
+        /// Gets or sets the strategy how the client secret should be handled. Apps are
+        /// "public clients" and cannot keep secrets, therefore OAuth2 providers usually do not
+        /// require the client secret for them.
+        /// </summary>
+        public ClientSecretHandling ClientSecretHandling { get; set; }
+    }
+
+    /// <summary>
+    /// Determines how the service should handle the client secret.
+    /// </summary>
+    public enum ClientSecretHandling
+    {
+        /// <summary>
+        /// The client secret is not sent at all. Since public clients like apps cannot keep
+        /// secrects, an OAuth2 service can decide that the client secret is not required/accepted
+        /// to get the token.
+        /// </summary>
+        DoNotSend,
+
+        /// <summary>
+        /// An empty string is passed as client secret. Since public clients like apps cannot keep
+        /// secrects, an OAuth2 service can decide that the client secret is not required to get the
+        /// token, but nevertheless needs this JSON parameter in the request.
+        /// </summary>
+        SendEmptyParam,
     }
 
     /// <summary>

@@ -122,6 +122,7 @@ namespace VanillaCloudStorageClientTest
                 RedirectUrl = "com.example.myapp://oauth2redirect/",
                 Flow = AuthorizationFlow.Token,
                 Scope = null,
+                ClientSecretHandling = ClientSecretHandling.DoNotSend,
             };
         }
 
@@ -135,6 +136,7 @@ namespace VanillaCloudStorageClientTest
                 RedirectUrl = "com.example.myapp://oauth2redirect/",
                 Flow = AuthorizationFlow.Code,
                 Scope = "https://www.googleapis.com/auth/drive.appdata",
+                ClientSecretHandling = ClientSecretHandling.SendEmptyParam,
             };
         }
 

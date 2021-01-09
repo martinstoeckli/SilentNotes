@@ -26,8 +26,13 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
         private const bool DoRealWebRequests = false;
         private const string ClientId = "cid";
         private const string RedirectUrl = "com.example.myapp://oauth2redirect/";
-        private const string DropboxAccessToken = "GetItWithTheReallyDoMethods";
+
+        private const string DropboxRedirectedUrl = "GetItWith:ReallyDoOpenAuthorizationPageInBrowser";
+        private const string DropboxAccessToken = "GetItWith:ReallyDoFetchToken_or_ReallyDoRefreshToken";
+        private const string DropboxRefreshToken = "GetItWith:ReallyDoFetchToken";
+
         private const string State = "7ysv8L9s4LB9CZpA";
+        private const string CodeVerifier = "abcdefghijklmnopqrstuvwxyabcdefghijklmnopqrstuvwxy";
         private HttpTest _httpTest;
 
         [SetUp]
@@ -49,7 +54,7 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
         public void ReallyDoOpenAuthorizationPageInBrowser()
         {
             IOAuth2CloudStorageClient client = new DropboxCloudStorageClient(ClientId, RedirectUrl);
-            string requestUrl = client.BuildAuthorizationRequestUrl(State, null);
+            string requestUrl = client.BuildAuthorizationRequestUrl(State, CodeVerifier);
 
             Process browserProcess = new Process();
             browserProcess.StartInfo.UseShellExecute = true;
@@ -58,7 +63,43 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
         }
 
         [Test]
-        public void FileLifecycleWorks()
+        [Ignore("Gets a real access-token")]
+        public async Task ReallyDoFetchToken()
+        {
+            if (!DoRealWebRequests)
+                return;
+
+            // Fetch token
+            IOAuth2CloudStorageClient client = new DropboxCloudStorageClient(ClientId, RedirectUrl);
+            CloudStorageToken token = await client.FetchTokenAsync(DropboxRedirectedUrl, State, CodeVerifier);
+
+            Assert.IsNotNull(token.AccessToken);
+            Assert.IsNotNull(token.RefreshToken);
+        }
+
+        [Test]
+        [Ignore("Refreshes a real token")]
+        public async Task ReallyDoRefreshToken()
+        {
+            if (!DoRealWebRequests)
+                return;
+
+            CloudStorageToken oldToken = new CloudStorageToken
+            {
+                RefreshToken = DropboxRefreshToken,
+            };
+
+            // Refresh token
+            IOAuth2CloudStorageClient client = new DropboxCloudStorageClient(ClientId, RedirectUrl);
+            CloudStorageToken newToken = await client.RefreshTokenAsync(oldToken);
+
+            Assert.IsNotNull(newToken.AccessToken);
+            Assert.AreNotEqual(oldToken.AccessToken, newToken.AccessToken);
+            Assert.AreEqual(oldToken.RefreshToken, newToken.RefreshToken);
+        }
+
+        [Test]
+        public async Task FileLifecycleWorks()
         {
             string fileName = "unittest.dat";
             byte[] fileContent = new byte[16];
@@ -72,7 +113,7 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
             {
                 _httpTest.RespondWith(GetDropboxFileListResponse());
             }
-            List<string> res = Task.Run(async () => await ListFileNamesWorksAsync()).Result;
+            List<string> res = await ListFileNamesWorksAsync();
             Assert.IsTrue(res.Count >= 1);
             Assert.IsTrue(res.Contains("unittest.dat"));
 
@@ -81,19 +122,23 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
             {
                 _httpTest.RespondWith(GetDropboxFileListResponse());
             }
-            bool exists = Task.Run(async () => await FileExistsWorksAsync(fileName)).Result;
+            bool exists = await FileExistsWorksAsync(fileName);
             Assert.IsTrue(exists);
 
             // 4) Test download
             if (!DoRealWebRequests)
             {
                 HttpContent httpContent = new ByteArrayContent(fileContent);
-                _httpTest.RespondWith(httpContent);
+                _httpTest.RespondWith(() => httpContent);
             }
-            Byte[] downloadedContent = Task.Run(async () => await DownloadFileWorksAsync(fileName)).Result;
+            Byte[] downloadedContent = await DownloadFileWorksAsync(fileName);
             Assert.AreEqual(fileContent, downloadedContent);
 
             // 5) Test delete
+            if (!DoRealWebRequests)
+            {
+                _httpTest.RespondWith(() => new ByteArrayContent(new byte[0]));
+            }
             Assert.DoesNotThrowAsync(() => DeleteFileWorksAsync(fileName));
 
             // 6) Was really deleted?
@@ -101,7 +146,7 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
             {
                 _httpTest.RespondWith(GetDropboxEmptyFileListResponse());
             }
-            exists = Task.Run(async () => await FileExistsWorksAsync(fileName)).Result;
+            exists = await FileExistsWorksAsync(fileName);
             Assert.IsFalse(exists);
         }
 

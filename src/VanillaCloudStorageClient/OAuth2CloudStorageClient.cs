@@ -94,12 +94,18 @@ namespace VanillaCloudStorageClient
 
             try
             {
-                string jsonResponse = await Flurl.Request(Config.TokenServiceEndpoint)
+                // Installable apps cannot keep secrets, thus the client secret is not transmitted
+                string clientSecret = Config.ClientSecretHandling == ClientSecretHandling.SendEmptyParam
+                    ? string.Empty // Serializes as empty parameter
+                    : null; // Won't be serialized
+
+                string jsonResponse = await Flurl
+                    .Request(Config.TokenServiceEndpoint)
                     .PostUrlEncodedAsync(new
                     {
                         refresh_token = token.RefreshToken,
                         client_id = Config.ClientId,
-                        client_secret = string.Empty, // Installable apps cannot keep secrets, thus the client secret is not transmitted
+                        client_secret = clientSecret,
                         grant_type = "refresh_token",
                     })
                     .ReceiveString();
@@ -141,12 +147,18 @@ namespace VanillaCloudStorageClient
 
             try
             {
-                string jsonResponse = await Flurl.Request(Config.TokenServiceEndpoint)
+                // Installable apps cannot keep secrets, thus the client secret is not transmitted
+                string clientSecret = Config.ClientSecretHandling == ClientSecretHandling.SendEmptyParam
+                    ? string.Empty // Serializes as empty parameter
+                    : null; // Won't be serialized
+
+                string jsonResponse = await Flurl
+                    .Request(Config.TokenServiceEndpoint)
                     .PostUrlEncodedAsync(new
                     {
                         code = authorizationCode,
                         client_id = Config.ClientId,
-                        client_secret = string.Empty, // Installable apps cannot keep secrets, thus the client secret is not transmitted
+                        client_secret = clientSecret,
                         redirect_uri = Config.RedirectUrl,
                         grant_type = "authorization_code",
                         code_verifier = codeVerifier,
@@ -168,12 +180,13 @@ namespace VanillaCloudStorageClient
             }
         }
 
-        private async Task<bool> IsInvalidGrantException(Exception ex)
+        private static async Task<bool> IsInvalidGrantException(Exception ex)
         {
+            // 400 specified by ietf.org, 401 specified by DropBox
             HttpStatusCode[] possibleCodes = { HttpStatusCode.BadRequest, HttpStatusCode.Unauthorized, HttpStatusCode.Forbidden };
             if ((ex is FlurlHttpException flurlHttpException) &&
-                (flurlHttpException.Call?.HttpStatus != null) &&
-                possibleCodes.Contains(flurlHttpException.Call.HttpStatus.Value))
+                (flurlHttpException.StatusCode != null) &&
+                possibleCodes.Contains(flurlHttpException.GetHttpStatusCode()))
             {
                 string jsonResponse = await flurlHttpException.GetResponseStringAsync();
                 return (jsonResponse != null) && (jsonResponse.IndexOf("invalid_grant", StringComparison.InvariantCultureIgnoreCase) > 0);

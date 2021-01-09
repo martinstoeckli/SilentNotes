@@ -58,11 +58,14 @@ namespace SilentNotes.StoryBoards.PullPushStory
                         // Refresh-token cannot be used to get new access-tokens anymore, a new
                         // authorization by the user is required.
                         stopBecauseNewOAuthLoginIsRequired = true;
-                        _feedbackService.ShowToast(_languageService["pushpull_error_need_sync_first"]);
                     }
                 }
 
-                if (!stopBecauseNewOAuthLoginIsRequired)
+                if (stopBecauseNewOAuthLoginIsRequired)
+                {
+                    _feedbackService.ShowToast(_languageService["sync_error_oauth_refresh"]);
+                }
+                else
                 {
                     bool repositoryExists = await cloudStorageClient.ExistsFileAsync(Config.RepositoryFileName, credentials);
                     if (repositoryExists)

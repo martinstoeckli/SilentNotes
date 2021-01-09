@@ -17,10 +17,12 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
     /// <summary>
     /// Implementation of the <see cref="ICloudStorageClient"/> interface,
     /// which can handle cloud storage with the Dropbox API.
+    /// Required permissions scopes are: files.content.read, files.content.write, files.metadata.read
     /// </summary>
     public class DropboxCloudStorageClient : OAuth2CloudStorageClient, ICloudStorageClient, IOAuth2CloudStorageClient
     {
         private const string AuthorizeUrl = "https://www.dropbox.com/oauth2/authorize";
+        private const string TokenUrl = "https://api.dropbox.com/oauth2/token";
         private const string UploadUrl = "https://content.dropboxapi.com/2/files/upload";
         private const string DownloadUrl = "https://content.dropboxapi.com/2/files/download";
         private const string DeleteUrl = "https://api.dropboxapi.com/2/files/delete_v2";
@@ -36,11 +38,12 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
             : base(new OAuth2Config
             {
                 AuthorizeServiceEndpoint = AuthorizeUrl,
-                TokenServiceEndpoint = null,
+                TokenServiceEndpoint = TokenUrl,
                 ClientId = oauthClientId,
                 RedirectUrl = oauthRedirectUrl,
-                Flow = AuthorizationFlow.Token,
+                Flow = AuthorizationFlow.Code,
                 Scope = null,
+                ClientSecretHandling = ClientSecretHandling.DoNotSend,
             })
         {
         }
@@ -50,7 +53,9 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
         /// <inheritdoc/>
         public override string BuildAuthorizationRequestUrl(string state, string codeVerifier)
         {
-            return base.BuildAuthorizationRequestUrl(state, null); // Do not send code verifier
+            string url = base.BuildAuthorizationRequestUrl(state, codeVerifier);
+            url = url + "&token_access_type=offline"; // This is only necessary as long as short lived tokens are not the default in the Dropbox developer console (possible until 30.09.2021).
+            return url;
         }
 
         /// <inheritdoc/>
