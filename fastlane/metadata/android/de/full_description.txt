@@ -1,0 +1,14 @@
+<i>SilentNotes</i> ist eine Notizen-App die Ihre Privatsphäre respektiert. Schreiben Sie Ihre Notizen in einem komfortablen WYSIWYG Editor mit einfachen Formatierungen wie Überschriften oder Listen, und synchronisieren Sie sie Ende-zu-Ende verschlüsselt zwischen Android und Windows Geräten.
+
+* Schreiben Sie die Notizen in einem komfotrablen WYSIWYG Editor.
+* Erstelle To-do-Listen um die Übersicht über noch anstehende Arbeiten zu behalten.
+* Schützen Sie ausgewählte Notizen mit einem benutzerdefinierten Passwort.
+* Finden Sie blitzschnell die richtige Notiz mit der Volltextsuche, einfach durch Eintippen von ein paar Buchstaben.
+* Speichern Sie die Notizen auf einem Online-Speicher Ihrer Wahl (self hosting), so können Sie sie zwischen Geräten synchronisieren und erhalten ein einfaches Backup.
+* Zurzeit werden das FTP Protokoll, das WebDav Protokoll, Dropbox, Google-Drive und One-Drive unterstützt.
+* Die Notizen verlassen das Gerät nie unverschlüsselt, sie sind Ende-zu-ende verschlüsselt und können nur auf den Geräten gelesen werden.
+* Ein dunkles Design kann gewählt werden, zum angenehmen Arbeiten bei spärlichem Licht.
+* Verwenden Sie einfache Formatierungen um die Notizen zu strukturieren und besser lesbar zu machen.
+* SilentNotes sammelt keine Benutzerinformationen und verlangt keine unnötigen Rechte, darum der Name silent notes.
+
+Die Windows Version ist im Microsoft Store erhältlich.

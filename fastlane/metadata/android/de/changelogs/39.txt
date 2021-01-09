@@ -1,0 +1,4 @@
+SilentNotes Version 5.5.0
+
+* Migration DropBox Login zu short lived tokens, um die Änderungen im DropBox API zu implementieren.
+* Updated auf Flurl 3.0.1.
