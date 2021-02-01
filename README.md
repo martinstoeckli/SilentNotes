@@ -1,6 +1,6 @@
 # SilentNotes
 
-![Icon](screenshots/silentnotes.png)
+![Icon](fastlane/metadata/android/en-US/images/phoneScreenshots/001-silentnotes.png)
 
 SilentNotes is a note taking app which respects your privacy. The notes can be synchronized between Android and Windows devices. SilentNotes uses end-to-end encryption to protect the notes.
 
