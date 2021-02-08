@@ -114,7 +114,7 @@ namespace SilentNotes.Models
                     _noteColorsHex ??
                     (_noteColorsHex = new List<string>
                     {
-                        "#fbf4c1", "#fdd8bb", "#facbc6", "#fcd5ef", "#d9d9fc", "#cee7fb", "#d0f8f9", "#d9f8c8",
+                        "#ffffff", "#fbf4c1", "#fdd8bb", "#facbc6", "#fcd5ef", "#d9d9fc", "#cee7fb", "#d0f8f9", "#d9f8c8",
                         "#ae7f0a", "#871908", "#800080", "#0d5696", "#007a7a", "#33750f", "#333333",
                     });
             }
