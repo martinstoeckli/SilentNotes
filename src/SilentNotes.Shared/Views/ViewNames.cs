@@ -3,14 +3,14 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-using System.Diagnostics.CodeAnalysis;
+using System;
 
 namespace SilentNotes.Views
 {
     /// <summary>
     /// Collection of known razor view names.
     /// </summary>
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Just a collection of constants.")]
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public static class ViewNames
     {
         public const string NoteRepository = "noterepositoryview";

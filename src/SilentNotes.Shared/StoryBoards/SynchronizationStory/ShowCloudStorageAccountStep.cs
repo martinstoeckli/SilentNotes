@@ -4,7 +4,6 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using SilentNotes.Controllers;
 using SilentNotes.Crypto;
@@ -28,7 +27,6 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         /// <summary>
         /// Initializes a new instance of the <see cref="ShowCloudStorageAccountStep"/> class.
         /// </summary>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1611:ElementParametersMustBeDocumented", Justification = "Dependency injection")]
         public ShowCloudStorageAccountStep(
             Enum stepId,
             IStoryBoard storyBoard,

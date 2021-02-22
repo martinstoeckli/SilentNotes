@@ -5,7 +5,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Security;
 using System.Windows.Input;
@@ -35,7 +34,6 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Initializes a new instance of the <see cref="OpenSafeViewModel"/> class.
         /// </summary>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1611:ElementParametersMustBeDocumented", Justification = "Dependency injection")]
         public OpenSafeViewModel(
             INavigationService navigationService,
             ILanguageService languageService,

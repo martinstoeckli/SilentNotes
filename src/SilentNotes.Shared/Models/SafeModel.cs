@@ -4,7 +4,6 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Security;
 using System.Xml.Serialization;
 using SilentNotes.Crypto;
@@ -14,7 +13,6 @@ namespace SilentNotes.Models
     /// <summary>
     /// A safe can be used to encrypt one or more notes.
     /// </summary>
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Properties are only used for serialization.")]
     public class SafeModel : IDisposable
     {
         /// <summary>The package name used for encryption, see <see cref="CryptoHeader.PackageName"/></summary>

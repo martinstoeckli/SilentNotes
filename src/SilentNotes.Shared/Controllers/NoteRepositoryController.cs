@@ -5,7 +5,6 @@
 
 using System;
 using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
 using SilentNotes.HtmlView;
 using SilentNotes.Services;
 using SilentNotes.ViewModels;
@@ -27,7 +26,6 @@ namespace SilentNotes.Controllers
         /// <summary>
         /// Initializes a new instance of the <see cref="NoteRepositoryController"/> class.
         /// </summary>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1611:ElementParametersMustBeDocumented", Justification = "Dependency injection")]
         public NoteRepositoryController(
             IRazorViewService viewService,
             IRazorViewService viewContentService,

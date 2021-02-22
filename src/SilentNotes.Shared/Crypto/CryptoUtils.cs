@@ -178,7 +178,7 @@ namespace SilentNotes.Crypto
         }
 
         /// <summary>
-        /// Reverses a string obfuscate with <see cref="Obfuscate(string, string, ICryptoRandomSource)"/>
+        /// Reverses a string obfuscate with <see cref="Obfuscate(string, SecureString, ICryptoRandomSource)"/>
         /// to its original plain text.
         /// </summary>
         /// <param name="obfuscatedText">Obfuscated text.</param>

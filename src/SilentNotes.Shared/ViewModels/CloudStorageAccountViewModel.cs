@@ -4,7 +4,6 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Security;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -27,7 +26,6 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Initializes a new instance of the <see cref="CloudStorageAccountViewModel"/> class.
         /// </summary>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1611:ElementParametersMustBeDocumented", Justification = "Dependency injection")]
         public CloudStorageAccountViewModel(
             INavigationService navigationService,
             ILanguageService languageService,

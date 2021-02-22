@@ -4,7 +4,6 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 
 namespace VanillaCloudStorageClient
 {
@@ -49,7 +48,6 @@ namespace VanillaCloudStorageClient
     /// <summary>
     /// Extension methods for the <see cref="CloudStorageToken"/> class.
     /// </summary>
-    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass", Justification = "Just extension methods for the same class.")]
     public static class CloudStorageTokenExtensions
     {
         /// <summary>

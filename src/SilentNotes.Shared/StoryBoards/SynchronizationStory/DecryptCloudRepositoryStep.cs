@@ -5,7 +5,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using SilentNotes.Crypto;
@@ -29,7 +28,6 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         /// <summary>
         /// Initializes a new instance of the <see cref="DecryptCloudRepositoryStep"/> class.
         /// </summary>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1611:ElementParametersMustBeDocumented", Justification = "Dependency injection")]
         public DecryptCloudRepositoryStep(
             Enum stepId,
             IStoryBoard storyBoard,

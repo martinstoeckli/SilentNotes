@@ -3,7 +3,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-using System.Diagnostics.CodeAnalysis;
+using System;
 
 namespace VanillaCloudStorageClient
 {
@@ -38,7 +38,6 @@ namespace VanillaCloudStorageClient
     /// <summary>
     /// Extension methods for the <see cref="CloudStorageCredentialsRequirements"/> class.
     /// </summary>
-    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass", Justification = "Just extension methods for the same class.")]
     public static class CloudStorageCredentialsRequirementsExtensions
     {
         /// <summary>

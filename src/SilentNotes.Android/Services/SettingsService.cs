@@ -3,7 +3,6 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Xml.Linq;
 using Android.Content;
@@ -24,9 +23,8 @@ namespace SilentNotes.Android.Services
         /// <summary>
         /// Initializes a new instance of the <see cref="SettingsService"/> class.
         /// </summary>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1611:ElementParametersMustBeDocumented", Justification = "Dependency injection")]
-        public SettingsService(Context appContext, IXmlFileService xmlFileService, IDataProtectionService dataProtectionService, IEnvironmentService environmentService)
-            : base(xmlFileService, dataProtectionService, environmentService)
+        public SettingsService(Context appContext, IXmlFileService xmlFileService, IDataProtectionService dataProtectionService)
+            : base(xmlFileService, dataProtectionService)
         {
             _appContext = appContext;
         }

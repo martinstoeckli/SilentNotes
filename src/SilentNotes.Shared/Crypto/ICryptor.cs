@@ -65,7 +65,7 @@ namespace SilentNotes.Crypto
             string compression = null);
 
         /// <summary>
-        /// Decrypts a cipher, which was encrypted with <see cref="Encrypt(byte[], SecureString, KeyDerivationCostType, ICryptoRandomSource, string, string, string)"/>.
+        /// Decrypts a cipher, which was encrypted with <see cref="Encrypt(byte[], SecureString, KeyDerivationCostType, string, string, string)"/>.
         /// </summary>
         /// <param name="packedCipher">The cipher containing a header with the necessary parameters
         /// for decryption.</param>
@@ -77,7 +77,7 @@ namespace SilentNotes.Crypto
         byte[] Decrypt(byte[] packedCipher, SecureString password);
 
         /// <summary>
-        /// Decrypts a cipher, which was encrypted with <see cref="Encrypt(byte[], byte[], ICryptoRandomSource, string, string)"/>.
+        /// Decrypts a cipher, which was encrypted with <see cref="Encrypt(byte[], byte[], string, string)"/>.
         /// </summary>
         /// <param name="packedCipher">The cipher containing a header with the necessary parameters
         /// for decryption.</param>

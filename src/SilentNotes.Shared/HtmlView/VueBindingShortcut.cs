@@ -3,14 +3,14 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-using System.Diagnostics.CodeAnalysis;
+using System;
 
 namespace SilentNotes.HtmlView
 {
     /// <summary>
     /// Description of a keyboard shortcut.
     /// </summary>
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "The Key* constants are self explanatory.")]
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class VueBindingShortcut
     {
         public const string KeyEnter = "Enter";

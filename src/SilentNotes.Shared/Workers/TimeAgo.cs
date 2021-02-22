@@ -160,16 +160,40 @@ namespace SilentNotes.Workers
                 NumberOfYearsAgo = "{0} years ago";
             }
 
+            /// <summary>
+            /// Gets or sets the localized string to express today.
+            /// <example>"today"</example>
+            /// </summary>
             public string Today { get; set; }
 
+            /// <summary>
+            /// Gets or sets the localized string to express yesterday.
+            /// <example>"yesterday"</example>
+            /// </summary>
             public string Yesterday { get; set; }
 
+            /// <summary>
+            /// Gets or sets the localized string to express how many days in the past.
+            /// <example>"{0} days ago"</example>
+            /// </summary>
             public string NumberOfDaysAgo { get; set; }
 
+            /// <summary>
+            /// Gets or sets the localized string to express how many weeks in the past.
+            /// <example>"{0} weeks ago"</example>
+            /// </summary>
             public string NumberOfWeeksAgo { get; set; }
 
+            /// <summary>
+            /// Gets or sets the localized string to express how many months in the past.
+            /// <example>"{0} months ago"</example>
+            /// </summary>
             public string NumberOfMonthsAgo { get; set; }
 
+            /// <summary>
+            /// Gets or sets the localized string to express how many years in the past.
+            /// <example>"{0} years ago"</example>
+            /// </summary>
             public string NumberOfYearsAgo { get; set; }
         }
     }

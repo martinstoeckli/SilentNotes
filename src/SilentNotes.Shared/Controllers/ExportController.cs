@@ -9,6 +9,9 @@ using SilentNotes.ViewModels;
 
 namespace SilentNotes.Controllers
 {
+    /// <summary>
+    /// Controller to show the export dialog.
+    /// </summary>
     public class ExportController : ControllerBase
     {
         private ExportViewModel _viewModel;

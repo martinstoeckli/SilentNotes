@@ -30,7 +30,10 @@ namespace SilentNotes.Services
     /// </summary>
     public enum OperatingSystem
     {
+        /// <summary>Microsoft Windows OS</summary>
         Windows,
+
+        /// <summary>Android OS</summary>
         Android,
     }
 }

@@ -4,7 +4,6 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 
 namespace VanillaCloudStorageClient.OAuth2
 {
@@ -64,7 +63,6 @@ namespace VanillaCloudStorageClient.OAuth2
     /// <summary>
     /// Extension methods for the <see cref="AuthorizationResponseError"/> enumeration.
     /// </summary>
-    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass", Justification = "Just extension methods for the same class.")]
     public static class AuthorizationResponseErrorExtensions
     {
         /// <summary>

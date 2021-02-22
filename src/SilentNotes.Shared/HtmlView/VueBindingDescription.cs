@@ -5,7 +5,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 
 namespace SilentNotes.HtmlView
 {
@@ -35,7 +34,6 @@ namespace SilentNotes.HtmlView
     /// <summary>
     /// List of <see cref="VueBindingDescription"/> objects.
     /// </summary>
-    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass", Justification = "Just a list belonging to the class.")]
     public class VueBindingDescriptions : List<VueBindingDescription>
     {
         /// <summary>

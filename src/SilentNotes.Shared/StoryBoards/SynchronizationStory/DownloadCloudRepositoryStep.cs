@@ -4,7 +4,6 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using SilentNotes.Services;
 using VanillaCloudStorageClient;
@@ -24,7 +23,6 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         /// <summary>
         /// Initializes a new instance of the <see cref="DownloadCloudRepositoryStep"/> class.
         /// </summary>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1611:ElementParametersMustBeDocumented", Justification = "Dependency injection")]
         public DownloadCloudRepositoryStep(
             Enum stepId,
             IStoryBoard storyBoard,

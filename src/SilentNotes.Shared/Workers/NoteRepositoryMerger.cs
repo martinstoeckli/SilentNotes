@@ -20,7 +20,6 @@ namespace SilentNotes.Workers
         /// </summary>
         /// <param name="localRepository">Repository from the local device.</param>
         /// <param name="remoteRepository">Repository stored on the server for synchronization.</param>
-        /// not used by any note.</param>
         /// <returns>The merged repository.</returns>
         public NoteRepositoryModel Merge(NoteRepositoryModel localRepository, NoteRepositoryModel remoteRepository)
         {

@@ -3,7 +3,6 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-using System.Diagnostics.CodeAnalysis;
 using SilentNotes.HtmlView;
 using SilentNotes.Services;
 using SilentNotes.UWP.Services;
@@ -14,8 +13,6 @@ namespace SilentNotes.UWP
     /// <summary>
     /// Initializes the dependencies and services of the application.
     /// </summary>
-    [SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1115:ParameterMustFollowComma", Justification = "Keep readability.")]
-    [SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1116:SplitParametersMustStartOnLineAfterDeclaration", Justification = "Keep readability.")]
     public class Startup
     {
         private static bool _isFirstTime = true;
@@ -58,8 +55,7 @@ namespace SilentNotes.UWP
             Ioc.RegisterFactory<IVersionService>(() => new VersionService());
             Ioc.RegisterFactory<ISettingsService>(() => new SettingsService(
                 Ioc.GetOrCreate<IXmlFileService>(),
-                Ioc.GetOrCreate<IDataProtectionService>(),
-                Ioc.GetOrCreate<IEnvironmentService>()));
+                Ioc.GetOrCreate<IDataProtectionService>()));
             Ioc.RegisterFactory<IRepositoryStorageService>(() => new RepositoryStorageService(
                 Ioc.GetOrCreate<IXmlFileService>(),
                 Ioc.GetOrCreate<ILanguageService>()));

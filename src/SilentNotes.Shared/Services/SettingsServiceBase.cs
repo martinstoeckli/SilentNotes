@@ -4,7 +4,6 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Security;
 using System.Text;
@@ -26,18 +25,15 @@ namespace SilentNotes.Services
         /// <summary>Gets the injected dependency to a data protection service</summary>
         protected readonly IDataProtectionService _dataProtectionService;
 
-        private readonly IEnvironmentService _environmentSettings;
         private SettingsModel _cachedSettings;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SettingsServiceBase"/> class.
         /// </summary>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1611:ElementParametersMustBeDocumented", Justification = "Dependency injection")]
-        public SettingsServiceBase(IXmlFileService xmlFileService, IDataProtectionService dataProtectionService, IEnvironmentService environmentService)
+        public SettingsServiceBase(IXmlFileService xmlFileService, IDataProtectionService dataProtectionService)
         {
             _xmlFileService = xmlFileService;
             _dataProtectionService = dataProtectionService;
-            _environmentSettings = environmentService;
         }
 
         /// <inheritdoc/>

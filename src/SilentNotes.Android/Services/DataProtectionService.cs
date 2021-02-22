@@ -4,7 +4,6 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using Android.Content;
 using Android.OS;
@@ -42,7 +41,6 @@ namespace SilentNotes.Android.Services
         /// <summary>
         /// Initializes a new instance of the <see cref="DataProtectionService"/> class.
         /// </summary>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1611:ElementParametersMustBeDocumented", Justification = "Dependency injection")]
         public DataProtectionService(Context applicationContext, ICryptoRandomService randomService)
         {
             _applicationContext = applicationContext;
@@ -169,9 +167,8 @@ namespace SilentNotes.Android.Services
                     .SetStartDate(startDateCalendar.Time)
                     .SetEndDate(endDateCalendar.Time)
                     .SetKeySize(KeySize);
-#pragma warning restore 618
-
                 keyGenerator.Initialize(builder.Build());
+#pragma warning restore 618
             }
             else if (Build.VERSION.SdkInt >= BuildVersionCodes.M)
             {

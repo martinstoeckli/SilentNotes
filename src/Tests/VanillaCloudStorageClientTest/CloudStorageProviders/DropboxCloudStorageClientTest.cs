@@ -10,6 +10,7 @@ using NUnit.Framework;
 using VanillaCloudStorageClient;
 using VanillaCloudStorageClient.CloudStorageProviders;
 
+#pragma warning disable CS0162 // Unreachable code detected
 namespace VanillaCloudStorageClientTest.CloudStorageProviders
 {
     [TestFixture]

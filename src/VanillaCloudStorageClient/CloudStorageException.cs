@@ -4,14 +4,12 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 
 namespace VanillaCloudStorageClient
 {
     /// <summary>
     /// Base class of all cloud storage exceptions.
     /// </summary>
-    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass", Justification = "Just a list of exceptions.")]
     public class CloudStorageException : Exception
     {
         /// <summary>
@@ -30,7 +28,6 @@ namespace VanillaCloudStorageClient
     /// Usually this happens when the user provides a wrong url, or if the internet access is
     /// turned off.
     /// </summary>
-    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass", Justification = "Just a list of exceptions.")]
     public class ConnectionFailedException : CloudStorageException
     {
         /// <summary>
@@ -66,7 +63,6 @@ namespace VanillaCloudStorageClient
     /// Throw this exception if the authentication failed or if there are missing privileges.
     /// Usually this happens when the user provides a wrong username password combination.
     /// </summary>
-    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass", Justification = "Just a list of exceptions.")]
     public class AccessDeniedException : CloudStorageException
     {
         /// <summary>
@@ -92,7 +88,6 @@ namespace VanillaCloudStorageClient
     /// Throw this exception if the token refresh was not granted by the OAuth2 server.
     /// This happens when the refresh-token has expired and the user has to do a new login.
     /// </summary>
-    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass", Justification = "Just a list of exceptions.")]
     public class RefreshTokenExpiredException : CloudStorageException
     {
         /// <summary>
@@ -118,7 +113,6 @@ namespace VanillaCloudStorageClient
     /// <summary>
     /// Throw this exception if the required parameter is missing or invalid.
     /// </summary>
-    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass", Justification = "Just a list of exceptions.")]
     public class InvalidParameterException : CloudStorageException
     {
         /// <summary>

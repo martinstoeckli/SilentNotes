@@ -4,14 +4,13 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 
 namespace SilentNotes.Controllers
 {
     /// <summary>
     /// Collection of known controller names.
     /// </summary>
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Just a collection of constants.")]
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public static class ControllerNames
     {
         public const string NoteRepository = "noterepository";

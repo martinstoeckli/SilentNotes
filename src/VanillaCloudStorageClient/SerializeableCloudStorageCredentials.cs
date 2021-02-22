@@ -4,7 +4,6 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
@@ -21,9 +20,7 @@ namespace VanillaCloudStorageClient
     [Serializable]
     [XmlType("cloud_storage_credentials")]
     [DataContract(Name = "cloud_storage_credentials")]
-    [SuppressMessage("StyleCop.CSharp.LayoutRules", "SA1502:ElementMustNotBeOnSingleLine", Justification = "The *Specified properties are only markers for serialization.")]
-    [SuppressMessage("StyleCop.CSharp.LayoutRules", "SA1516:ElementsMustBeSeparatedByBlankLine", Justification = "The *Specified properties are only markers for serialization.")]
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "The *Specified properties are only markers for serialization.")]
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class SerializeableCloudStorageCredentials : CloudStorageCredentials
     {
         /// <summary>

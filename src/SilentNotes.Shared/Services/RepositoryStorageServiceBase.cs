@@ -4,7 +4,6 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Xml.Linq;
 using SilentNotes.Models;
@@ -31,7 +30,6 @@ namespace SilentNotes.Services
         /// <summary>
         /// Initializes a new instance of the <see cref="RepositoryStorageServiceBase"/> class.
         /// </summary>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1611:ElementParametersMustBeDocumented", Justification = "Dependency injection")]
         public RepositoryStorageServiceBase(IXmlFileService xmlFileService, ILanguageService languageService)
         {
             _xmlFileService = xmlFileService;

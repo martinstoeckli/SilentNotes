@@ -5,7 +5,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Threading.Tasks;
 using Flurl;
@@ -216,7 +215,6 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
     /// <summary>
     /// This interface can be mocked and passed to the <see cref="FtpCloudStorageClient"/> for unittesting.
     /// </summary>
-    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass", Justification = "Just an interface for mocking the ftp server responses.")]
     public interface IFtpFakeResponse
     {
         /// <summary>

@@ -3,7 +3,6 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-using System.Diagnostics.CodeAnalysis;
 using Android.App;
 using SilentNotes.Android.Services;
 using SilentNotes.HtmlView;
@@ -15,8 +14,6 @@ namespace SilentNotes.Android
     /// <summary>
     /// Initializes the dependencies and services of the application.
     /// </summary>
-    [SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1115:ParameterMustFollowComma", Justification = "Keep readability.")]
-    [SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1116:SplitParametersMustStartOnLineAfterDeclaration", Justification = "Keep readability.")]
     public class Startup
     {
         /// <summary>
@@ -50,8 +47,7 @@ namespace SilentNotes.Android
             Ioc.RegisterFactory<ISettingsService>(() => new SettingsService(
                 rootActivity,
                 Ioc.GetOrCreate<IXmlFileService>(),
-                Ioc.GetOrCreate<IDataProtectionService>(),
-                Ioc.GetOrCreate<IEnvironmentService>()));
+                Ioc.GetOrCreate<IDataProtectionService>()));
             Ioc.RegisterFactory<IRepositoryStorageService>(() => new RepositoryStorageService(
                 rootActivity,
                 Ioc.GetOrCreate<IXmlFileService>(),

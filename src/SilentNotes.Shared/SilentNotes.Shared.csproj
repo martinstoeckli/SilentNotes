@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -36,7 +36,6 @@
   <ItemGroup>
     <Compile Update="ViewModels\CloudStorageChoiceViewModel.cs">
       <ExcludeFromSourceAnalysis>True</ExcludeFromSourceAnalysis>
-      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
     <Compile Update="Views\ChangePasswordRazorView.cs">
       <DesignTime>True</DesignTime>
@@ -144,7 +143,6 @@
       <DependentUpon>TransferCodeRazorView.cshtml</DependentUpon>
     </Compile>
     <Compile Update="Workers\NoteRepositoryMerger.cs">
-      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
       <ExcludeFromSourceAnalysis>True</ExcludeFromSourceAnalysis>
     </Compile>
   </ItemGroup>

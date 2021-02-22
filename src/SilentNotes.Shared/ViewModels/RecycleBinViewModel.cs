@@ -5,7 +5,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Windows.Input;
 using SilentNotes.Controllers;
 using SilentNotes.Crypto;
@@ -29,7 +28,6 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Initializes a new instance of the <see cref="RecycleBinViewModel"/> class.
         /// </summary>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1611:ElementParametersMustBeDocumented", Justification = "Dependency injection")]
         public RecycleBinViewModel(
             INavigationService navigationService,
             ILanguageService languageService,

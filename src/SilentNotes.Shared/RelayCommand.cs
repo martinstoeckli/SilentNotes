@@ -4,7 +4,6 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Windows.Input;
 
 namespace SilentNotes
@@ -44,7 +43,6 @@ namespace SilentNotes
     /// and to control access.
     /// </summary>
     /// <typeparam name="T">Type of the parameter, the command can pass on to its action.</typeparam>
-    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass", Justification = "Generic variation.")]
     public class RelayCommand<T> : GalaSoft.MvvmLight.Command.RelayCommand<T>, ICommand
     {
         /// <summary>

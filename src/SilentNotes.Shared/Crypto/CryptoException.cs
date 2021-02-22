@@ -4,7 +4,6 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 
 namespace SilentNotes.Crypto
 {
@@ -44,7 +43,6 @@ namespace SilentNotes.Crypto
     /// <summary>
     /// This exception will be thrown, whenever the cipher has an invalid format.
     /// </summary>
-    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass", Justification = "Just exceptions.")]
     public class CryptoExceptionInvalidCipherFormat : CryptoException
     {
     }
@@ -60,7 +58,6 @@ namespace SilentNotes.Crypto
     /// <summary>
     /// This exception will be thrown, whenever the decryption fails, mostly because of a wrong key.
     /// </summary>
-    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass", Justification = "Just exceptions.")]
     public class CryptoDecryptionException : CryptoException
     {
         /// <summary>
