@@ -306,7 +306,7 @@ namespace SilentNotes.Services
             resources["cloud_first_synchronization_title"] = "Einrichten des Online-Speichers";
             resources["cloud_first_synchronization_text"] = "Dies ist die erste Synchronisation, darum werden nun die nötigen Informationen gesammelt, um sich mit dem Online-Speicher zu verbinden.\nDie Informationen finden Sie jederzeit im Menu ‹Einstellungen›.";
             resources["cloud_service_choice"] = "Online-Speicher wählen";
-            resources["cloud_service_credentials"] = "Online-Speicher Zugansdaten";
+            resources["cloud_service_credentials"] = "Online-Speicher Zugangsdaten";
             resources["cloud_service_undefined"] = "Es ist noch kein Online-Speicher bestimmt";
             resources["cloud_ftp_example"] = "ftp://ftp.example.org/silentnote/";
             resources["cloud_webdav_example"] = "https://webdav.example.org/";
