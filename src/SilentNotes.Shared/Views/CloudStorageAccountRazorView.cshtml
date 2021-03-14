@@ -59,6 +59,10 @@
                 <input class="form-check-input" type="checkbox" id="Secure" v-model="Secure">
                 <label class="form-check-label" for="Secure">@Model.Language["cloud_secure"]</label>
             </div>
+            <div class="form-row form-group form-check" @if (!Model.NeedsSecureFlag) { @("hidden") ; }>
+                <input class="form-check-input" type="checkbox" id="AcceptInvalidCertificate" v-model="AcceptInvalidCertificate">
+                <label class="form-check-label" for="Secure">@Model.Language["cloud_accept_invalid_certificate"]</label>
+            </div>
             <button type="button" class="btn btn-primary mb-2 mr-1" v-on:click="OkCommand">@Model.Language["continue"]</button>
             <button type="button" class="btn btn-secondary mb-2 mr-1" v-on:click="CancelCommand">@Model.Language["cancel"]</button>
         </form>

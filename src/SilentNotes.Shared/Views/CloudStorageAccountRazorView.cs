@@ -23,7 +23,7 @@ using SilentNotes.ViewModels;
 #line hidden
 
 
-[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.7.0.452")]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.9.0.271")]
 public partial class CloudStorageAccountRazorView : CloudStorageAccountRazorViewBase
 {
 
@@ -441,6 +441,56 @@ WriteLiteral(">");
 
 #line default
 #line hidden
+WriteLiteral("</label>\r\n            </div>\r\n            <div");
+
+WriteLiteral(" class=\"form-row form-group form-check\"");
+
+WriteLiteral(" ");
+
+
+#line 62 "CloudStorageAccountRazorView.cshtml"
+                                                         if (!Model.NeedsSecureFlag) { 
+
+#line default
+#line hidden
+
+#line 62 "CloudStorageAccountRazorView.cshtml"
+                                                                                   Write("hidden");
+
+
+#line default
+#line hidden
+
+#line 62 "CloudStorageAccountRazorView.cshtml"
+                                                                                                   ; }
+
+#line default
+#line hidden
+WriteLiteral(">\r\n                <input");
+
+WriteLiteral(" class=\"form-check-input\"");
+
+WriteLiteral(" type=\"checkbox\"");
+
+WriteLiteral(" id=\"AcceptInvalidCertificate\"");
+
+WriteLiteral(" v-model=\"AcceptInvalidCertificate\"");
+
+WriteLiteral(">\r\n                <label");
+
+WriteLiteral(" class=\"form-check-label\"");
+
+WriteLiteral(" for=\"Secure\"");
+
+WriteLiteral(">");
+
+
+#line 64 "CloudStorageAccountRazorView.cshtml"
+                                                        Write(Model.Language["cloud_accept_invalid_certificate"]);
+
+
+#line default
+#line hidden
 WriteLiteral("</label>\r\n            </div>\r\n            <button");
 
 WriteLiteral(" type=\"button\"");
@@ -452,7 +502,7 @@ WriteLiteral(" v-on:click=\"OkCommand\"");
 WriteLiteral(">");
 
 
-#line 62 "CloudStorageAccountRazorView.cshtml"
+#line 66 "CloudStorageAccountRazorView.cshtml"
                                                                                       Write(Model.Language["continue"]);
 
 
@@ -469,7 +519,7 @@ WriteLiteral(" v-on:click=\"CancelCommand\"");
 WriteLiteral(">");
 
 
-#line 63 "CloudStorageAccountRazorView.cshtml"
+#line 67 "CloudStorageAccountRazorView.cshtml"
                                                                                             Write(Model.Language["cancel"]);
 
 
@@ -478,13 +528,13 @@ WriteLiteral(">");
 WriteLiteral("</button>\r\n        </form>\r\n    </div>\r\n\r\n    <div hidden>\r\n");
 
 
-#line 68 "CloudStorageAccountRazorView.cshtml"
+#line 72 "CloudStorageAccountRazorView.cshtml"
         
 
 #line default
 #line hidden
 
-#line 68 "CloudStorageAccountRazorView.cshtml"
+#line 72 "CloudStorageAccountRazorView.cshtml"
           WriteLiteral(Model.Icon.LoadIcon("settings", new[] { new KeyValuePair<string, string>("id", "svg-settings") }));
 
 #line default

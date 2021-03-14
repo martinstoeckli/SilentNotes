@@ -24,6 +24,8 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
         private const string AuthorizationUrl = "ftp://example.com";
         private const string AuthorizationUsername = "user@example.com";
         private const string AuthorizationPassword = "ValidPassword";
+        private const bool UseSecureSsl = false;
+        private const bool AcceptInvalidCertificate = false;
 
         [Test]
         public void FileLifecycleWorks()
@@ -203,13 +205,41 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
             }
         }
 
+        [Test]
+        public void SanitizeCredentials_ChangesInvalidPrefix()
+        {
+            // Keep valid url
+            var credentials = new CloudStorageCredentials { Url = "ftp://correct", Secure = false };
+            FtpCloudStorageClient.SanitizeCredentials(credentials);
+            Assert.AreEqual("ftp://correct", credentials.Url);
+            Assert.IsFalse(credentials.Secure);
+
+            // Correct ftps
+            credentials = new CloudStorageCredentials { Url = "ftps://invalidprefix", Secure = false };
+            FtpCloudStorageClient.SanitizeCredentials(credentials);
+            Assert.AreEqual("ftp://invalidprefix", credentials.Url);
+            Assert.IsTrue(credentials.Secure);
+
+            credentials = new CloudStorageCredentials { Url = "Ftps://invalidprefix", Secure = false };
+            FtpCloudStorageClient.SanitizeCredentials(credentials);
+            Assert.AreEqual("ftp://invalidprefix", credentials.Url);
+            Assert.IsTrue(credentials.Secure);
+
+            credentials = new CloudStorageCredentials { Url = null, Secure = false };
+            FtpCloudStorageClient.SanitizeCredentials(credentials);
+            Assert.IsNull(credentials.Url);
+            Assert.IsFalse(credentials.Secure);
+        }
+
         private static CloudStorageCredentials GetCredentials()
         {
             return new CloudStorageCredentials
             {
                 Url = AuthorizationUrl,
                 Username = AuthorizationUsername,
-                UnprotectedPassword = AuthorizationPassword
+                UnprotectedPassword = AuthorizationPassword,
+                Secure = UseSecureSsl,
+                AcceptInvalidCertificate = AcceptInvalidCertificate,
             };
         }
     }

@@ -40,6 +40,7 @@ namespace VanillaCloudStorageClient
             SerializeablePassword = EncryptProperty(UnprotectedPassword, encrypt);
             SerializeableUrl = Url;
             SerializeableSecure = Secure;
+            SerializeableAcceptInvalidCertificate = AcceptInvalidCertificate;
         }
 
         /// <summary>
@@ -64,6 +65,7 @@ namespace VanillaCloudStorageClient
             UnprotectedPassword = DecryptProperty(SerializeablePassword, decrypt);
             Url = SerializeableUrl;
             Secure = SerializeableSecure;
+            AcceptInvalidCertificate = SerializeableAcceptInvalidCertificate;
         }
 
         /// <summary>
@@ -144,6 +146,18 @@ namespace VanillaCloudStorageClient
         public bool SerializeableSecure { get; set; }
         [JsonIgnore]
         public bool SerializeableSecureSpecified { get { return SerializeableSecure == true; } } // Serialize only when set
+
+        /// <summary>
+        /// Gets or sets a value indicating whether a SSL certifacte shoudl be accepted, even if
+        /// the validation was not successful.
+        /// This value is currently used onyl by the FTP provider, others will ignore this value.
+        /// </summary>
+        [XmlElement("accept_invalid_certificate")]
+        [JsonProperty("accept_invalid_certificate")]
+        [DataMember(EmitDefaultValue = false, Name = "accept_invalid_certificate")]
+        public bool SerializeableAcceptInvalidCertificate { get; set; }
+        [JsonIgnore]
+        public bool SerializeableAcceptInvalidCertificateSpecified { get { return SerializeableAcceptInvalidCertificate == true; } } // Serialize only when set
 
         private string EncryptProperty(string plainText, Func<string, string> encrypt)
         {
