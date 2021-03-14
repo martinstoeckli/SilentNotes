@@ -139,6 +139,13 @@ namespace SilentNotes.ViewModels
             set { ChangePropertyIndirect(() => Model.Secure, (bool v) => Model.Secure = v, value, true); }
         }
 
+        [VueDataBinding(VueBindingMode.TwoWay)]
+        public bool AcceptInvalidCertificate
+        {
+            get { return Model.AcceptInvalidCertificate; }
+            set { ChangePropertyIndirect(() => Model.AcceptInvalidCertificate, (bool v) => Model.AcceptInvalidCertificate = v, value, true); }
+        }
+
         /// <summary>
         /// Gets a value indicating whether a url must be entered.
         /// </summary>

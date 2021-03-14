@@ -6,6 +6,8 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Flurl;
 
@@ -52,16 +54,18 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
         public override async Task UploadFileAsync(string filename, byte[] fileContent, CloudStorageCredentials credentials)
         {
             credentials.ThrowIfInvalid(CredentialsRequirements, true);
+            SanitizeCredentials(credentials);
 
             try
             {
                 Url fileUrl = new Url(credentials.Url).AppendPathSegment(filename);
+                using (var certificateAcceptor = new CertificateAcceptor(credentials.AcceptInvalidCertificate))
                 using (WebClient webClient = new CustomFtpWebClient(request =>
-                {
-                    request.Timeout = (int)TimeSpan.FromSeconds(UploadTimeoutSeconds).TotalMilliseconds;
-                    request.UseBinary = true;
-                    request.EnableSsl = credentials.Secure;
-                }))
+                    {
+                        request.Timeout = (int)TimeSpan.FromSeconds(UploadTimeoutSeconds).TotalMilliseconds;
+                        request.UseBinary = true;
+                        request.EnableSsl = credentials.Secure;
+                    }))
                 {
                     webClient.Credentials = new NetworkCredential(credentials.Username, credentials.Password);
                     if (!IsInTestMode)
@@ -78,11 +82,13 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
         public override async Task<byte[]> DownloadFileAsync(string filename, CloudStorageCredentials credentials)
         {
             credentials.ThrowIfInvalid(CredentialsRequirements, true);
+            SanitizeCredentials(credentials);
 
             try
             {
                 Url fileUrl = new Url(credentials.Url).AppendPathSegment(filename);
                 byte[] responseData;
+                using (var certificateAcceptor = new CertificateAcceptor(credentials.AcceptInvalidCertificate))
                 using (WebClient webClient = new CustomFtpWebClient(request =>
                     {
                         request.Timeout = (int)TimeSpan.FromSeconds(DownloadTimeoutSeconds).TotalMilliseconds;
@@ -108,17 +114,19 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
         public override async Task DeleteFileAsync(string filename, CloudStorageCredentials credentials)
         {
             credentials.ThrowIfInvalid(CredentialsRequirements, true);
+            SanitizeCredentials(credentials);
 
             try
             {
                 Url fileUrl = new Url(credentials.Url).AppendPathSegment(filename);
 
+                using (var certificateAcceptor = new CertificateAcceptor(credentials.AcceptInvalidCertificate))
                 using (WebClient webClient = new CustomFtpWebClient(request =>
-                {
-                    request.Timeout = (int)TimeSpan.FromSeconds(DeleteTimeoutSeconds).TotalMilliseconds;
-                    request.Method = WebRequestMethods.Ftp.DeleteFile; // "DELE"
-                    request.EnableSsl = credentials.Secure;
-                }))
+                    {
+                        request.Timeout = (int)TimeSpan.FromSeconds(DeleteTimeoutSeconds).TotalMilliseconds;
+                        request.Method = WebRequestMethods.Ftp.DeleteFile; // "DELE"
+                        request.EnableSsl = credentials.Secure;
+                    }))
                 {
                     webClient.Credentials = new NetworkCredential(credentials.Username, credentials.Password);
                     if (!IsInTestMode)
@@ -135,12 +143,14 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
         public override async Task<List<string>> ListFileNamesAsync(CloudStorageCredentials credentials)
         {
             credentials.ThrowIfInvalid(CredentialsRequirements, true);
+            SanitizeCredentials(credentials);
 
             try
             {
                 // Call the list command
                 Uri directoryUri = new Uri(IncludeTrailingSlash(credentials.Url));
                 string responseData = null;
+                using (var certificateAcceptor = new CertificateAcceptor(credentials.AcceptInvalidCertificate))
                 using (WebClient webClient = new CustomFtpWebClient(request =>
                     {
                         request.Timeout = (int)TimeSpan.FromSeconds(ListTimeoutSeconds).TotalMilliseconds;
@@ -168,6 +178,21 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
             catch (Exception ex)
             {
                 throw ConvertToCloudStorageException(ex);
+            }
+        }
+
+        /// <summary>
+        /// DotNet only supports FTP urls of the form "ftp://", but no "ftps://". Since SSL does
+        /// not depend on this prefix and is rather controlled by the secure flag, we can change
+        /// the prefix to a valid and accepted "ftp://".
+        /// </summary>
+        public static void SanitizeCredentials(CloudStorageCredentials credentials)
+        {
+            const string DisallowedPrefix = "ftps:";
+            if (!string.IsNullOrEmpty(credentials.Url) && credentials.Url.StartsWith(DisallowedPrefix, StringComparison.OrdinalIgnoreCase))
+            {
+                credentials.Url = "ftp:" + credentials.Url.Remove(0, DisallowedPrefix.Length);
+                credentials.Secure = true;
             }
         }
 
@@ -208,6 +233,57 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
 
                 _adjustWebRequest?.Invoke(ftpRequest);
                 return request;
+            }
+        }
+
+        /// <summary>
+        /// Helper class which can add a callback to the certificate validation, which accepts
+        /// even invalid certificates.
+        /// </summary>
+        private class CertificateAcceptor : IDisposable
+        {
+            private readonly bool _acceptInvalidCertificates;
+            private bool _disposed;
+            private RemoteCertificateValidationCallback _oldCertificateValidationCallback;
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="CertificateAcceptor"/> class.
+            /// </summary>
+            /// <param name="acceptInvalidCertificates">A value indicating whether all certificates
+            /// should be accepted.</param>
+            public CertificateAcceptor(bool acceptInvalidCertificates)
+            {
+                _acceptInvalidCertificates = acceptInvalidCertificates;
+                if (_acceptInvalidCertificates)
+                {
+                    _oldCertificateValidationCallback = ServicePointManager.ServerCertificateValidationCallback;
+                    ServicePointManager.ServerCertificateValidationCallback = CertificateValidationCallback;
+                }
+            }
+
+            /// <summary>
+            /// Finalizes an instance of the <see cref="CertificateAcceptor"/> class.
+            /// </summary>
+            ~CertificateAcceptor()
+            {
+                Dispose();
+            }
+
+            /// <inheritdoc/>
+            public void Dispose()
+            {
+                if (!_disposed)
+                {
+                    _disposed = true;
+                    if (_acceptInvalidCertificates)
+                        ServicePointManager.ServerCertificateValidationCallback = _oldCertificateValidationCallback;
+                }
+            }
+
+            private bool CertificateValidationCallback(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
+            {
+                // Accept every certificate, even if it is invalid.
+                return true;
             }
         }
     }

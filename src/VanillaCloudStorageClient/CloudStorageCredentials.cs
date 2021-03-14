@@ -74,6 +74,16 @@ namespace VanillaCloudStorageClient
         public bool Secure { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether a SSL certifacte shoudl be accepted, even if
+        /// the validation was not successful.
+        /// This value is currently used onyl by the FTP provider, others will ignore this value.
+        /// </summary>
+        [XmlIgnore]
+        [JsonIgnore]
+        [IgnoreDataMember]
+        public bool AcceptInvalidCertificate { get; set; }
+
+        /// <summary>
         /// Gets or sets the plain text password. Keep the usage of this property to a minimum,
         /// try to work with SeureString all the way instead.
         /// </summary>
