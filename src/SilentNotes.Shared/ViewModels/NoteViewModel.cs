@@ -129,6 +129,27 @@ namespace SilentNotes.ViewModels
         }
 
         /// <summary>
+        /// Gets the <see cref="UnlockedHtmlContent"/>, but very long notes are truncated, so they
+        /// can be processed faster by the HTML view in an overview of notes.
+        /// </summary>
+        /// <returns>Truncated html content of the note.</returns>
+        public string GetShortenedUnlockedHtmlContent()
+        {
+            string result = _unlockedContent;
+            if (result != null)
+            {
+                // Create a short version for large notes, with only the first part of the note.
+                // This is a performance improvement if there are large notes in the repository.
+                HtmlShortener shortener = new HtmlShortener();
+                shortener.WantedLength = 600; // Should be enough even for settings with
+                shortener.WantedTagNumber = 20; // small font and very height notes.
+
+                result = shortener.Shorten(result);
+            }
+            return result;
+        }
+
+        /// <summary>
         /// Gets or sets the background color as hex string, e.g. #ff0000
         /// </summary>
         [VueDataBinding(VueBindingMode.TwoWay)]
