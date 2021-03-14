@@ -23,7 +23,7 @@ using SilentNotes.ViewModels;
 #line hidden
 
 
-[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.6.0.1061")]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.9.0.271")]
 public partial class NoteRepositoryContentRazorView : NoteRepositoryContentRazorViewBase
 {
 
@@ -167,7 +167,7 @@ WriteLiteral(">");
 
 
 #line 14 "NoteRepositoryContentRazorView.cshtml"
-                                                                            WriteLiteral(note.UnlockedHtmlContent);
+                                                                            WriteLiteral(note.GetShortenedUnlockedHtmlContent());
 
 #line default
 #line hidden

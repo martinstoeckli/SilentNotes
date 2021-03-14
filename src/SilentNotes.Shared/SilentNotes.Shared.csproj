@@ -19,6 +19,9 @@
     <OutputPath>..\..\bin\Shared</OutputPath>
   </PropertyGroup>
   <Import Project="$(SolutionDir)\SolutionWideDefines.props" />
+  <ItemGroup>
+    <Compile Remove="ViewModels\ShortenedNoteViewModel.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Remove="StoryBoards\SynchronizationStory\diagram-draw.io.xml" />

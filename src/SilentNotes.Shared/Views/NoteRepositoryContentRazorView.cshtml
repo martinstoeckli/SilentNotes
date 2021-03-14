@@ -11,7 +11,7 @@
             }
             else
             {
-                <div class="note-viewer over-view @note.CssClassNoteType">@{WriteLiteral(note.UnlockedHtmlContent);}</div>
+                <div class="note-viewer over-view @note.CssClassNoteType">@{WriteLiteral(note.GetShortenedUnlockedHtmlContent());}</div>
             }
         </div>
         <div class="note-handle sortable-handle @note.GetDarkClass()"><svg width='22' height='22' viewBox='0 0 24 24'><use xlink:href="#svg-arrow-all" /></svg></div>
