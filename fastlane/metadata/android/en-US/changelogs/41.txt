@@ -1,0 +1,4 @@
+SilentNotes version 5.5.2
+
+* Fixed problem with truncated notes, when moving large notes to the safe.
+* Added option to accept unsafe certificates for FTP over SSL connections.
