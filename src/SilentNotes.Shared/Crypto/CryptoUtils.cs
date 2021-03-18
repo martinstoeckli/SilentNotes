@@ -146,7 +146,7 @@ namespace SilentNotes.Crypto
                 plainMessage,
                 obfuscationKey,
                 KeyDerivationCostType.Low,
-                "twofish_gcm");
+                "xchacha20_poly1305");
         }
 
         /// <summary>

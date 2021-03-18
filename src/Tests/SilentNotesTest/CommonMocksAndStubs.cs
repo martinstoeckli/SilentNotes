@@ -44,7 +44,7 @@ namespace SilentNotesTest
         /// <returns>Random service.</returns>
         public static ICryptoRandomService CryptoRandomService(byte predictableOutput)
         {
-            return new RandomSource4UnitTest();
+            return new RandomSource4UnitTest(predictableOutput);
         }
 
         /// <summary>

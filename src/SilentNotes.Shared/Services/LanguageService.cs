@@ -170,7 +170,7 @@ namespace SilentNotes.Services
 
             resources["encryption"] = "Encryption";
             resources["encryption_algorithm"] = "Encryption mode";
-            resources["encryption_algo_chacha20"] = "ChaCha20-Poly1305 - Modern encryption algorithm [recommended]";
+            resources["encryption_algo_xchacha20"] = "XChaCha20-Poly1305 [recommended]";
             resources["encryption_algo_aesgcm"] = "AES256-GCM";
             resources["encryption_algo_twofishgcm"] = "Twofish256-GCM";
 
@@ -339,7 +339,7 @@ namespace SilentNotes.Services
 
             resources["encryption"] = "Verschlüsselung";
             resources["encryption_algorithm"] = "Verschlüsselungsverfahren";
-            resources["encryption_algo_chacha20"] = "ChaCha20-Poly1305 - Moderner Algorithmus [empfohlen]";
+            resources["encryption_algo_xchacha20"] = "XChaCha20-Poly1305 [empfohlen]";
             resources["encryption_algo_aesgcm"] = "AES-256-GCM";
             resources["encryption_algo_twofishgcm"] = "Twofish-256-GCM";
 

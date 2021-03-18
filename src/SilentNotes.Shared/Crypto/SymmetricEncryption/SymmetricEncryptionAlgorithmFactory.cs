@@ -22,6 +22,8 @@ namespace SilentNotes.Crypto.SymmetricEncryption
             // Add other algorithms if necessary
             switch (algorithmName)
             {
+                case BouncyCastleXChaCha20.CryptoAlgorithmName:
+                    return new BouncyCastleXChaCha20();
                 case BouncyCastleAesGcm.CryptoAlgorithmName:
                     return new BouncyCastleAesGcm();
                 case BouncyCastleTwofishGcm.CryptoAlgorithmName:

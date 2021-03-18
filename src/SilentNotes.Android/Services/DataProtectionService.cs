@@ -51,7 +51,7 @@ namespace SilentNotes.Android.Services
         public string Protect(byte[] unprotectedData)
         {
             // Encrypt the data with a new random key
-            BouncyCastleTwofishGcm encryptor = new BouncyCastleTwofishGcm();
+            ISymmetricEncryptionAlgorithm encryptor = new BouncyCastleXChaCha20();
             byte[] randomKey = _randomService.GetRandomBytes(encryptor.ExpectedKeySize);
             byte[] nonce = _randomService.GetRandomBytes(encryptor.ExpectedNonceSize);
             byte[] protectedData = encryptor.Encrypt(unprotectedData, randomKey, nonce);
@@ -117,8 +117,19 @@ namespace SilentNotes.Android.Services
                 storedKey = CryptoUtils.Deobfuscate(encryptedStoredKey, CryptoUtils.StringToSecureString(Obcake));
 
             // Decrypt the data with the random key
-            BouncyCastleTwofishGcm decryptor = new BouncyCastleTwofishGcm();
-            byte[] result = decryptor.Decrypt(protectedDataPart, storedKey, nonce);
+            ISymmetricEncryptionAlgorithm decryptor;
+            byte[] result;
+            try
+            {
+                decryptor = new BouncyCastleXChaCha20();
+                result = decryptor.Decrypt(protectedDataPart, storedKey, nonce);
+            }
+            catch (Exception)
+            {
+                // Fallback to twofish, which was used before 3.2021
+                decryptor = new BouncyCastleTwofishGcm();
+                result = decryptor.Decrypt(protectedDataPart, storedKey, nonce);
+            }
             return result;
         }
 
