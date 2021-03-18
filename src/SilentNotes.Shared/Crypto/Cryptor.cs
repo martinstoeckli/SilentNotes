@@ -51,7 +51,7 @@ namespace SilentNotes.Crypto
             if (_randomSource == null)
                 throw new ArgumentNullException(nameof(_randomSource));
             if (string.IsNullOrWhiteSpace(encryptorName))
-                encryptorName = BouncyCastleAesGcm.CryptoAlgorithmName;
+                encryptorName = BouncyCastleAesGcm.CryptoAlgorithmName; // todo: switch to XChaCha as soon as updates had time to spread to all devices
             if (string.IsNullOrWhiteSpace(kdfName))
                 encryptorName = Pbkdf2.CryptoKdfName;
             ISymmetricEncryptionAlgorithm encryptor = new SymmetricEncryptionAlgorithmFactory().CreateAlgorithm(encryptorName);
@@ -97,7 +97,7 @@ namespace SilentNotes.Crypto
             if (_randomSource == null)
                 throw new ArgumentNullException(nameof(_randomSource));
             if (string.IsNullOrWhiteSpace(encryptorName))
-                encryptorName = BouncyCastleAesGcm.CryptoAlgorithmName;
+                encryptorName = BouncyCastleAesGcm.CryptoAlgorithmName; // todo: switch to XChaCha as soon as updates had time to spread to all devices
             ISymmetricEncryptionAlgorithm encryptor = new SymmetricEncryptionAlgorithmFactory().CreateAlgorithm(encryptorName);
 
             // Prepare header

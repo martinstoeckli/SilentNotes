@@ -66,6 +66,7 @@ namespace SilentNotes.ViewModels
         /// <param name="algorithms">List to fill.</param>
         private void FillAlgorithmList(List<DropdownItemViewModel> algorithms)
         {
+            algorithms.Add(new DropdownItemViewModel { Value = BouncyCastleXChaCha20.CryptoAlgorithmName, Description = Language["encryption_algo_xchacha20"] });
             algorithms.Add(new DropdownItemViewModel { Value = BouncyCastleAesGcm.CryptoAlgorithmName, Description = Language["encryption_algo_aesgcm"] });
             algorithms.Add(new DropdownItemViewModel { Value = BouncyCastleTwofishGcm.CryptoAlgorithmName, Description = Language["encryption_algo_twofishgcm"] });
         }
