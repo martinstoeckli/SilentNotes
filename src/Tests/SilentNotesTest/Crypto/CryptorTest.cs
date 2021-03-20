@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Security;
 using NUnit.Framework;
 using SilentNotes.Crypto;
@@ -57,6 +58,19 @@ namespace SilentNotesTest.Crypto
         {
             TestSymmetricEncryptionWithShortMessage(new BouncyCastleXChaCha20());
             TestSymmetricEncryptionWithLongMessage(new BouncyCastleXChaCha20());
+        }
+
+        [Test]
+        public void XChaCha20Poly1305CheckTestVector()
+        {
+            byte[] message = HexToBytes(@"4c616469657320616e642047656e746c656d656e206f662074686520636c617373206f66202739393a204966204920636f756c64206f6666657220796f75206f6e6c79206f6e652074697020666f7220746865206675747572652c2073756e73637265656e20776f756c642062652069742e");
+            byte[] key = HexToBytes(@"808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9f");
+            byte[] nonce = HexToBytes(@"07000000404142434445464748494a4b0000000000000000");
+            byte[] expectedCipher = HexToBytes(@"453c0693a7407f04ff4c56aedb17a3c0a1afff01174930fc22287c33dbcf0ac8b89ad929530a1bb3ab5e69f24c7f6070c8f840c9abb4f69fbfc8a7ff5126faeebbb55805ee9c1cf2ce5a57263287aec5780f04ec324c3514122cfc3231fc1a8b718a62863730a2702bb76366116bed09e0fd"+ "d4c860b7074be894fac9697399be5cc1");
+
+            ISymmetricEncryptionAlgorithm encryptor = new BouncyCastleXChaCha20();
+            byte[] cipher = encryptor.Encrypt(message, key, nonce);
+            Assert.IsTrue(expectedCipher.SequenceEqual(cipher));
         }
 
         [Test]
@@ -237,6 +251,18 @@ namespace SilentNotesTest.Crypto
                     KeyDerivationCostType.Low,
                     "InvalidAlgorithmName");
             });
+        }
+
+        private static byte[] HexToBytes(string hex)
+        {
+            var hexAsBytes = new byte[hex.Length / 2];
+
+            for (var i = 0; i < hex.Length; i += 2)
+            {
+                hexAsBytes[i / 2] = Convert.ToByte(hex.Substring(i, 2), 16);
+            }
+
+            return hexAsBytes;
         }
     }
 }
