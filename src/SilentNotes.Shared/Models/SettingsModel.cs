@@ -139,6 +139,13 @@ namespace SilentNotes.Models
         public NoteInsertionMode DefaultNoteInsertion { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether notes should be hidden in the overview, if they
+        /// are part of a closed safe.
+        /// </summary>
+        [XmlElement("hide_closed_safe_notes")]
+        public bool HideClosedSafeNotes { get; set; }
+
+        /// <summary>
         /// Gets or sets the default encryption algorithm, used to encrypt the repository
         /// before sending it to the cloud.
         /// </summary>

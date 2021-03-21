@@ -149,6 +149,15 @@
                     <option value="AtBottom">@Model.Language["gui_note_insertion_bottom"]</option>
                 </select>
             </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="HideClosedSafeNotes" v-model="HideClosedSafeNotes">
+                        <label class="form-check-label" for="HideClosedSafeNotes">@Model.Language["gui_hide_closed_safe_notes"]</label>
+                    </div>
+                </div>
+            </div>
         </form>
 
         <h2>@Model.Language["sync"]</h2>

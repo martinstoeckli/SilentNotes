@@ -224,6 +224,17 @@ namespace SilentNotes.ViewModels
         }
 
         /// <summary>
+        /// Gets or sets a value indicating whether notes should be hidden in the overview, if they
+        /// are part of a closed safe.
+        /// </summary>
+        [VueDataBinding(VueBindingMode.TwoWay)]
+        public bool HideClosedSafeNotes
+        {
+            get { return Model.HideClosedSafeNotes; }
+            set { ChangePropertyIndirect(() => Model.HideClosedSafeNotes, (bool v) => Model.HideClosedSafeNotes = v, value, true); }
+        }
+
+        /// <summary>
         /// Gets the dark class for a given background color, depending of whether the background
         /// color is a light or a dark color.
         /// </summary>
