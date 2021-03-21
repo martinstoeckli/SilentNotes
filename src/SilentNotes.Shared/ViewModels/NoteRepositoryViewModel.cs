@@ -191,13 +191,19 @@ namespace SilentNotes.ViewModels
 
         private void ApplyFilter(string filter)
         {
+            SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
             string normalizedFilter = SearchableHtmlConverter.NormalizeWhitespaces(filter);
             NoteFilter noteFilter = new NoteFilter(normalizedFilter);
 
             FilteredNotes.Clear();
             foreach (NoteViewModel noteViewModel in AllNotes)
             {
-                if (!noteViewModel.InRecyclingBin && noteFilter.ContainsPattern(noteViewModel.SearchableContent))
+                bool hideNote =
+                    noteViewModel.InRecyclingBin ||
+                    (settings.HideClosedSafeNotes && noteViewModel.IsLocked) ||
+                    !noteFilter.ContainsPattern(noteViewModel.SearchableContent);
+
+                if (!hideNote)
                     FilteredNotes.Add(noteViewModel);
             }
         }
@@ -508,6 +514,7 @@ namespace SilentNotes.ViewModels
 
             set
             {
+                SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
                 FilteredNotes.Clear();
                 AllNotes.Clear();
                 Filter = null;
@@ -518,7 +525,12 @@ namespace SilentNotes.ViewModels
                 {
                     NoteViewModel noteViewModel = new NoteViewModel(_navigationService, Language, Icon, Theme, _webviewBaseUrl, _searchableTextConverter, _repositoryService, _feedbackService, _settingsService, _noteCryptor, _model.Safes, note);
                     AllNotes.Add(noteViewModel);
-                    if (!noteViewModel.InRecyclingBin)
+
+                    bool hideNote =
+                        noteViewModel.InRecyclingBin ||
+                        (settings.HideClosedSafeNotes && noteViewModel.IsLocked);
+
+                    if (!hideNote)
                         FilteredNotes.Add(noteViewModel);
                 }
             }

@@ -188,6 +188,7 @@ namespace SilentNotes.Services
             resources["gui_note_insertion"] = "Placing of new notes";
             resources["gui_note_insertion_top"] = "Insert new notes at the top";
             resources["gui_note_insertion_bottom"] = "Append new notes at the bottom";
+            resources["gui_hide_closed_safe_notes"] = "Hide notes of closed safe";
         }
 
         private void LoadGermanResources(Dictionary<string, string> resources)
@@ -359,6 +360,7 @@ namespace SilentNotes.Services
             resources["gui_note_insertion"] = "Hinzufügen neuer Notizen";
             resources["gui_note_insertion_top"] = "Neue Notiz oben einfügen";
             resources["gui_note_insertion_bottom"] = "Neue Notiz unten anfügen";
+            resources["gui_hide_closed_safe_notes"] = "Notizen von geschlossenem Tresor ausblenden";
         }
 
         /// <inheritdoc/>

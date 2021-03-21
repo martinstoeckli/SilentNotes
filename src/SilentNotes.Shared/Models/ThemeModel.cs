@@ -17,12 +17,10 @@ namespace SilentNotes.Models
         /// </summary>
         /// <param name="id">See the <see cref="Id"/> property.</param>
         /// <param name="image">Sets the <see cref="Image"/> property.</param>
-        /// <param name="imageTint">Sets the <see cref="ImageTint"/> property.</param>
-        public ThemeModel(string id, string image, string imageTint)
+        public ThemeModel(string id, string image)
         {
             Id = id;
             Image = image;
-            ImageTint = imageTint;
         }
 
         /// <summary>
@@ -35,11 +33,5 @@ namespace SilentNotes.Models
         /// Example: "cork.jpg"
         /// </summary>
         public string Image { get; private set; }
-
-        /// <summary>
-        /// Gets a hex color representing the <see cref="Image"/> to avoid flickering when
-        /// navigating between pages. Example: "#00ff00"
-        /// </summary>
-        public string ImageTint { get; private set; }
     }
 }
