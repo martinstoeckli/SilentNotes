@@ -1,0 +1,4 @@
+SilentNotes version 5.6.0
+
+* Verschlüsselungsalgorithmus XChaCha20-Poly1305 implementiert.
+* Option hinzugefügt, um Notizen eines geschlossenen Tresors auszublenden.

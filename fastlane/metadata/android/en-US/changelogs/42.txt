@@ -1,0 +1,4 @@
+SilentNotes version 5.6.0
+
+* Implemented the XChaCha20-Poly1305 encryption algorithm.
+* Added option to hide notes, which are inside a closed safe.
