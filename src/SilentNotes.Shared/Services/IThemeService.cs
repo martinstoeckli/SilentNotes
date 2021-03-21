@@ -25,8 +25,8 @@ namespace SilentNotes.Services
         string CssClassDark { get; }
 
         /// <summary>
-        /// Gets a Css attribute string like:
-        ///   background-color: #121212;
+        /// Gets a Css attribute string if a solid background is defined or an empty string otherwise.
+        /// Example: background-color: #121212;
         /// </summary>
         string CssBackgroundColor { get; }
 

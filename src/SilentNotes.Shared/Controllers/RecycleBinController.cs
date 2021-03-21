@@ -6,6 +6,7 @@
 using SilentNotes.HtmlView;
 using SilentNotes.Services;
 using SilentNotes.ViewModels;
+using SilentNotes.Workers;
 
 namespace SilentNotes.Controllers
 {
@@ -62,6 +63,12 @@ namespace SilentNotes.Controllers
             string htmlNotes = _viewContentService.GenerateHtml(_viewModel);
             html = html.Replace("<ul id=\"recycled-notes\"></ul>", htmlNotes);
             htmlView.LoadHtml(html);
+        }
+
+        /// <inheritdoc/>
+        protected override void SetHtmlViewBackgroundColor(IHtmlView htmlView)
+        {
+            htmlView.SetBackgroundColor(ColorExtensions.HexToColor("#323232"));
         }
     }
 }

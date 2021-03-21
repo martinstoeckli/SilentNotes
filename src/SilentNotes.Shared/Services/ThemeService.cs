@@ -33,18 +33,18 @@ namespace SilentNotes.Services
 
         private void FillThemes(List<ThemeModel> themes)
         {
-            themes.Add(new ThemeModel("cork", "cork.jpg", "#ddbc99"));
-            themes.Add(new ThemeModel("forest", "forest.jpg", "#598b3e"));
-            themes.Add(new ThemeModel("stone", "stone.jpg", "#8d7f83"));
-            themes.Add(new ThemeModel("blackstone", "blackstone.jpg", "#312f2f"));
-            themes.Add(new ThemeModel("smarties", "smarties.jpg", "#bcaaa4"));
-            themes.Add(new ThemeModel("grass", "grass.jpg", "#5a9d2a"));
-            themes.Add(new ThemeModel("paper", "paper.jpg", "#fcf7f4"));
-            themes.Add(new ThemeModel("sky", "sky.jpg", "#80acd1"));
-            themes.Add(new ThemeModel("water", "water.jpg", "#4fb6df"));
-            themes.Add(new ThemeModel("sand", "sand.jpg", "#d1b189"));
-            themes.Add(new ThemeModel("stars", "stars.jpg", "#000518"));
-            themes.Add(new ThemeModel("meadow", "meadow.jpg", "#3c821c"));
+            themes.Add(new ThemeModel("cork", "cork.jpg"));
+            themes.Add(new ThemeModel("forest", "forest.jpg"));
+            themes.Add(new ThemeModel("stone", "stone.jpg"));
+            themes.Add(new ThemeModel("blackstone", "blackstone.jpg"));
+            themes.Add(new ThemeModel("smarties", "smarties.jpg"));
+            themes.Add(new ThemeModel("grass", "grass.jpg"));
+            themes.Add(new ThemeModel("paper", "paper.jpg"));
+            themes.Add(new ThemeModel("sky", "sky.jpg"));
+            themes.Add(new ThemeModel("water", "water.jpg"));
+            themes.Add(new ThemeModel("sand", "sand.jpg"));
+            themes.Add(new ThemeModel("stars", "stars.jpg"));
+            themes.Add(new ThemeModel("meadow", "meadow.jpg"));
         }
 
         /// <inheritdoc/>
@@ -79,10 +79,10 @@ namespace SilentNotes.Services
             get
             {
                 SettingsModel settings = _settingsService.LoadSettingsOrDefault();
-                string backgroundColor = settings.UseSolidColorTheme
-                    ? settings.ColorForSolidTheme
-                    : SelectedTheme.ImageTint;
-                return string.Format("background-color: {0};", backgroundColor);
+                if (settings.UseSolidColorTheme)
+                    return string.Format("background-color: {0};", settings.ColorForSolidTheme);
+                else
+                    return string.Empty;
             }
         }
 

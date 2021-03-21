@@ -138,8 +138,7 @@ namespace SilentNotes.Controllers
         /// <inheritdoc/>
         protected override void SetHtmlViewBackgroundColor(IHtmlView htmlView)
         {
-            IThemeService themeService = Ioc.GetOrCreate<IThemeService>();
-            htmlView.SetBackgroundColor(ColorExtensions.HexToColor(themeService.SelectedTheme.ImageTint));
+            htmlView.SetBackgroundColor(ColorExtensions.HexToColor("#323232"));
         }
 
         private void ViewLoadedEventHandler(object sender, EventArgs e)
