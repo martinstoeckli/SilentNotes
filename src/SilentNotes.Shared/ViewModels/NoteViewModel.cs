@@ -31,6 +31,7 @@ namespace SilentNotes.ViewModels
         private SearchableHtmlConverter _searchableTextConverter;
         protected string _unlockedContent;
         private string _searchableContent;
+        private bool _shoppingModeActive;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NoteViewModel"/> class.
@@ -59,6 +60,7 @@ namespace SilentNotes.ViewModels
             MarkSearchableContentAsDirty();
             PushNoteToOnlineStorageCommand = new RelayCommand(PushNoteToOnlineStorage);
             PullNoteFromOnlineStorageCommand = new RelayCommand(PullNoteFromOnlineStorage);
+            ToggleShoppingModeCommand = new RelayCommand(ToggleShoppingMode);
             GoBackCommand = new RelayCommand(GoBack);
 
             Model = noteFromRepository;
@@ -397,6 +399,29 @@ namespace SilentNotes.ViewModels
                 SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
                 return settings != null ? settings.AutoSyncMode == AutoSynchronizationMode.Never : true;
             }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the shopping mode is active or inactive. While
+        /// the shopping mode is active, the note is read-only and the menu is inactive, so that
+        /// one can use the note outdoor whithout fearing of unintentionally modifying the note.
+        /// </summary>
+        [VueDataBinding(VueBindingMode.OneWayToView)]
+        public bool ShoppingModeActive
+        {
+            get { return _shoppingModeActive; }
+            set { ChangeProperty(ref _shoppingModeActive, value, false); }
+        }
+
+        /// <summary>
+        /// Command which toggles the <see cref="ShoppingModeActive"/> property.
+        /// </summary>
+        [VueDataBinding(VueBindingMode.Command)]
+        public ICommand ToggleShoppingModeCommand { get; private set; }
+
+        private void ToggleShoppingMode()
+        {
+            ShoppingModeActive = !ShoppingModeActive;
         }
 
         [VueDataBinding(VueBindingMode.OneWayToView)]

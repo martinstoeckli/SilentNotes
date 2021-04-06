@@ -61,6 +61,7 @@ namespace SilentNotes.Services
             resources["note_header1"] = "Header 1";
             resources["note_header2"] = "Header 2";
             resources["note_header3"] = "Header 3";
+            resources["note_shopping_mode"] = "Freeze operation";
             resources["note_pull_from_server"] = "Manually download note";
             resources["note_push_to_server"] = "Manually upload note";
             resources["feedback_note_to_recycle"] = "The note has been moved to the recycle bin and can be restored from there.";
@@ -231,6 +232,7 @@ namespace SilentNotes.Services
             resources["note_header1"] = "Überschrift 1";
             resources["note_header2"] = "Überschrift 2";
             resources["note_header3"] = "Überschrift 3";
+            resources["note_shopping_mode"] = "Bedienung einfrieren";
             resources["note_pull_from_server"] = "Notiz manuell herunterladen";
             resources["note_push_to_server"] = "Notiz manuell hochladen";
             resources["feedback_note_to_recycle"] = "Die Notiz ist in den Papierkorb verschoben worden und kann von dort wieder hergestellt werden.";

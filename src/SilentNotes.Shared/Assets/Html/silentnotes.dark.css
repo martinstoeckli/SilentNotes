@@ -6,6 +6,7 @@ a:hover { color: #7ba7cc; }
 .nav-item { background-color: #323232; color: #fff; border-color: #323232; }
 .nav-item:hover { background-color: #5a6268; border-color: #545b62; }
 .nav-item svg { fill: #d3d3d3; }
+.nav-item.active svg { fill: #87cefa; }
 .nav-filter {background-color: #696969; }
 .nav-filter:hover { background-color: #696969; }
 .nav-filter input { background-color: transparent; color: white; }
@@ -405,6 +406,7 @@ select.form-control:focus::-ms-value { background-color: #323232; color: #ffffff
 .dropdown-item { color: #fff; }
 .dropdown-item:hover, .dropdown-item:focus { color: #fff; background-color: #375a7f; }
 .dropdown-item.active, .dropdown-item:active { color: #fff; background-color: #375a7f; }
+.dropdown-item.active svg { fill: #87cefa; }
 .dropdown-item.disabled, .dropdown-item:disabled { color: #999; }
 .dropdown-header { color: #999; }
 .dropdown-item-text { color: #fff; }

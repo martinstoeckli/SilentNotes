@@ -200,6 +200,7 @@ div.dark .detail-view.checklist .ql-editor p::after { content: @{WriteLiteral(Mo
             <button class="nav-item" onclick="moveUp(false); return false;" title="@Model.Language["checklist_move_up"]">@{WriteLiteral(Model.Icon["arrow-up"]);}</button>
             <button class="nav-item" onclick="moveDown(false); return false;" title="@Model.Language["checklist_move_down"]">@{WriteLiteral(Model.Icon["arrow-down"]);}</button>
             <button class="nav-item" onclick="moveDown(true); return false;" title="@Model.Language["checklist_move_to_bottom"]">@{WriteLiteral(Model.Icon["arrow-collapse-down"]);}</button>
+            <button class="nav-item" v-on:click="ToggleShoppingModeCommand" v-bind:class="{ active: ShoppingModeActive }" title="@Model.Language["note_shopping_mode"]">@{WriteLiteral(Model.Icon["snowflake"]);}</button>
         }
 
         <!-- Color dropdown -->
