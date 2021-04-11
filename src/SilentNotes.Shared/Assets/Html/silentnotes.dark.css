@@ -5,8 +5,10 @@ a:hover { color: #7ba7cc; }
 #navigation { background-color: #323232; color: #FFFFFF; }
 .nav-item { background-color: #323232; color: #fff; border-color: #323232; }
 .nav-item:hover { background-color: #5a6268; border-color: #545b62; }
+.nav-item:hover:disabled { background-color: #323232; color: #fff; border-color: #323232; }
 .nav-item svg { fill: #d3d3d3; }
 .nav-item.active svg { fill: #87cefa; }
+.nav-item:disabled svg { fill: #6f6f6f; }
 .nav-filter {background-color: #696969; }
 .nav-filter:hover { background-color: #696969; }
 .nav-filter input { background-color: transparent; color: white; }

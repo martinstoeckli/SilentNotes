@@ -31,7 +31,6 @@ namespace SilentNotes.ViewModels
         private SearchableHtmlConverter _searchableTextConverter;
         protected string _unlockedContent;
         private string _searchableContent;
-        private bool _shoppingModeActive;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NoteViewModel"/> class.
@@ -402,15 +401,14 @@ namespace SilentNotes.ViewModels
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the shopping mode is active or inactive. While
-        /// the shopping mode is active, the note is read-only and the menu is inactive, so that
-        /// one can use the note outdoor whithout fearing of unintentionally modifying the note.
+        /// Gets or sets a value indicating whether the shopping mode is active or inactive
+        /// <see cref="NoteModel.ShoppingModeActive"/>
         /// </summary>
-        [VueDataBinding(VueBindingMode.OneWayToView)]
+        [VueDataBinding(VueBindingMode.TwoWay)]
         public bool ShoppingModeActive
         {
-            get { return _shoppingModeActive; }
-            set { ChangeProperty(ref _shoppingModeActive, value, false); }
+            get { return Model.ShoppingModeActive; }
+            set { ChangePropertyIndirect(() => Model.ShoppingModeActive, (v) => Model.ShoppingModeActive = v, value, true); }
         }
 
         /// <summary>

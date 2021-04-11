@@ -26,7 +26,8 @@ function onParagraphClicked(ev, paragraphNode) {
 		toggleCheckedState(paragraphNode);
 	}
 	else {
-		deleteParagraph(paragraphNode);
+		if (!vm.ShoppingModeActive)
+			deleteParagraph(paragraphNode);
 	}
 }
 
