@@ -208,33 +208,15 @@ div.dark .detail-view.checklist .ql-editor p::after { content: @{WriteLiteral(Mo
             <button class="nav-item" onclick="moveDown(false); return false;" v-bind:disabled="ShoppingModeActive" title="@Model.Language["checklist_move_down"]">@{WriteLiteral(Model.Icon["arrow-down"]);}</button>
             <button class="nav-item" onclick="moveDown(true); return false;" v-bind:disabled="ShoppingModeActive" title="@Model.Language["checklist_move_to_bottom"]">@{WriteLiteral(Model.Icon["arrow-collapse-down"]);}</button>
             <button class="nav-item" onclick="toggleShoppingMode(); return false;" v-bind:class="{ active: ShoppingModeActive }" title="@Model.Language["note_shopping_mode"]">@{WriteLiteral(Model.Icon["keyboard_off_outline"]);}</button>
-        }
+            <button class="nav-item" onclick="toggleSearchDialog(); return false;" title="@Model.Language["search"]">@{WriteLiteral(Model.Icon["magnify"]);}</button>
 
-        <!-- Color dropdown -->
-        <div class="dropdown">
-            @if (!Model.IsLocked)
-            {
-                <button class="nav-item" onclick="toggleSearchDialog(); return false;" title="@Model.Language["search"]">@{WriteLiteral(Model.Icon["magnify"]);}</button>
-                <button class="nav-item" id="colorDropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="@Model.Language["note_colors"]">
-                    @{WriteLiteral(Model.Icon["palette"]);}
-                </button>
-            }
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="colorDropdownMenu">
-                @foreach (var backgroundColor in @Model.BackgroundColorsHex)
-                {
-                    <div class="dropdown-item color-btn @Model.GetDarkClass(backgroundColor)" v-on:click="BackgroundColorHex='@(backgroundColor)'" style="background-color: @backgroundColor">Lorem ipsum</div>
-                }
-            </div>
-        </div>
-
-        <!-- Dropdown Menu -->
-        @if (!Model.IsLocked)
-        {
             <div class="dropdown">
                 <button class="nav-item" id="navOverflowMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-bind:disabled="ShoppingModeActive">
                     @{WriteLiteral(Model.Icon["dots-vertical"]);}
                 </button>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navOverflowMenu">
+                    <div class="dropdown-item" data-toggle="modal" data-target="#colorPaletteModal">@{WriteLiteral(Model.Icon["palette"]);} @Model.Language["note_colors"]</div>
+                    <div class="dropdown-divider"></div>
                     <div class="dropdown-item" onclick="movePendingToTop(); return false;">@{WriteLiteral(Model.Icon["sort-bool-descending-variant"]);} @Model.Language["checklist_move_pending_to_top"]</div>
                     <div class="dropdown-item" onclick="setCheckedStateForAll(false, false); return false;">@{WriteLiteral(Model.Icon["checkbox-multiple-blank-outline"]);} @Model.Language["checklist_uncheck_all"]</div>
                     <div class="dropdown-item" onclick="setCheckedStateForAll(true, false); return false;">@{WriteLiteral(Model.Icon["check-box-multiple-outline"]);} @Model.Language["checklist_check_all"]</div>
@@ -270,6 +252,22 @@ div.dark .detail-view.checklist .ql-editor p::after { content: @{WriteLiteral(Mo
         <div class="nav-filter">
             <input id="TxtFilter" autocomplete="off" />
             <svg id="filter-cancel-icon" width='24' height='24' viewBox='0 0 24 24' class="" onclick="showSearchDialog(false);"><use xlink:href="#svg-close-circle-outline" /></svg>
+        </div>
+    </div>
+
+    <div class="modal" id="colorPaletteModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content p-2">
+                <button type="button" class="close d-flex justify-content-end" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <div class="d-flex flex-wrap">
+                    @foreach (var backgroundColor in @Model.BackgroundColorsHex)
+                    {
+                        <div class="d-flex align-items-center justify-content-center color-btn @Model.GetDarkClass(backgroundColor)" data-dismiss="modal" v-on:click="BackgroundColorHex='@(backgroundColor)'" style="background-color: @backgroundColor"><span>Lorem ipsum</span></div>
+                    }
+                </div>
+            </div>
         </div>
     </div>
 

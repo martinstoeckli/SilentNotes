@@ -403,6 +403,8 @@ select.form-control:focus::-ms-value { background-color: #323232; color: #ffffff
           box-shadow: 0 0 0 0.2rem rgba(79, 79, 79, 0.5);
 }
 
+.modal-content { background-color: #323232; }
+.modal-dialog .close { color: #fff; }
 
 .dropdown-divider { border-top-color: #444; }
 .dropdown-item { color: #fff; }
