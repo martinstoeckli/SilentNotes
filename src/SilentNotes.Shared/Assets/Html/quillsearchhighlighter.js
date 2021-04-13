@@ -80,7 +80,12 @@ function QuillSearchHighlighter(quill, inputElement) {
 
     // Bring first match into view
     if (scrollToFirst && findings.length >= 1) {
-      _this.quill.setSelection(findings[0], length);
+      var wasEnabled = _this.quill.isEnabled();
+      if (!wasEnabled)
+        _this.quill.enable(true);
+      _this.quill.setSelection(findings[0], length); // quill must be enabled here
+      if (!wasEnabled)
+        _this.quill.enable(false);
     }
 
     // Create highlights divs inside visible range
