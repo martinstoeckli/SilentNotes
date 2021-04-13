@@ -36,6 +36,8 @@ namespace SilentNotes.ViewModels
             Icon = svgIconService;
             Theme = themeService;
             _webviewBaseUrl = webviewBaseUrl;
+
+            HtmlRecource = new HtmlRecourceService();
         }
 
         /// <inheritdoc/>
@@ -133,6 +135,12 @@ namespace SilentNotes.ViewModels
         }
 
         /// <summary>
+        /// Gets the version independend path to an Html recource <see cref="IHtmlRecourceService"/>.
+        /// This property can be bound to in *.cshtml files, which is not possible with simple constants.
+        /// </summary>
+        public IHtmlRecourceService HtmlRecource { get; private set; }
+
+        /// <summary>
         /// Gets or sets a piece of JavaScript which initializes the Vue.js model and can be
         /// inserted into the HTML page. This script shouldn't be escaped.
         /// </summary>
@@ -164,5 +172,43 @@ namespace SilentNotes.ViewModels
         /// Gets the theme service, which controls the design of the application.
         /// </summary>
         public IThemeService Theme { get; private set; }
+
+        /// <summary>
+        /// The IHtmlRecourceService provides version independend paths to given recources like
+        /// *.js or *.css files. It can also be used to exchange minified versions to debuggable
+        /// versions.
+        /// </summary>
+        public interface IHtmlRecourceService
+        {
+            /// <summary>
+            /// Indexer property which returns the version independend path to the resource.
+            /// </summary>
+            /// <param name="id">Id of the recource.</param>
+            /// <returns>A path to the recource.</returns>
+            string this[string id] { get; }
+        }
+
+        /// <summary>
+        /// Implementation of the <see cref="IHtmlRecourceService"/> interface.
+        /// </summary>
+        private class HtmlRecourceService : IHtmlRecourceService
+        {
+            /// <inheritdoc/>
+            public string this[string id]
+            { 
+                get
+                {
+                    switch (id)
+                    {
+                        case "vuejs":
+                            return "vue.min.js"; // v2.6.12 (v3 is not ECMAScript 5 compliant)
+                        case "jqueryjs":
+                            return "jquery-3.5.1.slim.min.js";
+                        default:
+                            return string.Empty;
+                    }
+                }
+            }
+        }
     }
 }

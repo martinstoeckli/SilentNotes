@@ -23,7 +23,7 @@ using SilentNotes.ViewModels;
 #line hidden
 
 
-[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.7.0.452")]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.9.0.273")]
 public partial class StopRazorView : StopRazorViewBase
 {
 
@@ -93,8 +93,15 @@ WriteLiteral(" rel=\"stylesheet\"");
 
 WriteLiteral(" />\r\n\r\n    <script");
 
-WriteLiteral(" src=\"jquery-3.5.1.slim.min.js\"");
+WriteAttribute ("src", " src=\"", "\""
 
+#line 16 "StopRazorView.cshtml"
+, Tuple.Create<string,object,bool> ("", Model.HtmlRecource["jqueryjs"]
+
+#line default
+#line hidden
+, false)
+);
 WriteLiteral("></script>\r\n    <script");
 
 WriteLiteral(" src=\"bootstrap.bundle.min.js\"");

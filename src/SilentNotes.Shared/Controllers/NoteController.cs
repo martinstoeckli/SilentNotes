@@ -131,6 +131,8 @@ namespace SilentNotes.Controllers
             VueBindings.DeclareAdditionalVueData("Header1Active", "false");
             VueBindings.DeclareAdditionalVueData("Header2Active", "false");
             VueBindings.DeclareAdditionalVueData("Header3Active", "false");
+            VueBindings.DeclareAdditionalVueData("BoldActive", "false");
+            VueBindings.DeclareAdditionalVueData("ItalicActive", "false");
             VueBindings.DeclareAdditionalVueData("ListOrderedActive", "false");
             VueBindings.DeclareAdditionalVueData("ListBulletActive", "false");
             VueBindings.DeclareAdditionalVueData("CodeActive", "false");

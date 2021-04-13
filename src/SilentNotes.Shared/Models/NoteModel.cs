@@ -91,6 +91,14 @@ namespace SilentNotes.Models
         public bool InRecyclingBin { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the shopping mode is active or inactive. While
+        /// the shopping mode is active, the note is read-only and the menu is inactive, so that
+        /// one can use the note outdoor whithout fearing of unintentionally modifying the note.
+        /// </summary>
+        [XmlAttribute(AttributeName = "shopping_mode")]
+        public bool ShoppingModeActive { get; set; }
+
+        /// <summary>
         /// Gets or sets the time in UTC, when the note was first created.
         /// </summary>
         [XmlAttribute(AttributeName = "created_at")]

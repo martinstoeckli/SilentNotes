@@ -5,7 +5,10 @@ a:hover { color: #007bff; }
 #navigation { background-color: #323232; color: #FFFFFF; }
 .nav-item { background-color: #323232; color: #fff; border-color: #323232; }
 .nav-item:hover { background-color: #5a6268; border-color: #545b62; }
+.nav-item:hover:disabled { background-color: #323232; color: #fff; border-color: #323232; }
 .nav-item svg { fill: white; }
+.nav-item.active svg { fill: #87cefa; }
+.nav-item:disabled svg { fill: #6f6f6f; }
 .nav-filter {background-color: #FFFFFF; }
 .nav-filter:hover { background-color: #FFFFFF; }
 .nav-filter input { background-color: transparent; color: #666666; }
@@ -56,3 +59,7 @@ div .note-viewer.over-view.checklist p.disabled,
 div .detail-view.checklist .ql-editor p.disabled { color: rgba(0, 0, 0, 0.5); text-decoration-color: rgba(0, 0, 0, 0.25); }
 div.dark .note-viewer.over-view.checklist p.disabled,
 div.dark .detail-view.checklist .ql-editor p.disabled { color: rgba(255, 255, 255, 0.5); text-decoration-color: rgba(255, 255, 255, 0.25); }
+
+.dropdown-item.active svg { fill: #87cefa; }
+
+.modal-content { background-color: #f8f9fa; }
