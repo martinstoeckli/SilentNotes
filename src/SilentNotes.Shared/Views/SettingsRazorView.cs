@@ -93,12 +93,26 @@ WriteLiteral(" rel=\"stylesheet\"");
 
 WriteLiteral(" />\r\n\r\n    <script");
 
-WriteLiteral(" src=\"vue.global.prod.js\"");
+WriteAttribute ("src", " src=\"", "\""
 
+#line 16 "SettingsRazorView.cshtml"
+, Tuple.Create<string,object,bool> ("", Model.HtmlRecource["vuejs"]
+
+#line default
+#line hidden
+, false)
+);
 WriteLiteral("></script>\r\n    <script");
 
-WriteLiteral(" src=\"jquery-3.5.1.slim.min.js\"");
+WriteAttribute ("src", " src=\"", "\""
 
+#line 17 "SettingsRazorView.cshtml"
+, Tuple.Create<string,object,bool> ("", Model.HtmlRecource["jqueryjs"]
+
+#line default
+#line hidden
+, false)
+);
 WriteLiteral("></script>\r\n    <script");
 
 WriteLiteral(" src=\"bootstrap.bundle.min.js\"");

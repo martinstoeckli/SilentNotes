@@ -13,8 +13,8 @@
     <link href="silentnotes.css" rel="stylesheet" />
     <link href="@(Model.Theme.DarkMode ? "silentnotes.dark.css" : "silentnotes.light.css")" rel="stylesheet" />
 
-    <script src="vue.global.prod.js"></script>
-    <script src="jquery-3.5.1.slim.min.js"></script>
+    <script src="@Model.HtmlRecource["vuejs"]"></script>
+    <script src="@Model.HtmlRecource["jqueryjs"]"></script>
     <script src="bootstrap.bundle.min.js"></script>
     <script src="silentnotes.js"></script>
     <script src="Sortable.min.js"></script>

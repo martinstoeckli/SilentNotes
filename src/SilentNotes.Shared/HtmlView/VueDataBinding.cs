@@ -101,6 +101,10 @@ namespace SilentNotes.HtmlView
         /// and event handlers. The result can be inserted into a script tag of an HTML page, or it
         /// can be executed when the DOM content is loaded.
         /// </summary>
+        /// <remarks>
+        /// For now we stick to the version 2.* of vue, because version 3.* is not ECMAScript 5
+        /// compliant, and therefore does not run on Android 5-6 devices.
+        /// </remarks>
         /// <returns>JavaScript code which can be executed or placed inside an HTML view.</returns>
         public string BuildVueScript()
         {
@@ -138,11 +142,10 @@ function vueFindById(id) {
 var vm;
 document.addEventListener('DOMContentLoaded', function () {
     var _this = this;
-    vm = Vue.createApp({
-        data: function() {
-            return {
-                [VUE_DATA_DECLARATIONS]
-            }
+    vm = new Vue({
+        el: '#vueDataBinding',
+        data: {
+            [VUE_DATA_DECLARATIONS]
         },
         methods: {
             [VUE_METHOD_DECLARATIONS]
@@ -165,12 +168,12 @@ document.addEventListener('DOMContentLoaded', function () {
         },
         directives: {
           focus: {
-            mounted: function (el) {
+            inserted: function (el) {
               el.focus()
             }
           }
         },
-    }).mount('#vueDataBinding');
+    });
 
     if (typeof vueLoaded === 'function') { 
         vueLoaded(); // Html page can initialize itself
