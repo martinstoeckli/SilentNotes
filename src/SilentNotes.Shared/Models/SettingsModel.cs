@@ -215,7 +215,7 @@ namespace SilentNotes.Models
         /// <returns>The name of the default encryption algorithm.</returns>
         public static string GetDefaultEncryptionAlgorithmName()
         {
-            return BouncyCastleAesGcm.CryptoAlgorithmName; // todo: switch to XChaCha as soon as updates had time to spread to all devices
+            return BouncyCastleXChaCha20.CryptoAlgorithmName;
         }
 
         /// <summary>
