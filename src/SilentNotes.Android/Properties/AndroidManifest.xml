@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="42" package="ch.martinstoeckli.silentnotes" android:installLocation="internalOnly" android:versionName="5.6.0">
-	<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="29" />
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="43" package="ch.martinstoeckli.silentnotes" android:installLocation="internalOnly" android:versionName="5.7.0">
+	<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="30" />
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<application android:label="SilentNotes" android:allowBackup="false" android:icon="@drawable/ic_launcher"></application>
