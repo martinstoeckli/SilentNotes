@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2     # checkout the repo
-      - run: dotnet test src\Tests\VanillaCloudStorageClientTest --logger "trx;LogFileName=test-results.trx"
+      - run: dotnet test src\Tests\VanillaCloudStorageClientTest\VanillaCloudStorageClientTest.csproj
       
       - name: Test Report
         uses: dorny/test-reporter@v1
