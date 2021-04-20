@@ -7,9 +7,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2     # checkout the repo
-      - run: npm ci                   # install packages
-      - run: npm test                 # run tests (configured to use jest-junit reporter)
-
+      - run: dotnet test src\Tests\VanillaCloudStorageClientTest --logger "trx;LogFileName=test-results.trx"
+      
       - name: Test Report
         uses: dorny/test-reporter@v1
         if: success() || failure()    # run this step even if previous step failed
