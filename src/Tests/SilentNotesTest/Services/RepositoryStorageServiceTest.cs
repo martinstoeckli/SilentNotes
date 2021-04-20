@@ -50,7 +50,7 @@ namespace SilentNotesTest.Services
             RepositoryStorageLoadResult result = service.LoadRepositoryOrDefault(out NoteRepositoryModel repository);
 
             // Loaded existing settings and did not store it
-            Assert.AreEqual(RepositoryStorageLoadResult.InvalidRepository, result, "Please remove DEMO from SolutionWideDefines and run again");
+            Assert.AreEqual(RepositoryStorageLoadResult.InvalidRepository, result, "Please remove DEMO from Directory.Build.props and run again");
             Assert.IsNull(repository);
             fileService.Verify(m => m.TrySerializeAndSave(It.IsAny<string>(), It.IsAny<NoteRepositoryModel>()), Times.Never);
         }

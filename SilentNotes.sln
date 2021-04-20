@@ -16,7 +16,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8FAA55E2-E83B-4AB4-BC83-3664D79ADF46}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
-		SolutionWideDefines.props = SolutionWideDefines.props
+		Directory.Build.props = Directory.Build.props
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VanillaCloudStorageClient", "src\VanillaCloudStorageClient\VanillaCloudStorageClient.csproj", "{8E6A91C5-8D8B-49B6-9E5A-C0EDAE621FD6}"

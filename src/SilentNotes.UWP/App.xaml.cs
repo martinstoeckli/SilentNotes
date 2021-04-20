@@ -39,7 +39,7 @@ namespace SilentNotes.UWP
 
         /// <summary>
         /// This method should set the size of the main window when the DEMO condition is set in the
-        /// SolutionWideDefines.props, so that screenshots all have a preset size.
+        /// Directory.Build.props, so that screenshots all have a preset size.
         /// Unfortunately a change of the condition is only respected after reloading and rebuilding
         /// of the project, this is too error prone for release builds, but it can be called manually.
         /// </summary>
