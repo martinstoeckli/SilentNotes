@@ -18,8 +18,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>..\..\bin\Shared</OutputPath>
   </PropertyGroup>
-  <Import Project="$(SolutionDir)\SolutionWideDefines.props" />
-
+  
   <ItemGroup>
     <None Remove="StoryBoards\SynchronizationStory\diagram-draw.io.xml" />
   </ItemGroup>
