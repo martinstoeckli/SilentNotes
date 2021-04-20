@@ -14,7 +14,7 @@
         ENV_DEVELOPMENT: Uses different filenames for repository and settings (works only in DEBUG mode)
         LANG_EN:         Enforces an english localization (works only in DEBUG mode)
         LANG_DE:         Enforces a german localization (works only in DEBUG mode)
-        DEMO:            Loads hard coded demo data (works only in DEBUG mode)
+        DEMO:            Loads hard coded demo data and screenshot size (works only in DEBUG mode)
         -->
         <DefineConstants>$(DefineConstants)</DefineConstants>
     </PropertyGroup>
