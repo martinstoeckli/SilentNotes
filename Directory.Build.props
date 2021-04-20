@@ -16,10 +16,6 @@
         LANG_DE:         Enforces a german localization (works only in DEBUG mode)
         DEMO:            Loads hard coded demo data (works only in DEBUG mode)
         -->
-        <DefineConstants>$(DefineConstants);ENV_DEVELOPMENT;LANG_EN</DefineConstants>
-    </PropertyGroup>
-    <PropertyGroup>
-        <VSTestLogger>trx%3bLogFileName=$(MSBuildProjectName).trx</VSTestLogger>
-        <VSTestResultsDirectory>$(MSBuildThisFileDirectory)/TestResults/$(TargetFramework)</VSTestResultsDirectory>
+        <DefineConstants>$(DefineConstants)</DefineConstants>
     </PropertyGroup>
 </Project>
