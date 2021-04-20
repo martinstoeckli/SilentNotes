@@ -48,6 +48,7 @@ namespace SilentNotes.Models
             target.ModifiedAt = this.ModifiedAt;
             target.MaintainedAt = this.MaintainedAt;
             target.SafeId = this.SafeId;
+            target.ShoppingModeActive = this.ShoppingModeActive;
         }
 
         /// <summary>

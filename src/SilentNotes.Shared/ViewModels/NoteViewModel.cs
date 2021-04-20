@@ -403,6 +403,8 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets or sets a value indicating whether the shopping mode is active or inactive
         /// <see cref="NoteModel.ShoppingModeActive"/>
+        /// This property does not call <see cref="NoteModel.RefreshModifiedAt"/>, because it is
+        /// not seen as changed content, so switching should not overwrite other recent changes.
         /// </summary>
         [VueDataBinding(VueBindingMode.TwoWay)]
         public bool ShoppingModeActive
