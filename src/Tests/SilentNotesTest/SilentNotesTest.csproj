@@ -7,11 +7,11 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>D:\Source\SilentNotes\GitHub\bin\SilentNotesTest\</OutputPath>
+    <OutputPath>..\..\..\bin\SilentNotesTest\</OutputPath>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <OutputPath>D:\Source\SilentNotes\GitHub\bin\SilentNotesTest\</OutputPath>
+    <OutputPath>..\..\..\bin\SilentNotesTest\</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>
