@@ -8,6 +8,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2     # checkout the repo
       - run: dotnet test SilentNotes.sln --logger "trx" --results-directory "TestResults"
+      - continue-on-error: true
       
       - name: Test Report
         uses: dorny/test-reporter@v1
