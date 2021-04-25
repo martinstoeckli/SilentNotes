@@ -7,12 +7,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2     # checkout the repo
-      - run: dotnet test SilentNotes.sln --logger "trx;LogFileName=test-results.trx" --results-directory "TestResults"
+      - run: dotnet test SilentNotes.sln --logger "trx" --results-directory "TestResults"
       
       - name: Test Report
         uses: dorny/test-reporter@v1
         if: success() || failure()    # run this step even if previous step failed
         with:
           name: Run all tests            # Name of the check run which will be created
-          path: TestResults/test-results.trx    # Path to test results
+          path: TestResults/*.trx    # Path to test results
           reporter: dotnet-trx        # Format of test results
