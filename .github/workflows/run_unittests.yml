@@ -3,6 +3,7 @@ on:
   push:
 jobs:
   build-test:
+    name: Prerequisites
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2     # checkout the repo
@@ -13,6 +14,6 @@ jobs:
         uses: dorny/test-reporter@v1
         if: success() || failure()    # run this step even if previous step failed
         with:
-          name: Run all unit tests    # Name of the check run which will be created
+          name: Report of unit-tests  # Name of the check run which will be created
           path: TestResults/*.trx     # Path to test results
           reporter: dotnet-trx        # Format of test results
