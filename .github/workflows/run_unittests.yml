@@ -6,11 +6,11 @@ jobs:
     name: UnitTests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2     # checkout the repo
-      - run: dotnet test SilentNotes.sln --logger "trx" --results-directory "TestResults"
-      - continue-on-error: true
+      - name: Run tests
+        uses: actions/checkout@v2     # checkout the repo
+        run: dotnet test SilentNotes.sln --logger "trx" --results-directory "TestResults"
       
-      - name: Test Report
+      - name: Create report
         uses: dorny/test-reporter@v1
         if: success() || failure()    # run this step even if previous step failed
         with:
