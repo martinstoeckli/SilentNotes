@@ -93,6 +93,7 @@
     <Compile Include="Services\FolderPickerService.cs" />
     <Compile Include="Services\InternetStateService.cs" />
     <Compile Include="Services\LanguageCodeService.cs" />
+    <Compile Include="Services\LanguageServiceResourceReader.cs" />
     <Compile Include="Services\NativeBrowserService.cs" />
     <Compile Include="Services\RepositoryStorageService.cs" />
     <Compile Include="Services\SettingsService.cs" />
@@ -102,6 +103,15 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <AndroidAsset Include="..\Localization\Lng.SilentNotes.de">
+      <Link>Lng.SilentNotes.de</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Localization\Lng.SilentNotes.en">
+      <Link>Lng.SilentNotes.en</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Localization\Lng.SilentNotes.it">
+      <Link>Lng.SilentNotes.it</Link>
+    </AndroidAsset>
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
     <AndroidResource Include="Resources\layout\Main.axml">

@@ -37,7 +37,7 @@ namespace SilentNotes.Android
             Ioc.RegisterFactory<IEnvironmentService>(() => new EnvironmentService(OperatingSystem.Android, rootActivity));
             Ioc.RegisterFactory<IHtmlView>(() => rootActivity as IHtmlView);
             Ioc.RegisterFactory<IBaseUrlService>(() => new BaseUrlService());
-            Ioc.RegisterFactory<ILanguageService>(() => new LanguageService(new LanguageCodeService().GetSystemLanguageCode()));
+            Ioc.RegisterFactory<ILanguageService>(() => new LanguageService(new LanguageServiceResourceReader(rootActivity), "SilentNotes", new LanguageCodeService().GetSystemLanguageCode()));
             Ioc.RegisterFactory<ISvgIconService>(() => new SvgIconService());
             Ioc.RegisterFactory<INavigationService>(() => new NavigationService(
                 Ioc.GetOrCreate<IHtmlView>()));

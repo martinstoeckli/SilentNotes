@@ -46,7 +46,7 @@ namespace SilentNotes.UWP
         {
             Ioc.RegisterFactory<IEnvironmentService>(() => new EnvironmentService(OperatingSystem.Windows));
             Ioc.RegisterFactory<IBaseUrlService>(() => new BaseUrlService());
-            Ioc.RegisterFactory<ILanguageService>(() => new LanguageService(new LanguageCodeService().GetSystemLanguageCode()));
+            Ioc.RegisterFactory<ILanguageService>(() => new LanguageService(new LanguageServiceResourceReader(), "SilentNotes", new LanguageCodeService().GetSystemLanguageCode()));
             Ioc.RegisterFactory<ISvgIconService>(() => new SvgIconService());
             Ioc.RegisterFactory<INavigationService>(() => new NavigationService(
                 Ioc.GetOrCreate<IHtmlView>()));

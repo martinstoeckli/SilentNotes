@@ -68,7 +68,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
                     settings.TransferCode = transferCode;
                     _settingsService.TrySaveSettingsToLocalDevice(settings);
 
-                    string formattedTransferCode = TransferCode.FormatTransferCodeForDisplay(transferCode).Replace(' ', '-');
+                    string formattedTransferCode = TransferCode.FormatTransferCodeForDisplay(transferCode);
                     string messageNewCreated = _languageService.LoadTextFmt("transfer_code_created", formattedTransferCode);
                     string messageWriteDown = _languageService.LoadText("transfer_code_writedown");
                     if (StoryBoard.Mode.ShouldUseGui())

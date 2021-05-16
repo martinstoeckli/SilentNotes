@@ -119,6 +119,7 @@
     <Compile Include="Services\FeedbackService.cs" />
     <Compile Include="Services\FolderPickerService.cs" />
     <Compile Include="Services\LanguageCodeService.cs" />
+    <Compile Include="Services\LanguageServiceResourceReader.cs" />
     <Compile Include="Services\NativeBrowserService.cs" />
     <Compile Include="Services\InternetStateService.cs" />
     <Compile Include="Services\RepositoryStorageService.cs" />
@@ -131,6 +132,15 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
+    <Content Include="..\Localization\Lng.SilentNotes.de">
+      <Link>Lng.SilentNotes.de</Link>
+    </Content>
+    <Content Include="..\Localization\Lng.SilentNotes.en">
+      <Link>Lng.SilentNotes.en</Link>
+    </Content>
+    <Content Include="..\Localization\Lng.SilentNotes.it">
+      <Link>Lng.SilentNotes.it</Link>
+    </Content>
     <None Include="SilentNotes.UWP_StoreKey.pfx" />
     <None Include="SilentNotes.UWP_TemporaryKey.pfx" />
   </ItemGroup>
