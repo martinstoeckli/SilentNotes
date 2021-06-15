@@ -63,7 +63,7 @@ namespace SilentNotes.Crypto.KeyDerivation
                 case KeyDerivationCostType.Low:
                     return 1000;
                 case KeyDerivationCostType.High:
-                    return 10000;
+                    return 11000; // about ¼ sec on a mid-range mobile device in 2021
                 default:
                     throw new ArgumentOutOfRangeException("costType");
             }
