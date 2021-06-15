@@ -12,10 +12,12 @@ namespace SilentNotes.Crypto.KeyDerivation
     /// </summary>
     public enum KeyDerivationCostType
     {
-        /// <summary>Can be used with very strong passwords or tokens.</summary>
+        /// <summary>Can be used with very strong passwords or tokens, which do not require
+        /// key stretching.</summary>
         Low,
 
-        /// <summary>Should be used for weak user passwords.</summary>
+        /// <summary>Can be used for weak user passwords in a client app. The target time is
+        /// about ¼ sec on a mid-range mobile device.</summary>
         High
     }
 }
