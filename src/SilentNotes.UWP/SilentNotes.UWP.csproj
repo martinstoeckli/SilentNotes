@@ -141,8 +141,6 @@
     <Content Include="..\Localization\Lng.SilentNotes.it">
       <Link>Lng.SilentNotes.it</Link>
     </Content>
-    <None Include="SilentNotes.UWP_StoreKey.pfx" />
-    <None Include="SilentNotes.UWP_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\SilentNotes.Shared\Assets\Html\blackstone.jpg">
