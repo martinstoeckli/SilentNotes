@@ -35,6 +35,9 @@ namespace SilentNotes.UWP
             // To respond to the OS dark mode settings, the RequestedTheme should be removed from App.xaml.
             IThemeService themeService = Ioc.GetOrCreate<IThemeService>();
             RequestedTheme = themeService.DarkMode ? ApplicationTheme.Dark : ApplicationTheme.Light;
+
+            // Uncomment following line to make screenshots in Demo mode.
+            // AdjustWindowSizeInDemoMode();
         }
 
         /// <summary>
@@ -45,13 +48,9 @@ namespace SilentNotes.UWP
         /// </summary>
         private void AdjustWindowSizeInDemoMode()
         {
-#if (DEMO)
             // Set size to get 4:3 screenshots (800:600). border = 1 title bar = 32
             ApplicationView.PreferredLaunchViewSize = new Windows.Foundation.Size(800 - 2 * 1, 600 - 32 - 2 * 1);
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
-#else
-            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.Auto;
-#endif
         }
 
         /// <summary>

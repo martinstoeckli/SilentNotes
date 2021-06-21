@@ -1,0 +1,6 @@
+SilentNotes version 5.8.0
+
+* Italienische Übersetzung integriert.
+* Sprachresourcen für einfachere zukünftige Übersetzungen ausgelagert.
+* Kleinere GUI Verbesserung.
+* Komponentenupdate (Flurl)
