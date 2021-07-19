@@ -13,6 +13,7 @@
     <link href="silentnotes.css" rel="stylesheet" />
     <link href="@(Model.Theme.DarkMode ? "silentnotes.dark.css" : "silentnotes.light.css")" rel="stylesheet" />
 
+    <script src="@Model.HtmlRecource["vuejs"]"></script>
     <script src="@Model.HtmlRecource["jqueryjs"]"></script>
     <script src="bootstrap.bundle.min.js"></script>
     <script src="silentnotes.js"></script>
@@ -22,10 +23,20 @@
         }
     </style>
     <script>
+        @{WriteLiteral(Model.VueDataBindingScript);}
     </script>
 </head>
-<body>
+<body><div id="vueDataBinding">
     <nav id="navigation" class="d-flex">
+        <div class="mr-auto"></div>
+        <div class="dropdown">
+            <button class="nav-item" id="navOverflowMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                @{WriteLiteral(Model.Icon["dots-vertical"]);}
+            </button>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navOverflowMenu">
+                <div class="dropdown-item" v-on:click="RecoverRepositoryCommand">@Model.Language["recover_repository"]</div>
+            </div>
+        </div>
     </nav>
 
     <div id="content" class="container-fluid">
@@ -36,5 +47,5 @@
             @Model.Language["error_loading_repository"]
         </div>
     </div>
-</body>
+</div></body>
 </html>

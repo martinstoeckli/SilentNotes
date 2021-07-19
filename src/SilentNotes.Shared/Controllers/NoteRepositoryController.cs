@@ -39,7 +39,10 @@ namespace SilentNotes.Controllers
         /// <inheritdoc/>
         protected override void OverrideableDispose()
         {
-            _viewModel.PropertyChanged -= ViewmodelPropertyChangedEventHandler;
+            if (_viewModel != null)
+            {
+                _viewModel.PropertyChanged -= ViewmodelPropertyChangedEventHandler;
+            }
             if (VueBindings != null)
             {
                 VueBindings.UnhandledViewBindingEvent -= UnhandledViewBindingEventHandler;
@@ -112,6 +115,11 @@ namespace SilentNotes.Controllers
                     Ioc.GetOrCreate<ISvgIconService>(),
                     Ioc.GetOrCreate<IThemeService>(),
                     Ioc.GetOrCreate<IBaseUrlService>());
+
+                VueBindings = new VueDataBinding(_stopViewModel, View, null);
+                _stopViewModel.VueDataBindingScript = VueBindings.BuildVueScript();
+                VueBindings.StartListening();
+
                 string html = _viewStop.GenerateHtml(_stopViewModel);
                 View.LoadHtml(html);
             }

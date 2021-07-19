@@ -23,7 +23,7 @@ using SilentNotes.ViewModels;
 #line hidden
 
 
-[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.9.0.273")]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.10.0.231")]
 public partial class StopRazorView : StopRazorViewBase
 {
 
@@ -96,6 +96,17 @@ WriteLiteral(" />\r\n\r\n    <script");
 WriteAttribute ("src", " src=\"", "\""
 
 #line 16 "StopRazorView.cshtml"
+, Tuple.Create<string,object,bool> ("", Model.HtmlRecource["vuejs"]
+
+#line default
+#line hidden
+, false)
+);
+WriteLiteral("></script>\r\n    <script");
+
+WriteAttribute ("src", " src=\"", "\""
+
+#line 17 "StopRazorView.cshtml"
 , Tuple.Create<string,object,bool> ("", Model.HtmlRecource["jqueryjs"]
 
 #line default
@@ -115,13 +126,86 @@ WriteLiteral("></script>\r\n    <style");
 WriteLiteral(" type=\"text/css\"");
 
 WriteLiteral(">\r\n        #alert-icon {\r\n            fill: darkgray;\r\n        }\r\n    </style>\r\n " +
-"   <script>\r\n    </script>\r\n</head>\r\n<body>\r\n    <nav");
+"   <script>\r\n");
+
+
+#line 26 "StopRazorView.cshtml"
+        
+
+#line default
+#line hidden
+
+#line 26 "StopRazorView.cshtml"
+          WriteLiteral(Model.VueDataBindingScript);
+
+#line default
+#line hidden
+WriteLiteral("\r\n    </script>\r\n</head>\r\n<body><div");
+
+WriteLiteral(" id=\"vueDataBinding\"");
+
+WriteLiteral(">\r\n    <nav");
 
 WriteLiteral(" id=\"navigation\"");
 
 WriteLiteral(" class=\"d-flex\"");
 
-WriteLiteral(">\r\n    </nav>\r\n\r\n    <div");
+WriteLiteral(">\r\n        <div");
+
+WriteLiteral(" class=\"mr-auto\"");
+
+WriteLiteral("></div>\r\n        <div");
+
+WriteLiteral(" class=\"dropdown\"");
+
+WriteLiteral(">\r\n            <button");
+
+WriteLiteral(" class=\"nav-item\"");
+
+WriteLiteral(" id=\"navOverflowMenu\"");
+
+WriteLiteral(" data-toggle=\"dropdown\"");
+
+WriteLiteral(" aria-haspopup=\"true\"");
+
+WriteLiteral(" aria-expanded=\"false\"");
+
+WriteLiteral(">\r\n");
+
+
+#line 34 "StopRazorView.cshtml"
+                
+
+#line default
+#line hidden
+
+#line 34 "StopRazorView.cshtml"
+                  WriteLiteral(Model.Icon["dots-vertical"]);
+
+#line default
+#line hidden
+WriteLiteral("\r\n            </button>\r\n            <div");
+
+WriteLiteral(" class=\"dropdown-menu dropdown-menu-right\"");
+
+WriteLiteral(" aria-labelledby=\"navOverflowMenu\"");
+
+WriteLiteral(">\r\n                <div");
+
+WriteLiteral(" class=\"dropdown-item\"");
+
+WriteLiteral(" v-on:click=\"RecoverRepositoryCommand\"");
+
+WriteLiteral(">");
+
+
+#line 37 "StopRazorView.cshtml"
+                                                                            Write(Model.Language["recover_repository"]);
+
+
+#line default
+#line hidden
+WriteLiteral("</div>\r\n            </div>\r\n        </div>\r\n    </nav>\r\n\r\n    <div");
 
 WriteLiteral(" id=\"content\"");
 
@@ -140,13 +224,13 @@ WriteLiteral(" class=\"float-left mr-3\"");
 WriteLiteral(">\r\n");
 
 
-#line 34 "StopRazorView.cshtml"
+#line 45 "StopRazorView.cshtml"
                 
 
 #line default
 #line hidden
 
-#line 34 "StopRazorView.cshtml"
+#line 45 "StopRazorView.cshtml"
                   WriteLiteral(Model.Icon["alert"]);
 
 #line default
@@ -156,13 +240,13 @@ WriteLiteral("\r\n            </span>\r\n");
 WriteLiteral("            ");
 
 
-#line 36 "StopRazorView.cshtml"
+#line 47 "StopRazorView.cshtml"
        Write(Model.Language["error_loading_repository"]);
 
 
 #line default
 #line hidden
-WriteLiteral("\r\n        </div>\r\n    </div>\r\n</body>\r\n</html>");
+WriteLiteral("\r\n        </div>\r\n    </div>\r\n</div></body>\r\n</html>");
 
 }
 }

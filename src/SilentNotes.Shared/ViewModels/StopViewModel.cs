@@ -3,6 +3,8 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using System.Windows.Input;
+using SilentNotes.HtmlView;
 using SilentNotes.Services;
 
 namespace SilentNotes.ViewModels
@@ -23,12 +25,23 @@ namespace SilentNotes.ViewModels
             IBaseUrlService webviewBaseUrl)
             : base(navigationService, languageService, svgIconService, themeService, webviewBaseUrl)
         {
+            RecoverRepositoryCommand = new RelayCommand(RecoverRepository);
         }
 
         /// <inheritdoc/>
         public override void OnGoBackPressed(out bool handled)
         {
             handled = false;
+        }
+
+        /// <summary>
+        /// Gets the command which can safe the repository to a user selected directory.
+        /// </summary>
+        [VueDataBinding(VueBindingMode.Command)]
+        public ICommand RecoverRepositoryCommand { get; private set; }
+
+        private void RecoverRepository()
+        {
         }
     }
 }
