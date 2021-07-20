@@ -114,7 +114,9 @@ namespace SilentNotes.Controllers
                     Ioc.GetOrCreate<ILanguageService>(),
                     Ioc.GetOrCreate<ISvgIconService>(),
                     Ioc.GetOrCreate<IThemeService>(),
-                    Ioc.GetOrCreate<IBaseUrlService>());
+                    Ioc.GetOrCreate<IBaseUrlService>(),
+                    repositoryService,
+                    Ioc.GetOrCreate<IFolderPickerService>());
 
                 VueBindings = new VueDataBinding(_stopViewModel, View, null);
                 _stopViewModel.VueDataBindingScript = VueBindings.BuildVueScript();

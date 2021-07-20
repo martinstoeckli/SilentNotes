@@ -13,7 +13,7 @@ years_ago {0} anni fa
 modified_at Modificato {0}
 
 error_loading_repository Impossibile leggere gli appunti. Il programma è stato fermato per evitare ulteriori danni agli appunti già esistenti.
-recover_repository Recover notes to directory
+recover_repository Ripristina il deposito in una cartella
 welcome_note <h1>Benvenuto 💛</h1><p>SilentNotes rispetta la tua privacy. Non raccoglie dati personali, non visualizza pubblicità ed è open source.</p>
 welcome_note_2 <h1>Ordinamento appunti</h1><p>Trascina l'icona della doppia freccia su un appunto per cambiare l'ordine.</p>
 welcome_note_3 <h1>Protezione con password</h1><p>Apre la cassaforte e usa l'icona del lucchetto per proteggere un appunto.</p>
