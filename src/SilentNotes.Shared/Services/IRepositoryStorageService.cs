@@ -27,6 +27,14 @@ namespace SilentNotes.Services
         /// <param name="repositoryModel">The repository to store.</param>
         /// <returns>Returns true if the storage was successful, false otherwise.</returns>
         bool TrySaveRepository(NoteRepositoryModel repositoryModel);
+
+        /// <summary>
+        /// Loads the note repository from the local storage and returns its binary content.
+        /// This method is e.g. used to recover the file, to read the repository use
+        /// <see cref="LoadRepositoryOrDefault(out NoteRepositoryModel)"/> instead.
+        /// </summary>
+        /// <returns>Content of repository, or null if no such file exists.</returns>
+        byte[] LoadRepositoryFile();
     }
 
     /// <summary>

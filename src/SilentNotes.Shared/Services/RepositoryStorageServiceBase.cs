@@ -114,6 +114,20 @@ namespace SilentNotes.Services
             }
         }
 
+        /// <inheritdoc/>
+        public byte[] LoadRepositoryFile()
+        {
+            try
+            {
+                string xmlFilePath = Path.Combine(GetDirectoryPath(), Config.RepositoryFileName);
+                return File.ReadAllBytes(xmlFilePath);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
         /// <summary>
         /// Sub classes should override this method to change the directory, where the config is stored.
         /// </summary>

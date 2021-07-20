@@ -3,6 +3,9 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using System.IO;
+using System.Windows.Input;
+using SilentNotes.HtmlView;
 using SilentNotes.Services;
 
 namespace SilentNotes.ViewModels
@@ -12,6 +15,9 @@ namespace SilentNotes.ViewModels
     /// </summary>
     public class StopViewModel : ViewModelBase
     {
+        private readonly IRepositoryStorageService _repositoryService;
+        private readonly IFolderPickerService _folderPickerService;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="StopViewModel"/> class.
         /// </summary>
@@ -20,15 +26,36 @@ namespace SilentNotes.ViewModels
             ILanguageService languageService,
             ISvgIconService svgIconService,
             IThemeService themeService,
-            IBaseUrlService webviewBaseUrl)
+            IBaseUrlService webviewBaseUrl,
+            IRepositoryStorageService repositoryService,
+            IFolderPickerService folderPickerService)
             : base(navigationService, languageService, svgIconService, themeService, webviewBaseUrl)
         {
+            _repositoryService = repositoryService;
+            _folderPickerService = folderPickerService;
+            RecoverRepositoryCommand = new RelayCommand(RecoverRepository);
         }
 
         /// <inheritdoc/>
         public override void OnGoBackPressed(out bool handled)
         {
             handled = false;
+        }
+
+        /// <summary>
+        /// Gets the command which can safe the repository to a user selected directory.
+        /// </summary>
+        [VueDataBinding(VueBindingMode.Command)]
+        public ICommand RecoverRepositoryCommand { get; private set; }
+
+        private async void RecoverRepository()
+        {
+            if (await _folderPickerService.PickFolder())
+            {
+                byte[] repositoryContent = _repositoryService.LoadRepositoryFile();
+                await _folderPickerService.TrySaveFileToPickedFolder(
+                    Config.RepositoryFileName, repositoryContent);
+            }
         }
     }
 }
