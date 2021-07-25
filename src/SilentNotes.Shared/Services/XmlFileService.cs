@@ -36,12 +36,11 @@ namespace SilentNotes.Services
         {
             try
             {
-                string directoryPath = Path.GetDirectoryName(filePath);
-                Directory.CreateDirectory(directoryPath);
-                using (Stream xmlStream = new FileStream(filePath, FileMode.Create))
-                {
-                    XmlUtils.SerializeToXmlStream(serializeableObject, xmlStream, Encoding.UTF8);
-                }
+                AtomicFileWriter.Write(
+                    filePath,
+                    (xmlStream) => {
+                        XmlUtils.SerializeToXmlStream(serializeableObject, xmlStream, Encoding.UTF8);
+                    });
                 return true;
             }
             catch (Exception)
