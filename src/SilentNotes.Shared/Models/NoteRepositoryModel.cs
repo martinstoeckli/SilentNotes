@@ -118,8 +118,6 @@ namespace SilentNotes.Models
                 foreach (NoteModel note in Notes)
                 {
                     hashCode = (hashCode * 397) ^ note.ModifiedAt.GetHashCode();
-                    if (note.MaintainedAt != null)
-                        hashCode = (hashCode * 397) ^ note.MaintainedAt.GetHashCode();
                 }
                 foreach (Guid deletedNote in DeletedNotes)
                 {
@@ -135,21 +133,6 @@ namespace SilentNotes.Models
             }
         }
 
-        /// <summary>
-        /// Clears all the MaintainedAt properties if they are obsolete, because the object was
-        /// modified later.
-        /// </summary>
-        public void ClearMaintainedAtIfObsolete()
-        {
-            foreach (NoteModel note in Notes)
-                note.ClearMaintainedAtIfObsolete();
-            foreach (SafeModel safe in Safes)
-                safe.ClearMaintainedAtIfObsolete();
-        }
-
-        /// <summary>
-        /// Removes all safes, which are not used by any note anymore.
-        /// </summary>
         public void RemoveUnusedSafes()
         {
             List<Guid> usedSafeIds = Notes.Where(note => note.SafeId != null).Select(note => note.SafeId.Value).ToList();

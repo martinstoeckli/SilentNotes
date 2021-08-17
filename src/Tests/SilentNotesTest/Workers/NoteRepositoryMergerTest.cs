@@ -266,49 +266,16 @@ namespace SilentNotesTest.Workers
 
             // Newer ModifiedAt wins
             note1.ModifiedAt = new DateTime(2000, 06, 15);
-            note1.MaintainedAt = null;
             note2.ModifiedAt = new DateTime(2000, 06, 01);
-            note2.MaintainedAt = null;
-            Assert.AreSame(note1, NoteRepositoryMerger.ChooseLastModified(note1, note2, item => item.ModifiedAt, item => item.MaintainedAt));
+            Assert.AreSame(note1, NoteRepositoryMerger.ChooseLastModified(note1, note2, item => item.ModifiedAt));
 
             note1.ModifiedAt = new DateTime(2000, 06, 01);
-            note1.MaintainedAt = null;
             note2.ModifiedAt = new DateTime(2000, 06, 15);
-            note2.MaintainedAt = null;
-            Assert.AreSame(note2, NoteRepositoryMerger.ChooseLastModified(note1, note2, item => item.ModifiedAt, item => item.MaintainedAt));
+            Assert.AreSame(note2, NoteRepositoryMerger.ChooseLastModified(note1, note2, item => item.ModifiedAt));
 
             note1.ModifiedAt = new DateTime(2000, 06, 15);
-            note1.MaintainedAt = null;
             note2.ModifiedAt = new DateTime(2000, 06, 15);
-            note2.MaintainedAt = null;
-            Assert.AreSame(note1, NoteRepositoryMerger.ChooseLastModified(note1, note2, item => item.ModifiedAt, item => item.MaintainedAt));
-
-            // MaintainedAt is ignored when ModifiedAt is different
-            note1.ModifiedAt = new DateTime(2000, 06, 15);
-            note1.MaintainedAt = new DateTime(2001, 06, 30);
-            note2.ModifiedAt = new DateTime(2000, 06, 30);
-            note2.MaintainedAt = new DateTime(2001, 06, 15);
-            Assert.AreSame(note2, NoteRepositoryMerger.ChooseLastModified(note1, note2, item => item.ModifiedAt, item => item.MaintainedAt));
-
-            // Newer MaintainedAt wins
-            note1.ModifiedAt = new DateTime(2000, 06, 15);
-            note1.MaintainedAt = new DateTime(2001, 06, 15);
-            note2.ModifiedAt = new DateTime(2000, 06, 15);
-            note2.MaintainedAt = new DateTime(2001, 06, 30);
-            Assert.AreSame(note2, NoteRepositoryMerger.ChooseLastModified(note1, note2, item => item.ModifiedAt, item => item.MaintainedAt));
-
-            // Non null MaintainedAt wins
-            note1.ModifiedAt = new DateTime(2000, 06, 15);
-            note1.MaintainedAt = new DateTime(2001, 06, 15);
-            note2.ModifiedAt = new DateTime(2000, 06, 15);
-            note2.MaintainedAt = null;
-            Assert.AreSame(note1, NoteRepositoryMerger.ChooseLastModified(note1, note2, item => item.ModifiedAt, item => item.MaintainedAt));
-
-            note1.ModifiedAt = new DateTime(2000, 06, 15);
-            note1.MaintainedAt = null;
-            note2.ModifiedAt = new DateTime(2000, 06, 15);
-            note2.MaintainedAt = new DateTime(2001, 06, 15);
-            Assert.AreSame(note2, NoteRepositoryMerger.ChooseLastModified(note1, note2, item => item.ModifiedAt, item => item.MaintainedAt));
+            Assert.AreSame(note1, NoteRepositoryMerger.ChooseLastModified(note1, note2, item => item.ModifiedAt));
         }
     }
 }

@@ -30,7 +30,6 @@ namespace SilentNotesTest.Models
                 InRecyclingBin = true,
                 CreatedAt = new DateTime(2000, 10, 22, 18, 55, 30),
                 ModifiedAt = new DateTime(2001, 10, 22, 18, 55, 30),
-                MaintainedAt = new DateTime(2002, 10, 22, 18, 55, 30),
                 SafeId = new Guid("10000000000000000000000000000000"),
             };
             NoteModel note2 = note1.Clone();
@@ -42,7 +41,6 @@ namespace SilentNotesTest.Models
             Assert.AreEqual(note1.InRecyclingBin, note2.InRecyclingBin);
             Assert.AreEqual(note1.CreatedAt, note2.CreatedAt);
             Assert.AreEqual(note1.ModifiedAt, note2.ModifiedAt);
-            Assert.AreEqual(note1.MaintainedAt, note2.MaintainedAt);
             Assert.AreEqual(note1.SafeId, note2.SafeId);
         }
     }

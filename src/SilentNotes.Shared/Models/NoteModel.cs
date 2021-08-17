@@ -46,7 +46,6 @@ namespace SilentNotes.Models
             target.InRecyclingBin = this.InRecyclingBin;
             target.CreatedAt = this.CreatedAt;
             target.ModifiedAt = this.ModifiedAt;
-            target.MaintainedAt = this.MaintainedAt;
             target.SafeId = this.SafeId;
             target.ShoppingModeActive = this.ShoppingModeActive;
         }
@@ -110,32 +109,6 @@ namespace SilentNotes.Models
         /// </summary>
         [XmlAttribute(AttributeName = "modified_at")]
         public DateTime ModifiedAt { get; set; }
-
-        /// <summary>
-        /// Gets or sets the time in UTC, when the object was last updated by the system, instead of
-        /// the user. This way the system can clean up deprecated functions, but does not interfere
-        /// with more important user changes.
-        /// </summary>
-        [XmlIgnore]
-        public DateTime? MaintainedAt { get; set; }
-
-        [XmlAttribute(AttributeName = "maintained_at")]
-        public DateTime MaintainedAtSerializeable
-        {
-            get { return MaintainedAt.Value; }
-            set { MaintainedAt = value; }
-        }
-        public bool MaintainedAtSerializeableSpecified { get { return MaintainedAt != null && MaintainedAt > ModifiedAt; } } // Serialize only when set
-
-        /// <summary>
-        /// Clears the <see cref="MaintainedAt"/> property if it is obsolete, because the object was
-        /// modified later.
-        /// </summary>
-        public void ClearMaintainedAtIfObsolete()
-        {
-            if ((MaintainedAt != null) && (MaintainedAt < ModifiedAt))
-                MaintainedAt = null;
-        }
 
         /// <summary>
         /// Gets or sets the safe which was used to encrypt the note, or null if it is not encrypted.
