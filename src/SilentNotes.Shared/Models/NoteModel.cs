@@ -4,6 +4,7 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
+using System.Collections.Generic;
 using System.Xml.Serialization;
 using SilentNotes.Crypto;
 
@@ -27,7 +28,9 @@ namespace SilentNotes.Models
             BackgroundColorHex = SettingsModel.StartDefaultNoteColorHex;
             CreatedAt = DateTime.UtcNow;
             ModifiedAt = CreatedAt;
+            MetaModifiedAt = CreatedAt;
             HtmlContent = string.Empty;
+            Tags = new List<string>();
         }
 
         /// <summary>
@@ -42,10 +45,13 @@ namespace SilentNotes.Models
             target.Id = this.Id;
             target.NoteType = this.NoteType;
             target.HtmlContent = this.HtmlContent;
+            target.Tags.Clear();
+            target.Tags.AddRange(this.Tags);
             target.BackgroundColorHex = this.BackgroundColorHex;
             target.InRecyclingBin = this.InRecyclingBin;
             target.CreatedAt = this.CreatedAt;
             target.ModifiedAt = this.ModifiedAt;
+            target.MetaModifiedAt = this.MetaModifiedAt;
             target.SafeId = this.SafeId;
             target.ShoppingModeActive = this.ShoppingModeActive;
         }
@@ -76,6 +82,18 @@ namespace SilentNotes.Models
             get { return _htmlContent ?? (_htmlContent = string.Empty); }
             set { _htmlContent = value; }
         }
+
+        /// <summary>
+        /// Gets or sets a list of tags (labels) associated with this note.
+        /// </summary>
+        /// <remarks>
+        /// The tags are independend of the content, they rather should be seen like directory
+        /// information. This means they are not encrypted with the note and can be renamed
+        /// without making the note the newer one, see also <see cref="MetaModifiedAt"/>.
+        /// </remarks>
+        [XmlArray("tags")]
+        [XmlArrayItem("tag")]
+        public List<string> Tags { get; set; }
 
         /// <summary>
         /// Gets or sets the background color of the note as hex string, e.g. #ff0000
@@ -111,6 +129,15 @@ namespace SilentNotes.Models
         public DateTime ModifiedAt { get; set; }
 
         /// <summary>
+        /// Gets or sets the time in UTC, when the meta data of the note was last updated.
+        /// Keeping the timestamp of content and meta data separate, allows e.g. to rename a given
+        /// tag in all notes, without making it the more recent note (which would overwrite the
+        /// actually newer note content).
+        /// </summary>
+        [XmlAttribute(AttributeName = "meta_modified_at")]
+        public DateTime MetaModifiedAt { get; set; }
+
+        /// <summary>
         /// Gets or sets the safe which was used to encrypt the note, or null if it is not encrypted.
         /// </summary>
         [XmlElement(ElementName = "safe")]
@@ -123,6 +150,14 @@ namespace SilentNotes.Models
         public void RefreshModifiedAt()
         {
             ModifiedAt = DateTime.UtcNow;
+        }
+
+        /// <summary>
+        /// Sets the <see cref="MetaModifiedAt"/> property to the current UTC time.
+        /// </summary>
+        public void RefreshMetaModifiedAt()
+        {
+            MetaModifiedAt = DateTime.UtcNow;
         }
 
         /// <summary>
