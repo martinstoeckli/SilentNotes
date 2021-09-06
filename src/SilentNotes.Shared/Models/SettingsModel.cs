@@ -39,7 +39,7 @@ namespace SilentNotes.Models
             ColorForSolidTheme = "#121212";
             DefaultNoteColorHex = StartDefaultNoteColorHex;
             NoteMaxHeightScale = 1.0;
-            UseColorForAllNotesInDarkMode = true;
+            UseColorForAllNotesInDarkMode = false;
             ColorForAllNotesInDarkModeHex = "#323232";
         }
 
