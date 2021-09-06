@@ -156,7 +156,7 @@ gui_font_size Yazı tipi boyutu (küçük ‹ orta › büyük)
 gui_note_max_size Maksimum not uzunluğu (kısa ‹ orta › uzun)
 gui_texture Tema
 gui_default_color Varsayılan sayfa rengi
-gui_theme_auto Otomatik ayarla.
+gui_theme_auto Otomatik ayarla
 gui_theme_dark Koyu tema
 gui_theme_light Açık tema
 gui_theme_solid_color Arkaplanda resim yerine düz renk kullan
