@@ -75,12 +75,12 @@ show_settings Ayarlar
 empty_recyclebin Geri dönüşüm kutusunu temizle
 empty_recyclebin_confirmation Notları kalıcı olarak silmek istediğinizden emin misiniz?
 
-show_export Notları dışarı aktar
-export_desc Notlar biçimlendirmeleri korunarak HTML formatında dışarı aktarılır. Şifrelenmiş notlar sadece kasa açıldıktan sonra dışarı aktarılabilir.
-export_unencrypted Korunmayan notları dışarı aktar
-export_encrypted Kasada korunan notları dışarı aktar
-export_success Notlar başarıyla dışarı aktarıldı.
-export_error Dışarı aktarma başarısız.
+show_export Notları dışa aktar
+export_desc Notlar biçimlendirmeleri korunarak HTML formatında dışa aktarılır. Şifrelenmiş notlar sadece kasa açıldıktan sonra dışa aktarılabilir.
+export_unencrypted Korunmayan notları dışa aktar
+export_encrypted Kasada korunan notları dışa aktar
+export_success Notlar başarıyla dışa aktarıldı.
+export_error Dışa aktarım başarısız.
 
 show_transfer_code Aktarım kodunu göster
 transfer_not_existing Aktarım kodu ilk eşitlemeden sonra kullanılabilir olacaktır.
