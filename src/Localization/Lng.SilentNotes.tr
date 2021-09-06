@@ -124,7 +124,7 @@ cloud_webdav_example https://webdav.example.org/
 sync Eşitleme
 sync_auto Otomatik eşitleme
 sync_auto_never Asla, sadece el ile eşitleme
-sync_auto_costfree Sadece ücretsiz internet erişimi olduğu zaman
+sync_auto_costfree Sadece ücretsiz internet olduğu zaman
 sync_auto_always Her zaman
 sync_notes Notları bulutla eşitler
 sync_success Notlar başarıyla eşitlendi.
