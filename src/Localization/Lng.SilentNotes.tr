@@ -156,13 +156,13 @@ gui_font_size Yazı tipi boyutu (küçük ‹ orta › büyük)
 gui_note_max_size Maksimum not uzunluğu (kısa ‹ orta › uzun)
 gui_texture Tema
 gui_default_color Varsayılan sayfa rengi
-gui_theme_auto Otomatik ayarla
+gui_theme_auto Temayı otomatik ayarla
 gui_theme_dark Koyu tema
 gui_theme_light Açık tema
 gui_theme_solid_color Arkaplanda resim yerine düz renk kullan
 gui_theme_color_all_dark Koyu temada tüm notların rengini aynı yap
 gui_theme_color_cannot_change Tüm notlar için aynı renk ayarlandı.
-gui_note_insertion Yeni notların varsayılan yeri
+gui_note_insertion Yeni notların varsayılan konumu
 gui_note_insertion_top Yeni notları en üste yerleştir
 gui_note_insertion_bottom Yeni notları en alta yerleştir
 gui_hide_closed_safe_notes Kasa kilitlenince korunan notları gizle
