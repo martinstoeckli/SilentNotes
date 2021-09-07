@@ -65,7 +65,7 @@ safe_remove_note Notu kasadan çıkar
 safe_open_existing Korunan notlara erişmek için lütfen şifrenizi girin.
 safe_open_new Notlarınızı korumak için lütfen yeni bir şifre oluşturun. Şifrenizi oluşturduktan sonra korumak istediğiniz notları seçebilirsiniz.
 safe_password_requirement Güvenli bir şifre en az 8 karakterden oluşur. Cümle şeklinde bir şifre kullanmanızı tavsiye ederiz. Örneğin: 'Her akşam televizyonda haberleri izlerim'.
-safe_reset_warning Eğer şifrenizi unuttuysanız kasanızı sıfırlayıp yeni bir şifre oluşturabilirsiniz. Ancak kasanızı sıfırlarsanız kasada kalan korunan notlar silinecektir. Devam etmek istediğinizden emin misiniz?
+safe_reset_warning Eğer şifrenizi unuttuysanız kasanızı sıfırlayıp yeni bir şifre oluşturabilirsiniz. Ancak kasanızı sıfırlarsanız kasadaki korunan notlar silinecektir. Devam etmek istediğinizden emin misiniz?
 password_short_error Şifreniz en az 5 karakterden oluşmalıdır.
 password_confirmation_error Şifreler uyuşmadı. Lütfen şifrenizi doğru girdiğinizden emin olun.
 password_wrong_error Hatalı şifre. Lütfen şifrenizi doğru girdiğinizden emin olun.
