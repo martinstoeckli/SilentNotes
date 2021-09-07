@@ -134,7 +134,7 @@ sync_error_transfercode Lütfen aktarım kodunu doğru yazdığınızdan emin ol
 sync_error_connection Sunucuya bağlanılamadı. Lütfen internet bağlantınızı ve sunucu adresini kontrol edin.
 sync_error_privileges Lütfen kullanıcı adınızı ve şifrenizi kontrol edin. Ayrıca sunucuya bağlanmak için gerekli yetkilere sahip olduğunuzdan emin olun.
 sync_error_repository Dosya formatı geçersiz olduğu için sunucudaki notlar açılamadı.
-sync_error_revision Lütfen uygulamayı güncelleyin. Çevrimiçi notlar daha yeni bir sürümde saklanıyor.
+sync_error_revision Lütfen uygulamayı güncelleyin. Çevrimiçi notlar daha güncel bir sürümde saklanıyor.
 sync_error_oauth_refresh Çevrimiçi depoya erişebilmeniz için tekrar giriş yapmanız gerekiyor. Lütfen bir kere el ile eşitleme yapın.
 sync_repository_merge Cihazdaki ve sunucudaki notları birleştir [önerilen].
 sync_repository_cloud Sunucudaki notları kullan, cihazdaki notları sil.
