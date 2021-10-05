@@ -141,6 +141,9 @@
     <Content Include="..\Localization\Lng.SilentNotes.it">
       <Link>Lng.SilentNotes.it</Link>
     </Content>
+    <Content Include="..\Localization\Lng.SilentNotes.tr">
+      <Link>Lng.SilentNotes.tr</Link>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\SilentNotes.Shared\Assets\Html\blackstone.jpg">
