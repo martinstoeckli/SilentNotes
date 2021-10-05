@@ -40,7 +40,7 @@ note_header3 Überschrift 3
 note_shopping_mode Einkaufsmodus
 note_pull_from_server Notiz manuell herunterladen
 note_push_to_server Notiz manuell hochladen
-tag_add Schlagwort hinzufügen
+tag_add Neues Schlagwort hinzufügen
 feedback_note_to_recycle Die Notiz ist in den Papierkorb verschoben worden und kann von dort wieder hergestellt werden.
 
 checklist_create_new Neue Checkliste erstellen

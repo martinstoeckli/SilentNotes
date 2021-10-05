@@ -40,6 +40,7 @@ note_header3 Header 3
 note_shopping_mode Shopping mode
 note_pull_from_server Manually download note
 note_push_to_server Manually upload note
+tag_add Add new tag
 feedback_note_to_recycle The note has been moved to the recycle bin and can be restored from there.
 
 checklist_create_new Create new checklist

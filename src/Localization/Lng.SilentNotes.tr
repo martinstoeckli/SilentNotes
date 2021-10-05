@@ -40,6 +40,7 @@ note_header3 Başlık 3
 note_shopping_mode Alışveriş modu
 note_pull_from_server El ile not indir
 note_push_to_server El ile not yükle
+tag_add Add new tag
 feedback_note_to_recycle Not geri dönüşüm kutusuna taşındı.
 
 checklist_create_new Liste oluştur
