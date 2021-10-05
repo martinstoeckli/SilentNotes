@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Linq;
 using System.Reflection;
 using System.Security;
 using System.Text;
@@ -362,6 +363,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 else if (propertyType == typeof(string))
                 {
                     formattedValue = "'" + WebviewUtils.EscapeJavaScriptString(value.ToString()) + "'";
+                    return true;
+                }
+                else if (typeof(IEnumerable<string>).IsAssignableFrom(propertyType))
+                {
+                    IEnumerable<string> valueList = (IEnumerable<string>)value;
+                    formattedValue = string.Join(
+                        ",", valueList.Select(v => "'" + WebviewUtils.EscapeJavaScriptString(v) + "'"));
+                    formattedValue = "[" + formattedValue + "]";
                     return true;
                 }
                 else if (propertyType == typeof(bool))

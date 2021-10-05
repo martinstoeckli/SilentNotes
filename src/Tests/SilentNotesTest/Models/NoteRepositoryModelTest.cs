@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
 using SilentNotes.Models;
 
@@ -74,6 +76,21 @@ namespace SilentNotesTest.Models
             repository.RemoveUnusedSafes();
             Assert.AreEqual(1, repository.Safes.Count);
             Assert.AreEqual(safe2Id, repository.Safes[0].Id);
+        }
+
+        [Test]
+        public void CollectAllTags_IsDistinctAndSorted()
+        {
+            NoteRepositoryModel model = CreateNoteRepositoryModel();
+            model.Notes.Add(new NoteModel { Tags = new List<string> { "Def", "OPQ" } });
+            model.Notes.Add(new NoteModel { Tags = new List<string> { "abc", "def", "äbc" } });
+
+            List<string> tags = model.CollectAllTags().ToList();
+            Assert.AreEqual(4, tags.Count);
+            Assert.AreEqual("abc", tags[0]);
+            Assert.AreEqual("äbc", tags[1]);
+            Assert.AreEqual("Def", tags[2]);
+            Assert.AreEqual("OPQ", tags[3]);
         }
 
         private static NoteRepositoryModel CreateNoteRepositoryModel()

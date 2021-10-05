@@ -69,6 +69,12 @@ body { background-color: transparent; }
             toolbar.handlers['link'].call(toolbar, !selectionFormatValue);
         }
 
+        function addTag() {
+            var tagText = document.getElementById('tags').value;
+            document.getElementById('tags').value = '';
+            vueCommandExecute('AddTagCommand', tagText);
+        }
+
         function getNoteHtmlContent() {
             return quill.root.innerHTML;
         }
@@ -179,6 +185,12 @@ body { background-color: transparent; }
             }
 
             quill.enable(!vm.ShoppingModeActive);
+
+            document.getElementById('tags').addEventListener("keyup", function(event) {
+                if (event.key === 'Enter' || event.keyCode === 13) {
+                    addTag();
+                }
+            });
         };
 
         @{WriteLiteral(Model.VueDataBindingScript);}
@@ -241,6 +253,30 @@ body { background-color: transparent; }
         }
     </div>
 
+    <div id="tag-container" v-bind:class="{ dark: IsDark }">
+        <div class="row g-3">
+            <div class="col-7 col-sm-8">
+                <ul class="d-flex flex-wrap">
+                    <li class="tag-item d-flex" v-bind:style="{ backgroundColor: BackgroundColorHex }" v-for="Tag in Tags">
+                        {{Tag}}
+                        <div class="tag-handle"><svg width='16' height='16' viewBox='0 0 24 24'><use xlink:href="#svg-delete" /></svg></div>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-5 col-sm-4">
+                <div class="input-group">
+                    <input id="tags" class="form-control" list="existing-tags" placeholder='@Model.Language["tag_add"]' type="text">
+                    <datalist id="existing-tags">
+                        <option v-for="TagSuggestion in TagSuggestions" v-bind:value="TagSuggestion">
+                    </datalist>
+                    <div class="input-group-append">
+                        <div id="add-tag" class="btn" onclick="addTag();"><svg width='16' height='16' viewBox='0 0 24 24'><use xlink:href="#svg-plus" /></svg></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div id="search-dialog" class="hidden">
         <div class="nav-filter">
             <input id="TxtFilter" autocomplete="off" />
@@ -267,6 +303,8 @@ body { background-color: transparent; }
     <div hidden>
         @{WriteLiteral(Model.Icon.LoadIcon("lock-outline", new[] { new KeyValuePair<string, string>("id", "svg-lock-outline") }));}
         @{WriteLiteral(Model.Icon.LoadIcon("close-circle-outline", new[] { new KeyValuePair<string, string>("id", "svg-close-circle-outline") }));}
+        @{WriteLiteral(Model.Icon.LoadIcon("plus", new[] { new KeyValuePair<string, string>("id", "svg-plus") }));}
+        @{WriteLiteral(Model.Icon.LoadIcon("delete", new[] { new KeyValuePair<string, string>("id", "svg-delete") }));}
     </div>
 </div></body>
 </html>

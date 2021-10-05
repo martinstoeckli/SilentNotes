@@ -74,10 +74,11 @@ namespace SilentNotes.ViewModels
 
                 // Wrap models in view models
                 IFeedbackService feedbackService = new DummyFeedbackService();
+                List<string> allTags = _model.CollectAllTags();
                 foreach (NoteModel note in _model.Notes)
                 {
                     if (note.InRecyclingBin)
-                        RecycledNotes.Add(new NoteViewModel(_navigationService, Language, Icon, Theme, _webviewBaseUrl, null, _repositoryService, feedbackService, _settingsService, _noteCryptor, _model.Safes, note));
+                        RecycledNotes.Add(new NoteViewModel(_navigationService, Language, Icon, Theme, _webviewBaseUrl, null, _repositoryService, feedbackService, _settingsService, _noteCryptor, _model.Safes, allTags, note));
                 }
             }
         }

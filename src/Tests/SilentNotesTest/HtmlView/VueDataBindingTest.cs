@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Windows.Input;
 using Moq;
 using NUnit.Framework;
@@ -90,6 +91,35 @@ namespace SilentNotesTest.HtmView
             viewMock.Verify(m => m.ExecuteJavaScript(It.Is<string>(p => p == "var newValue = 'Cat'; if (vm.MyProperty != newValue) vm.MyProperty = newValue;")), Times.Once);
         }
 
+        [Test]
+        public void TryFormatForView_FormatsAccordingToType()
+        {
+            TestViewModel viewmodel = new TestViewModel();
+            Mock<IHtmlView> viewMock = new Mock<IHtmlView>();
+            VueDataBinding binding = new VueDataBinding(viewmodel, viewMock.Object);
+            string formattedValue;
+
+            // int
+            Assert.IsTrue(binding.TryFormatForView(
+                new VueBindingDescription("MyIntProperty", VueBindingMode.OneWayToView), 888, out formattedValue));
+            Assert.AreEqual("888", formattedValue);
+
+            // string
+            Assert.IsTrue(binding.TryFormatForView(
+                new VueBindingDescription("MyStringProperty", VueBindingMode.OneWayToView), "abc", out formattedValue));
+            Assert.AreEqual("'abc'", formattedValue);
+
+            // list<string>
+            Assert.IsTrue(binding.TryFormatForView(
+                new VueBindingDescription("MyStringListProperty", VueBindingMode.OneWayToView), new List<string> { "a", "b" }, out formattedValue));
+            Assert.AreEqual("['a','b']", formattedValue);
+
+            // bool
+            Assert.IsTrue(binding.TryFormatForView(
+                new VueBindingDescription("MyBoolProperty", VueBindingMode.OneWayToView), false, out formattedValue));
+            Assert.AreEqual("false", formattedValue);
+        }
+
         private class TestViewModel : INotifyPropertyChanged
         {
             public TestViewModel()
@@ -102,6 +132,15 @@ namespace SilentNotesTest.HtmView
 
             [VueDataBinding(VueBindingMode.TwoWay)]
             public int MyIntProperty { get; set; }
+
+            [VueDataBinding(VueBindingMode.TwoWay)]
+            public string MyStringProperty { get; set; }
+
+            [VueDataBinding(VueBindingMode.TwoWay)]
+            public List<string> MyStringListProperty { get; set; }
+
+            [VueDataBinding(VueBindingMode.TwoWay)]
+            public bool MyBoolProperty { get; set; }
 
             public string MyUnboundProperty { get; set; }
 
