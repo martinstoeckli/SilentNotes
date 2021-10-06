@@ -23,7 +23,7 @@ using SilentNotes.ViewModels;
 #line hidden
 
 
-[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.11.0.175")]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.11.0.190")]
 public partial class NoteRazorView : NoteRazorViewBase
 {
 
@@ -1031,61 +1031,24 @@ WriteLiteral(" v-bind:class=\"{ dark: IsDark }\"");
 
 WriteLiteral(">\r\n        <div");
 
-WriteLiteral(" class=\"row g-3\"");
+WriteLiteral(" class=\"tag-input-group\"");
 
 WriteLiteral(">\r\n            <div");
 
-WriteLiteral(" class=\"col-7 col-sm-8\"");
-
-WriteLiteral(">\r\n                <ul");
-
-WriteLiteral(" class=\"d-flex flex-wrap\"");
-
-WriteLiteral(">\r\n                    <li");
-
-WriteLiteral(" class=\"tag-item d-flex\"");
-
-WriteLiteral(" v-bind:style=\"{ backgroundColor: BackgroundColorHex }\"");
-
-WriteLiteral(" v-for=\"Tag in Tags\"");
-
-WriteLiteral(">\r\n                        {{Tag}}\r\n                        <div");
-
-WriteLiteral(" class=\"tag-handle\"");
-
-WriteLiteral("><svg");
-
-WriteLiteral(" width=\'16\'");
-
-WriteLiteral(" height=\'16\'");
-
-WriteLiteral(" viewBox=\'0 0 24 24\'");
-
-WriteLiteral("><use");
-
-WriteLiteral(" xlink:href=\"#svg-delete\"");
-
-WriteLiteral(" /></svg></div>\r\n                    </li>\r\n                </ul>\r\n            </" +
-"div>\r\n            <div");
-
-WriteLiteral(" class=\"col-5 col-sm-4\"");
-
-WriteLiteral(">\r\n                <div");
-
 WriteLiteral(" class=\"input-group\"");
 
-WriteLiteral(">\r\n                    <input");
+WriteLiteral(">\r\n                <input");
 
 WriteLiteral(" id=\"tags\"");
 
 WriteLiteral(" class=\"form-control\"");
 
-WriteLiteral(" list=\"existing-tags\"");
+WriteLiteral(" list=\"tag-suggestions\"");
 
 WriteAttribute ("placeholder", " placeholder=\'", "\'"
 
-#line 268 "NoteRazorView.cshtml"
-                                                     , Tuple.Create<string,object,bool> ("", Model.Language["tag_add"]
+#line 259 "NoteRazorView.cshtml"
+                                                   , Tuple.Create<string,object,bool> ("", Model.Language["tag_add"]
 
 #line default
 #line hidden
@@ -1093,21 +1056,21 @@ WriteAttribute ("placeholder", " placeholder=\'", "\'"
 );
 WriteLiteral(" type=\"text\"");
 
-WriteLiteral(">\r\n                    <datalist");
+WriteLiteral(">\r\n                <datalist");
 
-WriteLiteral(" id=\"existing-tags\"");
+WriteLiteral(" id=\"tag-suggestions\"");
 
-WriteLiteral(">\r\n                        <option");
+WriteLiteral(">\r\n                    <option");
 
 WriteLiteral(" v-for=\"TagSuggestion in TagSuggestions\"");
 
 WriteLiteral(" v-bind:value=\"TagSuggestion\"");
 
-WriteLiteral(">\r\n                    </datalist>\r\n                    <div");
+WriteLiteral(">\r\n                </datalist>\r\n                <div");
 
 WriteLiteral(" class=\"input-group-append\"");
 
-WriteLiteral(">\r\n                        <div");
+WriteLiteral(">\r\n                    <div");
 
 WriteLiteral(" id=\"add-tag\"");
 
@@ -1127,8 +1090,36 @@ WriteLiteral("><use");
 
 WriteLiteral(" xlink:href=\"#svg-plus\"");
 
-WriteLiteral(" /></svg></div>\r\n                    </div>\r\n                </div>\r\n            " +
-"</div>\r\n        </div>\r\n    </div>\r\n\r\n    <div");
+WriteLiteral(" /></svg></div>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    " +
+"    <ul");
+
+WriteLiteral(" class=\"tag-list mt-1\"");
+
+WriteLiteral(">\r\n            <li");
+
+WriteLiteral(" class=\"tag-item\"");
+
+WriteLiteral(" v-bind:style=\"{ backgroundColor: BackgroundColorHex }\"");
+
+WriteLiteral(" v-for=\"Tag in Tags\"");
+
+WriteLiteral(">\r\n                {{Tag}}\r\n                <div");
+
+WriteLiteral(" class=\"tag-handle\"");
+
+WriteLiteral("><svg");
+
+WriteLiteral(" width=\'16\'");
+
+WriteLiteral(" height=\'16\'");
+
+WriteLiteral(" viewBox=\'0 0 24 24\'");
+
+WriteLiteral("><use");
+
+WriteLiteral(" xlink:href=\"#svg-delete\"");
+
+WriteLiteral(" /></svg></div>\r\n            </li>\r\n        </ul>\r\n    </div>\r\n\r\n    <div");
 
 WriteLiteral(" id=\"search-dialog\"");
 
@@ -1205,13 +1196,13 @@ WriteLiteral(" class=\"d-flex flex-wrap\"");
 WriteLiteral(">\r\n");
 
 
-#line 294 "NoteRazorView.cshtml"
+#line 290 "NoteRazorView.cshtml"
                     
 
 #line default
 #line hidden
 
-#line 294 "NoteRazorView.cshtml"
+#line 290 "NoteRazorView.cshtml"
                      foreach (var backgroundColor in @Model.BackgroundColorsHex)
                     {
 
@@ -1226,7 +1217,7 @@ WriteAttribute ("class", " class=\"", "\""
 , Tuple.Create<string,object,bool> (" ", "justify-content-center", true)
 , Tuple.Create<string,object,bool> (" ", "color-btn", true)
 
-#line 296 "NoteRazorView.cshtml"
+#line 292 "NoteRazorView.cshtml"
                                                        , Tuple.Create<string,object,bool> (" ", Model.GetDarkClass(backgroundColor)
 
 #line default
@@ -1238,7 +1229,7 @@ WriteLiteral(" data-dismiss=\"modal\"");
 WriteAttribute ("v-on:click", " v-on:click=\"", "\""
 , Tuple.Create<string,object,bool> ("", "BackgroundColorHex=\'", true)
 
-#line 296 "NoteRazorView.cshtml"
+#line 292 "NoteRazorView.cshtml"
                                                                                                                                                     , Tuple.Create<string,object,bool> ("", backgroundColor
 
 #line default
@@ -1249,7 +1240,7 @@ WriteAttribute ("v-on:click", " v-on:click=\"", "\""
 WriteAttribute ("style", " style=\"", "\""
 , Tuple.Create<string,object,bool> ("", "background-color:", true)
 
-#line 296 "NoteRazorView.cshtml"
+#line 292 "NoteRazorView.cshtml"
                                                                                                                                                                                                 , Tuple.Create<string,object,bool> (" ", backgroundColor
 
 #line default
@@ -1259,7 +1250,7 @@ WriteAttribute ("style", " style=\"", "\""
 WriteLiteral("><span>Lorem ipsum</span></div>\r\n");
 
 
-#line 297 "NoteRazorView.cshtml"
+#line 293 "NoteRazorView.cshtml"
                     }
 
 
@@ -1269,13 +1260,13 @@ WriteLiteral("                </div>\r\n            </div>\r\n        </div>\r\n
 "v hidden>\r\n");
 
 
-#line 304 "NoteRazorView.cshtml"
+#line 300 "NoteRazorView.cshtml"
         
 
 #line default
 #line hidden
 
-#line 304 "NoteRazorView.cshtml"
+#line 300 "NoteRazorView.cshtml"
           WriteLiteral(Model.Icon.LoadIcon("lock-outline", new[] { new KeyValuePair<string, string>("id", "svg-lock-outline") }));
 
 #line default
@@ -1283,13 +1274,13 @@ WriteLiteral("                </div>\r\n            </div>\r\n        </div>\r\n
 WriteLiteral("\r\n");
 
 
-#line 305 "NoteRazorView.cshtml"
+#line 301 "NoteRazorView.cshtml"
         
 
 #line default
 #line hidden
 
-#line 305 "NoteRazorView.cshtml"
+#line 301 "NoteRazorView.cshtml"
           WriteLiteral(Model.Icon.LoadIcon("close-circle-outline", new[] { new KeyValuePair<string, string>("id", "svg-close-circle-outline") }));
 
 #line default
@@ -1297,13 +1288,13 @@ WriteLiteral("\r\n");
 WriteLiteral("\r\n");
 
 
-#line 306 "NoteRazorView.cshtml"
+#line 302 "NoteRazorView.cshtml"
         
 
 #line default
 #line hidden
 
-#line 306 "NoteRazorView.cshtml"
+#line 302 "NoteRazorView.cshtml"
           WriteLiteral(Model.Icon.LoadIcon("plus", new[] { new KeyValuePair<string, string>("id", "svg-plus") }));
 
 #line default
@@ -1311,13 +1302,13 @@ WriteLiteral("\r\n");
 WriteLiteral("\r\n");
 
 
-#line 307 "NoteRazorView.cshtml"
+#line 303 "NoteRazorView.cshtml"
         
 
 #line default
 #line hidden
 
-#line 307 "NoteRazorView.cshtml"
+#line 303 "NoteRazorView.cshtml"
           WriteLiteral(Model.Icon.LoadIcon("delete", new[] { new KeyValuePair<string, string>("id", "svg-delete") }));
 
 #line default

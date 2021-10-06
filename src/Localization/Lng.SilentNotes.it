@@ -40,7 +40,7 @@ note_header3 Intestazione 3
 note_shopping_mode Modalità Shopping
 note_pull_from_server Scarica manualmente l'appunto
 note_push_to_server Carica manualmente l'appunto
-tag_add Add new tag
+tag_add Add tag
 feedback_note_to_recycle L'appunto è stato spostato nel Cestino e può essere recuperato da lì.
 
 checklist_create_new Crea una nuova lista di controllo
