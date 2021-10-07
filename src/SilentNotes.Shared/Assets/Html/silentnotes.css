@@ -5,6 +5,10 @@ input::-ms-clear { display: none; }
 
 html {
 	font-size: 14px;
+	height: 100%;
+}
+body {
+	height: 100%;
 }
 
 h1 {
@@ -25,14 +29,16 @@ a:hover { text-decoration: underline; }
 
 input[type="color"] { padding: 1px; }
 
+#vueDataBinding {
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+}
+
 #navigation {
 	margin: 0;
 	padding: 2px 6px 2px 6px;
-	position: fixed;
-	top: 0;
-	right: 0;
-	left: 0;
-	z-index: 1030;
+	flex: none;
 	height: 42px;
 	border-style: none;
 	border-width: 0;
@@ -41,11 +47,7 @@ input[type="color"] { padding: 1px; }
 #content {
 	margin: 0;
 	padding: 0;
-	position: fixed;
-	top: 42px;
-	right: 0;
-	left: 0;
-	height: calc(100% - 42px);
+	flex: 1 1 0%;
 	overflow: auto;
 }
 
@@ -116,12 +118,11 @@ input[type="color"] { padding: 1px; }
 #tag-container {
 	margin: 0;
 	padding: 6px;
-	position: fixed;
-	bottom: 0;
-	right: 0;
-	left: 0;
-	border-style: none;
-	border-width: 0;
+	flex: none;
+	font-size: 0.95em;
+}
+.tag-list {
+	margin-top: 4px;
 }
 .tag-item {
 	display: inline-block;

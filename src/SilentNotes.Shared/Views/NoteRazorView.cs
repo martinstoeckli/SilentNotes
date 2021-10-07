@@ -1093,7 +1093,7 @@ WriteLiteral(" xlink:href=\"#svg-plus\"");
 WriteLiteral(" /></svg></div>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    " +
 "    <ul");
 
-WriteLiteral(" class=\"tag-list mt-1\"");
+WriteLiteral(" class=\"tag-list\"");
 
 WriteLiteral(">\r\n            <li");
 
