@@ -66,6 +66,7 @@ namespace SilentNotes.ViewModels
             ToggleShoppingModeCommand = new RelayCommand(ToggleShoppingMode);
             GoBackCommand = new RelayCommand(GoBack);
             AddTagCommand = new RelayCommand<string>(AddTag);
+            DeleteTagCommand = new RelayCommand<string>(DeleteTag);
 
             Model = noteFromRepository;
             _unlockedContent = IsInSafe ? UnlockIfSafeOpen(Model.HtmlContent) : Model.HtmlContent;
@@ -175,6 +176,22 @@ namespace SilentNotes.ViewModels
 
             Model.Tags.Add(value);
             Model.Tags.Sort(StringComparer.InvariantCultureIgnoreCase);
+            Model.RefreshMetaModifiedAt();
+            Modified = true;
+            OnPropertyChanged(nameof(Tags));
+            OnPropertyChanged(nameof(TagSuggestions));
+        }
+
+        /// <summary>
+        /// Gets the command to go back to the note overview.
+        /// </summary>
+        [VueDataBinding(VueBindingMode.Command)]
+        public ICommand DeleteTagCommand { get; private set; }
+
+        /// <inheritdoc/>
+        private void DeleteTag(string value)
+        {
+            Model.Tags.Remove(value);
             Model.RefreshMetaModifiedAt();
             Modified = true;
             OnPropertyChanged(nameof(Tags));

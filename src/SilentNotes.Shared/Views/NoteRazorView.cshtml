@@ -75,6 +75,10 @@ body { background-color: transparent; }
             vueCommandExecute('AddTagCommand', tagText);
         }
 
+        function deleteTag(e) {
+            vueCommandExecute('DeleteTagCommand', e.currentTarget.attributes['data-tag'].value);
+        }
+
         function getNoteHtmlContent() {
             return quill.root.innerHTML;
         }
@@ -268,7 +272,7 @@ body { background-color: transparent; }
         <ul class="tag-list">
             <li class="tag-item" v-bind:style="{ backgroundColor: BackgroundColorHex }" v-for="Tag in Tags">
                 {{Tag}}
-                <div class="tag-handle"><svg width='16' height='16' viewBox='0 0 24 24'><use xlink:href="#svg-delete" /></svg></div>
+                <div class="tag-handle" onclick="deleteTag(event);" v-bind:data-tag="Tag"><svg width='16' height='16' viewBox='0 0 24 24'><use xlink:href="#svg-delete" /></svg></div>
             </li>
         </ul>
     </div>
