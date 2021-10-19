@@ -29,7 +29,7 @@ namespace SilentNotes.ViewModels
         private readonly ISettingsService _settingsService;
         private readonly ICryptor _cryptor;
         private readonly SafeListModel _safes;
-        private readonly IList<string> _allDistingtAndSortedTags;
+        private readonly IList<string> _allDistinctAndSortedTags;
         private SearchableHtmlConverter _searchableTextConverter;
         protected string _unlockedContent;
         private string _searchableContent;
@@ -59,7 +59,7 @@ namespace SilentNotes.ViewModels
             _searchableTextConverter = searchableTextConverter;
             _cryptor = cryptor;
             _safes = safes;
-            _allDistingtAndSortedTags = allDistinctAndSortedTags;
+            _allDistinctAndSortedTags = allDistinctAndSortedTags;
             MarkSearchableContentAsDirty();
             PushNoteToOnlineStorageCommand = new RelayCommand(PushNoteToOnlineStorage);
             PullNoteFromOnlineStorageCommand = new RelayCommand(PullNoteFromOnlineStorage);
@@ -205,7 +205,7 @@ namespace SilentNotes.ViewModels
         [VueDataBinding(VueBindingMode.OneWayToView)]
         public IEnumerable<string> TagSuggestions
         {
-            get { return _allDistingtAndSortedTags.Where(tag => !Tags.Contains(tag, StringComparer.InvariantCultureIgnoreCase)); }
+            get { return _allDistinctAndSortedTags.Where(tag => !Tags.Contains(tag, StringComparer.InvariantCultureIgnoreCase)); }
         }
 
         /// <summary>

@@ -24,6 +24,7 @@ namespace SilentNotes.ViewModels
     /// </summary>
     public class NoteRepositoryViewModel : ViewModelBase
     {
+        private const string NoTagFilter = "✱";
         private static string _lastFilter;
 
         private readonly IStoryBoardService _storyBoardService;
@@ -35,6 +36,7 @@ namespace SilentNotes.ViewModels
         private readonly ICryptor _noteCryptor;
         private NoteRepositoryModel _model;
         private string _filter;
+        private string _selectedTag;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NoteRepositoryViewModel"/> class.
@@ -60,6 +62,7 @@ namespace SilentNotes.ViewModels
             _environmentService = environmentService;
             _noteCryptor = new Cryptor(NoteModel.CryptorPackageName, randomSource);
             _searchableTextConverter = new SearchableHtmlConverter();
+            _selectedTag = NoTagFilter;
             AllNotes = new List<NoteViewModel>();
             FilteredNotes = new ObservableCollection<NoteViewModel>();
 
@@ -327,6 +330,31 @@ namespace SilentNotes.ViewModels
             OnPropertyChanged("Notes");
 
             _feedbackService.ShowToast(Language.LoadText("feedback_note_to_recycle"));
+        }
+
+        /// <summary>
+        /// Gets a list of all tags which are used in the notes, plus the <see cref="NoTagFilter"/>.
+        /// </summary>
+        [VueDataBinding(VueBindingMode.OneWayToView)]
+        public IEnumerable<string> Tags
+        {
+            get 
+            {
+                List<string> result = Model.CollectAllTags();
+                result.Insert(0, NoTagFilter);
+                return result; 
+            }
+        }
+
+        [VueDataBinding(VueBindingMode.TwoWay)]
+        public string SelectedTag
+        {
+            get { return _selectedTag; }
+
+            set 
+            {
+                _selectedTag = value;
+            }
         }
 
         /// <summary>

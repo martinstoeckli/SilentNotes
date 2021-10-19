@@ -263,16 +263,18 @@ WriteLiteral("; }\r\n\r\n.nav-filter {\r\n    margin: 0 1em 0 0;\r\n    padding:
 "        function scrollToTop() {\r\n            var element = document.querySelect" +
 "or(\'#content\');\r\n            element.scrollTop = 0;\r\n        }\r\n\r\n        functi" +
 "on scrollToBottom() {\r\n            var element = document.querySelector(\'#conten" +
-"t\');\r\n            element.scrollTop = element.scrollHeight;\r\n        }\r\n\r\n");
+"t\');\r\n            element.scrollTop = element.scrollHeight;\r\n        }\r\n\r\n      " +
+"  function setSelectedTag(e) {\r\n            vm.SelectedTag = e.currentTarget.att" +
+"ributes[\'data-tag\'].value;\r\n        }\r\n\r\n");
 
 
-#line 120 "NoteRepositoryRazorView.cshtml"
+#line 124 "NoteRepositoryRazorView.cshtml"
         
 
 #line default
 #line hidden
 
-#line 120 "NoteRepositoryRazorView.cshtml"
+#line 124 "NoteRepositoryRazorView.cshtml"
           WriteLiteral(Model.VueDataBindingScript);
 
 #line default
@@ -309,39 +311,21 @@ WriteLiteral(">\r\n                <span");
 
 WriteLiteral(" class=\"tag-selector-text\"");
 
-WriteLiteral(">Wunder Plunder und mehr</span>\r\n            </button>\r\n            <div");
+WriteLiteral(">{{SelectedTag}}</span>\r\n            </button>\r\n            <div");
 
 WriteLiteral(" class=\"dropdown-menu\"");
 
-WriteLiteral(">\r\n                <a");
+WriteLiteral(">\r\n                <div");
 
 WriteLiteral(" class=\"dropdown-item\"");
 
-WriteLiteral(" href=\"#\"");
+WriteLiteral(" v-for=\"Tag in Tags\"");
 
-WriteLiteral(">Action</a>\r\n                <a");
+WriteLiteral(" onclick=\"setSelectedTag(event);\"");
 
-WriteLiteral(" class=\"dropdown-item\"");
+WriteLiteral(" v-bind:data-tag=\"Tag\"");
 
-WriteLiteral(" href=\"#\"");
-
-WriteLiteral(">Another action</a>\r\n                <a");
-
-WriteLiteral(" class=\"dropdown-item\"");
-
-WriteLiteral(" href=\"#\"");
-
-WriteLiteral(">Something else here</a>\r\n                <div");
-
-WriteLiteral(" class=\"dropdown-divider\"");
-
-WriteLiteral("></div>\r\n                <a");
-
-WriteLiteral(" class=\"dropdown-item\"");
-
-WriteLiteral(" href=\"#\"");
-
-WriteLiteral(">Separated link</a>\r\n            </div>\r\n        </div>\r\n        <div");
+WriteLiteral(">{{Tag}}</div>\r\n            </div>\r\n        </div>\r\n        <div");
 
 WriteLiteral(" class=\"nav-item nav-filter flex-grow-1 align-self-center\"");
 

@@ -117,6 +117,10 @@ div.dark .note-viewer.over-view.checklist p.disabled::before { content: @{WriteL
             element.scrollTop = element.scrollHeight;
         }
 
+        function setSelectedTag(e) {
+            vm.SelectedTag = e.currentTarget.attributes['data-tag'].value;
+        }
+
         @{WriteLiteral(Model.VueDataBindingScript);}
     </script>
 </head>
@@ -124,14 +128,10 @@ div.dark .note-viewer.over-view.checklist p.disabled::before { content: @{WriteL
     <nav id="navigation" class="d-flex">
         <div class="btn-group btn-group-sm align-self-center ml-auto mr-1">
             <button id="tag-selector" type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="tag-selector-text">Wunder Plunder und mehr</span>
+                <span class="tag-selector-text">{{SelectedTag}}</span>
             </button>
             <div class="dropdown-menu">
-                <a class="dropdown-item" href="#">Action</a>
-                <a class="dropdown-item" href="#">Another action</a>
-                <a class="dropdown-item" href="#">Something else here</a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#">Separated link</a>
+                <div class="dropdown-item" v-for="Tag in Tags" onclick="setSelectedTag(event);" v-bind:data-tag="Tag">{{Tag}}</div>
             </div>
         </div>
         <div class="nav-item nav-filter flex-grow-1 align-self-center">
