@@ -66,7 +66,7 @@ input[type="color"] { padding: 1px; }
 .nav-item:focus {
 	outline: 0; /* removes pressed dots */
 }
-.nav-item img {
+.nav-item img, button {
 	height: 28px;
 }
 .nav-item svg {
@@ -253,6 +253,14 @@ input[type="color"] { padding: 1px; }
 	cursor: default;
 }
 
+.tag-selector-text {
+	display: inline-block;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	/* max-width is media depending */
+}
+
 /* narrow browser */
 @media screen and (max-width: 540px) {
 	.show-only-on-wide-browser {
@@ -280,9 +288,15 @@ input[type="color"] { padding: 1px; }
 	#content {
 		height: calc(100% - 48px);
 	}
+	.tag-selector-text {
+		max-width: 5em;
+	}
 }
 /* wide device - desktop */
 @media screen and (min-device-width: 540.1px) {
+	.tag-selector-text {
+		max-width: 8em;
+	}
 }
 
 /* tooltip */
