@@ -233,5 +233,18 @@ namespace SilentNotes.Models
         {
             get { return !string.IsNullOrWhiteSpace(TransferCode); }
         }
+
+        /// <summary>
+        /// Gets or sets the currently selected tag which is used for filtering.
+        /// </summary>
+        [XmlElement("selected_tag")]
+        public string SelectedTag { get; set; }
+
+
+        /// <summary>
+        /// Gets or sets the currently active note filter.
+        /// </summary>
+        [XmlIgnore]
+        public string Filter { get; set; }
     }
 }

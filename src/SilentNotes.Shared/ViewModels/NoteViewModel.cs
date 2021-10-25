@@ -176,7 +176,7 @@ namespace SilentNotes.ViewModels
 
             Model.Tags.Add(value);
             Model.Tags.Sort(StringComparer.InvariantCultureIgnoreCase);
-            Model.RefreshMetaModifiedAt();
+            Model.RefreshModifiedAt();
             Modified = true;
             OnPropertyChanged(nameof(Tags));
             OnPropertyChanged(nameof(TagSuggestions));
@@ -191,8 +191,12 @@ namespace SilentNotes.ViewModels
         /// <inheritdoc/>
         private void DeleteTag(string value)
         {
-            Model.Tags.Remove(value);
-            Model.RefreshMetaModifiedAt();
+            int tagIndex = Model.Tags.FindIndex(tag => string.Equals(value, tag, StringComparison.InvariantCultureIgnoreCase));
+            if (tagIndex == -1)
+                return;
+
+            Model.Tags.RemoveAt(tagIndex);
+            Model.RefreshModifiedAt();
             Modified = true;
             OnPropertyChanged(nameof(Tags));
             OnPropertyChanged(nameof(TagSuggestions));

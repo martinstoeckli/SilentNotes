@@ -311,6 +311,8 @@ WriteLiteral(">\r\n                <span");
 
 WriteLiteral(" class=\"tag-selector-text\"");
 
+WriteLiteral(" v-bind:title=\"SelectedTag\"");
+
 WriteLiteral(">{{SelectedTag}}</span>\r\n            </button>\r\n            <div");
 
 WriteLiteral(" class=\"dropdown-menu\"");

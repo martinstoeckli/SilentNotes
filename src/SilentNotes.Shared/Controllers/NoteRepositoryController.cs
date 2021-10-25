@@ -160,7 +160,7 @@ namespace SilentNotes.Controllers
 
             if (!string.IsNullOrEmpty(_scrollToNote))
             {
-                string scrollToNoteScript = string.Format("document.querySelector('[data-note=\"{0}\"]').scrollIntoView();", _scrollToNote);
+                string scrollToNoteScript = string.Format("var note = document.querySelector('[data-note=\"{0}\"]'); if (note) note.scrollIntoView();", _scrollToNote);
                 View.ExecuteJavaScript(scrollToNoteScript);
             }
         }
