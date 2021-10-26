@@ -61,6 +61,20 @@ namespace SilentNotesTest.Models
         }
 
         [Test]
+        public void GetModificationFingerprint_ComparesMetaModifiedAtCorrectly()
+        {
+            NoteRepositoryModel model1 = CreateNoteRepositoryModel();
+            NoteRepositoryModel model2 = CreateNoteRepositoryModel();
+            model1.Notes[0].MetaModifiedAt = new DateTime(2021, 02, 21);
+            model2.Notes[0].MetaModifiedAt = new DateTime(2021, 02, 21);
+
+            Assert.AreEqual(model1.GetModificationFingerprint(), model2.GetModificationFingerprint());
+
+            model2.Notes[0].MetaModifiedAt = null;
+            Assert.AreNotEqual(model1.GetModificationFingerprint(), model2.GetModificationFingerprint());
+        }
+
+        [Test]
         public void RemoveUnusedSafesWorksCorrectly()
         {
             Guid safe1Id = new Guid("10000000000000000000000000000000");

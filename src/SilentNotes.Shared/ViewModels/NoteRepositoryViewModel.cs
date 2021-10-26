@@ -24,7 +24,7 @@ namespace SilentNotes.ViewModels
     /// </summary>
     public class NoteRepositoryViewModel : ViewModelBase
     {
-        private const string NoTagFilter = "✱";
+        private const string EmptyTagFilter = "✱";
 
         private readonly IStoryBoardService _storyBoardService;
         private readonly IRepositoryStorageService _repositoryService;
@@ -66,7 +66,7 @@ namespace SilentNotes.ViewModels
             Model = noteRepository;
 
             Tags = Model.CollectAllTags();
-            Tags.Insert(0, NoTagFilter);
+            Tags.Insert(0, EmptyTagFilter);
 
             // Initialize commands and events
             ShowNoteCommand = new RelayCommand<object>(ShowNote);
@@ -354,13 +354,13 @@ namespace SilentNotes.ViewModels
         }
 
         /// <summary>
-        /// Gets a list of all tags which are used in the notes, plus the <see cref="NoTagFilter"/>.
+        /// Gets a list of all tags which are used in the notes, plus the <see cref="EmptyTagFilter"/>.
         /// </summary>
         [VueDataBinding(VueBindingMode.OneWayToView)]
         public List<string> Tags { get; }
 
         /// <summary>
-        /// Gets or sets the selected tag string, or the <see cref="NoTagFilter"/> in case that no
+        /// Gets or sets the selected tag string, or the <see cref="EmptyTagFilter"/> in case that no
         /// tag is selected.
         /// </summary>
         [VueDataBinding(VueBindingMode.TwoWay)]
@@ -369,12 +369,12 @@ namespace SilentNotes.ViewModels
             get 
             {
                 SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
-                return string.IsNullOrEmpty(settings.SelectedTag) ? NoTagFilter : settings.SelectedTag;
+                return string.IsNullOrEmpty(settings.SelectedTag) ? EmptyTagFilter : settings.SelectedTag;
             }
 
-            set 
+            set
             {
-                string newValue = (value == NoTagFilter ? null : value);
+                string newValue = (value == EmptyTagFilter ? null : value);
                 SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
                 if (ChangePropertyIndirect(() => settings.SelectedTag, (string v) => settings.SelectedTag = v, newValue, true))
                 {

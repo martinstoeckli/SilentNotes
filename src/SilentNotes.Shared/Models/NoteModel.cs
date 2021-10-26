@@ -19,6 +19,7 @@ namespace SilentNotes.Models
         public const string CryptorPackageName = "SilentNote";
         private Guid _id;
         private string _htmlContent;
+        private DateTime? _metaModifiedAt;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NoteModel"/> class.
@@ -28,7 +29,7 @@ namespace SilentNotes.Models
             BackgroundColorHex = SettingsModel.StartDefaultNoteColorHex;
             CreatedAt = DateTime.UtcNow;
             ModifiedAt = CreatedAt;
-            MetaModifiedAt = CreatedAt;
+            MetaModifiedAt = null;
             HtmlContent = string.Empty;
             Tags = new List<string>();
         }
@@ -134,8 +135,27 @@ namespace SilentNotes.Models
         /// tag in all notes, without making it the more recent note (which would overwrite the
         /// actually newer note content).
         /// </summary>
+        [XmlIgnore]
+        public DateTime? MetaModifiedAt 
+        {
+            get 
+            {
+                // If the ModifiedAt property is newer, then the MetaModifiedAt is irrelevant.
+                if (_metaModifiedAt.HasValue && _metaModifiedAt <= ModifiedAt)
+                    _metaModifiedAt = null;
+                return _metaModifiedAt;
+            }
+
+            set { _metaModifiedAt = value; }
+        }
+
         [XmlAttribute(AttributeName = "meta_modified_at")]
-        public DateTime MetaModifiedAt { get; set; }
+        public DateTime MetaModifiedAtSerializeable
+        {
+            get { return MetaModifiedAt.Value; }
+            set { MetaModifiedAt = value; }
+        }
+        public bool MetaModifiedAtSerializeableSpecified { get { return MetaModifiedAt != null; } } // Serialize only when set
 
         /// <summary>
         /// Gets or sets the safe which was used to encrypt the note, or null if it is not encrypted.

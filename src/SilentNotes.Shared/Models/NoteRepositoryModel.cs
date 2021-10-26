@@ -18,7 +18,7 @@ namespace SilentNotes.Models
     public class NoteRepositoryModel
     {
         /// <summary>The highest revision of the repository which can be handled by this application.</summary>
-        public const int NewestSupportedRevision = 4;
+        public const int NewestSupportedRevision = 5;
         private Guid _id;
         private NoteListModel _notes;
         private List<Guid> _deletedNotes;
@@ -137,6 +137,8 @@ namespace SilentNotes.Models
                 foreach (NoteModel note in Notes)
                 {
                     hashCode = (hashCode * 397) ^ note.ModifiedAt.GetHashCode();
+                    if (note.MetaModifiedAt != null)
+                        hashCode = (hashCode * 397) ^ note.MetaModifiedAt.GetHashCode();
                 }
                 foreach (Guid deletedNote in DeletedNotes)
                 {

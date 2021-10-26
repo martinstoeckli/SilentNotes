@@ -128,7 +128,7 @@ namespace SilentNotes.Workers
                 {
                     // Take the more recent
                     NoteModel lastModifiedItem = ChooseLastModified(
-                        pair.Item1, pair.Item2, item => item.ModifiedAt);
+                        pair.Item1, pair.Item2, item => item.ModifiedAt, item => item.MetaModifiedAt);
                     result.Add(lastModifiedItem.Clone());
                 }
             }
@@ -162,7 +162,7 @@ namespace SilentNotes.Workers
                 {
                     // Take the more recent
                     SafeModel lastModifiedItem = ChooseLastModified(
-                        pair.Item1, pair.Item2, item => item.ModifiedAt);
+                        pair.Item1, pair.Item2, item => item.ModifiedAt, null);
                     result.Add(lastModifiedItem.Clone());
                 }
             }
@@ -260,13 +260,21 @@ namespace SilentNotes.Workers
         /// <param name="item1">The first item to compare.</param>
         /// <param name="item2">The second item to compare</param>
         /// <param name="modifiedAtSelector">A function which gets the ModifiedAt from an item.</param>
+        /// <param name="metaModifiedAtSelector">A function which gets the MetaModifiedAt from an item,
+        /// or null if no MetaModifiedAt exists.</param>
         /// <returns>The more recent item which should be written to a new merged repository.</returns>
         internal static TItem ChooseLastModified<TItem>(
             TItem item1,
             TItem item2,
-            Func<TItem, DateTime> modifiedAtSelector)
+            Func<TItem, DateTime> modifiedAtSelector,
+            Func<TItem, DateTime?> metaModifiedAtSelector)
         {
             int comparisonResult = DateTime.Compare(modifiedAtSelector(item1), modifiedAtSelector(item2));
+
+            // If both are modified at the same time, maybe the metadata modification is different.
+            if ((comparisonResult == 0) && (metaModifiedAtSelector != null))
+                comparisonResult = Nullable.Compare(metaModifiedAtSelector(item1), metaModifiedAtSelector(item2));
+
             return (comparisonResult >= 0) ? item1 : item2;
         }
     }

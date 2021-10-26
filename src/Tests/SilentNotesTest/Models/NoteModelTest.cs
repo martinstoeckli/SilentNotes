@@ -50,5 +50,23 @@ namespace SilentNotesTest.Models
             Assert.AreEqual(note1.Tags[0], note2.Tags[0]);
             Assert.AreEqual(note1.Tags[1], note2.Tags[1]);
         }
+
+        [Test]
+        public void MetaModifiedAt_ReturnsNullIfNotNewerThanModifiedAt()
+        {
+            NoteModel note1 = new NoteModel { ModifiedAt = new DateTime(2020, 1, 1) };
+
+            note1.MetaModifiedAt = new DateTime(2010, 1, 1);
+            Assert.IsNull(note1.MetaModifiedAt);
+
+            note1.MetaModifiedAt = new DateTime(2020, 1, 1);
+            Assert.IsNull(note1.MetaModifiedAt);
+
+            note1.MetaModifiedAt = null;
+            Assert.IsNull(note1.MetaModifiedAt);
+
+            note1.MetaModifiedAt = new DateTime(2030, 1, 1);
+            Assert.IsNotNull(note1.MetaModifiedAt);
+        }
     }
 }
