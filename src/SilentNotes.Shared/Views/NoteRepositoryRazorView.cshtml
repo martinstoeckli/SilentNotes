@@ -9,13 +9,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no">
 
-    <link href="bootstrap.min.css" rel="stylesheet" />
+    <link href="@Model.HtmlRecource["bootstrapcss"]" rel="stylesheet" />
     <link href="silentnotes.css" rel="stylesheet" />
     <link href="@(Model.Theme.DarkMode ? "silentnotes.dark.css" : "silentnotes.light.css")" rel="stylesheet" />
 
     <script src="@Model.HtmlRecource["vuejs"]"></script>
     <script src="@Model.HtmlRecource["jqueryjs"]"></script>
-    <script src="bootstrap.bundle.min.js"></script>
+    <script src="@Model.HtmlRecource["bootstrapjs"]"></script>
     <script src="silentnotes.js"></script>
     <script src="Sortable.min.js"></script>
 
@@ -46,19 +46,22 @@ div.dark .note-viewer.over-view.checklist p.disabled::before { content: @{WriteL
 
 .nav-filter {
     margin: 0 1em 0 0;
-    width: 200px;
+    padding: 0 5px 0 10px;
+    max-width: 280px;
     height: 28px;
     border-radius: 14px;
 }
 .nav-filter input {
-    margin: auto;
-    width: 154px;
-    left: 14px;
     border: none;
     border-width: 0;
     outline: none;
     font-size: 1.1em;
+    width: calc(100% - 24px);
 }
+.nav-filter #filter-icon-placeholder {
+    width: 24px;
+}
+
 .locked {
     position: absolute;
     width: 48px;
@@ -114,15 +117,29 @@ div.dark .note-viewer.over-view.checklist p.disabled::before { content: @{WriteL
             element.scrollTop = element.scrollHeight;
         }
 
+        function setSelectedTag(e) {
+            vm.SelectedTag = e.currentTarget.attributes['data-tag'].value;
+        }
+
         @{WriteLiteral(Model.VueDataBindingScript);}
     </script>
 </head>
 <body><div id="vueDataBinding">
     <nav id="navigation" class="d-flex">
-        <div class="nav-item nav-filter ml-auto d-inline-flex align-self-center">
-            <input id="Filter" v-on:input="Filter = $event.target.value;" autocomplete="off" v-focus value="@Model.Filter"/>
-            <svg id="filter-icon" v-if="!IsFiltered" width='24' height='24' viewBox='0 0 24 24'><use xlink:href="#svg-magnify" /></svg>
-            <svg id="filter-cancel-icon" v-if="IsFiltered" width='24' height='24' viewBox='0 0 24 24' v-on:click="ClearFilterCommand"><use xlink:href="#svg-close-circle-outline" /></svg>
+        <div class="btn-group btn-group-sm align-self-center ml-auto mr-1">
+            <button id="tag-selector" type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="tag-selector-text" v-bind:title="SelectedTag">{{SelectedTag}}</span>
+            </button>
+            <div class="dropdown-menu">
+                <div class="dropdown-item" v-for="Tag in Tags" onclick="setSelectedTag(event);" v-bind:data-tag="Tag">{{Tag}}</div>
+            </div>
+        </div>
+        <div class="nav-item nav-filter flex-grow-1 align-self-center">
+            <input id="Filter" class="" v-on:input="Filter = $event.target.value;" autocomplete="off" v-focus value="@Model.Filter"/>
+            <div id="filter-icon-placeholder">
+                <svg id="filter-icon" v-if="!IsFiltered" width='24' height='24' viewBox='0 0 24 24'><use xlink:href="#svg-magnify" /></svg>
+                <svg id="filter-cancel-icon" v-if="IsFiltered" width='24' height='24' viewBox='0 0 24 24' v-on:click="ClearFilterCommand"><use xlink:href="#svg-close-circle-outline" /></svg>
+            </div>
         </div>
 
         <button class="nav-item" v-on:click="SynchronizeCommand" title="@Model.Language["sync_notes"]">@{WriteLiteral(Model.Icon["cloud-sync"]);}</button>

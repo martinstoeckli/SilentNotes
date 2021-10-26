@@ -20,6 +20,18 @@ a:hover { color: #007bff; }
 .sortable-ghost { background-color: rgba(38, 160, 218, 0.3); }
 .note-handle { background-color: rgba(172, 172, 172, 0.5); fill: #707070 }
 .note-handle.dark { background-color: rgba(204, 204, 204, 0.7); fill: #606060; }
+#tag-container { background-color: rgba(172, 172, 172, 0.5) }
+#tag-container.dark { background-color: rgba(204, 204, 204, 0.5) }
+#tag-container .tag-item { color: black !important; }
+#tag-container.dark .tag-item { color: white !important; }
+#tag-container .btn { background-color: #2090ea; }
+#tag-container .btn svg { fill: white; }
+#tag-container .tag-item { color: black !important; }
+#tag-container.dark .tag-item { color: white !important; }
+#tag-container .tag-item svg { fill: #707070 }
+#tag-container.dark .tag-item svg { fill: #a0a0a0 }
+#tag-selector { background-color: #9accf5; }
+
 .background-icon { fill: #dedede; }
 .fab { background-color: #2090ea; }
 .fab svg { fill: white; }

@@ -18,7 +18,7 @@ namespace SilentNotes.Models
     public class NoteRepositoryModel
     {
         /// <summary>The highest revision of the repository which can be handled by this application.</summary>
-        public const int NewestSupportedRevision = 4;
+        public const int NewestSupportedRevision = 5;
         private Guid _id;
         private NoteListModel _notes;
         private List<Guid> _deletedNotes;
@@ -98,6 +98,25 @@ namespace SilentNotes.Models
         }
 
         /// <summary>
+        /// Creates a distinct and sorted list of all tags of all notes in the repository.
+        /// </summary>
+        /// <returns>List of all tags.</returns>
+        public List<string> CollectAllTags()
+        {
+            var result = new List<string>();
+            foreach (NoteModel note in Notes)
+            {
+                foreach (string tag in note.Tags)
+                {
+                    if (!result.Contains(tag, StringComparer.InvariantCultureIgnoreCase))
+                        result.Add(tag);
+                }
+            }
+            result.Sort(StringComparer.InvariantCultureIgnoreCase);
+            return result;
+        }
+
+        /// <summary>
         /// Gets a fingerprint of the current repository, which can be used to determine, whether
         /// two repositories are different, or if a repository was modified in the meantime.
         /// Equal fingerprints mean unchanged repositories, different fingerprints indicate
@@ -118,8 +137,8 @@ namespace SilentNotes.Models
                 foreach (NoteModel note in Notes)
                 {
                     hashCode = (hashCode * 397) ^ note.ModifiedAt.GetHashCode();
-                    if (note.MaintainedAt != null)
-                        hashCode = (hashCode * 397) ^ note.MaintainedAt.GetHashCode();
+                    if (note.MetaModifiedAt != null)
+                        hashCode = (hashCode * 397) ^ note.MetaModifiedAt.GetHashCode();
                 }
                 foreach (Guid deletedNote in DeletedNotes)
                 {
@@ -135,21 +154,6 @@ namespace SilentNotes.Models
             }
         }
 
-        /// <summary>
-        /// Clears all the MaintainedAt properties if they are obsolete, because the object was
-        /// modified later.
-        /// </summary>
-        public void ClearMaintainedAtIfObsolete()
-        {
-            foreach (NoteModel note in Notes)
-                note.ClearMaintainedAtIfObsolete();
-            foreach (SafeModel safe in Safes)
-                safe.ClearMaintainedAtIfObsolete();
-        }
-
-        /// <summary>
-        /// Removes all safes, which are not used by any note anymore.
-        /// </summary>
         public void RemoveUnusedSafes()
         {
             List<Guid> usedSafeIds = Notes.Where(note => note.SafeId != null).Select(note => note.SafeId.Value).ToList();

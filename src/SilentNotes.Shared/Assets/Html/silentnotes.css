@@ -5,6 +5,10 @@ input::-ms-clear { display: none; }
 
 html {
 	font-size: 14px;
+	height: 100%;
+}
+body {
+	height: 100%;
 }
 
 h1 {
@@ -25,14 +29,16 @@ a:hover { text-decoration: underline; }
 
 input[type="color"] { padding: 1px; }
 
+#vueDataBinding {
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+}
+
 #navigation {
 	margin: 0;
 	padding: 2px 6px 2px 6px;
-	position: fixed;
-	top: 0;
-	right: 0;
-	left: 0;
-	z-index: 1030;
+	flex: none;
 	height: 42px;
 	border-style: none;
 	border-width: 0;
@@ -41,11 +47,7 @@ input[type="color"] { padding: 1px; }
 #content {
 	margin: 0;
 	padding: 0;
-	position: fixed;
-	top: 42px;
-	right: 0;
-	left: 0;
-	height: calc(100% - 42px);
+	flex: 1 1 0%;
 	overflow: auto;
 }
 
@@ -64,7 +66,7 @@ input[type="color"] { padding: 1px; }
 .nav-item:focus {
 	outline: 0; /* removes pressed dots */
 }
-.nav-item img {
+.nav-item img, button {
 	height: 28px;
 }
 .nav-item svg {
@@ -111,6 +113,35 @@ input[type="color"] { padding: 1px; }
 
 .sortable-item {
 	position: relative;
+}
+
+#tag-container {
+	margin: 0;
+	padding: 6px;
+	flex: none;
+	font-size: 0.95em;
+}
+.tag-list {
+	margin-top: 4px;
+}
+.tag-item {
+	display: inline-block;
+	margin: 0.2em;
+	padding: 0.2em 0.4em;
+	border-radius: 4px;
+	cursor: default;
+}
+.tag-handle
+{
+	display: inline-block;
+	margin-left: 0.2em;
+	cursor: pointer;
+}
+.tag-input-group {
+	float: right;
+	margin-left: 0.2em;
+	width: 40%;
+	max-width: 220px;
 }
 
 .note-handle {
@@ -222,6 +253,15 @@ input[type="color"] { padding: 1px; }
 	cursor: default;
 }
 
+.tag-selector-text {
+	display: inline-block;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	min-width: 3em;
+	/* max-width is media depending */
+}
+
 /* narrow browser */
 @media screen and (max-width: 540px) {
 	.show-only-on-wide-browser {
@@ -249,9 +289,15 @@ input[type="color"] { padding: 1px; }
 	#content {
 		height: calc(100% - 48px);
 	}
+	.tag-selector-text {
+		max-width: 5em;
+	}
 }
 /* wide device - desktop */
 @media screen and (min-device-width: 540.1px) {
+	.tag-selector-text {
+		max-width: 8em;
+	}
 }
 
 /* tooltip */

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using NUnit.Framework;
 using SilentNotes.Models;
 
@@ -30,8 +31,9 @@ namespace SilentNotesTest.Models
                 InRecyclingBin = true,
                 CreatedAt = new DateTime(2000, 10, 22, 18, 55, 30),
                 ModifiedAt = new DateTime(2001, 10, 22, 18, 55, 30),
-                MaintainedAt = new DateTime(2002, 10, 22, 18, 55, 30),
+                MetaModifiedAt = new DateTime(2001, 10, 23, 18, 55, 30),
                 SafeId = new Guid("10000000000000000000000000000000"),
+                Tags = new List<string>() { "Aa", "Bb" },
             };
             NoteModel note2 = note1.Clone();
 
@@ -42,8 +44,29 @@ namespace SilentNotesTest.Models
             Assert.AreEqual(note1.InRecyclingBin, note2.InRecyclingBin);
             Assert.AreEqual(note1.CreatedAt, note2.CreatedAt);
             Assert.AreEqual(note1.ModifiedAt, note2.ModifiedAt);
-            Assert.AreEqual(note1.MaintainedAt, note2.MaintainedAt);
+            Assert.AreEqual(note1.MetaModifiedAt, note2.MetaModifiedAt);
             Assert.AreEqual(note1.SafeId, note2.SafeId);
+            Assert.AreEqual(note1.Tags.Count, note2.Tags.Count);
+            Assert.AreEqual(note1.Tags[0], note2.Tags[0]);
+            Assert.AreEqual(note1.Tags[1], note2.Tags[1]);
+        }
+
+        [Test]
+        public void MetaModifiedAt_ReturnsNullIfNotNewerThanModifiedAt()
+        {
+            NoteModel note1 = new NoteModel { ModifiedAt = new DateTime(2020, 1, 1) };
+
+            note1.MetaModifiedAt = new DateTime(2010, 1, 1);
+            Assert.IsNull(note1.MetaModifiedAt);
+
+            note1.MetaModifiedAt = new DateTime(2020, 1, 1);
+            Assert.IsNull(note1.MetaModifiedAt);
+
+            note1.MetaModifiedAt = null;
+            Assert.IsNull(note1.MetaModifiedAt);
+
+            note1.MetaModifiedAt = new DateTime(2030, 1, 1);
+            Assert.IsNotNull(note1.MetaModifiedAt);
         }
     }
 }

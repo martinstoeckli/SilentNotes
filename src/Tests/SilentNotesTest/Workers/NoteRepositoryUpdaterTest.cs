@@ -13,7 +13,7 @@ namespace SilentNotesTest.Workers
         public void NewestSupportedVersionIsCorrect()
         {
             INoteRepositoryUpdater updater = new NoteRepositoryUpdater();
-            Assert.AreEqual(4, updater.NewestSupportedRevision);
+            Assert.AreEqual(5, updater.NewestSupportedRevision);
         }
 
         [Test]
@@ -34,6 +34,18 @@ namespace SilentNotesTest.Workers
             repository.Revision = supportedVersion + 1;
             repositoryXml = XmlUtils.SerializeToXmlDocument(repository);
             Assert.IsTrue(updater.IsTooNewForThisApp(repositoryXml));
+        }
+
+        [Test]
+        public void Update_SetsNewestVersionNumber()
+        {
+            // Set revision too small
+            NoteRepositoryModel repository = new NoteRepositoryModel { Revision = NoteRepositoryModel.NewestSupportedRevision - 1 };
+            XDocument repositoryXml = XmlUtils.SerializeToXmlDocument(repository);
+
+            INoteRepositoryUpdater updater = new NoteRepositoryUpdater();
+            Assert.IsTrue(updater.Update(repositoryXml));
+            Assert.AreEqual(NoteRepositoryModel.NewestSupportedRevision.ToString(), repositoryXml.Root.Attribute("revision").Value);
         }
 
         [Test]

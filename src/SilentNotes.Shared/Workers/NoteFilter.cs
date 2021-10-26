@@ -4,6 +4,8 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SilentNotes.Workers
 {
@@ -13,14 +15,17 @@ namespace SilentNotes.Workers
     public class NoteFilter
     {
         private readonly string _pattern;
+        private readonly string _tag;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NoteFilter"/> class.
         /// </summary>
         /// <param name="pattern">User defined search filter.</param>
-        public NoteFilter(string pattern)
+        /// <param name="tag">User defined tag to search for.</param>
+        public NoteFilter(string pattern, string tag)
         {
             _pattern = pattern;
+            _tag = tag;
         }
 
         /// <summary>
@@ -38,6 +43,24 @@ namespace SilentNotes.Workers
                 return true;
 
             return false;
+        }
+
+        /// <summary>
+        /// Checks whether a note contains a given tag.
+        /// </summary>
+        /// <param name="noteTags">Tags of the note to test.</param>
+        /// <returns>Returns true if the note contains the tag, otherwise false.</returns>
+        public bool ContainsTag(IEnumerable<string> noteTags)
+        {
+            // There is no tag to search for
+            if (String.IsNullOrEmpty(_tag))
+                return true;
+
+            // There is a tag to search for, but no tags in the list
+            if (noteTags == null)
+                return false;
+
+            return noteTags.Contains(_tag, StringComparer.InvariantCultureIgnoreCase);
         }
     }
 }

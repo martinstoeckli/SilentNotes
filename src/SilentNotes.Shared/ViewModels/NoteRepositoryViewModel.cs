@@ -24,7 +24,7 @@ namespace SilentNotes.ViewModels
     /// </summary>
     public class NoteRepositoryViewModel : ViewModelBase
     {
-        private static string _lastFilter;
+        private const string EmptyTagFilter = "✱";
 
         private readonly IStoryBoardService _storyBoardService;
         private readonly IRepositoryStorageService _repositoryService;
@@ -34,7 +34,6 @@ namespace SilentNotes.ViewModels
         private readonly SearchableHtmlConverter _searchableTextConverter;
         private readonly ICryptor _noteCryptor;
         private NoteRepositoryModel _model;
-        private string _filter;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NoteRepositoryViewModel"/> class.
@@ -66,6 +65,9 @@ namespace SilentNotes.ViewModels
             _repositoryService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepository);
             Model = noteRepository;
 
+            Tags = Model.CollectAllTags();
+            Tags.Insert(0, EmptyTagFilter);
+
             // Initialize commands and events
             ShowNoteCommand = new RelayCommand<object>(ShowNote);
             NewNoteCommand = new RelayCommand(NewNote);
@@ -85,8 +87,26 @@ namespace SilentNotes.ViewModels
             Modified = false;
 
             // If a filter was set before e.g. opening a note, set the same filter again.
-            if (!string.IsNullOrEmpty(_lastFilter))
-                Filter = _lastFilter;
+            SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
+            ClearSelectedTagIfNotContainedInNotes(settings, Tags);
+
+            if (!string.IsNullOrEmpty(settings.SelectedTag) || !string.IsNullOrEmpty(settings.Filter))
+            {
+                OnPropertyChanged(nameof(SelectedTag));
+                OnPropertyChanged(nameof(Filter));
+                OnPropertyChanged(nameof(IsFiltered));
+                ApplyFilter();
+                OnPropertyChanged("Notes");
+            }
+        }
+
+        private static void ClearSelectedTagIfNotContainedInNotes(SettingsModel settings, List<string> tags)
+        {
+            // An invalid selected tag can exist if the user edited a note (deleted a tag) and
+            // returned to the overview, which still remembers this selected tag.
+            NoteFilter noteFilter = new NoteFilter(null, settings.SelectedTag);
+            if (!noteFilter.ContainsTag(tags))
+                settings.SelectedTag = null;
         }
 
         /// <inheritdoc/>
@@ -169,15 +189,16 @@ namespace SilentNotes.ViewModels
         [VueDataBinding(VueBindingMode.OneWayToViewmodel)]
         public string Filter
         {
-            get { return _filter; }
+            get { return _settingsService?.LoadSettingsOrDefault().Filter; }
 
             set
             {
-                if (ChangeProperty(ref _filter, value, false))
+                SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
+                if (ChangePropertyIndirect(() => settings.Filter, (string v) => settings.Filter = v, value, false))
                 {
-                    _lastFilter = _filter;
+                    OnPropertyChanged(nameof(Filter));
                     OnPropertyChanged(nameof(IsFiltered));
-                    ApplyFilter(_filter);
+                    ApplyFilter();
                     OnPropertyChanged("Notes");
                 }
             }
@@ -189,11 +210,11 @@ namespace SilentNotes.ViewModels
             get { return !string.IsNullOrEmpty(Filter); }
         }
 
-        private void ApplyFilter(string filter)
+        private void ApplyFilter()
         {
             SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
-            string normalizedFilter = SearchableHtmlConverter.NormalizeWhitespaces(filter);
-            NoteFilter noteFilter = new NoteFilter(normalizedFilter);
+            string normalizedFilter = SearchableHtmlConverter.NormalizeWhitespaces(settings.Filter);
+            NoteFilter noteFilter = new NoteFilter(normalizedFilter, settings.SelectedTag);
 
             FilteredNotes.Clear();
             foreach (NoteViewModel noteViewModel in AllNotes)
@@ -201,6 +222,7 @@ namespace SilentNotes.ViewModels
                 bool hideNote =
                     noteViewModel.InRecyclingBin ||
                     (settings.HideClosedSafeNotes && noteViewModel.IsLocked) ||
+                    !noteFilter.ContainsTag(noteViewModel.Tags) ||
                     !noteFilter.ContainsPattern(noteViewModel.SearchableContent);
 
                 if (!hideNote)
@@ -244,8 +266,10 @@ namespace SilentNotes.ViewModels
                     default:
                         throw new ArgumentOutOfRangeException(nameof(NoteType));
                 }
-                if (!string.IsNullOrEmpty(_filter))
-                    navigation.Variables.AddOrReplace(ControllerParameters.SearchFilter, _filter);
+
+                SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
+                if (!string.IsNullOrEmpty(settings.Filter))
+                    navigation.Variables.AddOrReplace(ControllerParameters.SearchFilter, settings.Filter);
                 _navigationService.Navigate(navigation);
         }
     }
@@ -272,7 +296,7 @@ namespace SilentNotes.ViewModels
             noteModel.BackgroundColorHex = _settingsService.LoadSettingsOrDefault().DefaultNoteColorHex;
 
             // Update view model list
-            NoteViewModel noteViewModel = new NoteViewModel(_navigationService, Language, Icon, Theme, _webviewBaseUrl, _searchableTextConverter, _repositoryService, _feedbackService, null, _noteCryptor, _model.Safes, noteModel);
+            NoteViewModel noteViewModel = new NoteViewModel(_navigationService, Language, Icon, Theme, _webviewBaseUrl, _searchableTextConverter, _repositoryService, _feedbackService, null, _noteCryptor, _model.Safes, _model.CollectAllTags(), noteModel); ;
             NoteInsertionMode insertionMode = _settingsService.LoadSettingsOrDefault().DefaultNoteInsertion;
             switch (insertionMode)
             {
@@ -327,6 +351,39 @@ namespace SilentNotes.ViewModels
             OnPropertyChanged("Notes");
 
             _feedbackService.ShowToast(Language.LoadText("feedback_note_to_recycle"));
+        }
+
+        /// <summary>
+        /// Gets a list of all tags which are used in the notes, plus the <see cref="EmptyTagFilter"/>.
+        /// </summary>
+        [VueDataBinding(VueBindingMode.OneWayToView)]
+        public List<string> Tags { get; }
+
+        /// <summary>
+        /// Gets or sets the selected tag string, or the <see cref="EmptyTagFilter"/> in case that no
+        /// tag is selected.
+        /// </summary>
+        [VueDataBinding(VueBindingMode.TwoWay)]
+        public string SelectedTag
+        {
+            get 
+            {
+                SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
+                return string.IsNullOrEmpty(settings.SelectedTag) ? EmptyTagFilter : settings.SelectedTag;
+            }
+
+            set
+            {
+                string newValue = (value == EmptyTagFilter ? null : value);
+                SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
+                if (ChangePropertyIndirect(() => settings.SelectedTag, (string v) => settings.SelectedTag = v, newValue, true))
+                {
+                    OnPropertyChanged(nameof(SelectedTag));
+                    ApplyFilter();
+                    OnPropertyChanged("Notes");
+                    _settingsService.TrySaveSettingsToLocalDevice(settings);
+                }
+            }
         }
 
         /// <summary>
@@ -517,13 +574,13 @@ namespace SilentNotes.ViewModels
                 SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
                 FilteredNotes.Clear();
                 AllNotes.Clear();
-                Filter = null;
                 _model = value;
 
                 // Wrap models in view models
+                List<string> allTags = _model.CollectAllTags();
                 foreach (NoteModel note in _model.Notes)
                 {
-                    NoteViewModel noteViewModel = new NoteViewModel(_navigationService, Language, Icon, Theme, _webviewBaseUrl, _searchableTextConverter, _repositoryService, _feedbackService, _settingsService, _noteCryptor, _model.Safes, note);
+                    NoteViewModel noteViewModel = new NoteViewModel(_navigationService, Language, Icon, Theme, _webviewBaseUrl, _searchableTextConverter, _repositoryService, _feedbackService, _settingsService, _noteCryptor, _model.Safes, allTags, note);
                     AllNotes.Add(noteViewModel);
 
                     bool hideNote =

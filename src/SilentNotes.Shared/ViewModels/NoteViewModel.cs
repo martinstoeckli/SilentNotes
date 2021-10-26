@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Input;
 using SilentNotes.Controllers;
 using SilentNotes.Crypto;
@@ -28,6 +29,7 @@ namespace SilentNotes.ViewModels
         private readonly ISettingsService _settingsService;
         private readonly ICryptor _cryptor;
         private readonly SafeListModel _safes;
+        private readonly IList<string> _allDistinctAndSortedTags;
         private SearchableHtmlConverter _searchableTextConverter;
         protected string _unlockedContent;
         private string _searchableContent;
@@ -47,6 +49,7 @@ namespace SilentNotes.ViewModels
             ISettingsService settingsService,
             ICryptor cryptor,
             SafeListModel safes,
+            IList<string> allDistinctAndSortedTags,
             NoteModel noteFromRepository)
             : base(navigationService, languageService, svgIconService, themeService, webviewBaseUrl)
         {
@@ -56,11 +59,14 @@ namespace SilentNotes.ViewModels
             _searchableTextConverter = searchableTextConverter;
             _cryptor = cryptor;
             _safes = safes;
+            _allDistinctAndSortedTags = allDistinctAndSortedTags;
             MarkSearchableContentAsDirty();
             PushNoteToOnlineStorageCommand = new RelayCommand(PushNoteToOnlineStorage);
             PullNoteFromOnlineStorageCommand = new RelayCommand(PullNoteFromOnlineStorage);
             ToggleShoppingModeCommand = new RelayCommand(ToggleShoppingMode);
             GoBackCommand = new RelayCommand(GoBack);
+            AddTagCommand = new RelayCommand<string>(AddTag);
+            DeleteTagCommand = new RelayCommand<string>(DeleteTag);
 
             Model = noteFromRepository;
             _unlockedContent = IsInSafe ? UnlockIfSafeOpen(Model.HtmlContent) : Model.HtmlContent;
@@ -148,6 +154,62 @@ namespace SilentNotes.ViewModels
                 result = shortener.Shorten(result);
             }
             return result;
+        }
+
+        [VueDataBinding(VueBindingMode.OneWayToView)]
+        public List<string> Tags
+        {
+            get  { return Model.Tags; }
+        }
+
+        /// <summary>
+        /// Gets the command to go back to the note overview.
+        /// </summary>
+        [VueDataBinding(VueBindingMode.Command)]
+        public ICommand AddTagCommand { get; private set; }
+
+        /// <inheritdoc/>
+        private void AddTag(string value)
+        {
+            if (Model.Tags.Contains(value, StringComparer.InvariantCultureIgnoreCase))
+                return;
+
+            Model.Tags.Add(value);
+            Model.Tags.Sort(StringComparer.InvariantCultureIgnoreCase);
+            Model.RefreshModifiedAt();
+            Modified = true;
+            OnPropertyChanged(nameof(Tags));
+            OnPropertyChanged(nameof(TagSuggestions));
+        }
+
+        /// <summary>
+        /// Gets the command to go back to the note overview.
+        /// </summary>
+        [VueDataBinding(VueBindingMode.Command)]
+        public ICommand DeleteTagCommand { get; private set; }
+
+        /// <inheritdoc/>
+        private void DeleteTag(string value)
+        {
+            int tagIndex = Model.Tags.FindIndex(tag => string.Equals(value, tag, StringComparison.InvariantCultureIgnoreCase));
+            if (tagIndex == -1)
+                return;
+
+            Model.Tags.RemoveAt(tagIndex);
+            Model.RefreshModifiedAt();
+            Modified = true;
+            OnPropertyChanged(nameof(Tags));
+            OnPropertyChanged(nameof(TagSuggestions));
+        }
+
+        /// <summary>
+        /// Gets a list of tags, which are used in other notes, but not in this note. They can be
+        /// used to make suggestions about already used tags.
+        /// </summary>
+        [VueDataBinding(VueBindingMode.OneWayToView)]
+        public IEnumerable<string> TagSuggestions
+        {
+            get { return _allDistinctAndSortedTags.Where(tag => !Tags.Contains(tag, StringComparer.InvariantCultureIgnoreCase)); }
         }
 
         /// <summary>
