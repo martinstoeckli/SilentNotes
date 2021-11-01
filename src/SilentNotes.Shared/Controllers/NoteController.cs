@@ -20,9 +20,7 @@ namespace SilentNotes.Controllers
     {
         private readonly IRepositoryStorageService _repositoryService;
         private NoteViewModel _viewModel;
-        private bool _startedWithSendToSilentnotes;
         private string _startingSearchFilter;
-        private string _sendToSilentnotesText;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NoteController"/> class.
@@ -33,7 +31,6 @@ namespace SilentNotes.Controllers
             : base(viewService)
         {
             _repositoryService = repositoryService;
-            _startedWithSendToSilentnotes = false;
         }
 
         /// <inheritdoc/>
@@ -85,23 +82,11 @@ namespace SilentNotes.Controllers
             ISettingsService settingsService = Ioc.GetOrCreate<ISettingsService>();
             _repositoryService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepository);
 
-            NoteModel note;
             variables.TryGetValue(ControllerParameters.SearchFilter, out _startingSearchFilter);
-            _startedWithSendToSilentnotes = variables.ContainsKey(ControllerParameters.SendToSilentnotesText);
-            if (_startedWithSendToSilentnotes)
-            {
-                // Create new note and update repository
-                note = new NoteModel();
-                note.BackgroundColorHex = settingsService.LoadSettingsOrDefault().DefaultNoteColorHex;
-                noteRepository.Notes.Insert(0, note);
-                _sendToSilentnotesText = variables[ControllerParameters.SendToSilentnotesText];
-            }
-            else
-            {
-                // Get the note from the repository
-                Guid noteId = new Guid(variables[ControllerParameters.NoteId]);
-                note = noteRepository.Notes.FindById(noteId);
-            }
+
+            // Get the note from the repository
+            Guid noteId = new Guid(variables[ControllerParameters.NoteId]);
+            NoteModel note = noteRepository.Notes.FindById(noteId);
 
             ICryptor cryptor = new Cryptor(NoteModel.CryptorPackageName, Ioc.GetOrCreate<ICryptoRandomService>());
             _viewModel = new NoteViewModel(
@@ -197,15 +182,7 @@ namespace SilentNotes.Controllers
             VueBindings.ViewLoadedEvent -= ViewLoadedEventHandler;
             View.Navigating += NavigatingEventHandler;
 
-            if (_startedWithSendToSilentnotes)
-            {
-                // Let quill do the text import, so it can convert it safely to HTML and trigger
-                // the "quill" event which eventually sets the modified property.
-                string encodedNewText = WebviewUtils.EscapeJavaScriptString(_sendToSilentnotesText);
-                string script = string.Format("setNoteHtmlContent('{0}');", encodedNewText);
-                View.ExecuteJavaScript(script);
-            }
-            else if (!string.IsNullOrEmpty(_startingSearchFilter))
+            if (!string.IsNullOrEmpty(_startingSearchFilter))
             {
                 string encodedSearchFilter = WebviewUtils.EscapeJavaScriptString(_startingSearchFilter);
                 string script = string.Format("setStartingSearchFilter('{0}');", encodedSearchFilter);
