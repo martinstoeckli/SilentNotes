@@ -19,12 +19,6 @@ namespace SilentNotes.Controllers
         public const string NoteId = "noteid";
 
         /// <summary>
-        /// This parameter can be passed to the <see cref="NoteController"/> and contains text
-        /// which was sent to or shared with SilentNotes by another application.
-        /// </summary>
-        public const string SendToSilentnotesText = "senttosilentnotes";
-
-        /// <summary>
         /// This parameter can be passed to the <see cref="NoteController"/> and contains an
         /// active search filter.
         /// </summary>

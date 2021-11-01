@@ -28,10 +28,6 @@ namespace SilentNotes.Android
     /// activity showing a window.
     /// </summary>
     [Activity(Label = "SilentNotes", Icon = "@drawable/ic_launcher", Theme = "@style/MainTheme.SplashScreen", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
-    [IntentFilter(
-        new[] { Intent.ActionSend },
-        Categories = new[] { Intent.CategoryDefault },
-        DataMimeType = @"text/plain")]
     public class MainActivity : Activity, IHtmlView
     {
         private ActivityResultAwaiter _activityResultAwaiter;
@@ -80,14 +76,14 @@ namespace SilentNotes.Android
             Ioc.Reset();
             Startup.InitializeApplication(this, _activityResultAwaiter);
 
-            INavigationService navigation = Ioc.GetOrCreate<INavigationService>();
+            INavigationService navigationService = Ioc.GetOrCreate<INavigationService>();
             IStoryBoardService storyBoardService = Ioc.GetOrCreate<IStoryBoardService>();
 
-            if (IsStartedBySendIntent())
+            if (IsIntentStartedWithNoteId())
             {
-                // Another app sent content to SilentNotes
-                navigation.Navigate(new Navigation(
-                    ControllerNames.Note, ControllerParameters.SendToSilentnotesText, GetSendIntentText()));
+                // Open app showing this note, see also <see cref="ActionSendActivity"/>.
+                string noteId = ConsumeNoteIdFromIntent();
+                navigationService.Navigate(new Navigation(ControllerNames.Note, ControllerParameters.NoteId, noteId));
             }
             else if (IsStartedByOAuthRedirectIndent(storyBoardService))
             {
@@ -102,13 +98,25 @@ namespace SilentNotes.Android
             {
                 // Normal startup
                 if (CanStartupWithLastNavigation(_lastNavigation))
-                    navigation.Navigate(_lastNavigation);
+                    navigationService.Navigate(_lastNavigation);
                 else
-                    navigation.Navigate(new Navigation(ControllerNames.NoteRepository));
+                    navigationService.Navigate(new Navigation(ControllerNames.NoteRepository));
 
                 IAutoSynchronizationService syncService = Ioc.GetOrCreate<IAutoSynchronizationService>();
                 syncService.SynchronizeAtStartup(); // no awaiting, run in background
             }
+        }
+
+        private bool IsIntentStartedWithNoteId()
+        {
+            return Intent.HasExtra(ControllerParameters.NoteId);
+        }
+
+        private string ConsumeNoteIdFromIntent()
+        {
+            string result = Intent.GetStringExtra(ControllerParameters.NoteId);
+            Intent.RemoveExtra(ControllerParameters.NoteId);
+            return result;
         }
 
         private static bool CanStartupWithLastNavigation(Navigation navigation)
@@ -222,16 +230,6 @@ namespace SilentNotes.Android
         {
             if (NavigationCompleted != null)
                 NavigationCompleted(_webView, new EventArgs());
-        }
-
-        private bool IsStartedBySendIntent()
-        {
-            return Intent.Action == Intent.ActionSend;
-        }
-
-        private string GetSendIntentText()
-        {
-            return Intent.GetStringExtra(Intent.ExtraText);
         }
 
         private bool IsStartedByOAuthRedirectIndent(IStoryBoardService storyBoardService)
