@@ -23,6 +23,8 @@ namespace SilentNotes.Services
                         return "bootstrap.min.css";
                     case "bootstrapjs":
                         return "bootstrap.bundle.min.js";
+                    case "bootstrapautocompletejs":
+                        return "bootstrap-4-autocomplete.js";
                     case "vuejs":
                         return "vue.min.js"; // v2.6.12 (v3 is not ECMAScript 5 compliant)
                     case "jqueryjs":

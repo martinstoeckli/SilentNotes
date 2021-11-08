@@ -149,6 +149,9 @@
     <Content Include="..\SilentNotes.Shared\Assets\Html\blackstone.jpg">
       <Link>Assets\Html\blackstone.jpg</Link>
     </Content>
+    <Content Include="..\SilentNotes.Shared\Assets\Html\bootstrap-4-autocomplete.js">
+      <Link>Assets\Html\bootstrap-4-autocomplete.js</Link>
+    </Content>
     <Content Include="..\SilentNotes.Shared\Assets\Html\bootstrap.bundle.min.js">
       <Link>Assets\Html\bootstrap.bundle.min.js</Link>
     </Content>
