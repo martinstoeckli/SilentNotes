@@ -40,7 +40,7 @@ note_header3 Başlık 3
 note_shopping_mode Alışveriş modu
 note_pull_from_server El ile not indir
 note_push_to_server El ile not yükle
-tag_add Add tag
+tag_add Etiket ekle
 feedback_note_to_recycle Not geri dönüşüm kutusuna taşındı.
 
 checklist_create_new Liste oluştur
@@ -101,7 +101,7 @@ opensource_desc SilentNotes, Mozilla Kamu Lisansı v2.0 koşulları altında yay
 license Gizliliğinize değer veriyoruz. SilentNotes kişisel verilerinizi toplamaz ve gereksiz izinler istemez. Cihaz dışına aktarılan notlar her zaman şifrelenir.
 newer_version SilentNotes için yeni bir sürüm mevcut. Lütfen {0} sürümünü yükleyin.
 
-cloud_url Suncu dizin adresi
+cloud_url Sunucu dizin adresi
 cloud_username Kullanıcı adı
 cloud_password Şifre
 cloud_secure Güvenli bağlantı kullan (SSL)
