@@ -1,11 +1,11 @@
-// https://github.com/Honatas/bootstrap-4-autocomplete
+// Based on https://github.com/Honatas/bootstrap-4-autocomplete
 (function ($) {
     var defaults = {
         treshold: 4,
         maximumItems: 5,
         highlightTyped: true,
         highlightClass: 'text-primary',
-        dropType: 'dropdown',
+        dropType: 'dropdown', // Extended: allows to set dropdown or dropup
     };
     function createItem(lookup, item, opts) {
         var label;
@@ -43,10 +43,18 @@
         var items = field.next();
         items.html('');
         var count = 0;
-        var keys = Object.keys(opts.source);
+
+        // Extended: check if source is a delegate
+        var sourceDict;
+        if (opts.source instanceof Function)
+            sourceDict = opts.source();
+        else
+            sourceDict = opts.source;
+
+        var keys = Object.keys(sourceDict);
         for (var i = 0; i < keys.length; i++) {
             var key = keys[i];
-            var object = opts.source[key];
+            var object = sourceDict[key];
             var item = {
                 label: opts.label ? object[opts.label] : key,
                 value: opts.value ? object[opts.value] : object
@@ -104,7 +112,7 @@
         this.off('keyup.autocomplete').keyup('keyup.autocomplete', function () {
             if (createItems(_field, opts) > 0) {
                 _field.dropdown('show');
-                _field.dropdown('update'); // updates the position of the list (necessary when list above input field)
+                _field.dropdown('update'); // Extended: updates list position (necessary when list is above input field)
             }
             else {
                 // sets up positioning
