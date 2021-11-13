@@ -50,22 +50,6 @@ div.dark .detail-view.checklist .ql-editor p::after { content: @{WriteLiteral(Mo
 .locked svg {
     fill: rgba(160, 160, 160, 0.4);
 }
-#pretty-time-ago {
-    position: fixed;
-    display: inline-block;
-    margin: 0;
-    padding: 0.1em 0.8em 0.15em 0.8em;
-    right: 0;
-    bottom: 0;
-    color: black;
-    background-color: rgba(128, 128, 128, 0.2);
-	pointer-events: none; /* do not prevent clicks on recyclebin */
-}
-#pretty-time-ago.dark {
-    color: white;
-    background-color: rgba(211, 211, 211, 0.3);
-}
-
     </style>
     <script>
         var quill;
@@ -144,7 +128,6 @@ div.dark .detail-view.checklist .ql-editor p::after { content: @{WriteLiteral(Mo
         function setStartingSearchFilter(filter) {
             searchHighlighter.searchAndHighlight(filter, true, false); // this causes a focusin event
             quill.root.blur();
-            vm.PrettyTimeAgoVisible = true; // the focusin event closed the date.
         }
 
         function scrollToTop() {
@@ -199,7 +182,6 @@ div.dark .detail-view.checklist .ql-editor p::after { content: @{WriteLiteral(Mo
             });
 
             $(quill.root).on("focusin", function () {
-                vm.PrettyTimeAgoVisible = false;
                 if (isSearchDialogHidden())
                     searchHighlighter.clearSearchHighlights();
             });
@@ -300,8 +282,6 @@ div.dark .detail-view.checklist .ql-editor p::after { content: @{WriteLiteral(Mo
             </li>
         </ul>
     </div>
-
-    @*<div id="pretty-time-ago" v-if="PrettyTimeAgoVisible" v-bind:class="{ dark: IsDark }">{{ PrettyTimeAgo }}</div>*@
 
     <div id="search-dialog" class="hidden">
         <div class="nav-filter">
