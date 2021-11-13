@@ -19,7 +19,8 @@
 
     <script src="@Model.HtmlRecource["vuejs"]"></script>
     <script src="@Model.HtmlRecource["jqueryjs"]"></script>
-    <script src="bootstrap.bundle.min.js"></script>
+    <script src="@Model.HtmlRecource["bootstrapjs"]"></script>
+    <script src="@Model.HtmlRecource["bootstrapautocompletejs"]"></script>
     <script src="silentnotes.js"></script>
     <script src="checklist.js"></script>
     <script src="quill/quill.min.js"></script>
@@ -49,22 +50,6 @@ div.dark .detail-view.checklist .ql-editor p::after { content: @{WriteLiteral(Mo
 .locked svg {
     fill: rgba(160, 160, 160, 0.4);
 }
-#pretty-time-ago {
-    position: fixed;
-    display: inline-block;
-    margin: 0;
-    padding: 0.1em 0.8em 0.15em 0.8em;
-    right: 0;
-    bottom: 0;
-    color: black;
-    background-color: rgba(128, 128, 128, 0.2);
-	pointer-events: none; /* do not prevent clicks on recyclebin */
-}
-#pretty-time-ago.dark {
-    color: white;
-    background-color: rgba(211, 211, 211, 0.3);
-}
-
     </style>
     <script>
         var quill;
@@ -86,6 +71,26 @@ div.dark .detail-view.checklist .ql-editor p::after { content: @{WriteLiteral(Mo
                 newSelectionFormat = blockType;
             quill.format(formatName, newSelectionFormat, 'user');
             refreshActiveFormatState();
+        }
+
+        function addTag() {
+            var tagText = document.getElementById('tags').value.trim();
+            if (vm.ShoppingModeActive || tagText === '')
+                return;
+            document.getElementById('tags').value = '';
+            vueCommandExecute('AddTagCommand', tagText);
+        }
+
+        function deleteTag(e) {
+            if (vm.ShoppingModeActive)
+                return;
+            vueCommandExecute('DeleteTagCommand', e.currentTarget.attributes['data-tag'].value);
+        }
+
+        function getTagSuggestions() {
+            return vm.$data.TagSuggestions.map(function (item) {
+                return { value: item }
+            });
         }
 
         function getNoteHtmlContent() {
@@ -123,7 +128,6 @@ div.dark .detail-view.checklist .ql-editor p::after { content: @{WriteLiteral(Mo
         function setStartingSearchFilter(filter) {
             searchHighlighter.searchAndHighlight(filter, true, false); // this causes a focusin event
             quill.root.blur();
-            vm.PrettyTimeAgoVisible = true; // the focusin event closed the date.
         }
 
         function scrollToTop() {
@@ -178,7 +182,6 @@ div.dark .detail-view.checklist .ql-editor p::after { content: @{WriteLiteral(Mo
             });
 
             $(quill.root).on("focusin", function () {
-                vm.PrettyTimeAgoVisible = false;
                 if (isSearchDialogHidden())
                     searchHighlighter.clearSearchHighlights();
             });
@@ -192,6 +195,23 @@ div.dark .detail-view.checklist .ql-editor p::after { content: @{WriteLiteral(Mo
             }
 
             quill.enable(!vm.ShoppingModeActive);
+
+            $("#tags").autocomplete({
+                source: getTagSuggestions,
+                treshold: 0,
+                maximumItems: 10,
+                value: "value",
+                label: "value",
+                dropType: "dropup",
+                onSelectItem: function (item, inputField) {
+                    addTag();
+                },
+            });
+            document.getElementById('tags').addEventListener("keyup", function (event) {
+                if (event.key === 'Enter' || event.keyCode === 13) {
+                    addTag();
+                }
+            });
         };
 
         @{WriteLiteral(Model.VueDataBindingScript);}
@@ -246,7 +266,22 @@ div.dark .detail-view.checklist .ql-editor p::after { content: @{WriteLiteral(Mo
         }
     </div>
 
-    <div id="pretty-time-ago" v-if="PrettyTimeAgoVisible" v-bind:class="{ dark: IsDark }">{{ PrettyTimeAgo }}</div>
+    <div id="tag-container" v-bind:class="{ dark: IsDark }">
+        <div class="tag-input-group">
+            <div class="input-group">
+                <input id="tags" class="form-control" v-bind:disabled="ShoppingModeActive" placeholder='@Model.Language["tag_add"]' type="text">
+                <div class="input-group-append">
+                    <div id="add-tag" class="btn" onclick="addTag();"><svg width='16' height='16' viewBox='0 0 24 24'><use xlink:href="#svg-plus" /></svg></div>
+                </div>
+            </div>
+        </div>
+        <ul class="tag-list">
+            <li class="tag-item" v-bind:style="{ backgroundColor: BackgroundColorHex }" v-for="Tag in Tags">
+                {{Tag}}
+                <div class="tag-handle" onclick="deleteTag(event);" v-bind:data-tag="Tag"><svg width='16' height='16' viewBox='0 0 24 24'><use xlink:href="#svg-delete" /></svg></div>
+            </li>
+        </ul>
+    </div>
 
     <div id="search-dialog" class="hidden">
         <div class="nav-filter">
@@ -275,6 +310,7 @@ div.dark .detail-view.checklist .ql-editor p::after { content: @{WriteLiteral(Mo
         @{WriteLiteral(Model.Icon.LoadIcon("lock-outline", new[] { new KeyValuePair<string, string>("id", "svg-lock-outline") }));}
         @{WriteLiteral(Model.Icon.LoadIcon("delete", new[] { new KeyValuePair<string, string>("id", "svg-delete") }));}
         @{WriteLiteral(Model.Icon.LoadIcon("close-circle-outline", new[] { new KeyValuePair<string, string>("id", "svg-close-circle-outline") }));}
+        @{WriteLiteral(Model.Icon.LoadIcon("plus", new[] { new KeyValuePair<string, string>("id", "svg-plus") }));}
     </div>
 </div></body>
 </html>

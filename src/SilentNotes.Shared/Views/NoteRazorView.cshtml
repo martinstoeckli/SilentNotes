@@ -19,7 +19,8 @@
 
     <script src="@Model.HtmlRecource["vuejs"]"></script>
     <script src="@Model.HtmlRecource["jqueryjs"]"></script>
-    <script src="bootstrap.bundle.min.js"></script>
+    <script src="@Model.HtmlRecource["bootstrapjs"]"></script>
+    <script src="@Model.HtmlRecource["bootstrapautocompletejs"]"></script>
     <script src="silentnotes.js"></script>
     <script src="quill/quill.min.js"></script>
     <script src="quillsearchhighlighter.js"></script>
@@ -70,13 +71,23 @@ body { background-color: transparent; }
         }
 
         function addTag() {
-            var tagText = document.getElementById('tags').value;
+            var tagText = document.getElementById('tags').value.trim();
+            if (vm.ShoppingModeActive || tagText === '')
+                return;
             document.getElementById('tags').value = '';
             vueCommandExecute('AddTagCommand', tagText);
         }
 
         function deleteTag(e) {
+            if (vm.ShoppingModeActive)
+                return;
             vueCommandExecute('DeleteTagCommand', e.currentTarget.attributes['data-tag'].value);
+        }
+
+        function getTagSuggestions() {
+            return vm.$data.TagSuggestions.map(function (item) {
+                return { value: item }
+            });
         }
 
         function getNoteHtmlContent() {
@@ -190,6 +201,17 @@ body { background-color: transparent; }
 
             quill.enable(!vm.ShoppingModeActive);
 
+            $("#tags").autocomplete({
+                source: getTagSuggestions,
+                treshold: 0,
+                maximumItems: 10,
+                value: "value",
+                label: "value",
+                dropType: "dropup",
+                onSelectItem: function (item, inputField) {
+                    addTag();
+                },
+            });
             document.getElementById('tags').addEventListener("keyup", function(event) {
                 if (event.key === 'Enter' || event.keyCode === 13) {
                     addTag();
@@ -260,10 +282,7 @@ body { background-color: transparent; }
     <div id="tag-container" v-bind:class="{ dark: IsDark }">
         <div class="tag-input-group">
             <div class="input-group">
-                <input id="tags" class="form-control" list="tag-suggestions" placeholder='@Model.Language["tag_add"]' type="text">
-                <datalist id="tag-suggestions">
-                    <option v-for="TagSuggestion in TagSuggestions" v-bind:value="TagSuggestion">
-                </datalist>
+                <input id="tags" class="form-control" v-bind:disabled="ShoppingModeActive" placeholder='@Model.Language["tag_add"]' type="text">
                 <div class="input-group-append">
                     <div id="add-tag" class="btn" onclick="addTag();"><svg width='16' height='16' viewBox='0 0 24 24'><use xlink:href="#svg-plus" /></svg></div>
                 </div>
