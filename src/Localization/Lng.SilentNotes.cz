@@ -1,6 +1,8 @@
 ok OK
 cancel Zrušit
 back Zpět
+yes Yes
+no No
 continue Pokračovat
 search Vyhledat
 
@@ -22,8 +24,6 @@ note_create_new Vytvořit novou poznámku
 note_undelete Obnovit poznámku--Restore note
 note_title Titulek--Title
 note_content Text
-note_left_key Levá šipka--Left arrow key
-note_right_key Pravá šikpa---Right arrow key
 note_colors Vybrat barvu poznámky--Choose note color
 note_bold Tučné--Bold
 note_italic Kurzíva--Italic
@@ -112,6 +112,7 @@ cloud_oauth_code_desc SilentNotes now opens the web page of the online-storage, 
 cloud_oauth_code_back Please go back to SilentNotes to continue.
 cloud_clear_settings Clear
 cloud_clear_settings_desc Removes conection to the online storage
+cloud_clear_settings_expl Do you want to keep the notes on the online storage?\nYes: keep the notes, only remove the connection.\nNo: remove the online notes and the connection.
 cloud_change_settings Change...
 cloud_change_settings_desc Connects to another online storage
 cloud_first_synchronization_title Set up the online storage
@@ -167,3 +168,4 @@ gui_note_insertion Placing of new notes
 gui_note_insertion_top Insert new notes at the top
 gui_note_insertion_bottom Append new notes at the bottom
 gui_hide_closed_safe_notes Hide notes of closed safe
+gui_localization_test Test new language file
