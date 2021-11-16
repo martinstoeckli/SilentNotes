@@ -1,5 +1,7 @@
 ok OK
 cancel Abbrechen
+yes Ja
+no Nein
 back Zurück
 continue Weiter
 search Suchen
@@ -110,6 +112,7 @@ cloud_oauth_code_desc SilentNotes öffnet nun die Webseite des Online-Speichers,
 cloud_oauth_code_back Bitte wechseln Sie nun zurück zu SilentNotes um weiterzufahren.
 cloud_clear_settings Entfernen
 cloud_clear_settings_desc Entfernt die Verbindung zum Online-Speicher
+cloud_clear_settings_expl Wollen Sie die Notizen auf dem Online-Speicher behalten?\nJa: behalte die Notizen, entferne nur die Verbindung.\nNein: Entferne die online Notizen und die Verbindung.
 cloud_change_settings Ändern...
 cloud_change_settings_desc Verbindet zu einem anderen Online-Speicher
 cloud_first_synchronization_title Einrichten des Online-Speichers
