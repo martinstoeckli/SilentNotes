@@ -245,36 +245,36 @@ WriteLiteral("; }\r\n\r\n.nav-filter {\r\n    margin: 0 1em 0 0;\r\n    padding:
 "-width: 280px;\r\n    height: 28px;\r\n    border-radius: 14px;\r\n}\r\n.nav-filter inpu" +
 "t {\r\n    border: none;\r\n    border-width: 0;\r\n    outline: none;\r\n    font-size:" +
 " 1.1em;\r\n    width: calc(100% - 24px);\r\n}\r\n.nav-filter #filter-icon-placeholder " +
-"{\r\n    width: 24px;\r\n}\r\n\r\n.locked {\r\n    position: absolute;\r\n    width: 48px;\r\n" +
-"    height: 48px;\r\n    top: 0;\r\n    bottom: 0;\r\n    left: 0;\r\n    right: 0;\r\n   " +
-" margin: auto;\r\n}\r\n.locked svg {\r\n    width: 100%;\r\n    height: 100%;\r\n    fill:" +
-" rgba(160, 160, 160, 0.4);\r\n}\r\n.locked.dark svg {\r\n    fill: rgba(204, 204, 204," +
-" 0.4);\r\n}\r\n.greenish, .greenish.dark {\r\n\tfill: #0a480a;\r\n\tbackground-color: #1bb" +
-"b1b;\r\n}\r\n.reddish, .reddish.dark {\r\n\tfill: #470a0a;\r\n\tbackground-color: #be1c1c;" +
-"\r\n}\r\n.fab { right: 3.2em; } /* should not cover icons */\r\n    </style>\r\n    <scr" +
-"ipt>\r\n        function showNote(e) {\r\n            vueCommandExecute(\'ShowNoteCom" +
-"mand\', e.currentTarget.parentNode.attributes[\'data-note\'].value);\r\n        }\r\n\r\n" +
-"        function deleteNote(e) {\r\n            vueCommandExecute(\'DeleteNoteComma" +
-"nd\', e.currentTarget.parentNode.attributes[\'data-note\'].value);\r\n        }\r\n\r\n  " +
-"      function addToSafe(e) {\r\n            vueCommandExecute(\'AddToSafeCommand\'," +
-" e.currentTarget.parentNode.attributes[\'data-note\'].value);\r\n        }\r\n\r\n      " +
-"  function removeFromSafe(e) {\r\n            vueCommandExecute(\'RemoveFromSafeCom" +
-"mand\', e.currentTarget.parentNode.attributes[\'data-note\'].value);\r\n        }\r\n\r\n" +
-"        function scrollToTop() {\r\n            var element = document.querySelect" +
-"or(\'#content\');\r\n            element.scrollTop = 0;\r\n        }\r\n\r\n        functi" +
-"on scrollToBottom() {\r\n            var element = document.querySelector(\'#conten" +
-"t\');\r\n            element.scrollTop = element.scrollHeight;\r\n        }\r\n\r\n      " +
-"  function setSelectedTag(e) {\r\n            vm.SelectedTag = e.currentTarget.att" +
-"ributes[\'data-tag\'].value;\r\n        }\r\n\r\n");
+"{\r\n    width: 24px;\r\n}\r\n#tag-selector {\r\n\theight: 28px;\r\n}\r\n\r\n.locked {\r\n    pos" +
+"ition: absolute;\r\n    width: 48px;\r\n    height: 48px;\r\n    top: 0;\r\n    bottom: " +
+"0;\r\n    left: 0;\r\n    right: 0;\r\n    margin: auto;\r\n}\r\n.locked svg {\r\n    width:" +
+" 100%;\r\n    height: 100%;\r\n    fill: rgba(160, 160, 160, 0.4);\r\n}\r\n.locked.dark " +
+"svg {\r\n    fill: rgba(204, 204, 204, 0.4);\r\n}\r\n.greenish, .greenish.dark {\r\n\tfil" +
+"l: #0a480a;\r\n\tbackground-color: #1bbb1b;\r\n}\r\n.reddish, .reddish.dark {\r\n\tfill: #" +
+"470a0a;\r\n\tbackground-color: #be1c1c;\r\n}\r\n.fab { right: 3.2em; } /* should not co" +
+"ver icons */\r\n    </style>\r\n    <script>\r\n        function showNote(e) {\r\n      " +
+"      vueCommandExecute(\'ShowNoteCommand\', e.currentTarget.parentNode.attributes" +
+"[\'data-note\'].value);\r\n        }\r\n\r\n        function deleteNote(e) {\r\n          " +
+"  vueCommandExecute(\'DeleteNoteCommand\', e.currentTarget.parentNode.attributes[\'" +
+"data-note\'].value);\r\n        }\r\n\r\n        function addToSafe(e) {\r\n            v" +
+"ueCommandExecute(\'AddToSafeCommand\', e.currentTarget.parentNode.attributes[\'data" +
+"-note\'].value);\r\n        }\r\n\r\n        function removeFromSafe(e) {\r\n            " +
+"vueCommandExecute(\'RemoveFromSafeCommand\', e.currentTarget.parentNode.attributes" +
+"[\'data-note\'].value);\r\n        }\r\n\r\n        function scrollToTop() {\r\n          " +
+"  var element = document.querySelector(\'#content\');\r\n            element.scrollT" +
+"op = 0;\r\n        }\r\n\r\n        function scrollToBottom() {\r\n            var eleme" +
+"nt = document.querySelector(\'#content\');\r\n            element.scrollTop = elemen" +
+"t.scrollHeight;\r\n        }\r\n\r\n        function setSelectedTag(e) {\r\n            " +
+"vm.SelectedTag = e.currentTarget.attributes[\'data-tag\'].value;\r\n        }\r\n\r\n");
 
 
-#line 124 "NoteRepositoryRazorView.cshtml"
+#line 127 "NoteRepositoryRazorView.cshtml"
         
 
 #line default
 #line hidden
 
-#line 124 "NoteRepositoryRazorView.cshtml"
+#line 127 "NoteRepositoryRazorView.cshtml"
           WriteLiteral(Model.VueDataBindingScript);
 
 #line default
@@ -345,7 +345,7 @@ WriteLiteral(" v-focus");
 
 WriteAttribute ("value", " value=\"", "\""
 
-#line 138 "NoteRepositoryRazorView.cshtml"
+#line 141 "NoteRepositoryRazorView.cshtml"
                                                                               , Tuple.Create<string,object,bool> ("", Model.Filter
 
 #line default
@@ -398,7 +398,7 @@ WriteLiteral(" v-on:click=\"SynchronizeCommand\"");
 
 WriteAttribute ("title", " title=\"", "\""
 
-#line 145 "NoteRepositoryRazorView.cshtml"
+#line 148 "NoteRepositoryRazorView.cshtml"
                                  , Tuple.Create<string,object,bool> ("", Model.Language["sync_notes"]
 
 #line default
@@ -408,7 +408,7 @@ WriteAttribute ("title", " title=\"", "\""
 WriteLiteral(">");
 
 
-#line 145 "NoteRepositoryRazorView.cshtml"
+#line 148 "NoteRepositoryRazorView.cshtml"
                                                                                                          WriteLiteral(Model.Icon["cloud-sync"]);
 
 #line default
@@ -432,13 +432,13 @@ WriteLiteral(" aria-expanded=\"false\"");
 WriteLiteral(">\r\n");
 
 
-#line 149 "NoteRepositoryRazorView.cshtml"
+#line 152 "NoteRepositoryRazorView.cshtml"
                 
 
 #line default
 #line hidden
 
-#line 149 "NoteRepositoryRazorView.cshtml"
+#line 152 "NoteRepositoryRazorView.cshtml"
                   WriteLiteral(Model.Icon["dots-vertical"]);
 
 #line default
@@ -462,7 +462,7 @@ WriteLiteral(" xlink:href=\"#svg-note-text-outline\"");
 WriteLiteral(" /></svg> ");
 
 
-#line 152 "NoteRepositoryRazorView.cshtml"
+#line 155 "NoteRepositoryRazorView.cshtml"
                                                                                                                          Write(Model.Language["note_create_new"]);
 
 
@@ -481,7 +481,7 @@ WriteLiteral(" xlink:href=\"#svg-order-bool-ascending-variant\"");
 WriteLiteral(" /></svg> ");
 
 
-#line 153 "NoteRepositoryRazorView.cshtml"
+#line 156 "NoteRepositoryRazorView.cshtml"
                                                                                                                                          Write(Model.Language["checklist_create_new"]);
 
 
@@ -496,7 +496,7 @@ WriteLiteral(" v-on:click=\"ShowRecycleBinCommand\"");
 WriteLiteral(">");
 
 
-#line 154 "NoteRepositoryRazorView.cshtml"
+#line 157 "NoteRepositoryRazorView.cshtml"
                                                                                 WriteLiteral(Model.Icon["delete-empty"]);
 
 #line default
@@ -504,7 +504,7 @@ WriteLiteral(">");
 WriteLiteral(" ");
 
 
-#line 154 "NoteRepositoryRazorView.cshtml"
+#line 157 "NoteRepositoryRazorView.cshtml"
                                                                                                                       Write(Model.Language["show_recyclebin"]);
 
 
@@ -519,7 +519,7 @@ WriteLiteral(" v-on:click=\"ShowExportCommand\"");
 WriteLiteral(">");
 
 
-#line 155 "NoteRepositoryRazorView.cshtml"
+#line 158 "NoteRepositoryRazorView.cshtml"
                                                                             WriteLiteral(Model.Icon["export"]);
 
 #line default
@@ -527,7 +527,7 @@ WriteLiteral(">");
 WriteLiteral(" ");
 
 
-#line 155 "NoteRepositoryRazorView.cshtml"
+#line 158 "NoteRepositoryRazorView.cshtml"
                                                                                                             Write(Model.Language["show_export"]);
 
 
@@ -544,20 +544,20 @@ WriteLiteral(" class=\"dropdown-item\"");
 WriteLiteral(" ");
 
 
-#line 157 "NoteRepositoryRazorView.cshtml"
+#line 160 "NoteRepositoryRazorView.cshtml"
                                             if (Model.IsAnySafeOpen) { 
 
 #line default
 #line hidden
 
-#line 157 "NoteRepositoryRazorView.cshtml"
+#line 160 "NoteRepositoryRazorView.cshtml"
                                                                    Write("hidden");
 
 
 #line default
 #line hidden
 
-#line 157 "NoteRepositoryRazorView.cshtml"
+#line 160 "NoteRepositoryRazorView.cshtml"
                                                                                    ; }
 
 #line default
@@ -565,7 +565,7 @@ WriteLiteral(" ");
 WriteLiteral(" v-on:click=\"OpenSafeCommand\">");
 
 
-#line 157 "NoteRepositoryRazorView.cshtml"
+#line 160 "NoteRepositoryRazorView.cshtml"
                                                                                                                       WriteLiteral(Model.Icon["safe-square-outline"]);
 
 #line default
@@ -573,7 +573,7 @@ WriteLiteral(" v-on:click=\"OpenSafeCommand\">");
 WriteLiteral(" ");
 
 
-#line 157 "NoteRepositoryRazorView.cshtml"
+#line 160 "NoteRepositoryRazorView.cshtml"
                                                                                                                                                                    Write(Model.Language["safe_open"]);
 
 
@@ -586,20 +586,20 @@ WriteLiteral(" class=\"dropdown-item\"");
 WriteLiteral(" ");
 
 
-#line 158 "NoteRepositoryRazorView.cshtml"
+#line 161 "NoteRepositoryRazorView.cshtml"
                                             if (!Model.IsAnySafeOpen) { 
 
 #line default
 #line hidden
 
-#line 158 "NoteRepositoryRazorView.cshtml"
+#line 161 "NoteRepositoryRazorView.cshtml"
                                                                     Write("hidden");
 
 
 #line default
 #line hidden
 
-#line 158 "NoteRepositoryRazorView.cshtml"
+#line 161 "NoteRepositoryRazorView.cshtml"
                                                                                     ; }
 
 #line default
@@ -607,7 +607,7 @@ WriteLiteral(" ");
 WriteLiteral(" v-on:click=\"CloseSafeCommand\">");
 
 
-#line 158 "NoteRepositoryRazorView.cshtml"
+#line 161 "NoteRepositoryRazorView.cshtml"
                                                                                                                         WriteLiteral(Model.Icon["safe-square-outline"]);
 
 #line default
@@ -615,7 +615,7 @@ WriteLiteral(" v-on:click=\"CloseSafeCommand\">");
 WriteLiteral(" ");
 
 
-#line 158 "NoteRepositoryRazorView.cshtml"
+#line 161 "NoteRepositoryRazorView.cshtml"
                                                                                                                                                                      Write(Model.Language["safe_close"]);
 
 
@@ -630,7 +630,7 @@ WriteLiteral(" v-on:click=\"ChangeSafePasswordCommand\"");
 WriteLiteral(">");
 
 
-#line 159 "NoteRepositoryRazorView.cshtml"
+#line 162 "NoteRepositoryRazorView.cshtml"
                                                                                     WriteLiteral(Model.Icon["lock-reset"]);
 
 #line default
@@ -638,7 +638,7 @@ WriteLiteral(">");
 WriteLiteral(" ");
 
 
-#line 159 "NoteRepositoryRazorView.cshtml"
+#line 162 "NoteRepositoryRazorView.cshtml"
                                                                                                                         Write(Model.Language["safe_change_password"]);
 
 
@@ -657,7 +657,7 @@ WriteLiteral(" v-on:click=\"ShowTransferCodeCommand\"");
 WriteLiteral(">");
 
 
-#line 161 "NoteRepositoryRazorView.cshtml"
+#line 164 "NoteRepositoryRazorView.cshtml"
                                                                                   WriteLiteral(Model.Icon["key"]);
 
 #line default
@@ -665,7 +665,7 @@ WriteLiteral(">");
 WriteLiteral(" ");
 
 
-#line 161 "NoteRepositoryRazorView.cshtml"
+#line 164 "NoteRepositoryRazorView.cshtml"
                                                                                                                Write(Model.Language["show_transfer_code"]);
 
 
@@ -680,7 +680,7 @@ WriteLiteral(" v-on:click=\"ShowSettingsCommand\"");
 WriteLiteral(">");
 
 
-#line 162 "NoteRepositoryRazorView.cshtml"
+#line 165 "NoteRepositoryRazorView.cshtml"
                                                                               WriteLiteral(Model.Icon["settings"]);
 
 #line default
@@ -688,7 +688,7 @@ WriteLiteral(">");
 WriteLiteral(" ");
 
 
-#line 162 "NoteRepositoryRazorView.cshtml"
+#line 165 "NoteRepositoryRazorView.cshtml"
                                                                                                                 Write(Model.Language["show_settings"]);
 
 
@@ -703,7 +703,7 @@ WriteLiteral(" v-on:click=\"ShowInfoCommand\"");
 WriteLiteral(">");
 
 
-#line 163 "NoteRepositoryRazorView.cshtml"
+#line 166 "NoteRepositoryRazorView.cshtml"
                                                                           WriteLiteral(Model.Icon["information"]);
 
 #line default
@@ -711,7 +711,7 @@ WriteLiteral(">");
 WriteLiteral(" ");
 
 
-#line 163 "NoteRepositoryRazorView.cshtml"
+#line 166 "NoteRepositoryRazorView.cshtml"
                                                                                                                Write(Model.Language["show_info"]);
 
 
@@ -736,7 +736,7 @@ WriteLiteral(" href=\"#\"");
 WriteLiteral(">");
 
 
-#line 169 "NoteRepositoryRazorView.cshtml"
+#line 172 "NoteRepositoryRazorView.cshtml"
                                                                                                                 WriteLiteral(Model.Icon["plus"]);
 
 #line default
@@ -778,13 +778,13 @@ WriteLiteral(" id=\"note-repository\"");
 WriteLiteral("></ul>\r\n    </div>\r\n\r\n    <div hidden>\r\n");
 
 
-#line 181 "NoteRepositoryRazorView.cshtml"
+#line 184 "NoteRepositoryRazorView.cshtml"
         
 
 #line default
 #line hidden
 
-#line 181 "NoteRepositoryRazorView.cshtml"
+#line 184 "NoteRepositoryRazorView.cshtml"
           WriteLiteral(Model.Icon.LoadIcon("magnify", new[] { new KeyValuePair<string, string>("id", "svg-magnify") }));
 
 #line default
@@ -792,13 +792,13 @@ WriteLiteral("></ul>\r\n    </div>\r\n\r\n    <div hidden>\r\n");
 WriteLiteral("\r\n");
 
 
-#line 182 "NoteRepositoryRazorView.cshtml"
+#line 185 "NoteRepositoryRazorView.cshtml"
         
 
 #line default
 #line hidden
 
-#line 182 "NoteRepositoryRazorView.cshtml"
+#line 185 "NoteRepositoryRazorView.cshtml"
           WriteLiteral(Model.Icon.LoadIcon("close-circle-outline", new[] { new KeyValuePair<string, string>("id", "svg-close-circle-outline") }));
 
 #line default
@@ -806,13 +806,13 @@ WriteLiteral("\r\n");
 WriteLiteral("\r\n");
 
 
-#line 183 "NoteRepositoryRazorView.cshtml"
+#line 186 "NoteRepositoryRazorView.cshtml"
         
 
 #line default
 #line hidden
 
-#line 183 "NoteRepositoryRazorView.cshtml"
+#line 186 "NoteRepositoryRazorView.cshtml"
           WriteLiteral(Model.Icon.LoadIcon("arrow-all", new[] { new KeyValuePair<string, string>("id", "svg-arrow-all") }));
 
 #line default
@@ -820,13 +820,13 @@ WriteLiteral("\r\n");
 WriteLiteral("\r\n");
 
 
-#line 184 "NoteRepositoryRazorView.cshtml"
+#line 187 "NoteRepositoryRazorView.cshtml"
         
 
 #line default
 #line hidden
 
-#line 184 "NoteRepositoryRazorView.cshtml"
+#line 187 "NoteRepositoryRazorView.cshtml"
           WriteLiteral(Model.Icon.LoadIcon("lock", new[] { new KeyValuePair<string, string>("id", "svg-lock") }));
 
 #line default
@@ -834,13 +834,13 @@ WriteLiteral("\r\n");
 WriteLiteral("\r\n");
 
 
-#line 185 "NoteRepositoryRazorView.cshtml"
+#line 188 "NoteRepositoryRazorView.cshtml"
         
 
 #line default
 #line hidden
 
-#line 185 "NoteRepositoryRazorView.cshtml"
+#line 188 "NoteRepositoryRazorView.cshtml"
           WriteLiteral(Model.Icon.LoadIcon("lock-open-variant", new[] { new KeyValuePair<string, string>("id", "svg-lock-open-variant") }));
 
 #line default
@@ -848,13 +848,13 @@ WriteLiteral("\r\n");
 WriteLiteral("\r\n");
 
 
-#line 186 "NoteRepositoryRazorView.cshtml"
+#line 189 "NoteRepositoryRazorView.cshtml"
         
 
 #line default
 #line hidden
 
-#line 186 "NoteRepositoryRazorView.cshtml"
+#line 189 "NoteRepositoryRazorView.cshtml"
           WriteLiteral(Model.Icon.LoadIcon("lock-outline", new[] { new KeyValuePair<string, string>("id", "svg-lock-outline") }));
 
 #line default
@@ -862,13 +862,13 @@ WriteLiteral("\r\n");
 WriteLiteral("\r\n");
 
 
-#line 187 "NoteRepositoryRazorView.cshtml"
+#line 190 "NoteRepositoryRazorView.cshtml"
         
 
 #line default
 #line hidden
 
-#line 187 "NoteRepositoryRazorView.cshtml"
+#line 190 "NoteRepositoryRazorView.cshtml"
           WriteLiteral(Model.Icon.LoadIcon("delete", new[] { new KeyValuePair<string, string>("id", "svg-delete") }));
 
 #line default
@@ -876,13 +876,13 @@ WriteLiteral("\r\n");
 WriteLiteral("\r\n");
 
 
-#line 188 "NoteRepositoryRazorView.cshtml"
+#line 191 "NoteRepositoryRazorView.cshtml"
         
 
 #line default
 #line hidden
 
-#line 188 "NoteRepositoryRazorView.cshtml"
+#line 191 "NoteRepositoryRazorView.cshtml"
           WriteLiteral(Model.Icon.LoadIcon("note-text-outline", new[] { new KeyValuePair<string, string>("id", "svg-note-text-outline") }));
 
 #line default
@@ -890,13 +890,13 @@ WriteLiteral("\r\n");
 WriteLiteral("\r\n");
 
 
-#line 189 "NoteRepositoryRazorView.cshtml"
+#line 192 "NoteRepositoryRazorView.cshtml"
         
 
 #line default
 #line hidden
 
-#line 189 "NoteRepositoryRazorView.cshtml"
+#line 192 "NoteRepositoryRazorView.cshtml"
           WriteLiteral(Model.Icon.LoadIcon("order-bool-ascending-variant", new[] { new KeyValuePair<string, string>("id", "svg-order-bool-ascending-variant") }));
 
 #line default
