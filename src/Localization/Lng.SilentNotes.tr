@@ -1,5 +1,7 @@
 ok Tamam
 cancel İptal
+yes Yes
+no No
 back Geri
 continue Devam Et
 search Ara
@@ -110,6 +112,7 @@ cloud_oauth_code_desc Çevrimiçi deponun web sayfası açılıyor. Lütfen Sile
 cloud_oauth_code_back Devam etmek için lütfen uygulamaya geri dönün.
 cloud_clear_settings Temizle
 cloud_clear_settings_desc Çevrimiçi depo ile bağlantıyı kes
+cloud_clear_settings_expl Do you want to keep the notes on the online storage?\nYes: keep the notes, only remove the connection.\nNo: remove the online notes and the connection.
 cloud_change_settings Değiştir...
 cloud_change_settings_desc Başka bir çevrimiçi depoya bağlan
 cloud_first_synchronization_title Çevrimiçi depo tanımla

@@ -1,5 +1,7 @@
 ok OK
 cancel Cancel
+yes Yes
+no No
 back Back
 continue Continue
 search Search
@@ -110,6 +112,7 @@ cloud_oauth_code_desc SilentNotes now opens the web page of the online-storage, 
 cloud_oauth_code_back Please go back to SilentNotes to continue.
 cloud_clear_settings Clear
 cloud_clear_settings_desc Removes conection to the online storage
+cloud_clear_settings_expl Do you want to keep the notes on the online storage?\nYes: keep the notes, only remove the connection.\nNo: remove the online notes and the connection.
 cloud_change_settings Change...
 cloud_change_settings_desc Connects to another online storage
 cloud_first_synchronization_title Set up the online storage

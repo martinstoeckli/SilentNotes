@@ -1,5 +1,7 @@
 ok OK
 cancel Annulla
+yes Yes
+no No
 back Indietro
 continue Continua
 search Cerca
@@ -110,6 +112,7 @@ cloud_oauth_code_desc SilentNotes aprirà ora la pagina web della memorizzazione
 cloud_oauth_code_back Ritorna a SilentNotes per continuare.
 cloud_clear_settings Pulisci
 cloud_clear_settings_desc Rimuove la connessione alla memorizzazione online
+cloud_clear_settings_expl Do you want to keep the notes on the online storage?\nYes: keep the notes, only remove the connection.\nNo: remove the online notes and the connection.
 cloud_change_settings Cambia...
 cloud_change_settings_desc Si connette ad un'altra memorizzazione online
 cloud_first_synchronization_title Imposta la memorizzazione online
