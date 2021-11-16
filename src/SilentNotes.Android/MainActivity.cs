@@ -47,6 +47,7 @@ namespace SilentNotes.Android
             SetTheme(Resource.Style.MainTheme);
 
             _activityResultAwaiter = new ActivityResultAwaiter(this);
+            Startup.InitializeApplication(this, _activityResultAwaiter);
 
             // Load main window of single page application.
             base.OnCreate(bundle);
@@ -69,12 +70,16 @@ namespace SilentNotes.Android
         }
 
         /// <inheritdoc/>
+        protected override void OnDestroy()
+        {
+            _activityResultAwaiter.Dispose();
+            base.OnDestroy();
+        }
+
+        /// <inheritdoc/>
         protected override void OnStart()
         {
             base.OnStart();
-
-            Ioc.Reset();
-            Startup.InitializeApplication(this, _activityResultAwaiter);
 
             INavigationService navigationService = Ioc.GetOrCreate<INavigationService>();
             IStoryBoardService storyBoardService = Ioc.GetOrCreate<IStoryBoardService>();
@@ -140,9 +145,6 @@ namespace SilentNotes.Android
             IAutoSynchronizationService syncService = Ioc.GetOrCreate<IAutoSynchronizationService>();
             syncService.SynchronizeAtShutdown();
 
-            // We can safely clear the Ioc, it will be rebuilt in the OnStart event. The still
-            // running syncService doesn't need Ioc, got its required services in the constructor.
-            Ioc.Reset();
             base.OnStop();
         }
 

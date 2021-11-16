@@ -22,8 +22,6 @@ note_create_new Crea un nuovo appunto
 note_undelete Ripristina l'appunto
 note_title Titolo
 note_content Testo
-note_left_key Pulsante freccia sinistra
-note_right_key Pulsante freccia destra
 note_colors Seleziona il colore dell'appunto
 note_bold Grassetto
 note_italic Corsivo
@@ -167,3 +165,4 @@ gui_note_insertion Posizionamento dei nuovi appunti
 gui_note_insertion_top Inserisci i nuovi appunti in cima
 gui_note_insertion_bottom Colloca i nuovi appunti in fondo
 gui_hide_closed_safe_notes Nascondi gli appunti della cassaforte chiusa
+gui_localization_test Test new language file

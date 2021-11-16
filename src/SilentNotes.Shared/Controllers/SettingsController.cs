@@ -43,7 +43,8 @@ namespace SilentNotes.Controllers
                 Ioc.GetOrCreate<IThemeService>(),
                 Ioc.GetOrCreate<IBaseUrlService>(),
                 Ioc.GetOrCreate<ISettingsService>(),
-                Ioc.GetOrCreate<IStoryBoardService>());
+                Ioc.GetOrCreate<IStoryBoardService>(),
+                Ioc.GetOrCreate<IFilePickerService>());
 
             VueBindingShortcut[] shortcuts = new[]
             {

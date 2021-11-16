@@ -29,6 +29,7 @@ namespace SilentNotes.ViewModels
         public const int ReferenceNoteMinSize = 115;
         private readonly ISettingsService _settingsService;
         private readonly IStoryBoardService _storyBoardService;
+        private readonly IFilePickerService _filePickerService;
         private readonly SliderStepConverter _fontSizeConverter;
         private readonly SliderStepConverter _noteMaxHeightConverter;
 
@@ -42,11 +43,13 @@ namespace SilentNotes.ViewModels
             IThemeService themeService,
             IBaseUrlService webviewBaseUrl,
             ISettingsService settingsService,
-            IStoryBoardService storyBoardService)
+            IStoryBoardService storyBoardService,
+            IFilePickerService filePickerService)
             : base(navigationService, languageService, svgIconService, themeService, webviewBaseUrl)
         {
             _settingsService = settingsService;
             _storyBoardService = storyBoardService;
+            _filePickerService = filePickerService;
             _fontSizeConverter = new SliderStepConverter(ReferenceFontSize, 1.0);
             _noteMaxHeightConverter = new SliderStepConverter(ReferenceNoteMaxSize, 20.0);
             Model = _settingsService.LoadSettingsOrDefault();
@@ -58,6 +61,7 @@ namespace SilentNotes.ViewModels
             GoBackCommand = new RelayCommand(GoBack);
             ChangeCloudSettingsCommand = new RelayCommand(ChangeCloudSettings);
             ClearCloudSettingsCommand = new RelayCommand(ClearCloudSettings);
+            TestNewLocalizationCommand = new RelayCommand(TestNewLocalization);
         }
 
         /// <summary>
@@ -362,6 +366,28 @@ namespace SilentNotes.ViewModels
                     sb.AppendLine(Model.Credentials.Url);
                     return sb.ToString();
                 }
+            }
+        }
+
+        /// <summary>
+        /// Gets the command to reset the cloud settings.
+        /// </summary>
+        [VueDataBinding(VueBindingMode.Command)]
+        public ICommand TestNewLocalizationCommand { get; private set; }
+
+        private async void TestNewLocalization()
+        {
+            try
+            {
+                if (await _filePickerService.PickFile())
+                {
+                    byte[] languageFile = await _filePickerService.ReadPickedFile();
+                    (Language as ILanguageTestService).OverrideWithTestResourceFile(languageFile);
+                    _navigationService.Navigate(new Navigation(ControllerNames.Settings));
+                }
+            }
+            catch (Exception)
+            {
             }
         }
 
