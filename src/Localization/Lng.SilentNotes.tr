@@ -22,8 +22,6 @@ note_create_new Not oluştur
 note_undelete Notu geri yükle
 note_title Başlık
 note_content Metin
-note_left_key Sol ok tuşu
-note_right_key Sağ ok tuşu
 note_colors Sayfa rengi seç
 note_bold Kalın
 note_italic İtalik
@@ -167,3 +165,4 @@ gui_note_insertion Yeni notların varsayılan konumu
 gui_note_insertion_top Yeni notları en üste yerleştir
 gui_note_insertion_bottom Yeni notları en alta yerleştir
 gui_hide_closed_safe_notes Kasa kilitlenince korunan notları gizle
+gui_localization_test Test new language file

@@ -117,6 +117,7 @@
     <Compile Include="Services\DataProtectionService.cs" />
     <Compile Include="Services\EnvironmentService.cs" />
     <Compile Include="Services\FeedbackService.cs" />
+    <Compile Include="Services\FilePickerService.cs" />
     <Compile Include="Services\FolderPickerService.cs" />
     <Compile Include="Services\LanguageCodeService.cs" />
     <Compile Include="Services\LanguageServiceResourceReader.cs" />

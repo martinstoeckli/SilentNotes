@@ -16,7 +16,7 @@ namespace SilentNotes.Services
     /// The platform specific part of reading the resource files is outsourced to an instance of
     /// <see cref="ILanguageServiceResourceReader"/>.
     /// </summary>
-    public class LanguageService : ILanguageService
+    public class LanguageService : ILanguageService, ILanguageTestService
     {
         private readonly ILanguageServiceResourceReader _resourceReader;
         private readonly string _domain;
@@ -132,12 +132,14 @@ namespace SilentNotes.Services
             // process all lines
             string line;
             while ((line = languageResourceStream.ReadLine()) != null)
+            {
                 if (!IsComment(line) &&
                     TrySplitLine(line, out string resKey, out string resText))
                 {
                     resText = ReplaceSpecialTags(resText);
                     result[resKey] = resText;
                 }
+            }
             return result;
         }
 
@@ -192,6 +194,38 @@ namespace SilentNotes.Services
                 result = result.Replace(@"\n", "\r\n");
             }
             return result;
+        }
+
+        /// <inheritdoc/>
+        public void OverrideWithTestResourceFile(byte[] customResourceFile)
+        {
+            const int MaxResourceItemLength = 1000; // We handle unsafe user input after all
+
+            // Reset to the original language
+            _textResources = null;
+            LazyLoadTextResources();
+
+            // Read test file and overwrite existing items.
+            using (MemoryStream stream = new MemoryStream(customResourceFile))
+            using (StreamReader languageResourceStream = new StreamReader(stream))
+            {
+                // process all lines
+                string line;
+                while ((line = languageResourceStream.ReadLine()) != null)
+                {
+                    if (!IsComment(line) &&
+                        TrySplitLine(line, out string resKey, out string resText))
+                    {
+                        if (_textResources.ContainsKey(resKey))
+                        {
+                            resText = ReplaceSpecialTags(resText);
+                            if (resText.Length > MaxResourceItemLength)
+                                resText.Substring(0, MaxResourceItemLength);
+                            _textResources[resKey] = resText;
+                        }
+                    }
+                }
+            }
         }
     }
 }

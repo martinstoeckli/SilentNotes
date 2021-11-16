@@ -22,8 +22,6 @@ note_create_new Neue Notiz erstellen
 note_undelete Notiz wiederherstellen
 note_title Titel
 note_content Text
-note_left_key Linke Pfeiltaste
-note_right_key Rechte Pfeiltaste
 note_colors Notizfarbe auswählen
 note_bold Fett
 note_italic Kursiv
@@ -153,12 +151,10 @@ encryption_algo_aesgcm AES-256-GCM
 encryption_algo_twofishgcm Twofish-256-GCM
 
 gui Benutzeroberfläche
-gui_show_arrow_keys Cursor Pfeiltasten beim Bearbeiten anzeigen
 gui_font_size Schriftgrösse (kleiner ‹ normal › grösser)
 gui_note_max_size Maximale Notizenhöhe (kleiner ‹ normal › grösser)
 gui_texture Design
 gui_default_color Standardfarbe für neue Notizen
-gui_arrow_key Ein Zeichen nach links/rechts bewegen
 gui_theme_auto Automatisch helles oder dunkles Design
 gui_theme_dark Dunkles Design
 gui_theme_light Helles Design
@@ -169,3 +165,4 @@ gui_note_insertion Hinzufügen neuer Notizen
 gui_note_insertion_top Neue Notiz oben einfügen
 gui_note_insertion_bottom Neue Notiz unten anfügen
 gui_hide_closed_safe_notes Notizen von geschlossenem Tresor ausblenden
+gui_localization_test Neue Sprachdatei testen

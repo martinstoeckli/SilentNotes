@@ -1,5 +1,11 @@
-﻿using Android.App;
+﻿// Copyright © 2021 Martin Stoeckli.
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+using Android.App;
 using Android.Content;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,10 +16,11 @@ namespace SilentNotes.Android
     /// This class offers awaitable methods to start an activity and wait for its result.
     /// This way we can circumvent the Android OnActivityResult event and its difficult handling.
     /// </summary>
-    public class ActivityResultAwaiter
+    public class ActivityResultAwaiter : IDisposable
     {
         private static int _requestCode = 497652123;
         private readonly List<StartedActivityInfo> _startedActivityInfos;
+        private bool _disposed = false;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ActivityResultAwaiter"/> class.
@@ -26,6 +33,21 @@ namespace SilentNotes.Android
         }
 
         /// <summary>
+        /// Finalizes an instance of the <see cref="ActivityResultAwaiter"/> class.
+        /// </summary>
+        ~ActivityResultAwaiter()
+        {
+            Dispose();
+        }
+
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            if (!_disposed)
+                _disposed = true;
+        }
+
+        /// <summary>
         /// Gets or sets the Activity which should start the new activity, this can be the
         /// root/main activity of the app.
         /// </summary>
@@ -35,11 +57,12 @@ namespace SilentNotes.Android
         /// Instead of calling "StarterActivity.StartActivityForResult()" directly, we call this
         /// awaitable method, which takes care about waiting for the Android event. If the Intent
         /// is never finished, the method would not return, but usually this results in a cancel
-        /// result.
+        /// result. If the instance was disposed meanwhile, a cancel result will be returned.
         /// </summary>
         /// <param name="intentToStart">New indent we want to start, this could for example be a
         /// file dialog intent.</param>
-        /// <returns>Returns the result of the started and awaited intent.</returns>
+        /// <returns>Returns the result of the started and awaited intent, or null in case that
+        /// the awaiter was disposed meanwhile.</returns>
         public async Task<ActivityResult> StartActivityAndWaitForResult(Intent intentToStart)
         {
             unchecked
@@ -59,7 +82,10 @@ namespace SilentNotes.Android
                 // Start the activity
                 StarterActivity.StartActivityForResult(intentToStart, activityInfo.RequestCode);
                 activityInfo.WaitHandle.WaitOne();
-                return activityInfo.Result;
+                if (!_disposed)
+                    return activityInfo.Result;
+                else
+                    return new ActivityResult(Result.Canceled, null);
             });
 
             // Start the waiting
