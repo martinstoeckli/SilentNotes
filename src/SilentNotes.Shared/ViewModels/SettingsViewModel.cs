@@ -29,6 +29,7 @@ namespace SilentNotes.ViewModels
         public const int ReferenceNoteMinSize = 115;
         private readonly ISettingsService _settingsService;
         private readonly IStoryBoardService _storyBoardService;
+        private readonly IFeedbackService _feedbackService;
         private readonly IFilePickerService _filePickerService;
         private readonly SliderStepConverter _fontSizeConverter;
         private readonly SliderStepConverter _noteMaxHeightConverter;
@@ -44,11 +45,13 @@ namespace SilentNotes.ViewModels
             IBaseUrlService webviewBaseUrl,
             ISettingsService settingsService,
             IStoryBoardService storyBoardService,
+            IFeedbackService feedbackService,
             IFilePickerService filePickerService)
             : base(navigationService, languageService, svgIconService, themeService, webviewBaseUrl)
         {
             _settingsService = settingsService;
             _storyBoardService = storyBoardService;
+            _feedbackService = feedbackService;
             _filePickerService = filePickerService;
             _fontSizeConverter = new SliderStepConverter(ReferenceFontSize, 1.0);
             _noteMaxHeightConverter = new SliderStepConverter(ReferenceNoteMaxSize, 20.0);
@@ -322,9 +325,23 @@ namespace SilentNotes.ViewModels
         [VueDataBinding(VueBindingMode.Command)]
         public ICommand ClearCloudSettingsCommand { get; private set; }
 
-        private void ClearCloudSettings()
+        private async void ClearCloudSettings()
         {
-            ChangePropertyIndirect(() => Model.Credentials, (v) => Model.Credentials = v, null, true, nameof(AccountSummary));
+            string title = Language.LoadText("cloud_clear_settings_desc");
+            string explanation = Language.LoadText("cloud_clear_settings_expl");
+            MessageBoxResult dialogResult = await _feedbackService.ShowMessageAsync(explanation, title, MessageBoxButtons.YesNoCancel, false);
+
+            // Remove repository from online storage
+            if (dialogResult == MessageBoxResult.Yes)
+            {
+
+            }
+
+            // Remove account from settings
+            if ((dialogResult == MessageBoxResult.Yes) || (dialogResult == MessageBoxResult.No))
+            {
+                ChangePropertyIndirect(() => Model.Credentials, (v) => Model.Credentials = v, null, true, nameof(AccountSummary));
+            }
         }
 
         /// <summary>

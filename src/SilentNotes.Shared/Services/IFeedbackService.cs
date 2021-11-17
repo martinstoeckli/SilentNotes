@@ -57,6 +57,10 @@ namespace SilentNotes.Services
 
         /// <summary>Shows a continue and a cancel button</summary>
         ContinueCancel,
+
+
+        /// <summary>Shows a yes, a no and a cancel button</summary>
+        YesNoCancel,
     }
 
     /// <summary>
@@ -67,10 +71,16 @@ namespace SilentNotes.Services
         /// <summary>The ok button was pressed.</summary>
         Ok,
 
-        /// <summary>The cancel button was pressed.</summary>
+        /// <summary>The cancel button was pressed or the dialog was closed without pressing a button.</summary>
         Cancel,
 
         /// <summary>The continue button was pressed.</summary>
         Continue,
+
+        /// <summary>The yes button was pressed.</summary>
+        Yes,
+
+        /// <summary>The no button was pressed.</summary>
+        No,
     }
 }
