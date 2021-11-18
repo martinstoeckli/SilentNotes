@@ -89,7 +89,7 @@ transfer_code Codice di trasferimento
 transfer_code_usage Con questo codice di trasferimento è possibile decifrare gli appunti memorizzati nel cloud.
 transfer_code_required Inserisci il codice di trasferimento. È possibile ottenere il codice da una periferica già sincronizzata usando la voce del menu «Visualizza codice di trasferimento»
 transfer_code_show_history Visualizza i vecchi codici di trasferimento
-transfer_code_created Un nuovo codice di trasferimento {0} è stato generato, può essere controllato in qualunque momento usando il menu ‹Visualizza codice di trasferimento›.
+transfer_code_created Un nuovo codice di trasferimento ‹{0}› è stato generato, può essere controllato in qualunque momento usando il menu ‹Visualizza codice di trasferimento›.
 transfer_code_writedown Consigliamo di scrivere il codice di trasferimento a parte, sarà necessario per sincronizzare gli appunti con altre periferiche o quando si dovrà accedere al backup online successivamente.
 
 show_info Informazioni

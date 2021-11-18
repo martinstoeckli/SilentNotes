@@ -59,14 +59,15 @@ namespace SilentNotes.UWP.Services
         /// <inheritdoc/>
         public async Task<MessageBoxResult> ShowMessageAsync(string message, string title, MessageBoxButtons buttons, bool conservativeDefault)
         {
-            ButtonArrangement arrangement = ButtonArrangement.Create(buttons, _languageService);
+            ButtonArrangement arrangement = new ButtonArrangement(buttons, conservativeDefault, _languageService);
             ContentDialog dialog = new ContentDialog()
             {
                 Title = title,
                 Content = message,
                 CloseButtonText = arrangement.CloseButtonText,
+                SecondaryButtonText = arrangement.SecondaryButtonText,
                 PrimaryButtonText = arrangement.PrimaryButtonText,
-                DefaultButton = conservativeDefault ? ContentDialogButton.Close : ContentDialogButton.Primary,
+                DefaultButton = arrangement.DefaultButton,
             };
 
             ContentDialogResult result = await dialog.ShowAsync();
@@ -75,47 +76,66 @@ namespace SilentNotes.UWP.Services
 
         private class ButtonArrangement
         {
-            public static ButtonArrangement Create(MessageBoxButtons buttons, ILanguageService languageService)
+            public ButtonArrangement(MessageBoxButtons buttons, bool conservativeDefault, ILanguageService languageService)
             {
-                ButtonArrangement result = new ButtonArrangement();
                 switch (buttons)
                 {
                     case MessageBoxButtons.Ok:
-                        result.CloseButton = MessageBoxResult.Ok;
-                        result.CloseButtonText = languageService.LoadText("ok");
+                        PrimaryButton = MessageBoxResult.Ok;
+                        PrimaryButtonText = languageService.LoadText("ok");
+                        CloseButton = MessageBoxResult.Cancel;
+                        DefaultButton = ContentDialogButton.Primary;
                         break;
                     case MessageBoxButtons.ContinueCancel:
-                        result.PrimaryButton = MessageBoxResult.Continue;
-                        result.PrimaryButtonText = languageService.LoadText("continue");
-                        result.CloseButton = MessageBoxResult.Cancel;
-                        result.CloseButtonText = languageService.LoadText("cancel");
+                        PrimaryButton = MessageBoxResult.Continue;
+                        PrimaryButtonText = languageService.LoadText("continue");
+                        CloseButton = MessageBoxResult.Cancel;
+                        CloseButtonText = languageService.LoadText("cancel");
+                        DefaultButton = conservativeDefault ? ContentDialogButton.Close : ContentDialogButton.Primary;
+                        break;
+                    case MessageBoxButtons.YesNoCancel:
+                        PrimaryButton = MessageBoxResult.Yes;
+                        PrimaryButtonText = languageService.LoadText("yes");
+                        SecondaryButton = MessageBoxResult.No;
+                        SecondaryButtonText = languageService.LoadText("no");
+                        CloseButton = MessageBoxResult.Cancel;
+                        CloseButtonText = languageService.LoadText("cancel");
+                        DefaultButton = conservativeDefault ? ContentDialogButton.Close : ContentDialogButton.Primary;
                         break;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(buttons));
                 }
 
                 // The dialog won't accept null strings, turn them to empty strings
-                result.PrimaryButtonText = result.PrimaryButtonText ?? string.Empty;
-                result.CloseButtonText = result.CloseButtonText ?? string.Empty;
-                return result;
+                PrimaryButtonText = PrimaryButtonText ?? string.Empty;
+                SecondaryButtonText = SecondaryButtonText ?? string.Empty;
+                CloseButtonText = CloseButtonText ?? string.Empty;
             }
 
-            public MessageBoxResult PrimaryButton { get; set; }
+            public MessageBoxResult PrimaryButton { get; }
 
-            public MessageBoxResult CloseButton { get; set; }
+            public MessageBoxResult SecondaryButton { get; }
 
-            public string PrimaryButtonText { get; set; }
+            public MessageBoxResult CloseButton { get; }
 
-            public string CloseButtonText { get; set; }
+            public string PrimaryButtonText { get; }
+
+            public string SecondaryButtonText { get; }
+
+            public string CloseButtonText { get; }
+
+            public ContentDialogButton DefaultButton { get; }
 
             public MessageBoxResult ToMessageBoxResult(ContentDialogResult dialogResult)
             {
                 switch (dialogResult)
                 {
-                    case ContentDialogResult.None:
+                    case ContentDialogResult.None: // Close button, back, esc
                         return CloseButton;
                     case ContentDialogResult.Primary:
                         return PrimaryButton;
+                    case ContentDialogResult.Secondary:
+                        return SecondaryButton;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(dialogResult));
                 }

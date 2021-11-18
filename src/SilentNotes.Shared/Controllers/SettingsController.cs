@@ -44,6 +44,8 @@ namespace SilentNotes.Controllers
                 Ioc.GetOrCreate<IBaseUrlService>(),
                 Ioc.GetOrCreate<ISettingsService>(),
                 Ioc.GetOrCreate<IStoryBoardService>(),
+                Ioc.GetOrCreate<IFeedbackService>(),
+                Ioc.GetOrCreate<ICloudStorageClientFactory>(),
                 Ioc.GetOrCreate<IFilePickerService>());
 
             VueBindingShortcut[] shortcuts = new[]

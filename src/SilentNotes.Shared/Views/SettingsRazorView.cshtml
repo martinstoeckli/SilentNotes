@@ -178,7 +178,7 @@
                 <textarea class="form-control" id="CloudStorageSettings" v-model="AccountSummary" rows="4" readonly></textarea>
             </div>
             <button type="button" class="btn btn-secondary mb-2 mr-1" v-on:click="ChangeCloudSettingsCommand" title="@Model.Language["cloud_change_settings_desc"]">@Model.Language["cloud_change_settings"]</button>
-            <button type="button" class="btn btn-secondary mb-2 mr-1" v-on:click="ClearCloudSettingsCommand" title="@Model.Language["cloud_clear_settings_desc"]">@Model.Language["cloud_clear_settings"]</button>
+            <button type="button" class="btn btn-danger mb-2 mr-1" v-on:click="ClearCloudSettingsCommand" v-bind:disabled="ClearCloudSettingsDisabled" title="@Model.Language["cloud_clear_settings_desc"]">@Model.Language["cloud_clear_settings"]</button>
         </form>
 
         <h2>@Model.Language["encryption"]</h2>

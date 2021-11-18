@@ -56,54 +56,79 @@ namespace SilentNotes.Android.Services
         /// <inheritdoc/>
         public async Task<MessageBoxResult> ShowMessageAsync(string message, string title, MessageBoxButtons buttons, bool conservativeDefault)
         {
-            ButtonArrangement arrangement = ButtonArrangement.Create(buttons, _languageService);
-            bool dialogResult = await AlertDialogHelper.ShowAsync(
+            ButtonArrangement arrangement = new ButtonArrangement(buttons, _languageService);
+            AlertDialogHelper.DialogResult dialogResult = await AlertDialogHelper.ShowAsync(
                 _rootActivity,
                 message,
                 title,
-                arrangement.PositiveButtonText,
-                arrangement.NegativeButtonText);
+                arrangement.PrimaryButtonText,
+                arrangement.SecondaryButtonText,
+                arrangement.CloseButtonText);
 
             return arrangement.ToMessageBoxResult(dialogResult);
         }
 
         private class ButtonArrangement
         {
-            public static ButtonArrangement Create(MessageBoxButtons buttons, ILanguageService languageService)
+            public ButtonArrangement(MessageBoxButtons buttons, ILanguageService languageService)
             {
-                ButtonArrangement result = new ButtonArrangement();
                 switch (buttons)
                 {
                     case MessageBoxButtons.Ok:
-                        result.PositiveButton = MessageBoxResult.Ok;
-                        result.PositiveButtonText = languageService.LoadText("ok");
+                        CloseButton = MessageBoxResult.Ok;
+                        CloseButtonText = languageService.LoadText("ok");
+                        Back = MessageBoxResult.Cancel;
                         break;
                     case MessageBoxButtons.ContinueCancel:
-                        result.PositiveButton = MessageBoxResult.Continue;
-                        result.PositiveButtonText = languageService.LoadText("continue");
-                        result.NegativeButton = MessageBoxResult.Cancel;
-                        result.NegativeButtonText = languageService.LoadText("cancel");
+                        PrimaryButton = MessageBoxResult.Continue;
+                        PrimaryButtonText = languageService.LoadText("continue");
+                        CloseButton = MessageBoxResult.Cancel;
+                        CloseButtonText = languageService.LoadText("cancel");
+                        Back = MessageBoxResult.Cancel;
+                        break;
+                    case MessageBoxButtons.YesNoCancel:
+                        PrimaryButton = MessageBoxResult.Yes;
+                        PrimaryButtonText = languageService.LoadText("yes");
+                        CloseButton = MessageBoxResult.No;
+                        CloseButtonText = languageService.LoadText("no");
+                        SecondaryButton = MessageBoxResult.Cancel;
+                        SecondaryButtonText = languageService.LoadText("cancel");
+                        Back = MessageBoxResult.Cancel;
                         break;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(buttons));
                 }
-                return result;
             }
 
-            public MessageBoxResult PositiveButton { get; set; }
+            public MessageBoxResult PrimaryButton { get; }
 
-            public MessageBoxResult NegativeButton { get; set; }
+            public MessageBoxResult SecondaryButton { get; }
 
-            public string PositiveButtonText { get; set; }
+            public MessageBoxResult CloseButton { get; }
 
-            public string NegativeButtonText { get; set; }
+            public string PrimaryButtonText { get; }
 
-            public MessageBoxResult ToMessageBoxResult(bool dialogResult)
+            public string SecondaryButtonText { get; }
+
+            public string CloseButtonText { get; }
+
+            public MessageBoxResult Back { get; }
+
+            public MessageBoxResult ToMessageBoxResult(AlertDialogHelper.DialogResult dialogResult)
             {
-                if (dialogResult)
-                    return PositiveButton;
-                else
-                    return NegativeButton;
+                switch (dialogResult)
+                {
+                    case AlertDialogHelper.DialogResult.None:
+                        return Back;
+                    case AlertDialogHelper.DialogResult.Positive:
+                        return PrimaryButton;
+                    case AlertDialogHelper.DialogResult.Negative:
+                        return CloseButton;
+                    case AlertDialogHelper.DialogResult.Neutral:
+                        return SecondaryButton;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(dialogResult));
+                }
             }
         }
     }
