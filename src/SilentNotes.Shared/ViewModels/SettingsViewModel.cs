@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using SilentNotes.Controllers;
 using SilentNotes.Crypto.SymmetricEncryption;
@@ -16,6 +17,7 @@ using SilentNotes.Services;
 using SilentNotes.StoryBoards;
 using SilentNotes.StoryBoards.SynchronizationStory;
 using SilentNotes.Workers;
+using VanillaCloudStorageClient;
 
 namespace SilentNotes.ViewModels
 {
@@ -31,6 +33,7 @@ namespace SilentNotes.ViewModels
         private readonly IStoryBoardService _storyBoardService;
         private readonly IFeedbackService _feedbackService;
         private readonly IFilePickerService _filePickerService;
+        private readonly ICloudStorageClientFactory _cloudStorageClientFactory;
         private readonly SliderStepConverter _fontSizeConverter;
         private readonly SliderStepConverter _noteMaxHeightConverter;
 
@@ -46,12 +49,14 @@ namespace SilentNotes.ViewModels
             ISettingsService settingsService,
             IStoryBoardService storyBoardService,
             IFeedbackService feedbackService,
+            ICloudStorageClientFactory cloudStorageClientFactory,
             IFilePickerService filePickerService)
             : base(navigationService, languageService, svgIconService, themeService, webviewBaseUrl)
         {
             _settingsService = settingsService;
             _storyBoardService = storyBoardService;
             _feedbackService = feedbackService;
+            _cloudStorageClientFactory = cloudStorageClientFactory;
             _filePickerService = filePickerService;
             _fontSizeConverter = new SliderStepConverter(ReferenceFontSize, 1.0);
             _noteMaxHeightConverter = new SliderStepConverter(ReferenceNoteMaxSize, 20.0);
@@ -332,15 +337,37 @@ namespace SilentNotes.ViewModels
             MessageBoxResult dialogResult = await _feedbackService.ShowMessageAsync(explanation, title, MessageBoxButtons.YesNoCancel, false);
 
             // Remove repository from online storage
-            if (dialogResult == MessageBoxResult.Yes)
+            if (dialogResult == MessageBoxResult.No)
             {
-
+                await TryDeleteCloudNoteRepository();
             }
 
             // Remove account from settings
             if ((dialogResult == MessageBoxResult.Yes) || (dialogResult == MessageBoxResult.No))
             {
                 ChangePropertyIndirect(() => Model.Credentials, (v) => Model.Credentials = v, null, true, nameof(AccountSummary));
+                OnPropertyChanged(nameof(ClearCloudSettingsDisabled));
+            }
+        }
+
+        [VueDataBinding(VueBindingMode.OneWayToView)]
+        public bool ClearCloudSettingsDisabled
+        {
+            get { return Model.Credentials == null; }
+        }
+
+        private async Task<bool> TryDeleteCloudNoteRepository()
+        {
+            var credentials = Model.Credentials;
+            ICloudStorageClient cloudStorageClient = _cloudStorageClientFactory.GetOrCreate(credentials.CloudStorageId);
+            try
+            {
+                await cloudStorageClient.DeleteFileAsync(Config.RepositoryFileName, credentials);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
             }
         }
 

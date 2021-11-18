@@ -968,10 +968,12 @@ WriteLiteral(" class=\"btn btn-danger mb-2 mr-1\"");
 
 WriteLiteral(" v-on:click=\"ClearCloudSettingsCommand\"");
 
+WriteLiteral(" v-bind:disabled=\"ClearCloudSettingsDisabled\"");
+
 WriteAttribute ("title", " title=\"", "\""
 
 #line 181 "SettingsRazorView.cshtml"
-                                                                          , Tuple.Create<string,object,bool> ("", Model.Language["cloud_clear_settings_desc"]
+                                                                                                                       , Tuple.Create<string,object,bool> ("", Model.Language["cloud_clear_settings_desc"]
 
 #line default
 #line hidden
@@ -981,7 +983,7 @@ WriteLiteral(">");
 
 
 #line 181 "SettingsRazorView.cshtml"
-                                                                                                                                                          Write(Model.Language["cloud_clear_settings"]);
+                                                                                                                                                                                                       Write(Model.Language["cloud_clear_settings"]);
 
 
 #line default
