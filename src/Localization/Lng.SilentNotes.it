@@ -1,6 +1,6 @@
 ok OK
 cancel Annulla
-yes Yes
+yes Sì
 no No
 back Indietro
 continue Continua
@@ -40,7 +40,7 @@ note_header3 Intestazione 3
 note_shopping_mode Modalità Shopping
 note_pull_from_server Scarica manualmente l'appunto
 note_push_to_server Carica manualmente l'appunto
-tag_add Add tag
+tag_add Aggiungi etichetta
 feedback_note_to_recycle L'appunto è stato spostato nel Cestino e può essere recuperato da lì.
 
 checklist_create_new Crea una nuova lista di controllo
@@ -64,9 +64,9 @@ safe_new_password Nuova password
 safe_add_note Aggiungi appunto alla cassaforte
 safe_remove_note Rimuovi appunto dalla cassaforte
 safe_open_existing Inserisci la password per sbloccare gli appunti protetti.
-safe_open_new Crea una nuova password per proteggere gli appunti. successivamente potrai scegliere gli appunti che verranno protetti.
+safe_open_new Crea una nuova password per proteggere gli appunti. Successivamente potrai scegliere gli appunti che verranno protetti.
 safe_password_requirement Una password sicura contiene almeno 8 caratteri, è consigliabile usare una passphrase come ad esempio: 'Mi piace dormire dal 10 fino ad agosto'.
-safe_reset_warning Se dimentichi la password puoi azzerarla e crearne una nuova, ma facendo così perderai tutti gli appunti protetti. Sei proprio sicuro di voler continuare?
+safe_reset_warning Se dimentichi la password puoi azzerarla e crearne una nuova, ma così facendo perderai tutti gli appunti protetti. Sei proprio sicuro di voler continuare?
 password_short_error La password deve essere di almeno 5 caratteri.
 password_confirmation_error La conferma della password non corrisponde.
 password_wrong_error Impossibile aprire la cassaforte con questa password, controllate gli errori.
@@ -112,7 +112,7 @@ cloud_oauth_code_desc SilentNotes aprirà ora la pagina web della memorizzazione
 cloud_oauth_code_back Ritorna a SilentNotes per continuare.
 cloud_clear_settings Pulisci
 cloud_clear_settings_desc Rimuove la connessione alla memorizzazione online
-cloud_clear_settings_expl Do you want to keep the notes on the online storage?\nYes: keep the notes, only remove the connection.\nNo: remove the online notes and the connection.
+cloud_clear_settings_expl Volete mantenere gli appunti sulla memorizzazione online?\nSi: mantieni gli appunti, togli solo la connessione.\nNo: togli gli appunti online e la connessione.
 cloud_change_settings Cambia...
 cloud_change_settings_desc Si connette ad un'altra memorizzazione online
 cloud_first_synchronization_title Imposta la memorizzazione online
@@ -142,7 +142,7 @@ sync_repository_merge Unisci gli appunti dalla periferica locale e dal server [c
 sync_repository_cloud Usa gli appunti dal server, elimina gli appunti dalla periferica locale.
 sync_repository_device Usa gli appunti dalla periferica locale, elimina gli appunti sul server.
 pushpull_pull_confirmation Questo appunto locale verrà sovrascritto con l'appunto sulla memorizzazione online. Sei sicuro di voler continuare?
-pushpull_push_confirmation L'appunto sulla memorizzazione online evrrà sovrascritto con questo appunto locale. Sei sicuro di voler continuare?
+pushpull_push_confirmation L'appunto sulla memorizzazione online verrà sovrascritto con questo appunto locale. Sei sicuro di voler continuare?
 pushpull_success Questo appunto è stato sincronizzato correttamente.
 pushpull_error_need_sync_first Impossibile sincronizzare questo appunto con il cloud, esegui una sincronizzazione manuale di tutti gli appunti.
 pushpull_error_no_cloud_note Questo appunto non esiste nella memorizzazione online, esegui prima una sincronizzazione di tutti gli appunti.
@@ -168,4 +168,4 @@ gui_note_insertion Posizionamento dei nuovi appunti
 gui_note_insertion_top Inserisci i nuovi appunti in cima
 gui_note_insertion_bottom Colloca i nuovi appunti in fondo
 gui_hide_closed_safe_notes Nascondi gli appunti della cassaforte chiusa
-gui_localization_test Test new language file
+gui_localization_test Prova il nuovo file della lingua
