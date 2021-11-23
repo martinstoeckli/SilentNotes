@@ -17,6 +17,7 @@ using Android.Webkit;
 using Java.IO;
 using SilentNotes.Controllers;
 using SilentNotes.HtmlView;
+using SilentNotes.Models;
 using SilentNotes.Services;
 using SilentNotes.StoryBoards.SynchronizationStory;
 using SilentNotes.Workers;
@@ -27,12 +28,19 @@ namespace SilentNotes.Android
     /// The main activity of the Android app. Because this is a single page app, it is the only
     /// activity showing a window.
     /// </summary>
-    [Activity(Label = "SilentNotes", Icon = "@drawable/ic_launcher", Theme = "@style/MainTheme.SplashScreen", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
+    [Activity(
+        Label = "SilentNotes",
+        Icon = "@drawable/ic_launcher",
+        Theme = "@style/MainTheme.SplashScreen",
+        MainLauncher = true,
+        LaunchMode = LaunchMode.SingleTask,
+        ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
     public class MainActivity : Activity, IHtmlView
     {
         private ActivityResultAwaiter _activityResultAwaiter;
         private WebView _webView;
         private Navigation _lastNavigation;
+        private string _actionSendParameter;
 
         /// <inheritdoc/>
         protected override void OnCreate(Bundle bundle)
@@ -48,6 +56,7 @@ namespace SilentNotes.Android
 
             _activityResultAwaiter = new ActivityResultAwaiter(this);
             Startup.InitializeApplication(this, _activityResultAwaiter);
+            ConsumeActionSendIntentParameter(Intent);
 
             // Load main window of single page application.
             base.OnCreate(bundle);
@@ -84,11 +93,23 @@ namespace SilentNotes.Android
             INavigationService navigationService = Ioc.GetOrCreate<INavigationService>();
             IStoryBoardService storyBoardService = Ioc.GetOrCreate<IStoryBoardService>();
 
-            if (IsIntentStartedWithNoteId())
+            if (!string.IsNullOrEmpty(_actionSendParameter))
             {
-                // Open app showing this note, see also <see cref="ActionSendActivity"/>.
-                string noteId = ConsumeNoteIdFromIntent();
-                navigationService.Navigate(new Navigation(ControllerNames.Note, ControllerParameters.NoteId, noteId));
+                // Create new note and show it
+                IRepositoryStorageService repositoryStorageService = Ioc.GetOrCreate<IRepositoryStorageService>();
+                ISettingsService settingsService = Ioc.GetOrCreate<ISettingsService>();
+
+                repositoryStorageService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepository);
+                NoteModel note = new NoteModel
+                {
+                    BackgroundColorHex = settingsService.LoadSettingsOrDefault().DefaultNoteColorHex,
+                    HtmlContent = _actionSendParameter,
+                };
+                noteRepository.Notes.Insert(0, note);
+                repositoryStorageService.TrySaveRepository(noteRepository);
+
+                _actionSendParameter = null; // create the note only once
+                navigationService.Navigate(new Navigation(ControllerNames.Note, ControllerParameters.NoteId, note.Id.ToString()));
             }
             else if (IsStartedByOAuthRedirectIndent(storyBoardService))
             {
@@ -112,16 +133,31 @@ namespace SilentNotes.Android
             }
         }
 
-        private bool IsIntentStartedWithNoteId()
+        /// <inheritdoc/>
+        protected override void OnNewIntent(Intent intent)
         {
-            return Intent.HasExtra(ControllerParameters.NoteId);
+            base.OnNewIntent(intent);
+            ConsumeActionSendIntentParameter(intent);
         }
 
-        private string ConsumeNoteIdFromIntent()
+        /// <summary>
+        /// Checks whether the intent was created by an <see cref="ActionSendActivity"/> and stores
+        /// its parameter to the variable <see cref="_actionSendParameter"/>, so it can later be
+        /// used to start up the app.
+        /// </summary>
+        /// <param name="intent">The active indent.</param>
+        private void ConsumeActionSendIntentParameter(Intent intent)
         {
-            string result = Intent.GetStringExtra(ControllerParameters.NoteId);
-            Intent.RemoveExtra(ControllerParameters.NoteId);
-            return result;
+            bool isStartedWithActionSend = intent.HasExtra(ActionSendActivity.NoteHtmlParam);
+            if (isStartedWithActionSend)
+            {
+                _actionSendParameter = intent.GetStringExtra(ActionSendActivity.NoteHtmlParam);
+                intent.RemoveExtra(ActionSendActivity.NoteHtmlParam);
+            }
+            else
+            {
+                _actionSendParameter = null;
+            }
         }
 
         private static bool CanStartupWithLastNavigation(Navigation navigation)
