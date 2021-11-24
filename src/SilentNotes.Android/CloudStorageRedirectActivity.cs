@@ -17,10 +17,7 @@ namespace SilentNotes.Android
     /// Intercepts URLs of the scheme "ch.martinstoeckli.silentnotes://...". This scheme is used
     /// to react to OAuth2 answers.
     /// </summary>
-    /// <remarks>
-    /// The flags NoHistory and LaunchMode are essential, for the app to appear at the top again.
-    /// </remarks>
-    [Activity(Label = "CloudStorageRedirectActivity", NoHistory = true, LaunchMode = LaunchMode.SingleTop)]
+    [Activity(Label = "CloudStorageRedirectActivity", NoHistory = true)]
     [IntentFilter(
         new[] { Intent.ActionView },
         Categories = new[] { Intent.CategoryDefault, Intent.CategoryBrowsable },
@@ -38,13 +35,12 @@ namespace SilentNotes.Android
             if (storyBoardService.ActiveStory != null)
                 storyBoardService.ActiveStory.StoreToSession(SynchronizationStorySessionKey.OauthRedirectUrl, redirectUrl);
 
-            // Stop the redirect activity, its job is already done.
-            Finish();
-
             // Clear the activity holding the custom tab and return to already running main activity.
             Intent intent = new Intent(this, typeof(MainActivity));
-            intent.SetFlags(ActivityFlags.ClearTop | ActivityFlags.SingleTop);
             StartActivity(intent);
+
+            // Stop the redirect activity, its job is already done.
+            Finish();
         }
     }
 }
