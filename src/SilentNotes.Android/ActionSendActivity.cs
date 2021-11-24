@@ -3,9 +3,11 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using System;
 using System.Text;
 using Android.App;
 using Android.Content;
+using Android.Content.PM;
 using Android.OS;
 using SilentNotes.Controllers;
 using SilentNotes.Models;
@@ -16,46 +18,28 @@ namespace SilentNotes.Android
     /// <summary>
     /// This activity handles retrieving text data from other applications.
     /// </summary>
-    [Activity(Label = "SilentNotes")]
+    [Activity(Label = "SilentNotes", NoHistory = true)]
     [IntentFilter(
         new[] { Intent.ActionSend },
         Categories = new[] { Intent.CategoryDefault },
         DataMimeType = @"text/plain")]
     public class ActionSendActivity : Activity
     {
+        public const string NoteHtmlParam = "ActionSendNoteHtml";
+
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
 
-            Ioc.Reset();
-            Startup.InitializeApplication(this, null);
-            ISettingsService settingsService = Ioc.GetOrCreate<ISettingsService>();
-            IRepositoryStorageService repositoryStorageService = Ioc.GetOrCreate<IRepositoryStorageService>();
-
-            // Create new note
-            NoteModel note = null;
-            if (repositoryStorageService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepository) != RepositoryStorageLoadResult.InvalidRepository)
-            {
-                note = new NoteModel();
-                note.BackgroundColorHex = settingsService.LoadSettingsOrDefault().DefaultNoteColorHex;
-                note.HtmlContent = PlainTextToHtml(GetSendIntentText());
-                noteRepository.Notes.Insert(0, note);
-
-                repositoryStorageService.TrySaveRepository(noteRepository);
-            }
-
-            // Stop the activity, its job is already done
-            Finish();
-
-            // Start main activity to show new note. If later the application is stopped/restarted
+            // Start main activity to create new note. If later the application is stopped/restarted
             // it will be opened with the main activity instead of this ActionSend activity, this
             // avoids creating new notes each time.
-            if (note != null)
-            {
-                Intent intent = new Intent(this, typeof(MainActivity));
-                intent.PutExtra(ControllerParameters.NoteId, note.Id.ToString());
-                StartActivity(intent);
-            }
+            Intent intent = new Intent(this, typeof(MainActivity));
+            intent.PutExtra(NoteHtmlParam, PlainTextToHtml(GetSendIntentText()));
+            StartActivity(intent);
+
+            // Stop the activity, its job is just to start the main activity with parameters.
+            Finish();
         }
 
         private string GetSendIntentText()
