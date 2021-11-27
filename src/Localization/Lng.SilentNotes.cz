@@ -53,7 +53,7 @@ checklist_check_all Zaškrtnout vše (hotovo)
 checklist_uncheck_all Odškrtnout vše (nesplněno)
 checklist_disable_all Zakázat vše
 
-safe_new Vytvořit trezot
+safe_new Vytvořit trezor
 safe_open Otevřít trezor
 safe_close Zavřít trezor
 safe_change_password Změnit heslo trezoru
@@ -65,7 +65,7 @@ safe_add_note Přidat poznámku do trezoru
 safe_remove_note Odstranit poznámku z trezoru
 safe_open_existing Pro odemčení zabezpečených poznámek zadejte heslo
 safe_open_new Prosím zadejte nové heslo k trezoru. Poté lze vybrat, které poznámky chcete zabezpečit.
-#safe_password_requirement Silné heslo obsahuje alespoň 8 znaků, je doporučeno použít větu jako: "Rád spím od 10 do srpna".
+safe_password_requirement Silné heslo obsahuje alespoň 8 znaků, je doporučeno použít větu jako: "Rád spím od 10 do srpna".
 safe_reset_warning Vytvořením nového hesla přijdete o veškeré zabezpečené poznámky. Opravdu chcete pokračovat?
 password_short_error Heslo musí mít alespoň 5 znaků.
 password_confirmation_error Hesla se neshodují.
@@ -97,7 +97,7 @@ version Verze
 copyright Copyright
 website Webová stránka
 opensource Licence
-#opensource_desc SilentNotes je open source projekt spadající pod Mozilla Public License v. 2.0.
+opensource_desc SilentNotes je open source projekt spadající pod Mozilla Public License v. 2.0.
 license SilentNotes respektují vaše soukromí - neshromažďují informace o uživateli a nevyžadují žádná nadbytečná oprávnění. Poznámky vždy opouštějí zařízení šifrovaná.
 newer_version Nejnovější verze {0} SilentNotes je k dispozici, prosím aktualizujte.
 
@@ -110,13 +110,13 @@ cloud_service Online úložiště
 cloud_oauth_code Přástupový kód
 cloud_oauth_code_desc SilentNotes nyní otevře adresu online úložiště v prohlížeči, prosím potvrďte přistup. Čeká se na autorizaci...
 cloud_oauth_code_back Pro pokračování se prosím vraťte do SilentNotes.
-cloud_clear_settings Vyšistit
+cloud_clear_settings Vyčistit
 cloud_clear_settings_desc Odstraní propojení s online úložištěm
 cloud_clear_settings_expl Chcete ponechat poznámky v online úložišti?\nAno: ponechat poznámky, pouze odebrat propojení.\nNe: odebrat poznámky a propojení.
 cloud_change_settings Změnit...
 cloud_change_settings_desc Změní online úložiště
 cloud_first_synchronization_title Nastavit online úložiště
-cloud_first_synchronization_text Toto je vaše první synchronizace, veškeré potřebné informace byly schromážděny. Naleznete je v nabídce ‹Nastavení›
+cloud_first_synchronization_text Toto je vaše první synchronizace, veškeré potřebné informace byly schromážděny. \nNaleznete je v nabídce ‹Nastavení›
 cloud_service_choice Výběr online úložiště
 cloud_service_credentials Přihlašovací údaje pro online úložiště
 cloud_service_undefined Není nastaveno žádné online úložiště
@@ -155,7 +155,7 @@ encryption_algo_twofishgcm Twofish256-GCM
 gui Uživatelské rozhraní
 gui_font_size Velikost písma (menší ‹ běžné › větší)
 gui_note_max_size Maximální velikost poznámky (menší ‹ běžné › větší)
-gui_texture Barevné schéma
+gui_texture Pozadí
 gui_default_color Výchozí barva nových poznámek
 gui_theme_auto Automatický světlý nebo tmavý režim.
 gui_theme_dark Tmavý režim
