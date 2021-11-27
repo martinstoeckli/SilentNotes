@@ -1,171 +1,170 @@
 ok OK
 cancel Zrušit
 back Zpět
-yes Yes
-no No
+yes Ano
+no Ne
 continue Pokračovat
 search Vyhledat
 
 today dnes
 yesterday včera
-days_ago {0} days ago
-weeks_ago {0} weeks ago
-months_ago {0} month ago
-years_ago {0} years ago
+days_ago před {0} dny
+weeks_ago před {0} týdny
+months_ago před {0} měsíci
+years_ago před {0} lety
 modified_at Změněno {0}
 
-error_loading_repository Could not read the notes. The application was stopped, to avoid further damage of already existing notes.
-recover_repository Recover note repository to directory
-welcome_note <h1>Welcome 💛</h1><p>SilentNotes respects your privacy. It doesn't collect personal data, runs free of ads and is open source.</p>
-welcome_note_2 <h1>Ordering notes</h1><p>Drag the double-arrow icon on a note to change the order.</p>
-welcome_note_3 <h1>Password protection</h1><p>Open the safe and use the lock icon to protect a note.</p>
+error_loading_repository Nebylo možné přečíst poznámky. Aplikace byla zastavena, aby se zabránilo dalšímu poškození již existujících poznámek.
+recover_repository Obnovit poznámky do adresáře
+welcome_note <h1>Vitejte 💛</h1><p>SilentNotes respektují vaše soukromí. Nejsou shromažďována osobní data, neobsahuje reklamy a je open source.</p>
+welcome_note_2 <h1>Řazení poznámek</h1><p>Pořadí poznámky změníte tažením ikony v pravém horním rohu.</p>
+welcome_note_3 <h1>Ochrana heslem</h1><p>Otevřte trezor a kliknutím na ikonu zámku zaheslujte poznámku.</p>
 
 note_create_new Vytvořit novou poznámku
-note_undelete Obnovit poznámku--Restore note
-note_title Titulek--Title
+note_undelete Obnovit poznámku
+note_title Titulek
 note_content Text
-note_colors Vybrat barvu poznámky--Choose note color
-note_bold Tučné--Bold
-note_italic Kurzíva--Italic
-note_underline Podtrhnout--Underline
-note_strike Přeškrtnout--Strike
-note_list_ordered Číslovaný seznam--Numbered list
-note_list_unordered Seznam--Bulleted list
-note_code Code block
-note_quotation Citace--Quotation
-note_link Odkaz--Link
-note_header1 Nadpis 1--Header 1
-note_header2 Nadpis 2--Header 2
-note_header3 Nadpis 3--Header 3
-note_shopping_mode Režim nákupu--Shopping mode
-note_pull_from_server Ručně stáhnout poznámku--Manually download note
-note_push_to_server Ručně nahrát poznámku--Manually upload note
-tag_add Přidat štítek--Add tag
-feedback_note_to_recycle !-Poznámka byla přesunuta do koše kde ji lze obnovit--The note has been moved to the recycle bin and can be restored from there.
+note_colors Vybrat barvu poznámky
+note_bold Tučné
+note_italic Kurzíva
+note_underline Podtrhnout
+note_strike Přeškrtnout
+note_list_ordered Číslovaný seznam
+note_list_unordered Seznam
+note_code Blok kódu
+note_quotation Citace
+note_link Odkaz
+note_header1 Nadpis úr. 1
+note_header2 Nadpis úr. 2
+note_header3 Nadpis úr. 3
+note_shopping_mode Režim nákupu
+note_pull_from_server Ručně stáhnout poznámku
+note_push_to_server Ručně nahrát poznámku
+tag_add Přidat štítek
+feedback_note_to_recycle Poznámka byla přesunuta do koše, odkud ji lze obnovit.
 
-checklist_create_new Vytvořit zaškrtávací seznam--Create new checklist
-checklist_move_to_top !-Přesunout na začátek--Move to top
-checklist_move_up Posunout nahoru--Move up
-checklist_move_down Posunout dolu--Move down
-checklist_move_to_bottom !-Přesunout na konec--Move to bottom
-checklist_move_pending_to_top Move all pending items to top
-checklist_check_all Check all (done)
-checklist_uncheck_all Uncheck all (pending)
-checklist_disable_all Disable all
+checklist_create_new Vytvořit zaškrtávací seznam
+checklist_move_to_top Přesunout na začátek
+checklist_move_up Posunout nahoru
+checklist_move_down Posunout dolu
+checklist_move_to_bottom Přesunout na konec
+checklist_move_pending_to_top Přesunout všechny nesplněné položky na začátek
+checklist_check_all Zaškrtnout vše (hotovo)
+checklist_uncheck_all Odškrtnout vše (nesplněno)
+checklist_disable_all Zakázat vše
 
-safe_new Create safe
-safe_open Open safe
-safe_close Close safe
-safe_change_password Change safe password
-safe_reset Reset safe
-safe_confirm_password Confirm password
-safe_old_password Current password
-safe_new_password New password
-safe_add_note Add note to safe
-safe_remove_note Remove note from safe
-safe_open_existing Please enter your password, to unlock the protected notes.
-safe_open_new Please create a new password to protect your notes. Afterwards you can choose the notes which should be protected.
-safe_password_requirement A safe password contains at least 8 characters, it is recommended to use a passphrase like: 'I like to sleep from 10 to august'.
-safe_reset_warning If you forgot the password you can reset the safe and create a new one, but thereby you will lose all protected notes. Are you really sure you want to continue?
-password_short_error The password needs at least 5 characters.
-password_confirmation_error The password confirmation does not match.
-password_wrong_error Cannot open the safe with this password, please check for typos.
+safe_new Vytvořit trezot
+safe_open Otevřít trezor
+safe_close Zavřít trezor
+safe_change_password Změnit heslo trezoru
+safe_reset Resetovat trezor
+safe_confirm_password Potvrdit heslo
+safe_old_password Aktuální heslo
+safe_new_password Nové heslo
+safe_add_note Přidat poznámku do trezoru
+safe_remove_note Odstranit poznámku z trezoru
+safe_open_existing Pro odemčení zabezpečených poznámek zadejte heslo
+safe_open_new Prosím zadejte nové heslo k trezoru. Poté lze vybrat, které poznámky chcete zabezpečit.
+#safe_password_requirement Silné heslo obsahuje alespoň 8 znaků, je doporučeno použít větu jako: "Rád spím od 10 do srpna".
+safe_reset_warning Vytvořením nového hesla přijdete o veškeré zabezpečené poznámky. Opravdu chcete pokračovat?
+password_short_error Heslo musí mít alespoň 5 znaků.
+password_confirmation_error Hesla se neshodují.
+password_wrong_error Zadali jste nesprávné heslo.
 
-show_recyclebin Open recycle bin
-show_settings Settings
-empty_recyclebin Empty recycle bin
-empty_recyclebin_confirmation The recycle bin will be cleared. Are you sure you want to continue?
+show_recyclebin Otevřít koš
+show_settings Nastavení
+empty_recyclebin Vysypat koš
+empty_recyclebin_confirmation Budou trvale smazány veškeré odstraněné poznámky. Opravdu chcete pokračovat?
 
-show_export Export notes
-export_desc The notes will be exported in the HTML format and therefore keep their formatting. Encrypted notes can only be exported if the safe is open.
-export_unencrypted Export unprotected notes
-export_encrypted Export decrypted notes from the safe
-export_success Successfully exported notes.
-export_error Could not export the notes.
+show_export Vyexportovat poznámky
+export_desc Poznámky budou vyexportovány v HTML formátu a zachovají si svoje formátování. Zabezpečené poznámky lze exportovat pouze pokud je trezor odemčen. 
+export_unencrypted Vyexportovat nezabezpečené poznámky
+export_encrypted Vyexportovat dešifrované poznámky z trezoru
+export_success Export byl úspěšný.
+export_error Nepodařilo se vyexportovat poznámky.
 
-show_transfer_code Show transfer code
-transfer_not_existing The transfer code will be available after the first synchronization.
-transfer_code Transfer code
-transfer_code_usage With this transfer code you can decrypt the notes stored in the cloud.
-transfer_code_required Please enter the transfer code. You can get the code from an already synchronized device, by using its menu entry «Show transfer code»
-transfer_code_show_history Show old transfer codes
-transfer_code_created A new transfer code {0} was generated, it can be checked up anytime using the menu ‹Show transfer code›.
-transfer_code_writedown We recommend to write the transfercode down, you need it to synchronize the notes with other devices, or when you later have to access the online backup.
+show_transfer_code Zobrazit přenosový kód
+transfer_not_existing Přenosový kód bude k dispozici po první synchronizaci.
+transfer_code Přenosový kód
+transfer_code_usage Přenosovým kódem lze dešifrovat poznámky uložené v cloudu.
+transfer_code_required Prosím zadejte přenosový kód. Kód můžete získat z již synchronizovaného zařízení přes «Zobrazit přenosový kód» v menu
+transfer_code_show_history Zobrazit historii přenosových kódů
+transfer_code_created Byl vygenerován nový přenosový kód {0}, lze jej kdykoliv zobrazit pomocí ‹Zobrazit přenosový kód›.
+transfer_code_writedown Doporučujeme si zapsat přenosový kód, je potřeba k synchronizaci s dalšími zařízeními nebo při obnově zálohy.
 
-show_info Information
-version Version
+show_info Informace
+version Verze
 copyright Copyright
-website Website
-opensource License
-opensource_desc SilentNotes is an open source project, published under the terms of the Mozilla Public License v. 2.0.
-license SilentNotes respects your privacy, it does not collect user information and requires no unnecessary privileges. The notes never leave the device unencrypted.
-newer_version A newer version {0} of SilentNotes available, please install the update.
+website Webová stránka
+opensource Licence
+#opensource_desc SilentNotes je open source projekt spadající pod Mozilla Public License v. 2.0.
+license SilentNotes respektují vaše soukromí - neshromažďují informace o uživateli a nevyžadují žádná nadbytečná oprávnění. Poznámky vždy opouštějí zařízení šifrovaná.
+newer_version Nejnovější verze {0} SilentNotes je k dispozici, prosím aktualizujte.
 
-cloud_url Server directory URL
-cloud_username User name
-cloud_password Password
-cloud_secure Use secure connection (SSL)
-cloud_accept_invalid_certificate Accept unsafe certificates.
-cloud_service Online storage
-cloud_oauth_code Access code
-cloud_oauth_code_desc SilentNotes now opens the web page of the online-storage, please allow access for SilentNotes. Waiting for authorization…
-cloud_oauth_code_back Please go back to SilentNotes to continue.
-cloud_clear_settings Clear
-cloud_clear_settings_desc Removes conection to the online storage
-cloud_clear_settings_expl Do you want to keep the notes on the online storage?\nYes: keep the notes, only remove the connection.\nNo: remove the online notes and the connection.
-cloud_change_settings Change...
-cloud_change_settings_desc Connects to another online storage
-cloud_first_synchronization_title Set up the online storage
-cloud_first_synchronization_text This is your first synchronization, the necessary information to connect to the online storage is now collected.\nYou can find this information anytime in the menu ‹Settings›
-cloud_service_choice Online storage selection
-cloud_service_credentials Online storage credentials
-cloud_service_undefined No online storage is defined yet
+cloud_url Adresa složky na serveru
+cloud_username Uživatelské jméno
+cloud_password Heslo
+cloud_secure Použít zabezpečené připojení (SSL)
+cloud_accept_invalid_certificate Přijímat nedůvěryhodné certifikáty.
+cloud_service Online úložiště
+cloud_oauth_code Přástupový kód
+cloud_oauth_code_desc SilentNotes nyní otevře adresu online úložiště v prohlížeči, prosím potvrďte přistup. Čeká se na autorizaci...
+cloud_oauth_code_back Pro pokračování se prosím vraťte do SilentNotes.
+cloud_clear_settings Vyšistit
+cloud_clear_settings_desc Odstraní propojení s online úložištěm
+cloud_clear_settings_expl Chcete ponechat poznámky v online úložišti?\nAno: ponechat poznámky, pouze odebrat propojení.\nNe: odebrat poznámky a propojení.
+cloud_change_settings Změnit...
+cloud_change_settings_desc Změní online úložiště
+cloud_first_synchronization_title Nastavit online úložiště
+cloud_first_synchronization_text Toto je vaše první synchronizace, veškeré potřebné informace byly schromážděny. Naleznete je v nabídce ‹Nastavení›
+cloud_service_choice Výběr online úložiště
+cloud_service_credentials Přihlašovací údaje pro online úložiště
+cloud_service_undefined Není nastaveno žádné online úložiště
 cloud_ftp_example ftp://ftp.example.org/silentnote/
 cloud_webdav_example https://webdav.example.org/
 
-sync Synchronization
-sync_auto Automatic synchronization
-sync_auto_never Never, only manual synchronization
-sync_auto_costfree Only if internet is free of cost
-sync_auto_always Always
-sync_notes Synchronizes notes with the cloud
-sync_success Successfully synchronized notes.
-sync_reject The synchronization with the cloud was aborted.
-sync_error_generic Could not synchronize the notes with the cloud, please try again later.
-sync_error_transfercode Please check the transfer code for typos, and use the latest version of SilentNotes.
-sync_error_connection Could not connect to the server, please check the internet connection and the server address in the settings.
-sync_error_privileges Please check username and password, and make sure you have enough privileges on the server.
-sync_error_repository Could not read the notes from the server, because the file has an invalid format.
-sync_error_revision Please update SilentNotes, the online-notes are stored in a more recent format.
-sync_error_oauth_refresh The online-storage requires a new login, please do once a manual synchronization.
-sync_repository_merge Merge notes from local device and server [recommended].
-sync_repository_cloud Use notes from the server, delete notes on the local device.
-sync_repository_device Use notes from the local device, delete notes on the server.
-pushpull_pull_confirmation This local note will be overwritten with the note from the online-storage. Are you sure you want to continue?
-pushpull_push_confirmation The note of the online-storage will be overwritten with this locale note. Are you sure you want to continue?
-pushpull_success Successfully synchronized this note.
-pushpull_error_need_sync_first Could not synchronize this note with the cloud, please do once a manual synchronization of all notes.
-pushpull_error_no_cloud_note This note does not exist on the online-storage, please do a synchronization of all notes first.
+sync Synchronizace
+sync_auto Automatická synchronizace
+sync_auto_never Nikdy, pouze manuální synchronizace
+sync_auto_costfree Pouze na bezplatném připojení
+sync_auto_always Vždy
+sync_notes Synchronizuje poznámky s cloudem
+sync_success Poznámky byly úspěšně synchronizovány.
+sync_reject Synchronizace s cloudem byla zrušena.
+sync_error_generic Synchronizace s cloudem se nezdařila, zkuste to prosím později.
+sync_error_transfercode Prosím zkontrolujte přenosový kód a využijte aktuální verze SilentNotes.
+sync_error_connection Nepodařilo se připojit k serveru, prosím zkontrolujte připojení k internetu a adresu serveru v nastavení.
+sync_error_repository Nepodařilo se přečíst poznámky ze serveru, soubor má špatný formát.
+sync_error_revision Prosím aktualizujte SilentNotes, nelze synchronizovat s novější verzí souboru.
+sync_error_oauth_refresh Online úložiště vyžaduje nové přihlašení, prosím proveďte jednorázovou ruční synchronizaci.
+sync_repository_merge Sloučit poznámky z místního úložiště a serveru [doporučeno].
+sync_repository_cloud Použít poznámky ze serveru (odstraní místní poznámky).
+sync_repository_device Použít poznámky z místního úložiště (odstraní poznámky ze serveru).
+pushpull_pull_confirmation Tato poznámka bude přepsána poznámkou ze serveru. Opravdu chcete pokračovat?
+pushpull_push_confirmation Poznámka na serveru bude přepsána touto poznámkou. Opravdu chcete pokračovat?
+pushpull_success Poznámka byla úspěšně synchronizována.
+pushpull_error_need_sync_first Nepodařilo se synchronizovat poznámku, prosím proveďte manuální synchronizaci všech poznámek.
+pushpull_error_no_cloud_note Tato poznámka neexistuje v online úložišti, prosím proveďtě synchoznizaci všech poznámek.
 
-encryption Encryption
-encryption_algorithm Encryption mode
-encryption_algo_xchacha20 XChaCha20-Poly1305 [recommended]
+encryption Šifrování
+encryption_algorithm Režim šifrování
+encryption_algo_xchacha20 XChaCha20-Poly1305 [doporučeno]
 encryption_algo_aesgcm AES256-GCM
 encryption_algo_twofishgcm Twofish256-GCM
 
-gui User interface
-gui_font_size Font size (smaller ‹ normal › larger)
-gui_note_max_size Maximum note height (smaller ‹ normal › larger)
-gui_texture Theme
-gui_default_color Default color for new notes
-gui_theme_auto Automatically light or dark mode.
-gui_theme_dark Dark mode
-gui_theme_light Light mode
-gui_theme_solid_color Solid color instead of background image
-gui_theme_color_all_dark Same color for all notes in dark mode
-gui_theme_color_cannot_change Same color for all notes is set.
-gui_note_insertion Placing of new notes
-gui_note_insertion_top Insert new notes at the top
-gui_note_insertion_bottom Append new notes at the bottom
-gui_hide_closed_safe_notes Hide notes of closed safe
-gui_localization_test Test new language file
+gui Uživatelské rozhraní
+gui_font_size Velikost písma (menší ‹ běžné › větší)
+gui_note_max_size Maximální velikost poznámky (menší ‹ běžné › větší)
+gui_texture Barevné schéma
+gui_default_color Výchozí barva nových poznámek
+gui_theme_auto Automatický světlý nebo tmavý režim.
+gui_theme_dark Tmavý režim
+gui_theme_light Světlý režim
+gui_theme_solid_color Jednobarevné pozadí místo obrázku
+gui_theme_color_all_dark Jednotná barva pro všechny poznámky v tmavém režimu
+gui_theme_color_cannot_change Byla nastavena jednotná barva pro všechny poznámky.
+gui_note_insertion Pozice nových poznámek
+gui_note_insertion_top Vkládat nové poznámky na začátek
+gui_note_insertion_bottom Vkládat nové poznámky na konec
+gui_hide_closed_safe_notes Skrýt poznámky uzamčeného trezoru
+gui_localization_test Vyzkoušet soubor s překladem
