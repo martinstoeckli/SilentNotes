@@ -174,13 +174,17 @@ namespace SilentNotes.Android
             navigationService.CurrentController?.StoreUnsavedData();
             navigationService.CurrentController?.Dispose();
 
+            // Make sure that all open safes are closed.
+            IRepositoryStorageService repositoryService = Ioc.GetOrCreate<IRepositoryStorageService>();
+            repositoryService.LoadRepositoryOrDefault(out NoteRepositoryModel repositoryModel);
+            repositoryModel?.Safes.ForEach(safe => safe.Close());
+
             // The synchronization continues when we do not await it, even if another app became
             // active in the meantime. As long as the user doesn't swipe away the app from the
             // "recent apps", it can finish the job, that's exactly what we need.
             // Tested with Android 5.0, 8.1
             IAutoSynchronizationService syncService = Ioc.GetOrCreate<IAutoSynchronizationService>();
             syncService.SynchronizeAtShutdown();
-
             base.OnStop();
         }
 
