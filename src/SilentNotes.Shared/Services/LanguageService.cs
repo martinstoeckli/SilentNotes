@@ -45,10 +45,6 @@ namespace SilentNotes.Services
             _resourceReader = resourceReader;
 #if (LANG_EN && DEBUG)
             languageCode = "en";
-#elif (LANG_DE && DEBUG)
-            languageCode = "de";
-#elif (LANG_IT && DEBUG)
-            languageCode = "it";
 #endif
             _domain = domain;
             _languageCode = languageCode;

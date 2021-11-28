@@ -29,7 +29,7 @@
     <DefaultLanguage>en</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion>10.0.19041.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.17134.0</TargetPlatformMinVersion>
+    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <EnableDotNetNativeCompatibleProfile>true</EnableDotNetNativeCompatibleProfile>
     <FileAlignment>512</FileAlignment>
@@ -145,9 +145,9 @@
     <Content Include="..\Localization\Lng.SilentNotes.tr">
       <Link>Lng.SilentNotes.tr</Link>
     </Content>
-	  <Content Include="..\Localization\Lng.SilentNotes.cz">
-		  <Link>Lng.SilentNotes.cz</Link>
-	  </Content>
+    <Content Include="..\Localization\Lng.SilentNotes.cz">
+      <Link>Lng.SilentNotes.cz</Link>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\SilentNotes.Shared\Assets\Html\blackstone.jpg">
