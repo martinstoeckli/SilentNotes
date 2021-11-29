@@ -4,6 +4,7 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
+using System.Collections.Generic;
 using System.Xml.Serialization;
 
 namespace SilentNotes.Models
@@ -32,6 +33,7 @@ namespace SilentNotes.Models
                 InRecyclingBin = false,
                 CreatedAt = DateTime.Parse("2017-09-10T09:25:16.6787213Z"),
                 ModifiedAt = DateTime.Parse("2018-12-18T12:52:39.8746458Z"),
+                Tags = new List<string> { "Shopping" },
                 HtmlContent = @"<h1>Opening hours</h1><h3>Post office</h3><p>Monday - Friday 9:00-12:00 / 13:00-17:00</p><p>Saturday 9:00-12:00</p><h3>Supermarket</h3><p>Monday - Sunday 7:00-22:00</p><h3>Ticket shop</h3><p>Monday - Friday 8:00-18:30</p>"
             });
 
@@ -43,7 +45,8 @@ namespace SilentNotes.Models
                 InRecyclingBin = false,
                 CreatedAt = DateTime.Parse("2017-09-10T09:25:16.6787213Z"),
                 ModifiedAt = DateTime.Parse("2018-12-18T12:52:39.8746458Z"),
-                HtmlContent = @"<h1>Shopping list</h1><p class='done'>Milk</p><p class='done'>Toast</p><p>Sun cream</p><p>Garbage bags</p><h1>Bakery</h1><p>Torte</p>"
+                Tags = new List<string> { "Shopping" },
+                HtmlContent = @"<h1>Shopping list</h1><p class='done'>Milk</p><p class='done'>Toast</p><p>Sun cream</p><p>Garbage bags</p><h1>Bakery</h1><p>Croissants</p><p>Marmelade</p><p class='disabled'>Torte</p>"
             });
 
             Notes.Add(new NoteModel
@@ -76,6 +79,7 @@ namespace SilentNotes.Models
                 InRecyclingBin = false,
                 CreatedAt = DateTime.Parse("2017-09-10T09:35:52.9190418Z"),
                 ModifiedAt = DateTime.Parse("2018-12-18T12:54:18.333087Z"),
+                Tags = new List<string> { "Shopping" },
                 HtmlContent = @"<h1>Printer refill</h1><p>brother DCP-9020CDW</p><p>Cartridge <strong>TN-241* </strong><em>(1400 pages)</em></p><p>Cartridge <strong>TN-245*</strong> <em>(2200 pages)</em></p>"
             });
 
@@ -87,6 +91,7 @@ namespace SilentNotes.Models
                 InRecyclingBin = false,
                 CreatedAt = DateTime.Parse("2018-12-18T12:53:09.3660557Z"),
                 ModifiedAt = DateTime.Parse("2018-12-18T13:25:55.8335803Z"),
+                Tags = new List<string> { "Recipes", "Cooking" },
                 HtmlContent = @"<h1>Recipe Yellow Split Pea Soup</h1><pre class='ql-syntax' spellcheck='false'>1.25 l    Water              put in pressure cooker.
 200 g     Yellow beans       add to cooker.
 2         Bouillon cube      crumble and add to cooker.
