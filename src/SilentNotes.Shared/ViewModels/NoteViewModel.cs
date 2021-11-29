@@ -23,7 +23,7 @@ namespace SilentNotes.ViewModels
     /// </summary>
     public class NoteViewModel : ViewModelBase
     {
-        static TimeAgo _timeAgo;
+        private static TimeAgo _timeAgo;
         private readonly IRepositoryStorageService _repositoryService;
         private readonly IFeedbackService _feedbackService;
         private readonly ISettingsService _settingsService;
@@ -83,7 +83,7 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets the type of the note as css class.
         /// </summary>
-        public string CssClassNoteType 
+        public string CssClassNoteType
         {
             get { return Model.NoteType.ToString().ToLowerInvariant(); }
         }
@@ -159,7 +159,7 @@ namespace SilentNotes.ViewModels
         [VueDataBinding(VueBindingMode.OneWayToView)]
         public List<string> Tags
         {
-            get  { return Model.Tags; }
+            get { return Model.Tags; }
         }
 
         /// <summary>
@@ -218,7 +218,7 @@ namespace SilentNotes.ViewModels
         [VueDataBinding(VueBindingMode.TwoWay)]
         public string BackgroundColorHex
         {
-            get 
+            get
             {
                 string result = Model.BackgroundColorHex;
                 if (Theme.DarkMode)
@@ -486,10 +486,62 @@ namespace SilentNotes.ViewModels
             ShoppingModeActive = !ShoppingModeActive;
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the the note is pinned.
+        /// <see cref="NoteModel.IsPinned"/>
+        /// This property does not call <see cref="NoteModel.RefreshModifiedAt"/>, because it is
+        /// not seen as changed content, so switching should not overwrite other recent changes.
+        /// </summary>
+        [VueDataBinding(VueBindingMode.TwoWay)]
+        public bool IsPinned
+        {
+            get { return Model.IsPinned; }
+            set
+            {
+                ChangePropertyIndirect(() => Model.IsPinned, (v) => Model.IsPinned = v, value, true);
+                if (Model.IsPinned)//TODO: delete, just for debugging
+                {
+                    BackgroundColorHex = "#ffff00";
+                }
+                else
+                {
+                    BackgroundColorHex = "#ffffff";
+                }
+
+                PinnedChanged = !PinnedChanged; //if you click the button back, it shouldn't register as changed
+            }
+        }
+
+        /// <summary>
+        /// Command which toggles the <see cref="IsPinned"/> property.
+        /// </summary>
+        [VueDataBinding(VueBindingMode.Command)]
+        public ICommand TogglePinnedCommand { get; private set; }
+
+        private void TogglePinned()
+        {
+            IsPinned = !IsPinned;
+            //PinnedChanged = !PinnedChanged; //if you click the button back, it shouldn't register as changed
+        }
+
+        public bool PinnedChanged
+        {
+            get { return Model.PinnedChanged; }
+            set
+            {
+                ChangePropertyIndirect(
+                       () => Model.PinnedChanged,
+                       (v) => Model.PinnedChanged = v,
+                       value,
+                       true
+                   );
+            }
+        }
+
         [VueDataBinding(VueBindingMode.OneWayToView)]
         public string PrettyTimeAgo
         {
-            get 
+            get
             {
                 string prettyTime = GetOrCreateTimeAgo().PrettyPrint(Model.ModifiedAt, DateTime.UtcNow);
                 return Language.LoadTextFmt("modified_at", prettyTime);
