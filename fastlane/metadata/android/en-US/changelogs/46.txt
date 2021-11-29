@@ -1,0 +1,8 @@
+SilentNotes version 6.0.0
+
+* Implemented tagging system, to get a flexible folder structure.
+* Added Turkish and Czech translation.
+* Implemented function to test a new language resource files.
+* Notes can now be explicitely removed from the online storage.
+* Prevented encryted content to become visible in Android's list of recent apps.
+* Fixed repeated adding of notes, after sharing text from an external apps.

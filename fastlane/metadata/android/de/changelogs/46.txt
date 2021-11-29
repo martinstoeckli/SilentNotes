@@ -1,0 +1,8 @@
+SilentNotes version 6.0.0
+
+* Schlagwortsystem eingebaut, um eine flexible Ordnerstruktur anzubieten.
+* Türkische und tschechische Übersetzung hinzugefügt.
+* Funktion zum testen neuer Sprachdateien eingebaut.
+* Notizen können nun explizit vom Onlinespeicher entfernt werden.
+* Verhindert dass verschlüsselter Inhalt in Android's Liste der zuletzt verwendeten Apps sichtbar wird.
+* Wiederholtes hinzufügen einer Notiz, nach Teilen von Text aus einer externen App, behoben.

@@ -13,8 +13,9 @@ More information you can find on [SilentNote's homepage](https://www.martinstoec
 * ✔ Create To-Do lists to keep an overview of your pending tasks.
 * ✔ Protect your notes with a user defined password.
 * ✔ Quickly find the right note with the full-text search, just by typing a few letters.
+* ✔ Organize and filter the notes with a tagging system.
 * ✔ Store the notes to an online-storage of your choice (self hosting), this allows to synchronize them between devices and offers an easy backup.
-* ✔ Currently supported are the `FTP` protocol, the `WebDav` protocol, `Dropbox`, Google-Drive and One-Drive.
+* ✔ Currently supported are the `FTP` protocol, the `WebDav` protocol, `Dropbox`, `Google-Drive` and `One-Drive`.
 * ✔ The notes never leave the device unencrypted, they are end-to-end encrypted and can only be read on your devices.
 * ✔ A dark theme is available for more comfortable working in dark environment.
 * ✔ Use basic formatting to structure your notes and make them more readable.
