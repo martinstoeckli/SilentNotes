@@ -118,6 +118,18 @@ namespace SilentNotes.Models
         public bool ShoppingModeActive { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the note is pinned.
+        /// </summary>
+        [XmlAttribute(AttributeName = "note_pinned")]
+        public bool IsPinned { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the pin status changed.
+        /// </summary>
+        [XmlAttribute(AttributeName = "note_pinned_changed")]
+        public bool PinnedChanged { get; set; } = false;
+
+        /// <summary>
         /// Gets or sets the time in UTC, when the note was first created.
         /// </summary>
         [XmlAttribute(AttributeName = "created_at")]
