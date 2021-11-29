@@ -14,6 +14,7 @@ using Android.OS;
 using Android.Runtime;
 using Android.Util;
 using Android.Webkit;
+using Android.Views;
 using Java.IO;
 using SilentNotes.Controllers;
 using SilentNotes.HtmlView;
@@ -186,6 +187,23 @@ namespace SilentNotes.Android
             IAutoSynchronizationService syncService = Ioc.GetOrCreate<IAutoSynchronizationService>();
             syncService.SynchronizeAtShutdown();
             base.OnStop();
+        }
+
+        protected override void OnPause()
+        {
+            base.OnPause();
+
+            // With adding the secure flag we prevent the content of possibly encrypted notes to be
+            // visible in the list of recent apps.
+            Window.AddFlags(WindowManagerFlags.Secure);
+        }
+
+        protected override void OnResume()
+        {
+            base.OnResume();
+
+            // Remove the secure flag set by OnPause(), so that screenshots are allowed again.
+            Window.ClearFlags(WindowManagerFlags.Secure);
         }
 
         /// <inheritdoc/>
