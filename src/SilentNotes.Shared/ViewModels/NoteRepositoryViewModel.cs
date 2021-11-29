@@ -90,6 +90,23 @@ namespace SilentNotes.ViewModels
             if (!SelectedTagExistsInTags())
                 settings.SelectedTag = null;
 
+            //TODO: refactor
+            var tmpVariables = _navigationService.CurrentNavigation.Variables;
+            if (tmpVariables.Exists(x => x.Key == "noteid"))
+            {
+                /*
+                 * If the variable exists, it means that we navigated from a NoteViewModel
+                 * and the pin property might have changed.
+                 * Could be also done by iterating throught the whole list and check for the property.
+                 * TODO: Consider PropertyChanged event.
+                */
+                var changedNote = AllNotes
+                    .Where(x => x.Id.ToString().Equals(tmpVariables["noteid"]))
+                    .FirstOrDefault();
+
+                CheckChangedNoteForPin(changedNote);
+            }
+
             if (!string.IsNullOrEmpty(settings.SelectedTag) || !string.IsNullOrEmpty(settings.Filter))
             {
                 OnPropertyChanged(nameof(SelectedTag));
@@ -100,7 +117,34 @@ namespace SilentNotes.ViewModels
             }
         }
 
-        private bool SelectedTagExistsInTags()
+        /// <summary>
+        /// Checks whether the <see cref="NoteViewModel.PinnedChanged"/> changed
+        /// and moves the note based on <see cref="NoteViewModel.IsPinned"/>.
+        /// </summary>
+        /// <param name="noteId"></param>
+        private void CheckChangedNoteForPin(NoteViewModel changedNote)
+        {
+            if (changedNote.PinnedChanged)
+            {
+                if (changedNote.IsPinned)
+                {//since the note got pinned, move it to the top
+                    MoveNote(FilteredNotes.IndexOf(changedNote), 0);
+                    //TODO: highlight note as pinned (border/icon/whatever)
+                }
+                else
+                {//the note got unpinned, move it to the end of pinned notes
+                    int firstUnpinnedNoteIndex = FilteredNotes.IndexOf(
+                        FilteredNotes.First(x => x.IsPinned == false)
+                    );
+
+                    MoveNote(FilteredNotes.IndexOf(changedNote), firstUnpinnedNoteIndex);
+                    //TODO: change highlight to normal
+                }
+                changedNote.PinnedChanged = false; //handled
+            }
+        }
+
+        private static void ClearSelectedTagIfNotContainedInNotes(SettingsModel settings, List<string> tags)
         {
             // An invalid selected tag can exist if the user edited a note (deleted a tag) and
             // returned to the overview, which still remembers this selected tag.
@@ -154,7 +198,7 @@ namespace SilentNotes.ViewModels
 
         public int NoteMinHeight
         {
-            get 
+            get
             {
                 // The minimum must not be bigger than the maximum.
                 return Math.Min(SettingsViewModel.ReferenceNoteMinSize, NoteMaxHeight);
@@ -259,9 +303,11 @@ namespace SilentNotes.ViewModels
                     case NoteType.Text:
                         navigation = new Navigation(ControllerNames.Note, ControllerParameters.NoteId, noteId.ToString());
                         break;
+
                     case NoteType.Checklist:
                         navigation = new Navigation(ControllerNames.Checklist, ControllerParameters.NoteId, noteId.ToString());
                         break;
+
                     default:
                         throw new ArgumentOutOfRangeException(nameof(NoteType));
                 }
@@ -270,8 +316,8 @@ namespace SilentNotes.ViewModels
                 if (!string.IsNullOrEmpty(settings.Filter))
                     navigation.Variables.AddOrReplace(ControllerParameters.SearchFilter, settings.Filter);
                 _navigationService.Navigate(navigation);
+            }
         }
-    }
 
         /// <summary>
         /// Gets the command which handles the creation of a new note.
@@ -304,11 +350,13 @@ namespace SilentNotes.ViewModels
                     AllNotes.Insert(0, noteViewModel);
                     FilteredNotes.Insert(0, noteViewModel);
                     break;
+
                 case NoteInsertionMode.AtBottom:
                     _model.Notes.Add(noteModel);
                     AllNotes.Add(noteViewModel);
                     FilteredNotes.Add(noteViewModel);
                     break;
+
                 default:
                     throw new ArgumentOutOfRangeException(nameof(insertionMode));
             }
@@ -374,7 +422,7 @@ namespace SilentNotes.ViewModels
         [VueDataBinding(VueBindingMode.TwoWay)]
         public string SelectedTag
         {
-            get 
+            get
             {
                 SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
                 return string.IsNullOrEmpty(settings.SelectedTag) ? EmptyTagFilter : settings.SelectedTag;
@@ -560,6 +608,22 @@ namespace SilentNotes.ViewModels
                 || !IsInRange(newIndex, 0, FilteredNotes.Count - 1))
                 return;
             Modified = true;
+
+            /*
+             * Check for moving a normal note before a pinned one.
+             * If the user tries that, the normal note gets appended behind the pinned notes,
+             * by setting the newIndex as the index of the first unpinned note.
+             *
+             * Apparently this doen't affect UI, so the note is displayed in the incorrect order
+             * until reload.
+             */
+
+            if (FilteredNotes[oldIndex].IsPinned == false && FilteredNotes[newIndex].IsPinned)
+            {
+                newIndex = FilteredNotes.IndexOf(
+                    FilteredNotes.First(x => x.IsPinned == false)
+                );
+            }
 
             int oldIndexInUnfilteredList = AllNotes.IndexOf(FilteredNotes[oldIndex]);
             int newIndexInUnfilteredList = AllNotes.IndexOf(FilteredNotes[newIndex]);
