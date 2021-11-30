@@ -1,14 +1,20 @@
-<i>SilentNotes</i> is a note taking app which respects your privacy. Write your notes in a comfortable WYSIWYG editor with basic formatting like headers or lists, and synchronize them end-to-end encrypted between Android and Windows devices.
+<i>SilentNotes</i> is a note taking app which respects your privacy. It doesn't collect personal data, runs free of adds and is an open source (FOSS) software. Write your notes in a comfortable WYSIWYG editor with basic formatting like headers or lists, and synchronize them end-to-end encrypted between Android and Windows devices.
 
+Beside writing of traditional notes, you can also create to-do lists to keep track of your pending tasks. Additionally the notes can be password protected with your own password, and quickly found with a full-text search.
+
+* Take your notes wherever you are, and share them between your Android and Windows devices.
 * Write the notes in an easily operated WYSIWYG editor.
 * Create To-Do lists to keep an overview of your pending tasks.
-* Protect your notes with a user defined password.
+* Protect selecte notes with a user defined password.
+* Organize and filter the notes with a tagging system.
 * Quickly find the right note with the full-text search, just by typing a few letters.
 * Store the notes to an online-storage of your choice (self hosting), this allows to synchronize them between devices and offers an easy backup.
 * Currently supported are the FTP protocol, the WebDav protocol, Dropbox, Google-Drive and One-Drive.
 * The notes never leave the device unencrypted, they are end-to-end encrypted and can only be read on your devices.
 * A dark theme is available for more comfortable working in dark environment.
 * Use basic formatting to structure your notes and make them more readable.
-* SilentNotes does not collect user information and requires no unnecessary privileges.
+* Get a note back from the recycle-bin if it was deleted by accident.
+* SilentNotes does not collect user information and requires no unnecessary privileges, thus the name silent notes.
+* SilentNotes is an open source project, its source code can be verified on GitHub.
 
 The Windows version is available from the Microsoft store.

@@ -1,14 +1,20 @@
-<i>SilentNotes</i> ist eine Notizen-App die Ihre Privatsphäre respektiert. Schreiben Sie Ihre Notizen in einem komfortablen WYSIWYG Editor mit einfachen Formatierungen wie Überschriften oder Listen, und synchronisieren Sie sie Ende-zu-Ende verschlüsselt zwischen Android und Windows Geräten.
+<i>SilentNotes</i> ist eine Notizen-App die Ihre Privatsphäre respektiert. Sie sammelt keine Benutzerdaten, verzichtet auf Werbung und ist eine Open Source (FOSS) Software. Schreiben Sie Ihre Notizen in einem komfortablen WYSIWYG Editor mit einfachen Formatierungen wie Überschriften oder Listen, und synchronisieren Sie sie Ende-zu-Ende verschlüsselt zwischen Android und Windows Geräten.
 
-* Schreiben Sie die Notizen in einem komfotrablen WYSIWYG Editor.
+Neben dem Schreiben von Notizen, können Sie auch To-do-Listen erstellen um die Übersicht über noch anstehende Arbeiten zu behalten. Zusätzlich können die Notizen mit einem eigenen Passwort geschützt, und mit der Volltextsuche schnell gefunden werden.
+
+* Machen Sie Ihre Notizen wo immer Sie sich gerade befinden, und verteilen Sie sie auf Ihren Android und Windows Geräten.
+* Ein WYSIWYG Editor vereinfacht das Schreiben der Notizen.
 * Erstelle To-do-Listen um die Übersicht über noch anstehende Arbeiten zu behalten.
 * Schützen Sie ausgewählte Notizen mit einem benutzerdefinierten Passwort.
+* Organisieren und filtern Sie die Notizen mit Schlagwörtern (tagging system).
 * Finden Sie blitzschnell die richtige Notiz mit der Volltextsuche, einfach durch Eintippen von ein paar Buchstaben.
 * Speichern Sie die Notizen auf einem Online-Speicher Ihrer Wahl (self hosting), so können Sie sie zwischen Geräten synchronisieren und erhalten ein einfaches Backup.
 * Zurzeit werden das FTP Protokoll, das WebDav Protokoll, Dropbox, Google-Drive und One-Drive unterstützt.
 * Die Notizen verlassen das Gerät nie unverschlüsselt, sie sind Ende-zu-ende verschlüsselt und können nur auf den Geräten gelesen werden.
 * Ein dunkles Design kann gewählt werden, zum angenehmen Arbeiten bei spärlichem Licht.
 * Verwenden Sie einfache Formatierungen um die Notizen zu strukturieren und besser lesbar zu machen.
+* Holen Sie eine Notiz zurück aus dem Papierkorb, wenn sie versehentlich gelöscht wurde.
 * SilentNotes sammelt keine Benutzerinformationen und verlangt keine unnötigen Rechte, darum der Name silent notes.
+* SilentNotes ist ein open source Projekt, der gesamte Sourcecode kann auf GitHub verifiziert werden.
 
 Die Windows Version ist im Microsoft Store erhältlich.
