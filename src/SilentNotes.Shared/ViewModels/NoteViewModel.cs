@@ -524,6 +524,9 @@ namespace SilentNotes.ViewModels
             //PinnedChanged = !PinnedChanged; //if you click the button back, it shouldn't register as changed
         }
 
+        /// <summary>
+        /// Value indicating whether the <see cref="IsPinned"/> changed by button
+        /// </summary>
         public bool PinnedChanged
         {
             get { return Model.PinnedChanged; }

@@ -63,7 +63,7 @@ namespace SilentNotes.Controllers
         /// <inheritdoc/>
         public override void ShowInView(IHtmlView htmlView, KeyValueList<string, string> variables, Navigation redirectedFrom)
         {
-            base.ShowInView(htmlView, variables,redirectedFrom);
+            base.ShowInView(htmlView, variables, redirectedFrom);
             IRepositoryStorageService repositoryService = Ioc.GetOrCreate<IRepositoryStorageService>();
             _scrollToNote = variables?.GetValueOrDefault(ControllerParameters.NoteId);
 
@@ -156,7 +156,7 @@ namespace SilentNotes.Controllers
             VueBindings.ViewLoadedEvent -= ViewLoadedEventHandler;
 
             // Loading the notes not until here, makes the vue.js initialization faster.
-            ViewmodelPropertyChangedEventHandler(this, new PropertyChangedEventArgs("Notes")); ;
+            ViewmodelPropertyChangedEventHandler(this, new PropertyChangedEventArgs("Notes"));
 
             if (!string.IsNullOrEmpty(_scrollToNote))
             {
@@ -187,15 +187,18 @@ namespace SilentNotes.Controllers
                     _viewModel.AddNoteToSafe(noteId);
                     SetVisibilityAddRemoveTresor(noteId, true);
                     break;
+
                 case "RemoveFromSafeCommand":
                     noteId = new Guid(e.Value);
                     _viewModel.RemoveNoteFromSafe(noteId);
                     SetVisibilityAddRemoveTresor(noteId, false);
                     break;
+
                 case "OrderChangedCommand":
                     int oldIndex = int.Parse(e.Parameters["oldIndex"]);
                     int newIndex = int.Parse(e.Parameters["newIndex"]);
                     _viewModel.MoveNote(oldIndex, newIndex);
+                    _viewModel.CheckPinStatusAtPosition(newIndex);
                     break;
             }
         }

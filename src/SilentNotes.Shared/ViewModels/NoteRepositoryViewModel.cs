@@ -609,22 +609,6 @@ namespace SilentNotes.ViewModels
                 return;
             Modified = true;
 
-            /*
-             * Check for moving a normal note before a pinned one.
-             * If the user tries that, the normal note gets appended behind the pinned notes,
-             * by setting the newIndex as the index of the first unpinned note.
-             *
-             * Apparently this doen't affect UI, so the note is displayed in the incorrect order
-             * until reload.
-             */
-
-            if (FilteredNotes[oldIndex].IsPinned == false && FilteredNotes[newIndex].IsPinned)
-            {
-                newIndex = FilteredNotes.IndexOf(
-                    FilteredNotes.First(x => x.IsPinned == false)
-                );
-            }
-
             int oldIndexInUnfilteredList = AllNotes.IndexOf(FilteredNotes[oldIndex]);
             int newIndexInUnfilteredList = AllNotes.IndexOf(FilteredNotes[newIndex]);
 
@@ -632,6 +616,30 @@ namespace SilentNotes.ViewModels
             ListMove(AllNotes, oldIndexInUnfilteredList, newIndexInUnfilteredList);
             FilteredNotes.Move(oldIndex, newIndex);
             _model.RefreshOrderModifiedAt();
+        }
+
+        /// <summary>
+        /// Changes <see cref="NoteViewModel.IsPinned"/> based on position.
+        /// This is usually called after a drag and drop action.
+        /// </summary>
+        /// <remarks>Changes to true if placed in front of a
+        /// pinned note. False if placed behind unpinned one.</remarks>
+        internal void CheckPinStatusAtPosition(int currentIndex)
+        {
+            var movedNote = FilteredNotes[currentIndex];
+            var noteBehind = FilteredNotes.ElementAtOrDefault(currentIndex + 1);
+            var noteInfront = FilteredNotes.ElementAtOrDefault(currentIndex - 1);
+
+            if (movedNote.IsPinned == false && noteBehind != null && noteBehind.IsPinned)
+            {
+                movedNote.IsPinned = true;
+                movedNote.PinnedChanged = false;
+            }
+            else if (movedNote.IsPinned && noteInfront != null && noteInfront.IsPinned == false)
+            {
+                movedNote.IsPinned = false;
+                movedNote.PinnedChanged = false;
+            }
         }
 
         /// <summary>
