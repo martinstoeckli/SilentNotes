@@ -2,7 +2,7 @@
 
 Thank you for taking the time to read this lines, before making a pull request or opening an issue! 👍
 
-We are glad to hear about your [ideas↘](#feature-requests), to be informed when you [found a problem↘](#bug-reports), to receive [code contributions↘](#pull-requests) or a [translation↘](#localization) to another language. Please don't be disappointed though, should a suggestion be rejected, we try to explain the reasons why the idea is not implemented. Following the points below, you will make it easier for us to react appropriate and probably will get a faster response.
+We are glad to hear about your [ideas↓](#feature-requests), to be informed when you [found a problem↓](#bug-reports), to receive [code contributions↓](#pull-requests) or a [translation↓](#localization) to another language. Please don't be disappointed though, should a suggestion be rejected, we try to explain the reasons why the idea is not implemented. Following the points below, you will make it easier for us to react appropriate and probably will get a faster response.
 
 ## Feature requests
 
