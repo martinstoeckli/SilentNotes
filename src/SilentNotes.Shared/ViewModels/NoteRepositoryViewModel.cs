@@ -134,8 +134,16 @@ namespace SilentNotes.ViewModels
                 else
                 {//the note got unpinned, move it to the end of pinned notes
                     int firstUnpinnedNoteIndex = FilteredNotes.IndexOf(
-                        FilteredNotes.First(x => x.IsPinned == false)
+                        FilteredNotes.FirstOrDefault(x => x.IsPinned == false && x.Id != changedNote.Id)
                     );
+                    if (firstUnpinnedNoteIndex == -1)
+                    {//there's no unpinned note, move to last position
+                        firstUnpinnedNoteIndex = FilteredNotes.Count;
+                    }
+                    else
+                    {
+                        firstUnpinnedNoteIndex--;//needs to account for removing the current note
+                    }
 
                     MoveNote(FilteredNotes.IndexOf(changedNote), firstUnpinnedNoteIndex);
                     //TODO: change highlight to normal
@@ -634,11 +642,13 @@ namespace SilentNotes.ViewModels
             {
                 movedNote.IsPinned = true;
                 movedNote.PinnedChanged = false;
+                OnPropertyChanged("Notes");//refreshes the notes
             }
             else if (movedNote.IsPinned && noteInfront != null && noteInfront.IsPinned == false)
             {
                 movedNote.IsPinned = false;
                 movedNote.PinnedChanged = false;
+                OnPropertyChanged("Notes");
             }
         }
 

@@ -507,7 +507,6 @@ namespace SilentNotes.ViewModels
                 {
                     BackgroundColorHex = "#ffffff";
                 }
-
                 PinnedChanged = !PinnedChanged; //if you click the button back, it shouldn't register as changed
             }
         }
