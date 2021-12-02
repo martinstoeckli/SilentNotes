@@ -1,4 +1,4 @@
-<i>SilentNotes</i> is a note taking app which respects your privacy. It doesn't collect personal data, runs free of adds and is an open source (FOSS) software. Write your notes in a comfortable WYSIWYG editor with basic formatting like headers or lists, and synchronize them end-to-end encrypted between Android and Windows devices.
+<i>SilentNotes</i> is a note taking app which respects your privacy. It doesn't collect personal data, runs free of ads and is an open source (FOSS) software. Write your notes in a comfortable WYSIWYG editor with basic formatting like headers or lists, and synchronize them end-to-end encrypted between Android and Windows devices.
 
 Beside writing of traditional notes, you can also create to-do lists to keep track of your pending tasks. Additionally the notes can be password protected with your own password, and quickly found with a full-text search.
 
