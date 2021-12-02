@@ -33,6 +33,7 @@ But you want to contribute and that's great, so have a look at following points:
 - Write unit-tests whenever this is possible with a reasonable amount of work. This applies especially to the low level code like models and helper/worker classes. View and ViewModels can be tested manually with system tests.
 - Comment all public functions, try to describe their limits and how they are meant to be used, instead of repeating the (hopefully well choosen) method name 😉. Non public function can be commented if you think it makes sense.
 - The repository contains a StyleCop config file with somewhat relaxed rules. We appreciate if you do a quick test before submitting, StyleCop can be installed as an extension in VisualStudio. To check a single file, just right click on the open source file and select _"Run StyleCop"_.
+- If new language resources have been created, place the english text as placeholder in all language files.
 - All functionallity needs to be cross-platform.
 
 If the contribution affects the Android app, please test with the minimum version (currently 6.0) as well as with two other versions. It is a tedious work, but there are often unexpected differences in the WebView implementations.
