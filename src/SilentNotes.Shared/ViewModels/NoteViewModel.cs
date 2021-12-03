@@ -252,22 +252,6 @@ namespace SilentNotes.ViewModels
         }
 
         /// <summary>
-        /// Gets or sets the border as CSS string, e.g. '1px solid black'
-        /// </summary>
-        [VueDataBinding(VueBindingMode.TwoWay)]
-        public string Border
-        {
-            get
-            {
-                return Model.Border;
-            }
-            set
-            {
-                ChangePropertyIndirect(() => Model.Border, (string v) => Model.Border = v, value, true);
-            }
-        }
-
-        /// <summary>
         /// Gets a list of available background colors.
         /// </summary>
         public List<string> BackgroundColorsHex
@@ -517,13 +501,11 @@ namespace SilentNotes.ViewModels
                 ChangePropertyIndirect(() => Model.IsPinned, (v) => Model.IsPinned = v, value, true);
                 if (Model.IsPinned)//TODO: delete, just for debugging
                 {
-                    //BackgroundColorHex = "#ffff00";
-                    Border = "5px solid red";
+                    BackgroundColorHex = "#ffff00";
                 }
                 else
                 {
-                    //BackgroundColorHex = "#ffffff";
-                    Border = "none";
+                    BackgroundColorHex = "#ffffff";
                 }
                 PinnedChanged = !PinnedChanged; //if you click the button back, it shouldn't register as changed
             }

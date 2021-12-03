@@ -17,7 +17,6 @@ namespace SilentNotes.Models
     {
         /// <summary>The package name used for encryption, see <see cref="CryptoHeader.PackageName"/></summary>
         public const string CryptorPackageName = "SilentNote";
-
         private Guid _id;
         private string _htmlContent;
         private DateTime? _metaModifiedAt;
@@ -79,7 +78,7 @@ namespace SilentNotes.Models
         /// This property is never null, instead an empty string will be returned.
         /// </summary>
         [XmlElement(ElementName = "html_content")]
-        public string HtmlContent
+        public string HtmlContent 
         {
             get { return _htmlContent ?? (_htmlContent = string.Empty); }
             set { _htmlContent = value; }
@@ -102,12 +101,6 @@ namespace SilentNotes.Models
         /// </summary>
         [XmlAttribute(AttributeName = "background_color")]
         public string BackgroundColorHex { get; set; }
-
-        /// <summary>
-        /// TODO: add comment
-        /// </summary>
-        [XmlAttribute(AttributeName = "border")]
-        public string Border { get; set; } = "none";
 
         /// <summary>
         /// Gets or sets a value indicating whether the note is deleted and is part of the
@@ -155,9 +148,9 @@ namespace SilentNotes.Models
         /// actually newer note content).
         /// </summary>
         [XmlIgnore]
-        public DateTime? MetaModifiedAt
+        public DateTime? MetaModifiedAt 
         {
-            get
+            get 
             {
                 // If the ModifiedAt property is newer, then the MetaModifiedAt is irrelevant.
                 if (_metaModifiedAt.HasValue && _metaModifiedAt <= ModifiedAt)
@@ -174,18 +167,14 @@ namespace SilentNotes.Models
             get { return MetaModifiedAt.Value; }
             set { MetaModifiedAt = value; }
         }
-
-        public bool MetaModifiedAtSerializeableSpecified
-        { get { return MetaModifiedAt != null; } } // Serialize only when set
+        public bool MetaModifiedAtSerializeableSpecified { get { return MetaModifiedAt != null; } } // Serialize only when set
 
         /// <summary>
         /// Gets or sets the safe which was used to encrypt the note, or null if it is not encrypted.
         /// </summary>
         [XmlElement(ElementName = "safe")]
         public Guid? SafeId { get; set; }
-
-        public bool SafeIdSpecified
-        { get { return SafeId != null; } } // Serialize only when set
+        public bool SafeIdSpecified { get { return SafeId != null; } } // Serialize only when set
 
         /// <summary>
         /// Sets the <see cref="ModifiedAt"/> property to the current UTC time.
