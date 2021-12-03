@@ -354,9 +354,18 @@ namespace SilentNotes.ViewModels
             switch (insertionMode)
             {
                 case NoteInsertionMode.AtTop:
+
                     _model.Notes.Insert(0, noteModel);
-                    AllNotes.Insert(0, noteViewModel);
-                    FilteredNotes.Insert(0, noteViewModel);
+
+                    var firstUnpinned = AllNotes.FirstOrDefault(x => x.IsPinned == false);
+                    var index = firstUnpinned == null ? 0 : AllNotes.IndexOf(firstUnpinned);
+
+                    AllNotes.Insert(index, noteViewModel);
+
+                    firstUnpinned = FilteredNotes.FirstOrDefault(x => x.IsPinned == false);
+                    index = firstUnpinned == null ? 0 : FilteredNotes.IndexOf(firstUnpinned);
+
+                    FilteredNotes.Insert(index, noteViewModel);
                     break;
 
                 case NoteInsertionMode.AtBottom:
