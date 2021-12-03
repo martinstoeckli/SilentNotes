@@ -192,18 +192,25 @@ namespace SilentNotes.Android
         protected override void OnPause()
         {
             base.OnPause();
-
-            // With adding the secure flag we prevent the content of possibly encrypted notes to be
-            // visible in the list of recent apps.
-            Window.AddFlags(WindowManagerFlags.Secure);
+            try
+            {
+                // With turning off the view, we prevent the content of possibly encrypted notes to
+                // become visible in the list of recent apps.
+                _webView.Visibility = ViewStates.Invisible;
+            }
+            catch (Exception)
+            {
+                // We tried, but no exception should escape here.
+            }
         }
 
         protected override void OnResume()
         {
             base.OnResume();
 
-            // Remove the secure flag set by OnPause(), so that screenshots are allowed again.
-            Window.ClearFlags(WindowManagerFlags.Secure);
+            // Turn on the view again, see OnPause().
+            if (_webView.Visibility != ViewStates.Visible)
+                _webView.Visibility = ViewStates.Visible;
         }
 
         /// <inheritdoc/>

@@ -31,14 +31,10 @@ namespace SilentNotes.Android.Services
         {
             ConnectivityManager connectivity = GetConnectivityManager();
 
-            if (Build.VERSION.SdkInt >= BuildVersionCodes.M)
-            {
-                NetworkCapabilities capabilities = connectivity.GetNetworkCapabilities(connectivity.ActiveNetwork);
-                return (capabilities != null) && capabilities.HasCapability(NetCapability.Internet);
-            }
-
-            NetworkInfo info = connectivity.ActiveNetworkInfo;
-            return (info != null) && (info.IsConnected);
+            // With Build.VERSION.SdkInt < BuildVersionCodes.M we would have to use an alternative
+            // way to check, but Android 6 is our min version.
+            NetworkCapabilities capabilities = connectivity.GetNetworkCapabilities(connectivity.ActiveNetwork);
+            return (capabilities != null) && capabilities.HasCapability(NetCapability.Internet);
         }
 
         /// <inheritdoc/>

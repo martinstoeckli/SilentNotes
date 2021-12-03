@@ -160,39 +160,17 @@ namespace SilentNotes.Android.Services
             KeyPairGenerator keyGenerator =
                 KeyPairGenerator.GetInstance(KeyProperties.KeyAlgorithmRsa, KeyStoreName);
 
-            if (Build.VERSION.SdkInt >= BuildVersionCodes.JellyBeanMr2 &&
-                Build.VERSION.SdkInt <= BuildVersionCodes.LollipopMr1)
-            {
-                Calendar startDateCalendar = Calendar.GetInstance(Locale.Default);
-                startDateCalendar.Add(CalendarField.Year, -1);
-                Calendar endDateCalendar = Calendar.GetInstance(Locale.Default);
-                endDateCalendar.Add(CalendarField.Year, 100);
-                string certificateName = string.Format("CN={0} CA Certificate", KeyAlias);
+            // With Build.VERSION.SdkInt < BuildVersionCodes.M we would have to use an alternative
+            // way, but Android 6 is our min version.
+            Calendar endDateCalendar = Calendar.GetInstance(Locale.Default);
+            endDateCalendar.Add(CalendarField.Year, 100);
 
-                // this API is obsolete after Android M, but we are supporting Android L
-#pragma warning disable 618
-                var builder = new KeyPairGeneratorSpec.Builder(_applicationContext)
-                    .SetAlias(KeyAlias)
-                    .SetSerialNumber(BigInteger.One)
-                    .SetSubject(new X500Principal(certificateName))
-                    .SetStartDate(startDateCalendar.Time)
-                    .SetEndDate(endDateCalendar.Time)
-                    .SetKeySize(KeySize);
-                keyGenerator.Initialize(builder.Build());
-#pragma warning restore 618
-            }
-            else if (Build.VERSION.SdkInt >= BuildVersionCodes.M)
-            {
-                Calendar endDateCalendar = Calendar.GetInstance(Locale.Default);
-                endDateCalendar.Add(CalendarField.Year, 100);
-
-                var builder = new KeyGenParameterSpec.Builder(KeyAlias, KeyStorePurpose.Encrypt | KeyStorePurpose.Decrypt)
-                    .SetBlockModes(KeyProperties.BlockModeEcb)
-                    .SetEncryptionPaddings(KeyProperties.EncryptionPaddingRsaPkcs1)
-                    .SetCertificateNotAfter(endDateCalendar.Time)
-                    .SetKeySize(KeySize);
-                keyGenerator.Initialize(builder.Build());
-            }
+            var builder = new KeyGenParameterSpec.Builder(KeyAlias, KeyStorePurpose.Encrypt | KeyStorePurpose.Decrypt)
+                .SetBlockModes(KeyProperties.BlockModeEcb)
+                .SetEncryptionPaddings(KeyProperties.EncryptionPaddingRsaPkcs1)
+                .SetCertificateNotAfter(endDateCalendar.Time)
+                .SetKeySize(KeySize);
+            keyGenerator.Initialize(builder.Build());
 
             // Key generator is initialized, generate the key
             keyGenerator.GenerateKeyPair();

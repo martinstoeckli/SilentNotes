@@ -18,7 +18,7 @@ namespace SilentNotes.Android
     /// <summary>
     /// This activity handles retrieving text data from other applications.
     /// </summary>
-    [Activity(Label = "SilentNotes", NoHistory = true)]
+    [Activity(Label = "SilentNotes", NoHistory = true, Exported = true)]
     [IntentFilter(
         new[] { Intent.ActionSend },
         Categories = new[] { Intent.CategoryDefault },

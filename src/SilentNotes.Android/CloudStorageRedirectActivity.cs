@@ -17,7 +17,7 @@ namespace SilentNotes.Android
     /// Intercepts URLs of the scheme "ch.martinstoeckli.silentnotes://...". This scheme is used
     /// to react to OAuth2 answers.
     /// </summary>
-    [Activity(Label = "CloudStorageRedirectActivity", NoHistory = true)]
+    [Activity(Label = "CloudStorageRedirectActivity", NoHistory = true, Exported = true)]
     [IntentFilter(
         new[] { Intent.ActionView },
         Categories = new[] { Intent.CategoryDefault, Intent.CategoryBrowsable },
