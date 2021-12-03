@@ -1,0 +1,5 @@
+SilentNotes version 6.0.1
+
+* Fixed missing android:export flag, which could have prevented installations on Android 12.
+* Found a saver alternative for the usage of Androids Flag_SECURE.
+* Re-targeted to Android SDK 30.
