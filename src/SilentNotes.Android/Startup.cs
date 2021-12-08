@@ -22,14 +22,11 @@ namespace SilentNotes.Android
         /// <param name="rootActivity">The main activity of the Android app.</param>
         public static void InitializeApplication(Activity rootActivity, ActivityResultAwaiter rootActivityResultWaiter)
         {
-            // do it only the first time
-            if (IsFirstTime())
-            {
-                RegisterServices(rootActivity, rootActivityResultWaiter);
-                StartupShared.RegisterControllers();
-                StartupShared.RegisterRazorViews();
-                StartupShared.RegisterCloudStorageClientFactory();
-            }
+            Ioc.Reset();
+            RegisterServices(rootActivity, rootActivityResultWaiter);
+            StartupShared.RegisterControllers();
+            StartupShared.RegisterRazorViews();
+            StartupShared.RegisterCloudStorageClientFactory();
         }
 
         private static void RegisterServices(Activity rootActivity, ActivityResultAwaiter rootActivityResultWaiter)
@@ -70,11 +67,6 @@ namespace SilentNotes.Android
                 Ioc.GetOrCreate<ISettingsService>(), Ioc.GetOrCreate<IEnvironmentService>()));
             Ioc.RegisterFactory<IFolderPickerService>(() => new FolderPickerService(rootActivity, rootActivityResultWaiter));
             Ioc.RegisterFactory<IFilePickerService>(() => new FilePickerService(rootActivity, rootActivityResultWaiter));
-        }
-
-        private static bool IsFirstTime()
-        {
-            return !Ioc.IsRegistered<IEnvironmentService>();
         }
     }
 }
