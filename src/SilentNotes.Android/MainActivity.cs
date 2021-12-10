@@ -13,8 +13,8 @@ using Android.Graphics;
 using Android.OS;
 using Android.Runtime;
 using Android.Util;
-using Android.Webkit;
 using Android.Views;
+using Android.Webkit;
 using Java.IO;
 using SilentNotes.Controllers;
 using SilentNotes.HtmlView;
@@ -87,9 +87,92 @@ namespace SilentNotes.Android
         }
 
         /// <inheritdoc/>
-        protected override void OnStart()
+        protected override void OnNewIntent(Intent intent)
         {
-            base.OnStart();
+            base.OnNewIntent(intent);
+
+            // After reading the parameters from the passed intent, we forget about it and keep
+            // the old intent running.
+            ConsumeActionSendIntentParameter(intent);
+        }
+
+        /// <summary>
+        /// Checks whether the intent was created by an <see cref="ActionSendActivity"/> and stores
+        /// its parameter to the variable <see cref="_actionSendParameter"/>, so it can later be
+        /// used to start up the app.
+        /// </summary>
+        /// <param name="intent">The active indent.</param>
+        private void ConsumeActionSendIntentParameter(Intent intent)
+        {
+            bool isStartedWithActionSend = intent.HasExtra(ActionSendActivity.NoteHtmlParam);
+            bool isAlreadyHandled = intent.Flags.HasFlag(ActivityFlags.LaunchedFromHistory);
+
+            if (isStartedWithActionSend && !isAlreadyHandled)
+            {
+                _actionSendParameter = intent.GetStringExtra(ActionSendActivity.NoteHtmlParam);
+                intent.RemoveExtra(ActionSendActivity.NoteHtmlParam);
+            }
+            else
+            {
+                _actionSendParameter = null;
+            }
+        }
+
+        private static bool CanStartupWithLastNavigation(Navigation navigation)
+        {
+            var allowedStartupNavigations = new[] { ControllerNames.NoteRepository, ControllerNames.Note, ControllerNames.Checklist, ControllerNames.Settings, ControllerNames.Info };
+            return allowedStartupNavigations.Contains(navigation?.ControllerId);
+        }
+
+        /// <inheritdoc/>
+        protected override void OnStop()
+        {
+            // The synchronization continues when we do not await it, even if another app became
+            // active in the meantime. As long as the user doesn't swipe away the app from the
+            // "recent apps", it can finish the job, that's exactly what we need.
+            // Tested with Android 5.0, 8.1
+            IAutoSynchronizationService syncService = Ioc.GetOrCreate<IAutoSynchronizationService>();
+            syncService.SynchronizeAtShutdown();
+            base.OnStop();
+        }
+
+        /// <inheritdoc/>
+        protected override void OnPause()
+        {
+            base.OnPause();
+            try
+            {
+                // With turning off the view, we prevent the content of possibly encrypted notes to
+                // become visible in the list of recent apps.
+                _webView.Visibility = ViewStates.Invisible;
+
+                INavigationService navigationService = Ioc.GetOrCreate<INavigationService>();
+                _lastNavigation = navigationService?.CurrentNavigation;
+                navigationService.CurrentController?.StoreUnsavedData();
+                navigationService.CurrentController?.Dispose();
+
+                // Make sure that all open safes are closed.
+                IRepositoryStorageService repositoryService = Ioc.GetOrCreate<IRepositoryStorageService>();
+                repositoryService.LoadRepositoryOrDefault(out NoteRepositoryModel repositoryModel);
+                repositoryModel?.Safes.ForEach(safe => safe.Close());
+            }
+            catch (Exception)
+            {
+                // No exception should escape here.
+            }
+        }
+
+        /// <summary>
+        /// The OnStart() and OnNewIntent() methods have no guaranteed order, so we do all the
+        /// work for starting up the app here, this is guaranteed to be called after them.
+        /// </summary>
+        protected override void OnResume()
+        {
+            base.OnResume();
+
+            // Turn on the view again, see OnPause().
+            if (_webView.Visibility != ViewStates.Visible)
+                _webView.Visibility = ViewStates.Visible;
 
             INavigationService navigationService = Ioc.GetOrCreate<INavigationService>();
             IStoryBoardService storyBoardService = Ioc.GetOrCreate<IStoryBoardService>();
@@ -132,85 +215,6 @@ namespace SilentNotes.Android
                 IAutoSynchronizationService syncService = Ioc.GetOrCreate<IAutoSynchronizationService>();
                 syncService.SynchronizeAtStartup(); // no awaiting, run in background
             }
-        }
-
-        /// <inheritdoc/>
-        protected override void OnNewIntent(Intent intent)
-        {
-            base.OnNewIntent(intent);
-            ConsumeActionSendIntentParameter(intent);
-        }
-
-        /// <summary>
-        /// Checks whether the intent was created by an <see cref="ActionSendActivity"/> and stores
-        /// its parameter to the variable <see cref="_actionSendParameter"/>, so it can later be
-        /// used to start up the app.
-        /// </summary>
-        /// <param name="intent">The active indent.</param>
-        private void ConsumeActionSendIntentParameter(Intent intent)
-        {
-            bool isStartedWithActionSend = intent.HasExtra(ActionSendActivity.NoteHtmlParam);
-            if (isStartedWithActionSend)
-            {
-                _actionSendParameter = intent.GetStringExtra(ActionSendActivity.NoteHtmlParam);
-                intent.RemoveExtra(ActionSendActivity.NoteHtmlParam);
-            }
-            else
-            {
-                _actionSendParameter = null;
-            }
-        }
-
-        private static bool CanStartupWithLastNavigation(Navigation navigation)
-        {
-            var allowedStartupNavigations = new[] { ControllerNames.NoteRepository, ControllerNames.Note, ControllerNames.Checklist, ControllerNames.Settings, ControllerNames.Info };
-            return allowedStartupNavigations.Contains(navigation?.ControllerId);
-        }
-
-        /// <inheritdoc/>
-        protected override void OnStop()
-        {
-            INavigationService navigationService = Ioc.GetOrCreate<INavigationService>();
-            _lastNavigation = navigationService?.CurrentNavigation;
-            navigationService.CurrentController?.StoreUnsavedData();
-            navigationService.CurrentController?.Dispose();
-
-            // Make sure that all open safes are closed.
-            IRepositoryStorageService repositoryService = Ioc.GetOrCreate<IRepositoryStorageService>();
-            repositoryService.LoadRepositoryOrDefault(out NoteRepositoryModel repositoryModel);
-            repositoryModel?.Safes.ForEach(safe => safe.Close());
-
-            // The synchronization continues when we do not await it, even if another app became
-            // active in the meantime. As long as the user doesn't swipe away the app from the
-            // "recent apps", it can finish the job, that's exactly what we need.
-            // Tested with Android 5.0, 8.1
-            IAutoSynchronizationService syncService = Ioc.GetOrCreate<IAutoSynchronizationService>();
-            syncService.SynchronizeAtShutdown();
-            base.OnStop();
-        }
-
-        protected override void OnPause()
-        {
-            base.OnPause();
-            try
-            {
-                // With turning off the view, we prevent the content of possibly encrypted notes to
-                // become visible in the list of recent apps.
-                _webView.Visibility = ViewStates.Invisible;
-            }
-            catch (Exception)
-            {
-                // We tried, but no exception should escape here.
-            }
-        }
-
-        protected override void OnResume()
-        {
-            base.OnResume();
-
-            // Turn on the view again, see OnPause().
-            if (_webView.Visibility != ViewStates.Visible)
-                _webView.Visibility = ViewStates.Visible;
         }
 
         /// <inheritdoc/>
