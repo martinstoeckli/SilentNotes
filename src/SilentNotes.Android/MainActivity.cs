@@ -13,8 +13,8 @@ using Android.Graphics;
 using Android.OS;
 using Android.Runtime;
 using Android.Util;
-using Android.Webkit;
 using Android.Views;
+using Android.Webkit;
 using Java.IO;
 using SilentNotes.Controllers;
 using SilentNotes.HtmlView;
@@ -105,7 +105,9 @@ namespace SilentNotes.Android
         private void ConsumeActionSendIntentParameter(Intent intent)
         {
             bool isStartedWithActionSend = intent.HasExtra(ActionSendActivity.NoteHtmlParam);
-            if (isStartedWithActionSend)
+            bool isAlreadyHandled = intent.Flags.HasFlag(ActivityFlags.LaunchedFromHistory);
+
+            if (isStartedWithActionSend && !isAlreadyHandled)
             {
                 _actionSendParameter = intent.GetStringExtra(ActionSendActivity.NoteHtmlParam);
                 intent.RemoveExtra(ActionSendActivity.NoteHtmlParam);
