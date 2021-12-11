@@ -77,6 +77,7 @@ namespace SilentNotes.Android
             settings.CacheMode = CacheModes.NoCache; // is already local content
             settings.JavaScriptCanOpenWindowsAutomatically = false; // same as default
             settings.SetSupportMultipleWindows(false); // same as default
+            settings.TextZoom = 100; // Ignores system font size, so the app controls the font size
         }
 
         /// <inheritdoc/>
