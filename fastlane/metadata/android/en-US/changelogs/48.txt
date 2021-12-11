@@ -1,0 +1,5 @@
+SilentNotes version 6.0.2
+
+* Fixed white screen when closing SilentNotes app with the back key.
+* Fixed flawed user interface because of large Android system font size.
+* Added Russian translation.

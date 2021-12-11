@@ -1,0 +1,5 @@
+SilentNotes version 6.0.2
+
+* Problem mit weissem Screen nach drücken der Zurücktaste behoben.
+* Fehlerhafte Darstellung wegen grosser Schriftgrösse in den Android Einstellungen behoben.
+* Russische Übersetzung hinzugefügt.
