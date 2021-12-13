@@ -143,7 +143,7 @@ sync_repository_cloud 使用服务器上的笔记，删除本地设备上的笔�
 sync_repository_device 使用本地设备上的笔记，删除服务器上的笔记。
 pushpull_pull_confirmation 该本地笔记将被来自在线存储的笔记覆盖。您确定要继续吗？
 pushpull_push_confirmation 在线存储的笔记将被该本地笔记覆盖。您确定要继续吗？
-pushpull_success Successfully 同步此笔记。
+pushpull_success Successfully 已成功同步此笔记。
 pushpull_error_need_sync_first 无法将此笔记与云端同步，请手动同步所有笔记。
 pushpull_error_no_cloud_note 在线存储中不存在此笔记，请先将所有笔记同步。
 
@@ -158,9 +158,9 @@ gui_font_size 字体大小 (更小 ‹ 常规 › 更大)
 gui_note_max_size 最大笔记高度 (更小 ‹ 常规 › 更大)
 gui_texture 主题
 gui_default_color 新笔记默认颜色
-gui_theme_auto 自动明亮或深色模式
+gui_theme_auto 自动浅色或深色模式
 gui_theme_dark 深色模式
-gui_theme_light 明亮模式
+gui_theme_light 浅色模式
 gui_theme_solid_color 纯色代替背景图像
 gui_theme_color_all_dark 深色模式下所有笔记使用相同颜色
 gui_theme_color_cannot_change 所有笔记使用相同颜色已设置。
