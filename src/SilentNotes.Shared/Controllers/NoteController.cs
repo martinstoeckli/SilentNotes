@@ -101,7 +101,7 @@ namespace SilentNotes.Controllers
                 settingsService,
                 cryptor,
                 noteRepository.Safes,
-                noteRepository.CollectAllTags(),
+                noteRepository.CollectActiveTags(),
                 note);
             SetHtmlViewBackgroundColor(htmlView);
 
