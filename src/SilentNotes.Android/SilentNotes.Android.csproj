@@ -121,6 +121,12 @@
     <AndroidAsset Include="..\Localization\Lng.SilentNotes.cz">
       <Link>Lng.SilentNotes.cz</Link>
     </AndroidAsset>
+    <AndroidAsset Include="..\Localization\Lng.SilentNotes.ru">
+      <Link>Lng.SilentNotes.ru</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Localization\Lng.SilentNotes.zh">
+      <Link>Lng.SilentNotes.zh</Link>
+    </AndroidAsset>
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
     <AndroidResource Include="Resources\layout\Main.axml">

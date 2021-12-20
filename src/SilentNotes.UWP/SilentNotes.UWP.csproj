@@ -285,6 +285,12 @@
     <Content Include="Assets\Wide310x150Logo.scale-100.png" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
     <Content Include="Assets\Wide310x150Logo.scale-400.png" />
+    <Content Include="..\Localization\Lng.SilentNotes.ru">
+      <Link>Lng.SilentNotes.ru</Link>
+    </Content>
+    <Content Include="..\Localization\Lng.SilentNotes.zh">
+      <Link>Lng.SilentNotes.zh</Link>
+    </Content>
     <None Include="Package.StoreAssociation.xml" />
     <Content Include="Properties\Default.rd.xml" />
   </ItemGroup>
