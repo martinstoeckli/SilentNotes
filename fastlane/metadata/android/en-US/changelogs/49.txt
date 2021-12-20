@@ -1,0 +1,5 @@
+SilentNotes version 6.0.3
+
+* Tags from notes in the recycling bin are now ignored.
+* Added Russian translation.
+* Added Chinese translation.

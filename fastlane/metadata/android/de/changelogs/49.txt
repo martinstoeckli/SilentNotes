@@ -1,0 +1,5 @@
+SilentNotes version 6.0.3
+
+* Schlagwörter von Notizen aus dem Papierkorb werden nun ignoriert.
+* Russische Übersetzung hinzugefügt.
+* Chinesische Übersetzung hinzugefügt.
