@@ -99,17 +99,21 @@ namespace SilentNotes.Models
 
         /// <summary>
         /// Creates a distinct and sorted list of all tags of all notes in the repository.
+        /// Tags from notes in the recycle bin are ignored.
         /// </summary>
         /// <returns>List of all tags.</returns>
-        public List<string> CollectAllTags()
+        public List<string> CollectActiveTags()
         {
             var result = new List<string>();
             foreach (NoteModel note in Notes)
             {
-                foreach (string tag in note.Tags)
+                if (!note.InRecyclingBin)
                 {
-                    if (!result.Contains(tag, StringComparer.InvariantCultureIgnoreCase))
-                        result.Add(tag);
+                    foreach (string tag in note.Tags)
+                    {
+                        if (!result.Contains(tag, StringComparer.InvariantCultureIgnoreCase))
+                            result.Add(tag);
+                    }
                 }
             }
             result.Sort(StringComparer.InvariantCultureIgnoreCase);

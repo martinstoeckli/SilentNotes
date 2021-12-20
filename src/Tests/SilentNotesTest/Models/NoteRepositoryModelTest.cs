@@ -93,18 +93,31 @@ namespace SilentNotesTest.Models
         }
 
         [Test]
-        public void CollectAllTags_IsDistinctAndSorted()
+        public void CollectActiveTags_IsDistinctAndSorted()
         {
             NoteRepositoryModel model = CreateNoteRepositoryModel();
             model.Notes.Add(new NoteModel { Tags = new List<string> { "Def", "OPQ" } });
             model.Notes.Add(new NoteModel { Tags = new List<string> { "abc", "def", "äbc" } });
 
-            List<string> tags = model.CollectAllTags().ToList();
+            List<string> tags = model.CollectActiveTags().ToList();
             Assert.AreEqual(4, tags.Count);
             Assert.AreEqual("abc", tags[0]);
             Assert.AreEqual("äbc", tags[1]);
             Assert.AreEqual("Def", tags[2]);
             Assert.AreEqual("OPQ", tags[3]);
+        }
+
+        [Test]
+        public void CollectActiveTags_IgnoresTagsFromRecyclebin()
+        {
+            NoteRepositoryModel model = CreateNoteRepositoryModel();
+            model.Notes.Add(new NoteModel { Tags = new List<string> { "Def", "OPQ" } });
+            model.Notes.Add(new NoteModel { Tags = new List<string> { "abc", "def", "äbc" }, InRecyclingBin = true });
+
+            List<string> tags = model.CollectActiveTags().ToList();
+            Assert.AreEqual(2, tags.Count);
+            Assert.AreEqual("Def", tags[0]);
+            Assert.AreEqual("OPQ", tags[1]);
         }
 
         private static NoteRepositoryModel CreateNoteRepositoryModel()

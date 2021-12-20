@@ -64,7 +64,7 @@ namespace SilentNotes.ViewModels
             _repositoryService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepository);
             Model = noteRepository;
 
-            Tags = Model.CollectAllTags();
+            Tags = Model.CollectActiveTags();
             Tags.Insert(0, EmptyTagFilter);
 
             // Initialize commands and events
@@ -87,7 +87,8 @@ namespace SilentNotes.ViewModels
 
             // If a filter was set before e.g. opening a note, set the same filter again.
             SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
-            ClearSelectedTagIfNotContainedInNotes(settings, Tags);
+            if (!SelectedTagExistsInTags())
+                settings.SelectedTag = null;
 
             if (!string.IsNullOrEmpty(settings.SelectedTag) || !string.IsNullOrEmpty(settings.Filter))
             {
@@ -99,13 +100,12 @@ namespace SilentNotes.ViewModels
             }
         }
 
-        private static void ClearSelectedTagIfNotContainedInNotes(SettingsModel settings, List<string> tags)
+        private bool SelectedTagExistsInTags()
         {
             // An invalid selected tag can exist if the user edited a note (deleted a tag) and
             // returned to the overview, which still remembers this selected tag.
-            NoteFilter noteFilter = new NoteFilter(null, settings.SelectedTag);
-            if (!noteFilter.ContainsTag(tags))
-                settings.SelectedTag = null;
+            NoteFilter noteFilter = new NoteFilter(null, SelectedTag);
+            return noteFilter.ContainsTag(Tags);
         }
 
         /// <inheritdoc/>
@@ -295,7 +295,7 @@ namespace SilentNotes.ViewModels
             noteModel.BackgroundColorHex = _settingsService.LoadSettingsOrDefault().DefaultNoteColorHex;
 
             // Update view model list
-            NoteViewModel noteViewModel = new NoteViewModel(_navigationService, Language, Icon, Theme, _webviewBaseUrl, _searchableTextConverter, _repositoryService, _feedbackService, null, _noteCryptor, _model.Safes, _model.CollectAllTags(), noteModel); ;
+            NoteViewModel noteViewModel = new NoteViewModel(_navigationService, Language, Icon, Theme, _webviewBaseUrl, _searchableTextConverter, _repositoryService, _feedbackService, null, _noteCryptor, _model.Safes, _model.CollectActiveTags(), noteModel); ;
             NoteInsertionMode insertionMode = _settingsService.LoadSettingsOrDefault().DefaultNoteInsertion;
             switch (insertionMode)
             {
@@ -347,7 +347,16 @@ namespace SilentNotes.ViewModels
             // Remove note from filtered list
             int selectedIndex = FilteredNotes.IndexOf(selectedNote);
             FilteredNotes.RemoveAt(selectedIndex);
-            OnPropertyChanged("Notes");
+
+            Tags = Model.CollectActiveTags();
+            Tags.Insert(0, EmptyTagFilter);
+            OnPropertyChanged("Tags");
+
+            // If the note was the last one containing the selected tag, the filter should be cleared
+            if (!SelectedTagExistsInTags())
+                SelectedTag = null;
+            else
+                OnPropertyChanged("Notes");
 
             _feedbackService.ShowToast(Language.LoadText("feedback_note_to_recycle"));
         }
@@ -356,7 +365,7 @@ namespace SilentNotes.ViewModels
         /// Gets a list of all tags which are used in the notes, plus the <see cref="EmptyTagFilter"/>.
         /// </summary>
         [VueDataBinding(VueBindingMode.OneWayToView)]
-        public List<string> Tags { get; }
+        public List<string> Tags { get; private set; }
 
         /// <summary>
         /// Gets or sets the selected tag string, or the <see cref="EmptyTagFilter"/> in case that no
@@ -576,7 +585,7 @@ namespace SilentNotes.ViewModels
                 _model = value;
 
                 // Wrap models in view models
-                List<string> allTags = _model.CollectAllTags();
+                List<string> allTags = _model.CollectActiveTags();
                 foreach (NoteModel note in _model.Notes)
                 {
                     NoteViewModel noteViewModel = new NoteViewModel(_navigationService, Language, Icon, Theme, _webviewBaseUrl, _searchableTextConverter, _repositoryService, _feedbackService, _settingsService, _noteCryptor, _model.Safes, allTags, note);
