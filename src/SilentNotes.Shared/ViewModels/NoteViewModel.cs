@@ -499,14 +499,7 @@ namespace SilentNotes.ViewModels
             set
             {
                 ChangePropertyIndirect(() => Model.IsPinned, (v) => Model.IsPinned = v, value, true);
-                if (Model.IsPinned)//TODO: delete, just for debugging
-                {
-                    BackgroundColorHex = "#ffff00";
-                }
-                else
-                {
-                    BackgroundColorHex = "#ffffff";
-                }
+
                 PinnedChanged = !PinnedChanged; //if you click the button back, it shouldn't register as changed
             }
         }
