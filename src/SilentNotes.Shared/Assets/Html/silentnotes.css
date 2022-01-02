@@ -168,6 +168,21 @@ input[type="color"] { padding: 1px; }
 	bottom: 14px;
 }
 
+/*Not working */
+.pin {
+	left: 5px;
+	bottom: auto;
+	top: 5px;
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+	position: absolute;
+	top: 14px;
+	right: 18px;
+	width: 26px;
+	height: 26px;
+}
+
 .background-icon {
 	position: fixed;
 	display: inline-block;
