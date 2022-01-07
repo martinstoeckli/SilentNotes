@@ -1,0 +1,20 @@
+Gizliliğinize değer veriyoruz. <i>SilentNotes</i> kişisel verilerinizi toplamaz ve reklamsız çalışır. Kaynak kodu herkese açıktır. Kullanıcı dostu WYSIWYG tipi düzenleyici sayesinde notlarınızı rahatça yazabilir, uçtan uca şifreleme ile de notlarınızı Android ve Windows cihazlarınız arasında kolayca eşitleyebilirsiniz.
+
+Not oluşturma özelliğinin yanı sıra liste oluşturma özelliği de mevcuttur. Ayrıca notlarınızı şifreleyerek koruyabilir, arama özelliği sayesinde de istediğiniz zaman kolayca bulabilirsiniz.
+
+* İstediğiniz yerde not alın ve notunuzu Android ve Windows cihazlarınız arasında kolayca eşitleyin.
+* Kolayca kullanabileceğiniz WYSIWYG tipi düzenleyicisi ile notlarınızı yazın.
+* Liste oluşturama özelliği ile yapılacak şeyleri listeleyin.
+* Seçtiğiniz notları şifreleyerek koruyun.
+* Etiketleme sistemi ile notlarınızı organize edin.
+* Arama özelliği sayesinde istediğiniz notu kolayca bulun.
+* Notlarınızı çevrimiçi depolama özelliği ile saklayın. Bu özellik sayesinde notlarınızı rahatça yedekleyebilir, cihazlarınız arasında kolayca eşitleyebilirsiniz.
+* FTP, WebDav, Dropbox, Google Drive ve OneDrive desteği mevcuttur.
+* Cihaz dışına aktarılan notlar her zaman şifrelenir. Hepsi uçtan uca şifrelenir ve yalnızca kendi cihazınızda açılabilir.
+* Koyu tema sayesinde notlarınıza gece de rahatça göz atın.
+* Temel formatlama desteği ile notlarınızı dilediğiniz gibi biçimlendirin.
+* Yanlışlıkla sildiğiniz notları geri dönüşüm kutusu özelliği sayesinde kurtarın.
+* SilentNotes kişisel verilerinizi toplamaz ve sizden gereksiz izinler istemez.
+* SilentNotes açık kaynaklı bir uygulamadır ve kaynak kodu Github üzerinden doğrulanabilir.
+
+Uygulamanın Windows sürümü Microsoft Store’da mevcuttur.
