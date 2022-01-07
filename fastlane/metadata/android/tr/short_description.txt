@@ -1,0 +1,1 @@
+Notlarınızı uçtan uca şifreleme ile bilgisayarınıza senkronize edebileceğiniz bir not uygulaması.
