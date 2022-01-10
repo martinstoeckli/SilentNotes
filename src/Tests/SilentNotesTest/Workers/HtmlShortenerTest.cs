@@ -88,5 +88,13 @@ namespace SilentNotesTest.Workers
             string result = shortener.Shorten("<p>abc<li>def</li><p>ghi</p><p>klm</p>");
             Assert.AreEqual("<p>abc<li>def</li><p>ghi</p><p>klm</p>", result);
         }
+
+        [Test]
+        public void Shrorten_ReducesItemsOfLongList()
+        {
+            HtmlShortener shortener = new HtmlShortener { MinimumLengthForShortening = 1, WantedTagNumber = 3 };
+            string result = shortener.Shorten("<ul><li>111</li><li>222</li><li>333</li><li>444</li><li>555</li></ul>");
+            Assert.AreEqual("<ul><li>111</li><li>222</li><li>333</li></ul>", result);
+        }
     }
 }
