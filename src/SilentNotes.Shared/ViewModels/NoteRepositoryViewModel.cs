@@ -349,17 +349,30 @@ namespace SilentNotes.ViewModels
             noteModel.BackgroundColorHex = _settingsService.LoadSettingsOrDefault().DefaultNoteColorHex;
 
             // Update view model list
-            NoteViewModel noteViewModel = new NoteViewModel(_navigationService, Language, Icon, Theme, _webviewBaseUrl, _searchableTextConverter, _repositoryService, _feedbackService, null, _noteCryptor, _model.Safes, _model.CollectActiveTags(), noteModel); ;
+            NoteViewModel noteViewModel = new NoteViewModel(
+                _navigationService,
+                Language,
+                Icon,
+                Theme,
+                _webviewBaseUrl,
+                _searchableTextConverter,
+                _repositoryService,
+                _feedbackService,
+                null,
+                _noteCryptor,
+                _model.Safes,
+                _model.CollectAllTags(),
+                noteModel);
+
             NoteInsertionMode insertionMode = _settingsService.LoadSettingsOrDefault().DefaultNoteInsertion;
             switch (insertionMode)
             {
                 case NoteInsertionMode.AtTop:
 
-                    _model.Notes.Insert(0, noteModel);
-
-                    var firstUnpinned = AllNotes.FirstOrDefault(x => x.IsPinned == false);
+                    var firstUnpinned = AllNotes.FirstOrDefault(x => x.IsPinned == false && x.InRecyclingBin == false);
                     var index = firstUnpinned == null ? 0 : AllNotes.IndexOf(firstUnpinned);
 
+                    _model.Notes.Insert(index, noteModel);
                     AllNotes.Insert(index, noteViewModel);
 
                     firstUnpinned = FilteredNotes.FirstOrDefault(x => x.IsPinned == false);
