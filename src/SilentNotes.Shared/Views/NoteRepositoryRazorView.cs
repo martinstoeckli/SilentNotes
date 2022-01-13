@@ -23,7 +23,7 @@ using SilentNotes.ViewModels;
 #line hidden
 
 
-[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.11.0.190")]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "17.0.0.343")]
 public partial class NoteRepositoryRazorView : NoteRepositoryRazorViewBase
 {
 
@@ -897,6 +897,20 @@ WriteLiteral("\r\n");
 #line hidden
 
 #line 192 "NoteRepositoryRazorView.cshtml"
+          WriteLiteral(Model.Icon.LoadIcon("pin", new[] { new KeyValuePair<string, string>("id", "svg-pin") }));
+
+#line default
+#line hidden
+WriteLiteral("\r\n");
+
+
+#line 193 "NoteRepositoryRazorView.cshtml"
+        
+
+#line default
+#line hidden
+
+#line 193 "NoteRepositoryRazorView.cshtml"
           WriteLiteral(Model.Icon.LoadIcon("order-bool-ascending-variant", new[] { new KeyValuePair<string, string>("id", "svg-order-bool-ascending-variant") }));
 
 #line default

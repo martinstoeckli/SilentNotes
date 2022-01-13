@@ -165,22 +165,19 @@ input[type="color"] { padding: 1px; }
 .recycle-handle {
 	right: 18px;
 	top: auto;
-	bottom: 14px;
+	bottom: 14px;	
 }
 
-/*Not working */
 .pin {
-	left: 5px;
+	width: 26px;
+	height: 26px;
+	left: 3px;
+	top: 7px;
 	bottom: auto;
-	top: 5px;
 	display: inline-flex;
 	justify-content: center;
 	align-items: center;
 	position: absolute;
-	top: 14px;
-	right: 18px;
-	width: 26px;
-	height: 26px;
 }
 
 .background-icon {

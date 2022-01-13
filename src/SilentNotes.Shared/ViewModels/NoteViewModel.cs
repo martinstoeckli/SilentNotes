@@ -500,7 +500,7 @@ namespace SilentNotes.ViewModels
             {
                 ChangePropertyIndirect(() => Model.IsPinned, (v) => Model.IsPinned = v, value, true);
 
-                PinnedChanged = !PinnedChanged; //if you click the button back, it shouldn't register as changed
+                PinnedChanged = !PinnedChanged; 
             }
         }
 
@@ -513,7 +513,6 @@ namespace SilentNotes.ViewModels
         private void TogglePinned()
         {
             IsPinned = !IsPinned;
-            //PinnedChanged = !PinnedChanged; //if you click the button back, it shouldn't register as changed
         }
 
         /// <summary>

@@ -20,6 +20,7 @@ a:hover { color: #7ba7cc; }
 .sortable-ghost { background-color: rgba(38, 160, 218, 0.3); }
 .note-handle { background-color: rgba(172, 172, 172, 0.5); fill: #707070 }
 .note-handle.dark { background-color: rgba(204, 204, 204, 0.7); fill: #606060; }
+.pin { fill: #cccccc;}
 #tag-container { background-color: rgba(172, 172, 172, 0.5) }
 #tag-container.dark { background-color: rgba(204, 204, 204, 0.5) }
 #tag-container .tag-item { color: black !important; }
