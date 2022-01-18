@@ -26,6 +26,14 @@ namespace SilentNotesTest.Workers
         }
 
         [Test]
+        public void Shorten_TruncatesWantedLength()
+        {
+            HtmlShortener shortener = new HtmlShortener { MinimumLengthForShortening = 1, WantedTagNumber = 100000, WantedLength = 5 };
+            string result = shortener.Shorten("<p>abc</p><p>def</p><p>ghi</p><p>jkl</p><p>mno</p>");
+            Assert.AreEqual("<p>abc</p><p>def</p>", result);
+        }
+
+        [Test]
         public void Shorten_IsCaseInsensitive()
         {
             HtmlShortener shortener = new HtmlShortener { MinimumLengthForShortening = 1, WantedTagNumber = 3 };
@@ -50,11 +58,11 @@ namespace SilentNotesTest.Workers
         }
 
         [Test]
-        public void Shorten_StripsOffEnclosingHtmlTag()
+        public void Shorten_KeepsEnclosingHtmlTag()
         {
             HtmlShortener shortener = new HtmlShortener { MinimumLengthForShortening = 1, WantedTagNumber = 2 };
             string result = shortener.Shorten("<!DOCTYPE html><html><head><meta charset='utf-8'></head><body><p>abc</p><p>def</p><p>ghi</p></body></html>");
-            Assert.AreEqual("<p>abc</p><p>def</p>", result);
+            Assert.AreEqual("<!DOCTYPE html><html><head><meta charset='utf-8'></head><body><p>abc</p><p>def</p></body></html>", result);
         }
 
         [Test]
@@ -78,15 +86,39 @@ namespace SilentNotesTest.Workers
         {
             HtmlShortener shortener = new HtmlShortener { MinimumLengthForShortening = 1, WantedTagNumber = 2 };
             string result = shortener.Shorten("<p>abc<li>def</li></p><p><li><li>hi</li></li>ghi</p><p>klm</p>");
-            Assert.AreEqual("<p>abc<li>def</li></p><p><li><li>hi</li></li>ghi</p>", result);
+            Assert.AreEqual("<p>abc<li>def</li></p>", result);
         }
 
         [Test]
-        public void Shorten_UnfinishedTagReturnsAll()
+        public void Shorten_UnfinishedTagWorksCorrectly()
         {
             HtmlShortener shortener = new HtmlShortener { MinimumLengthForShortening = 1, WantedTagNumber = 2 };
             string result = shortener.Shorten("<p>abc<li>def</li><p>ghi</p><p>klm</p>");
-            Assert.AreEqual("<p>abc<li>def</li><p>ghi</p><p>klm</p>", result);
+            Assert.AreEqual("<p>abc<li>def</li>", result);
+        }
+
+        [Test]
+        public void Shorten_ReducesItemsOfLongList()
+        {
+            HtmlShortener shortener = new HtmlShortener { MinimumLengthForShortening = 1, WantedTagNumber = 3 };
+            string result = shortener.Shorten("<ul><li>111</li><li>222</li><li>333</li><li>444</li><li>555</li></ul>");
+            Assert.AreEqual("<ul><li>111</li><li>222</li><li>333</li></ul>", result);
+        }
+
+        [Test]
+        public void Shorten_ReducesItemsAcrossDistributedLists()
+        {
+            HtmlShortener shortener = new HtmlShortener { MinimumLengthForShortening = 1, WantedTagNumber = 3 };
+            string result = shortener.Shorten("<ul><li>111</li><li>222</li></ul><ul><li>333</li><li>444</li><li>555</li></ul>");
+            Assert.AreEqual("<ul><li>111</li><li>222</li></ul><ul><li>333</li></ul>", result);
+        }
+
+        [Test]
+        public void Shorten_HandleSelfClosingItemsCorrectly()
+        {
+            HtmlShortener shortener = new HtmlShortener { MinimumLengthForShortening = 1, WantedTagNumber = 5 };
+            string result = shortener.Shorten("<p>aaa</p><div/><p>bbb</p><br><p>ccc</p><br/><p>ddd</p><p>eee</p>");
+            Assert.AreEqual("<p>aaa</p><div/><p>bbb</p><br><p>ccc</p><br/><p>ddd</p>", result);
         }
     }
 }
