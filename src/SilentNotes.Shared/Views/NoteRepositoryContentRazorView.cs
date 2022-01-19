@@ -180,37 +180,33 @@ WriteLiteral("</div>\r\n");
 
 #line default
 #line hidden
-WriteLiteral("            </div>\r\n                        \r\n            <div");
+WriteLiteral("            </div>\r\n");
+
+
+#line 17 "NoteRepositoryContentRazorView.cshtml"
+            
+
+#line default
+#line hidden
+
+#line 17 "NoteRepositoryContentRazorView.cshtml"
+             if (!@note.IsPinned)
+            {//Changed as per email. TODO: delete comment
+
+
+#line default
+#line hidden
+WriteLiteral("               <div");
 
 WriteAttribute ("class", " class=\"", "\""
 , Tuple.Create<string,object,bool> ("", "pin", true)
 
-#line 18 "NoteRepositoryContentRazorView.cshtml"
+#line 19 "NoteRepositoryContentRazorView.cshtml"
 , Tuple.Create<string,object,bool> (" ", note.GetDarkClass()
 
 #line default
 #line hidden
 , false)
-, Tuple.Create<string,object,bool> (" ", new Action<System.IO.TextWriter> (__razor_attribute_value_writer => {
-
-#line 18 "NoteRepositoryContentRazorView.cshtml"
-                                                  if (!@note.IsPinned) {
-
-#line default
-#line hidden
-WriteLiteralTo(__razor_attribute_value_writer, " ");
-
-WriteLiteralTo(__razor_attribute_value_writer, "hidden");
-
-WriteLiteralTo(__razor_attribute_value_writer, " ");
-
-
-#line 18 "NoteRepositoryContentRazorView.cshtml"
-                                                                                             }
-
-#line default
-#line hidden
-}), false)
 );
 WriteLiteral("><svg");
 
@@ -224,13 +220,22 @@ WriteLiteral("><use");
 
 WriteLiteral(" xlink:href=\"#svg-pin\"");
 
-WriteLiteral(" /></svg></div>            \r\n            <div");
+WriteLiteral(" /></svg></div>            \r\n");
+
+
+#line 20 "NoteRepositoryContentRazorView.cshtml"
+            }
+
+
+#line default
+#line hidden
+WriteLiteral("            <div");
 
 WriteAttribute ("class", " class=\"", "\""
 , Tuple.Create<string,object,bool> ("", "note-handle", true)
 , Tuple.Create<string,object,bool> (" ", "sortable-handle", true)
 
-#line 19 "NoteRepositoryContentRazorView.cshtml"
+#line 21 "NoteRepositoryContentRazorView.cshtml"
             , Tuple.Create<string,object,bool> (" ", note.GetDarkClass()
 
 #line default
@@ -257,7 +262,7 @@ WriteAttribute ("class", " class=\"", "\""
 , Tuple.Create<string,object,bool> (" ", "greenish", true)
 , Tuple.Create<string,object,bool> (" ", new Action<System.IO.TextWriter> (__razor_attribute_value_writer => {
 
-#line 20 "NoteRepositoryContentRazorView.cshtml"
+#line 22 "NoteRepositoryContentRazorView.cshtml"
                                                           if (!@Model.IsAnySafeOpen || @note.IsInSafe || @note.IsLocked) {
 
 #line default
@@ -269,14 +274,14 @@ WriteLiteralTo(__razor_attribute_value_writer, "hidden");
 WriteLiteralTo(__razor_attribute_value_writer, " ");
 
 
-#line 20 "NoteRepositoryContentRazorView.cshtml"
+#line 22 "NoteRepositoryContentRazorView.cshtml"
                                                                                                                                                }
 
 #line default
 #line hidden
 }), false)
 
-#line 20 "NoteRepositoryContentRazorView.cshtml"
+#line 22 "NoteRepositoryContentRazorView.cshtml"
                                                                                                          , Tuple.Create<string,object,bool> (" ", note.GetDarkClass()
 
 #line default
@@ -307,7 +312,7 @@ WriteAttribute ("class", " class=\"", "\""
 , Tuple.Create<string,object,bool> (" ", "reddish", true)
 , Tuple.Create<string,object,bool> (" ", new Action<System.IO.TextWriter> (__razor_attribute_value_writer => {
 
-#line 21 "NoteRepositoryContentRazorView.cshtml"
+#line 23 "NoteRepositoryContentRazorView.cshtml"
                                                          if (!@Model.IsAnySafeOpen || !@note.IsInSafe || @note.IsLocked) {
 
 #line default
@@ -319,14 +324,14 @@ WriteLiteralTo(__razor_attribute_value_writer, "hidden");
 WriteLiteralTo(__razor_attribute_value_writer, " ");
 
 
-#line 21 "NoteRepositoryContentRazorView.cshtml"
+#line 23 "NoteRepositoryContentRazorView.cshtml"
                                                                                                                                                }
 
 #line default
 #line hidden
 }), false)
 
-#line 21 "NoteRepositoryContentRazorView.cshtml"
+#line 23 "NoteRepositoryContentRazorView.cshtml"
                                                                                                          , Tuple.Create<string,object,bool> (" ", note.GetDarkClass()
 
 #line default
@@ -355,7 +360,7 @@ WriteAttribute ("class", " class=\"", "\""
 , Tuple.Create<string,object,bool> ("", "note-handle", true)
 , Tuple.Create<string,object,bool> (" ", "recycle-handle", true)
 
-#line 22 "NoteRepositoryContentRazorView.cshtml"
+#line 24 "NoteRepositoryContentRazorView.cshtml"
            , Tuple.Create<string,object,bool> (" ", note.GetDarkClass()
 
 #line default
@@ -379,7 +384,7 @@ WriteLiteral(" xlink:href=\"#svg-delete\"");
 WriteLiteral(" /></svg></div>\r\n        </li>\r\n");
 
 
-#line 24 "NoteRepositoryContentRazorView.cshtml"
+#line 26 "NoteRepositoryContentRazorView.cshtml"
     }
 
 

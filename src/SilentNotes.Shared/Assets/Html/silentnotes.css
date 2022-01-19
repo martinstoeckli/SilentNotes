@@ -178,6 +178,7 @@ input[type="color"] { padding: 1px; }
 	justify-content: center;
 	align-items: center;
 	position: absolute;
+	fill: #e60000;
 }
 
 .background-icon {
