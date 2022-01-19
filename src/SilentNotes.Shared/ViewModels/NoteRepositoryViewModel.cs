@@ -369,14 +369,21 @@ namespace SilentNotes.ViewModels
             {
                 case NoteInsertionMode.AtTop:
 
-                    var firstUnpinned = AllNotes.FirstOrDefault(x => x.IsPinned == false && x.InRecyclingBin == false);
-                    var index = firstUnpinned == null ? 0 : AllNotes.IndexOf(firstUnpinned);
+                    /*
+                     * Switched to last pinned instead of first unpinned -
+                     * If there were only pinned notes, the index would be 0, and the new
+                     * unpinned note would be placed in front of all the pinned.
+                     * Also removed recycle bin condition as per email.
+                     */
+                    var lastPinned = AllNotes.LastOrDefault(x => x.IsPinned == true);
+
+                    var index = lastPinned == null ? 0 : AllNotes.IndexOf(lastPinned) + 1;
 
                     _model.Notes.Insert(index, noteModel);
                     AllNotes.Insert(index, noteViewModel);
 
-                    firstUnpinned = FilteredNotes.FirstOrDefault(x => x.IsPinned == false);
-                    index = firstUnpinned == null ? 0 : FilteredNotes.IndexOf(firstUnpinned);
+                    lastPinned = FilteredNotes.LastOrDefault(x => x.IsPinned == true);
+                    index = lastPinned == null ? 0 : FilteredNotes.IndexOf(lastPinned) + 1;
 
                     FilteredNotes.Insert(index, noteViewModel);
                     break;
