@@ -227,46 +227,47 @@ WriteLiteral("px !important;\r\n}\r\n.color-btn { color: black; }\r\n.color-btn.
 ";\r\n            element.scrollTop = element.scrollHeight;\r\n        }\r\n\r\n        f" +
 "unction toggleShoppingMode() {\r\n            vm.ShoppingModeActive = !vm.Shopping" +
 "ModeActive;\r\n            quill.enable(!vm.ShoppingModeActive);\r\n        }\r\n\r\n   " +
-"     function togglePinned() {\r\n            vm.IsPinned = !vm.IsPinned;\r\n       " +
-"     //quill.enable(!vm.IsPinned);\r\n        }\r\n\r\n        function refreshActiveF" +
-"ormatState() {\r\n            var selectionFormat = quill.getFormat();\r\n          " +
-"  var formatValue = selectionFormat[\'header\'];\r\n            vm.Header1Active = f" +
-"ormatValue == 1;\r\n            vm.Header2Active = formatValue == 2;\r\n            " +
-"vm.Header3Active = formatValue == 3;\r\n            vm.BoldActive = selectionForma" +
-"t[\'bold\'];\r\n            vm.ItalicActive = selectionFormat[\'italic\'];\r\n          " +
-"  formatValue = selectionFormat[\'list\'];\r\n            vm.ListOrderedActive = for" +
-"matValue == \'ordered\';\r\n            vm.ListBulletActive = formatValue == \'bullet" +
-"\';\r\n            vm.CodeActive = selectionFormat[\'code-block\'];\r\n            vm.Q" +
-"uoteActive = selectionFormat[\'blockquote\'];\r\n            vm.UnderlineActive = se" +
-"lectionFormat[\'underline\'];\r\n            vm.StrikeActive = selectionFormat[\'stri" +
-"ke\'];\r\n        }\r\n\r\n        function vueLoaded() {\r\n            quill = new Quil" +
-"l(\'#myeditor\', {\r\n                formats: [\'header\', \'bold\', \'italic\', \'underli" +
-"ne\', \'strike\', \'list\', \'code\', \'code-block\', \'blockquote\', \'link\'],\r\n           " +
-"     modules: {\r\n                    toolbar: \'#quill-toolbar\',\r\n               " +
-" },\r\n                theme: \'snow\',\r\n            });\r\n\r\n            quill.on(\'te" +
-"xt-change\', function (delta, oldDelta, source) {\r\n                if (source ===" +
-" \'user\') {\r\n                    vuePropertyChanged(\'UnlockedHtmlContent\', null);" +
-"\r\n                }\r\n            });\r\n\r\n            quill.on(\'selection-change\'," +
-" function (range, oldRange, source) {\r\n                if (range) {\r\n           " +
-"         refreshActiveFormatState();\r\n                }\r\n            });\r\n\r\n    " +
-"        // This way we can remove the tel:// protocol\r\n            var Link = Qu" +
-"ill.import(\'formats/link\');\r\n            Link.PROTOCOL_WHITELIST = [\'http\', \'htt" +
-"ps\', \'mailto\'];\r\n\r\n            searchHighlighter = new QuillSearchHighlighter(qu" +
-"ill, document.getElementById(\"TxtFilter\"));\r\n            $(quill.root).on(\"focus" +
-"in\", function () {\r\n                if (isSearchDialogHidden())\r\n               " +
-"     searchHighlighter.clearSearchHighlights();\r\n            });\r\n\r\n            " +
-"var noteContent = getNoteHtmlContent();\r\n            var noteIsNew = noteContent" +
-".length > 1 && noteContent.length < 42 && noteContent.replace(/<[^>]*>/g, \'\').tr" +
-"im().length == 0;\r\n            if (noteIsNew) {\r\n                toggleBlockForm" +
-"at(\'header\', 1);\r\n            }\r\n\r\n            quill.enable(!vm.ShoppingModeActi" +
-"ve);\r\n\r\n            $(\"#tags\").autocomplete({\r\n                source: getTagSug" +
-"gestions,\r\n                treshold: 0,\r\n                maximumItems: 10,\r\n    " +
-"            value: \"value\",\r\n                label: \"value\",\r\n                dr" +
-"opType: \"dropup\",\r\n                onSelectItem: function (item, inputField) {\r\n" +
-"                    addTag();\r\n                },\r\n            });\r\n            " +
-"document.getElementById(\'tags\').addEventListener(\"keyup\", function(event) {\r\n   " +
-"             if (event.key === \'Enter\' || event.keyCode === 13) {\r\n             " +
-"       addTag();\r\n                }\r\n            });\r\n        };\r\n\r\n");
+"     function togglePinned() {//TODO: delete after changes\r\n            vm.IsPin" +
+"ned = !vm.IsPinned;\r\n            //quill.enable(!vm.IsPinned);\r\n        }\r\n\r\n   " +
+"     function refreshActiveFormatState() {\r\n            var selectionFormat = qu" +
+"ill.getFormat();\r\n            var formatValue = selectionFormat[\'header\'];\r\n    " +
+"        vm.Header1Active = formatValue == 1;\r\n            vm.Header2Active = for" +
+"matValue == 2;\r\n            vm.Header3Active = formatValue == 3;\r\n            vm" +
+".BoldActive = selectionFormat[\'bold\'];\r\n            vm.ItalicActive = selectionF" +
+"ormat[\'italic\'];\r\n            formatValue = selectionFormat[\'list\'];\r\n          " +
+"  vm.ListOrderedActive = formatValue == \'ordered\';\r\n            vm.ListBulletAct" +
+"ive = formatValue == \'bullet\';\r\n            vm.CodeActive = selectionFormat[\'cod" +
+"e-block\'];\r\n            vm.QuoteActive = selectionFormat[\'blockquote\'];\r\n       " +
+"     vm.UnderlineActive = selectionFormat[\'underline\'];\r\n            vm.StrikeAc" +
+"tive = selectionFormat[\'strike\'];\r\n        }\r\n\r\n        function vueLoaded() {\r\n" +
+"            quill = new Quill(\'#myeditor\', {\r\n                formats: [\'header\'" +
+", \'bold\', \'italic\', \'underline\', \'strike\', \'list\', \'code\', \'code-block\', \'blockq" +
+"uote\', \'link\'],\r\n                modules: {\r\n                    toolbar: \'#quil" +
+"l-toolbar\',\r\n                },\r\n                theme: \'snow\',\r\n            });" +
+"\r\n\r\n            quill.on(\'text-change\', function (delta, oldDelta, source) {\r\n  " +
+"              if (source === \'user\') {\r\n                    vuePropertyChanged(\'" +
+"UnlockedHtmlContent\', null);\r\n                }\r\n            });\r\n\r\n            " +
+"quill.on(\'selection-change\', function (range, oldRange, source) {\r\n             " +
+"   if (range) {\r\n                    refreshActiveFormatState();\r\n              " +
+"  }\r\n            });\r\n\r\n            // This way we can remove the tel:// protoco" +
+"l\r\n            var Link = Quill.import(\'formats/link\');\r\n            Link.PROTOC" +
+"OL_WHITELIST = [\'http\', \'https\', \'mailto\'];\r\n\r\n            searchHighlighter = n" +
+"ew QuillSearchHighlighter(quill, document.getElementById(\"TxtFilter\"));\r\n       " +
+"     $(quill.root).on(\"focusin\", function () {\r\n                if (isSearchDial" +
+"ogHidden())\r\n                    searchHighlighter.clearSearchHighlights();\r\n   " +
+"         });\r\n\r\n            var noteContent = getNoteHtmlContent();\r\n           " +
+" var noteIsNew = noteContent.length > 1 && noteContent.length < 42 && noteConten" +
+"t.replace(/<[^>]*>/g, \'\').trim().length == 0;\r\n            if (noteIsNew) {\r\n   " +
+"             toggleBlockFormat(\'header\', 1);\r\n            }\r\n\r\n            quill" +
+".enable(!vm.ShoppingModeActive);\r\n\r\n            $(\"#tags\").autocomplete({\r\n     " +
+"           source: getTagSuggestions,\r\n                treshold: 0,\r\n           " +
+"     maximumItems: 10,\r\n                value: \"value\",\r\n                label: " +
+"\"value\",\r\n                dropType: \"dropup\",\r\n                onSelectItem: fun" +
+"ction (item, inputField) {\r\n                    addTag();\r\n                },\r\n " +
+"           });\r\n            document.getElementById(\'tags\').addEventListener(\"ke" +
+"yup\", function(event) {\r\n                if (event.key === \'Enter\' || event.keyC" +
+"ode === 13) {\r\n                    addTag();\r\n                }\r\n            });" +
+"\r\n        };\r\n\r\n");
 
 
 #line 227 "NoteRazorView.cshtml"
@@ -338,26 +339,25 @@ WriteLiteral("                <button");
 
 WriteLiteral(" class=\"nav-item\"");
 
-WriteLiteral(" onclick=\"togglePinned(); return false;\"");
+WriteLiteral("  onclick=\"togglePinned(); return false;\"");
 
-WriteLiteral(" v-bind:class=\"{ active: IsPinned }\"");
+WriteLiteral(" ");
 
-WriteLiteral(" v-bind:disabled=\"ShoppingModeActive\"");
+WriteLiteral(" v-bind:class=\"{ active: IsPinned }\" v-bind:disabled=\"ShoppingModeActive\" title=\"" +
+"");
 
-WriteAttribute ("title", " title=\"", "\""
 
 #line 238 "NoteRazorView.cshtml"
-                                                                                                                          , Tuple.Create<string,object,bool> ("", Model.Language["note_pin"]
+                                                                                                                                                                                                  Write(Model.Language["note_pin"]);
+
 
 #line default
 #line hidden
-, false)
-);
-WriteLiteral(">");
+WriteLiteral("\">");
 
 
 #line 238 "NoteRazorView.cshtml"
-                                                                                                                                                                                                WriteLiteral(Model.Icon["pin"]);
+                                                                                                                                                                                                                                      WriteLiteral(Model.Icon["pin"]);
 
 #line default
 #line hidden
