@@ -145,7 +145,7 @@ body { background-color: transparent; }
             quill.enable(!vm.ShoppingModeActive);
         }
 
-        function togglePinned() {
+        function togglePinned() {//TODO: delete after changes
             vm.IsPinned = !vm.IsPinned;
             //quill.enable(!vm.IsPinned);
         }
@@ -235,7 +235,7 @@ body { background-color: transparent; }
 
             @if (!Model.IsLocked)
             {                
-                <button class="nav-item" onclick="togglePinned(); return false;" v-bind:class="{ active: IsPinned }" v-bind:disabled="ShoppingModeActive" title="@Model.Language["note_pin"]">@{WriteLiteral(Model.Icon["pin"]);}</button>
+                <button class="nav-item"  onclick="togglePinned(); return false;" @*v-on:click="TogglePinnedCommand"*@ v-bind:class="{ active: IsPinned }" v-bind:disabled="ShoppingModeActive" title="@Model.Language["note_pin"]">@{WriteLiteral(Model.Icon["pin"]);}</button>
                 <button class="nav-item" onclick="toggleFormat('bold');" v-bind:class="{ active: BoldActive }" v-bind:disabled="ShoppingModeActive" title="@Model.Language["note_bold"]">@{WriteLiteral(Model.Icon["format-bold"]);}</button>
                 <button class="nav-item" onclick="toggleFormat('italic');" v-bind:class="{ active: ItalicActive }" v-bind:disabled="ShoppingModeActive" title="@Model.Language["note_italic"]">@{WriteLiteral(Model.Icon["format-italic"]);}</button>
                 <span class="show-only-on-wide-browser">

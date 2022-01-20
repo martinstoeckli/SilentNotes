@@ -33,6 +33,7 @@ namespace SilentNotes.ViewModels
         private SearchableHtmlConverter _searchableTextConverter;
         protected string _unlockedContent;
         private string _searchableContent;
+        private readonly bool _originalWasPinned;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NoteViewModel"/> class.
@@ -60,10 +61,12 @@ namespace SilentNotes.ViewModels
             _cryptor = cryptor;
             _safes = safes;
             _allDistinctAndSortedTags = allDistinctAndSortedTags;
+            _originalWasPinned = IsPinned; //Added as per email. TODO: delete comment
             MarkSearchableContentAsDirty();
             PushNoteToOnlineStorageCommand = new RelayCommand(PushNoteToOnlineStorage);
             PullNoteFromOnlineStorageCommand = new RelayCommand(PullNoteFromOnlineStorage);
             ToggleShoppingModeCommand = new RelayCommand(ToggleShoppingMode);
+            //TogglePinnedCommand = new RelayCommand(TogglePinned); //Added as per email. TODO: delete comment
             GoBackCommand = new RelayCommand(GoBack);
             AddTagCommand = new RelayCommand<string>(AddTag);
             DeleteTagCommand = new RelayCommand<string>(DeleteTag);
@@ -361,7 +364,15 @@ namespace SilentNotes.ViewModels
         /// <inheritdoc />
         public override void OnStoringUnsavedData()
         {
-            if (Modified)
+            //bool pinStateChanged = Model.IsPinned != _originalWasPinned;
+
+            //if (pinStateChanged)
+            //{
+            //    Model.RefreshModifiedAt();
+            //    RepositionNoteBecausePinStateChanged();
+            //}
+
+            if (Modified /*|| pinStateChanged*/)
             {
                 if (IsUnlocked)
                     Model.HtmlContent = Lock(_unlockedContent);
@@ -500,7 +511,7 @@ namespace SilentNotes.ViewModels
             {
                 ChangePropertyIndirect(() => Model.IsPinned, (v) => Model.IsPinned = v, value, true);
 
-                PinnedChanged = !PinnedChanged; 
+                PinnedChanged = !PinnedChanged;
             }
         }
 
@@ -513,6 +524,7 @@ namespace SilentNotes.ViewModels
         private void TogglePinned()
         {
             IsPinned = !IsPinned;
+            //PinnedChanged = !PinnedChanged;
         }
 
         /// <summary>
