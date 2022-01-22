@@ -190,7 +190,7 @@ WriteLiteral("            </div>\r\n");
 #line hidden
 
 #line 17 "NoteRepositoryContentRazorView.cshtml"
-             if (!@note.IsPinned)
+             if (@note.IsPinned)
             {//Changed as per email. TODO: delete comment
 
 
@@ -198,16 +198,8 @@ WriteLiteral("            </div>\r\n");
 #line hidden
 WriteLiteral("               <div");
 
-WriteAttribute ("class", " class=\"", "\""
-, Tuple.Create<string,object,bool> ("", "pin", true)
+WriteLiteral(" class=\"pin\"");
 
-#line 19 "NoteRepositoryContentRazorView.cshtml"
-, Tuple.Create<string,object,bool> (" ", note.GetDarkClass()
-
-#line default
-#line hidden
-, false)
-);
 WriteLiteral("><svg");
 
 WriteLiteral(" width=\'22\'");

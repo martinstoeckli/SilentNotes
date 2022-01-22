@@ -55,6 +55,7 @@ namespace SilentNotes.Models
             target.MetaModifiedAt = this.MetaModifiedAt;
             target.SafeId = this.SafeId;
             target.ShoppingModeActive = this.ShoppingModeActive;
+            target.IsPinned = this.IsPinned;
         }
 
         /// <summary>
@@ -78,7 +79,7 @@ namespace SilentNotes.Models
         /// This property is never null, instead an empty string will be returned.
         /// </summary>
         [XmlElement(ElementName = "html_content")]
-        public string HtmlContent 
+        public string HtmlContent
         {
             get { return _htmlContent ?? (_htmlContent = string.Empty); }
             set { _htmlContent = value; }
@@ -123,11 +124,6 @@ namespace SilentNotes.Models
         [XmlAttribute(AttributeName = "note_pinned")]
         public bool IsPinned { get; set; }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether the pin status changed.
-        /// </summary>
-        [XmlAttribute(AttributeName = "note_pinned_changed")]
-        public bool PinnedChanged { get; set; } = false;
 
         /// <summary>
         /// Gets or sets the time in UTC, when the note was first created.
@@ -148,9 +144,9 @@ namespace SilentNotes.Models
         /// actually newer note content).
         /// </summary>
         [XmlIgnore]
-        public DateTime? MetaModifiedAt 
+        public DateTime? MetaModifiedAt
         {
-            get 
+            get
             {
                 // If the ModifiedAt property is newer, then the MetaModifiedAt is irrelevant.
                 if (_metaModifiedAt.HasValue && _metaModifiedAt <= ModifiedAt)

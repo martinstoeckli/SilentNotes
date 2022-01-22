@@ -61,17 +61,17 @@ namespace SilentNotes.ViewModels
             _cryptor = cryptor;
             _safes = safes;
             _allDistinctAndSortedTags = allDistinctAndSortedTags;
-            _originalWasPinned = IsPinned; //Added as per email. TODO: delete comment
             MarkSearchableContentAsDirty();
             PushNoteToOnlineStorageCommand = new RelayCommand(PushNoteToOnlineStorage);
             PullNoteFromOnlineStorageCommand = new RelayCommand(PullNoteFromOnlineStorage);
             ToggleShoppingModeCommand = new RelayCommand(ToggleShoppingMode);
-            //TogglePinnedCommand = new RelayCommand(TogglePinned); //Added as per email. TODO: delete comment
+            TogglePinnedCommand = new RelayCommand(TogglePinned); //Added as per email. TODO: delete comment
             GoBackCommand = new RelayCommand(GoBack);
             AddTagCommand = new RelayCommand<string>(AddTag);
             DeleteTagCommand = new RelayCommand<string>(DeleteTag);
 
             Model = noteFromRepository;
+            _originalWasPinned = IsPinned; //Added as per email. TODO: delete comment
             _unlockedContent = IsInSafe ? UnlockIfSafeOpen(Model.HtmlContent) : Model.HtmlContent;
         }
 
@@ -364,15 +364,9 @@ namespace SilentNotes.ViewModels
         /// <inheritdoc />
         public override void OnStoringUnsavedData()
         {
-            //bool pinStateChanged = Model.IsPinned != _originalWasPinned;
+            bool pinStateChanged = Model.IsPinned != _originalWasPinned;
 
-            //if (pinStateChanged)
-            //{
-            //    Model.RefreshModifiedAt();
-            //    RepositionNoteBecausePinStateChanged();
-            //}
-
-            if (Modified /*|| pinStateChanged*/)
+            if (Modified || pinStateChanged)
             {
                 if (IsUnlocked)
                     Model.HtmlContent = Lock(_unlockedContent);
@@ -380,8 +374,47 @@ namespace SilentNotes.ViewModels
                     Model.HtmlContent = XmlUtils.SanitizeXmlString(_unlockedContent);
 
                 _repositoryService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepository);
+
+                if (pinStateChanged)
+                {
+                    RepositionNoteBecausePinStateChanged(noteRepository.Notes);
+                }
+
                 _repositoryService.TrySaveRepository(noteRepository);
                 Modified = false;
+            }
+        }
+
+        /// <summary>
+        /// Handles moving of the note based on <see cref="IsPinned"/> property.
+        /// </summary>
+        /// <param name="fullNoteList"></param>
+        private void RepositionNoteBecausePinStateChanged(NoteListModel fullNoteList)
+        {
+            Model.RefreshModifiedAt();
+
+            if (Model.IsPinned)
+            {//the note got pinned, move it to the top
+                fullNoteList.Remove(Model);
+                fullNoteList.Insert(0, Model);
+            }
+            else
+            {//the note got unpinned, move it to the end of pinned notes
+                int firstUnpinnedNoteIndex = fullNoteList.IndexOf(
+                    fullNoteList.FirstOrDefault(x => x.IsPinned == false && x.Id != Model.Id)
+                );
+                if (firstUnpinnedNoteIndex == -1)
+                {//there's no unpinned note, move to last position
+                    fullNoteList.Remove(Model);
+                    fullNoteList.Add(Model);
+                }
+                else
+                {
+                    firstUnpinnedNoteIndex--;//needs to account for removing the current note
+
+                    fullNoteList.Remove(Model);
+                    fullNoteList.Insert(firstUnpinnedNoteIndex, Model);
+                }
             }
         }
 
@@ -507,12 +540,7 @@ namespace SilentNotes.ViewModels
         public bool IsPinned
         {
             get { return Model.IsPinned; }
-            set
-            {
-                ChangePropertyIndirect(() => Model.IsPinned, (v) => Model.IsPinned = v, value, true);
-
-                PinnedChanged = !PinnedChanged;
-            }
+            set { ChangePropertyIndirect(() => Model.IsPinned, (v) => Model.IsPinned = v, value, true); }
         }
 
         /// <summary>
@@ -524,24 +552,6 @@ namespace SilentNotes.ViewModels
         private void TogglePinned()
         {
             IsPinned = !IsPinned;
-            //PinnedChanged = !PinnedChanged;
-        }
-
-        /// <summary>
-        /// Value indicating whether the <see cref="IsPinned"/> changed by button
-        /// </summary>
-        public bool PinnedChanged
-        {
-            get { return Model.PinnedChanged; }
-            set
-            {
-                ChangePropertyIndirect(
-                       () => Model.PinnedChanged,
-                       (v) => Model.PinnedChanged = v,
-                       value,
-                       true
-                   );
-            }
         }
 
         [VueDataBinding(VueBindingMode.OneWayToView)]
