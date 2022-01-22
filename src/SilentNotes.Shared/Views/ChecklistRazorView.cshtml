@@ -223,6 +223,7 @@ div.dark .detail-view.checklist .ql-editor p::after { content: @{WriteLiteral(Mo
 
         @if (!Model.IsLocked)
         {
+            <button class="nav-item" v-on:click="TogglePinnedCommand" v-bind:class="{ active: IsPinned }" v-bind:disabled="ShoppingModeActive" title="@Model.Language["note_pin"]">@{WriteLiteral(Model.Icon["pin"]);}</button>  
             <button class="nav-item" onclick="moveUp(true); return false;" v-bind:disabled="ShoppingModeActive" title="@Model.Language["checklist_move_to_top"]">@{WriteLiteral(Model.Icon["arrow-collapse-up"]);}</button>
             <button class="nav-item" onclick="moveUp(false); return false;" v-bind:disabled="ShoppingModeActive" title="@Model.Language["checklist_move_up"]">@{WriteLiteral(Model.Icon["arrow-up"]);}</button>
             <button class="nav-item" onclick="moveDown(false); return false;" v-bind:disabled="ShoppingModeActive" title="@Model.Language["checklist_move_down"]">@{WriteLiteral(Model.Icon["arrow-down"]);}</button>
