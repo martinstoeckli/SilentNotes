@@ -540,7 +540,7 @@ namespace SilentNotes.ViewModels
         public bool IsPinned
         {
             get { return Model.IsPinned; }
-            set { ChangePropertyIndirect(() => Model.IsPinned, (v) => Model.IsPinned = v, value, true); }
+            set { ChangePropertyIndirect(() => Model.IsPinned, (v) => Model.IsPinned = v, value, false); }
         }
 
         /// <summary>
