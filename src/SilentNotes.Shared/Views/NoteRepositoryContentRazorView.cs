@@ -191,7 +191,7 @@ WriteLiteral("            </div>\r\n");
 
 #line 17 "NoteRepositoryContentRazorView.cshtml"
              if (@note.IsPinned)
-            {//Changed as per email. TODO: delete comment
+            {
 
 
 #line default
