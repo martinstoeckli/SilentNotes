@@ -42,6 +42,7 @@ note_pull_from_server El ile not indir
 note_push_to_server El ile not yükle
 tag_add Etiket ekle
 feedback_note_to_recycle Not geri dönüşüm kutusuna taşındı.
+note_pin Pin note
 
 checklist_create_new Liste oluştur
 checklist_move_to_top En üste taşı
