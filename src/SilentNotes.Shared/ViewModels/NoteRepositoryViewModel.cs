@@ -154,7 +154,7 @@ namespace SilentNotes.ViewModels
 
         public int NoteMinHeight
         {
-            get 
+            get
             {
                 // The minimum must not be bigger than the maximum.
                 return Math.Min(SettingsViewModel.ReferenceNoteMinSize, NoteMaxHeight);
@@ -250,7 +250,7 @@ namespace SilentNotes.ViewModels
         private void ShowNote(object value)
         {
             Guid noteId = (value is Guid) ? (Guid)value : new Guid(value.ToString());
-            NoteViewModel note = FilteredNotes.FirstOrDefault(item => item.Id == noteId);
+            NoteViewModel note = AllNotes.FirstOrDefault(item => item.Id == noteId);
             if (note != null)
             {
                 Navigation navigation = null;
@@ -259,9 +259,11 @@ namespace SilentNotes.ViewModels
                     case NoteType.Text:
                         navigation = new Navigation(ControllerNames.Note, ControllerParameters.NoteId, noteId.ToString());
                         break;
+
                     case NoteType.Checklist:
                         navigation = new Navigation(ControllerNames.Checklist, ControllerParameters.NoteId, noteId.ToString());
                         break;
+
                     default:
                         throw new ArgumentOutOfRangeException(nameof(NoteType));
                 }
@@ -270,8 +272,8 @@ namespace SilentNotes.ViewModels
                 if (!string.IsNullOrEmpty(settings.Filter))
                     navigation.Variables.AddOrReplace(ControllerParameters.SearchFilter, settings.Filter);
                 _navigationService.Navigate(navigation);
+            }
         }
-    }
 
         /// <summary>
         /// Gets the command which handles the creation of a new note.
@@ -295,20 +297,22 @@ namespace SilentNotes.ViewModels
             noteModel.BackgroundColorHex = _settingsService.LoadSettingsOrDefault().DefaultNoteColorHex;
 
             // Update view model list
-            NoteViewModel noteViewModel = new NoteViewModel(_navigationService, Language, Icon, Theme, _webviewBaseUrl, _searchableTextConverter, _repositoryService, _feedbackService, null, _noteCryptor, _model.Safes, _model.CollectActiveTags(), noteModel); ;
+            NoteViewModel noteViewModel = new NoteViewModel(_navigationService, Language, Icon, Theme, _webviewBaseUrl, _searchableTextConverter, _repositoryService, _feedbackService, null, _noteCryptor, _model.Safes, _model.CollectActiveTags(), noteModel);
             NoteInsertionMode insertionMode = _settingsService.LoadSettingsOrDefault().DefaultNoteInsertion;
             switch (insertionMode)
             {
                 case NoteInsertionMode.AtTop:
-                    _model.Notes.Insert(0, noteModel);
-                    AllNotes.Insert(0, noteViewModel);
-                    FilteredNotes.Insert(0, noteViewModel);
+                    var lastPinned = AllNotes.LastOrDefault(x => x.IsPinned == true);
+                    var index = lastPinned == null ? 0 : AllNotes.IndexOf(lastPinned) + 1;
+                    _model.Notes.Insert(index, noteModel);
+                    AllNotes.Insert(index, noteViewModel);
                     break;
+
                 case NoteInsertionMode.AtBottom:
                     _model.Notes.Add(noteModel);
                     AllNotes.Add(noteViewModel);
-                    FilteredNotes.Add(noteViewModel);
                     break;
+
                 default:
                     throw new ArgumentOutOfRangeException(nameof(insertionMode));
             }
@@ -332,6 +336,30 @@ namespace SilentNotes.ViewModels
         /// </summary>
         [VueDataBinding(VueBindingMode.Command)]
         public ICommand DeleteNoteCommand { get; private set; }
+
+        /// <summary>
+        /// Changes <see cref="NoteViewModel.IsPinned"/> based on position.
+        /// This is usually called after a drag and drop action.
+        /// </summary>
+        /// <remarks>Changes to true if placed in front of a
+        /// pinned note. False if placed behind unpinned one.</remarks>
+        internal void CheckPinStatusAtPosition(int currentIndex)
+        {
+            var movedNote = FilteredNotes[currentIndex];
+            var noteBehind = FilteredNotes.ElementAtOrDefault(currentIndex + 1);
+            var noteInfront = FilteredNotes.ElementAtOrDefault(currentIndex - 1);
+
+            if (movedNote.IsPinned == false && noteBehind != null && noteBehind.IsPinned)
+            {
+                movedNote.IsPinned = true;
+                OnPropertyChanged("Notes"); // refreshes the notes
+            }
+            else if (movedNote.IsPinned && noteInfront != null && noteInfront.IsPinned == false)
+            {
+                movedNote.IsPinned = false;
+                OnPropertyChanged("Notes");
+            }
+        }
 
         private void DeleteNote(object value)
         {
@@ -374,7 +402,7 @@ namespace SilentNotes.ViewModels
         [VueDataBinding(VueBindingMode.TwoWay)]
         public string SelectedTag
         {
-            get 
+            get
             {
                 SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
                 return string.IsNullOrEmpty(settings.SelectedTag) ? EmptyTagFilter : settings.SelectedTag;

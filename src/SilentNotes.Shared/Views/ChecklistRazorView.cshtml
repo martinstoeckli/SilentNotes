@@ -223,11 +223,13 @@ div.dark .detail-view.checklist .ql-editor p::after { content: @{WriteLiteral(Mo
 
         @if (!Model.IsLocked)
         {
+             
             <button class="nav-item" onclick="moveUp(true); return false;" v-bind:disabled="ShoppingModeActive" title="@Model.Language["checklist_move_to_top"]">@{WriteLiteral(Model.Icon["arrow-collapse-up"]);}</button>
             <button class="nav-item" onclick="moveUp(false); return false;" v-bind:disabled="ShoppingModeActive" title="@Model.Language["checklist_move_up"]">@{WriteLiteral(Model.Icon["arrow-up"]);}</button>
             <button class="nav-item" onclick="moveDown(false); return false;" v-bind:disabled="ShoppingModeActive" title="@Model.Language["checklist_move_down"]">@{WriteLiteral(Model.Icon["arrow-down"]);}</button>
             <button class="nav-item" onclick="moveDown(true); return false;" v-bind:disabled="ShoppingModeActive" title="@Model.Language["checklist_move_to_bottom"]">@{WriteLiteral(Model.Icon["arrow-collapse-down"]);}</button>
             <button class="nav-item" onclick="toggleShoppingMode(); return false;" v-bind:class="{ active: ShoppingModeActive }" title="@Model.Language["note_shopping_mode"]">@{WriteLiteral(Model.Icon["keyboard_off_outline"]);}</button>
+            <button class="nav-item" v-on:click="TogglePinnedCommand" v-bind:class="{ active: IsPinned }" v-bind:disabled="ShoppingModeActive" title="@Model.Language["note_pin"]">@{WriteLiteral(Model.Icon["pin"]);}</button> 
             <button class="nav-item" onclick="toggleSearchDialog(); return false;" title="@Model.Language["search"]">@{WriteLiteral(Model.Icon["magnify"]);}</button>
 
             <div class="dropdown">

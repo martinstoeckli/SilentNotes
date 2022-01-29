@@ -42,6 +42,7 @@ note_pull_from_server Ručně stáhnout poznámku
 note_push_to_server Ručně nahrát poznámku
 tag_add Přidat štítek
 feedback_note_to_recycle Poznámka byla přesunuta do koše, odkud ji lze obnovit.
+note_pin Připnout poznámku
 
 checklist_create_new Vytvořit zaškrtávací seznam
 checklist_move_to_top Přesunout na začátek

@@ -23,13 +23,14 @@ namespace SilentNotes.ViewModels
     /// </summary>
     public class NoteViewModel : ViewModelBase
     {
-        static TimeAgo _timeAgo;
+        private static TimeAgo _timeAgo;
         private readonly IRepositoryStorageService _repositoryService;
         private readonly IFeedbackService _feedbackService;
         private readonly ISettingsService _settingsService;
         private readonly ICryptor _cryptor;
         private readonly SafeListModel _safes;
         private readonly IList<string> _allDistinctAndSortedTags;
+        private readonly bool _originalWasPinned;
         private SearchableHtmlConverter _searchableTextConverter;
         protected string _unlockedContent;
         private string _searchableContent;
@@ -64,11 +65,13 @@ namespace SilentNotes.ViewModels
             PushNoteToOnlineStorageCommand = new RelayCommand(PushNoteToOnlineStorage);
             PullNoteFromOnlineStorageCommand = new RelayCommand(PullNoteFromOnlineStorage);
             ToggleShoppingModeCommand = new RelayCommand(ToggleShoppingMode);
+            TogglePinnedCommand = new RelayCommand(TogglePinned);
             GoBackCommand = new RelayCommand(GoBack);
             AddTagCommand = new RelayCommand<string>(AddTag);
             DeleteTagCommand = new RelayCommand<string>(DeleteTag);
 
             Model = noteFromRepository;
+            _originalWasPinned = IsPinned;
             _unlockedContent = IsInSafe ? UnlockIfSafeOpen(Model.HtmlContent) : Model.HtmlContent;
         }
 
@@ -83,7 +86,7 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets the type of the note as css class.
         /// </summary>
-        public string CssClassNoteType 
+        public string CssClassNoteType
         {
             get { return Model.NoteType.ToString().ToLowerInvariant(); }
         }
@@ -159,7 +162,7 @@ namespace SilentNotes.ViewModels
         [VueDataBinding(VueBindingMode.OneWayToView)]
         public List<string> Tags
         {
-            get  { return Model.Tags; }
+            get { return Model.Tags; }
         }
 
         /// <summary>
@@ -218,7 +221,7 @@ namespace SilentNotes.ViewModels
         [VueDataBinding(VueBindingMode.TwoWay)]
         public string BackgroundColorHex
         {
-            get 
+            get
             {
                 string result = Model.BackgroundColorHex;
                 if (Theme.DarkMode)
@@ -361,7 +364,9 @@ namespace SilentNotes.ViewModels
         /// <inheritdoc />
         public override void OnStoringUnsavedData()
         {
-            if (Modified)
+            bool pinStateChanged = Model.IsPinned != _originalWasPinned;
+
+            if (Modified || pinStateChanged)
             {
                 if (IsUnlocked)
                     Model.HtmlContent = Lock(_unlockedContent);
@@ -369,8 +374,50 @@ namespace SilentNotes.ViewModels
                     Model.HtmlContent = XmlUtils.SanitizeXmlString(_unlockedContent);
 
                 _repositoryService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepository);
+
+                if (pinStateChanged)
+                {
+                    RepositionNoteBecausePinStateChanged(noteRepository.Notes);
+                }
+
                 _repositoryService.TrySaveRepository(noteRepository);
                 Modified = false;
+            }
+        }
+
+        /// <summary>
+        /// Handles moving of the note based on <see cref="IsPinned"/> property.
+        /// </summary>
+        /// <param name="fullNoteList"></param>
+        private void RepositionNoteBecausePinStateChanged(NoteListModel fullNoteList)
+        {
+            Model.RefreshModifiedAt();
+
+            if (Model.IsPinned)
+            {
+                // the note got pinned, move it to the top
+                fullNoteList.Remove(Model);
+                fullNoteList.Insert(0, Model);
+            }
+            else
+            {
+                // the note got unpinned, move it to the end of pinned notes
+                int firstUnpinnedNoteIndex = fullNoteList.IndexOf(
+                    fullNoteList.FirstOrDefault(x => x.IsPinned == false && x.Id != Model.Id));
+
+                if (firstUnpinnedNoteIndex == -1)
+                {
+                    // there's no unpinned note, move to last position
+                    fullNoteList.Remove(Model);
+                    fullNoteList.Add(Model);
+                }
+                else
+                {
+                    firstUnpinnedNoteIndex--; // needs to account for removing the current note
+
+                    fullNoteList.Remove(Model);
+                    fullNoteList.Insert(firstUnpinnedNoteIndex, Model);
+                }
             }
         }
 
@@ -486,10 +533,34 @@ namespace SilentNotes.ViewModels
             ShoppingModeActive = !ShoppingModeActive;
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the the note is pinned.
+        /// <see cref="NoteModel.IsPinned"/>
+        /// This property does not call <see cref="NoteModel.RefreshModifiedAt"/>, because it is
+        /// not seen as changed content, so switching should not overwrite other recent changes.
+        /// </summary>
+        [VueDataBinding(VueBindingMode.TwoWay)]
+        public bool IsPinned
+        {
+            get { return Model.IsPinned; }
+            set { ChangePropertyIndirect(() => Model.IsPinned, (v) => Model.IsPinned = v, value, false); }
+        }
+
+        /// <summary>
+        /// Command which toggles the <see cref="IsPinned"/> property.
+        /// </summary>
+        [VueDataBinding(VueBindingMode.Command)]
+        public ICommand TogglePinnedCommand { get; private set; }
+
+        private void TogglePinned()
+        {
+            IsPinned = !IsPinned;
+        }
+
         [VueDataBinding(VueBindingMode.OneWayToView)]
         public string PrettyTimeAgo
         {
-            get 
+            get
             {
                 string prettyTime = GetOrCreateTimeAgo().PrettyPrint(Model.ModifiedAt, DateTime.UtcNow);
                 return Language.LoadTextFmt("modified_at", prettyTime);
