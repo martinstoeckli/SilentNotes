@@ -229,8 +229,7 @@ body { background-color: transparent; }
             <span id="quill-toolbar" hidden></span> <!--we need the initialized quill theme for editing hyperlinks-->
 
             @if (!Model.IsLocked)
-            {                
-                <button class="nav-item" v-on:click="TogglePinnedCommand" v-bind:class="{ active: IsPinned }" v-bind:disabled="ShoppingModeActive" title="@Model.Language["note_pin"]">@{WriteLiteral(Model.Icon["pin"]);}</button>
+            {   
                 <button class="nav-item" onclick="toggleFormat('bold');" v-bind:class="{ active: BoldActive }" v-bind:disabled="ShoppingModeActive" title="@Model.Language["note_bold"]">@{WriteLiteral(Model.Icon["format-bold"]);}</button>
                 <button class="nav-item" onclick="toggleFormat('italic');" v-bind:class="{ active: ItalicActive }" v-bind:disabled="ShoppingModeActive" title="@Model.Language["note_italic"]">@{WriteLiteral(Model.Icon["format-italic"]);}</button>
                 <span class="show-only-on-wide-browser">
@@ -240,6 +239,7 @@ body { background-color: transparent; }
                     <button class="nav-item" onclick="toggleBlockFormat('list', 'bullet');" v-bind:class="{ active: ListBulletActive }" v-bind:disabled="ShoppingModeActive" title="@Model.Language["note_list_unordered"]">@{WriteLiteral(Model.Icon["format-list-bulleted"]);}</button>
                 </span>
                 <button class="nav-item" onclick="toggleShoppingMode(); return false;" v-bind:class="{ active: ShoppingModeActive }" title="@Model.Language["note_shopping_mode"]">@{WriteLiteral(Model.Icon["keyboard_off_outline"]);}</button>
+                <button class="nav-item" v-on:click="TogglePinnedCommand" v-bind:class="{ active: IsPinned }" v-bind:disabled="ShoppingModeActive" title="@Model.Language["note_pin"]">@{WriteLiteral(Model.Icon["pin"]);}</button>
                 <button class="nav-item" onclick="toggleSearchDialog(); return false;" title="@Model.Language["search"]">@{WriteLiteral(Model.Icon["magnify"]);}</button>
 
                 <div class="dropdown">

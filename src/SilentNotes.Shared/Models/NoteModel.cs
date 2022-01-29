@@ -17,6 +17,7 @@ namespace SilentNotes.Models
     {
         /// <summary>The package name used for encryption, see <see cref="CryptoHeader.PackageName"/></summary>
         public const string CryptorPackageName = "SilentNote";
+
         private Guid _id;
         private string _htmlContent;
         private DateTime? _metaModifiedAt;
@@ -124,7 +125,6 @@ namespace SilentNotes.Models
         [XmlAttribute(AttributeName = "note_pinned")]
         public bool IsPinned { get; set; }
 
-
         /// <summary>
         /// Gets or sets the time in UTC, when the note was first created.
         /// </summary>
@@ -163,6 +163,7 @@ namespace SilentNotes.Models
             get { return MetaModifiedAt.Value; }
             set { MetaModifiedAt = value; }
         }
+
         public bool MetaModifiedAtSerializeableSpecified { get { return MetaModifiedAt != null; } } // Serialize only when set
 
         /// <summary>
@@ -170,6 +171,7 @@ namespace SilentNotes.Models
         /// </summary>
         [XmlElement(ElementName = "safe")]
         public Guid? SafeId { get; set; }
+
         public bool SafeIdSpecified { get { return SafeId != null; } } // Serialize only when set
 
         /// <summary>

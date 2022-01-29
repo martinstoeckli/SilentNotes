@@ -250,7 +250,7 @@ namespace SilentNotes.ViewModels
         private void ShowNote(object value)
         {
             Guid noteId = (value is Guid) ? (Guid)value : new Guid(value.ToString());
-            NoteViewModel note = FilteredNotes.FirstOrDefault(item => item.Id == noteId);
+            NoteViewModel note = AllNotes.FirstOrDefault(item => item.Id == noteId);
             if (note != null)
             {
                 Navigation navigation = null;
@@ -297,35 +297,20 @@ namespace SilentNotes.ViewModels
             noteModel.BackgroundColorHex = _settingsService.LoadSettingsOrDefault().DefaultNoteColorHex;
 
             // Update view model list
-            NoteViewModel noteViewModel = new NoteViewModel(_navigationService, Language, Icon, Theme, _webviewBaseUrl, _searchableTextConverter, _repositoryService, _feedbackService, null, _noteCryptor, _model.Safes, _model.CollectActiveTags(), noteModel); ;
+            NoteViewModel noteViewModel = new NoteViewModel(_navigationService, Language, Icon, Theme, _webviewBaseUrl, _searchableTextConverter, _repositoryService, _feedbackService, null, _noteCryptor, _model.Safes, _model.CollectActiveTags(), noteModel);
             NoteInsertionMode insertionMode = _settingsService.LoadSettingsOrDefault().DefaultNoteInsertion;
             switch (insertionMode)
             {
                 case NoteInsertionMode.AtTop:
-                    /*
-                     * Switched to last pinned instead of first unpinned -
-                     * If there were only pinned notes, the index would be 0, and the new
-                     * unpinned note would be placed in front of all the pinned.
-                     * Also removed recycle bin condition as per email.
-                     * TODO: delete comment
-                     */
                     var lastPinned = AllNotes.LastOrDefault(x => x.IsPinned == true);
-
                     var index = lastPinned == null ? 0 : AllNotes.IndexOf(lastPinned) + 1;
-
                     _model.Notes.Insert(index, noteModel);
                     AllNotes.Insert(index, noteViewModel);
-
-                    lastPinned = FilteredNotes.LastOrDefault(x => x.IsPinned == true);
-                    index = lastPinned == null ? 0 : FilteredNotes.IndexOf(lastPinned) + 1;
-
-                    FilteredNotes.Insert(index, noteViewModel);
                     break;
 
                 case NoteInsertionMode.AtBottom:
                     _model.Notes.Add(noteModel);
                     AllNotes.Add(noteViewModel);
-                    FilteredNotes.Add(noteViewModel);
                     break;
 
                 default:
@@ -360,7 +345,6 @@ namespace SilentNotes.ViewModels
         /// pinned note. False if placed behind unpinned one.</remarks>
         internal void CheckPinStatusAtPosition(int currentIndex)
         {
-            //should this consider all notes, or just filtered?
             var movedNote = FilteredNotes[currentIndex];
             var noteBehind = FilteredNotes.ElementAtOrDefault(currentIndex + 1);
             var noteInfront = FilteredNotes.ElementAtOrDefault(currentIndex - 1);
@@ -368,7 +352,7 @@ namespace SilentNotes.ViewModels
             if (movedNote.IsPinned == false && noteBehind != null && noteBehind.IsPinned)
             {
                 movedNote.IsPinned = true;
-                OnPropertyChanged("Notes");//refreshes the notes
+                OnPropertyChanged("Notes"); // refreshes the notes
             }
             else if (movedNote.IsPinned && noteInfront != null && noteInfront.IsPinned == false)
             {

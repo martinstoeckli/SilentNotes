@@ -26,9 +26,6 @@ namespace SilentNotesTest.ViewModels
             // New note is at position 1, after first pinned note
             NoteModel newNote = model.Notes[1];
             Assert.IsFalse(oldNotes.Contains(newNote));
-
-            // Not in filtered notes, because its content doesn't match the filter
-            Assert.IsNull(viewModel.FilteredNotes.FirstOrDefault(viewModel => viewModel.Model == newNote));
         }
 
         [Test]
