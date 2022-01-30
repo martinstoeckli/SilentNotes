@@ -42,7 +42,7 @@ note_pull_from_server Загрузка заметки вручную
 note_push_to_server Выгрузка заметки вручную
 tag_add Ярлык
 feedback_note_to_recycle Заметка перемещена в корзину и может быть восстановлена оттуда.
-note_pin Pin note
+note_pin Закрепить заметку
 
 checklist_create_new Создать новый чек-лист
 checklist_move_to_top Переместить в начало
