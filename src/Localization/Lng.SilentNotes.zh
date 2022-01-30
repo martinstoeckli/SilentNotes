@@ -42,7 +42,7 @@ note_pull_from_server 手动下载笔记
 note_push_to_server 手动上传笔记
 tag_add 添加标签
 feedback_note_to_recycle 笔记已移至回收站，可以从那里恢复。
-note_pin Pin note
+note_pin 置顶笔记
 
 checklist_create_new 创建清单
 checklist_move_to_top 移动至顶部
