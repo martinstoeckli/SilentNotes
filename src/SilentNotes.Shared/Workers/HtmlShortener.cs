@@ -70,21 +70,14 @@ namespace SilentNotes.Workers
             if ((content == null) || (content.Length <= MinimumLengthForShortening))
                 return content;
 
-            TagTreeItem rootTag = new TagTreeItem();
+            Stack<TagInfo> branchToLastItem = new Stack<TagInfo>();
             IEnumerator<Match> tagEnumerator = EnumerateTags(content).GetEnumerator();
-            BuildTagTree(rootTag, tagEnumerator);
-
             int numberOfFoundTags = 0;
-            int lengthOfMarkedTags = 0;
-            MarkRetainedTags(rootTag, ref numberOfFoundTags, ref lengthOfMarkedTags);
+            int lengthOfFoundTags = 0;
+            TagInfo lastItem = null;
+            FindLastItemInsideLimits(ref lastItem, branchToLastItem, tagEnumerator, ref numberOfFoundTags, ref lengthOfFoundTags);
 
-            List<TagTreeItem> tagsToRemove = new List<TagTreeItem>();
-            FindTagsToRemove(tagsToRemove, rootTag);
-
-            if (tagsToRemove.Count > 0)
-                return RemoveTags(content, tagsToRemove);
-            else
-                return content;
+            return BuildShortenedContent(content, lastItem, branchToLastItem);
         }
 
         /// <summary>
@@ -103,14 +96,14 @@ namespace SilentNotes.Workers
             }
         }
 
-        /// <summary>
-        /// Recursively walks the HTML tags and builds a tree of <see cref="TagTreeItem"/> objects.
-        /// </summary>
-        /// <param name="parent">The current element of the tree which should be extended.</param>
-        /// <param name="tagEnumerator">The enumerator which can find the tags.</param>
-        private void BuildTagTree(TagTreeItem parent, IEnumerator<Match> tagEnumerator)
+        private void FindLastItemInsideLimits(
+            ref TagInfo result,
+            Stack<TagInfo> branchToLastItem,
+            IEnumerator<Match> tagEnumerator,
+            ref int numberOfFoundTags,
+            ref int lengthOfFoundTags)
         {
-            while (tagEnumerator.MoveNext())
+            while ((numberOfFoundTags < WantedTagNumber) && (lengthOfFoundTags < WantedLength) && tagEnumerator.MoveNext())
             {
                 Match foundTag = tagEnumerator.Current;
                 if (string.IsNullOrEmpty(foundTag.Value))
@@ -121,99 +114,57 @@ namespace SilentNotes.Workers
 
                 if (IsEmptyTag(tagName) || (tagType == TagType.OpeningAndClosing))
                 {
-                    TagTreeItem child = new TagTreeItem
+                    if (IsRelevantTag(tagName))
                     {
-                        Name = tagName,
-                        StartTag = foundTag,
-                        EndTag = null,
-                    };
-                    parent.Children.Add(child);
+                        numberOfFoundTags++;
+                    }
                 }
                 else if (tagType == TagType.Opening)
                 {
-                    TagTreeItem child = new TagTreeItem
+                    var child = new TagInfo
                     {
                         Name = tagName,
                         StartTag = foundTag,
                     };
-                    parent.Children.Add(child);
-                    BuildTagTree(child, tagEnumerator);
+                    branchToLastItem.Push(child);
                 }
                 else if (tagType == TagType.Closing)
                 {
-                    if (string.Equals(tagName, parent.Name))
+                    if (branchToLastItem.Count == 0)
+                        continue;
+
+                    TagInfo lastTag = branchToLastItem.Peek();
+                    if (string.Equals(tagName, lastTag.Name))
                     {
-                        parent.EndTag = foundTag;
-                        return;
+                        result = branchToLastItem.Pop();
+                        result.EndTag = foundTag;
+
+                        if (IsRelevantTag(tagName))
+                        {
+                            numberOfFoundTags++;
+                            lengthOfFoundTags += result.ContentLength;
+                        }
                     }
                 }
             }
         }
 
-        /// <summary>
-        /// Walks the tree of tags, and sets the <see cref="TagTreeItem.Retained"/> to true, for so
-        /// many tags as are inside the limits of <see cref="WantedTagNumber"/> and <see cref="WantedLength"/>.
-        /// It assumes that all <see cref="TagTreeItem.Retained"/> are preset to false.
-        /// </summary>
-        /// <param name="tag">Decide for this tag.</param>
-        /// <param name="numberOfMarkedTags">The sum of already marked tags.</param>
-        /// <param name="lengthOfMarkedTags">The sum of the length of the already marked tags.</param>
-        private void MarkRetainedTags(TagTreeItem tag, ref int numberOfMarkedTags, ref int lengthOfMarkedTags)
+        private string BuildShortenedContent(string content, TagInfo lastItem, Stack<TagInfo> branchToLastItem)
         {
-            for (int index = 0; index < tag.ChildrenCount; index++)
-            {
-                TagTreeItem childTag = tag.Children[index];
-                bool isRelevant = IsRelevantTag(childTag.Name);
-                if (isRelevant)
-                {
-                    if ((numberOfMarkedTags < WantedTagNumber) && (lengthOfMarkedTags < WantedLength))
-                    {
-                        childTag.Retained = true;
-                        numberOfMarkedTags++;
-                        lengthOfMarkedTags += childTag.ContentLength;
-                        MarkRetainedTags(childTag, ref numberOfMarkedTags, ref lengthOfMarkedTags);
-                    }
-                }
-                else
-                {
-                    childTag.Retained = true;
-                    MarkRetainedTags(childTag, ref numberOfMarkedTags, ref lengthOfMarkedTags);
-                }
-            }
-        }
+            if (lastItem == null)
+                return content;
 
-        /// <summary>
-        /// Recursively walks the tag tree and fills <paramref name="result"/> with tags which can
-        /// be removed to shorten the content. Only removeable top level tags are included, without
-        /// their child tags.
-        /// </summary>
-        /// <param name="result">Receives the tags to remove.</param>
-        /// <param name="tag">Check this tag and recursively its children.</param>
-        private static void FindTagsToRemove(List<TagTreeItem> result, TagTreeItem tag)
-        {
-            for (int index = 0; index < tag.ChildrenCount; index++)
-            {
-                TagTreeItem childTag = tag.Children[index];
-                if (childTag.Retained)
-                {
-                    FindTagsToRemove(result, childTag);
-                }
-                else
-                {
-                    result.Add(childTag);
-                }
-            }
-        }
+            string partToLastItem = content.Substring(0, lastItem.StartTagPosition + lastItem.TagLength);
+            if (branchToLastItem.Count == 0)
+                return partToLastItem;
 
-        private static string RemoveTags(string content, List<TagTreeItem> tagsToRemove)
-        {
-            // Remove the range of the characters covered by the tag, working from the end to
-            // the begin of the content.
-            StringBuilder result = new StringBuilder(content);
-            for (int index = tagsToRemove.Count - 1; index >= 0; index--)
+            StringBuilder result = new StringBuilder(partToLastItem);
+            while (branchToLastItem.Count > 0)
             {
-                TagTreeItem tagToRemove = tagsToRemove[index];
-                result.Remove(tagToRemove.StartTagPosition, tagToRemove.TagLength);
+                TagInfo itemToClose = branchToLastItem.Pop();
+                result.Append("</");
+                result.Append(itemToClose.Name);
+                result.Append(">");
             }
             return result.ToString();
         }
@@ -253,6 +204,8 @@ namespace SilentNotes.Workers
                 return TagType.Closing;
             else if (tag.EndsWith("/>"))
                 return TagType.OpeningAndClosing;
+            else if (tag.StartsWith("<!"))
+                return TagType.DocType;
             else
                 return TagType.Opening;
         }
@@ -262,10 +215,8 @@ namespace SilentNotes.Workers
             return _findTagsRegex ?? (_findTagsRegex = new Regex("<[^>]+>", RegexOptions.Compiled)); // Any HTML tag
         }
 
-        private class TagTreeItem
+        private class TagInfo
         {
-            private List<TagTreeItem> _children;
-
             public string Name { get; set; }
 
             public Match StartTag { get; set; }
@@ -286,22 +237,6 @@ namespace SilentNotes.Workers
             {
                 get { return (EndTag != null) ? EndTag.Index + EndTag.Length - StartTag.Index : 0; }
             }
-
-            public bool Retained { get; set; }
-
-            public List<TagTreeItem> Children
-            {
-                get { return _children ?? (_children = new List<TagTreeItem>()); }
-            }
-
-            /// <summary>
-            /// Gets the number of children. By using <see cref="ChildrenCount"/> instead of
-            /// Children.Count we can avoid creation of unnecessary lists (lazy creation).
-            /// </summary>
-            public int ChildrenCount 
-            { 
-                get { return _children != null ? _children.Count : 0; }
-            }
         }
 
         private enum TagType
@@ -311,6 +246,8 @@ namespace SilentNotes.Workers
             Closing,
 
             OpeningAndClosing,
+
+            DocType,
         }
     }
 }
