@@ -117,7 +117,9 @@ namespace SilentNotes.Workers
                     continue;
 
                 string tagName = GetLowerCaseTagName(foundTag.Value);
-                if (IsEmptyTag(tagName))
+                TagType tagType = GetTagType(foundTag.Value);
+
+                if (IsEmptyTag(tagName) || (tagType == TagType.OpeningAndClosing))
                 {
                     TagTreeItem child = new TagTreeItem
                     {
@@ -127,7 +129,7 @@ namespace SilentNotes.Workers
                     };
                     parent.Children.Add(child);
                 }
-                else if (IsOpeningTag(foundTag.Value))
+                else if (tagType == TagType.Opening)
                 {
                     TagTreeItem child = new TagTreeItem
                     {
@@ -137,7 +139,7 @@ namespace SilentNotes.Workers
                     parent.Children.Add(child);
                     BuildTagTree(child, tagEnumerator);
                 }
-                else
+                else if (tagType == TagType.Closing)
                 {
                     if (string.Equals(tagName, parent.Name))
                     {
@@ -244,9 +246,15 @@ namespace SilentNotes.Workers
             return Array.BinarySearch(_emptyTagNames, tagName) >= 0;
         }
 
-        private static bool IsOpeningTag(string tag)
+        private static TagType GetTagType(string tag)
         {
-            return !tag.StartsWith("</");
+            tag = tag.Replace(" ", "");
+            if (tag.StartsWith("</"))
+                return TagType.Closing;
+            else if (tag.EndsWith("/>"))
+                return TagType.OpeningAndClosing;
+            else
+                return TagType.Opening;
         }
 
         private static Regex GetOrCreateRegex()
@@ -294,6 +302,15 @@ namespace SilentNotes.Workers
             { 
                 get { return _children != null ? _children.Count : 0; }
             }
+        }
+
+        private enum TagType
+        {
+            Opening,
+
+            Closing,
+
+            OpeningAndClosing,
         }
     }
 }
