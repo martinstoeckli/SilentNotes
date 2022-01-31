@@ -175,6 +175,15 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
             Assert.AreEqual("Bearbeiten2.txt", fileNames[2]);
         }
 
+        [Test]
+        public void ParseMailboxOrgWebdavResponseCorrectly()
+        {
+            List<string> fileNames = WebdavCloudStorageClient.ParseWebdavResponseForFileNames(GetMailboxOrgResponse());
+            Assert.AreEqual(1, fileNames.Count);
+            Assert.AreEqual("unittest.dat", fileNames[0]);
+        }
+
+
         private string GetWebdavFileListResponse()
         {
             return
@@ -466,6 +475,59 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
             </g0:propstat>
           </g0:response>
         </ns0:multistatus>";
+            using (TextReader rextReader = new StringReader(response))
+            {
+                return XDocument.Load(rextReader);
+            }
+        }
+
+        private XDocument GetMailboxOrgResponse()
+        {
+            string response = @"
+<D:multistatus xmlns:D='DAV:'>
+  <D:response>
+    <D:href>/servlet/webdav.infostore/Userstore/Martin%20Stoeckli/</D:href>
+    <D:propstat>
+      <D:prop>
+        <D:resourcetype>
+          <D:collection />
+        </D:resourcetype>
+      </D:prop>
+      <D:status>HTTP/1.1 200 OK</D:status>
+    </D:propstat>
+  </D:response>
+  <D:response>
+    <D:href>/servlet/webdav.infostore/Userstore/Martin%20Stoeckli/Pictures/</D:href>
+    <D:propstat>
+      <D:prop>
+        <D:resourcetype>
+          <D:collection />
+        </D:resourcetype>
+      </D:prop>
+      <D:status>HTTP/1.1 200 OK</D:status>
+    </D:propstat>
+  </D:response>
+  <D:response>
+    <D:href>/servlet/webdav.infostore/Userstore/Martin%20Stoeckli/unittest.dat</D:href>
+    <D:propstat>
+      <D:prop>
+        <D:resourcetype />
+      </D:prop>
+      <D:status>HTTP/1.1 200 OK</D:status>
+    </D:propstat>
+  </D:response>
+  <D:response>
+    <D:href>/servlet/webdav.infostore/Userstore/Martin%20Stoeckli/Documents/</D:href>
+    <D:propstat>
+      <D:prop>
+        <D:resourcetype>
+          <D:collection />
+        </D:resourcetype>
+      </D:prop>
+      <D:status>HTTP/1.1 200 OK</D:status>
+    </D:propstat>
+  </D:response>
+</D:multistatus>";
             using (TextReader rextReader = new StringReader(response))
             {
                 return XDocument.Load(rextReader);
