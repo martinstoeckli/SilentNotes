@@ -1,0 +1,4 @@
+SilentNotes version 6.1.0
+
+* Added pins to keep notes on the top of the list.
+* Fixed wrong placing of truncated long notes.

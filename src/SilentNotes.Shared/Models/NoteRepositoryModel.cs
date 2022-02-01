@@ -18,7 +18,7 @@ namespace SilentNotes.Models
     public class NoteRepositoryModel
     {
         /// <summary>The highest revision of the repository which can be handled by this application.</summary>
-        public const int NewestSupportedRevision = 5;
+        public const int NewestSupportedRevision = 6;
 
         private Guid _id;
         private NoteListModel _notes;

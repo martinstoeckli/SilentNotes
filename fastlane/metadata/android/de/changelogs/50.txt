@@ -1,0 +1,4 @@
+SilentNotes version 6.0.3
+
+* Pins hinzugefügt, um Notizen oben an der Liste anzuheften.
+* Fehlerhafte Anzeige von gekürzten langen Notizen behoben.
