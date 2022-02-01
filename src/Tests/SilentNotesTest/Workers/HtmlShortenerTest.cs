@@ -18,6 +18,20 @@ namespace SilentNotesTest.Workers
         }
 
         [Test]
+        public void Shorten_WorksWithMissingContent()
+        {
+            HtmlShortener shortener = new HtmlShortener { MinimumLengthForShortening = 0, WantedTagNumber = 8 };
+            string result = shortener.Shorten("<p>abc</p>");
+            Assert.AreEqual("<p>abc</p>", result);
+
+            result = shortener.Shorten(string.Empty);
+            Assert.AreEqual(string.Empty, result);
+
+            result = shortener.Shorten(null);
+            Assert.IsNull(result);
+        }
+
+        [Test]
         public void Shorten_TruncatesWantedTagNumber()
         {
             HtmlShortener shortener = new HtmlShortener { MinimumLengthForShortening = 1, WantedTagNumber = 2 };
@@ -94,7 +108,7 @@ namespace SilentNotesTest.Workers
         {
             HtmlShortener shortener = new HtmlShortener { MinimumLengthForShortening = 1, WantedTagNumber = 2 };
             string result = shortener.Shorten("<p>abc<li>def</li><p>ghi</p><p>klm</p>");
-            Assert.AreEqual("<p>abc<li>def</li>", result);
+            Assert.AreEqual("<p>abc<li>def</li><p>ghi</p></p>", result);
         }
 
         [Test]
