@@ -72,12 +72,10 @@ namespace SilentNotes.Workers
 
             Stack<TagInfo> branchToLastItem = new Stack<TagInfo>();
             IEnumerator<Match> tagEnumerator = EnumerateTags(content).GetEnumerator();
-            int numberOfFoundTags = 0;
-            int lengthOfFoundTags = 0;
-            TagInfo lastItem = null;
-            FindLastItemInsideLimits(ref lastItem, branchToLastItem, tagEnumerator, ref numberOfFoundTags, ref lengthOfFoundTags);
+            TagInfo lastItem = FindLastItemInsideLimits(tagEnumerator, branchToLastItem);
 
-            return BuildShortenedContent(content, lastItem, branchToLastItem);
+            string result = BuildShortenedContent(content, lastItem, branchToLastItem);
+            return result;
         }
 
         /// <summary>
@@ -96,13 +94,22 @@ namespace SilentNotes.Workers
             }
         }
 
-        private void FindLastItemInsideLimits(
-            ref TagInfo result,
-            Stack<TagInfo> branchToLastItem,
+        /// <summary>
+        /// Searches for the last Html tag whitch should be kept for the shortened content, subsequent
+        /// tags won't fit into the <see cref="WantedLength"/>/<see cref="WantedTagNumber"/>.
+        /// </summary>
+        /// <param name="tagEnumerator">An enumerator which can provide found tags.</param>
+        /// <param name="branchToLastItem">Receives a list of tags, which are all parents of the
+        /// found last item.</param>
+        /// <returns>Last tag which should be visible in the shortened content, or null if no such
+        /// tag could be found.</returns>
+        private TagInfo FindLastItemInsideLimits(
             IEnumerator<Match> tagEnumerator,
-            ref int numberOfFoundTags,
-            ref int lengthOfFoundTags)
+            Stack<TagInfo> branchToLastItem)
         {
+            TagInfo result = null;
+            int numberOfFoundTags = 0;
+            int lengthOfFoundTags = 0;
             while ((numberOfFoundTags < WantedTagNumber) && (lengthOfFoundTags < WantedLength) && tagEnumerator.MoveNext())
             {
                 Match foundTag = tagEnumerator.Current;
@@ -114,6 +121,7 @@ namespace SilentNotes.Workers
 
                 if (IsEmptyTag(tagName) || (tagType == TagType.OpeningAndClosing))
                 {
+                    // Self closing tags don't have to be closed, so we do not add it to the branch
                     if (IsRelevantTag(tagName))
                     {
                         numberOfFoundTags++;
@@ -130,11 +138,12 @@ namespace SilentNotes.Workers
                 }
                 else if (tagType == TagType.Closing)
                 {
+                    // Closing tag without opening tag?
                     if (branchToLastItem.Count == 0)
                         continue;
 
-                    TagInfo lastTag = branchToLastItem.Peek();
-                    if (string.Equals(tagName, lastTag.Name))
+                    bool tagCompleted = string.Equals(tagName, branchToLastItem.Peek().Name);
+                    if (tagCompleted)
                     {
                         result = branchToLastItem.Pop();
                         result.EndTag = foundTag;
@@ -147,9 +156,18 @@ namespace SilentNotes.Workers
                     }
                 }
             }
+            return result;
         }
 
-        private string BuildShortenedContent(string content, TagInfo lastItem, Stack<TagInfo> branchToLastItem)
+        /// <summary>
+        /// Copies the content of all tags until the <paramref name="lastItem"/>, and closes all
+        /// tags with the parents of <paramref name="branchToLastItem"/>, to get a valid tag hierarchy.
+        /// </summary>
+        /// <param name="content">The original long content.</param>
+        /// <param name="lastItem">The last tag to include in the shortened content.</param>
+        /// <param name="branchToLastItem">List of parents to the <paramref name="lastItem"/>.</param>
+        /// <returns>Shortened content.</returns>
+        private static string BuildShortenedContent(string content, TagInfo lastItem, Stack<TagInfo> branchToLastItem)
         {
             if (lastItem == null)
                 return content;
@@ -158,7 +176,7 @@ namespace SilentNotes.Workers
             if (branchToLastItem.Count == 0)
                 return partToLastItem;
 
-            StringBuilder result = new StringBuilder(partToLastItem);
+            StringBuilder result = new StringBuilder();
             while (branchToLastItem.Count > 0)
             {
                 TagInfo itemToClose = branchToLastItem.Pop();
@@ -166,7 +184,7 @@ namespace SilentNotes.Workers
                 result.Append(itemToClose.Name);
                 result.Append(">");
             }
-            return result.ToString();
+            return partToLastItem + result.ToString();
         }
 
         private static string GetLowerCaseTagName(string tag)
