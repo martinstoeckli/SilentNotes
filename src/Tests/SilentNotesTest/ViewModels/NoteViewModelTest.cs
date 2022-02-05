@@ -22,7 +22,7 @@ namespace SilentNotesTest.ViewModels
             Mock<ISettingsService> settingsService = new Mock<ISettingsService>();
             Mock<ICryptor> cryptor = new Mock<ICryptor>();
 
-            SafeListModel safes = new SafeListModel(new[] 
+            SafeListModel safes = new SafeListModel(new[]
             {
                 new SafeModel { Id = Guid.NewGuid() },
             });
@@ -224,7 +224,7 @@ namespace SilentNotesTest.ViewModels
                 new Mock<ISettingsService>().Object,
                 new Mock<ICryptor>().Object,
                 new SafeListModel(),
-                new string[] {"aaa", "bbb"},
+                new string[] { "aaa", "bbb" },
                 note);
 
             List<string> suggestions = noteViewModel.TagSuggestions.ToList();
@@ -319,6 +319,38 @@ namespace SilentNotesTest.ViewModels
 
             Assert.AreSame(noteToBeUnpinned, repository.Notes[2]); // Now on last position
             Assert.IsFalse(noteToBeUnpinned.IsPinned);
+        }
+
+        [Test]
+        public void IsPinned_PositionChange_StoresPosition()
+        {
+            NoteRepositoryModel repository = CreateTestRepository();
+            var testNote = repository.Notes[2];
+            NoteViewModel noteViewModel = CreateMockedNoteViewModel(testNote, repository);
+
+            var original = repository.OrderModifiedAt;
+
+            testNote.IsPinned = true; //should be moved to index 0 and refresh OrderModifiedAt
+
+            noteViewModel.OnStoringUnsavedData();
+
+            Assert.IsTrue(repository.OrderModifiedAt != original);
+        }
+
+        [Test]
+        public void IsPinned_NoPositionChange_NOTStoresPosition()
+        {
+            NoteRepositoryModel repository = CreateTestRepository();
+            var testNote = repository.Notes[0];
+            NoteViewModel noteViewModel = CreateMockedNoteViewModel(testNote, repository);
+
+            var original = repository.OrderModifiedAt;
+
+            testNote.IsPinned = true; //stays on indey 0 and does NOT refresh OrderModifiedAt
+
+            noteViewModel.OnStoringUnsavedData();
+
+            Assert.IsTrue(repository.OrderModifiedAt == original);
         }
 
         [Test]
