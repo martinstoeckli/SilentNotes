@@ -377,7 +377,7 @@ namespace SilentNotes.ViewModels
 
                 if (pinStateChanged)
                 {
-                    RepositionNoteBecausePinStateChanged(noteRepository.Notes);
+                    RepositionNoteBecausePinStateChanged(noteRepository);
                 }
 
                 _repositoryService.TrySaveRepository(noteRepository);
@@ -388,36 +388,42 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Handles moving of the note based on <see cref="IsPinned"/> property.
         /// </summary>
-        /// <param name="fullNoteList"></param>
-        private void RepositionNoteBecausePinStateChanged(NoteListModel fullNoteList)
+        /// <param name="repository"></param>
+        private void RepositionNoteBecausePinStateChanged(NoteRepositoryModel repository)
         {
+            var originalPosition = repository.Notes.IndexOf(Model);
             Model.RefreshModifiedAt();
 
             if (Model.IsPinned)
             {
                 // the note got pinned, move it to the top
-                fullNoteList.Remove(Model);
-                fullNoteList.Insert(0, Model);
+                repository.Notes.Remove(Model);
+                repository.Notes.Insert(0, Model);
             }
             else
             {
                 // the note got unpinned, move it to the end of pinned notes
-                int firstUnpinnedNoteIndex = fullNoteList.IndexOf(
-                    fullNoteList.FirstOrDefault(x => x.IsPinned == false && x.Id != Model.Id));
+                int firstUnpinnedNoteIndex = repository.Notes.IndexOf(
+                     repository.Notes.FirstOrDefault(x => x.IsPinned == false && x.Id != Model.Id));
 
                 if (firstUnpinnedNoteIndex == -1)
                 {
                     // there's no unpinned note, move to last position
-                    fullNoteList.Remove(Model);
-                    fullNoteList.Add(Model);
+                    repository.Notes.Remove(Model);
+                    repository.Notes.Add(Model);
                 }
                 else
                 {
                     firstUnpinnedNoteIndex--; // needs to account for removing the current note
 
-                    fullNoteList.Remove(Model);
-                    fullNoteList.Insert(firstUnpinnedNoteIndex, Model);
+                    repository.Notes.Remove(Model);
+                    repository.Notes.Insert(firstUnpinnedNoteIndex, Model);
                 }
+            }
+
+            if (originalPosition != repository.Notes.IndexOf(Model))
+            {
+                repository.RefreshOrderModifiedAt();
             }
         }
 
