@@ -310,5 +310,47 @@ namespace SilentNotesTest.Workers
             note2.MetaModifiedAt = new DateTime(2001, 06, 15);
             Assert.AreSame(note2, NoteRepositoryMerger.ChooseLastModified(note1, note2, item => item.ModifiedAt, item => item.MetaModifiedAt));
         }
+
+        /// <summary>
+        /// If the order of the remote repository is newer, it usually wins. Though, if a note was
+        /// pinned on the client and went to the top, it should stick there, even if the order of
+        /// the remote repository has precedence.
+        /// </summary>
+        [Test]
+        public void KeepPinnedNotesToTheTop()
+        {
+            NoteRepositoryModel serverRepo = new NoteRepositoryModel();
+            NoteModel note101 = new NoteModel { IsPinned = true };
+            NoteModel note102 = new NoteModel();
+            NoteModel note103 = new NoteModel();
+            NoteModel note104 = new NoteModel();
+            serverRepo.Notes.Add(note101);
+            serverRepo.Notes.Add(note102);
+            serverRepo.Notes.Add(note103);
+            serverRepo.Notes.Add(note104);
+
+            NoteRepositoryModel clientRepo = new NoteRepositoryModel();
+            NoteModel note201 = note101.Clone(); // IsPinned == true
+            NoteModel note202 = note102.Clone();
+            NoteModel note203 = note103.Clone();
+            NoteModel note204 = note104.Clone();
+            note204.IsPinned = true;
+            note204.RefreshModifiedAt();
+            clientRepo.Notes.Add(note204); // User pinned note so it went to the top
+            clientRepo.Notes.Add(note201); // Was already pinned
+            clientRepo.Notes.Add(note203); // The new order of 202/203 where changed, but the remote repo has a newer order
+            clientRepo.Notes.Add(note202);
+
+            // Take order of server, but keep pinned to the top
+            NoteRepositoryMerger merger = new NoteRepositoryMerger();
+            serverRepo.OrderModifiedAt = new DateTime(2000, 01, 02); // newer
+            clientRepo.OrderModifiedAt = new DateTime(2000, 01, 01);
+            NoteRepositoryModel result = merger.Merge(clientRepo, serverRepo);
+
+            Assert.AreEqual(note204.Id, result.Notes[0].Id);
+            Assert.AreEqual(note201.Id, result.Notes[1].Id);
+            Assert.AreEqual(note202.Id, result.Notes[2].Id);
+            Assert.AreEqual(note203.Id, result.Notes[3].Id);
+        }
     }
 }
