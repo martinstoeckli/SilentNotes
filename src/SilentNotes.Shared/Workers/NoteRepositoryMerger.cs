@@ -53,6 +53,7 @@ namespace SilentNotes.Workers
             }
 
             result.RemoveUnusedSafes();
+            BringPinnedToTop(result.Notes);
             return result;
         }
 
@@ -276,6 +277,28 @@ namespace SilentNotes.Workers
                 comparisonResult = Nullable.Compare(metaModifiedAtSelector(item1), metaModifiedAtSelector(item2));
 
             return (comparisonResult >= 0) ? item1 : item2;
+        }
+
+        /// <summary>
+        /// If the order of the remote repository is newer, it usually wins. Though, if a note was
+        /// pinned on the client and went to the top, it should stick there, even if the order of
+        /// the remote repository has precedence.
+        /// </summary>
+        private static void BringPinnedToTop(NoteListModel notes)
+        {
+            int firstUnpinnedIndex = notes.IndexOfFirstUnpinnedNote();
+            if (firstUnpinnedIndex >= 0)
+            {
+                for (int index = firstUnpinnedIndex; index < notes.Count; index++)
+                {
+                    var note = notes[index];
+                    if (note.IsPinned)
+                    {
+                        notes.RemoveAt(index);
+                        notes.Insert(0, note);
+                    }
+                }
+            }
         }
     }
 }

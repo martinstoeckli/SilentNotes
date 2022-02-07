@@ -48,5 +48,20 @@ namespace SilentNotes.Models
         {
             return Find(item => item.Id == id);
         }
+
+        /// <summary>
+        /// Searches for the first note with <see cref="NoteModel.IsPinned"/> is false, and returns
+        /// the zero based index of this note.
+        /// </summary>
+        /// <returns>Returns index of first unpinned note, or -1 id no such note was found.</returns>
+        public int IndexOfFirstUnpinnedNote()
+        {
+            for (int index = 0; index < Count; index++)
+            {
+                if (!this[index].IsPinned)
+                    return index;
+            }
+            return -1;
+        }
     }
 }
