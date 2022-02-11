@@ -11,7 +11,8 @@
     <WebView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/webView" />
+        android:id="@+id/webView"
+        android:keepScreenOn="true"/>
     <ProgressBar
         android:id="@+id/busyIndicator"
         style="?android:attr/progressBarStyleLarge"
