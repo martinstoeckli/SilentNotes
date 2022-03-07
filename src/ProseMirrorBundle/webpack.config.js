@@ -17,7 +17,7 @@ module.exports = {
     extensions: ['.tsx', '.ts', '.js'],
   },
   optimization: {
-    minimize: true,
+    minimize: false,
     minimizer: [
       new TerserPlugin({
         terserOptions: {
@@ -40,9 +40,9 @@ module.exports = {
       // The environment supports BigInt as literal (123n).
       bigIntLiteral: false, // default: false
       // The environment supports const and let for variable declarations.
-      const: true, // default: true
+      const: false, // default: true
       // The environment supports destructuring ('{ a, b } = obj').
-      destructuring: true, // default: true
+      destructuring: false, // default: true
       // The environment supports an async import() function to import EcmaScript modules.
       dynamicImport: false, // default: false
       // The environment supports 'for of' iteration ('for (const x of array) { ... }').

@@ -1,3 +1,6 @@
+import "core-js";
+import "regenerator-runtime/runtime";
+import "core-js/proposals/object-values-entries";
 import { Editor } from '@tiptap/core'
 import Blockquote from '@tiptap/extension-blockquote'
 import Bold from '@tiptap/extension-bold'
@@ -17,9 +20,6 @@ import Text from '@tiptap/extension-text'
 import TextStyle from '@tiptap/extension-text-style'
 import Underline from '@tiptap/extension-underline'
 
-export {
-  initializeEditor
-}
 
 /**
  * This method will be exported and can be called from the HTML document with the "prose_mirror_bundle"
@@ -34,7 +34,9 @@ export {
  *   becomes the container of the TipTap editor.
  * @returns {Editor} The new TipTap editor instance.
  */
-function initializeEditor(editorElement: HTMLScriptElement): Editor {
+export function initializeEditor(editorElement: HTMLElement): any {
+  try {
+
   return new Editor({
     element: editorElement,
     extensions: [
@@ -60,4 +62,37 @@ function initializeEditor(editorElement: HTMLScriptElement): Editor {
     ],
     editable: true,
   });
+
+  } 
+  catch ( e ) {
+      return e.message + ' ' + e.stack;
+  }
+
+  // editorElement.innerText = '<p>Hello old World!</p>';
+  // return 'hi';
+  // return new Editor({
+  //   element: editorElement,
+  //   extensions: [
+  //     Blockquote,
+  //     Bold,
+  //     BulletList,
+  //     Code,
+  //     CodeBlock,
+  //     Document,
+  //     HardBreak,
+  //     Heading.configure({
+  //       levels: [1, 2, 3],
+  //     }),
+  //     Italic,
+  //     Link,
+  //     ListItem,
+  //     OrderedList,
+  //     Paragraph,
+  //     Strike,
+  //     Text,
+  //     TextStyle,
+  //     Underline,
+  //   ],
+  //   editable: true,
+  // });
 }
