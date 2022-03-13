@@ -207,6 +207,9 @@
     <Content Include="..\SilentNotes.Shared\Assets\Html\paper.jpg">
       <Link>Assets\Html\paper.jpg</Link>
     </Content>
+    <Content Include="..\SilentNotes.Shared\Assets\Html\prose-mirror-bundle.js">
+      <Link>Assets\Html\prose-mirror-bundle.js</Link>
+    </Content>
     <Content Include="..\SilentNotes.Shared\Assets\Html\quillsearchhighlighter.css">
       <Link>Assets\Html\quillsearchhighlighter.css</Link>
     </Content>

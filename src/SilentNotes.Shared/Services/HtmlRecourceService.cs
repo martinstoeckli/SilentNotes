@@ -29,6 +29,8 @@ namespace SilentNotes.Services
                         return "vue.min.js"; // v2.6.12 (v3 is not ECMAScript 5 compliant)
                     case "jqueryjs":
                         return "jquery-3.5.1.slim.min.js";
+                    case "prosemirror":
+                        return "prose-mirror-bundle.js";
                     default:
                         return string.Empty;
                 }
