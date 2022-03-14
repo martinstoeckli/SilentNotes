@@ -13,17 +13,14 @@
     <link href="silentnotes.css" rel="stylesheet" />
     <link href="@(Model.Theme.DarkMode ? "silentnotes.dark.css" : "silentnotes.light.css")" rel="stylesheet" />
 
-    <link href="quill/quill.snow.css" rel="stylesheet">
     <link href="note-view.css" rel="stylesheet">
-    <link href="quillsearchhighlighter.css" rel="stylesheet">
 
     <script src="@Model.HtmlRecource["vuejs"]"></script>
     <script src="@Model.HtmlRecource["jqueryjs"]"></script>
     <script src="@Model.HtmlRecource["bootstrapjs"]"></script>
     <script src="@Model.HtmlRecource["bootstrapautocompletejs"]"></script>
+    <script src="@Model.HtmlRecource["prosemirror"]"></script>
     <script src="silentnotes.js"></script>
-    <script src="quill/quill.min.js"></script>
-    <script src="quillsearchhighlighter.js"></script>
 
     <style type="text/css">
 body { background-color: transparent; }
@@ -42,32 +39,21 @@ body { background-color: transparent; }
 }
     </style>
     <script>
-        var quill;
-        var searchHighlighter;
+        var editor;
 
         function toggleFormat(formatName) {
-            var selectionFormat = quill.getFormat();
-            var selectionFormatValue = selectionFormat[formatName];
-            selectionFormatValue = !selectionFormatValue;
-            quill.format(formatName, selectionFormatValue, 'user');
-            refreshActiveFormatState();
         }
 
         function toggleBlockFormat(formatName, blockType) {
-            var selectionFormat = quill.getFormat();
-            var selectionFormatValue = selectionFormat[formatName];
-            var newSelectionFormat; // undefined removes the block format
-            if (selectionFormatValue !== blockType)
-                newSelectionFormat = blockType;
-            quill.format(formatName, newSelectionFormat, 'user');
-            refreshActiveFormatState();
+            //switch (formatName) {
+            //  case 'bold':
+            //    editor.chain().focus().toggleBold().run();
+            //    break;
+            //}
+            //refreshActiveFormatState();
         }
 
         function toggleLink() {
-            var selectionFormat = quill.getFormat();
-            var selectionFormatValue = selectionFormat['link'];
-            var toolbar = quill.getModule('toolbar');
-            toolbar.handlers['link'].call(toolbar, !selectionFormatValue);
         }
 
         function addTag() {
@@ -91,11 +77,10 @@ body { background-color: transparent; }
         }
 
         function getNoteHtmlContent() {
-            return quill.root.innerHTML;
+            return '';
         }
 
         function setNoteHtmlContent(text) {
-            quill.setText(text, 'user');
         }
 
         function isSearchDialogHidden() {
@@ -107,117 +92,32 @@ body { background-color: transparent; }
         }
 
         function showSearchDialog(visible) {
-            if (visible) {
-                // Open dialog
-                $('#TxtFilter').val(''); // Can be set by setStartingSearchFilter()
-                $('#search-dialog').removeClass('hidden');
-                $('#TxtFilter').focus();
-                searchHighlighter.startListening();
-            }
-            else {
-                // Close dialog
-                searchHighlighter.stopListening();
-                searchHighlighter.clearSearchHighlights();
-                $('#search-dialog').addClass('hidden');
-                $('#TxtFilter').val('');
-            }
         }
 
         function setStartingSearchFilter(filter) {
-            $('#TxtFilter').val(filter);
-            searchHighlighter.searchAndHighlight(filter, true, false);
-            quill.root.blur(); // searchAndHighlight() caused a focusin event
-            searchHighlighter.startListening();
         }
 
         function scrollToTop() {
-            var element = quill.root;
-            element.scrollTop = 0;
         }
 
         function scrollToBottom() {
-            var element = quill.root;
-            element.scrollTop = element.scrollHeight;
         }
 
         function toggleShoppingMode() {
             vm.ShoppingModeActive = !vm.ShoppingModeActive;
-            quill.enable(!vm.ShoppingModeActive);
+//            quill.enable(!vm.ShoppingModeActive);
         }
 
         function refreshActiveFormatState() {
-            var selectionFormat = quill.getFormat();
-            var formatValue = selectionFormat['header'];
-            vm.Header1Active = formatValue == 1;
-            vm.Header2Active = formatValue == 2;
-            vm.Header3Active = formatValue == 3;
-            vm.BoldActive = selectionFormat['bold'];
-            vm.ItalicActive = selectionFormat['italic'];
-            formatValue = selectionFormat['list'];
-            vm.ListOrderedActive = formatValue == 'ordered';
-            vm.ListBulletActive = formatValue == 'bullet';
-            vm.CodeActive = selectionFormat['code-block'];
-            vm.QuoteActive = selectionFormat['blockquote'];
-            vm.UnderlineActive = selectionFormat['underline'];
-            vm.StrikeActive = selectionFormat['strike'];
+//            var marks = editor.activeMarks();
+//            vm.BoldActive = marks.includes('bold');
         }
 
         function vueLoaded() {
-            quill = new Quill('#myeditor', {
-                formats: ['header', 'bold', 'italic', 'underline', 'strike', 'list', 'code', 'code-block', 'blockquote', 'link'],
-                modules: {
-                    toolbar: '#quill-toolbar',
-                },
-                theme: 'snow',
-            });
-
-            quill.on('text-change', function (delta, oldDelta, source) {
-                if (source === 'user') {
-                    vuePropertyChanged('UnlockedHtmlContent', null);
-                }
-            });
-
-            quill.on('selection-change', function (range, oldRange, source) {
-                if (range) {
-                    refreshActiveFormatState();
-                }
-            });
-
-            // This way we can remove the tel:// protocol
-            var Link = Quill.import('formats/link');
-            Link.PROTOCOL_WHITELIST = ['http', 'https', 'mailto'];
-
-            searchHighlighter = new QuillSearchHighlighter(quill, document.getElementById("TxtFilter"));
-            $(quill.root).on("focusin", function () {
-                if (isSearchDialogHidden())
-                    searchHighlighter.clearSearchHighlights();
-            });
-
-            var noteContent = getNoteHtmlContent();
-            var noteIsNew = noteContent.length > 1 && noteContent.length < 42 && noteContent.replace(/<[^>]*>/g, '').trim().length == 0;
-            if (noteIsNew) {
-                toggleBlockFormat('header', 1);
-            }
-
-            quill.enable(!vm.ShoppingModeActive);
-
-            $("#tags").autocomplete({
-                source: getTagSuggestions,
-                treshold: 0,
-                maximumItems: 10,
-                value: "value",
-                label: "value",
-                dropType: "dropup",
-                onSelectItem: function (item, inputField) {
-                    addTag();
-                },
-            });
-            document.getElementById('tags').addEventListener("keyup", function(event) {
-                if (event.key === 'Enter' || event.keyCode === 13) {
-                    addTag();
-                }
-            });
-        };
+            var editorElement = document.getElementById('myeditor');
+            editor = ProseMirrorBundle.initializeEditor(editorElement);
+            editor.commands.setContent('@{WriteLiteral(Model.GetUnlockedHtmlContentAsJavaScriptString());}');
+        }
 
         @{WriteLiteral(Model.VueDataBindingScript);}
     </script>
@@ -277,7 +177,7 @@ body { background-color: transparent; }
             }
             else
             {
-                <div id="myeditor" class="note-viewer detail-view @Model.CssClassNoteType">@{WriteLiteral(Model.UnlockedHtmlContent);}</div>
+                <div id="myeditor" class="note-viewer detail-view @Model.CssClassNoteType"></div>
             }
         </div>
 
