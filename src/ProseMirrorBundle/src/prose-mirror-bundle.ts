@@ -18,14 +18,13 @@ import Text from '@tiptap/extension-text'
 import TextStyle from '@tiptap/extension-text-style'
 import Underline from '@tiptap/extension-underline'
 
-
 /**
  * This method will be exported and can be called from the HTML document with the "prose_mirror_bundle"
  * namespace. The namespace is defined in the webpack config.
- * The function names of the TipTap editor are preserved (not minified), so that it is possible to
- * call functions inside the HTML page.
+ * The function names of the TipTap/ProseMirror editor are preserved (not minified), so that it is
+ * possible to call functions inside the HTML page.
  * @example
- *   var editor = window.prose_mirror_bundle.initializeEditor(document.getElementById('myeditor'));
+ *   var editor = ProseMirrorBundle.initializeEditor(document.getElementById('myeditor'));
  *   editor.commands.setContent('<p>Hello World!</p>');
  *   editor.chain().focus().toggleBold().run();
  * @param {HTMLScriptElement}  editorElement - Usually a DIV element from the HTML document which
@@ -34,35 +33,54 @@ import Underline from '@tiptap/extension-underline'
  */
 export function initializeEditor(editorElement: HTMLElement): any {
   try {
-
-  return new Editor({
-    element: editorElement,
-    extensions: [
-      Blockquote,
-      Bold,
-      BulletList,
-      Code,
-      CodeBlock,
-      Document,
-      HardBreak,
-      Heading.configure({
-        levels: [1, 2, 3],
-      }),
-      Italic,
-      Link,
-      ListItem,
-      OrderedList,
-      Paragraph,
-      Strike,
-      Text,
-      TextStyle,
-      Underline,
-    ],
-    editable: true,
-  });
-
+    return new Editor({
+      element: editorElement,
+      extensions: [
+        Blockquote,
+        Bold,
+        BulletList,
+        Code,
+        CodeBlock,
+        Document,
+        HardBreak,
+        Heading.configure({
+          levels: [1, 2, 3],
+        }),
+        Italic,
+        Link.configure({
+          autolink: true,
+        }),
+        ListItem,
+        OrderedList,
+        Paragraph,
+        Strike,
+        Text,
+        TextStyle,
+        Underline,
+      ],
+      editable: true,
+    });
   } 
   catch ( e ) {
       return e.message + ' ' + e.stack;
   }
 }
+
+// export function getLinkUrlAtCurrentPosition(editor: Editor): string
+// {
+//   const state = editor.state;
+
+//   // get marks, if any from selected area
+//   const { from, to } = state.selection;
+//   let marks: any[] = [];
+//   editor.view.state.doc.nodesBetween(from, to, (node) => {
+//     marks = [...marks, ...node.marks];
+//   })
+
+//   const mark = marks.find((markItem) => markItem.type.name === 'link');
+
+//   if (mark && mark.attrs.href) {
+//     return mark.attrs.href;
+//   }
+//   return null;
+// }

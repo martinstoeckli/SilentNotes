@@ -25,9 +25,17 @@
     <style type="text/css">
 body { background-color: transparent; }
 
-.note-viewer {
+div.ProseMirror {
+	border: none 0;
     font-size: @(Model.NoteBaseFontSize)px !important;
 }
+div.ProseMirror:focus {
+    outline: none;
+}
+div.ProseMirror li p {
+    display: inline-block;
+}
+
 .color-btn { color: black; }
 .color-btn.dark { color: white; }
 .locked {
@@ -79,7 +87,30 @@ body { background-color: transparent; }
             vm.ListOrderedActive = editor.isActive('orderedList');
         }
 
-        function toggleLink() {
+        function linkTo() {
+            const previousUrl = editor.getAttributes('link').href;
+//            var url = window.prompt('URL', previousUrl);
+            var url = 'http://www.martinstoeckli.ch';
+
+            // cancelled
+            if (url === null)
+                return;
+
+            if (url === '') {
+                // remove link
+                editor.chain().focus().extendMarkRange('link').unsetLink().run();
+                var selection = editor.view.state.selection;
+                if (!selection.empty)
+                    editor.setTextSelection(selection.to);
+            }
+            else {
+                // update link
+                var commandChain = editor.chain().focus().extendMarkRange('link').setLink({ href: url });
+                var selection = editor.view.state.selection;
+                if (!selection.empty)
+                    commandChain.setTextSelection(selection.to);
+                commandChain.run();
+            }
         }
 
         function addTag() {
@@ -183,7 +214,7 @@ body { background-color: transparent; }
                         <div class="dropdown-item show-only-on-narrow-browser" v-bind:class="{ active: ListBulletActive }" onclick="toggleFormat('bullet-list');">@{WriteLiteral(Model.Icon["format-list-bulleted"]);} @Model.Language["note_list_unordered"]</div>
                         <div class="dropdown-item" v-bind:class="{ active: CodeActive }" onclick="toggleFormat('code-block');">@{WriteLiteral(Model.Icon["code-braces"]);} @Model.Language["note_code"]</div>
                         <div class="dropdown-item" v-bind:class="{ active: QuoteActive }" onclick="toggleFormat('blockquote');">@{WriteLiteral(Model.Icon["format-quote-close"]);} @Model.Language["note_quotation"]</div>
-                        <div class="dropdown-item" onclick="toggleLink()">@{WriteLiteral(Model.Icon["link-variant"]);} @Model.Language["note_link"]</div>
+                        <div class="dropdown-item" onclick="linkTo();">@{WriteLiteral(Model.Icon["link-variant"]);} @Model.Language["note_link"]</div>
                         @if (Model.ShowManualSynchronization)
                         {
                             <div class="dropdown-divider"></div>
