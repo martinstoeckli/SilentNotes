@@ -125,6 +125,7 @@ namespace SilentNotes.Controllers
             VueBindings.DeclareAdditionalVueData("QuoteActive", "false");
             VueBindings.DeclareAdditionalVueData("UnderlineActive", "false");
             VueBindings.DeclareAdditionalVueData("StrikeActive", "false");
+            VueBindings.DeclareAdditionalVueData("EditLinkUrl", "''");
             VueBindings.DeclareAdditionalVueMethod("ToggleSearchDialogCommand", "toggleSearchDialog();");
             VueBindings.DeclareAdditionalVueMethod("CloseSearchDialogCommand", "showSearchDialog(false);");
             VueBindings.DeclareAdditionalVueMethod("ScrollToTop", "scrollToTop();");

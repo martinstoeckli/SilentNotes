@@ -9,7 +9,6 @@ import Document from '@tiptap/extension-document'
 import HardBreak from '@tiptap/extension-hard-break'
 import Heading from '@tiptap/extension-heading'
 import Italic from '@tiptap/extension-italic'
-import Link from '@tiptap/extension-link'
 import ListItem from '@tiptap/extension-list-item'
 import OrderedList from '@tiptap/extension-ordered-list'
 import Paragraph from '@tiptap/extension-paragraph'
@@ -17,6 +16,8 @@ import Strike from '@tiptap/extension-strike'
 import Text from '@tiptap/extension-text'
 import TextStyle from '@tiptap/extension-text-style'
 import Underline from '@tiptap/extension-underline'
+
+import { CustomLink } from "./custom-link-extension";
 
 /**
  * This method will be exported and can be called from the HTML document with the "prose_mirror_bundle"
@@ -47,8 +48,9 @@ export function initializeEditor(editorElement: HTMLElement): any {
           levels: [1, 2, 3],
         }),
         Italic,
-        Link.configure({
+        CustomLink.configure({
           autolink: true,
+          openOnClick: false,
         }),
         ListItem,
         OrderedList,
@@ -65,22 +67,3 @@ export function initializeEditor(editorElement: HTMLElement): any {
       return e.message + ' ' + e.stack;
   }
 }
-
-// export function getLinkUrlAtCurrentPosition(editor: Editor): string
-// {
-//   const state = editor.state;
-
-//   // get marks, if any from selected area
-//   const { from, to } = state.selection;
-//   let marks: any[] = [];
-//   editor.view.state.doc.nodesBetween(from, to, (node) => {
-//     marks = [...marks, ...node.marks];
-//   })
-
-//   const mark = marks.find((markItem) => markItem.type.name === 'link');
-
-//   if (mark && mark.attrs.href) {
-//     return mark.attrs.href;
-//   }
-//   return null;
-// }

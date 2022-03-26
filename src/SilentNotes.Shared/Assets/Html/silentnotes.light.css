@@ -75,3 +75,6 @@ div.dark .detail-view.checklist .ql-editor p.disabled { color: rgba(255, 255, 25
 .dropdown-item.active svg { fill: #87cefa; }
 
 .modal-content { background-color: #f8f9fa; }
+.modal-dialog .btn {
+  fill: white;
+}

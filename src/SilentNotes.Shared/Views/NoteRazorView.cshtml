@@ -87,30 +87,37 @@ div.ProseMirror li p {
             vm.ListOrderedActive = editor.isActive('orderedList');
         }
 
-        function linkTo() {
-            const previousUrl = editor.getAttributes('link').href;
-//            var url = window.prompt('URL', previousUrl);
-            var url = 'http://www.martinstoeckli.ch';
+        function linkDialogShow() {
+            vm.EditLinkUrl = editor.getAttributes('link').href;
+            var dialog = new bootstrap.Modal(document.getElementById('editLinkModal'));
+            dialog.show();
+        }
 
-            // cancelled
-            if (url === null)
+        function linkDialogOpenPressed()
+        {
+            location.href = vm.EditLinkUrl;
+        }
+
+        function linkDialogOkPressed()
+        {
+            var oldUrl = editor.getAttributes('link').href;
+            var url = vm.EditLinkUrl;
+            if (url == oldUrl)
                 return;
 
-            if (url === '') {
-                // remove link
-                editor.chain().focus().extendMarkRange('link').unsetLink().run();
-                var selection = editor.view.state.selection;
-                if (!selection.empty)
-                    editor.setTextSelection(selection.to);
-            }
-            else {
-                // update link
-                var commandChain = editor.chain().focus().extendMarkRange('link').setLink({ href: url });
-                var selection = editor.view.state.selection;
-                if (!selection.empty)
-                    commandChain.setTextSelection(selection.to);
-                commandChain.run();
-            }
+            var commandChain = editor.chain().focus().extendMarkRange('link').setLink({ href: url });
+            var selection = editor.view.state.selection;
+            if (!selection.empty)
+                commandChain.setTextSelection(selection.to);
+            commandChain.run();
+        }
+
+        function linkDialogRemovePressed()
+        {
+            var commandChain = editor.chain().focus().extendMarkRange('link').unsetLink().run();
+            var selection = editor.view.state.selection;
+            if (!selection.empty)
+                editor.setTextSelection(selection.to);
         }
 
         function addTag() {
@@ -173,6 +180,10 @@ div.ProseMirror li p {
             editor.on('selectionUpdate', function (editor) {
                 refreshActiveFormatState();
             });
+
+            document.addEventListener('custom-link-clicked', function () {
+                linkDialogShow();
+            });
         }
 
         @{WriteLiteral(Model.VueDataBindingScript);}
@@ -214,7 +225,7 @@ div.ProseMirror li p {
                         <div class="dropdown-item show-only-on-narrow-browser" v-bind:class="{ active: ListBulletActive }" onclick="toggleFormat('bullet-list');">@{WriteLiteral(Model.Icon["format-list-bulleted"]);} @Model.Language["note_list_unordered"]</div>
                         <div class="dropdown-item" v-bind:class="{ active: CodeActive }" onclick="toggleFormat('code-block');">@{WriteLiteral(Model.Icon["code-braces"]);} @Model.Language["note_code"]</div>
                         <div class="dropdown-item" v-bind:class="{ active: QuoteActive }" onclick="toggleFormat('blockquote');">@{WriteLiteral(Model.Icon["format-quote-close"]);} @Model.Language["note_quotation"]</div>
-                        <div class="dropdown-item" onclick="linkTo();">@{WriteLiteral(Model.Icon["link-variant"]);} @Model.Language["note_link"]</div>
+                        <div class="dropdown-item" onclick="linkDialogShow();">@{WriteLiteral(Model.Icon["link-variant"]);} @Model.Language["note_link"]</div>
                         @if (Model.ShowManualSynchronization)
                         {
                             <div class="dropdown-divider"></div>
@@ -272,6 +283,24 @@ div.ProseMirror li p {
                         {
                             <div class="d-flex align-items-center justify-content-center color-btn @Model.GetDarkClass(backgroundColor)" data-dismiss="modal" v-on:click="BackgroundColorHex='@(backgroundColor)'" style="background-color: @backgroundColor"><span>Lorem ipsum</span></div>
                         }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" id="editLinkModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-sm" role="document">
+                <div class="modal-content p-2">
+                    <div class="modal-body">
+                        <div class="input-group mb-3">
+                            <input type="url" v-model="EditLinkUrl" class="form-control" v-focus>
+                            <button type="button" class="btn btn-primary" onclick="linkDialogOpenPressed();">Open link</button>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="linkDialogOkPressed();">@Model.Language["ok"]</button>
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">@Model.Language["cancel"]</button>
+                      <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="linkDialogRemovePressed();"><svg width='16' height='16' viewBox='0 0 24 24'><use xlink:href="#svg-delete" /></svg></button>
                     </div>
                 </div>
             </div>

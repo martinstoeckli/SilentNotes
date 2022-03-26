@@ -417,6 +417,9 @@ select.form-control:focus::-ms-value { background-color: #323232; color: #ffffff
 
 .modal-content { background-color: #323232; }
 .modal-dialog .close { color: #fff; }
+.modal-dialog .btn {
+  fill: white;
+}
 
 .dropdown-divider { border-top-color: #444; }
 .dropdown-item { color: #fff; }
