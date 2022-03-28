@@ -48,6 +48,7 @@ div.ProseMirror li p {
     </style>
     <script>
         var editor;
+        var linkDialog;
 
         function toggleFormat(formatName, formatParameter) {
             switch (formatName) {
@@ -87,37 +88,40 @@ div.ProseMirror li p {
             vm.ListOrderedActive = editor.isActive('orderedList');
         }
 
-        function linkDialogShow() {
-            vm.EditLinkUrl = editor.getAttributes('link').href;
-            var dialog = new bootstrap.Modal(document.getElementById('editLinkModal'));
-            dialog.show();
+        function showLinkDialog() {
+            if (vm.ShoppingModeActive) return;
+
+            var selectedUrl = editor.getAttributes('link').href;
+            if (selectedUrl) {
+                vm.OldLinkUrl = selectedUrl;
+                vm.NewLinkUrl = selectedUrl;
+            }
+            else {
+                vm.OldLinkUrl = '';
+                vm.NewLinkUrl = '';
+            }
+            linkDialog.show();
         }
 
-        function linkDialogOpenPressed()
-        {
-            location.href = vm.EditLinkUrl;
+        function linkDialogOpenPressed() {
+            location.href = vm.NewLinkUrl;
         }
 
-        function linkDialogOkPressed()
-        {
-            var oldUrl = editor.getAttributes('link').href;
-            var url = vm.EditLinkUrl;
-            if (url == oldUrl)
-                return;
-
-            var commandChain = editor.chain().focus().extendMarkRange('link').setLink({ href: url });
+        function linkDialogOkPressed() {
+            var commandChain = editor.chain().focus();
+            if (vm.NewLinkUrl != vm.OldLinkUrl) {
+                if (vm.NewLinkUrl) {
+                    commandChain.extendMarkRange('link').setLink({ href: vm.NewLinkUrl });
+                }
+                else {
+                    commandChain.extendMarkRange('link').unsetLink();
+                }
+            }
             var selection = editor.view.state.selection;
-            if (!selection.empty)
-                commandChain.setTextSelection(selection.to);
+            commandChain.setTextSelection(selection.$to.pos);
             commandChain.run();
-        }
 
-        function linkDialogRemovePressed()
-        {
-            var commandChain = editor.chain().focus().extendMarkRange('link').unsetLink().run();
-            var selection = editor.view.state.selection;
-            if (!selection.empty)
-                editor.setTextSelection(selection.to);
+            linkDialog.hide();
         }
 
         function addTag() {
@@ -176,13 +180,21 @@ div.ProseMirror li p {
             var editorElement = document.getElementById('myeditor');
             editor = ProseMirrorBundle.initializeEditor(editorElement);
             editor.commands.setContent('@{WriteLiteral(Model.GetUnlockedHtmlContentAsJavaScriptString());}');
-
             editor.on('selectionUpdate', function (editor) {
                 refreshActiveFormatState();
             });
 
             document.addEventListener('custom-link-clicked', function () {
-                linkDialogShow();
+                showLinkDialog();
+            });
+
+            var linkDialogElement = document.getElementById('linkDialog');
+            linkDialog = new bootstrap.Modal(linkDialogElement);
+            linkDialogElement.addEventListener('keydown', function (event) {
+                if (event.keyCode == 13) {
+                    event.preventDefault();
+                    linkDialogOkPressed();
+                }
             });
         }
 
@@ -225,7 +237,7 @@ div.ProseMirror li p {
                         <div class="dropdown-item show-only-on-narrow-browser" v-bind:class="{ active: ListBulletActive }" onclick="toggleFormat('bullet-list');">@{WriteLiteral(Model.Icon["format-list-bulleted"]);} @Model.Language["note_list_unordered"]</div>
                         <div class="dropdown-item" v-bind:class="{ active: CodeActive }" onclick="toggleFormat('code-block');">@{WriteLiteral(Model.Icon["code-braces"]);} @Model.Language["note_code"]</div>
                         <div class="dropdown-item" v-bind:class="{ active: QuoteActive }" onclick="toggleFormat('blockquote');">@{WriteLiteral(Model.Icon["format-quote-close"]);} @Model.Language["note_quotation"]</div>
-                        <div class="dropdown-item" onclick="linkDialogShow();">@{WriteLiteral(Model.Icon["link-variant"]);} @Model.Language["note_link"]</div>
+                        <div class="dropdown-item" onclick="showLinkDialog();">@{WriteLiteral(Model.Icon["link-variant"]);} @Model.Language["note_link"]</div>
                         @if (Model.ShowManualSynchronization)
                         {
                             <div class="dropdown-divider"></div>
@@ -288,19 +300,19 @@ div.ProseMirror li p {
             </div>
         </div>
 
-        <div class="modal" id="editLinkModal" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog modal-sm" role="document">
+        <div class="modal" id="linkDialog" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content p-2">
                     <div class="modal-body">
                         <div class="input-group mb-3">
-                            <input type="url" v-model="EditLinkUrl" class="form-control" v-focus>
-                            <button type="button" class="btn btn-primary" onclick="linkDialogOpenPressed();">Open link</button>
+                            <input type="url" v-model="NewLinkUrl" class="form-control" v-focus>
+                            <button type="button" class="btn btn-danger" onclick="vm.NewLinkUrl = '';"><svg width='16' height='16' viewBox='0 0 24 24'><use xlink:href="#svg-delete" /></svg></button>
                         </div>
                     </div>
                     <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="linkDialogOkPressed();">@Model.Language["ok"]</button>
+                      <button type="button" class="btn btn-secondary" onclick="linkDialogOpenPressed();">Visit link <svg width='16' height='16' viewBox='0 0 24 24'><use xlink:href="#svg-link-variant" /></svg></button>
+                      <button type="button" class="btn btn-primary" onclick="linkDialogOkPressed();">@Model.Language["ok"]</button>
                       <button type="button" class="btn btn-secondary" data-dismiss="modal">@Model.Language["cancel"]</button>
-                      <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="linkDialogRemovePressed();"><svg width='16' height='16' viewBox='0 0 24 24'><use xlink:href="#svg-delete" /></svg></button>
                     </div>
                 </div>
             </div>
@@ -311,6 +323,7 @@ div.ProseMirror li p {
             @{WriteLiteral(Model.Icon.LoadIcon("close-circle-outline", new[] { new KeyValuePair<string, string>("id", "svg-close-circle-outline") }));}
             @{WriteLiteral(Model.Icon.LoadIcon("plus", new[] { new KeyValuePair<string, string>("id", "svg-plus") }));}
             @{WriteLiteral(Model.Icon.LoadIcon("delete", new[] { new KeyValuePair<string, string>("id", "svg-delete") }));}
+            @{WriteLiteral(Model.Icon.LoadIcon("link-variant", new[] { new KeyValuePair<string, string>("id", "svg-link-variant") }));}
         </div>
     </div>
 </body>

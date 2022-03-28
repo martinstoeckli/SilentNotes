@@ -111,6 +111,7 @@ namespace SilentNotes.Controllers
                 new VueBindingShortcut(VueBindingShortcut.KeyEscape, "CloseSearchDialogCommand"),
                 new VueBindingShortcut(VueBindingShortcut.KeyHome, "ScrollToTop") { Ctrl = true },
                 new VueBindingShortcut(VueBindingShortcut.KeyEnd, "ScrollToBottom") { Ctrl = true },
+                new VueBindingShortcut("l", "ShowLinkDialog") { Ctrl = true },
             };
             VueBindings = new VueDataBinding(_viewModel, View, shortcuts);
             VueBindings.DeclareAdditionalVueData("PrettyTimeAgoVisible", "true");
@@ -125,11 +126,13 @@ namespace SilentNotes.Controllers
             VueBindings.DeclareAdditionalVueData("QuoteActive", "false");
             VueBindings.DeclareAdditionalVueData("UnderlineActive", "false");
             VueBindings.DeclareAdditionalVueData("StrikeActive", "false");
-            VueBindings.DeclareAdditionalVueData("EditLinkUrl", "''");
+            VueBindings.DeclareAdditionalVueData("OldLinkUrl", "''");
+            VueBindings.DeclareAdditionalVueData("NewLinkUrl", "''");
             VueBindings.DeclareAdditionalVueMethod("ToggleSearchDialogCommand", "toggleSearchDialog();");
             VueBindings.DeclareAdditionalVueMethod("CloseSearchDialogCommand", "showSearchDialog(false);");
             VueBindings.DeclareAdditionalVueMethod("ScrollToTop", "scrollToTop();");
             VueBindings.DeclareAdditionalVueMethod("ScrollToBottom", "scrollToBottom();");
+            VueBindings.DeclareAdditionalVueMethod("ShowLinkDialog", "showLinkDialog();");
             VueBindings.UnhandledViewBindingEvent += UnhandledViewBindingEventHandler;
             VueBindings.ViewLoadedEvent += ViewLoadedEventHandler;
             _viewModel.VueDataBindingScript = VueBindings.BuildVueScript();
