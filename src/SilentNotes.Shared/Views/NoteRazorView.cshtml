@@ -91,15 +91,19 @@ div.ProseMirror li p {
         function showLinkDialog() {
             if (vm.ShoppingModeActive) return;
 
+            editor.chain().focus().run();
+            var url;
             var selectedUrl = editor.getAttributes('link').href;
             if (selectedUrl) {
-                vm.OldLinkUrl = selectedUrl;
-                vm.NewLinkUrl = selectedUrl;
+                editor.commands.extendMarkRange('link');
+                url = selectedUrl;
             }
             else {
-                vm.OldLinkUrl = '';
-                vm.NewLinkUrl = '';
+                var text = ProseMirrorBundle.selectWordAtCurrentPosition(editor);
+                url = ProseMirrorBundle.makeLinkSuggestion(text);
             }
+            vm.OldLinkUrl = url;
+            vm.NewLinkUrl = url;
             linkDialog.show();
         }
 
@@ -117,10 +121,9 @@ div.ProseMirror li p {
                     commandChain.extendMarkRange('link').unsetLink();
                 }
             }
-            var selection = editor.view.state.selection;
-            commandChain.setTextSelection(selection.$to.pos);
+//            var selection = editor.view.state.selection;
+//            commandChain.setTextSelection(selection.$to.pos);
             commandChain.run();
-
             linkDialog.hide();
         }
 
