@@ -92,18 +92,17 @@ div.ProseMirror li p {
             if (vm.ShoppingModeActive) return;
 
             editor.chain().focus().run();
-            var url;
             var selectedUrl = editor.getAttributes('link').href;
             if (selectedUrl) {
                 editor.commands.extendMarkRange('link');
-                url = selectedUrl;
+                vm.OldLinkUrl = selectedUrl;
+                vm.NewLinkUrl = selectedUrl;
             }
             else {
                 var text = ProseMirrorBundle.selectWordAtCurrentPosition(editor);
-                url = ProseMirrorBundle.makeLinkSuggestion(text);
+                vm.OldLinkUrl = ''; // Consider it as modified
+                vm.NewLinkUrl = ProseMirrorBundle.makeLinkSuggestion(text);
             }
-            vm.OldLinkUrl = url;
-            vm.NewLinkUrl = url;
             linkDialog.show();
         }
 
