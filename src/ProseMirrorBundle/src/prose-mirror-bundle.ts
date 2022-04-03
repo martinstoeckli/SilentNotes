@@ -16,6 +16,7 @@ import Strike from '@tiptap/extension-strike'
 import Text from '@tiptap/extension-text'
 import TextStyle from '@tiptap/extension-text-style'
 import Underline from '@tiptap/extension-underline'
+import { Selection } from 'prosemirror-state'
 
 import { CustomLink } from "./custom-link-extension";
 
@@ -66,6 +67,23 @@ export function initializeEditor(editorElement: HTMLElement): any {
   catch ( e ) {
       return e.message + ' ' + e.stack;
   }
+}
+
+/**
+ * Scrolls to the top of the document. It does the same as focus('start') but without setting the focus.
+ * @param {Editor}  editor - A TipTap editor instance.
+*/
+export function scrollToTop(editor: Editor): void {
+  editor.chain().setTextSelection({ from: 0, to: 0 }).scrollIntoView().run();
+}
+
+/**
+ * Scrolls to the end of the document. It does the same as focus('end') but without setting the focus.
+ * @param {Editor}  editor - A TipTap editor instance.
+*/
+export function scrollToBottom(editor: Editor): void {
+  const selection = Selection.atEnd(editor.state.doc);
+  editor.chain().setTextSelection({ from: selection.$from.pos, to: selection.$to.pos }).scrollIntoView().run();
 }
 
 function isValidUrl(text: string): boolean {

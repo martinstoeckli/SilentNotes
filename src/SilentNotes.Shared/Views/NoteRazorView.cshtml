@@ -148,7 +148,11 @@ div.ProseMirror li p {
             return '';
         }
 
-        function setNoteHtmlContent(text) {
+        // By setting the content after loading the page, we can avoid that the content has to be
+        // declared statically as javascript and therefore would occupy memory twice.
+        function setNoteContent(text) {
+            editor.commands.setContent(text);
+            ProseMirrorBundle.scrollToTop(editor);
         }
 
         function isSearchDialogHidden() {
@@ -165,12 +169,6 @@ div.ProseMirror li p {
         function setStartingSearchFilter(filter) {
         }
 
-        function scrollToTop() {
-        }
-
-        function scrollToBottom() {
-        }
-
         function toggleShoppingMode() {
             vm.ShoppingModeActive = !vm.ShoppingModeActive;
             editor.setEditable(!vm.ShoppingModeActive);
@@ -179,7 +177,6 @@ div.ProseMirror li p {
         function vueLoaded() {
             var editorElement = document.getElementById('myeditor');
             editor = ProseMirrorBundle.initializeEditor(editorElement);
-            editor.commands.setContent('@{WriteLiteral(Model.GetUnlockedHtmlContentAsJavaScriptString());}');
             editor.on('selectionUpdate', function (editor) {
                 refreshActiveFormatState();
             });

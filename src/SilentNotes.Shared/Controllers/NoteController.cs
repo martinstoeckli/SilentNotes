@@ -4,6 +4,7 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
+using System.Text;
 using SilentNotes.Crypto;
 using SilentNotes.HtmlView;
 using SilentNotes.Models;
@@ -130,8 +131,8 @@ namespace SilentNotes.Controllers
             VueBindings.DeclareAdditionalVueData("NewLinkUrl", "''");
             VueBindings.DeclareAdditionalVueMethod("ToggleSearchDialogCommand", "toggleSearchDialog();");
             VueBindings.DeclareAdditionalVueMethod("CloseSearchDialogCommand", "showSearchDialog(false);");
-            VueBindings.DeclareAdditionalVueMethod("ScrollToTop", "scrollToTop();");
-            VueBindings.DeclareAdditionalVueMethod("ScrollToBottom", "scrollToBottom();");
+            VueBindings.DeclareAdditionalVueMethod("ScrollToTop", "ProseMirrorBundle.scrollToTop(editor);");
+            VueBindings.DeclareAdditionalVueMethod("ScrollToBottom", "ProseMirrorBundle.scrollToBottom(editor);");
             VueBindings.DeclareAdditionalVueMethod("ShowLinkDialog", "showLinkDialog();");
             VueBindings.UnhandledViewBindingEvent += UnhandledViewBindingEventHandler;
             VueBindings.ViewLoadedEvent += ViewLoadedEventHandler;
@@ -186,11 +187,18 @@ namespace SilentNotes.Controllers
             VueBindings.ViewLoadedEvent -= ViewLoadedEventHandler;
             View.Navigating += NavigatingEventHandler;
 
+            string escapedContent = WebviewUtils.EscapeJavaScriptString(_viewModel.UnlockedHtmlContent);
+            StringBuilder script = new StringBuilder(escapedContent.Length + 20);
+            script.Append("setNoteContent('");
+            script.Append(escapedContent);
+            script.Append("');");
+            View.ExecuteJavaScript(script.ToString());
+
             if (!string.IsNullOrEmpty(_startingSearchFilter))
             {
-                string encodedSearchFilter = WebviewUtils.EscapeJavaScriptString(_startingSearchFilter);
-                string script = string.Format("setStartingSearchFilter('{0}');", encodedSearchFilter);
-                View.ExecuteJavaScript(script);
+                //string encodedSearchFilter = WebviewUtils.EscapeJavaScriptString(_startingSearchFilter);
+                //string script = string.Format("setStartingSearchFilter('{0}');", encodedSearchFilter);
+                //View.ExecuteJavaScript(script);
             }
         }
     }
