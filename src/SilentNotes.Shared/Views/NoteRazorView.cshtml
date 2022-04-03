@@ -35,6 +35,9 @@ div.ProseMirror:focus {
 div.ProseMirror li p {
     display: inline-block;
 }
+div.ProseMirror .search-result {
+  background: rgba(32, 144, 234, 0.5);
+}
 
 .color-btn { color: black; }
 .color-btn.dark { color: white; }
@@ -49,6 +52,18 @@ div.ProseMirror li p {
     <script>
         var editor;
         var linkDialog;
+
+        function getFilterElement() {
+            return document.getElementById('TxtFilter');
+        }
+
+        function getSearchDialogElement() {
+            return document.getElementById('search-dialog');
+        }
+
+        function getTagsElement() {
+            return document.getElementById('tags');
+        }
 
         function toggleFormat(formatName, formatParameter) {
             switch (formatName) {
@@ -125,10 +140,10 @@ div.ProseMirror li p {
         }
 
         function addTag() {
-            var tagText = document.getElementById('tags').value.trim();
+            var tagText = getTagsElement().value.trim();
             if (vm.ShoppingModeActive || tagText === '')
                 return;
-            document.getElementById('tags').value = '';
+            getTagsElement().value = '';
             vueCommandExecute('AddTagCommand', tagText);
         }
 
@@ -156,7 +171,7 @@ div.ProseMirror li p {
         }
 
         function isSearchDialogHidden() {
-            return $('#search-dialog').hasClass('hidden');
+            return getSearchDialogElement().classList.contains('hidden');
         }
 
         function toggleSearchDialog() {
@@ -164,6 +179,30 @@ div.ProseMirror li p {
         }
 
         function showSearchDialog(visible) {
+            if (visible) {
+                // Open dialog
+                var filterElement = getFilterElement();
+                var selectedText = ProseMirrorBundle.getSelectedText(editor);
+                if (selectedText) {
+                    filterElement.value = selectedText;
+                    searchByFilter();
+                }
+                getSearchDialogElement().classList.remove('hidden');
+                filterElement.focus();
+            }
+            else {
+                // Close dialog
+                getSearchDialogElement().classList.add('hidden');
+                getFilterElement().value = '';
+                searchByFilter();
+            }
+        }
+
+        function searchByFilter() {
+            var filter = getFilterElement().value;
+            if (filter.length < 2)
+                filter = '';
+            ProseMirrorBundle.searchAndHighlight(editor, filter);
         }
 
         function setStartingSearchFilter(filter) {
@@ -192,6 +231,10 @@ div.ProseMirror li p {
                     event.preventDefault();
                     linkDialogOkPressed();
                 }
+            });
+
+            getFilterElement().addEventListener('input', function (event) {
+                searchByFilter();
             });
         }
 
@@ -277,6 +320,8 @@ div.ProseMirror li p {
         <div id="search-dialog" class="hidden">
             <div class="nav-filter">
                 <input id="TxtFilter" autocomplete="off" />
+                <svg id="search-next" width='24' height='24' viewBox='0 0 24 24' class="" onclick=""><use xlink:href="#svg-chevron-down" /></svg>
+                <svg id="search-previous" width='24' height='24' viewBox='0 0 24 24' class="" onclick=""><use xlink:href="#svg-chevron-up" /></svg>
                 <svg id="filter-cancel-icon" width='24' height='24' viewBox='0 0 24 24' class="" onclick="showSearchDialog(false);"><use xlink:href="#svg-close-circle-outline" /></svg>
             </div>
         </div>
@@ -322,6 +367,8 @@ div.ProseMirror li p {
             @{WriteLiteral(Model.Icon.LoadIcon("delete", new[] { new KeyValuePair<string, string>("id", "svg-delete") }));}
             @{WriteLiteral(Model.Icon.LoadIcon("link-variant", new[] { new KeyValuePair<string, string>("id", "svg-link-variant") }));}
             @{WriteLiteral(Model.Icon.LoadIcon("open-in-new", new[] { new KeyValuePair<string, string>("id", "svg-open-in-new") }));}
+            @{WriteLiteral(Model.Icon.LoadIcon("chevron-up", new[] { new KeyValuePair<string, string>("id", "svg-chevron-up") }));}
+            @{WriteLiteral(Model.Icon.LoadIcon("chevron-down", new[] { new KeyValuePair<string, string>("id", "svg-chevron-down") }));}
         </div>
     </div>
 </body>

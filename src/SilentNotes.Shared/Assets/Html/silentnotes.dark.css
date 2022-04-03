@@ -13,7 +13,7 @@ a:hover { color: #7ba7cc; }
 .nav-filter:hover { background-color: #696969; }
 .nav-filter input { background-color: transparent; color: white; }
 #filter-icon { fill: #d3d3d3; }
-#filter-cancel-icon { fill: #d3d3d3; }
+#filter-cancel-icon, #search-next, #search-previous { fill: #d3d3d3; }
 .dialog-action-arrow { color: #8dc37a }
 
 .dropdown-item svg { fill: #c0c0c0; }

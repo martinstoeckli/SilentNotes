@@ -19,6 +19,7 @@ import Underline from '@tiptap/extension-underline'
 import { Selection } from 'prosemirror-state'
 
 import { CustomLink } from "./custom-link-extension";
+import { SearchNReplace } from './search-n-replace'
 
 /**
  * This method will be exported and can be called from the HTML document with the "prose_mirror_bundle"
@@ -60,6 +61,11 @@ export function initializeEditor(editorElement: HTMLElement): any {
         Text,
         TextStyle,
         Underline,
+        SearchNReplace.configure({
+          searchResultClass: "search-result", // css class to give to found items. default 'search-result'
+          caseSensitive: false,
+          disableRegex: true,
+        }),
       ],
       editable: true,
     });
@@ -86,33 +92,26 @@ export function scrollToBottom(editor: Editor): void {
   editor.chain().setTextSelection({ from: selection.$from.pos, to: selection.$to.pos }).scrollIntoView().run();
 }
 
-function isValidUrl(text: string): boolean {
-  try {
-      new URL(text);
-      return true;
-  } catch {
-      return false;
-  }
-}
-
-function isWhitespace(char: string): boolean {
-  let regex = /[\s]/;
-  return regex.test(char);
+/**
+ * Searches for all occurences of a given text in the note and highlights the findings.
+ * @param {Editor}  editor - A TipTap editor instance.
+ * @param {string}  needle - The text to search for.
+*/
+export function searchAndHighlight(editor: Editor, needle: string): void {
+  editor.commands.setSearchTerm(needle);
 }
 
 /**
- * Tries to guess how an url with the given text would look like.
- * @param {string}  text - A text which may or may not contain an url.
- * @returns {string} A suggestion for an url derrived from the text.
+ * Gets the selected text.
+ * @param {Editor}  editor - A TipTap editor instance.
+ * @returns { string } The selected text, or null if the selection is empty.
 */
-export function makeLinkSuggestion(text: string): string {
-  if (!isValidUrl(text)) {
-    text = 'https://' + text;
-    if (!isValidUrl(text)) {
-        text = 'https://';
-    }
+export function getSelectedText(editor: Editor): string {
+  const { from, to, empty } = editor.state.selection;
+  if (empty) {
+    return null;
   }
-  return text;
+  return editor.state.doc.textBetween(from, to, ' ');
 }
 
 /**
@@ -138,4 +137,33 @@ export function selectWordAtCurrentPosition(editor: Editor): string {
 
   editor.commands.setTextSelection({ from: selection.$from.pos - toLeft, to: selection.$to.pos + toRight });
   return text.substring(textFromPos - toLeft, textToPos + toRight);
+}
+
+/**
+ * Tries to guess how an url with the given text would look like.
+ * @param {string}  text - A text which may or may not contain an url.
+ * @returns {string} A suggestion for an url derrived from the text.
+*/
+export function makeLinkSuggestion(text: string): string {
+  if (!isValidUrl(text)) {
+    text = 'https://' + text;
+    if (!isValidUrl(text)) {
+        text = 'https://';
+    }
+  }
+  return text;
+}
+
+function isValidUrl(text: string): boolean {
+  try {
+      new URL(text);
+      return true;
+  } catch {
+      return false;
+  }
+}
+
+function isWhitespace(char: string): boolean {
+  let regex = /[\s]/;
+  return regex.test(char);
 }
