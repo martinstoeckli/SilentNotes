@@ -43,6 +43,7 @@ note_push_to_server Manually upload note
 tag_add Add tag
 feedback_note_to_recycle The note has been moved to the recycle bin and can be restored from there.
 note_pin Pin note
+note_open_link Open link
 
 checklist_create_new Create new checklist
 checklist_move_to_top Move to top

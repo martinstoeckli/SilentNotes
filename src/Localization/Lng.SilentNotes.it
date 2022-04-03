@@ -43,6 +43,7 @@ note_push_to_server Carica manualmente l'appunto
 tag_add Aggiungi etichetta
 feedback_note_to_recycle L'appunto è stato spostato nel Cestino e può essere recuperato da lì.
 note_pin Appunto in evidenza
+note_open_link Open link
 
 checklist_create_new Crea una nuova lista di controllo
 checklist_move_to_top Sposta in cima

@@ -120,8 +120,6 @@ div.ProseMirror li p {
                     commandChain.extendMarkRange('link').unsetLink();
                 }
             }
-//            var selection = editor.view.state.selection;
-//            commandChain.setTextSelection(selection.$to.pos);
             commandChain.run();
             linkDialog.hide();
         }
@@ -312,8 +310,8 @@ div.ProseMirror li p {
                         </div>
                     </div>
                     <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" onclick="linkDialogOpenPressed();">Visit link <svg width='16' height='16' viewBox='0 0 24 24'><use xlink:href="#svg-link-variant" /></svg></button>
                       <button type="button" class="btn btn-primary" onclick="linkDialogOkPressed();">@Model.Language["ok"]</button>
+                      <button type="button" class="btn btn-secondary" onclick="linkDialogOpenPressed();">@Model.Language["note_open_link"] <svg width='16' height='16' viewBox='0 0 24 24'><use xlink:href="#svg-open-in-new" /></svg></button>
                       <button type="button" class="btn btn-secondary" data-dismiss="modal">@Model.Language["cancel"]</button>
                     </div>
                 </div>
@@ -326,6 +324,7 @@ div.ProseMirror li p {
             @{WriteLiteral(Model.Icon.LoadIcon("plus", new[] { new KeyValuePair<string, string>("id", "svg-plus") }));}
             @{WriteLiteral(Model.Icon.LoadIcon("delete", new[] { new KeyValuePair<string, string>("id", "svg-delete") }));}
             @{WriteLiteral(Model.Icon.LoadIcon("link-variant", new[] { new KeyValuePair<string, string>("id", "svg-link-variant") }));}
+            @{WriteLiteral(Model.Icon.LoadIcon("open-in-new", new[] { new KeyValuePair<string, string>("id", "svg-open-in-new") }));}
         </div>
     </div>
 </body>
