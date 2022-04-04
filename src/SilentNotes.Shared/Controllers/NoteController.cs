@@ -113,6 +113,7 @@ namespace SilentNotes.Controllers
                 new VueBindingShortcut(VueBindingShortcut.KeyHome, "ScrollToTop") { Ctrl = true },
                 new VueBindingShortcut(VueBindingShortcut.KeyEnd, "ScrollToBottom") { Ctrl = true },
                 new VueBindingShortcut("l", "ShowLinkDialog") { Ctrl = true },
+                new VueBindingShortcut("F3", "FindNextCommand"),
             };
             VueBindings = new VueDataBinding(_viewModel, View, shortcuts);
             VueBindings.DeclareAdditionalVueData("PrettyTimeAgoVisible", "true");
@@ -134,6 +135,8 @@ namespace SilentNotes.Controllers
             VueBindings.DeclareAdditionalVueMethod("ScrollToTop", "ProseMirrorBundle.scrollToTop(editor);");
             VueBindings.DeclareAdditionalVueMethod("ScrollToBottom", "ProseMirrorBundle.scrollToBottom(editor);");
             VueBindings.DeclareAdditionalVueMethod("ShowLinkDialog", "showLinkDialog();");
+            VueBindings.DeclareAdditionalVueMethod("FindNextCommand", "ProseMirrorBundle.findNext(editor);");
+            VueBindings.DeclareAdditionalVueMethod("FindPreviousCommand", "ProseMirrorBundle.findPrevious(editor);");
             VueBindings.UnhandledViewBindingEvent += UnhandledViewBindingEventHandler;
             VueBindings.ViewLoadedEvent += ViewLoadedEventHandler;
             _viewModel.VueDataBindingScript = VueBindings.BuildVueScript();

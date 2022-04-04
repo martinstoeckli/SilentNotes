@@ -200,8 +200,6 @@ div.ProseMirror .search-result {
 
         function searchByFilter() {
             var filter = getFilterElement().value;
-            if (filter.length < 2)
-                filter = '';
             ProseMirrorBundle.searchAndHighlight(editor, filter);
         }
 
@@ -219,6 +217,9 @@ div.ProseMirror .search-result {
             editor.on('selectionUpdate', function (editor) {
                 refreshActiveFormatState();
             });
+
+            @* // For debugging purposes, get the complete HTML in NoteController.ShowInView().
+            editor.commands.setContent('@{WriteLiteral(Model.GetEscapedUnlockedHtmlContent());}'); *@
 
             document.addEventListener('custom-link-clicked', function () {
                 showLinkDialog();
@@ -320,8 +321,8 @@ div.ProseMirror .search-result {
         <div id="search-dialog" class="hidden">
             <div class="nav-filter">
                 <input id="TxtFilter" autocomplete="off" />
-                <svg id="search-next" width='24' height='24' viewBox='0 0 24 24' class="" onclick=""><use xlink:href="#svg-chevron-down" /></svg>
-                <svg id="search-previous" width='24' height='24' viewBox='0 0 24 24' class="" onclick=""><use xlink:href="#svg-chevron-up" /></svg>
+                <svg id="search-next" width='24' height='24' viewBox='0 0 24 24' class="" v-on:click="FindNextCommand"><use xlink:href="#svg-chevron-down" /></svg>
+                <svg id="search-previous" width='24' height='24' viewBox='0 0 24 24' class="" v-on:click="FindPreviousCommand"><use xlink:href="#svg-chevron-up" /></svg>
                 <svg id="filter-cancel-icon" width='24' height='24' viewBox='0 0 24 24' class="" onclick="showSearchDialog(false);"><use xlink:href="#svg-close-circle-outline" /></svg>
             </div>
         </div>

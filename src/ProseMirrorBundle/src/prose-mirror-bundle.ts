@@ -97,8 +97,26 @@ export function scrollToBottom(editor: Editor): void {
  * @param {Editor}  editor - A TipTap editor instance.
  * @param {string}  needle - The text to search for.
 */
-export function searchAndHighlight(editor: Editor, needle: string): void {
+export function searchAndHighlight(editor: Editor, needle: string, minLength: number = 2): void {
+  if (needle.length < minLength)
+    needle = '';
   editor.commands.setSearchTerm(needle);
+}
+
+/**
+ * Searches for the next occurence of a given text in the note and selects the finding.
+ * @param {Editor}  editor - A TipTap editor instance.
+*/
+export function findNext(editor: Editor): void {
+  editor.chain().focus().findNext().scrollIntoView().run();
+}
+
+/**
+ * Searches for the next occurence of a given text in the note and selects the finding.
+ * @param {Editor}  editor - A TipTap editor instance.
+*/
+export function findPrevious(editor: Editor): void {
+  editor.chain().focus().findPrevious().scrollIntoView().run();
 }
 
 /**
