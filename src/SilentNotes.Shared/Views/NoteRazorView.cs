@@ -78,7 +78,7 @@ WriteLiteral(" href=\"silentnotes.css\"");
 
 WriteLiteral(" rel=\"stylesheet\"");
 
-WriteLiteral(" />\r\njavascript     <link");
+WriteLiteral(" />\r\n    <link");
 
 WriteAttribute ("href", " href=\"", "\""
 
