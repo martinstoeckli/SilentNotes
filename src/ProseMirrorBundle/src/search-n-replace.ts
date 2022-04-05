@@ -1,3 +1,4 @@
+import "core-js";
 import { Extension } from '@tiptap/core'
 import { Decoration, DecorationSet } from 'prosemirror-view'
 import { EditorState, Plugin, PluginKey, TextSelection } from 'prosemirror-state'
@@ -29,13 +30,15 @@ declare module '@tiptap/core' {
     //   replaceAll: () => ReturnType,
       /**
        * @description Searches for the next match and sets the selection to this match.
+       * @param {boolean}  canKeepPos - If set to true, the selection will be kept if it already
+       * is a match. If set to false, the next occurence will be found.
        */
-      findNext: () => ReturnType,
+      findNext: (canKeepPos: boolean) => ReturnType,
       /**
        * @description Searches for the previous match and sets the selection to this match.
        */
-       findPrevious: () => ReturnType,
-      }
+      findPrevious: () => ReturnType,
+    }
   }
 }
 
@@ -123,89 +126,95 @@ function processSearches(doc: ProsemirrorNode, searchTerm: RegExp, searchResultC
   }
 }
 
-const replace = (replaceTerm: string, results: Result[], { state, dispatch }: any) => {
-  const firstResult = results[0]
+// const replace = (replaceTerm: string, results: Result[], { state, dispatch }: any) => {
+//   const firstResult = results[0]
 
-  if (!firstResult) return
+//   if (!firstResult) return
 
-  const { from, to } = results[0]
+//   const { from, to } = results[0]
 
-  if (dispatch) dispatch(state.tr.insertText(replaceTerm, from, to))
-}
+//   if (dispatch) dispatch(state.tr.insertText(replaceTerm, from, to))
+// }
 
-const rebaseNextResult = (replaceTerm: string, index: number, lastOffset: number, results: Result[]): [number, Result[]] | null => {
-  const nextIndex = index + 1
+// const rebaseNextResult = (replaceTerm: string, index: number, lastOffset: number, results: Result[]): [number, Result[]] | null => {
+//   const nextIndex = index + 1
 
-  if (!results[nextIndex]) return null
+//   if (!results[nextIndex]) return null
 
-  const { from: currentFrom, to: currentTo } = results[index]
+//   const { from: currentFrom, to: currentTo } = results[index]
 
-  const offset = (currentTo - currentFrom - replaceTerm.length) + lastOffset
+//   const offset = (currentTo - currentFrom - replaceTerm.length) + lastOffset
 
-  const { from, to } = results[nextIndex]
+//   const { from, to } = results[nextIndex]
 
-  results[nextIndex] = {
-    to: to - offset,
-    from: from - offset,
-  }
+//   results[nextIndex] = {
+//     to: to - offset,
+//     from: from - offset,
+//   }
 
-  return [offset, results]
-}
+//   return [offset, results]
+// }
 
-const replaceAll = (replaceTerm: string, results: Result[], { tr, dispatch }: any) => {
-  let offset = 0
+// const replaceAll = (replaceTerm: string, results: Result[], { tr, dispatch }: any) => {
+//   let offset = 0
 
-  let ourResults = results.slice()
+//   let ourResults = results.slice()
 
-  if (!ourResults.length) return
+//   if (!ourResults.length) return
 
-  for (let i = 0; i < ourResults.length; i += 1) {
-    const { from, to } = ourResults[i]
+//   for (let i = 0; i < ourResults.length; i += 1) {
+//     const { from, to } = ourResults[i]
 
-    tr.insertText(replaceTerm, from, to)
+//     tr.insertText(replaceTerm, from, to)
 
-    const rebaseNextResultResponse = rebaseNextResult(replaceTerm, i, offset, ourResults)
+//     const rebaseNextResultResponse = rebaseNextResult(replaceTerm, i, offset, ourResults)
 
-    if (rebaseNextResultResponse) {
-      offset = rebaseNextResultResponse[0]
-      ourResults = rebaseNextResultResponse[1]
-    }
-  }
+//     if (rebaseNextResultResponse) {
+//       offset = rebaseNextResultResponse[0]
+//       ourResults = rebaseNextResultResponse[1]
+//     }
+//   }
 
-  dispatch(tr)
-}
+//   dispatch(tr)
+// }
 
-const findNext = (results: Result[], { state }: any) => {
-  const { from } = state.selection;
+const findNext = (canKeepPos: boolean, results: Result[], { state }: any) => {
+  const { from } = state.selection
 
-  let nextResult = null;
-  let i = 0;
+  let nextResult = null
+  let i = 0
   while ((nextResult == null) && (i < results.length)) {
-    if (results[i].from > from)
-      nextResult = results[i];
-    i++;
+    if (canKeepPos) {
+      if (results[i].from >= from)
+        nextResult = results[i]
+    }
+    else {
+      if (results[i].from > from)
+        nextResult = results[i]
+    }
+    i++
   }
 
   if (nextResult) {
-    const selection = TextSelection.create(state.doc, nextResult.from, nextResult.to);
-    state.tr.setSelection(selection);
+    const selection = TextSelection.create(state.doc, nextResult.from, nextResult.to)
+    state.tr.setSelection(selection)
   }
 }
 
 const findPrevious = (results: Result[], { state }: any) => {
-  const { from } = state.selection;
+  const { from } = state.selection
 
-  let nextResult = null;
-  let i = results.length - 1;
+  let nextResult = null
+  let i = results.length - 1
   while ((nextResult == null) && (i >= 0)) {
     if (results[i].from < from)
-      nextResult = results[i];
-    i--;
+      nextResult = results[i]
+    i--
   }
 
   if (nextResult) {
-    const selection = TextSelection.create(state.doc, nextResult.from, nextResult.to);
-    state.tr.setSelection(selection);
+    const selection = TextSelection.create(state.doc, nextResult.from, nextResult.to)
+    state.tr.setSelection(selection)
   }
 }
 
@@ -262,10 +271,10 @@ export const SearchNReplace = Extension.create<SearchOptions>({
 
     //     return false
     //   },
-      findNext: () => ({ state, dispatch }) => {
+      findNext: (canKeepPos: boolean) => ({ state, dispatch }) => {
         const { results } = this.options
 
-        findNext(results, { state })
+        findNext(canKeepPos, results, { state })
 
         updateView(state, dispatch)
 

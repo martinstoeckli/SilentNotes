@@ -38,6 +38,9 @@ div.ProseMirror li p {
 div.ProseMirror .search-result {
   background: rgba(32, 144, 234, 0.5);
 }
+div.ProseMirror .search-result-selected {
+  background: rgba(32, 144, 234, 0.9);
+}
 
 .color-btn { color: black; }
 .color-btn.dark { color: white; }
@@ -236,6 +239,7 @@ div.ProseMirror .search-result {
 
             getFilterElement().addEventListener('input', function (event) {
                 searchByFilter();
+                ProseMirrorBundle.findNext(editor, true, false);
             });
         }
 

@@ -110,10 +110,11 @@ namespace SilentNotes.Controllers
             {
                 new VueBindingShortcut("f", "ToggleSearchDialogCommand") { Ctrl = true },
                 new VueBindingShortcut(VueBindingShortcut.KeyEscape, "CloseSearchDialogCommand"),
-                new VueBindingShortcut(VueBindingShortcut.KeyHome, "ScrollToTop") { Ctrl = true },
-                new VueBindingShortcut(VueBindingShortcut.KeyEnd, "ScrollToBottom") { Ctrl = true },
+                new VueBindingShortcut(VueBindingShortcut.KeyHome, "ScrollToTopCommand") { Ctrl = true },
+                new VueBindingShortcut(VueBindingShortcut.KeyEnd, "ScrollToBottomCommand") { Ctrl = true },
                 new VueBindingShortcut("l", "ShowLinkDialog") { Ctrl = true },
                 new VueBindingShortcut("F3", "FindNextCommand"),
+                new VueBindingShortcut("F3", "FindPreviousCommand") { Shift = true },
             };
             VueBindings = new VueDataBinding(_viewModel, View, shortcuts);
             VueBindings.DeclareAdditionalVueData("PrettyTimeAgoVisible", "true");
@@ -132,10 +133,10 @@ namespace SilentNotes.Controllers
             VueBindings.DeclareAdditionalVueData("NewLinkUrl", "''");
             VueBindings.DeclareAdditionalVueMethod("ToggleSearchDialogCommand", "toggleSearchDialog();");
             VueBindings.DeclareAdditionalVueMethod("CloseSearchDialogCommand", "showSearchDialog(false);");
-            VueBindings.DeclareAdditionalVueMethod("ScrollToTop", "ProseMirrorBundle.scrollToTop(editor);");
-            VueBindings.DeclareAdditionalVueMethod("ScrollToBottom", "ProseMirrorBundle.scrollToBottom(editor);");
+            VueBindings.DeclareAdditionalVueMethod("ScrollToTopCommand", "ProseMirrorBundle.scrollToTop(editor);");
+            VueBindings.DeclareAdditionalVueMethod("ScrollToBottomCommand", "ProseMirrorBundle.scrollToBottom(editor);");
             VueBindings.DeclareAdditionalVueMethod("ShowLinkDialog", "showLinkDialog();");
-            VueBindings.DeclareAdditionalVueMethod("FindNextCommand", "ProseMirrorBundle.findNext(editor);");
+            VueBindings.DeclareAdditionalVueMethod("FindNextCommand", "ProseMirrorBundle.findNext(editor, false, true);");
             VueBindings.DeclareAdditionalVueMethod("FindPreviousCommand", "ProseMirrorBundle.findPrevious(editor);");
             VueBindings.UnhandledViewBindingEvent += UnhandledViewBindingEventHandler;
             VueBindings.ViewLoadedEvent += ViewLoadedEventHandler;

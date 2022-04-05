@@ -106,9 +106,15 @@ export function searchAndHighlight(editor: Editor, needle: string, minLength: nu
 /**
  * Searches for the next occurence of a given text in the note and selects the finding.
  * @param {Editor}  editor - A TipTap editor instance.
+ * @param {boolean}  canKeepPos - If set to true, the selection will be kept if it already
+ * is a match. If set to false, the next occurence will be found.
+ * @param {boolean}  focusToEditor - If set to true, the focus will be set back to the editor.
 */
-export function findNext(editor: Editor): void {
-  editor.chain().focus().findNext().scrollIntoView().run();
+export function findNext(editor: Editor, canKeepPos: boolean, focusToEditor: boolean): void {
+  var commandChain = editor.chain();
+  if (focusToEditor)
+    commandChain.focus();
+  commandChain.findNext(canKeepPos).run();
 }
 
 /**
