@@ -80,7 +80,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
         {
             // The resumable upload type is the recommended approach for reliable file transfer,
             // not only for big files.
-            IFlurlResponse sessionResponse = await Flurl.Request(UploadUrl)
+            IFlurlResponse sessionResponse = await GetFlurl().Request(UploadUrl)
                 .SetQueryParam("uploadType", "resumable")
                 .WithOAuthBearerToken(credentials.Token.AccessToken)
                 .WithHeader("X-Upload-Content-Type", "application/octet-stream")
@@ -94,7 +94,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
 
             // Now that we have got the session, the file can be uploaded
             HttpContent content = new ByteArrayContent(fileContent);
-            IFlurlResponse uploadResponse = await Flurl.Request(sessionUri)
+            IFlurlResponse uploadResponse = await GetFlurl().Request(sessionUri)
                 .WithOAuthBearerToken(credentials.Token.AccessToken)
                 .PostAsync(content);
         }
@@ -104,7 +104,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
             // The resumable upload type is the recommended approach for reliable file transfer,
             // not only for big files.
             // Adding SetQueryParam("addParents", DataFolder) is not necessary because the id is unique
-            IFlurlResponse sessionResponse = await Flurl.Request(UploadUrl, fileId)
+            IFlurlResponse sessionResponse = await GetFlurl().Request(UploadUrl, fileId)
                 .SetQueryParam("uploadType", "resumable")
                 .WithOAuthBearerToken(credentials.Token.AccessToken)
                 .WithHeader("X-Upload-Content-Type", "application/octet-stream")
@@ -114,7 +114,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
 
             // Now that we have got the session, the file can be uploaded
             HttpContent content = new ByteArrayContent(fileContent);
-            IFlurlResponse uploadResponse = await Flurl.Request(sessionUri)
+            IFlurlResponse uploadResponse = await GetFlurl().Request(sessionUri)
                 .WithOAuthBearerToken(credentials.Token.AccessToken)
                 .PutAsync(content);
         }
@@ -131,7 +131,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
                 if (fileId == null)
                     throw new ConnectionFailedException(string.Format("The file '{0}' does not exist.", filename), null);
 
-                byte[] responseData = await Flurl.Request(DownloadUrl, fileId)
+                byte[] responseData = await GetFlurl().Request(DownloadUrl, fileId)
                     .WithOAuthBearerToken(credentials.Token.AccessToken)
                     .SetQueryParam("alt", "media")
                     .GetAsync()
@@ -156,7 +156,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
                 if (fileId == null)
                     throw new ConnectionFailedException(string.Format("The file '{0}' does not exist.", filename), null);
 
-                await Flurl.Request(DeleteUrl, fileId)
+                await GetFlurl().Request(DeleteUrl, fileId)
                     .WithOAuthBearerToken(credentials.Token.AccessToken)
                     .DeleteAsync();
             }
@@ -177,7 +177,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
                 JsonFolderEntries entries = null;
                 do
                 {
-                    string jsonResponse = await Flurl.Request(ListUrl)
+                    string jsonResponse = await GetFlurl().Request(ListUrl)
                         .WithOAuthBearerToken(credentials.Token.AccessToken)
                         .SetQueryParam("spaces", DataFolder)
                         .SetQueryParam("pageToken", entries?.Cursor)
@@ -219,7 +219,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
         {
             try
             {
-                string jsonResponse = await Flurl.Request(ListUrl)
+                string jsonResponse = await GetFlurl().Request(ListUrl)
                     .WithOAuthBearerToken(accessToken)
                     .SetQueryParam("spaces", DataFolder)
                     .SetQueryParam("q", string.Format("name='{0}'", filename))

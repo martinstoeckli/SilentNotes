@@ -151,7 +151,7 @@ namespace SilentNotes.ViewModels
         /// </summary>
         public bool NeedsUrl
         {
-            get { return _credentialsRequirements.NeedsUrl(); }
+            get { return _credentialsRequirements.HasRequirement(CloudStorageCredentialsRequirements.Url); }
         }
 
         /// <summary>
@@ -159,7 +159,7 @@ namespace SilentNotes.ViewModels
         /// </summary>
         public bool NeedsUsername
         {
-            get { return _credentialsRequirements.NeedsUsername(); }
+            get { return _credentialsRequirements.HasRequirement(CloudStorageCredentialsRequirements.Username); }
         }
 
         /// <summary>
@@ -167,7 +167,7 @@ namespace SilentNotes.ViewModels
         /// </summary>
         public bool NeedsPassword
         {
-            get { return _credentialsRequirements.NeedsPassword(); }
+            get { return _credentialsRequirements.HasRequirement(CloudStorageCredentialsRequirements.Password); }
         }
 
         /// <summary>
@@ -175,7 +175,15 @@ namespace SilentNotes.ViewModels
         /// </summary>
         public bool NeedsSecureFlag
         {
-            get { return _credentialsRequirements.NeedsSecureFlag(); }
+            get { return _credentialsRequirements.HasRequirement(CloudStorageCredentialsRequirements.Secure); }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether unsafe certificates can be accepted.
+        /// </summary>
+        public bool NeedsAcceptUnsafeCertificate
+        {
+            get { return _credentialsRequirements.HasRequirement(CloudStorageCredentialsRequirements.AcceptUnsafeCertificate); }
         }
 
         /// <summary>

@@ -153,19 +153,19 @@ namespace VanillaCloudStorageClient
             if (credentials == null)
                 throw new InvalidParameterException(nameof(CloudStorageCredentials));
 
-            if (requirements.NeedsToken() && (credentials.Token == null))
+            if (requirements.HasRequirement(CloudStorageCredentialsRequirements.Token) && (credentials.Token == null))
                 throw new InvalidParameterException(string.Format("{0}.{1}", nameof(CloudStorageCredentials), nameof(CloudStorageCredentials.Token)));
 
-            if (requirements.NeedsUrl() && string.IsNullOrWhiteSpace(credentials.Url))
+            if (requirements.HasRequirement(CloudStorageCredentialsRequirements.Url) && string.IsNullOrWhiteSpace(credentials.Url))
                 throw new InvalidParameterException(string.Format("{0}.{1}", nameof(CloudStorageCredentials), nameof(CloudStorageCredentials.Url)));
 
             bool usernameRequiredOrProvided = !allowAnonymous || !string.IsNullOrEmpty(credentials.Username);
             if (usernameRequiredOrProvided)
             {
-                if (requirements.NeedsUsername() && string.IsNullOrWhiteSpace(credentials.Username))
+                if (requirements.HasRequirement(CloudStorageCredentialsRequirements.Username) && string.IsNullOrWhiteSpace(credentials.Username))
                     throw new InvalidParameterException(string.Format("{0}.{1}", nameof(CloudStorageCredentials), nameof(CloudStorageCredentials.Username)));
 
-                if (requirements.NeedsPassword() && (credentials.Password == null))
+                if (requirements.HasRequirement(CloudStorageCredentialsRequirements.Password) && (credentials.Password == null))
                     throw new InvalidParameterException(string.Format("{0}.{1}", nameof(CloudStorageCredentials), nameof(CloudStorageCredentials.Password)));
             }
         }
