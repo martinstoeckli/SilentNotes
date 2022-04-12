@@ -75,7 +75,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
 
                 // Using an upload session is the recommended approach for reliable file transfer,
                 // not only for big files.
-                string jsonResponse = await Flurl.Request(url)
+                string jsonResponse = await GetFlurl().Request(url)
                     .WithOAuthBearerToken(credentials.Token.AccessToken)
                     .WithHeader("Content-Type", "application/json")
                     .PostAsync(sessionContent)
@@ -85,7 +85,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
 
                 // Now that we have got the session, the file can be uploaded
                 HttpContent content = new ByteArrayContent(fileContent);
-                IFlurlResponse uploadResponse = await Flurl.Request(session.UploadUrl)
+                IFlurlResponse uploadResponse = await GetFlurl().Request(session.UploadUrl)
                     .WithHeader("Content-Length", fileContent.Length)
                     .WithHeader("Content-Range", string.Format("bytes 0-{0}/{1}", fileContent.Length - 1, fileContent.Length))
                     .PutAsync(content);
@@ -105,7 +105,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
             {
                 string url = string.Format(DownloadUrl, Url.Encode(filename));
 
-                byte[] responseData = await Flurl.Request(url)
+                byte[] responseData = await GetFlurl().Request(url)
                     .WithOAuthBearerToken(credentials.Token.AccessToken)
                     .GetAsync()
                     .ReceiveBytes();
@@ -126,7 +126,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
             {
                 string url = string.Format(DeleteUrl, Url.Encode(filename));
 
-                await Flurl.Request(url)
+                await GetFlurl().Request(url)
                     .WithOAuthBearerToken(credentials.Token.AccessToken)
                     .DeleteAsync();
             }
@@ -147,7 +147,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
                 string url = ListUrl;
                 while (url != null)
                 {
-                    string jsonResponse = await Flurl.Request(url)
+                    string jsonResponse = await GetFlurl().Request(url)
                         .WithOAuthBearerToken(credentials.Token.AccessToken)
                         .SetQueryParam("$select", "name,file")
                         .GetAsync()
@@ -175,7 +175,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
             {
                 string url = string.Format(ExistsUrl, Url.Encode(filename));
 
-                await Flurl.Request(url)
+                await GetFlurl().Request(url)
                     .WithOAuthBearerToken(credentials.Token.AccessToken)
                     .SetQueryParam("$select", "name")
                     .GetAsync()
@@ -206,7 +206,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
         {
             try
             {
-                string jsonResponse = await Flurl.Request(AppRootUrl)
+                string jsonResponse = await GetFlurl().Request(AppRootUrl)
                     .WithOAuthBearerToken(accessToken)
                     .SetQueryParam("$select", "id")
                     .GetAsync()

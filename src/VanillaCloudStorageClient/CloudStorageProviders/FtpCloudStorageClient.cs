@@ -47,7 +47,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
         /// <inheritdoc/>
         public override CloudStorageCredentialsRequirements CredentialsRequirements
         {
-            get { return CloudStorageCredentialsRequirements.UsernamePasswordUrlSecure; }
+            get { return CloudStorageCredentialsRequirements.Username | CloudStorageCredentialsRequirements.Password | CloudStorageCredentialsRequirements.Url | CloudStorageCredentialsRequirements.Secure | CloudStorageCredentialsRequirements.AcceptUnsafeCertificate; }
         }
 
         /// <inheritdoc/>

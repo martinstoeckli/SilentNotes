@@ -25,7 +25,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
         /// <inheritdoc/>
         public override CloudStorageCredentialsRequirements CredentialsRequirements
         {
-            get { return CloudStorageCredentialsRequirements.UsernamePasswordUrl; }
+            get { return CloudStorageCredentialsRequirements.Username | CloudStorageCredentialsRequirements.Password | CloudStorageCredentialsRequirements.Url | CloudStorageCredentialsRequirements.AcceptUnsafeCertificate; }
         }
 
         /// <inheritdoc/>
@@ -36,7 +36,8 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
             try
             {
                 HttpContent content = new ByteArrayContent(fileContent);
-                await Flurl.Request(credentials.Url, filename)
+                await GetFlurl(credentials.AcceptInvalidCertificate)
+                    .Request(credentials.Url, filename)
                     .WithBasicAuthOrAnonymous(credentials.Username, credentials.UnprotectedPassword)
                     .PutAsync(content);
             }
@@ -53,7 +54,8 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
 
             try
             {
-                return await Flurl.Request(credentials.Url, filename)
+                return await GetFlurl(credentials.AcceptInvalidCertificate)
+                    .Request(credentials.Url, filename)
                     .WithBasicAuthOrAnonymous(credentials.Username, credentials.UnprotectedPassword)
                     .GetBytesAsync();
             }
@@ -70,7 +72,8 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
 
             try
             {
-                await Flurl.Request(credentials.Url, filename)
+                await GetFlurl(credentials.AcceptInvalidCertificate)
+                    .Request(credentials.Url, filename)
                     .WithBasicAuthOrAnonymous(credentials.Username, credentials.UnprotectedPassword)
                     .DeleteAsync();
             }
@@ -99,7 +102,8 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
                 HttpContent content = new ByteArrayContent(requestBytes);
                 XDocument responseXml;
                 Url url = new Url(IncludeTrailingSlash(credentials.Url));
-                using (Stream responseStream = await Flurl.Request(url)
+                using (Stream responseStream = await GetFlurl(credentials.AcceptInvalidCertificate)
+                    .Request(url)
                     .WithBasicAuthOrAnonymous(credentials.Username, credentials.UnprotectedPassword)
                     .WithHeader("Depth", "1")
                     .WithTimeout(20)

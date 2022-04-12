@@ -12,27 +12,29 @@ namespace VanillaCloudStorageClient
     /// provides this information, which can be used for validation and to display the correct
     /// controls in a view.
     /// </summary>
+    [Flags]
     public enum CloudStorageCredentialsRequirements
     {
-        /// <summary>
-        /// The storage client needs just an OAuth2 access token.
-        /// </summary>
-        Token,
+        /// <summary>No requirements or not set.</summary>
+        None = 0,
 
-        /// <summary>
-        /// The storage client needs a username and a password.
-        /// </summary>
-        UsernamePassword,
+        /// <summary>The storage client needs an OAuth2 access token.</summary>
+        Token = 1,
 
-        /// <summary>
-        /// The storage client needs a username, a password and an Url
-        /// </summary>
-        UsernamePasswordUrl,
+        /// <summary>The storage client needs a user name.</summary>
+        Username = 2,
 
-        /// <summary>
-        /// The storage client needs a username, a password, an Url and the secure flag.
-        /// </summary>
-        UsernamePasswordUrlSecure,
+        /// <summary>The storage client needs a password.</summary>
+        Password = 4,
+
+        /// <summary>The storage client needs just an url.</summary>
+        Url = 8,
+
+        /// <summary>The storage client needs a secure flag.</summary>
+        Secure = 16,
+
+        /// <summary>The storage client accepts unsafe certificates.</summary>
+        AcceptUnsafeCertificate = 32,
     }
 
     /// <summary>
@@ -41,54 +43,14 @@ namespace VanillaCloudStorageClient
     public static class CloudStorageCredentialsRequirementsExtensions
     {
         /// <summary>
-        /// Checks whether this requirement needs an OAuth2 token.
+        /// Checks whether a given requirement is set (type-safe <see cref="Enum.HasFlag(Enum)"/>).
         /// </summary>
-        /// <param name="requirements">Requirement to check.</param>
-        /// <returns>Returns true if if requires a token, otherwise false.</returns>
-        public static bool NeedsToken(this CloudStorageCredentialsRequirements requirements)
+        /// <param name="requirements">Requirements which may or may not contain the specified requirement.</param>
+        /// <param name="requirement">Requirement we want to check if it is contained in <paramref name="requirements"/>.</param>
+        /// <returns>Returns true if it requires a secure flag, otherwise false.</returns>
+        public static bool HasRequirement(this CloudStorageCredentialsRequirements requirements, CloudStorageCredentialsRequirements requirement)
         {
-            return requirements == CloudStorageCredentialsRequirements.Token;
-        }
-
-        /// <summary>
-        /// Checks whether this requirement needs a user name.
-        /// </summary>
-        /// <param name="requirements">Requirement to check.</param>
-        /// <returns>Returns true if if requires a user name, otherwise false.</returns>
-        public static bool NeedsUsername(this CloudStorageCredentialsRequirements requirements)
-        {
-            return requirements != CloudStorageCredentialsRequirements.Token;
-        }
-
-        /// <summary>
-        /// Checks whether this requirement needs a password.
-        /// </summary>
-        /// <param name="requirements">Requirement to check.</param>
-        /// <returns>Returns true if if requires a password, otherwise false.</returns>
-        public static bool NeedsPassword(this CloudStorageCredentialsRequirements requirements)
-        {
-            return requirements != CloudStorageCredentialsRequirements.Token;
-        }
-
-        /// <summary>
-        /// Checks whether this requirement needs a url.
-        /// </summary>
-        /// <param name="requirements">Requirement to check.</param>
-        /// <returns>Returns true if if requires a url, otherwise false.</returns>
-        public static bool NeedsUrl(this CloudStorageCredentialsRequirements requirements)
-        {
-            return requirements == CloudStorageCredentialsRequirements.UsernamePasswordUrl ||
-                requirements == CloudStorageCredentialsRequirements.UsernamePasswordUrlSecure;
-        }
-
-        /// <summary>
-        /// Checks whether this requirement needs a secure flag.
-        /// </summary>
-        /// <param name="requirements">Requirement to check.</param>
-        /// <returns>Returns true if if requires a secure flag, otherwise false.</returns>
-        public static bool NeedsSecureFlag(this CloudStorageCredentialsRequirements requirements)
-        {
-            return requirements == CloudStorageCredentialsRequirements.UsernamePasswordUrlSecure;
+            return (requirements & requirement) == requirement;
         }
     }
 }

@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Flurl.Http;
 
@@ -23,6 +24,7 @@ namespace VanillaCloudStorageClient
         /// access this member.
         /// </summary>
         private static IFlurlClient _sharedFlurlClient;
+        private static HttpClientHandler _sharedHttpClientHandler;
 
         /// <inheritdoc/>
         public abstract CloudStorageCredentialsRequirements CredentialsRequirements { get; }
@@ -47,15 +49,43 @@ namespace VanillaCloudStorageClient
         }
 
         /// <summary>
-        /// Gets or sets or creates a Flurl client. The client is created on demand (lazy loading)
-        /// and shared between all cloud storage clients. This means one should not rely on stateful
+        /// Gets or creates a Flurl client. The client is created on demand (lazy loading) and
+        /// shared between all cloud storage clients. This means one should not rely on stateful
         /// properties like IFlurlClient.BaseUrl, instead set all necessary properties explicitely
         /// for each request.
         /// </summary>
-        protected IFlurlClient Flurl
+        /// <param name="acceptUnsafeCertificates">Value indicating whether invalid SSL certificates
+        /// are accepted or not.</param>
+        /// <returns>Shared Flurl client.</returns>
+        protected IFlurlClient GetFlurl(bool acceptUnsafeCertificates = false)
         {
-            get { return _sharedFlurlClient ?? (_sharedFlurlClient = new FlurlClient()); }
-            set { _sharedFlurlClient = value; }
+            // If acceptance of invalid certifications has changed, we need to recreate the flurl
+            // client (HttpClientHandler doesn't allow changes after first use).
+            bool hasFlurlClient = _sharedFlurlClient != null;
+            bool hasCertificationValidationCallback = (hasFlurlClient && _sharedHttpClientHandler?.ServerCertificateCustomValidationCallback != null);
+            if (hasFlurlClient && (acceptUnsafeCertificates != hasCertificationValidationCallback))
+            {
+                _sharedHttpClientHandler = null;
+                _sharedFlurlClient.Dispose();
+                _sharedFlurlClient = null;
+            }
+
+            // Lazy creation of Flurl client
+            if (_sharedFlurlClient == null)
+            {
+                // Configuration for certificate verification
+                if (acceptUnsafeCertificates)
+                {
+                    _sharedHttpClientHandler = new HttpClientHandler();
+                    _sharedHttpClientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
+                    _sharedFlurlClient = new FlurlClient(new HttpClient(_sharedHttpClientHandler));
+                }
+                else
+                {
+                    _sharedFlurlClient = new FlurlClient();
+                }
+            }
+            return _sharedFlurlClient;
         }
 
         /// <summary>
