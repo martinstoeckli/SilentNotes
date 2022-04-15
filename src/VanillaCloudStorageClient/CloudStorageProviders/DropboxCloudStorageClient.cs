@@ -79,7 +79,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
                 });
                 HttpContent content = new ByteArrayContent(fileContent);
 
-                await Flurl.Request(UploadUrl)
+                await GetFlurl().Request(UploadUrl)
                     .WithOAuthBearerToken(credentials.Token.AccessToken)
                     .WithHeader("Dropbox-API-Arg", jsonPathParameter)
                     .WithHeader("Content-Type", "application/octet-stream")
@@ -103,7 +103,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
                     path = EnsureLeadingSlash(filename)
                 });
 
-                byte[] result = await Flurl.Request(DownloadUrl)
+                byte[] result = await GetFlurl().Request(DownloadUrl)
                     .WithOAuthBearerToken(credentials.Token.AccessToken)
                     .WithHeader("Dropbox-API-Arg", jsonPathParameter)
                     .PostAsync(null)
@@ -124,7 +124,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
 
             try
             {
-                await Flurl.Request(DeleteUrl)
+                await GetFlurl().Request(DeleteUrl)
                     .WithOAuthBearerToken(credentials.Token.AccessToken)
                     .PostJsonAsync(new
                     {
@@ -144,7 +144,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
 
             try
             {
-                string jsonResponse = await Flurl.Request(ListUrl)
+                string jsonResponse = await GetFlurl().Request(ListUrl)
                     .WithOAuthBearerToken(credentials.Token.AccessToken)
                     .PostJsonAsync(new
                     {
@@ -166,7 +166,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
                 // Check whether there are more file names to get and make consecutive requests.
                 while (entries.HasMore)
                 {
-                    jsonResponse = await Flurl.Request(ListContinueUrl)
+                    jsonResponse = await GetFlurl().Request(ListContinueUrl)
                         .WithOAuthBearerToken(credentials.Token.AccessToken)
                         .PostJsonAsync(new { cursor = entries.Cursor })
                         .ReceiveString();

@@ -23,7 +23,7 @@ using SilentNotes.ViewModels;
 #line hidden
 
 
-[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.9.0.273")]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "17.1.0.324")]
 public partial class CloudStorageAccountRazorView : CloudStorageAccountRazorViewBase
 {
 
@@ -463,20 +463,20 @@ WriteLiteral(" ");
 
 
 #line 62 "CloudStorageAccountRazorView.cshtml"
-                                                         if (!Model.NeedsSecureFlag) { 
+                                                         if (!Model.NeedsAcceptUnsafeCertificate) { 
 
 #line default
 #line hidden
 
 #line 62 "CloudStorageAccountRazorView.cshtml"
-                                                                                   Write("hidden");
+                                                                                                Write("hidden");
 
 
 #line default
 #line hidden
 
 #line 62 "CloudStorageAccountRazorView.cshtml"
-                                                                                                   ; }
+                                                                                                                ; }
 
 #line default
 #line hidden

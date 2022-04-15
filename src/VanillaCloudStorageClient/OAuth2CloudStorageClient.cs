@@ -99,7 +99,7 @@ namespace VanillaCloudStorageClient
                     ? string.Empty // Serializes as empty parameter
                     : null; // Won't be serialized
 
-                string jsonResponse = await Flurl
+                string jsonResponse = await GetFlurl()
                     .Request(Config.TokenServiceEndpoint)
                     .PostUrlEncodedAsync(new
                     {
@@ -152,7 +152,7 @@ namespace VanillaCloudStorageClient
                     ? string.Empty // Serializes as empty parameter
                     : null; // Won't be serialized
 
-                string jsonResponse = await Flurl
+                string jsonResponse = await GetFlurl()
                     .Request(Config.TokenServiceEndpoint)
                     .PostUrlEncodedAsync(new
                     {
