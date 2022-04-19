@@ -13,18 +13,13 @@
     <link href="silentnotes.css" rel="stylesheet" />
     <link href="@(Model.Theme.DarkMode ? "silentnotes.dark.css" : "silentnotes.light.css")" rel="stylesheet" />
 
-    <link href="quill/quill.snow.css" rel="stylesheet">
-    <link href="note-view.css" rel="stylesheet">
-    <link href="quillsearchhighlighter.css" rel="stylesheet">
-
     <script src="@Model.HtmlRecource["vuejs"]"></script>
     <script src="@Model.HtmlRecource["jqueryjs"]"></script>
     <script src="@Model.HtmlRecource["bootstrapjs"]"></script>
     <script src="@Model.HtmlRecource["bootstrapautocompletejs"]"></script>
+    <script src="@Model.HtmlRecource["prosemirror"]"></script>
     <script src="silentnotes.js"></script>
     <script src="checklist.js"></script>
-    <script src="quill/quill.min.js"></script>
-    <script src="quillsearchhighlighter.js"></script>
 
     <style type="text/css">
 body { background-color: transparent; }
@@ -32,14 +27,14 @@ body { background-color: transparent; }
 .note-viewer {
     font-size: @(Model.NoteBaseFontSize)px !important;
 }
-div .detail-view.checklist .ql-editor p::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("checkbox-blank-outline", new[] { new KeyValuePair<string, string>("fill", "#000000") }));}; }
-div .detail-view.checklist .ql-editor p.done::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("check-box-outline", new[] { new KeyValuePair<string, string>("fill", "#000000") }));}; }
-div .detail-view.checklist .ql-editor p.disabled::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("checkbox-blank-outline", new[] { new KeyValuePair<string, string>("fill", "#000000") }));}; }
-div .detail-view.checklist .ql-editor p::after { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("delete", new[] { new KeyValuePair<string, string>("fill", "#000000") }));}; }
-div.dark .detail-view.checklist .ql-editor p::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("checkbox-blank-outline", new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") }));}; }
-div.dark .detail-view.checklist .ql-editor p.done::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("check-box-outline", new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") }));}; }
-div.dark .detail-view.checklist .ql-editor p.disabled::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("checkbox-blank-outline", new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") }));}; }
-div.dark .detail-view.checklist .ql-editor p::after { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("delete", new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") }));}; }
+div .detail-view.checklist .ProseMirror p::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("checkbox-blank-outline", new[] { new KeyValuePair<string, string>("fill", "#000000") }));}; }
+div .detail-view.checklist .ProseMirror p.done::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("check-box-outline", new[] { new KeyValuePair<string, string>("fill", "#000000") }));}; }
+div .detail-view.checklist .ProseMirror p.disabled::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("checkbox-blank-outline", new[] { new KeyValuePair<string, string>("fill", "#000000") }));}; }
+div .detail-view.checklist .ProseMirror p::after { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("delete", new[] { new KeyValuePair<string, string>("fill", "#000000") }));}; }
+div.dark .detail-view.checklist .ProseMirror p::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("checkbox-blank-outline", new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") }));}; }
+div.dark .detail-view.checklist .ProseMirror p.done::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("check-box-outline", new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") }));}; }
+div.dark .detail-view.checklist .ProseMirror p.disabled::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("checkbox-blank-outline", new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") }));}; }
+div.dark .detail-view.checklist .ProseMirror p::after { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("delete", new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") }));}; }
 
 .color-btn { color: black; }
 .color-btn.dark { color: white; }
@@ -52,32 +47,53 @@ div.dark .detail-view.checklist .ql-editor p::after { content: @{WriteLiteral(Mo
 }
     </style>
     <script>
-        var quill;
-        var searchHighlighter;
+        var editor;
 
-        function toggleFormat(formatName) {
-            var selectionFormat = quill.getFormat();
-            var selectionFormatValue = selectionFormat[formatName];
-            selectionFormatValue = !selectionFormatValue;
-            quill.format(formatName, selectionFormatValue, 'user');
+        function getSearchDialogElement() {
+            return document.getElementById('search-dialog');
+        }
+
+        function getTagsElement() {
+            return document.getElementById('tags');
+        }
+
+        function toggleFormat(formatName, formatParameter) {
+            switch (formatName) {
+              case 'heading':
+                editor.chain().focus().toggleHeading({ level: formatParameter }).run(); break;
+              case 'codeblock':
+                editor.chain().focus().toggleCodeBlock().run(); break;
+              case 'blockquote':
+                editor.chain().focus().toggleBlockquote().run(); break;
+              case 'bulletlist':
+                editor.chain().focus().toggleBulletList().run(); break;
+              case 'orderedlist':
+                editor.chain().focus().toggleOrderedList().run(); break;
+              default:
+                editor.chain().focus().toggleMark(formatName).run(); break;
+            }
             refreshActiveFormatState();
         }
 
-        function toggleBlockFormat(formatName, blockType) {
-            var selectionFormat = quill.getFormat();
-            var selectionFormatValue = selectionFormat[formatName];
-            var newSelectionFormat; // undefined removes the block format
-            if (selectionFormatValue !== blockType)
-                newSelectionFormat = blockType;
-            quill.format(formatName, newSelectionFormat, 'user');
-            refreshActiveFormatState();
+        function refreshActiveFormatState() {
+            vm.Header1Active = editor.isActive('heading', { level: 1 });
+            vm.Header2Active = editor.isActive('heading', { level: 2 });
+            vm.Header3Active = editor.isActive('heading', { level: 3 });
+            vm.BoldActive = editor.isActive('bold');
+            vm.ItalicActive = editor.isActive('italic');
+            vm.UnderlineActive = editor.isActive('underline');
+            vm.StrikeActive = editor.isActive('strike');
+            vm.CodeActive = editor.isActive('codeblock');
+            vm.QuoteActive = editor.isActive('blockquote');
+            vm.ListBulletActive = editor.isActive('bulletlist');
+            vm.ListOrderedActive = editor.isActive('orderedlist');
         }
 
         function addTag() {
-            var tagText = document.getElementById('tags').value.trim();
+            var tagText = getTagsElement().value.trim();
             if (vm.ShoppingModeActive || tagText === '')
                 return;
-            document.getElementById('tags').value = '';
+            getTagsElement().value = '';
             vueCommandExecute('AddTagCommand', tagText);
         }
 
@@ -94,15 +110,18 @@ div.dark .detail-view.checklist .ql-editor p::after { content: @{WriteLiteral(Mo
         }
 
         function getNoteHtmlContent() {
-            return quill.root.innerHTML;
+            return '';
         }
 
-        function setNoteHtmlContent(text) {
-            quill.setText(text, 'user');
+        // By setting the content after loading the page, we can avoid that the content has to be
+        // declared statically as javascript and therefore would occupy memory twice.
+        function setNoteContent(text) {
+            editor.commands.setContent(text);
+            ProseMirrorBundle.scrollToTop(editor);
         }
 
         function isSearchDialogHidden() {
-            return $('#search-dialog').hasClass('hidden');
+            return getSearchDialogElement().classList.contains('hidden');
         }
 
         function toggleSearchDialog() {
@@ -112,32 +131,24 @@ div.dark .detail-view.checklist .ql-editor p::after { content: @{WriteLiteral(Mo
         function showSearchDialog(visible) {
             if (visible) {
                 // Open dialog
-                $('#search-dialog').removeClass('hidden');
-                $('#TxtFilter').focus();
-                searchHighlighter.startListening();
+                var filter = ProseMirrorBundle.getSelectedText(editor);
+                if (filter) {
+                    vm.SearchPattern = filter.trim();
+                }
+                searchByFilter();
+                getSearchDialogElement().classList.remove('hidden');
+                document.getElementById('SearchPattern').focus();
             }
             else {
                 // Close dialog
-                searchHighlighter.stopListening();
-                searchHighlighter.clearSearchHighlights();
-                $('#search-dialog').addClass('hidden');
-                $('#TxtFilter').val('');
+                vm.SearchPattern = '';
+                getSearchDialogElement().classList.add('hidden');
+                searchByFilter();
             }
         }
 
-        function setStartingSearchFilter(filter) {
-            searchHighlighter.searchAndHighlight(filter, true, false); // this causes a focusin event
-            quill.root.blur();
-        }
-
-        function scrollToTop() {
-            var element = quill.root;
-            element.scrollTop = 0;
-        }
-
-        function scrollToBottom() {
-            var element = quill.root;
-            element.scrollTop = element.scrollHeight;
+        function searchByFilter() {
+            ProseMirrorBundle.searchAndHighlight(editor, vm.SearchPattern);
         }
 
         function toggleShoppingMode() {
@@ -145,73 +156,47 @@ div.dark .detail-view.checklist .ql-editor p::after { content: @{WriteLiteral(Mo
             quill.enable(!vm.ShoppingModeActive);
         }
 
-        function refreshActiveFormatState() {
-            var selectionFormat = quill.getFormat();
-            var formatValue = selectionFormat['header'];
-            vm.Header1Active = formatValue == 1;
-            vm.Header2Active = formatValue == 2;
-            vm.Header3Active = formatValue == 3;
-            formatValue = selectionFormat['list'];
-            vm.ListOrderedActive = formatValue == 'ordered';
-            vm.ListBulletActive = formatValue == 'bullet';
-            vm.CodeActive = selectionFormat['code-block'];
-            vm.QuoteActive = selectionFormat['blockquote'];
-            vm.UnderlineActive = selectionFormat['underline'];
-            vm.StrikeActive = selectionFormat['strike'];
-        }
-
         function vueLoaded() {
-            // quill "imports" the existing html content and looses the class attributes,
-            // that's why we save and reapply the check states.
-            var checkStates = saveCheckStates();
-            quill = new Quill('#myeditor', {
-                formats: ['header'],
+            var editorElement = document.getElementById('myeditor');
+            editor = ProseMirrorBundle.initializeEditor(editorElement);
+            editor.on('selectionUpdate', function (editor) {
+                refreshActiveFormatState();
             });
             restoreCheckStates(checkStates);
 
-            quill.on('text-change', function (delta, oldDelta, source) {
-                if (source === 'user') {
-                    vuePropertyChanged('UnlockedHtmlContent', null);
-                }
+            @* // For debugging purposes, get the complete HTML in NoteController.ShowInView().
+            editor.commands.setContent('@{WriteLiteral(Model.GetEscapedUnlockedHtmlContent());}'); *@
+
+            var searchPatternElement = document.getElementById('SearchPattern');
+            searchPatternElement.addEventListener('input', function (event) {
+                searchByFilter();
+                ProseMirrorBundle.selectNextWhileTyping(editor);
             });
 
-            quill.on('selection-change', function (range, oldRange, source) {
-                if (range) {
-                    refreshActiveFormatState();
-                }
-            });
+            //var noteContent = getNoteHtmlContent();
+            //var noteIsNew = noteContent.length > 1 && noteContent.length < 42 && noteContent.replace(/<[^>]*>/g, '').trim().length == 0;
+            //if (noteIsNew) {
+            //    toggleBlockFormat('header', 1);
+            //}
 
-            $(quill.root).on("focusin", function () {
-                if (isSearchDialogHidden())
-                    searchHighlighter.clearSearchHighlights();
-            });
+            //quill.enable(!vm.ShoppingModeActive);
 
-            searchHighlighter = new QuillSearchHighlighter(quill, document.getElementById("TxtFilter"));
-
-            var noteContent = getNoteHtmlContent();
-            var noteIsNew = noteContent.length > 1 && noteContent.length < 42 && noteContent.replace(/<[^>]*>/g, '').trim().length == 0;
-            if (noteIsNew) {
-                toggleBlockFormat('header', 1);
-            }
-
-            quill.enable(!vm.ShoppingModeActive);
-
-            $("#tags").autocomplete({
-                source: getTagSuggestions,
-                treshold: 0,
-                maximumItems: 10,
-                value: "value",
-                label: "value",
-                dropType: "dropup",
-                onSelectItem: function (item, inputField) {
-                    addTag();
-                },
-            });
-            document.getElementById('tags').addEventListener("keyup", function (event) {
-                if (event.key === 'Enter' || event.keyCode === 13) {
-                    addTag();
-                }
-            });
+            //$("#tags").autocomplete({
+            //    source: getTagSuggestions,
+            //    treshold: 0,
+            //    maximumItems: 10,
+            //    value: "value",
+            //    label: "value",
+            //    dropType: "dropup",
+            //    onSelectItem: function (item, inputField) {
+            //        addTag();
+            //    },
+            //});
+            //document.getElementById('tags').addEventListener("keyup", function (event) {
+            //    if (event.key === 'Enter' || event.keyCode === 13) {
+            //        addTag();
+            //    }
+            //});
         };
 
         @{WriteLiteral(Model.VueDataBindingScript);}
@@ -244,8 +229,8 @@ div.dark .detail-view.checklist .ql-editor p::after { content: @{WriteLiteral(Mo
                     <div class="dropdown-item" onclick="setCheckedStateForAll(true, false); return false;">@{WriteLiteral(Model.Icon["check-box-multiple-outline"]);} @Model.Language["checklist_check_all"]</div>
                     <div class="dropdown-item" onclick="setCheckedStateForAll(false, true); return false;">@{WriteLiteral(Model.Icon["checkbox-blank-off-outline"]);} @Model.Language["checklist_disable_all"]</div>
                     <div class="dropdown-divider"></div>
-                    <div class="dropdown-item" v-bind:class="{ active: Header1Active }" onclick="toggleBlockFormat('header', 1);">@{WriteLiteral(Model.Icon["format-header-1"]);} @Model.Language["note_header1"]</div>
-                    <div class="dropdown-item" v-bind:class="{ active: Header2Active }" onclick="toggleBlockFormat('header', 2);">@{WriteLiteral(Model.Icon["format-header-2"]);} @Model.Language["note_header2"]</div>
+                    <div class="dropdown-item" v-bind:class="{ active: Header1Active }" onclick="toggleFormat('heading', 1);">@{WriteLiteral(Model.Icon["format-header-1"]);} @Model.Language["note_header1"]</div>
+                    <div class="dropdown-item" v-bind:class="{ active: Header2Active }" onclick="toggleFormat('heading', 2);">@{WriteLiteral(Model.Icon["format-header-2"]);} @Model.Language["note_header2"]</div>
                     @if (Model.ShowManualSynchronization)
                     {
                         <div class="dropdown-divider"></div>
@@ -264,7 +249,7 @@ div.dark .detail-view.checklist .ql-editor p::after { content: @{WriteLiteral(Mo
         }
         else
         {
-            <div id="myeditor" class="note-viewer detail-view @Model.CssClassNoteType">@{WriteLiteral(Model.UnlockedHtmlContent);}</div>
+            <div id="myeditor" class="note-viewer detail-view @Model.CssClassNoteType"></div>
         }
     </div>
 
@@ -287,7 +272,9 @@ div.dark .detail-view.checklist .ql-editor p::after { content: @{WriteLiteral(Mo
 
     <div id="search-dialog" class="hidden">
         <div class="nav-filter">
-            <input id="TxtFilter" autocomplete="off" />
+            <input id="SearchPattern" v-model="SearchPattern" autocomplete="off" />
+            <svg id="search-next" width='24' height='24' viewBox='0 0 24 24' class="" v-on:click="FindNextCommand"><use xlink:href="#svg-chevron-down" /></svg>
+            <svg id="search-previous" width='24' height='24' viewBox='0 0 24 24' class="" v-on:click="FindPreviousCommand"><use xlink:href="#svg-chevron-up" /></svg>
             <svg id="filter-cancel-icon" width='24' height='24' viewBox='0 0 24 24' class="" onclick="showSearchDialog(false);"><use xlink:href="#svg-close-circle-outline" /></svg>
         </div>
     </div>
@@ -313,6 +300,8 @@ div.dark .detail-view.checklist .ql-editor p::after { content: @{WriteLiteral(Mo
         @{WriteLiteral(Model.Icon.LoadIcon("delete", new[] { new KeyValuePair<string, string>("id", "svg-delete") }));}
         @{WriteLiteral(Model.Icon.LoadIcon("close-circle-outline", new[] { new KeyValuePair<string, string>("id", "svg-close-circle-outline") }));}
         @{WriteLiteral(Model.Icon.LoadIcon("plus", new[] { new KeyValuePair<string, string>("id", "svg-plus") }));}
+        @{WriteLiteral(Model.Icon.LoadIcon("chevron-up", new[] { new KeyValuePair<string, string>("id", "svg-chevron-up") }));}
+        @{WriteLiteral(Model.Icon.LoadIcon("chevron-down", new[] { new KeyValuePair<string, string>("id", "svg-chevron-down") }));}
     </div>
 </div></body>
 </html>

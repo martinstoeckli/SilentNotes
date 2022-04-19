@@ -60,17 +60,17 @@ div.dark .note-viewer a { color: rgba(173, 216, 230, 0.90) !important; }
 div.dark .note-viewer a:hover { color: rgba(173, 216, 230, 0.90) !important; }
 
 div .note-viewer.over-view.checklist p,
-div .detail-view.checklist .ql-editor p { background-color: rgba(128, 128, 128, 0.2); }
+div .detail-view.checklist .ProseMirror p { background-color: rgba(128, 128, 128, 0.2); }
 div.dark .note-viewer.over-view.checklist p,
-div.dark .detail-view.checklist .ql-editor p { background-color: rgba(211, 211, 211, 0.3); }
+div.dark .detail-view.checklist .ProseMirror p { background-color: rgba(211, 211, 211, 0.3); }
 div .note-viewer.over-view.checklist p.done,
-div .detail-view.checklist .ql-editor p.done { background: #ccf0a8; }
+div .detail-view.checklist .ProseMirror p.done { background: #ccf0a8; }
 div.dark .note-viewer.over-view.checklist p.done,
-div.dark .detail-view.checklist .ql-editor p.done { background: #467c46; }
+div.dark .detail-view.checklist .ProseMirror p.done { background: #467c46; }
 div .note-viewer.over-view.checklist p.disabled,
-div .detail-view.checklist .ql-editor p.disabled { color: rgba(0, 0, 0, 0.5); text-decoration-color: rgba(0, 0, 0, 0.25); }
+div .detail-view.checklist .ProseMirror p.disabled { color: rgba(0, 0, 0, 0.5); text-decoration-color: rgba(0, 0, 0, 0.25); }
 div.dark .note-viewer.over-view.checklist p.disabled,
-div.dark .detail-view.checklist .ql-editor p.disabled { color: rgba(255, 255, 255, 0.5); text-decoration-color: rgba(255, 255, 255, 0.25); }
+div.dark .detail-view.checklist .ProseMirror p.disabled { color: rgba(255, 255, 255, 0.5); text-decoration-color: rgba(255, 255, 255, 0.25); }
 
 .dropdown-item.active svg { fill: #87cefa; }
 

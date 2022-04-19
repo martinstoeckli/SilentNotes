@@ -13,8 +13,6 @@
     <link href="silentnotes.css" rel="stylesheet" />
     <link href="@(Model.Theme.DarkMode ? "silentnotes.dark.css" : "silentnotes.light.css")" rel="stylesheet" />
 
-    <link href="note-view.css" rel="stylesheet">
-
     <script src="@Model.HtmlRecource["vuejs"]"></script>
     <script src="@Model.HtmlRecource["jqueryjs"]"></script>
     <script src="@Model.HtmlRecource["bootstrapjs"]"></script>
@@ -25,23 +23,9 @@
     <style type="text/css">
 body { background-color: transparent; }
 
-div.ProseMirror {
-	border: none 0;
+.note-viewer {
     font-size: @(Model.NoteBaseFontSize)px !important;
 }
-div.ProseMirror:focus {
-    outline: none;
-}
-div.ProseMirror li p {
-    display: inline-block;
-}
-div.ProseMirror .search-result {
-  background: rgba(32, 144, 234, 0.5);
-}
-div.ProseMirror .search-result-selected {
-  background: rgba(32, 144, 234, 0.9);
-}
-
 .color-btn { color: black; }
 .color-btn.dark { color: white; }
 .locked {
@@ -66,24 +50,18 @@ div.ProseMirror .search-result-selected {
 
         function toggleFormat(formatName, formatParameter) {
             switch (formatName) {
-              case 'header':
+              case 'heading':
                 editor.chain().focus().toggleHeading({ level: formatParameter }).run(); break;
-              case 'bold':
-                editor.chain().focus().toggleBold().run(); break;
-              case 'italic':
-                editor.chain().focus().toggleItalic().run(); break;
-              case 'underline':
-                editor.chain().focus().toggleUnderline().run(); break;
-              case 'strike':
-                editor.chain().focus().toggleStrike().run(); break;
-              case 'code-block':
+              case 'codeblock':
                 editor.chain().focus().toggleCodeBlock().run(); break;
               case 'blockquote':
                 editor.chain().focus().toggleBlockquote().run(); break;
-              case 'bullet-list':
+              case 'bulletlist':
                 editor.chain().focus().toggleBulletList().run(); break;
-              case 'ordered-list':
+              case 'orderedlist':
                 editor.chain().focus().toggleOrderedList().run(); break;
+              default:
+                editor.chain().focus().toggleMark(formatName).run(); break;
             }
             refreshActiveFormatState();
         }
@@ -96,10 +74,10 @@ div.ProseMirror .search-result-selected {
             vm.ItalicActive = editor.isActive('italic');
             vm.UnderlineActive = editor.isActive('underline');
             vm.StrikeActive = editor.isActive('strike');
-            vm.CodeActive = editor.isActive('codeBlock');
+            vm.CodeActive = editor.isActive('codeblock');
             vm.QuoteActive = editor.isActive('blockquote');
-            vm.ListBulletActive = editor.isActive('bulletList');
-            vm.ListOrderedActive = editor.isActive('orderedList');
+            vm.ListBulletActive = editor.isActive('bulletlist');
+            vm.ListOrderedActive = editor.isActive('orderedlist');
         }
 
         function showLinkDialog() {
@@ -242,7 +220,6 @@ div.ProseMirror .search-result-selected {
     <div id="vueDataBinding">
         <nav id="navigation" class="d-flex">
             <button class="nav-item mr-auto" v-on:click="GoBackCommand" title="@Model.Language["back"]">@{WriteLiteral(Model.Icon["arrow-left"]);}</button>
-            <span id="quill-toolbar" hidden></span> <!--we need the initialized quill theme for editing hyperlinks-->
 
             @if (!Model.IsLocked)
             {   
@@ -251,8 +228,8 @@ div.ProseMirror .search-result-selected {
                 <span class="show-only-on-wide-browser">
                     <button class="nav-item" onclick="toggleFormat('underline');" v-bind:class="{ active: UnderlineActive }" v-bind:disabled="ShoppingModeActive" title="@Model.Language["note_underline"]">@{WriteLiteral(Model.Icon["format-underline"]);}</button>
                     <button class="nav-item" onclick="toggleFormat('strike');" v-bind:class="{ active: StrikeActive }" v-bind:disabled="ShoppingModeActive" title="@Model.Language["note_strike"]">@{WriteLiteral(Model.Icon["format-strikethrough"]);}</button>
-                    <button class="nav-item" onclick="toggleFormat('ordered-list');" v-bind:class="{ active: ListOrderedActive }" v-bind:disabled="ShoppingModeActive" title="@Model.Language["note_list_ordered"]">@{WriteLiteral(Model.Icon["format-list-numbers"]);}</button>
-                    <button class="nav-item" onclick="toggleFormat('bullet-list');" v-bind:class="{ active: ListBulletActive }" v-bind:disabled="ShoppingModeActive" title="@Model.Language["note_list_unordered"]">@{WriteLiteral(Model.Icon["format-list-bulleted"]);}</button>
+                    <button class="nav-item" onclick="toggleFormat('orderedlist');" v-bind:class="{ active: ListOrderedActive }" v-bind:disabled="ShoppingModeActive" title="@Model.Language["note_list_ordered"]">@{WriteLiteral(Model.Icon["format-list-numbers"]);}</button>
+                    <button class="nav-item" onclick="toggleFormat('bulletlist');" v-bind:class="{ active: ListBulletActive }" v-bind:disabled="ShoppingModeActive" title="@Model.Language["note_list_unordered"]">@{WriteLiteral(Model.Icon["format-list-bulleted"]);}</button>
                 </span>
                 <button class="nav-item" onclick="toggleShoppingMode(); return false;" v-bind:class="{ active: ShoppingModeActive }" title="@Model.Language["note_shopping_mode"]">@{WriteLiteral(Model.Icon["keyboard_off_outline"]);}</button>
                 <button class="nav-item" v-on:click="TogglePinnedCommand" v-bind:class="{ active: IsPinned }" v-bind:disabled="ShoppingModeActive" title="@Model.Language["note_pin"]">@{WriteLiteral(Model.Icon["pin"]);}</button>
@@ -265,14 +242,14 @@ div.ProseMirror .search-result-selected {
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navOverflowMenu">
                         <div class="dropdown-item" data-toggle="modal" data-target="#colorPaletteModal">@{WriteLiteral(Model.Icon["palette"]);} @Model.Language["note_colors"]</div>
                         <div class="dropdown-divider"></div>
-                        <div class="dropdown-item" v-bind:class="{ active: Header1Active }" onclick="toggleFormat('header', 1);">@{WriteLiteral(Model.Icon["format-header-1"]);} @Model.Language["note_header1"]</div>
-                        <div class="dropdown-item" v-bind:class="{ active: Header2Active }" onclick="toggleFormat('header', 2);">@{WriteLiteral(Model.Icon["format-header-2"]);} @Model.Language["note_header2"]</div>
-                        <div class="dropdown-item" v-bind:class="{ active: Header3Active }" onclick="toggleFormat('header', 3);">@{WriteLiteral(Model.Icon["format-header-3"]);} @Model.Language["note_header3"]</div>
+                        <div class="dropdown-item" v-bind:class="{ active: Header1Active }" onclick="toggleFormat('heading', 1);">@{WriteLiteral(Model.Icon["format-header-1"]);} @Model.Language["note_header1"]</div>
+                        <div class="dropdown-item" v-bind:class="{ active: Header2Active }" onclick="toggleFormat('heading', 2);">@{WriteLiteral(Model.Icon["format-header-2"]);} @Model.Language["note_header2"]</div>
+                        <div class="dropdown-item" v-bind:class="{ active: Header3Active }" onclick="toggleFormat('heading', 3);">@{WriteLiteral(Model.Icon["format-header-3"]);} @Model.Language["note_header3"]</div>
                         <div class="dropdown-item show-only-on-narrow-browser" v-bind:class="{ active: UnderlineActive }" onclick="toggleFormat('underline');">@{WriteLiteral(Model.Icon["format-underline"]);} @Model.Language["note_underline"]</div>
                         <div class="dropdown-item show-only-on-narrow-browser" v-bind:class="{ active: StrikeActive }" onclick="toggleFormat('strike');">@{WriteLiteral(Model.Icon["format-strikethrough"]);} @Model.Language["note_strike"]</div>
-                        <div class="dropdown-item show-only-on-narrow-browser" v-bind:class="{ active: ListOrderedActive }" onclick="toggleFormat('ordered-list');">@{WriteLiteral(Model.Icon["format-list-numbers"]);} @Model.Language["note_list_ordered"]</div>
-                        <div class="dropdown-item show-only-on-narrow-browser" v-bind:class="{ active: ListBulletActive }" onclick="toggleFormat('bullet-list');">@{WriteLiteral(Model.Icon["format-list-bulleted"]);} @Model.Language["note_list_unordered"]</div>
-                        <div class="dropdown-item" v-bind:class="{ active: CodeActive }" onclick="toggleFormat('code-block');">@{WriteLiteral(Model.Icon["code-braces"]);} @Model.Language["note_code"]</div>
+                        <div class="dropdown-item show-only-on-narrow-browser" v-bind:class="{ active: ListOrderedActive }" onclick="toggleFormat('orderedlist');">@{WriteLiteral(Model.Icon["format-list-numbers"]);} @Model.Language["note_list_ordered"]</div>
+                        <div class="dropdown-item show-only-on-narrow-browser" v-bind:class="{ active: ListBulletActive }" onclick="toggleFormat('bulletlist');">@{WriteLiteral(Model.Icon["format-list-bulleted"]);} @Model.Language["note_list_unordered"]</div>
+                        <div class="dropdown-item" v-bind:class="{ active: CodeActive }" onclick="toggleFormat('codeblock');">@{WriteLiteral(Model.Icon["code-braces"]);} @Model.Language["note_code"]</div>
                         <div class="dropdown-item" v-bind:class="{ active: QuoteActive }" onclick="toggleFormat('blockquote');">@{WriteLiteral(Model.Icon["format-quote-close"]);} @Model.Language["note_quotation"]</div>
                         <div class="dropdown-item" onclick="showLinkDialog();">@{WriteLiteral(Model.Icon["link-variant"]);} @Model.Language["note_link"]</div>
                         @if (Model.ShowManualSynchronization)
