@@ -56,10 +56,6 @@ div.ProseMirror .search-result-selected {
         var editor;
         var linkDialog;
 
-        function getFilterElement() {
-            return document.getElementById('TxtFilter');
-        }
-
         function getSearchDialogElement() {
             return document.getElementById('search-dialog');
         }
@@ -184,29 +180,24 @@ div.ProseMirror .search-result-selected {
         function showSearchDialog(visible) {
             if (visible) {
                 // Open dialog
-                var filterElement = getFilterElement();
-                var selectedText = ProseMirrorBundle.getSelectedText(editor);
-                if (selectedText) {
-                    filterElement.value = selectedText;
-                    searchByFilter();
+                var filter = ProseMirrorBundle.getSelectedText(editor);
+                if (filter) {
+                    vm.SearchPattern = filter.trim();
                 }
+                searchByFilter();
                 getSearchDialogElement().classList.remove('hidden');
-                filterElement.focus();
+                document.getElementById('SearchPattern').focus();
             }
             else {
                 // Close dialog
+                vm.SearchPattern = '';
                 getSearchDialogElement().classList.add('hidden');
-                getFilterElement().value = '';
                 searchByFilter();
             }
         }
 
         function searchByFilter() {
-            var filter = getFilterElement().value;
-            ProseMirrorBundle.searchAndHighlight(editor, filter);
-        }
-
-        function setStartingSearchFilter(filter) {
+            ProseMirrorBundle.searchAndHighlight(editor, vm.SearchPattern);
         }
 
         function toggleShoppingMode() {
@@ -237,9 +228,10 @@ div.ProseMirror .search-result-selected {
                 }
             });
 
-            getFilterElement().addEventListener('input', function (event) {
+            var searchPatternElement = document.getElementById('SearchPattern');
+            searchPatternElement.addEventListener('input', function (event) {
                 searchByFilter();
-                ProseMirrorBundle.findNext(editor, true, false);
+                ProseMirrorBundle.selectNextWhileTyping(editor);
             });
         }
 
@@ -324,7 +316,7 @@ div.ProseMirror .search-result-selected {
 
         <div id="search-dialog" class="hidden">
             <div class="nav-filter">
-                <input id="TxtFilter" autocomplete="off" />
+                <input id="SearchPattern" v-model="SearchPattern" autocomplete="off" />
                 <svg id="search-next" width='24' height='24' viewBox='0 0 24 24' class="" v-on:click="FindNextCommand"><use xlink:href="#svg-chevron-down" /></svg>
                 <svg id="search-previous" width='24' height='24' viewBox='0 0 24 24' class="" v-on:click="FindPreviousCommand"><use xlink:href="#svg-chevron-up" /></svg>
                 <svg id="filter-cancel-icon" width='24' height='24' viewBox='0 0 24 24' class="" onclick="showSearchDialog(false);"><use xlink:href="#svg-close-circle-outline" /></svg>

@@ -28,16 +28,20 @@ declare module '@tiptap/core' {
     //    * @description Replace all instances of search result with given replace term.
     //    */
     //   replaceAll: () => ReturnType,
+
       /**
        * @description Searches for the next match and sets the selection to this match.
        * @param {boolean}  canKeepPos - If set to true, the selection will be kept if it already
        * is a match. If set to false, the next occurence will be found.
+       * @param {boolean}  continueAtBegin - If set to true, the search will be continued at the
+       * begin of the document, if no match could be found after the selection.
        */
-      findNext: (canKeepPos: boolean) => ReturnType,
+      selectNext: (canKeepPos: boolean, continueAtBegin: boolean) => ReturnType,
+
       /**
        * @description Searches for the previous match and sets the selection to this match.
        */
-      findPrevious: () => ReturnType,
+      selectPrevious: () => ReturnType,
     }
   }
 }
@@ -178,7 +182,7 @@ function processSearches(doc: ProsemirrorNode, searchTerm: RegExp, searchResultC
 //   dispatch(tr)
 // }
 
-const findNext = (canKeepPos: boolean, results: Result[], { state }: any) => {
+const selectNext = (canKeepPos: boolean, continueAtBegin: boolean, results: Result[], { state }: any) => {
   const { from } = state.selection
 
   let nextResult = null
@@ -195,13 +199,17 @@ const findNext = (canKeepPos: boolean, results: Result[], { state }: any) => {
     i++
   }
 
+  if ((nextResult == null) && continueAtBegin && (results.length > 0)) {
+    nextResult = results[0];
+  }
+
   if (nextResult) {
     const selection = TextSelection.create(state.doc, nextResult.from, nextResult.to)
     state.tr.setSelection(selection)
   }
 }
 
-const findPrevious = (results: Result[], { state }: any) => {
+const selectPrevious = (results: Result[], { state }: any) => {
   const { from } = state.selection
 
   let nextResult = null
@@ -271,22 +279,18 @@ export const SearchNReplace = Extension.create<SearchOptions>({
 
     //     return false
     //   },
-      findNext: (canKeepPos: boolean) => ({ state, dispatch }) => {
+
+      selectNext: (canKeepPos: boolean, continueAtBegin: boolean) => ({ state, dispatch }) => {
         const { results } = this.options
-
-        findNext(canKeepPos, results, { state })
-
+        selectNext(canKeepPos, continueAtBegin, results, { state })
         updateView(state, dispatch)
-
         return false
       },
-      findPrevious: () => ({ state, dispatch }) => {
+
+      selectPrevious: () => ({ state, dispatch }) => {
         const { results } = this.options
-
-        findPrevious(results, { state })
-
+        selectPrevious(results, { state })
         updateView(state, dispatch)
-
         return false
       },
   }
@@ -311,9 +315,7 @@ export const SearchNReplace = Extension.create<SearchOptions>({
 //            if (docChanged || searchTerm) {
             if (searchTerm) {
               const { decorationsToReturn, results } = processSearches(doc, regex(searchTerm, disableRegex, caseSensitive), searchResultClass)
-
               extensionThis.options.results = results
-
               return decorationsToReturn
             }
             return DecorationSet.empty

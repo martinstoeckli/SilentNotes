@@ -21,7 +21,6 @@ namespace SilentNotes.Controllers
     {
         private readonly IRepositoryStorageService _repositoryService;
         private NoteViewModel _viewModel;
-        private string _startingSearchFilter;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NoteController"/> class.
@@ -83,7 +82,7 @@ namespace SilentNotes.Controllers
             ISettingsService settingsService = Ioc.GetOrCreate<ISettingsService>();
             _repositoryService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepository);
 
-            variables.TryGetValue(ControllerParameters.SearchFilter, out _startingSearchFilter);
+            variables.TryGetValue(ControllerParameters.SearchFilter, out string startingSearchFilter);
 
             // Get the note from the repository
             Guid noteId = new Guid(variables[ControllerParameters.NoteId]);
@@ -131,13 +130,14 @@ namespace SilentNotes.Controllers
             VueBindings.DeclareAdditionalVueData("StrikeActive", "false");
             VueBindings.DeclareAdditionalVueData("OldLinkUrl", "''");
             VueBindings.DeclareAdditionalVueData("NewLinkUrl", "''");
+            VueBindings.DeclareAdditionalVueData("SearchPattern", String.Format("'{0}'", startingSearchFilter));
             VueBindings.DeclareAdditionalVueMethod("ToggleSearchDialogCommand", "toggleSearchDialog();");
             VueBindings.DeclareAdditionalVueMethod("CloseSearchDialogCommand", "showSearchDialog(false);");
             VueBindings.DeclareAdditionalVueMethod("ScrollToTopCommand", "ProseMirrorBundle.scrollToTop(editor);");
             VueBindings.DeclareAdditionalVueMethod("ScrollToBottomCommand", "ProseMirrorBundle.scrollToBottom(editor);");
             VueBindings.DeclareAdditionalVueMethod("ShowLinkDialog", "showLinkDialog();");
-            VueBindings.DeclareAdditionalVueMethod("FindNextCommand", "ProseMirrorBundle.findNext(editor, false, true);");
-            VueBindings.DeclareAdditionalVueMethod("FindPreviousCommand", "ProseMirrorBundle.findPrevious(editor);");
+            VueBindings.DeclareAdditionalVueMethod("FindNextCommand", "ProseMirrorBundle.selectNext(editor);");
+            VueBindings.DeclareAdditionalVueMethod("FindPreviousCommand", "ProseMirrorBundle.selectPrevious(editor);");
             VueBindings.UnhandledViewBindingEvent += UnhandledViewBindingEventHandler;
             VueBindings.ViewLoadedEvent += ViewLoadedEventHandler;
             _viewModel.VueDataBindingScript = VueBindings.BuildVueScript();
@@ -197,13 +197,6 @@ namespace SilentNotes.Controllers
             script.Append(escapedContent);
             script.Append("');");
             View.ExecuteJavaScript(script.ToString());
-
-            if (!string.IsNullOrEmpty(_startingSearchFilter))
-            {
-                //string encodedSearchFilter = WebviewUtils.EscapeJavaScriptString(_startingSearchFilter);
-                //string script = string.Format("setStartingSearchFilter('{0}');", encodedSearchFilter);
-                //View.ExecuteJavaScript(script);
-            }
         }
     }
 }

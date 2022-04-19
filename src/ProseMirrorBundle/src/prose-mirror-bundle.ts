@@ -93,6 +93,18 @@ export function scrollToBottom(editor: Editor): void {
 }
 
 /**
+ * Scrolls to the current position/selection of the document. It does the same as scrollIntoView()
+ * but without requiring the focus on the editor, thus it can be called from the search box while typing.
+ * @param {Editor}  editor - A TipTap editor instance.
+*/
+function scrollToSelection(editor: Editor): void {
+  const { node } = editor.view.domAtPos(editor.state.selection.anchor);
+  if (node) {
+      (node as any).scrollIntoView(false);
+  }
+}
+
+/**
  * Searches for all occurences of a given text in the note and highlights the findings.
  * @param {Editor}  editor - A TipTap editor instance.
  * @param {string}  needle - The text to search for.
@@ -105,24 +117,29 @@ export function searchAndHighlight(editor: Editor, needle: string, minLength: nu
 
 /**
  * Searches for the next occurence of a given text in the note and selects the finding.
+ * If the current selection matches, it is kept. The focus is not set to the editor, so the
+ * search input field does not loose the focus.
  * @param {Editor}  editor - A TipTap editor instance.
- * @param {boolean}  canKeepPos - If set to true, the selection will be kept if it already
- * is a match. If set to false, the next occurence will be found.
- * @param {boolean}  focusToEditor - If set to true, the focus will be set back to the editor.
 */
-export function findNext(editor: Editor, canKeepPos: boolean, focusToEditor: boolean): void {
-  var commandChain = editor.chain();
-  if (focusToEditor)
-    commandChain.focus();
-  commandChain.findNext(canKeepPos).run();
+export function selectNextWhileTyping(editor: Editor): void {
+  editor.chain().selectNext(true, true).run();
+  scrollToSelection(editor);
 }
 
 /**
  * Searches for the next occurence of a given text in the note and selects the finding.
  * @param {Editor}  editor - A TipTap editor instance.
 */
-export function findPrevious(editor: Editor): void {
-  editor.chain().focus().findPrevious().scrollIntoView().run();
+export function selectNext(editor: Editor): void {
+  editor.chain().focus().selectNext(false, false).scrollIntoView().run();
+}
+
+/**
+ * Searches for the next occurence of a given text in the note and selects the finding.
+ * @param {Editor}  editor - A TipTap editor instance.
+*/
+export function selectPrevious(editor: Editor): void {
+  editor.chain().focus().selectPrevious().scrollIntoView().run();
 }
 
 /**
