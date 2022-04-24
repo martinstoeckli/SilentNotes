@@ -20,6 +20,7 @@ import { Selection } from 'prosemirror-state'
 
 import { CustomLink } from "./custom-link-extension";
 import { SearchNReplace } from './search-n-replace'
+import { ClassifiedParagraph } from "./classified-paragraph-extension";
 
 /**
  * This method will be exported and can be called from the HTML document with the "prose_mirror_bundle"
@@ -76,6 +77,46 @@ export function initializeEditor(editorElement: HTMLElement): any {
 }
 
 /**
+ * This method will be exported and can be called from the HTML document with the "prose_mirror_bundle"
+ * namespace. The namespace is defined in the webpack config.
+ * The function names of the TipTap/ProseMirror editor are preserved (not minified), so that it is
+ * possible to call functions inside the HTML page.
+ * @example
+ *   var editor = ProseMirrorBundle.initializeChecklist(document.getElementById('myeditor'));
+ *   editor.commands.setContent('<p>Hello World!</p>');
+ *   editor.chain().focus().toggleBold().run();
+ * @param {HTMLScriptElement}  editorElement - Usually a DIV element from the HTML document which
+ *   becomes the container of the TipTap editor.
+ * @returns {Editor} The new TipTap editor instance.
+ */
+ export function initializeChecklist(editorElement: HTMLElement): any {
+  try {
+    return new Editor({
+      element: editorElement,
+      extensions: [
+        Document,
+        HardBreak,
+        Heading.configure({
+          levels: [1, 2],
+        }),
+        ClassifiedParagraph, // Preserves the class attribute needed for the checkboxes
+        Text,
+        TextStyle,
+        SearchNReplace.configure({
+          searchResultClass: "search-result", // css class to give to found items. default 'search-result'
+          caseSensitive: false,
+          disableRegex: true,
+        }),
+      ],
+      editable: true,
+    });
+  } 
+  catch ( e ) {
+      return e.message + ' ' + e.stack;
+  }
+}
+
+/**
  * Scrolls to the top of the document. It does the same as focus('start') but without setting the focus.
  * @param {Editor}  editor - A TipTap editor instance.
 */
@@ -100,7 +141,7 @@ export function scrollToBottom(editor: Editor): void {
 function scrollToSelection(editor: Editor): void {
   const { node } = editor.view.domAtPos(editor.state.selection.anchor);
   if (node) {
-      (node as any).scrollIntoView(false);
+      (node as any).scrollIntoView?.(false);
   }
 }
 

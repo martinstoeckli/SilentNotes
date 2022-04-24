@@ -158,11 +158,10 @@ div.dark .detail-view.checklist .ProseMirror p::after { content: @{WriteLiteral(
 
         function vueLoaded() {
             var editorElement = document.getElementById('myeditor');
-            editor = ProseMirrorBundle.initializeEditor(editorElement);
+            editor = ProseMirrorBundle.initializeChecklist(editorElement);
             editor.on('selectionUpdate', function (editor) {
                 refreshActiveFormatState();
             });
-            restoreCheckStates(checkStates);
 
             @* // For debugging purposes, get the complete HTML in NoteController.ShowInView().
             editor.commands.setContent('@{WriteLiteral(Model.GetEscapedUnlockedHtmlContent());}'); *@
