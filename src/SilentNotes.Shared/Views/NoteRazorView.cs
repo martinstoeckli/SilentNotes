@@ -170,75 +170,72 @@ WriteLiteral("px !important;\r\n}\r\n.color-btn { color: black; }\r\n.color-btn.
 "         return document.getElementById(\'search-dialog\');\r\n        }\r\n\r\n        " +
 "function getTagsElement() {\r\n            return document.getElementById(\'tags\');" +
 "\r\n        }\r\n\r\n        function toggleFormat(formatName, formatParameter) {\r\n   " +
-"         switch (formatName) {\r\n              case \'heading\':\r\n                e" +
-"ditor.chain().focus().toggleHeading({ level: formatParameter }).run(); break;\r\n " +
-"             case \'codeblock\':\r\n                editor.chain().focus().toggleCod" +
-"eBlock().run(); break;\r\n              case \'blockquote\':\r\n                editor" +
-".chain().focus().toggleBlockquote().run(); break;\r\n              case \'bulletlis" +
-"t\':\r\n                editor.chain().focus().toggleBulletList().run(); break;\r\n  " +
-"            case \'orderedlist\':\r\n                editor.chain().focus().toggleOr" +
-"deredList().run(); break;\r\n              default:\r\n                editor.chain(" +
-").focus().toggleMark(formatName).run(); break;\r\n            }\r\n            refre" +
-"shActiveFormatState();\r\n        }\r\n\r\n        function refreshActiveFormatState()" +
-" {\r\n            vm.Header1Active = editor.isActive(\'heading\', { level: 1 });\r\n  " +
-"          vm.Header2Active = editor.isActive(\'heading\', { level: 2 });\r\n        " +
-"    vm.Header3Active = editor.isActive(\'heading\', { level: 3 });\r\n            vm" +
-".BoldActive = editor.isActive(\'bold\');\r\n            vm.ItalicActive = editor.isA" +
-"ctive(\'italic\');\r\n            vm.UnderlineActive = editor.isActive(\'underline\');" +
-"\r\n            vm.StrikeActive = editor.isActive(\'strike\');\r\n            vm.CodeA" +
-"ctive = editor.isActive(\'codeblock\');\r\n            vm.QuoteActive = editor.isAct" +
-"ive(\'blockquote\');\r\n            vm.ListBulletActive = editor.isActive(\'bulletlis" +
-"t\');\r\n            vm.ListOrderedActive = editor.isActive(\'orderedlist\');\r\n      " +
-"  }\r\n\r\n        function showLinkDialog() {\r\n            if (vm.ShoppingModeActiv" +
-"e) return;\r\n\r\n            editor.chain().focus().run();\r\n            var selecte" +
-"dUrl = editor.getAttributes(\'link\').href;\r\n            if (selectedUrl) {\r\n     " +
-"           editor.commands.extendMarkRange(\'link\');\r\n                vm.OldLinkU" +
-"rl = selectedUrl;\r\n                vm.NewLinkUrl = selectedUrl;\r\n            }\r\n" +
-"            else {\r\n                var text = ProseMirrorBundle.selectWordAtCur" +
-"rentPosition(editor);\r\n                vm.OldLinkUrl = \'\'; // Consider it as mod" +
-"ified\r\n                vm.NewLinkUrl = ProseMirrorBundle.makeLinkSuggestion(text" +
-");\r\n            }\r\n            linkDialog.show();\r\n        }\r\n\r\n        function" +
-" linkDialogOpenPressed() {\r\n            location.href = vm.NewLinkUrl;\r\n        " +
-"}\r\n\r\n        function linkDialogOkPressed() {\r\n            var commandChain = ed" +
-"itor.chain().focus();\r\n            if (vm.NewLinkUrl != vm.OldLinkUrl) {\r\n      " +
-"          if (vm.NewLinkUrl) {\r\n                    commandChain.extendMarkRange" +
-"(\'link\').setLink({ href: vm.NewLinkUrl });\r\n                }\r\n                e" +
-"lse {\r\n                    commandChain.extendMarkRange(\'link\').unsetLink();\r\n  " +
-"              }\r\n            }\r\n            commandChain.run();\r\n            lin" +
-"kDialog.hide();\r\n        }\r\n\r\n        function addTag() {\r\n            var tagTe" +
-"xt = getTagsElement().value.trim();\r\n            if (vm.ShoppingModeActive || ta" +
-"gText === \'\')\r\n                return;\r\n            getTagsElement().value = \'\';" +
-"\r\n            vueCommandExecute(\'AddTagCommand\', tagText);\r\n        }\r\n\r\n       " +
-" function deleteTag(e) {\r\n            if (vm.ShoppingModeActive)\r\n              " +
-"  return;\r\n            vueCommandExecute(\'DeleteTagCommand\', e.currentTarget.att" +
-"ributes[\'data-tag\'].value);\r\n        }\r\n\r\n        function getTagSuggestions() {" +
-"\r\n            return vm.$data.TagSuggestions.map(function (item) {\r\n            " +
-"    return { value: item }\r\n            });\r\n        }\r\n\r\n        function getNo" +
-"teHtmlContent() {\r\n            return \'\';\r\n        }\r\n\r\n        // By setting th" +
-"e content after loading the page, we can avoid that the content has to be\r\n     " +
-"   // declared statically as javascript and therefore would occupy memory twice." +
-"\r\n        function setNoteContent(text) {\r\n            editor.commands.setConten" +
-"t(text);\r\n            ProseMirrorBundle.scrollToTop(editor);\r\n        }\r\n\r\n     " +
-"   function isSearchDialogHidden() {\r\n            return getSearchDialogElement(" +
-").classList.contains(\'hidden\');\r\n        }\r\n\r\n        function toggleSearchDialo" +
-"g() {\r\n            showSearchDialog(isSearchDialogHidden());\r\n        }\r\n\r\n     " +
-"   function showSearchDialog(visible) {\r\n            if (visible) {\r\n           " +
-"     // Open dialog\r\n                var filter = ProseMirrorBundle.getSelectedT" +
-"ext(editor);\r\n                if (filter) {\r\n                    vm.SearchPatter" +
-"n = filter.trim();\r\n                }\r\n                searchByFilter();\r\n      " +
-"          getSearchDialogElement().classList.remove(\'hidden\');\r\n                " +
-"document.getElementById(\'SearchPattern\').focus();\r\n            }\r\n            el" +
-"se {\r\n                // Close dialog\r\n                vm.SearchPattern = \'\';\r\n " +
-"               getSearchDialogElement().classList.add(\'hidden\');\r\n              " +
-"  searchByFilter();\r\n            }\r\n        }\r\n\r\n        function searchByFilter" +
-"() {\r\n            ProseMirrorBundle.searchAndHighlight(editor, vm.SearchPattern)" +
-";\r\n        }\r\n\r\n        function toggleShoppingMode() {\r\n            vm.Shopping" +
-"ModeActive = !vm.ShoppingModeActive;\r\n            editor.setEditable(!vm.Shoppin" +
-"gModeActive);\r\n        }\r\n\r\n        function vueLoaded() {\r\n            var edit" +
-"orElement = document.getElementById(\'myeditor\');\r\n            editor = ProseMirr" +
-"orBundle.initializeEditor(editorElement);\r\n            editor.on(\'selectionUpdat" +
-"e\', function (editor) {\r\n                refreshActiveFormatState();\r\n          " +
-"  });\r\n\r\n            ");
+"         ProseMirrorBundle.toggleFormat(editor, formatName, formatParameter);\r\n " +
+"           refreshActiveFormatState();\r\n        }\r\n\r\n        function refreshAct" +
+"iveFormatState() {\r\n            vm.Header1Active = ProseMirrorBundle.isFormatAct" +
+"ive(editor, \'heading\', { level: 1 });\r\n            vm.Header2Active = ProseMirro" +
+"rBundle.isFormatActive(editor, \'heading\', { level: 2 });\r\n            vm.Header3" +
+"Active = ProseMirrorBundle.isFormatActive(editor, \'heading\', { level: 3 });\r\n   " +
+"         vm.BoldActive = ProseMirrorBundle.isFormatActive(editor, \'bold\');\r\n    " +
+"        vm.ItalicActive = ProseMirrorBundle.isFormatActive(editor, \'italic\');\r\n " +
+"           vm.UnderlineActive = ProseMirrorBundle.isFormatActive(editor, \'underl" +
+"ine\');\r\n            vm.StrikeActive = ProseMirrorBundle.isFormatActive(editor, \'" +
+"strike\');\r\n            vm.CodeActive = ProseMirrorBundle.isFormatActive(editor, " +
+"\'codeblock\');\r\n            vm.QuoteActive = ProseMirrorBundle.isFormatActive(edi" +
+"tor, \'blockquote\');\r\n            vm.ListBulletActive = ProseMirrorBundle.isForma" +
+"tActive(editor, \'bulletlist\');\r\n            vm.ListOrderedActive = ProseMirrorBu" +
+"ndle.isFormatActive(editor, \'orderedlist\');\r\n        }\r\n\r\n        function showL" +
+"inkDialog() {\r\n            if (vm.ShoppingModeActive) return;\r\n\r\n            edi" +
+"tor.chain().focus().run();\r\n            var selectedUrl = editor.getAttributes(\'" +
+"link\').href;\r\n            if (selectedUrl) {\r\n                editor.commands.ex" +
+"tendMarkRange(\'link\');\r\n                vm.OldLinkUrl = selectedUrl;\r\n          " +
+"      vm.NewLinkUrl = selectedUrl;\r\n            }\r\n            else {\r\n         " +
+"       var text = ProseMirrorBundle.selectWordAtCurrentPosition(editor);\r\n      " +
+"          vm.OldLinkUrl = \'\'; // Consider it as modified\r\n                vm.New" +
+"LinkUrl = ProseMirrorBundle.makeLinkSuggestion(text);\r\n            }\r\n          " +
+"  linkDialog.show();\r\n        }\r\n\r\n        function linkDialogOpenPressed() {\r\n " +
+"           location.href = vm.NewLinkUrl;\r\n        }\r\n\r\n        function linkDia" +
+"logOkPressed() {\r\n            var commandChain = editor.chain().focus();\r\n      " +
+"      if (vm.NewLinkUrl != vm.OldLinkUrl) {\r\n                if (vm.NewLinkUrl) " +
+"{\r\n                    commandChain.extendMarkRange(\'link\').setLink({ href: vm.N" +
+"ewLinkUrl });\r\n                }\r\n                else {\r\n                    co" +
+"mmandChain.extendMarkRange(\'link\').unsetLink();\r\n                }\r\n            " +
+"}\r\n            commandChain.run();\r\n            linkDialog.hide();\r\n        }\r\n\r" +
+"\n        function addTag() {\r\n            var tagText = getTagsElement().value.t" +
+"rim();\r\n            if (vm.ShoppingModeActive || tagText === \'\')\r\n              " +
+"  return;\r\n            getTagsElement().value = \'\';\r\n            vueCommandExecu" +
+"te(\'AddTagCommand\', tagText);\r\n        }\r\n\r\n        function deleteTag(e) {\r\n   " +
+"         if (vm.ShoppingModeActive)\r\n                return;\r\n            vueCom" +
+"mandExecute(\'DeleteTagCommand\', e.currentTarget.attributes[\'data-tag\'].value);\r\n" +
+"        }\r\n\r\n        function getTagSuggestions() {\r\n            return vm.$data" +
+".TagSuggestions.map(function (item) {\r\n                return { value: item }\r\n " +
+"           });\r\n        }\r\n\r\n        function getNoteHtmlContent() {\r\n          " +
+"  return editor.getHTML();\r\n        }\r\n\r\n        // By setting the content after" +
+" loading the page, we can avoid that the content has to be\r\n        // declared " +
+"statically as javascript and therefore would occupy memory twice.\r\n        funct" +
+"ion setNoteContent(text) {\r\n            editor.commands.setContent(text);\r\n     " +
+"       ProseMirrorBundle.scrollToTop(editor);\r\n        }\r\n\r\n        function isS" +
+"earchDialogHidden() {\r\n            return getSearchDialogElement().classList.con" +
+"tains(\'hidden\');\r\n        }\r\n\r\n        function toggleSearchDialog() {\r\n        " +
+"    showSearchDialog(isSearchDialogHidden());\r\n        }\r\n\r\n        function sho" +
+"wSearchDialog(visible) {\r\n            if (visible) {\r\n                // Open di" +
+"alog\r\n                var filter = ProseMirrorBundle.getSelectedText(editor);\r\n " +
+"               if (filter) {\r\n                    vm.SearchPattern = filter.trim" +
+"();\r\n                }\r\n                searchByFilter();\r\n                getSe" +
+"archDialogElement().classList.remove(\'hidden\');\r\n                document.getEle" +
+"mentById(\'SearchPattern\').focus();\r\n            }\r\n            else {\r\n         " +
+"       // Close dialog\r\n                vm.SearchPattern = \'\';\r\n                " +
+"getSearchDialogElement().classList.add(\'hidden\');\r\n                searchByFilte" +
+"r();\r\n            }\r\n        }\r\n\r\n        function searchByFilter() {\r\n         " +
+"   ProseMirrorBundle.searchAndHighlight(editor, vm.SearchPattern);\r\n        }\r\n\r" +
+"\n        function toggleShoppingMode() {\r\n            vm.ShoppingModeActive = !v" +
+"m.ShoppingModeActive;\r\n            editor.setEditable(!vm.ShoppingModeActive);\r\n" +
+"        }\r\n\r\n        function vueLoaded() {\r\n            var editorElement = doc" +
+"ument.getElementById(\'myeditor\');\r\n            editor = ProseMirrorBundle.initia" +
+"lizeEditor(editorElement);\r\n            editor.on(\'selectionUpdate\', function (e" +
+"ditor) {\r\n                refreshActiveFormatState();\r\n            });\r\n        " +
+"    editor.on(\'update\', function (editor) {\r\n                vuePropertyChanged(" +
+"\'UnlockedHtmlContent\', null);\r\n            });\r\n\r\n            ");
 
 WriteLiteral(@"
 
@@ -260,18 +257,37 @@ WriteLiteral(@"
                 searchByFilter();
                 ProseMirrorBundle.selectNextWhileTyping(editor);
             });
+
+            editor.setEditable(!vm.ShoppingModeActive);
+
+            $(""#tags"").autocomplete({
+                source: getTagSuggestions,
+                treshold: 0,
+                maximumItems: 10,
+                value: ""value"",
+                label: ""value"",
+                dropType: ""dropup"",
+                onSelectItem: function (item, inputField) {
+                    addTag();
+                },
+            });
+            getTagsElement().addEventListener(""keyup"", function(event) {
+                if (event.key === 'Enter' || event.keyCode === 13) {
+                    addTag();
+                }
+            });
         }
 
 ");
 
 
-#line 216 "NoteRazorView.cshtml"
+#line 225 "NoteRazorView.cshtml"
         
 
 #line default
 #line hidden
 
-#line 216 "NoteRazorView.cshtml"
+#line 225 "NoteRazorView.cshtml"
           WriteLiteral(Model.VueDataBindingScript);
 
 #line default
@@ -294,7 +310,7 @@ WriteLiteral(" v-on:click=\"GoBackCommand\"");
 
 WriteAttribute ("title", " title=\"", "\""
 
-#line 222 "NoteRazorView.cshtml"
+#line 231 "NoteRazorView.cshtml"
                                         , Tuple.Create<string,object,bool> ("", Model.Language["back"]
 
 #line default
@@ -304,7 +320,7 @@ WriteAttribute ("title", " title=\"", "\""
 WriteLiteral(">");
 
 
-#line 222 "NoteRazorView.cshtml"
+#line 231 "NoteRazorView.cshtml"
                                                                                                           WriteLiteral(Model.Icon["arrow-left"]);
 
 #line default
@@ -312,13 +328,13 @@ WriteLiteral(">");
 WriteLiteral("</button>\r\n\r\n");
 
 
-#line 224 "NoteRazorView.cshtml"
+#line 233 "NoteRazorView.cshtml"
             
 
 #line default
 #line hidden
 
-#line 224 "NoteRazorView.cshtml"
+#line 233 "NoteRazorView.cshtml"
              if (!Model.IsLocked)
             {   
 
@@ -337,7 +353,7 @@ WriteLiteral(" v-bind:disabled=\"ShoppingModeActive\"");
 
 WriteAttribute ("title", " title=\"", "\""
 
-#line 226 "NoteRazorView.cshtml"
+#line 235 "NoteRazorView.cshtml"
                                                                                                                     , Tuple.Create<string,object,bool> ("", Model.Language["note_bold"]
 
 #line default
@@ -347,7 +363,7 @@ WriteAttribute ("title", " title=\"", "\""
 WriteLiteral(">");
 
 
-#line 226 "NoteRazorView.cshtml"
+#line 235 "NoteRazorView.cshtml"
                                                                                                                                                                                            WriteLiteral(Model.Icon["format-bold"]);
 
 #line default
@@ -366,7 +382,7 @@ WriteLiteral(" v-bind:disabled=\"ShoppingModeActive\"");
 
 WriteAttribute ("title", " title=\"", "\""
 
-#line 227 "NoteRazorView.cshtml"
+#line 236 "NoteRazorView.cshtml"
                                                                                                                         , Tuple.Create<string,object,bool> ("", Model.Language["note_italic"]
 
 #line default
@@ -376,7 +392,7 @@ WriteAttribute ("title", " title=\"", "\""
 WriteLiteral(">");
 
 
-#line 227 "NoteRazorView.cshtml"
+#line 236 "NoteRazorView.cshtml"
                                                                                                                                                                                                  WriteLiteral(Model.Icon["format-italic"]);
 
 #line default
@@ -399,7 +415,7 @@ WriteLiteral(" v-bind:disabled=\"ShoppingModeActive\"");
 
 WriteAttribute ("title", " title=\"", "\""
 
-#line 229 "NoteRazorView.cshtml"
+#line 238 "NoteRazorView.cshtml"
                                                                                                                                   , Tuple.Create<string,object,bool> ("", Model.Language["note_underline"]
 
 #line default
@@ -409,7 +425,7 @@ WriteAttribute ("title", " title=\"", "\""
 WriteLiteral(">");
 
 
-#line 229 "NoteRazorView.cshtml"
+#line 238 "NoteRazorView.cshtml"
                                                                                                                                                                                                               WriteLiteral(Model.Icon["format-underline"]);
 
 #line default
@@ -426,7 +442,7 @@ WriteLiteral(" v-bind:disabled=\"ShoppingModeActive\"");
 
 WriteAttribute ("title", " title=\"", "\""
 
-#line 230 "NoteRazorView.cshtml"
+#line 239 "NoteRazorView.cshtml"
                                                                                                                             , Tuple.Create<string,object,bool> ("", Model.Language["note_strike"]
 
 #line default
@@ -436,7 +452,7 @@ WriteAttribute ("title", " title=\"", "\""
 WriteLiteral(">");
 
 
-#line 230 "NoteRazorView.cshtml"
+#line 239 "NoteRazorView.cshtml"
                                                                                                                                                                                                      WriteLiteral(Model.Icon["format-strikethrough"]);
 
 #line default
@@ -453,7 +469,7 @@ WriteLiteral(" v-bind:disabled=\"ShoppingModeActive\"");
 
 WriteAttribute ("title", " title=\"", "\""
 
-#line 231 "NoteRazorView.cshtml"
+#line 240 "NoteRazorView.cshtml"
                                                                                                                                       , Tuple.Create<string,object,bool> ("", Model.Language["note_list_ordered"]
 
 #line default
@@ -463,7 +479,7 @@ WriteAttribute ("title", " title=\"", "\""
 WriteLiteral(">");
 
 
-#line 231 "NoteRazorView.cshtml"
+#line 240 "NoteRazorView.cshtml"
                                                                                                                                                                                                                      WriteLiteral(Model.Icon["format-list-numbers"]);
 
 #line default
@@ -480,7 +496,7 @@ WriteLiteral(" v-bind:disabled=\"ShoppingModeActive\"");
 
 WriteAttribute ("title", " title=\"", "\""
 
-#line 232 "NoteRazorView.cshtml"
+#line 241 "NoteRazorView.cshtml"
                                                                                                                                     , Tuple.Create<string,object,bool> ("", Model.Language["note_list_unordered"]
 
 #line default
@@ -490,7 +506,7 @@ WriteAttribute ("title", " title=\"", "\""
 WriteLiteral(">");
 
 
-#line 232 "NoteRazorView.cshtml"
+#line 241 "NoteRazorView.cshtml"
                                                                                                                                                                                                                      WriteLiteral(Model.Icon["format-list-bulleted"]);
 
 #line default
@@ -507,7 +523,7 @@ WriteLiteral(" v-bind:class=\"{ active: ShoppingModeActive }\"");
 
 WriteAttribute ("title", " title=\"", "\""
 
-#line 234 "NoteRazorView.cshtml"
+#line 243 "NoteRazorView.cshtml"
                                                                                                      , Tuple.Create<string,object,bool> ("", Model.Language["note_shopping_mode"]
 
 #line default
@@ -517,7 +533,7 @@ WriteAttribute ("title", " title=\"", "\""
 WriteLiteral(">");
 
 
-#line 234 "NoteRazorView.cshtml"
+#line 243 "NoteRazorView.cshtml"
                                                                                                                                                                                      WriteLiteral(Model.Icon["keyboard_off_outline"]);
 
 #line default
@@ -536,7 +552,7 @@ WriteLiteral(" v-bind:disabled=\"ShoppingModeActive\"");
 
 WriteAttribute ("title", " title=\"", "\""
 
-#line 235 "NoteRazorView.cshtml"
+#line 244 "NoteRazorView.cshtml"
                                                                                                                    , Tuple.Create<string,object,bool> ("", Model.Language["note_pin"]
 
 #line default
@@ -546,7 +562,7 @@ WriteAttribute ("title", " title=\"", "\""
 WriteLiteral(">");
 
 
-#line 235 "NoteRazorView.cshtml"
+#line 244 "NoteRazorView.cshtml"
                                                                                                                                                                                          WriteLiteral(Model.Icon["pin"]);
 
 #line default
@@ -561,7 +577,7 @@ WriteLiteral(" onclick=\"toggleSearchDialog(); return false;\"");
 
 WriteAttribute ("title", " title=\"", "\""
 
-#line 236 "NoteRazorView.cshtml"
+#line 245 "NoteRazorView.cshtml"
                                                        , Tuple.Create<string,object,bool> ("", Model.Language["search"]
 
 #line default
@@ -571,7 +587,7 @@ WriteAttribute ("title", " title=\"", "\""
 WriteLiteral(">");
 
 
-#line 236 "NoteRazorView.cshtml"
+#line 245 "NoteRazorView.cshtml"
                                                                                                                            WriteLiteral(Model.Icon["magnify"]);
 
 #line default
@@ -579,7 +595,7 @@ WriteLiteral(">");
 WriteLiteral("</button>\r\n");
 
 
-#line 237 "NoteRazorView.cshtml"
+#line 246 "NoteRazorView.cshtml"
 
 
 
@@ -606,13 +622,13 @@ WriteLiteral(" v-bind:disabled=\"ShoppingModeActive\"");
 WriteLiteral(">\r\n");
 
 
-#line 240 "NoteRazorView.cshtml"
+#line 249 "NoteRazorView.cshtml"
                         
 
 #line default
 #line hidden
 
-#line 240 "NoteRazorView.cshtml"
+#line 249 "NoteRazorView.cshtml"
                           WriteLiteral(Model.Icon["dots-vertical"]);
 
 #line default
@@ -634,7 +650,7 @@ WriteLiteral(" data-target=\"#colorPaletteModal\"");
 WriteLiteral(">");
 
 
-#line 243 "NoteRazorView.cshtml"
+#line 252 "NoteRazorView.cshtml"
                                                                                                           WriteLiteral(Model.Icon["palette"]);
 
 #line default
@@ -642,7 +658,7 @@ WriteLiteral(">");
 WriteLiteral(" ");
 
 
-#line 243 "NoteRazorView.cshtml"
+#line 252 "NoteRazorView.cshtml"
                                                                                                                                            Write(Model.Language["note_colors"]);
 
 
@@ -663,7 +679,7 @@ WriteLiteral(" onclick=\"toggleFormat(\'heading\', 1);\"");
 WriteLiteral(">");
 
 
-#line 245 "NoteRazorView.cshtml"
+#line 254 "NoteRazorView.cshtml"
                                                                                                                                     WriteLiteral(Model.Icon["format-header-1"]);
 
 #line default
@@ -671,7 +687,7 @@ WriteLiteral(">");
 WriteLiteral(" ");
 
 
-#line 245 "NoteRazorView.cshtml"
+#line 254 "NoteRazorView.cshtml"
                                                                                                                                                                              Write(Model.Language["note_header1"]);
 
 
@@ -688,7 +704,7 @@ WriteLiteral(" onclick=\"toggleFormat(\'heading\', 2);\"");
 WriteLiteral(">");
 
 
-#line 246 "NoteRazorView.cshtml"
+#line 255 "NoteRazorView.cshtml"
                                                                                                                                     WriteLiteral(Model.Icon["format-header-2"]);
 
 #line default
@@ -696,7 +712,7 @@ WriteLiteral(">");
 WriteLiteral(" ");
 
 
-#line 246 "NoteRazorView.cshtml"
+#line 255 "NoteRazorView.cshtml"
                                                                                                                                                                              Write(Model.Language["note_header2"]);
 
 
@@ -713,7 +729,7 @@ WriteLiteral(" onclick=\"toggleFormat(\'heading\', 3);\"");
 WriteLiteral(">");
 
 
-#line 247 "NoteRazorView.cshtml"
+#line 256 "NoteRazorView.cshtml"
                                                                                                                                     WriteLiteral(Model.Icon["format-header-3"]);
 
 #line default
@@ -721,7 +737,7 @@ WriteLiteral(">");
 WriteLiteral(" ");
 
 
-#line 247 "NoteRazorView.cshtml"
+#line 256 "NoteRazorView.cshtml"
                                                                                                                                                                              Write(Model.Language["note_header3"]);
 
 
@@ -738,7 +754,7 @@ WriteLiteral(" onclick=\"toggleFormat(\'underline\');\"");
 WriteLiteral(">");
 
 
-#line 248 "NoteRazorView.cshtml"
+#line 257 "NoteRazorView.cshtml"
                                                                                                                                                                  WriteLiteral(Model.Icon["format-underline"]);
 
 #line default
@@ -746,7 +762,7 @@ WriteLiteral(">");
 WriteLiteral(" ");
 
 
-#line 248 "NoteRazorView.cshtml"
+#line 257 "NoteRazorView.cshtml"
                                                                                                                                                                                                            Write(Model.Language["note_underline"]);
 
 
@@ -763,7 +779,7 @@ WriteLiteral(" onclick=\"toggleFormat(\'strike\');\"");
 WriteLiteral(">");
 
 
-#line 249 "NoteRazorView.cshtml"
+#line 258 "NoteRazorView.cshtml"
                                                                                                                                                            WriteLiteral(Model.Icon["format-strikethrough"]);
 
 #line default
@@ -771,7 +787,7 @@ WriteLiteral(">");
 WriteLiteral(" ");
 
 
-#line 249 "NoteRazorView.cshtml"
+#line 258 "NoteRazorView.cshtml"
                                                                                                                                                                                                          Write(Model.Language["note_strike"]);
 
 
@@ -788,7 +804,7 @@ WriteLiteral(" onclick=\"toggleFormat(\'orderedlist\');\"");
 WriteLiteral(">");
 
 
-#line 250 "NoteRazorView.cshtml"
+#line 259 "NoteRazorView.cshtml"
                                                                                                                                                                      WriteLiteral(Model.Icon["format-list-numbers"]);
 
 #line default
@@ -796,7 +812,7 @@ WriteLiteral(">");
 WriteLiteral(" ");
 
 
-#line 250 "NoteRazorView.cshtml"
+#line 259 "NoteRazorView.cshtml"
                                                                                                                                                                                                                   Write(Model.Language["note_list_ordered"]);
 
 
@@ -813,7 +829,7 @@ WriteLiteral(" onclick=\"toggleFormat(\'bulletlist\');\"");
 WriteLiteral(">");
 
 
-#line 251 "NoteRazorView.cshtml"
+#line 260 "NoteRazorView.cshtml"
                                                                                                                                                                    WriteLiteral(Model.Icon["format-list-bulleted"]);
 
 #line default
@@ -821,7 +837,7 @@ WriteLiteral(">");
 WriteLiteral(" ");
 
 
-#line 251 "NoteRazorView.cshtml"
+#line 260 "NoteRazorView.cshtml"
                                                                                                                                                                                                                  Write(Model.Language["note_list_unordered"]);
 
 
@@ -838,7 +854,7 @@ WriteLiteral(" onclick=\"toggleFormat(\'codeblock\');\"");
 WriteLiteral(">");
 
 
-#line 252 "NoteRazorView.cshtml"
+#line 261 "NoteRazorView.cshtml"
                                                                                                                                 WriteLiteral(Model.Icon["code-braces"]);
 
 #line default
@@ -846,7 +862,7 @@ WriteLiteral(">");
 WriteLiteral(" ");
 
 
-#line 252 "NoteRazorView.cshtml"
+#line 261 "NoteRazorView.cshtml"
                                                                                                                                                                      Write(Model.Language["note_code"]);
 
 
@@ -863,7 +879,7 @@ WriteLiteral(" onclick=\"toggleFormat(\'blockquote\');\"");
 WriteLiteral(">");
 
 
-#line 253 "NoteRazorView.cshtml"
+#line 262 "NoteRazorView.cshtml"
                                                                                                                                   WriteLiteral(Model.Icon["format-quote-close"]);
 
 #line default
@@ -871,7 +887,7 @@ WriteLiteral(">");
 WriteLiteral(" ");
 
 
-#line 253 "NoteRazorView.cshtml"
+#line 262 "NoteRazorView.cshtml"
                                                                                                                                                                               Write(Model.Language["note_quotation"]);
 
 
@@ -886,7 +902,7 @@ WriteLiteral(" onclick=\"showLinkDialog();\"");
 WriteLiteral(">");
 
 
-#line 254 "NoteRazorView.cshtml"
+#line 263 "NoteRazorView.cshtml"
                                                                                  WriteLiteral(Model.Icon["link-variant"]);
 
 #line default
@@ -894,7 +910,7 @@ WriteLiteral(">");
 WriteLiteral(" ");
 
 
-#line 254 "NoteRazorView.cshtml"
+#line 263 "NoteRazorView.cshtml"
                                                                                                                        Write(Model.Language["note_link"]);
 
 
@@ -903,13 +919,13 @@ WriteLiteral(" ");
 WriteLiteral("</div>\r\n");
 
 
-#line 255 "NoteRazorView.cshtml"
+#line 264 "NoteRazorView.cshtml"
                         
 
 #line default
 #line hidden
 
-#line 255 "NoteRazorView.cshtml"
+#line 264 "NoteRazorView.cshtml"
                          if (Model.ShowManualSynchronization)
                         {
 
@@ -931,7 +947,7 @@ WriteLiteral(" v-on:click=\"PushNoteToOnlineStorageCommand\"");
 WriteLiteral(">");
 
 
-#line 258 "NoteRazorView.cshtml"
+#line 267 "NoteRazorView.cshtml"
                                                                                                      WriteLiteral(Model.Icon["cloud-upload"]);
 
 #line default
@@ -939,7 +955,7 @@ WriteLiteral(">");
 WriteLiteral(" ");
 
 
-#line 258 "NoteRazorView.cshtml"
+#line 267 "NoteRazorView.cshtml"
                                                                                                                                            Write(Model.Language["note_push_to_server"]);
 
 
@@ -956,7 +972,7 @@ WriteLiteral(" v-on:click=\"PullNoteFromOnlineStorageCommand\"");
 WriteLiteral(">");
 
 
-#line 259 "NoteRazorView.cshtml"
+#line 268 "NoteRazorView.cshtml"
                                                                                                        WriteLiteral(Model.Icon["cloud-download"]);
 
 #line default
@@ -964,7 +980,7 @@ WriteLiteral(">");
 WriteLiteral(" ");
 
 
-#line 259 "NoteRazorView.cshtml"
+#line 268 "NoteRazorView.cshtml"
                                                                                                                                                Write(Model.Language["note_pull_from_server"]);
 
 
@@ -973,7 +989,7 @@ WriteLiteral(" ");
 WriteLiteral("</div>\r\n");
 
 
-#line 260 "NoteRazorView.cshtml"
+#line 269 "NoteRazorView.cshtml"
                         }
 
 
@@ -982,7 +998,7 @@ WriteLiteral("</div>\r\n");
 WriteLiteral("                    </div>\r\n                </div>\r\n");
 
 
-#line 263 "NoteRazorView.cshtml"
+#line 272 "NoteRazorView.cshtml"
             }
 
 
@@ -999,13 +1015,13 @@ WriteLiteral(" v-bind:style=\"{ backgroundColor: BackgroundColorHex }\"");
 WriteLiteral(">\r\n");
 
 
-#line 267 "NoteRazorView.cshtml"
+#line 276 "NoteRazorView.cshtml"
             
 
 #line default
 #line hidden
 
-#line 267 "NoteRazorView.cshtml"
+#line 276 "NoteRazorView.cshtml"
              if (Model.IsLocked)
             {
 
@@ -1033,7 +1049,7 @@ WriteLiteral(" xlink:href=\"#svg-lock-outline\"");
 WriteLiteral(" /></svg></span>\r\n");
 
 
-#line 270 "NoteRazorView.cshtml"
+#line 279 "NoteRazorView.cshtml"
             }
             else
             {
@@ -1049,7 +1065,7 @@ WriteAttribute ("class", " class=\"", "\""
 , Tuple.Create<string,object,bool> ("", "note-viewer", true)
 , Tuple.Create<string,object,bool> (" ", "detail-view", true)
 
-#line 273 "NoteRazorView.cshtml"
+#line 282 "NoteRazorView.cshtml"
                           , Tuple.Create<string,object,bool> (" ", Model.CssClassNoteType
 
 #line default
@@ -1059,7 +1075,7 @@ WriteAttribute ("class", " class=\"", "\""
 WriteLiteral("></div>\r\n");
 
 
-#line 274 "NoteRazorView.cshtml"
+#line 283 "NoteRazorView.cshtml"
             }
 
 
@@ -1089,7 +1105,7 @@ WriteLiteral(" v-bind:disabled=\"ShoppingModeActive\"");
 
 WriteAttribute ("placeholder", " placeholder=\'", "\'"
 
-#line 280 "NoteRazorView.cshtml"
+#line 289 "NoteRazorView.cshtml"
                                                                      , Tuple.Create<string,object,bool> ("", Model.Language["tag_add"]
 
 #line default
@@ -1271,13 +1287,13 @@ WriteLiteral(" class=\"d-flex flex-wrap\"");
 WriteLiteral(">\r\n");
 
 
-#line 310 "NoteRazorView.cshtml"
+#line 319 "NoteRazorView.cshtml"
                         
 
 #line default
 #line hidden
 
-#line 310 "NoteRazorView.cshtml"
+#line 319 "NoteRazorView.cshtml"
                          foreach (var backgroundColor in @Model.BackgroundColorsHex)
                         {
 
@@ -1292,7 +1308,7 @@ WriteAttribute ("class", " class=\"", "\""
 , Tuple.Create<string,object,bool> (" ", "justify-content-center", true)
 , Tuple.Create<string,object,bool> (" ", "color-btn", true)
 
-#line 312 "NoteRazorView.cshtml"
+#line 321 "NoteRazorView.cshtml"
                                                            , Tuple.Create<string,object,bool> (" ", Model.GetDarkClass(backgroundColor)
 
 #line default
@@ -1304,7 +1320,7 @@ WriteLiteral(" data-dismiss=\"modal\"");
 WriteAttribute ("v-on:click", " v-on:click=\"", "\""
 , Tuple.Create<string,object,bool> ("", "BackgroundColorHex=\'", true)
 
-#line 312 "NoteRazorView.cshtml"
+#line 321 "NoteRazorView.cshtml"
                                                                                                                                                         , Tuple.Create<string,object,bool> ("", backgroundColor
 
 #line default
@@ -1315,7 +1331,7 @@ WriteAttribute ("v-on:click", " v-on:click=\"", "\""
 WriteAttribute ("style", " style=\"", "\""
 , Tuple.Create<string,object,bool> ("", "background-color:", true)
 
-#line 312 "NoteRazorView.cshtml"
+#line 321 "NoteRazorView.cshtml"
                                                                                                                                                                                                     , Tuple.Create<string,object,bool> (" ", backgroundColor
 
 #line default
@@ -1325,7 +1341,7 @@ WriteAttribute ("style", " style=\"", "\""
 WriteLiteral("><span>Lorem ipsum</span></div>\r\n");
 
 
-#line 313 "NoteRazorView.cshtml"
+#line 322 "NoteRazorView.cshtml"
                         }
 
 
@@ -1406,7 +1422,7 @@ WriteLiteral(" onclick=\"linkDialogOkPressed();\"");
 WriteLiteral(">");
 
 
-#line 329 "NoteRazorView.cshtml"
+#line 338 "NoteRazorView.cshtml"
                                                                                                 Write(Model.Language["ok"]);
 
 
@@ -1423,7 +1439,7 @@ WriteLiteral(" onclick=\"linkDialogOpenPressed();\"");
 WriteLiteral(">");
 
 
-#line 330 "NoteRazorView.cshtml"
+#line 339 "NoteRazorView.cshtml"
                                                                                                     Write(Model.Language["note_open_link"]);
 
 
@@ -1452,7 +1468,7 @@ WriteLiteral(" data-dismiss=\"modal\"");
 WriteLiteral(">");
 
 
-#line 331 "NoteRazorView.cshtml"
+#line 340 "NoteRazorView.cshtml"
                                                                                       Write(Model.Language["cancel"]);
 
 
@@ -1462,13 +1478,13 @@ WriteLiteral("</button>\r\n                    </div>\r\n                </div>\
 "\r\n        </div>\r\n\r\n        <div hidden>\r\n");
 
 
-#line 338 "NoteRazorView.cshtml"
+#line 347 "NoteRazorView.cshtml"
             
 
 #line default
 #line hidden
 
-#line 338 "NoteRazorView.cshtml"
+#line 347 "NoteRazorView.cshtml"
               WriteLiteral(Model.Icon.LoadIcon("lock-outline", new[] { new KeyValuePair<string, string>("id", "svg-lock-outline") }));
 
 #line default
@@ -1476,13 +1492,13 @@ WriteLiteral("</button>\r\n                    </div>\r\n                </div>\
 WriteLiteral("\r\n");
 
 
-#line 339 "NoteRazorView.cshtml"
+#line 348 "NoteRazorView.cshtml"
             
 
 #line default
 #line hidden
 
-#line 339 "NoteRazorView.cshtml"
+#line 348 "NoteRazorView.cshtml"
               WriteLiteral(Model.Icon.LoadIcon("close-circle-outline", new[] { new KeyValuePair<string, string>("id", "svg-close-circle-outline") }));
 
 #line default
@@ -1490,13 +1506,13 @@ WriteLiteral("\r\n");
 WriteLiteral("\r\n");
 
 
-#line 340 "NoteRazorView.cshtml"
+#line 349 "NoteRazorView.cshtml"
             
 
 #line default
 #line hidden
 
-#line 340 "NoteRazorView.cshtml"
+#line 349 "NoteRazorView.cshtml"
               WriteLiteral(Model.Icon.LoadIcon("plus", new[] { new KeyValuePair<string, string>("id", "svg-plus") }));
 
 #line default
@@ -1504,13 +1520,13 @@ WriteLiteral("\r\n");
 WriteLiteral("\r\n");
 
 
-#line 341 "NoteRazorView.cshtml"
+#line 350 "NoteRazorView.cshtml"
             
 
 #line default
 #line hidden
 
-#line 341 "NoteRazorView.cshtml"
+#line 350 "NoteRazorView.cshtml"
               WriteLiteral(Model.Icon.LoadIcon("delete", new[] { new KeyValuePair<string, string>("id", "svg-delete") }));
 
 #line default
@@ -1518,13 +1534,13 @@ WriteLiteral("\r\n");
 WriteLiteral("\r\n");
 
 
-#line 342 "NoteRazorView.cshtml"
+#line 351 "NoteRazorView.cshtml"
             
 
 #line default
 #line hidden
 
-#line 342 "NoteRazorView.cshtml"
+#line 351 "NoteRazorView.cshtml"
               WriteLiteral(Model.Icon.LoadIcon("link-variant", new[] { new KeyValuePair<string, string>("id", "svg-link-variant") }));
 
 #line default
@@ -1532,13 +1548,13 @@ WriteLiteral("\r\n");
 WriteLiteral("\r\n");
 
 
-#line 343 "NoteRazorView.cshtml"
+#line 352 "NoteRazorView.cshtml"
             
 
 #line default
 #line hidden
 
-#line 343 "NoteRazorView.cshtml"
+#line 352 "NoteRazorView.cshtml"
               WriteLiteral(Model.Icon.LoadIcon("open-in-new", new[] { new KeyValuePair<string, string>("id", "svg-open-in-new") }));
 
 #line default
@@ -1546,13 +1562,13 @@ WriteLiteral("\r\n");
 WriteLiteral("\r\n");
 
 
-#line 344 "NoteRazorView.cshtml"
+#line 353 "NoteRazorView.cshtml"
             
 
 #line default
 #line hidden
 
-#line 344 "NoteRazorView.cshtml"
+#line 353 "NoteRazorView.cshtml"
               WriteLiteral(Model.Icon.LoadIcon("chevron-up", new[] { new KeyValuePair<string, string>("id", "svg-chevron-up") }));
 
 #line default
@@ -1560,13 +1576,13 @@ WriteLiteral("\r\n");
 WriteLiteral("\r\n");
 
 
-#line 345 "NoteRazorView.cshtml"
+#line 354 "NoteRazorView.cshtml"
             
 
 #line default
 #line hidden
 
-#line 345 "NoteRazorView.cshtml"
+#line 354 "NoteRazorView.cshtml"
               WriteLiteral(Model.Icon.LoadIcon("chevron-down", new[] { new KeyValuePair<string, string>("id", "svg-chevron-down") }));
 
 #line default

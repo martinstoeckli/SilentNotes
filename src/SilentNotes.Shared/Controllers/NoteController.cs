@@ -196,6 +196,9 @@ namespace SilentNotes.Controllers
             script.Append("setNoteContent('");
             script.Append(escapedContent);
             script.Append("');");
+            bool isNewNote = _viewModel.SearchableContent.Trim().Length == 0;
+            if (isNewNote)
+                script.Append("toggleFormat('heading', 1);");
             View.ExecuteJavaScript(script.ToString());
         }
     }

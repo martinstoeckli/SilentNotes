@@ -322,16 +322,6 @@
     </AndroidAsset>
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\quillsearchhighlighter.css">
-      <Link>Assets\Html\quillsearchhighlighter.css</Link>
-    </AndroidAsset>
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\quillsearchhighlighter.js">
-      <Link>Assets\Html\quillsearchhighlighter.js</Link>
-    </AndroidAsset>
-  </ItemGroup>
-  <ItemGroup>
     <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\jquery-3.5.1.slim.min.js">
       <Link>Assets\Html\jquery-3.5.1.slim.min.js</Link>
     </AndroidAsset>

@@ -49,35 +49,22 @@ body { background-color: transparent; }
         }
 
         function toggleFormat(formatName, formatParameter) {
-            switch (formatName) {
-              case 'heading':
-                editor.chain().focus().toggleHeading({ level: formatParameter }).run(); break;
-              case 'codeblock':
-                editor.chain().focus().toggleCodeBlock().run(); break;
-              case 'blockquote':
-                editor.chain().focus().toggleBlockquote().run(); break;
-              case 'bulletlist':
-                editor.chain().focus().toggleBulletList().run(); break;
-              case 'orderedlist':
-                editor.chain().focus().toggleOrderedList().run(); break;
-              default:
-                editor.chain().focus().toggleMark(formatName).run(); break;
-            }
+            ProseMirrorBundle.toggleFormat(editor, formatName, formatParameter);
             refreshActiveFormatState();
         }
 
         function refreshActiveFormatState() {
-            vm.Header1Active = editor.isActive('heading', { level: 1 });
-            vm.Header2Active = editor.isActive('heading', { level: 2 });
-            vm.Header3Active = editor.isActive('heading', { level: 3 });
-            vm.BoldActive = editor.isActive('bold');
-            vm.ItalicActive = editor.isActive('italic');
-            vm.UnderlineActive = editor.isActive('underline');
-            vm.StrikeActive = editor.isActive('strike');
-            vm.CodeActive = editor.isActive('codeblock');
-            vm.QuoteActive = editor.isActive('blockquote');
-            vm.ListBulletActive = editor.isActive('bulletlist');
-            vm.ListOrderedActive = editor.isActive('orderedlist');
+            vm.Header1Active = ProseMirrorBundle.isFormatActive(editor, 'heading', { level: 1 });
+            vm.Header2Active = ProseMirrorBundle.isFormatActive(editor, 'heading', { level: 2 });
+            vm.Header3Active = ProseMirrorBundle.isFormatActive(editor, 'heading', { level: 3 });
+            vm.BoldActive = ProseMirrorBundle.isFormatActive(editor, 'bold');
+            vm.ItalicActive = ProseMirrorBundle.isFormatActive(editor, 'italic');
+            vm.UnderlineActive = ProseMirrorBundle.isFormatActive(editor, 'underline');
+            vm.StrikeActive = ProseMirrorBundle.isFormatActive(editor, 'strike');
+            vm.CodeActive = ProseMirrorBundle.isFormatActive(editor, 'codeblock');
+            vm.QuoteActive = ProseMirrorBundle.isFormatActive(editor, 'blockquote');
+            vm.ListBulletActive = ProseMirrorBundle.isFormatActive(editor, 'bulletlist');
+            vm.ListOrderedActive = ProseMirrorBundle.isFormatActive(editor, 'orderedlist');
         }
 
         function showLinkDialog() {
@@ -137,7 +124,7 @@ body { background-color: transparent; }
         }
 
         function getNoteHtmlContent() {
-            return '';
+            return editor.getHTML();
         }
 
         // By setting the content after loading the page, we can avoid that the content has to be
@@ -189,6 +176,9 @@ body { background-color: transparent; }
             editor.on('selectionUpdate', function (editor) {
                 refreshActiveFormatState();
             });
+            editor.on('update', function (editor) {
+                vuePropertyChanged('UnlockedHtmlContent', null);
+            });
 
             @* // For debugging purposes, get the complete HTML in NoteController.ShowInView().
             editor.commands.setContent('@{WriteLiteral(Model.GetEscapedUnlockedHtmlContent());}'); *@
@@ -210,6 +200,25 @@ body { background-color: transparent; }
             searchPatternElement.addEventListener('input', function (event) {
                 searchByFilter();
                 ProseMirrorBundle.selectNextWhileTyping(editor);
+            });
+
+            editor.setEditable(!vm.ShoppingModeActive);
+
+            $("#tags").autocomplete({
+                source: getTagSuggestions,
+                treshold: 0,
+                maximumItems: 10,
+                value: "value",
+                label: "value",
+                dropType: "dropup",
+                onSelectItem: function (item, inputField) {
+                    addTag();
+                },
+            });
+            getTagsElement().addEventListener("keyup", function(event) {
+                if (event.key === 'Enter' || event.keyCode === 13) {
+                    addTag();
+                }
             });
         }
 

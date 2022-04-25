@@ -135,13 +135,66 @@ export function scrollToBottom(editor: Editor): void {
 
 /**
  * Scrolls to the current position/selection of the document. It does the same as scrollIntoView()
- * but without requiring the focus on the editor, thus it can be called from the search box while typing.
+ * but without requiring the focus on the editor, thus it can be called from the search box while
+ * typing or in shopping mode when the editor is disabled.
  * @param {Editor}  editor - A TipTap editor instance.
 */
 function scrollToSelection(editor: Editor): void {
   const { node } = editor.view.domAtPos(editor.state.selection.anchor);
   if (node) {
       (node as any).scrollIntoView?.(false);
+  }
+}
+
+/**
+ * Toggles a given format like heading, bold or italic.
+ * @param {Editor}  editor - A TipTap editor instance.
+ * @param {string}  formatName - Name of the format to toggle, one of those:
+ *   (heading, bold, italic, underline, strike, codeblock, blockquote, bulletlist, orderedlist).
+ * @param {string}  formatParameter - Optional parameter for the heading format.
+*/
+export function toggleFormat(editor: Editor, formatName: string, formatParameter: any): void {
+  let lowerFormatName: string = formatName.toLowerCase();
+  switch (lowerFormatName) {
+    case 'heading':
+      editor.chain().focus().toggleHeading({ level: formatParameter }).run(); break;
+    case 'codeblock':
+      editor.chain().focus().toggleCodeBlock().run(); break;
+    case 'blockquote':
+      editor.chain().focus().toggleBlockquote().run(); break;
+    case 'bulletlist':
+      editor.chain().focus().toggleBulletList().run(); break;
+    case 'orderedlist':
+      editor.chain().focus().toggleOrderedList().run(); break;
+    default:
+      editor.chain().focus().toggleMark(formatName).run(); break;
+  }
+}
+
+/**
+ * Checks whether a given format is active at the current position.
+ * @param {Editor}  editor - A TipTap editor instance.
+ * @param {string}  formatName - Name of the format to toggle, one of those:
+ *   (heading, bold, italic, underline, strike, codeblock, blockquote, bulletlist, orderedlist).
+ * @param {string}  formatParameter - Optional parameter for the heading format.
+ * @returns {bool} Returns true if the format is active, false otherwise.
+*/
+export function isFormatActive(editor: Editor, formatName: string, formatParameter: any): boolean {
+  formatName = getCaseSensitiveFormat(formatName);
+  return editor.isActive(formatName, formatParameter);
+}
+
+function getCaseSensitiveFormat(formatName: string): string {
+  let lowerFormatName: string = formatName.toLowerCase();
+  switch (lowerFormatName) {
+    case 'codeblock':
+      return 'codeBlock'; break;
+    case 'bulletlist':
+      return 'bulletList'; break;
+    case 'orderedlist':
+      return 'orderedList'; break;
+    default:
+      return lowerFormatName; break;
   }
 }
 
@@ -172,7 +225,8 @@ export function selectNextWhileTyping(editor: Editor): void {
  * @param {Editor}  editor - A TipTap editor instance.
 */
 export function selectNext(editor: Editor): void {
-  editor.chain().focus().selectNext(false, false).scrollIntoView().run();
+  editor.chain().focus().selectNext(false, false).run();
+  scrollToSelection(editor);
 }
 
 /**
@@ -180,7 +234,8 @@ export function selectNext(editor: Editor): void {
  * @param {Editor}  editor - A TipTap editor instance.
 */
 export function selectPrevious(editor: Editor): void {
-  editor.chain().focus().selectPrevious().scrollIntoView().run();
+  editor.chain().focus().selectPrevious().run();
+  scrollToSelection(editor);
 }
 
 /**
