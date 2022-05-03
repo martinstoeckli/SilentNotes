@@ -62,12 +62,13 @@ function clickHandler(options: ClickHandlerOptions): Plugin {
         // because most TipTap commands work with the current selection
         const editor: Editor = options.editor;
         const resolvedPos = view.state.doc.resolve(pos);
-        editor.chain()
-          .setTextSelection({ from: resolvedPos.pos, to: resolvedPos.pos })
-          .selectTextblockEnd()
-          .run();
+        editor.commands.setTextSelection({ from: resolvedPos.pos, to: resolvedPos.pos });
 
         if (clickedCheckbox) {
+          // On Android 6 a click is sometimes ignored, if the click position is
+          // too close to the text cursor
+          editor.commands.selectTextblockEnd();
+
           let nodeAttributes = getAttributes(view.state, options.type);
           const oldState = nodeAttributes.htmlElementClass;
           const newState = rotateState(oldState);
@@ -75,6 +76,7 @@ function clickHandler(options: ClickHandlerOptions): Plugin {
           editor.commands.updateAttributes(options.type, nodeAttributes);
         }
         if (clickedRecyclebin) {
+          editor.commands.deleteNode(options.type);
         }
         return true;
       },
