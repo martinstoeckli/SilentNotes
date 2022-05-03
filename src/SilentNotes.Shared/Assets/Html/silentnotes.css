@@ -433,6 +433,7 @@ a[data-tooltip]:hover:after {
 	display: inline-block;
 	position: absolute;
 	left: 0.8em;
+	padding-right: 0.25em;
 	vertical-align: middle;
 	pointer-events: all;
 	cursor: pointer;

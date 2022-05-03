@@ -20,7 +20,7 @@ import { Selection } from 'prosemirror-state'
 
 import { CustomLink } from "./custom-link-extension";
 import { SearchNReplace } from './search-n-replace'
-import { ClassifiedParagraph } from "./classified-paragraph-extension";
+import { CheckableParagraph } from "./checkable-paragraph-extension";
 
 /**
  * This method will be exported and can be called from the HTML document with the "prose_mirror_bundle"
@@ -99,7 +99,7 @@ export function initializeEditor(editorElement: HTMLElement): any {
         Heading.configure({
           levels: [1, 2],
         }),
-        ClassifiedParagraph, // Preserves the class attribute needed for the checkboxes
+        CheckableParagraph, // Preserves the class attribute needed for the checkboxes
         Text,
         TextStyle,
         SearchNReplace.configure({

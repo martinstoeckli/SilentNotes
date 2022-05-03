@@ -302,11 +302,6 @@
     </AndroidAsset>
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\checklist.js">
-      <Link>Assets\Html\checklist.js</Link>
-    </AndroidAsset>
-  </ItemGroup>
-  <ItemGroup>
     <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\note-view.css">
       <Link>Assets\Html\note-view.css</Link>
     </AndroidAsset>
