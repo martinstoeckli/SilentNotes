@@ -78,6 +78,7 @@ namespace SilentNotes.Android
             settings.JavaScriptCanOpenWindowsAutomatically = false; // same as default
             settings.SetSupportMultipleWindows(false); // same as default
             settings.TextZoom = 100; // Ignores system font size, so the app controls the font size
+            settings.SaveFormData = false;
         }
 
         /// <inheritdoc/>

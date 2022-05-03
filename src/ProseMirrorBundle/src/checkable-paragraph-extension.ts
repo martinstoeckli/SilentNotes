@@ -62,7 +62,10 @@ function clickHandler(options: ClickHandlerOptions): Plugin {
         // because most TipTap commands work with the current selection
         const editor: Editor = options.editor;
         const resolvedPos = view.state.doc.resolve(pos);
-        editor.commands.setTextSelection({ from: resolvedPos.pos, to: resolvedPos.pos });
+        editor.chain()
+          .setTextSelection({ from: resolvedPos.pos, to: resolvedPos.pos })
+          .selectTextblockEnd()
+          .run();
 
         if (clickedCheckbox) {
           let nodeAttributes = getAttributes(view.state, options.type);
