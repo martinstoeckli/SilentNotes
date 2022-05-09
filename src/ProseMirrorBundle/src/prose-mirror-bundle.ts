@@ -20,7 +20,7 @@ import { Selection } from 'prosemirror-state'
 
 import { CustomLink } from "./custom-link-extension";
 import { SearchNReplace } from './search-n-replace'
-import { CheckableParagraph } from "./checkable-paragraph-extension";
+import { CheckableParagraph, setCheckedStateForAll } from "./checkable-paragraph-extension";
 
 /**
  * This method will be exported and can be called from the HTML document with the "prose_mirror_bundle"
@@ -289,6 +289,33 @@ export function makeLinkSuggestion(text: string): string {
     }
   }
   return text;
+}
+
+/*
+ * Searches for all checklist items (paragraphs) and sets their html class attribute
+ * to the new check state "todo".
+ * @param {Editor}  editor - A TipTap editor instance.
+*/
+export function setCheckedStateForAllToTodo(editor: Editor): void {
+  setCheckedStateForAll(editor, '');
+}
+
+/*
+ * Searches for all checklist items (paragraphs) and sets their html class attribute
+ * to the new check state "done".
+ * @param {Editor}  editor - A TipTap editor instance.
+*/
+export function setCheckedStateForAllToDone(editor: Editor): void {
+  setCheckedStateForAll(editor, 'done');
+}
+
+/*
+ * Searches for all checklist items (paragraphs) and sets their html class attribute
+ * to the new check state "disabled".
+ * @param {Editor}  editor - A TipTap editor instance.
+*/
+export function setCheckedStateForAllToDisabled(editor: Editor): void {
+  setCheckedStateForAll(editor, 'disabled');
 }
 
 function isValidUrl(text: string): boolean {

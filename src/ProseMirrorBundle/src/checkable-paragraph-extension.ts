@@ -1,7 +1,7 @@
 import { Editor, getAttributes } from '@tiptap/core';
 import Paragraph, { ParagraphOptions } from '@tiptap/extension-paragraph'
 import { Plugin, PluginKey } from 'prosemirror-state'
-import { NodeType } from 'prosemirror-model'
+import { NodeType, Node as ProsemirrorNode } from 'prosemirror-model'
 
 const todoClass = '';
 const doneClass = 'done';
@@ -17,12 +17,7 @@ export const CheckableParagraph = Paragraph.extend({
       htmlElementClass: {
         parseHTML: element => element.getAttribute('class'),
         renderHTML: attributes => {
-          if (!attributes.htmlElementClass) {
-            return {}
-          }
-          else {
-            return { 'class': attributes.htmlElementClass }
-          }
+          return { 'class': attributes.htmlElementClass };
         },
       },
     }
@@ -91,4 +86,27 @@ function rotateState(state: string): string {
     return todoClass;
   else
     return doneClass;
+}
+
+/*
+ * Searches for all checklist items (paragraphs) and sets their html class attribute
+ * to the new check state.
+ * @param {Editor}  editor - A TipTap editor instance.
+ * @param {string}  checkState - The new html class for the paragraph elements.
+*/
+export function setCheckedStateForAll(editor: Editor, checkState: string) {
+  const commandChain = editor.chain();
+  editor.state.doc.descendants((node, pos) => {
+    if ((node.type == editor.view.state.schema.nodes.paragraph) &&
+        (node.attrs.htmlElementClass != checkState))
+    {
+      const newAttributes = { htmlElementClass: checkState };
+      commandChain.setNodeSelection(pos);
+      commandChain.updateAttributes(node.type, {
+        ...node.attrs,
+        ...newAttributes
+      });
+    }
+  });
+  commandChain.run();
 }

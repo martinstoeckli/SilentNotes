@@ -667,13 +667,13 @@ WriteLiteral("</div>\r\n                    <div");
 
 WriteLiteral(" class=\"dropdown-item\"");
 
-WriteLiteral(" onclick=\"setCheckedStateForAll(false, false); return false;\"");
+WriteLiteral(" onclick=\"ProseMirrorBundle.setCheckedStateForAllToTodo(editor); return false;\"");
 
 WriteLiteral(">");
 
 
 #line 210 "ChecklistRazorView.cshtml"
-                                                                                                              WriteLiteral(Model.Icon["checkbox-multiple-blank-outline"]);
+                                                                                                                                WriteLiteral(Model.Icon["checkbox-multiple-blank-outline"]);
 
 #line default
 #line hidden
@@ -681,7 +681,7 @@ WriteLiteral(" ");
 
 
 #line 210 "ChecklistRazorView.cshtml"
-                                                                                                                                                                       Write(Model.Language["checklist_uncheck_all"]);
+                                                                                                                                                                                         Write(Model.Language["checklist_uncheck_all"]);
 
 
 #line default
@@ -690,13 +690,13 @@ WriteLiteral("</div>\r\n                    <div");
 
 WriteLiteral(" class=\"dropdown-item\"");
 
-WriteLiteral(" onclick=\"setCheckedStateForAll(true, false); return false;\"");
+WriteLiteral(" onclick=\"ProseMirrorBundle.setCheckedStateForAllToDone(editor); return false;\"");
 
 WriteLiteral(">");
 
 
 #line 211 "ChecklistRazorView.cshtml"
-                                                                                                             WriteLiteral(Model.Icon["check-box-multiple-outline"]);
+                                                                                                                                WriteLiteral(Model.Icon["check-box-multiple-outline"]);
 
 #line default
 #line hidden
@@ -704,7 +704,7 @@ WriteLiteral(" ");
 
 
 #line 211 "ChecklistRazorView.cshtml"
-                                                                                                                                                                 Write(Model.Language["checklist_check_all"]);
+                                                                                                                                                                                    Write(Model.Language["checklist_check_all"]);
 
 
 #line default
@@ -713,13 +713,14 @@ WriteLiteral("</div>\r\n                    <div");
 
 WriteLiteral(" class=\"dropdown-item\"");
 
-WriteLiteral(" onclick=\"setCheckedStateForAll(false, true); return false;\"");
+WriteLiteral(" onclick=\"ProseMirrorBundle.setCheckedStateForAllToDisabled(editor); return false" +
+";\"");
 
 WriteLiteral(">");
 
 
 #line 212 "ChecklistRazorView.cshtml"
-                                                                                                             WriteLiteral(Model.Icon["checkbox-blank-off-outline"]);
+                                                                                                                                    WriteLiteral(Model.Icon["checkbox-blank-off-outline"]);
 
 #line default
 #line hidden
@@ -727,7 +728,7 @@ WriteLiteral(" ");
 
 
 #line 212 "ChecklistRazorView.cshtml"
-                                                                                                                                                                 Write(Model.Language["checklist_disable_all"]);
+                                                                                                                                                                                        Write(Model.Language["checklist_disable_all"]);
 
 
 #line default
@@ -931,12 +932,14 @@ WriteLiteral("            <div");
 
 WriteLiteral(" id=\"myeditor\"");
 
+WriteLiteral(" v-pre");
+
 WriteAttribute ("class", " class=\"", "\""
 , Tuple.Create<string,object,bool> ("", "note-viewer", true)
 , Tuple.Create<string,object,bool> (" ", "detail-view", true)
 
 #line 234 "ChecklistRazorView.cshtml"
-                      , Tuple.Create<string,object,bool> (" ", Model.CssClassNoteType
+                            , Tuple.Create<string,object,bool> (" ", Model.CssClassNoteType
 
 #line default
 #line hidden

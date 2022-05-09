@@ -1061,12 +1061,14 @@ WriteLiteral("                <div");
 
 WriteLiteral(" id=\"myeditor\"");
 
+WriteLiteral(" v-pre");
+
 WriteAttribute ("class", " class=\"", "\""
 , Tuple.Create<string,object,bool> ("", "note-viewer", true)
 , Tuple.Create<string,object,bool> (" ", "detail-view", true)
 
 #line 282 "NoteRazorView.cshtml"
-                          , Tuple.Create<string,object,bool> (" ", Model.CssClassNoteType
+                                , Tuple.Create<string,object,bool> (" ", Model.CssClassNoteType
 
 #line default
 #line hidden

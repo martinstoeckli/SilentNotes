@@ -207,9 +207,9 @@ div.dark .detail-view.checklist .ProseMirror p::after { content: @{WriteLiteral(
                     <div class="dropdown-item" data-toggle="modal" data-target="#colorPaletteModal">@{WriteLiteral(Model.Icon["palette"]);} @Model.Language["note_colors"]</div>
                     <div class="dropdown-divider"></div>
                     <div class="dropdown-item" onclick="movePendingToTop(); return false;">@{WriteLiteral(Model.Icon["sort-bool-descending-variant"]);} @Model.Language["checklist_move_pending_to_top"]</div>
-                    <div class="dropdown-item" onclick="setCheckedStateForAll(false, false); return false;">@{WriteLiteral(Model.Icon["checkbox-multiple-blank-outline"]);} @Model.Language["checklist_uncheck_all"]</div>
-                    <div class="dropdown-item" onclick="setCheckedStateForAll(true, false); return false;">@{WriteLiteral(Model.Icon["check-box-multiple-outline"]);} @Model.Language["checklist_check_all"]</div>
-                    <div class="dropdown-item" onclick="setCheckedStateForAll(false, true); return false;">@{WriteLiteral(Model.Icon["checkbox-blank-off-outline"]);} @Model.Language["checklist_disable_all"]</div>
+                    <div class="dropdown-item" onclick="ProseMirrorBundle.setCheckedStateForAllToTodo(editor); return false;">@{WriteLiteral(Model.Icon["checkbox-multiple-blank-outline"]);} @Model.Language["checklist_uncheck_all"]</div>
+                    <div class="dropdown-item" onclick="ProseMirrorBundle.setCheckedStateForAllToDone(editor); return false;">@{WriteLiteral(Model.Icon["check-box-multiple-outline"]);} @Model.Language["checklist_check_all"]</div>
+                    <div class="dropdown-item" onclick="ProseMirrorBundle.setCheckedStateForAllToDisabled(editor); return false;">@{WriteLiteral(Model.Icon["checkbox-blank-off-outline"]);} @Model.Language["checklist_disable_all"]</div>
                     <div class="dropdown-divider"></div>
                     <div class="dropdown-item" v-bind:class="{ active: Header1Active }" onclick="toggleFormat('heading', 1);">@{WriteLiteral(Model.Icon["format-header-1"]);} @Model.Language["note_header1"]</div>
                     <div class="dropdown-item" v-bind:class="{ active: Header2Active }" onclick="toggleFormat('heading', 2);">@{WriteLiteral(Model.Icon["format-header-2"]);} @Model.Language["note_header2"]</div>
@@ -231,7 +231,7 @@ div.dark .detail-view.checklist .ProseMirror p::after { content: @{WriteLiteral(
         }
         else
         {
-            <div id="myeditor" class="note-viewer detail-view @Model.CssClassNoteType"></div>
+            <div id="myeditor" v-pre class="note-viewer detail-view @Model.CssClassNoteType"></div>
         }
     </div>
 
