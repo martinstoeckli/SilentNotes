@@ -381,14 +381,14 @@ WriteLiteral("            <button");
 
 WriteLiteral(" class=\"nav-item\"");
 
-WriteLiteral(" onclick=\"moveUp(true); return false;\"");
+WriteLiteral(" onclick=\"ProseMirrorBundle.moveChecklist(editor, true, false); return false;\"");
 
 WriteLiteral(" v-bind:disabled=\"ShoppingModeActive\"");
 
 WriteAttribute ("title", " title=\"", "\""
 
 #line 194 "ChecklistRazorView.cshtml"
-                                                                                , Tuple.Create<string,object,bool> ("", Model.Language["checklist_move_to_top"]
+                                                                                                                        , Tuple.Create<string,object,bool> ("", Model.Language["checklist_move_to_top"]
 
 #line default
 #line hidden
@@ -398,7 +398,7 @@ WriteLiteral(">");
 
 
 #line 194 "ChecklistRazorView.cshtml"
-                                                                                                                                                                   WriteLiteral(Model.Icon["arrow-collapse-up"]);
+                                                                                                                                                                                                           WriteLiteral(Model.Icon["arrow-collapse-up"]);
 
 #line default
 #line hidden
@@ -408,14 +408,14 @@ WriteLiteral("            <button");
 
 WriteLiteral(" class=\"nav-item\"");
 
-WriteLiteral(" onclick=\"moveUp(false); return false;\"");
+WriteLiteral(" onclick=\"ProseMirrorBundle.moveChecklist(editor, true, true); return false;\"");
 
 WriteLiteral(" v-bind:disabled=\"ShoppingModeActive\"");
 
 WriteAttribute ("title", " title=\"", "\""
 
 #line 195 "ChecklistRazorView.cshtml"
-                                                                                 , Tuple.Create<string,object,bool> ("", Model.Language["checklist_move_up"]
+                                                                                                                       , Tuple.Create<string,object,bool> ("", Model.Language["checklist_move_up"]
 
 #line default
 #line hidden
@@ -425,7 +425,7 @@ WriteLiteral(">");
 
 
 #line 195 "ChecklistRazorView.cshtml"
-                                                                                                                                                                WriteLiteral(Model.Icon["arrow-up"]);
+                                                                                                                                                                                                      WriteLiteral(Model.Icon["arrow-up"]);
 
 #line default
 #line hidden
@@ -435,14 +435,14 @@ WriteLiteral("            <button");
 
 WriteLiteral(" class=\"nav-item\"");
 
-WriteLiteral(" onclick=\"moveDown(false); return false;\"");
+WriteLiteral(" onclick=\"ProseMirrorBundle.moveChecklist(editor, false, true); return false;\"");
 
 WriteLiteral(" v-bind:disabled=\"ShoppingModeActive\"");
 
 WriteAttribute ("title", " title=\"", "\""
 
 #line 196 "ChecklistRazorView.cshtml"
-                                                                                   , Tuple.Create<string,object,bool> ("", Model.Language["checklist_move_down"]
+                                                                                                                        , Tuple.Create<string,object,bool> ("", Model.Language["checklist_move_down"]
 
 #line default
 #line hidden
@@ -452,7 +452,7 @@ WriteLiteral(">");
 
 
 #line 196 "ChecklistRazorView.cshtml"
-                                                                                                                                                                    WriteLiteral(Model.Icon["arrow-down"]);
+                                                                                                                                                                                                         WriteLiteral(Model.Icon["arrow-down"]);
 
 #line default
 #line hidden
@@ -462,14 +462,14 @@ WriteLiteral("            <button");
 
 WriteLiteral(" class=\"nav-item\"");
 
-WriteLiteral(" onclick=\"moveDown(true); return false;\"");
+WriteLiteral(" onclick=\"ProseMirrorBundle.moveChecklist(editor, false, false); return false;\"");
 
 WriteLiteral(" v-bind:disabled=\"ShoppingModeActive\"");
 
 WriteAttribute ("title", " title=\"", "\""
 
 #line 197 "ChecklistRazorView.cshtml"
-                                                                                  , Tuple.Create<string,object,bool> ("", Model.Language["checklist_move_to_bottom"]
+                                                                                                                         , Tuple.Create<string,object,bool> ("", Model.Language["checklist_move_to_bottom"]
 
 #line default
 #line hidden
@@ -479,7 +479,7 @@ WriteLiteral(">");
 
 
 #line 197 "ChecklistRazorView.cshtml"
-                                                                                                                                                                        WriteLiteral(Model.Icon["arrow-collapse-down"]);
+                                                                                                                                                                                                               WriteLiteral(Model.Icon["arrow-collapse-down"]);
 
 #line default
 #line hidden

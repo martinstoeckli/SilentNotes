@@ -20,7 +20,7 @@ import { Selection } from 'prosemirror-state'
 
 import { CustomLink } from "./custom-link-extension";
 import { SearchNReplace } from './search-n-replace'
-import { CheckableParagraph, setCheckedStateForAll } from "./checkable-paragraph-extension";
+import { CheckableParagraph, moveChecklistUp, moveChecklistDown, setChecklistStateForAll } from "./checkable-paragraph-extension";
 
 /**
  * This method will be exported and can be called from the HTML document with the "prose_mirror_bundle"
@@ -296,8 +296,8 @@ export function makeLinkSuggestion(text: string): string {
  * to the new check state "todo".
  * @param {Editor}  editor - A TipTap editor instance.
 */
-export function setCheckedStateForAllToTodo(editor: Editor): void {
-  setCheckedStateForAll(editor, '');
+export function setChecklistStateForAllToTodo(editor: Editor): void {
+  setChecklistStateForAll(editor, '');
 }
 
 /*
@@ -305,8 +305,8 @@ export function setCheckedStateForAllToTodo(editor: Editor): void {
  * to the new check state "done".
  * @param {Editor}  editor - A TipTap editor instance.
 */
-export function setCheckedStateForAllToDone(editor: Editor): void {
-  setCheckedStateForAll(editor, 'done');
+export function setChecklistStateForAllToDone(editor: Editor): void {
+  setChecklistStateForAll(editor, 'done');
 }
 
 /*
@@ -314,8 +314,17 @@ export function setCheckedStateForAllToDone(editor: Editor): void {
  * to the new check state "disabled".
  * @param {Editor}  editor - A TipTap editor instance.
 */
-export function setCheckedStateForAllToDisabled(editor: Editor): void {
-  setCheckedStateForAll(editor, 'disabled');
+export function setChecklistStateForAllToDisabled(editor: Editor): void {
+  setChecklistStateForAll(editor, 'disabled');
+}
+
+export function moveChecklist(editor: Editor, upwards: boolean, singleStep: boolean): void {
+  if (upwards) {
+    moveChecklistUp(editor, singleStep);
+  }
+  else {
+    moveChecklistDown(editor, singleStep);
+  }
 }
 
 function isValidUrl(text: string): boolean {
