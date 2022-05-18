@@ -23,7 +23,7 @@ using SilentNotes.ViewModels;
 #line hidden
 
 
-[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "17.0.0.343")]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "17.1.0.324")]
 public partial class NoteRazorView : NoteRazorViewBase
 {
 
@@ -1053,12 +1053,14 @@ WriteLiteral("                <div");
 
 WriteLiteral(" id=\"myeditor\"");
 
+WriteLiteral(" v-pre");
+
 WriteAttribute ("class", " class=\"", "\""
 , Tuple.Create<string,object,bool> ("", "note-viewer", true)
 , Tuple.Create<string,object,bool> (" ", "detail-view", true)
 
 #line 280 "NoteRazorView.cshtml"
-                          , Tuple.Create<string,object,bool> (" ", Model.CssClassNoteType
+                                , Tuple.Create<string,object,bool> (" ", Model.CssClassNoteType
 
 #line default
 #line hidden
@@ -1068,7 +1070,7 @@ WriteLiteral(">");
 
 
 #line 280 "NoteRazorView.cshtml"
-                                                                                             WriteLiteral(Model.UnlockedHtmlContent);
+                                                                                                   WriteLiteral(Model.UnlockedHtmlContent);
 
 #line default
 #line hidden
