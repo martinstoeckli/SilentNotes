@@ -41,18 +41,46 @@ namespace SilentNotes.Workers
             Directory.CreateDirectory(directoryPath);
 
             // Write to temporary file
-            string tempFilePath = filePath + ".new";
-            using (FileStream tempFileStream = new FileStream(tempFilePath, FileMode.Create))
+            string newFilePath = filePath + ".new";
+            using (FileStream tempFileStream = new FileStream(newFilePath, FileMode.Create))
             {
                 writingDelegate(tempFileStream);
             }
 
             // Now that the new file is written completely (process was not killed in meantime),
             // it will be renamed to the original file name.
+            File.Copy(newFilePath, filePath, true);
+
+            // Clean up if copy is verified
             if (File.Exists(filePath))
-                File.Move(filePath, filePath + ".old"); // Fast renaming instead of deletion
-            File.Move(tempFilePath, filePath);
-            File.Delete(filePath + ".old");
+                File.Delete(newFilePath);
+        }
+
+        public static void CompleteUnfinishedWrite(string filePath)
+        {
+            if (string.IsNullOrWhiteSpace(filePath))
+                throw new ArgumentNullException(nameof(filePath));
+
+            string newFilePath = filePath + ".new";
+            if (File.Exists(newFilePath))
+            {
+                // Since the temporary file was not cleaned up, something went wrong when writing the last time.
+                File.Copy(newFilePath, filePath, true);
+
+                // Clean up if copy is verified
+                if (File.Exists(filePath))
+                    File.Delete(newFilePath);
+            }
+            else
+            {
+                // Todo: Remove this handling of legacy code situation in next version
+                string oldFilePath = filePath + ".old";
+                if (File.Exists(oldFilePath))
+                {
+                    File.Copy(oldFilePath, filePath, true);
+                    File.Delete(oldFilePath);
+                }
+            }
         }
     }
 }
