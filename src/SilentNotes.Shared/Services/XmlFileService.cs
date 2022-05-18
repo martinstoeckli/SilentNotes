@@ -52,6 +52,7 @@ namespace SilentNotes.Services
         /// <inheritdoc/>
         public bool Exists(string filePath)
         {
+            AtomicFileWriter.CompleteUnfinishedWrite(filePath);
             return File.Exists(filePath);
         }
     }
