@@ -36,7 +36,7 @@ namespace SilentNotes.Services
         {
             try
             {
-                AtomicFileWriter.Write(
+                new AtomicFileWriter().Write(
                     filePath,
                     (xmlStream) => {
                         XmlUtils.SerializeToXmlStream(serializeableObject, xmlStream, Encoding.UTF8);
@@ -52,7 +52,7 @@ namespace SilentNotes.Services
         /// <inheritdoc/>
         public bool Exists(string filePath)
         {
-            AtomicFileWriter.CompleteUnfinishedWrite(filePath);
+            new AtomicFileWriter().CompletePendingWrite(filePath);
             return File.Exists(filePath);
         }
     }
