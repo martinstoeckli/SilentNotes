@@ -1,4 +1,4 @@
-import { Editor, Predicate, findParentNode, getAttributes, findParentNodeClosestToPos, isNodeSelection } from '@tiptap/core';
+import { Editor, Predicate, findParentNodeClosestToPos, NodeWithPos } from '@tiptap/core';
 import Paragraph, { ParagraphOptions } from '@tiptap/extension-paragraph'
 import { Plugin, PluginKey, TextSelection } from 'prosemirror-state'
 import { NodeType, Node as ProsemirrorNode, ResolvedPos } from 'prosemirror-model'
@@ -53,19 +53,11 @@ function clickHandler(options: ClickHandlerOptions): Plugin {
         // Clicking on the :before doesn't select the item, so we select it,
         // because most TipTap commands work with the current selection
         const editor: Editor = options.editor;
-        editor.commands.setTextSelection({ from: pos, to: pos });
-
         if (clickedOnTheLeftSide) {
-          // On Android 6 a click is sometimes ignored, if the click position is
-          // too close to the text cursor
-          editor.commands.selectTextblockEnd();
-
-          let nodeAttributes = getAttributes(view.state, options.type);
-          nodeAttributes.htmlElementClass = rotateState(nodeAttributes.htmlElementClass);
-          editor.commands.updateAttributes(options.type, nodeAttributes);
+          rotateNodeState(editor, pos);
         }
         else {
-          deleteNodeAtPos(editor, pos, options.type);
+          deleteNodeAtPos(editor, pos);
         }
         return true;
       },
@@ -73,15 +65,18 @@ function clickHandler(options: ClickHandlerOptions): Plugin {
   })
 }
 
-function deleteNodeAtPos(editor: Editor, pos: number, type: NodeType) {
+function rotateNodeState(editor: Editor, pos: number) {
   const resolvedPos = resolvePos(editor, pos);
-  const nodeInfo = findParentNodeClosestToPos(resolvedPos, node => isNodeOfType(node, type));
+  const nodeInfo = findParentNodeClosestToPos(resolvedPos, node => isParagraph(editor, node));
   if (nodeInfo.node != null) {
-    const from = resolvedPos.before(nodeInfo.depth);
-    const to = resolvedPos.after(nodeInfo.depth);
+    const {node, pos} = nodeInfo;
 
+    const newAttributes = { htmlElementClass: rotateState(node.attrs.htmlElementClass) };
     const tr = editor.state.tr;
-    tr.delete(from, to);
+    tr.setNodeMarkup(pos, undefined, {
+      ...node.attrs,
+      ...newAttributes,
+    })
     editor.view.dispatch(tr);
   }
 }
@@ -95,6 +90,19 @@ function rotateState(state: string): string {
     return doneClass;
 }
 
+function deleteNodeAtPos(editor: Editor, pos: number) {
+  const resolvedPos = resolvePos(editor, pos);
+  const nodeInfo = findParentNodeClosestToPos(resolvedPos, node => isParagraph(editor, node));
+  if (nodeInfo.node != null) {
+    const from = resolvedPos.before(nodeInfo.depth);
+    const to = resolvedPos.after(nodeInfo.depth);
+
+    const tr = editor.state.tr;
+    tr.delete(from, to);
+    editor.view.dispatch(tr);
+  }
+}
+
 /*
  * Searches for all checklist items (paragraphs) and sets their html class attribute
  * to the new check state.
@@ -102,48 +110,78 @@ function rotateState(state: string): string {
  * @param {string}  checkState - The new html class for the paragraph elements.
 */
 export function setChecklistStateForAll(editor: Editor, checkState: string) {
-  const commandChain = editor.chain();
-  editor.state.doc.descendants((node, pos) => {
-    if (isParagraph(editor, node) && !isOfCheckState(node, checkState))
+  const tr = editor.state.tr;
+  const newAttributes = { htmlElementClass: checkState };
+  const paragraphNodePositions = collectAllParagraphs(editor);
+
+  // Check for each paragraph, if it has to be changed
+  paragraphNodePositions.forEach(nodePosition => {
+    const {node, pos} = nodePosition;
+
+    if (!isOfCheckState(node, checkState))
     {
-      const newAttributes = { htmlElementClass: checkState };
-      commandChain.setNodeSelection(pos);
-      commandChain.updateAttributes(node.type, {
+      tr.setNodeMarkup(pos, undefined, {
         ...node.attrs,
-        ...newAttributes
-      });
+        ...newAttributes,
+      })
     }
   });
-  commandChain.run();
+  editor.view.dispatch(tr);
 }
 
+/*
+ * Moves the currently selected paragraph (checklist item) upwards.
+ * @param {Editor}  editor - A TipTap editor instance.
+ * @param {string}  singleStep - True if the paragraph should move 1 step upwards,
+ *   false if it should move to the top.
+*/
 export function moveChecklistUp(editor: Editor, singleStep: boolean): void {
   editor.view.focus();
   const paragraphPos = editor.view.state.selection.$anchor;
   const paragraphInfo = findParentNodeClosestToPos(paragraphPos, node => isParagraph(editor, node));
+  if (!paragraphInfo)
+    return; // Selection is not on paragraph
+
   const previousParagraphInfo = searchPreviousParagraph(
     editor, paragraphPos, singleStep, node => isParagraph(editor, node));
 
   if (previousParagraphInfo) {
-    const from = paragraphPos.before(paragraphInfo.depth);
-    const to = paragraphPos.after(paragraphInfo.depth);
-    const previousPos = resolvePos(editor, previousParagraphInfo.pos);
-    const insertAt = previousPos.before(previousParagraphInfo.depth);
-
-    const tr = editor.state.tr;
-    tr.delete(from, to).insert(insertAt, paragraphInfo.node);
-    const newSelection = TextSelection.near(tr.doc.resolve(insertAt));
-    tr.setSelection(newSelection);
-    tr.scrollIntoView();
-    
-    editor.view.dispatch(tr);
+    moveParagraphUp(editor, paragraphInfo, previousParagraphInfo, true);
   }
 }
 
+function moveParagraphUp(editor: Editor, paragraphInfo: any, previousParagraphInfo: any, selectMovedNode: boolean): void {
+  const paragraphPos = resolvePos(editor, paragraphInfo.start);
+  const from = paragraphPos.before(paragraphPos.depth);
+  const to = paragraphPos.after(paragraphPos.depth);
+
+  const previousPos = resolvePos(editor, previousParagraphInfo.start);
+  const insertAt = previousPos.before(previousParagraphInfo.depth);
+
+  const tr = editor.state.tr;
+  tr.delete(from, to).insert(insertAt, paragraphInfo.node);
+
+  if (selectMovedNode) {
+    const newSelection = TextSelection.near(tr.doc.resolve(insertAt));
+    tr.setSelection(newSelection);
+    tr.scrollIntoView();
+  }
+  editor.view.dispatch(tr);
+}
+
+/*
+ * Moves the currently selected paragraph (checklist item) downwards.
+ * @param {Editor}  editor - A TipTap editor instance.
+ * @param {string}  singleStep - True if the paragraph should move 1 step downwards,
+ *   false if it should move to the bottom.
+*/
 export function moveChecklistDown(editor: Editor, singleStep: boolean): void {
   editor.view.focus();
   const paragraphPos = editor.view.state.selection.$anchor;
   const paragraphInfo = findParentNodeClosestToPos(paragraphPos, node => isParagraph(editor, node));
+  if (!paragraphInfo)
+    return; // Selection is not on paragraph
+
   const followingParagraphInfo = searchFollowingParagraph(
     editor, paragraphPos, singleStep, node => isParagraph(editor, node));
 
@@ -156,12 +194,87 @@ export function moveChecklistDown(editor: Editor, singleStep: boolean): void {
 
     const tr = editor.state.tr;
     tr.delete(from, to).insert(insertAtAfterDeletion, paragraphInfo.node);
+
     const newSelection = TextSelection.near(tr.doc.resolve(insertAtAfterDeletion));
     tr.setSelection(newSelection);
     tr.scrollIntoView();
     
     editor.view.dispatch(tr);
   }
+}
+
+/*
+ * Sorts all paragraphs (checklist items) accordig to their check state.
+ * The sorting should result in fewest possible editor changes (small history).
+ * @param {Editor}  editor - A TipTap editor instance.
+*/
+export function sortPendingToTop(editor: Editor): void {
+  const paragraphNodePositions = collectAllParagraphs(editor);
+
+  // Check for each paragraph, if it should be moved upwards
+  paragraphNodePositions.forEach(nodePosition => {
+    const {node, pos} = nodePosition;
+    const paragraphPos = resolvePos(editor, pos+1);
+    const paragraphInfo = findParentNodeClosestToPos(paragraphPos, node => isParagraph(editor, node));
+    const nodeState = numericCheckState(node.attrs.htmlElementClass);
+
+    const previousParagraphInfo = searchPreviousParagraph(
+      editor, paragraphPos, false, previousNode => shouldMovePendingToTop(editor, nodeState, previousNode));
+
+    if (previousParagraphInfo) {
+      moveParagraphUp(editor, paragraphInfo, previousParagraphInfo, false);
+    }
+  });
+}
+
+function collectAllParagraphs(editor: Editor): NodeWithPos[] {
+  const result: NodeWithPos[] = [];
+  editor.view.state.doc.descendants((node, pos, parent) => {
+    if (isParagraph(editor, node)) {
+      result.push({ node: node, pos: pos });
+      return false;
+    }
+    return true;
+  });
+  return result;
+}
+
+function shouldMovePendingToTop(editor: Editor, nodeState: number, previousNode: ProsemirrorNode): boolean {
+  if (!isParagraph(editor, previousNode))
+    return false;
+  const previousNodeState = numericCheckState(previousNode.attrs.htmlElementClass);
+  return nodeState < previousNodeState;
+}
+
+/*
+ * Sorts all paragraphs (checklist items) accordig to their check state.
+ * The sorting should result in fewest possible editor changes (small history).
+ * @param {Editor}  editor - A TipTap editor instance.
+*/
+export function sortAlphabetical(editor: Editor): void {
+  const paragraphNodePositions = collectAllParagraphs(editor);
+
+  // Check for each paragraph, if it should be moved upwards
+  paragraphNodePositions.forEach(nodePosition => {
+    const {node, pos} = nodePosition;
+    const paragraphPos = resolvePos(editor, pos+1);
+    const paragraphInfo = findParentNodeClosestToPos(paragraphPos, node => isParagraph(editor, node));
+
+    const previousParagraphInfo = searchPreviousParagraph(
+      editor, paragraphPos, false, previousNode => shouldMoveAlphabetical(editor, node, previousNode));
+
+    if (previousParagraphInfo) {
+      moveParagraphUp(editor, paragraphInfo, previousParagraphInfo, false);
+    }
+  });
+}
+
+function shouldMoveAlphabetical(editor: Editor, node: ProsemirrorNode, previousNode: ProsemirrorNode): boolean {
+  if (!isParagraph(editor, previousNode))
+    return false;
+
+  const comparison = node.textContent.localeCompare(previousNode.textContent, undefined, { sensitivity: 'base' });
+  return comparison < 0;
 }
 
 /*
@@ -240,6 +353,15 @@ function searchFollowingParagraph(editor: Editor, pos: ResolvedPos, singleStep: 
 
 function isOfCheckState(node: ProsemirrorNode, checkState: string) {
   return node.attrs.htmlElementClass == checkState;
+}
+
+function numericCheckState(state: string): number {
+  if (state == null || state == todoClass)
+    return 0;
+  else if (state == doneClass)
+    return 1;
+  else
+    return 2;
 }
 
 function isNodeOfType(node: ProsemirrorNode, type: NodeType): boolean {

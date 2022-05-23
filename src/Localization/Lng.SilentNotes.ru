@@ -51,6 +51,7 @@ checklist_move_up Переместить выше
 checklist_move_down Переместить ниже
 checklist_move_to_bottom Переместить в конец
 checklist_move_pending_to_top Переместить все ожидающие в начало
+checklist_sort_alphabetical Sort items alphabetically
 checklist_check_all Отметить все (готово)
 checklist_uncheck_all Снять отметки со всех (ожидание)
 checklist_disable_all Отключить все

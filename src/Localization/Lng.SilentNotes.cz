@@ -51,6 +51,7 @@ checklist_move_up Posunout nahoru
 checklist_move_down Posunout dolu
 checklist_move_to_bottom Přesunout na konec
 checklist_move_pending_to_top Přesunout všechny nesplněné položky na začátek
+checklist_sort_alphabetical Sort items alphabetically
 checklist_check_all Zaškrtnout vše (hotovo)
 checklist_uncheck_all Odškrtnout vše (nesplněno)
 checklist_disable_all Zakázat vše

@@ -51,6 +51,7 @@ checklist_move_up Yukarı taşı
 checklist_move_down Aşağı taşı
 checklist_move_to_bottom En alta taşı
 checklist_move_pending_to_top İşaretlenmemiş maddeleri üste taşı
+checklist_sort_alphabetical Sort items alphabetically
 checklist_check_all Tümünü işaretle
 checklist_uncheck_all Tüm işaretleri kaldır
 checklist_disable_all Tümünü devre dışı bırak

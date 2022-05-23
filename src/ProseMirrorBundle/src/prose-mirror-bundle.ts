@@ -20,7 +20,7 @@ import { Selection } from 'prosemirror-state'
 
 import { CustomLink } from "./custom-link-extension";
 import { SearchNReplace } from './search-n-replace'
-import { CheckableParagraph, moveChecklistUp, moveChecklistDown, setChecklistStateForAll } from "./checkable-paragraph-extension";
+import { CheckableParagraph, moveChecklistUp, moveChecklistDown, sortPendingToTop, setChecklistStateForAll, sortAlphabetical } from "./checkable-paragraph-extension";
 
 /**
  * This method will be exported and can be called from the HTML document with the "prose_mirror_bundle"
@@ -325,6 +325,14 @@ export function moveChecklist(editor: Editor, upwards: boolean, singleStep: bool
   else {
     moveChecklistDown(editor, singleStep);
   }
+}
+
+export function sortChecklistPendingToTop(editor: Editor): void {
+  sortPendingToTop(editor);
+}
+
+export function sortChecklistAlphabetical(editor: Editor): void {
+  sortAlphabetical(editor);
 }
 
 function isValidUrl(text: string): boolean {

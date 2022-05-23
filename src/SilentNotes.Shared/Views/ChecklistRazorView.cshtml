@@ -47,6 +47,23 @@ div.dark .detail-view.checklist .ProseMirror p::after { content: @{WriteLiteral(
     </style>
     <script>
         var editor;
+        var ignoreViewModelUpdate = false;
+
+        function triggerViewModelUpdate() {
+            if (!ignoreViewModelUpdate)
+                vuePropertyChanged('UnlockedHtmlContent', null);
+        }
+
+        function singleViewModelUpdate(delegate) {
+            try {
+                ignoreViewModelUpdate = true;
+                delegate();
+            }
+            finally {
+                ignoreViewModelUpdate = false;
+            }
+            triggerViewModelUpdate();
+        }
 
         function getSearchDialogElement() {
             return document.getElementById('search-dialog');
@@ -149,7 +166,7 @@ div.dark .detail-view.checklist .ProseMirror p::after { content: @{WriteLiteral(
                 refreshActiveFormatState();
             });
             editor.on('update', function (editor) {
-                vuePropertyChanged('UnlockedHtmlContent', null);
+                triggerViewModelUpdate();
             });
 
             @* // For debugging purposes, get the complete HTML in NoteController.ShowInView().
@@ -206,10 +223,12 @@ div.dark .detail-view.checklist .ProseMirror p::after { content: @{WriteLiteral(
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navOverflowMenu">
                     <div class="dropdown-item" data-toggle="modal" data-target="#colorPaletteModal">@{WriteLiteral(Model.Icon["palette"]);} @Model.Language["note_colors"]</div>
                     <div class="dropdown-divider"></div>
-                    <div class="dropdown-item" onclick="movePendingToTop(); return false;">@{WriteLiteral(Model.Icon["sort-bool-descending-variant"]);} @Model.Language["checklist_move_pending_to_top"]</div>
-                    <div class="dropdown-item" onclick="ProseMirrorBundle.setCheckedStateForAllToTodo(editor); return false;">@{WriteLiteral(Model.Icon["checkbox-multiple-blank-outline"]);} @Model.Language["checklist_uncheck_all"]</div>
-                    <div class="dropdown-item" onclick="ProseMirrorBundle.setCheckedStateForAllToDone(editor); return false;">@{WriteLiteral(Model.Icon["check-box-multiple-outline"]);} @Model.Language["checklist_check_all"]</div>
-                    <div class="dropdown-item" onclick="ProseMirrorBundle.setCheckedStateForAllToDisabled(editor); return false;">@{WriteLiteral(Model.Icon["checkbox-blank-off-outline"]);} @Model.Language["checklist_disable_all"]</div>
+                    <div class="dropdown-item" onclick="singleViewModelUpdate(function () {ProseMirrorBundle.sortChecklistPendingToTop(editor)}); return false;">@{WriteLiteral(Model.Icon["sort-bool-descending-variant"]);} @Model.Language["checklist_move_pending_to_top"]</div>
+                    <div class="dropdown-item" onclick="singleViewModelUpdate(function () {ProseMirrorBundle.sortChecklistAlphabetical(editor)}); return false;">@{WriteLiteral(Model.Icon["sort-alphabetical-ascending"]);} @Model.Language["checklist_sort_alphabetical"]</div>
+                    <div class="dropdown-divider"></div>
+                    <div class="dropdown-item" onclick="singleViewModelUpdate(function () {ProseMirrorBundle.setChecklistStateForAllToTodo(editor)}); return false;">@{WriteLiteral(Model.Icon["checkbox-multiple-blank-outline"]);} @Model.Language["checklist_uncheck_all"]</div>
+                    <div class="dropdown-item" onclick="singleViewModelUpdate(function () {ProseMirrorBundle.setChecklistStateForAllToDone(editor)}); return false;">@{WriteLiteral(Model.Icon["check-box-multiple-outline"]);} @Model.Language["checklist_check_all"]</div>
+                    <div class="dropdown-item" onclick="singleViewModelUpdate(function () {ProseMirrorBundle.setChecklistStateForAllToDisabled(editor)}); return false;">@{WriteLiteral(Model.Icon["checkbox-blank-off-outline"]);} @Model.Language["checklist_disable_all"]</div>
                     <div class="dropdown-divider"></div>
                     <div class="dropdown-item" v-bind:class="{ active: Header1Active }" onclick="toggleFormat('heading', 1);">@{WriteLiteral(Model.Icon["format-header-1"]);} @Model.Language["note_header1"]</div>
                     <div class="dropdown-item" v-bind:class="{ active: Header2Active }" onclick="toggleFormat('heading', 2);">@{WriteLiteral(Model.Icon["format-header-2"]);} @Model.Language["note_header2"]</div>

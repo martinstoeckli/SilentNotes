@@ -51,6 +51,7 @@ checklist_move_up 上移
 checklist_move_down 下移
 checklist_move_to_bottom 移动至底部
 checklist_move_pending_to_top 将待办事项移至顶部
+checklist_sort_alphabetical Sort items alphabetically
 checklist_check_all 全部选中（完成）
 checklist_uncheck_all 全部取消选中（待办）
 checklist_disable_all 全部禁用

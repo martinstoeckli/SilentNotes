@@ -51,6 +51,7 @@ checklist_move_up Sposta in alto
 checklist_move_down Sposta in basso
 checklist_move_to_bottom Sposta in fondo
 checklist_move_pending_to_top Sposta tutti gli elementi in corso in cima
+checklist_sort_alphabetical Sort items alphabetically
 checklist_check_all Seleziona tutto (completato)
 checklist_uncheck_all Deseleziona tutto (in corso)
 checklist_disable_all Disabilita tutto
