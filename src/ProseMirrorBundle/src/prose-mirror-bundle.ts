@@ -20,7 +20,7 @@ import { Selection } from 'prosemirror-state'
 
 import { CustomLink } from "./custom-link-extension";
 import { SearchNReplace } from './search-n-replace'
-import { CheckableParagraph, moveChecklistUp, moveChecklistDown, sortPendingToTop, setChecklistStateForAll, sortAlphabetical } from "./checkable-paragraph-extension";
+import { CheckableParagraph, registerIsShoppingModeActive as checklistRegisterIsShoppingModeActive, moveChecklistUp, moveChecklistDown, sortPendingToTop, setCheckStateForAll, sortAlphabetical } from "./checkable-paragraph-extension";
 
 /**
  * This method will be exported and can be called from the HTML document with the "prose_mirror_bundle"
@@ -114,6 +114,10 @@ export function initializeEditor(editorElement: HTMLElement): any {
   catch ( e ) {
       return e.message + ' ' + e.stack;
   }
+}
+
+export function registerIsShoppingModeActive(delegate: () => boolean) {
+  checklistRegisterIsShoppingModeActive(delegate);
 }
 
 /**
@@ -296,8 +300,8 @@ export function makeLinkSuggestion(text: string): string {
  * to the new check state "todo".
  * @param {Editor}  editor - A TipTap editor instance.
 */
-export function setChecklistStateForAllToTodo(editor: Editor): void {
-  setChecklistStateForAll(editor, '');
+export function setCheckStateForAllToTodo(editor: Editor): void {
+  setCheckStateForAll(editor, '');
 }
 
 /*
@@ -305,8 +309,8 @@ export function setChecklistStateForAllToTodo(editor: Editor): void {
  * to the new check state "done".
  * @param {Editor}  editor - A TipTap editor instance.
 */
-export function setChecklistStateForAllToDone(editor: Editor): void {
-  setChecklistStateForAll(editor, 'done');
+export function setCheckStateForAllToDone(editor: Editor): void {
+  setCheckStateForAll(editor, 'done');
 }
 
 /*
@@ -314,8 +318,8 @@ export function setChecklistStateForAllToDone(editor: Editor): void {
  * to the new check state "disabled".
  * @param {Editor}  editor - A TipTap editor instance.
 */
-export function setChecklistStateForAllToDisabled(editor: Editor): void {
-  setChecklistStateForAll(editor, 'disabled');
+export function setCheckStateForAllToDisabled(editor: Editor): void {
+  setCheckStateForAll(editor, 'disabled');
 }
 
 export function moveChecklist(editor: Editor, upwards: boolean, singleStep: boolean): void {

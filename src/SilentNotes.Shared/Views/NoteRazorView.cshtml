@@ -40,6 +40,11 @@ body { background-color: transparent; }
         var editor;
         var linkDialog;
 
+        /* Notifies the viewmodel about changes in the note content. */
+        function triggerViewModelUpdate() {
+            vuePropertyChanged('UnlockedHtmlContent', null);
+        }
+
         function getSearchDialogElement() {
             return document.getElementById('search-dialog');
         }
@@ -177,7 +182,7 @@ body { background-color: transparent; }
                 refreshActiveFormatState();
             });
             editor.on('update', function (editor) {
-                vuePropertyChanged('UnlockedHtmlContent', null);
+                triggerViewModelUpdate();
             });
 
             @* // For debugging purposes, get the complete HTML in NoteController.ShowInView().

@@ -207,12 +207,6 @@
     <Content Include="..\SilentNotes.Shared\Assets\Html\prose-mirror-bundle.js">
       <Link>Assets\Html\prose-mirror-bundle.js</Link>
     </Content>
-    <Content Include="..\SilentNotes.Shared\Assets\Html\quill\quill.min.js">
-      <Link>Assets\Html\quill\quill.min.js</Link>
-    </Content>
-    <Content Include="..\SilentNotes.Shared\Assets\Html\quill\quill.snow.css">
-      <Link>Assets\Html\quill\quill.snow.css</Link>
-    </Content>
     <Content Include="..\SilentNotes.Shared\Assets\Html\sand.jpg">
       <Link>Assets\Html\sand.jpg</Link>
     </Content>

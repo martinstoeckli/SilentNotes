@@ -184,14 +184,6 @@
     </AndroidAsset>
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\quill\quill.min.js">
-      <Link>Assets\Html\quill\quill.min.js</Link>
-    </AndroidAsset>
-    <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\quill\quill.snow.css">
-      <Link>Assets\Html\quill\quill.snow.css</Link>
-    </AndroidAsset>
-  </ItemGroup>
-  <ItemGroup>
     <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\cloud_service_dropbox.png">
       <Link>Assets\Html\cloud_service_dropbox.png</Link>
     </AndroidAsset>

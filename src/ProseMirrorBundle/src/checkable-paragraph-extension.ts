@@ -1,11 +1,13 @@
 import { Editor, Predicate, findParentNodeClosestToPos, NodeWithPos } from '@tiptap/core';
 import Paragraph, { ParagraphOptions } from '@tiptap/extension-paragraph'
 import { Plugin, PluginKey, TextSelection } from 'prosemirror-state'
-import { NodeType, Node as ProsemirrorNode, ResolvedPos } from 'prosemirror-model'
+import { NodeType, Node, ResolvedPos } from 'prosemirror-model'
 
 const todoClass = '';
 const doneClass = 'done';
 const disabledClass = 'disabled';
+
+let isShoppingModeActive: () => boolean;
 
 /*
 Extends the Paragraph node of TipTap, but preserves the class attribute of the HTML element.
@@ -57,7 +59,9 @@ function clickHandler(options: ClickHandlerOptions): Plugin {
           rotateNodeState(editor, pos);
         }
         else {
-          deleteNodeAtPos(editor, pos);
+          if (!isShoppingModeActive()) {
+            deleteNodeAtPos(editor, pos);
+          }
         }
         return true;
       },
@@ -104,12 +108,19 @@ function deleteNodeAtPos(editor: Editor, pos: number) {
 }
 
 /*
+ * Registers a function which can be used to check whether the shopping mode is active or not.
+*/
+export function registerIsShoppingModeActive(delegate: () => boolean) {
+  isShoppingModeActive = delegate;
+}
+
+/*
  * Searches for all checklist items (paragraphs) and sets their html class attribute
  * to the new check state.
  * @param {Editor}  editor - A TipTap editor instance.
  * @param {string}  checkState - The new html class for the paragraph elements.
 */
-export function setChecklistStateForAll(editor: Editor, checkState: string) {
+export function setCheckStateForAll(editor: Editor, checkState: string) {
   const tr = editor.state.tr;
   const newAttributes = { htmlElementClass: checkState };
   const paragraphNodePositions = collectAllParagraphs(editor);
@@ -239,7 +250,7 @@ function collectAllParagraphs(editor: Editor): NodeWithPos[] {
   return result;
 }
 
-function shouldMovePendingToTop(editor: Editor, nodeState: number, previousNode: ProsemirrorNode): boolean {
+function shouldMovePendingToTop(editor: Editor, nodeState: number, previousNode: Node): boolean {
   if (!isParagraph(editor, previousNode))
     return false;
   const previousNodeState = numericCheckState(previousNode.attrs.htmlElementClass);
@@ -269,7 +280,7 @@ export function sortAlphabetical(editor: Editor): void {
   });
 }
 
-function shouldMoveAlphabetical(editor: Editor, node: ProsemirrorNode, previousNode: ProsemirrorNode): boolean {
+function shouldMoveAlphabetical(editor: Editor, node: Node, previousNode: Node): boolean {
   if (!isParagraph(editor, previousNode))
     return false;
 
@@ -351,7 +362,7 @@ function searchFollowingParagraph(editor: Editor, pos: ResolvedPos, singleStep: 
   return result;
 }
 
-function isOfCheckState(node: ProsemirrorNode, checkState: string) {
+function isOfCheckState(node: Node, checkState: string) {
   return node.attrs.htmlElementClass == checkState;
 }
 
@@ -364,11 +375,11 @@ function numericCheckState(state: string): number {
     return 2;
 }
 
-function isNodeOfType(node: ProsemirrorNode, type: NodeType): boolean {
+function isNodeOfType(node: Node, type: NodeType): boolean {
   return node && node.type == type;
 }
 
-function isParagraph(editor: Editor, node: ProsemirrorNode) {
+function isParagraph(editor: Editor, node: Node) {
 	return isNodeOfType(node, editor.view.state.schema.nodes.paragraph);
 }
 
