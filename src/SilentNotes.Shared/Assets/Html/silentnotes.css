@@ -378,6 +378,7 @@ a[data-tooltip]:hover:after {
 	width: 1.8em !important;
 	content: counter(sn-counter) ".";
 	text-align: right !important;
+	vertical-align: top;
 }
 
 .note-viewer ul {
@@ -398,6 +399,10 @@ a[data-tooltip]:hover:after {
 	white-space: nowrap;
 	content: '•';
 	text-align: right !important;
+	vertical-align: top;
+}
+.note-viewer li p {
+    display: inline-block;
 }
 
 .note-viewer pre {
@@ -488,9 +493,6 @@ div.ProseMirror {
 }
 div.ProseMirror:focus {
     outline: none;
-}
-div.ProseMirror li p {
-    display: inline-block;
 }
 div.ProseMirror .search-result {
   background: rgba(32, 144, 234, 0.5);

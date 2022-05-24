@@ -294,11 +294,6 @@
     </AndroidAsset>
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\note-view.css">
-      <Link>Assets\Html\note-view.css</Link>
-    </AndroidAsset>
-  </ItemGroup>
-  <ItemGroup>
     <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\cloud_service_nextcloud.png">
       <Link>Assets\Html\cloud_service_nextcloud.png</Link>
     </AndroidAsset>

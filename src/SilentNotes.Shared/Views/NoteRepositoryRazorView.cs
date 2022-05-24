@@ -23,7 +23,7 @@ using SilentNotes.ViewModels;
 #line hidden
 
 
-[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "17.0.0.343")]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "17.1.0.324")]
 public partial class NoteRepositoryRazorView : NoteRepositoryRazorViewBase
 {
 
@@ -768,6 +768,8 @@ WriteLiteral(" xlink:href=\"#svg-order-bool-ascending-variant\"");
 WriteLiteral(" /></svg></a>\r\n        </div>\r\n    </div>\r\n\r\n    <div");
 
 WriteLiteral(" id=\"content\"");
+
+WriteLiteral(" v-pre");
 
 WriteLiteral(" class=\"p-2\"");
 

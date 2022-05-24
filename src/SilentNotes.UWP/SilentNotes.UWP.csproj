@@ -198,9 +198,6 @@
     <Content Include="..\SilentNotes.Shared\Assets\Html\meadow.jpg">
       <Link>Assets\Html\meadow.jpg</Link>
     </Content>
-    <Content Include="..\SilentNotes.Shared\Assets\Html\note-view.css">
-      <Link>Assets\Html\note-view.css</Link>
-    </Content>
     <Content Include="..\SilentNotes.Shared\Assets\Html\paper.jpg">
       <Link>Assets\Html\paper.jpg</Link>
     </Content>
