@@ -2,6 +2,7 @@ a { text-decoration: none; }
 ol, ul { list-style: none; margin:0; padding:0;}
 a, img, li, input { -webkit-tap-highlight-color: transparent; }
 input::-ms-clear { display: none; }
+[v-cloak] { display: none }
 
 html {
 	font-size: 14px;

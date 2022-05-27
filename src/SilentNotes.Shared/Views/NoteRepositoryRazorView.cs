@@ -360,7 +360,7 @@ WriteLiteral(">\r\n                <svg");
 
 WriteLiteral(" id=\"filter-icon\"");
 
-WriteLiteral(" v-if=\"!IsFiltered\"");
+WriteLiteral(" v-show=\"!IsFiltered\"");
 
 WriteLiteral(" width=\'24\'");
 
@@ -376,7 +376,9 @@ WriteLiteral(" /></svg>\r\n                <svg");
 
 WriteLiteral(" id=\"filter-cancel-icon\"");
 
-WriteLiteral(" v-if=\"IsFiltered\"");
+WriteLiteral(" v-cloak");
+
+WriteLiteral(" v-show=\"IsFiltered\"");
 
 WriteLiteral(" width=\'24\'");
 
