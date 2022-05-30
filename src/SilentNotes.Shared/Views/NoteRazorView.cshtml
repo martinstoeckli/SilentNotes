@@ -135,8 +135,14 @@ body { background-color: transparent; }
         // By setting the content after loading the page, we can avoid that the content has to be
         // declared statically as javascript and therefore would occupy memory twice.
         function setNoteContent(text) {
-            editor.commands.setContent(text);
-            ProseMirrorBundle.scrollToTop(editor);
+            try {
+                editor.commands.setContent(text);
+                ProseMirrorBundle.scrollToTop(editor);
+            }
+            catch (ex) {
+                editor.setEditable(false);
+                document.getElementById('myeditor').textContent = ex.message;
+            }
         }
 
         function isSearchDialogHidden() {

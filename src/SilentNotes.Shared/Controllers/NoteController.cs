@@ -191,7 +191,10 @@ namespace SilentNotes.Controllers
             VueBindings.ViewLoadedEvent -= ViewLoadedEventHandler;
             View.Navigating += NavigatingEventHandler;
 
-            string escapedContent = WebviewUtils.EscapeJavaScriptString(_viewModel.UnlockedHtmlContent);
+            // To load the content in the view, the javascript would have to be written into the page,
+            // which would have to be interpreted by the WebView and would increase the size of the content.
+            // Loading it here avoids this performance issue.
+            string escapedContent = _viewModel.GetEscapedUnlockedHtmlContent();
             StringBuilder script = new StringBuilder(escapedContent.Length + 20);
             script.Append("setNoteContent('");
             script.Append(escapedContent);

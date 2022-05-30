@@ -28,7 +28,7 @@ Whenever an application promises security and confidentiality, users just have t
 
 ## Credits
 
-* The [QuillJS](https://quilljs.com/) library made it possible to offer WYSIWYG note editing across platforms.
+* The [ProseMirror](https://prosemirror.net/) editor made it possible to offer WYSIWYG note editing across platforms.
 * Cryptograhic tasks are solved with the [Bouncy Castle](https://bouncycastle.org/) crypto API.
 * The clean and minimalistic [Flurl](https://flurl.dev/) library helped a lot to keep the HTTP requests readable.
-* A databinding system between C# and the HTML views was developed, using the [vue.js](https://vuejs.org/) framework.
+* A databinding system between C# and the HTML views was developed with the help of the [vue.js](https://vuejs.org/) framework.

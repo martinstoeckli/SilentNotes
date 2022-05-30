@@ -32,8 +32,31 @@ But you want to contribute and that's great, so have a look at following points:
 - Try to write [clean code](https://clean-code-developer.com/), we are not religious about it, but we see the value in carefully written code.
 - Write unit-tests whenever this is possible with a reasonable amount of work. This applies especially to the low level code like models and helper/worker classes. View and ViewModels can be tested manually with system tests.
 - Comment all public functions, try to describe their limits and how they are meant to be used, instead of repeating the (hopefully well choosen) method name 😉. Non public function can be commented if you think it makes sense.
-- The repository contains a StyleCop config file with somewhat relaxed rules. We appreciate if you do a quick test before submitting, StyleCop can be installed as an extension in VisualStudio. To check a single file, just right click on the open source file and select _"Run StyleCop"_.
 - If new language resources have been created, place the english text as placeholder in all language files.
 - All functionallity needs to be cross-platform.
 
 If the contribution affects the Android app, please test with the minimum version (currently 6.0) as well as with two other versions. It is a tedious work, but there are often unexpected differences in the WebView implementations.
+
+## Building the application
+
+### Building C# code
+
+Install a current version of VisualStudio and make sure the mobile development and the UWP package is selected. Make a rebuild of the whole application.
+
+You can build a side by side installation with the real SilentNotes version by altering the package name in the Android project properties (e.g. to `dev.martinstoeckli.silentnotes`) and in the UWP project options by clicking the `Package Manifest...` button and opening the `Packaging` tab.
+
+In the `Directory.Build.props` file one can append the `ENV_DEVELOPMENT` constant as explained in the comments, so SilentNotes will read and write to an alternative repository and leaves the original repository intact.
+
+For debugging the UWP application, one has to choose the `x64` platform instead of `Any CPU`, VisualStudio
+often forgets about this setting after switching the "Startup Project".
+
+### Building TypeScript code
+
+Usually building the TypeScript code is not necessary, because the pre compiled and minified code is committed in the file [prose-mirror-bundle.js](src\SilentNotes.Shared\Assets\Html\prose-mirror-bundle.js), which allows to create reproducable builds.
+
+If you are working with the editor one has to build the code in `src/ProseMirrorBundle`. After installing a working npm environment go to this directory and run following commands, it will create and replace the prose-mirror-bundle.js file, which later becomes part of the application after doing a rebuild:
+
+```
+call npm install
+call npm run build
+```

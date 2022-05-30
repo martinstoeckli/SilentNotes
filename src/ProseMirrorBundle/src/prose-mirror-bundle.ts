@@ -52,7 +52,7 @@ export function initializeEditor(editorElement: HTMLElement): any {
         }),
         Italic,
         CustomLink.configure({
-          autolink: true,
+          autolink: false,
           openOnClick: false,
         }),
         ListItem,

@@ -65,8 +65,6 @@ interface TextNodesWithPosition {
   pos: number;
 }
 
-const updateView = (state: EditorState<any>, dispatch: any) => dispatch(state.tr)
-
 const regex = (s: string, disableRegex: boolean, caseSensitive: boolean): RegExp => {
   return RegExp(disableRegex ? s.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&') : s, caseSensitive ? 'gu' : 'gui')
 }
@@ -245,15 +243,14 @@ export const SearchNReplace = Extension.create<SearchOptions>({
         this.options.searchTerm = searchTerm
         this.options.results = []
 
-        updateView(state, dispatch)
-
+        dispatch(state.tr)
         return false
       },
     //   setReplaceTerm: (replaceTerm: string) => ({ state, dispatch }) => {
     //     this.options.replaceTerm = replaceTerm
     //     this.options.results = []
 
-    //     updateView(state, dispatch)
+    //     dispatch(state.tr)
 
     //     return false
     //   },
@@ -264,7 +261,7 @@ export const SearchNReplace = Extension.create<SearchOptions>({
 
     //     this.options.results.shift()
 
-    //     updateView(state, dispatch)
+    //     dispatch(state.tr)
 
     //     return false
     //   },
@@ -275,7 +272,7 @@ export const SearchNReplace = Extension.create<SearchOptions>({
 
     //     this.options.results = []
 
-    //     updateView(state, dispatch)
+    //     dispatch(state.tr)
 
     //     return false
     //   },
@@ -283,14 +280,14 @@ export const SearchNReplace = Extension.create<SearchOptions>({
       selectNext: (canKeepPos: boolean, continueAtBegin: boolean) => ({ state, dispatch }) => {
         const { results } = this.options
         selectNext(canKeepPos, continueAtBegin, results, { state })
-        updateView(state, dispatch)
+        dispatch(state.tr)
         return false
       },
 
       selectPrevious: () => ({ state, dispatch }) => {
         const { results } = this.options
         selectPrevious(results, { state })
-        updateView(state, dispatch)
+        dispatch(state.tr)
         return false
       },
   }
