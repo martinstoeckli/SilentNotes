@@ -13,7 +13,7 @@ namespace SilentNotesTest.Workers
         public void NewestSupportedVersionIsCorrect()
         {
             INoteRepositoryUpdater updater = new NoteRepositoryUpdater();
-            Assert.AreEqual(6, updater.NewestSupportedRevision);
+            Assert.AreEqual(NoteRepositoryModel.NewestSupportedRevision, updater.NewestSupportedRevision);
         }
 
         [Test]
