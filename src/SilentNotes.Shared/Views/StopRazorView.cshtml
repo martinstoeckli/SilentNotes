@@ -46,6 +46,14 @@
             </span>
             @Model.Language["error_loading_repository"]
         </div>
+        <div>
+            <table class="my-3 table table-sm">
+                <tr>
+                    <th class="">@Model.Language["version"]</th>
+                    <td v-once>{{ VersionFmt }}</td>
+                </tr>
+            </table>
+        </div>
     </div>
 </div></body>
 </html>

@@ -119,6 +119,7 @@ namespace SilentNotes.Controllers
                     Ioc.GetOrCreate<ISvgIconService>(),
                     Ioc.GetOrCreate<IThemeService>(),
                     Ioc.GetOrCreate<IBaseUrlService>(),
+                    Ioc.GetOrCreate<IVersionService>(),
                     repositoryService,
                     Ioc.GetOrCreate<IFolderPickerService>());
 

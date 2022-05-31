@@ -178,6 +178,41 @@ namespace SilentNotesTest.Workers
             Assert.AreEqual(newContent, readContent);
         }
 
+        [Test]
+        public void InvalidPendingFileDoesntOverwriteOriginal()
+        {
+            string filePath = GetTestFilePath();
+            var oldContent = new byte[] { 77 };
+            File.WriteAllBytes(filePath, oldContent);
+
+            var writer = new AtomicFileWriter { MinValidFileSize = 999 };
+            var newContent = new byte[] { 88 }; // New content is too small
+            writer.Write(filePath, stream => stream.Write(newContent));
+
+            byte[] readContent = File.ReadAllBytes(filePath);
+            Assert.AreEqual(oldContent, readContent);
+            Assert.IsFalse(ReadyFileExists());
+            Assert.IsFalse(TempFileExists());
+        }
+
+        [Test]
+        public void InvalidPendingFileDoesntBlock()
+        {
+            string filePath = GetTestFilePath();
+            var newContent = new byte[] { 88 };
+            var writer = new AtomicFileWriter { MinValidFileSize = 999 };
+            writer.Write(filePath, stream => stream.Write(newContent));
+
+            var newerContent = new byte[] { 99 };
+            writer = new AtomicFileWriter { MinValidFileSize = 1 };
+            writer.Write(filePath, stream => stream.Write(newerContent));
+
+            byte[] readContent = File.ReadAllBytes(filePath);
+            Assert.AreEqual(newerContent, readContent);
+            Assert.IsFalse(ReadyFileExists());
+            Assert.IsFalse(TempFileExists());
+        }
+
         private string GetTestFilePath()
         {
             return Path.Combine(_directoryPath, _testFileName);
