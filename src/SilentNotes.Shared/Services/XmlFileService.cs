@@ -36,7 +36,8 @@ namespace SilentNotes.Services
         {
             try
             {
-                new AtomicFileWriter().Write(
+                var writer = new AtomicFileWriter { MinValidFileSize = "</silentnotes>".Length };
+                writer.Write(
                     filePath,
                     (xmlStream) => {
                         XmlUtils.SerializeToXmlStream(serializeableObject, xmlStream, Encoding.UTF8);
@@ -52,7 +53,8 @@ namespace SilentNotes.Services
         /// <inheritdoc/>
         public bool Exists(string filePath)
         {
-            new AtomicFileWriter().CompletePendingWrite(filePath);
+            var writer = new AtomicFileWriter { MinValidFileSize = "</silentnotes>".Length };
+            writer.CompletePendingWrite(filePath);
             return File.Exists(filePath);
         }
     }

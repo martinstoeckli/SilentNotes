@@ -38,6 +38,12 @@ namespace SilentNotes.Workers
         }
 
         /// <summary>
+        /// Gets or sets a minimum file size which is required to be a valid file. Files with a
+        /// smaller size do not replace an existing file, because they are regarded as invalid.
+        /// </summary>
+        public long MinValidFileSize { get; set; }
+
+        /// <summary>
         /// Writes to a file, so that the integrity of the exsting file is guaranteed until the
         /// new file is written completely.
         /// </summary>
@@ -92,26 +98,37 @@ namespace SilentNotes.Workers
         public void CompletePendingWrite(string filePath)
         {
             string readyFilePath = GetReadyFilePath(filePath);
-            if (!File.Exists(readyFilePath))
+            bool hasPendingWrite = File.Exists(readyFilePath);
+            if (!hasPendingWrite)
                 return;
-
-            // Critical place, we can simulate an error while replacing the original file with
-            // the new content.
-            if ((_testSimulation != null) && _testSimulation.SimulateReplaceError)
-                throw new Exception(nameof(TestSimulation.SimulateReplaceError));
 
             // An unfinished writing operation exists (ready file still exists)
             string tempFilePath = GetTempFilePath(filePath);
-            File.Copy(tempFilePath, filePath, true);
-            if (!SameFileSize(tempFilePath, filePath))
+            if (FileExistsAndHasValidSize(tempFilePath))
             {
-                // The ready file will still exist, so no data loss
-                throw new UnfinishedAtomicFileWritingException(filePath);
-            }
+                // Critical place, we can simulate an error while replacing the original file with
+                // the new content.
+                if ((_testSimulation != null) && _testSimulation.SimulateReplaceError)
+                    throw new Exception(nameof(TestSimulation.SimulateReplaceError));
 
-            // Clean up ready-file after the target file has been copied error free
-            File.Delete(readyFilePath);
-            File.Delete(tempFilePath);
+                File.Copy(tempFilePath, filePath, true);
+
+                if (!FileExistsAndHasValidSize(filePath))
+                {
+                    // The ready file will still exist, so no data loss
+                    throw new UnfinishedAtomicFileWritingException(filePath);
+                }
+
+                // Clean up ready-file after the target file has been copied error free
+                TryDeleteFile(readyFilePath);
+                TryDeleteFile(tempFilePath);
+            }
+            else
+            {
+                // The temporary file is invalid and should never overwrite the intact file.
+                TryDeleteFile(readyFilePath);
+                TryDeleteFile(tempFilePath);
+            }
         }
 
         private static string GetTempFilePath(string filePath)
@@ -124,11 +141,29 @@ namespace SilentNotes.Workers
             return filePath + ".ready";
         }
 
-        private static bool SameFileSize(string filePath1, string filePath2)
+        private bool FileExistsAndHasValidSize(string filePath)
         {
-            long fileSize1 = new FileInfo(filePath1).Length;
-            long fileSize2 = new FileInfo(filePath2).Length;
-            return fileSize1 == fileSize2;
+            if (!File.Exists(filePath))
+                return false;
+
+            if (MinValidFileSize == 0)
+                return true;
+
+            long fileSize = new FileInfo(filePath).Length;
+            return fileSize >= MinValidFileSize;
+        }
+
+        private static bool TryDeleteFile(string filePath)
+        {
+            try
+            {
+                File.Delete(filePath);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         public class TestSimulation

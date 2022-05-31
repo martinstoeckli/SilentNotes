@@ -23,7 +23,7 @@ using SilentNotes.ViewModels;
 #line hidden
 
 
-[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.10.0.231")]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "17.1.0.324")]
 public partial class StopRazorView : StopRazorViewBase
 {
 
@@ -246,7 +246,25 @@ WriteLiteral("            ");
 
 #line default
 #line hidden
-WriteLiteral("\r\n        </div>\r\n    </div>\r\n</div></body>\r\n</html>");
+WriteLiteral("\r\n        </div>\r\n        <div>\r\n            <table");
+
+WriteLiteral(" class=\"my-3 table table-sm\"");
+
+WriteLiteral(">\r\n                <tr>\r\n                    <th");
+
+WriteLiteral(" class=\"\"");
+
+WriteLiteral(">");
+
+
+#line 52 "StopRazorView.cshtml"
+                            Write(Model.Language["version"]);
+
+
+#line default
+#line hidden
+WriteLiteral("</th>\r\n                    <td v-once>{{ VersionFmt }}</td>\r\n                </tr" +
+">\r\n            </table>\r\n        </div>\r\n    </div>\r\n</div></body>\r\n</html>");
 
 }
 }

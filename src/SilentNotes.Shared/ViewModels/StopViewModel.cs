@@ -17,6 +17,7 @@ namespace SilentNotes.ViewModels
     {
         private readonly IRepositoryStorageService _repositoryService;
         private readonly IFolderPickerService _folderPickerService;
+        private readonly IVersionService _versionService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StopViewModel"/> class.
@@ -27,12 +28,14 @@ namespace SilentNotes.ViewModels
             ISvgIconService svgIconService,
             IThemeService themeService,
             IBaseUrlService webviewBaseUrl,
+            IVersionService versionService,
             IRepositoryStorageService repositoryService,
             IFolderPickerService folderPickerService)
             : base(navigationService, languageService, svgIconService, themeService, webviewBaseUrl)
         {
             _repositoryService = repositoryService;
             _folderPickerService = folderPickerService;
+            _versionService = versionService;
             RecoverRepositoryCommand = new RelayCommand(RecoverRepository);
         }
 
@@ -56,6 +59,15 @@ namespace SilentNotes.ViewModels
                 await _folderPickerService.TrySaveFileToPickedFolder(
                     Config.RepositoryFileName, repositoryContent);
             }
+        }
+
+        /// <summary>
+        /// Gets the current version of the assembly/application
+        /// </summary>
+        [VueDataBinding(VueBindingMode.OneWayToView)]
+        public string VersionFmt
+        {
+            get { return _versionService.GetApplicationVersion(); }
         }
     }
 }

@@ -42,13 +42,6 @@ namespace SilentNotes.Services
         }
 
         /// <inheritdoc/>
-        public bool RepositoryExists()
-        {
-            string repositoryFilePath = Path.Combine(GetDirectoryPath(), Config.RepositoryFileName);
-            return _xmlFileService.Exists(repositoryFilePath);
-        }
-
-        /// <inheritdoc/>
         public RepositoryStorageLoadResult LoadRepositoryOrDefault(out NoteRepositoryModel repositoryModel)
         {
             if (_cachedRepository != null)
@@ -62,13 +55,19 @@ namespace SilentNotes.Services
             bool modelWasUpdated = false;
             try
             {
+                string xmlFilePath = Path.Combine(GetDirectoryPath(), Config.RepositoryFileName);
+
                 // A new repository is created only if it does not yet exist, we won't overwrite
                 // an invalid repository.
-                if (RepositoryExists())
+                if (_xmlFileService.Exists(xmlFilePath))
                 {
-                    string xmlFilePath = Path.Combine(GetDirectoryPath(), Config.RepositoryFileName);
                     if (!_xmlFileService.TryLoad(xmlFilePath, out XDocument xml))
-                        throw new Exception("Invalid XML");
+                    {
+                        if (!TryRecoverRepositoryFromLegacyWriter(_xmlFileService, xmlFilePath, out xml))
+                        {
+                            throw new Exception("Invalid XML");
+                        }
+                    }
 
                     result = RepositoryStorageLoadResult.SuccessfullyLoaded;
                     modelWasUpdated = _updater.Update(xml);
@@ -95,6 +94,38 @@ namespace SilentNotes.Services
                 TrySaveRepository(repositoryModel);
             _cachedRepository = repositoryModel;
             return result;
+        }
+
+        /// <summary>
+        /// This method should be removed in future, it tries to recover the repository, if Android
+        /// caused a 0 byte file by killing the process while writing, before the
+        /// <see cref="AtomicFileWriter"/> (v6.1.4) was able to handle this situation.
+        /// </summary>
+        private bool TryRecoverRepositoryFromLegacyWriter(IXmlFileService xmlFileService, string xmlFilePath, out XDocument xml)
+        {
+            bool result = false;
+            xml = null;
+            long minValidFileSize = 22; // 0 byte files are not accepted
+            if (FileExistsAndHasValidSize(xmlFilePath + ".old", minValidFileSize))
+            {
+                File.Copy(xmlFilePath + ".old", xmlFilePath, true);
+                result = _xmlFileService.TryLoad(xmlFilePath, out xml);
+            }
+            if (!result && FileExistsAndHasValidSize(xmlFilePath + ".new", minValidFileSize))
+            {
+                File.Copy(xmlFilePath + ".new", xmlFilePath, true);
+                result = _xmlFileService.TryLoad(xmlFilePath, out xml);
+            }
+            return result;
+        }
+
+        private static bool FileExistsAndHasValidSize(string filePath, long minValidFileSize)
+        {
+            if (!File.Exists(filePath))
+                return false;
+
+            long fileSize = new FileInfo(filePath).Length;
+            return fileSize >= minValidFileSize;
         }
 
         /// <inheritdoc/>
