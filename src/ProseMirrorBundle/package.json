@@ -18,11 +18,11 @@
     "@babel/core": "latest",
     "@babel/preset-env": "latest",
     "babel-loader": "latest",
-    "core-js": "^3",
-    "terser-webpack-plugin": "latest",
+    "core-js": "^3.22.8",
+    "terser-webpack-plugin": "^5.3.3",
     "ts-loader": "latest",
-    "typescript": "latest",
-    "webpack": "latest",
+    "typescript": "^4.7.3",
+    "webpack": "^5.73.0",
     "webpack-cli": "latest"
   },
   "dependencies": {
