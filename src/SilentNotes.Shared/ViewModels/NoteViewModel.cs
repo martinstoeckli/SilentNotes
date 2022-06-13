@@ -138,6 +138,11 @@ namespace SilentNotes.ViewModels
             }
         }
 
+        public string GetEscapedUnlockedHtmlContent()
+        {
+            return WebviewUtils.EscapeJavaScriptString(UnlockedHtmlContent);
+        }
+
         /// <summary>
         /// Gets the <see cref="UnlockedHtmlContent"/>, but very long notes are truncated, so they
         /// can be processed faster by the HTML view in an overview of notes.

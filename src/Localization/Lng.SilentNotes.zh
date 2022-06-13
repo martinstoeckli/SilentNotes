@@ -43,6 +43,7 @@ note_push_to_server 手动上传笔记
 tag_add 添加标签
 feedback_note_to_recycle 笔记已移至回收站，可以从那里恢复。
 note_pin 置顶笔记
+note_open_link Open link
 
 checklist_create_new 创建清单
 checklist_move_to_top 移动至顶部
@@ -50,6 +51,7 @@ checklist_move_up 上移
 checklist_move_down 下移
 checklist_move_to_bottom 移动至底部
 checklist_move_pending_to_top 将待办事项移至顶部
+checklist_sort_alphabetical Sort items alphabetically
 checklist_check_all 全部选中（完成）
 checklist_uncheck_all 全部取消选中（待办）
 checklist_disable_all 全部禁用

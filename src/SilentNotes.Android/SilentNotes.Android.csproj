@@ -184,14 +184,6 @@
     </AndroidAsset>
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\quill\quill.min.js">
-      <Link>Assets\Html\quill\quill.min.js</Link>
-    </AndroidAsset>
-    <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\quill\quill.snow.css">
-      <Link>Assets\Html\quill\quill.snow.css</Link>
-    </AndroidAsset>
-  </ItemGroup>
-  <ItemGroup>
     <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\cloud_service_dropbox.png">
       <Link>Assets\Html\cloud_service_dropbox.png</Link>
     </AndroidAsset>
@@ -302,16 +294,6 @@
     </AndroidAsset>
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\checklist.js">
-      <Link>Assets\Html\checklist.js</Link>
-    </AndroidAsset>
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\note-view.css">
-      <Link>Assets\Html\note-view.css</Link>
-    </AndroidAsset>
-  </ItemGroup>
-  <ItemGroup>
     <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\cloud_service_nextcloud.png">
       <Link>Assets\Html\cloud_service_nextcloud.png</Link>
     </AndroidAsset>
@@ -319,16 +301,6 @@
   <ItemGroup>
     <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\smarties.jpg">
       <Link>Assets\Html\smarties.jpg</Link>
-    </AndroidAsset>
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\quillsearchhighlighter.css">
-      <Link>Assets\Html\quillsearchhighlighter.css</Link>
-    </AndroidAsset>
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\quillsearchhighlighter.js">
-      <Link>Assets\Html\quillsearchhighlighter.js</Link>
     </AndroidAsset>
   </ItemGroup>
   <ItemGroup>
@@ -344,6 +316,11 @@
   <ItemGroup>
     <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\bootstrap-4-autocomplete.js">
       <Link>Assets\Html\bootstrap-4-autocomplete.js</Link>
+    </AndroidAsset>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\prose-mirror-bundle.js">
+      <Link>Assets\Html\prose-mirror-bundle.js</Link>
     </AndroidAsset>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />

@@ -43,6 +43,7 @@ note_push_to_server El ile not yükle
 tag_add Etiket ekle
 feedback_note_to_recycle Not geri dönüşüm kutusuna taşındı.
 note_pin Notu sabitle
+note_open_link Open link
 
 checklist_create_new Liste oluştur
 checklist_move_to_top En üste taşı
@@ -50,6 +51,7 @@ checklist_move_up Yukarı taşı
 checklist_move_down Aşağı taşı
 checklist_move_to_bottom En alta taşı
 checklist_move_pending_to_top İşaretlenmemiş maddeleri üste taşı
+checklist_sort_alphabetical Sort items alphabetically
 checklist_check_all Tümünü işaretle
 checklist_uncheck_all Tüm işaretleri kaldır
 checklist_disable_all Tümünü devre dışı bırak

@@ -43,6 +43,7 @@ note_push_to_server Manually upload note
 tag_add Add tag
 feedback_note_to_recycle The note has been moved to the recycle bin and can be restored from there.
 note_pin Pin note
+note_open_link Open link
 
 checklist_create_new Create new checklist
 checklist_move_to_top Move to top
@@ -50,6 +51,7 @@ checklist_move_up Move up
 checklist_move_down Move down
 checklist_move_to_bottom Move to bottom
 checklist_move_pending_to_top Move all pending items to top
+checklist_sort_alphabetical Sort items alphabetically
 checklist_check_all Check all (done)
 checklist_uncheck_all Uncheck all (pending)
 checklist_disable_all Disable all

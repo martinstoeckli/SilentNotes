@@ -103,7 +103,11 @@ namespace SilentNotes.Controllers
 
                 _viewModel.PropertyChanged += ViewmodelPropertyChangedEventHandler;
 
+                // The content div is excluded from Vue.js interpretation (v-pre), so we can include
+                // the notes directly into the page without performance issues.
                 string html = _viewService.GenerateHtml(_viewModel);
+                string htmlNotes = _viewContentService.GenerateHtml(_viewModel);
+                html = html.Replace("<ul id=\"note-repository\"></ul>", htmlNotes); // Replace node "note-repository" with content
                 View.LoadHtml(html);
             }
             else
@@ -155,9 +159,6 @@ namespace SilentNotes.Controllers
         private void ViewLoadedEventHandler(object sender, EventArgs e)
         {
             VueBindings.ViewLoadedEvent -= ViewLoadedEventHandler;
-
-            // Loading the notes not until here, makes the vue.js initialization faster.
-            ViewmodelPropertyChangedEventHandler(this, new PropertyChangedEventArgs("Notes"));
 
             if (!string.IsNullOrEmpty(_scrollToNote))
             {

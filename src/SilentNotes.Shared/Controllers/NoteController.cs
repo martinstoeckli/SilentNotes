@@ -4,6 +4,7 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
+using System.Text;
 using SilentNotes.Crypto;
 using SilentNotes.HtmlView;
 using SilentNotes.Models;
@@ -20,7 +21,6 @@ namespace SilentNotes.Controllers
     {
         private readonly IRepositoryStorageService _repositoryService;
         private NoteViewModel _viewModel;
-        private string _startingSearchFilter;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NoteController"/> class.
@@ -82,7 +82,7 @@ namespace SilentNotes.Controllers
             ISettingsService settingsService = Ioc.GetOrCreate<ISettingsService>();
             _repositoryService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepository);
 
-            variables.TryGetValue(ControllerParameters.SearchFilter, out _startingSearchFilter);
+            variables.TryGetValue(ControllerParameters.SearchFilter, out string startingSearchFilter);
 
             // Get the note from the repository
             Guid noteId = new Guid(variables[ControllerParameters.NoteId]);
@@ -109,8 +109,11 @@ namespace SilentNotes.Controllers
             {
                 new VueBindingShortcut("f", "ToggleSearchDialogCommand") { Ctrl = true },
                 new VueBindingShortcut(VueBindingShortcut.KeyEscape, "CloseSearchDialogCommand"),
-                new VueBindingShortcut(VueBindingShortcut.KeyHome, "ScrollToTop") { Ctrl = true },
-                new VueBindingShortcut(VueBindingShortcut.KeyEnd, "ScrollToBottom") { Ctrl = true },
+                new VueBindingShortcut(VueBindingShortcut.KeyHome, "ScrollToTopCommand") { Ctrl = true },
+                new VueBindingShortcut(VueBindingShortcut.KeyEnd, "ScrollToBottomCommand") { Ctrl = true },
+                new VueBindingShortcut("l", "ShowLinkDialog") { Ctrl = true },
+                new VueBindingShortcut("F3", "FindNextCommand"),
+                new VueBindingShortcut("F3", "FindPreviousCommand") { Shift = true },
             };
             VueBindings = new VueDataBinding(_viewModel, View, shortcuts);
             VueBindings.DeclareAdditionalVueData("PrettyTimeAgoVisible", "true");
@@ -125,10 +128,16 @@ namespace SilentNotes.Controllers
             VueBindings.DeclareAdditionalVueData("QuoteActive", "false");
             VueBindings.DeclareAdditionalVueData("UnderlineActive", "false");
             VueBindings.DeclareAdditionalVueData("StrikeActive", "false");
+            VueBindings.DeclareAdditionalVueData("OldLinkUrl", "''");
+            VueBindings.DeclareAdditionalVueData("NewLinkUrl", "''");
+            VueBindings.DeclareAdditionalVueData("SearchPattern", String.Format("'{0}'", startingSearchFilter));
             VueBindings.DeclareAdditionalVueMethod("ToggleSearchDialogCommand", "toggleSearchDialog();");
             VueBindings.DeclareAdditionalVueMethod("CloseSearchDialogCommand", "showSearchDialog(false);");
-            VueBindings.DeclareAdditionalVueMethod("ScrollToTop", "scrollToTop();");
-            VueBindings.DeclareAdditionalVueMethod("ScrollToBottom", "scrollToBottom();");
+            VueBindings.DeclareAdditionalVueMethod("ScrollToTopCommand", "ProseMirrorBundle.scrollToTop(editor);");
+            VueBindings.DeclareAdditionalVueMethod("ScrollToBottomCommand", "ProseMirrorBundle.scrollToBottom(editor);");
+            VueBindings.DeclareAdditionalVueMethod("ShowLinkDialog", "showLinkDialog();");
+            VueBindings.DeclareAdditionalVueMethod("FindNextCommand", "ProseMirrorBundle.selectNext(editor);");
+            VueBindings.DeclareAdditionalVueMethod("FindPreviousCommand", "ProseMirrorBundle.selectPrevious(editor);");
             VueBindings.UnhandledViewBindingEvent += UnhandledViewBindingEventHandler;
             VueBindings.ViewLoadedEvent += ViewLoadedEventHandler;
             _viewModel.VueDataBindingScript = VueBindings.BuildVueScript();
@@ -182,12 +191,18 @@ namespace SilentNotes.Controllers
             VueBindings.ViewLoadedEvent -= ViewLoadedEventHandler;
             View.Navigating += NavigatingEventHandler;
 
-            if (!string.IsNullOrEmpty(_startingSearchFilter))
-            {
-                string encodedSearchFilter = WebviewUtils.EscapeJavaScriptString(_startingSearchFilter);
-                string script = string.Format("setStartingSearchFilter('{0}');", encodedSearchFilter);
-                View.ExecuteJavaScript(script);
-            }
+            // To load the content in the view, the javascript would have to be written into the page,
+            // which would have to be interpreted by the WebView and would increase the size of the content.
+            // Loading it here avoids this performance issue.
+            string escapedContent = _viewModel.GetEscapedUnlockedHtmlContent();
+            StringBuilder script = new StringBuilder(escapedContent.Length + 20);
+            script.Append("setNoteContent('");
+            script.Append(escapedContent);
+            script.Append("');");
+            bool isNewNote = _viewModel.SearchableContent.Trim().Length == 0;
+            if (isNewNote)
+                script.Append("toggleFormat('heading', 1);");
+            View.ExecuteJavaScript(script.ToString());
         }
     }
 }

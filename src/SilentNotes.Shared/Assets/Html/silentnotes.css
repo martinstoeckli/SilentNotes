@@ -2,6 +2,7 @@ a { text-decoration: none; }
 ol, ul { list-style: none; margin:0; padding:0;}
 a, img, li, input { -webkit-tap-highlight-color: transparent; }
 input::-ms-clear { display: none; }
+[v-cloak] { display: none }
 
 html {
 	font-size: 14px;
@@ -378,6 +379,7 @@ a[data-tooltip]:hover:after {
 	width: 1.8em !important;
 	content: counter(sn-counter) ".";
 	text-align: right !important;
+	vertical-align: top;
 }
 
 .note-viewer ul {
@@ -398,6 +400,10 @@ a[data-tooltip]:hover:after {
 	white-space: nowrap;
 	content: '•';
 	text-align: right !important;
+	vertical-align: top;
+}
+.note-viewer li p {
+    display: inline-block;
 }
 
 .note-viewer pre {
@@ -423,21 +429,22 @@ a[data-tooltip]:hover:after {
 
 /* Checklist in editor. The content: url() is set in view to avoid external resource and to configure the color. */
 
-.detail-view.checklist .ql-editor p {
+.detail-view.checklist .ProseMirror p {
 	position: relative;
 	padding: 0.5em 3em 0.5em 3em;
 	border-radius: 4px;
 	pointer-events: none;
 }
-.detail-view.checklist .ql-editor p::before {
+.detail-view.checklist .ProseMirror p::before {
 	display: inline-block;
 	position: absolute;
 	left: 0.8em;
+	padding-right: 0.25em;
 	vertical-align: middle;
 	pointer-events: all;
 	cursor: pointer;
 }
-.detail-view.checklist .ql-editor p::after {
+.detail-view.checklist .ProseMirror p::after {
 	display: inline-block;
 	position: absolute;
 	bottom: 0;
@@ -447,13 +454,13 @@ a[data-tooltip]:hover:after {
 	cursor: pointer;
 	opacity: .65;
 }
-.detail-view.dark.checklist .ql-editor p::after {
+.detail-view.dark.checklist .ProseMirror p::after {
 	opacity: .7;
 }
-.detail-view.checklist .ql-editor p.disabled {
+.detail-view.checklist .ProseMirror p.disabled {
 	text-decoration: line-through;
 }
-.detail-view.checklist .ql-editor p.disabled::before {
+.detail-view.checklist .ProseMirror p.disabled::before {
 	opacity: .2;
 }
 
@@ -479,3 +486,50 @@ a[data-tooltip]:hover:after {
 .note-viewer.over-view.checklist p.disabled::before {
 	opacity: .2;
 }
+
+/* NoteView ChecklistView */
+div.ProseMirror {
+	border: none 0;
+	padding: 0.8em 1em;
+}
+div.ProseMirror:focus {
+    outline: none;
+}
+div.ProseMirror .search-result {
+  background: rgba(32, 144, 234, 0.5);
+}
+div.ProseMirror .search-result-selected {
+  background: rgba(32, 144, 234, 0.9);
+}
+
+.color-btn {
+	margin: 3px;
+	width: 75px;
+	height: 55px;
+	cursor: pointer;
+	border: 1px solid rgba(0, 0, 0, 0.8);
+	border-radius: 5px;
+	text-align: center;
+	font-size: 12px;
+}
+
+#search-dialog {
+	position: fixed;
+	display: inline-flex;
+	height: 42px;
+	align-items: center;
+	margin: 0;
+	padding: 4px 6px;
+	top: calc(42px + 0px);
+	right: 0;
+	z-index: 1020;
+	background-color: #323232; color: #fff; border-color: #323232;
+	border-bottom-left-radius: 4px;
+}
+.nav-filter 
+{
+	padding: 1px 4px;
+	border-radius: 4px;
+}
+.nav-filter input { border: none; }
+.nav-filter input:focus { outline: none; }

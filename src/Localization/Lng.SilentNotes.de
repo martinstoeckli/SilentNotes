@@ -43,6 +43,7 @@ note_push_to_server Notiz manuell hochladen
 tag_add Schlagwort hinzufügen
 feedback_note_to_recycle Die Notiz ist in den Papierkorb verschoben worden und kann von dort wieder hergestellt werden.
 note_pin Notiz anheften
+note_open_link Link öffnen
 
 checklist_create_new Neue Checkliste erstellen
 checklist_move_to_top Schiebe ganz nach oben
@@ -50,6 +51,7 @@ checklist_move_up Schiebe nach oben
 checklist_move_down Schiebe nach unten
 checklist_move_to_bottom Schiebe ganz nach unten
 checklist_move_pending_to_top Schiebe unerledigte nach oben
+checklist_sort_alphabetical Alphabetisch sortieren
 checklist_check_all Setze alle (erledigt)
 checklist_uncheck_all Leere alle (unerledigt)
 checklist_disable_all Deaktiviere alle
