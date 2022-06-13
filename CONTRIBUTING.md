@@ -52,9 +52,9 @@ often forgets about this setting after switching the "Startup Project".
 
 ### Building TypeScript code
 
-Usually building the TypeScript code is not necessary, because the pre compiled and minified code is committed in the file [prose-mirror-bundle.js](src\SilentNotes.Shared\Assets\Html\prose-mirror-bundle.js), which allows to create reproducable builds.
+Usually building the TypeScript code is not necessary, because the pre compiled and minified code is committed in the file [prose-mirror-bundle.js](src/SilentNotes.Shared/Assets/Html/prose-mirror-bundle.js), which allows to create reproducable builds.
 
-If you are working with the editor one has to build the code in `src/ProseMirrorBundle`. After installing a working npm environment go to this directory and run following commands, it will create and replace the prose-mirror-bundle.js file, which later becomes part of the application after doing a rebuild:
+If you are working with the ProseMirror editor, one has to build the code in `src/ProseMirrorBundle`. After installing a working npm environment go to this directory and run following commands, it will create and replace the prose-mirror-bundle.js file, which later becomes part of the application after doing a rebuild:
 
 ```
 call npm install
