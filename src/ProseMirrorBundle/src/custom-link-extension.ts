@@ -6,14 +6,17 @@ import { MarkType } from 'prosemirror-model'
 import { find } from 'linkifyjs'
 
 export const CustomLink = Link.extend({
+
+  // Newer versions than 2.0.0-beta.36 define a tag which is not compatible with WebViews
+  // of UWP or Android 6/7, so we redefine the tag to be more compatible.
+  parseHTML() {
+    return [
+      { tag: 'a[href]' },
+    ]
+  },
+
   addProseMirrorPlugins() {
     const plugins = []
-
-    // if (this.options.autolink) {
-    //    plugins.push(customAutolink({
-    //      type: this.type,
-    //    }))
-    // }
 
     plugins.push(customClickHandler({
       type: this.type,
