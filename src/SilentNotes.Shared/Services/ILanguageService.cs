@@ -33,5 +33,13 @@ namespace SilentNotes.Services
         /// <param name="args">Arguments used by the format function.</param>
         /// <returns>Localized formatted text resource.</returns>
         string LoadTextFmt(string id, params object[] args);
+
+        /// <summary>
+        /// Formats a DateTime value with the culture of the loaded language.
+        /// </summary>
+        /// <param name="dateTime">A date time value to format.</param>
+        /// <param name="format">See <see cref="DateTime.ToString(string)"/> for possible values.</param>
+        /// <returns>Formatted date time.</returns>
+        string FormatDateTime(DateTime dateTime, string format);
     }
 }

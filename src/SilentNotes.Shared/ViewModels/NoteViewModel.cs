@@ -6,7 +6,9 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
+using System.Text;
 using System.Windows.Input;
 using SilentNotes.Controllers;
 using SilentNotes.Crypto;
@@ -69,6 +71,7 @@ namespace SilentNotes.ViewModels
             GoBackCommand = new RelayCommand(GoBack);
             AddTagCommand = new RelayCommand<string>(AddTag);
             DeleteTagCommand = new RelayCommand<string>(DeleteTag);
+            ShowInfoCommand = new RelayCommand(ShowInfo);
 
             Model = noteFromRepository;
             _originalWasPinned = IsPinned;
@@ -133,7 +136,6 @@ namespace SilentNotes.ViewModels
                 {
                     MarkSearchableContentAsDirty();
                     Model.RefreshModifiedAt();
-                    OnPropertyChanged(nameof(PrettyTimeAgo));
                 }
             }
         }
@@ -568,14 +570,26 @@ namespace SilentNotes.ViewModels
             IsPinned = !IsPinned;
         }
 
-        [VueDataBinding(VueBindingMode.OneWayToView)]
-        public string PrettyTimeAgo
+        /// <summary>
+        /// Gets the command which shows the info dialog.
+        /// </summary>
+        [VueDataBinding(VueBindingMode.Command)]
+        public ICommand ShowInfoCommand { get; private set; }
+
+        private void ShowInfo()
         {
-            get
-            {
-                string prettyTime = GetOrCreateTimeAgo().PrettyPrint(Model.ModifiedAt, DateTime.UtcNow);
-                return Language.LoadTextFmt("modified_at", prettyTime);
-            }
+            StringBuilder sb = new StringBuilder();
+
+            string modificationDate = Language.FormatDateTime(Model.ModifiedAt.ToLocalTime(), "g");
+            sb.Append(Language.LoadTextFmt("modified_at", modificationDate));
+
+            string prettyTime = GetOrCreateTimeAgo().PrettyPrint(Model.ModifiedAt, DateTime.UtcNow);
+            sb.Append(" (").Append(prettyTime).AppendLine(")");
+
+            string creationDate = Language.FormatDateTime(Model.CreatedAt.ToLocalTime(), "d");
+            sb.Append(Language.LoadTextFmt("created_at", creationDate));
+
+            _feedbackService.ShowMessageAsync(sb.ToString(), Language.LoadText("note_show_info"), MessageBoxButtons.Ok, true);
         }
 
         private TimeAgo GetOrCreateTimeAgo()

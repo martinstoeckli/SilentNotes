@@ -207,8 +207,9 @@ body { background-color: transparent; }
                 }
             });
 
+            // The 'input' event can be delayed by Android IME composition, so we use 'keyup'.
             var searchPatternElement = document.getElementById('SearchPattern');
-            searchPatternElement.addEventListener('input', function (event) {
+            searchPatternElement.addEventListener('keyup', function (event) {
                 searchByFilter();
                 ProseMirrorBundle.selectNextWhileTyping(editor);
             });
@@ -260,8 +261,6 @@ body { background-color: transparent; }
                         @{WriteLiteral(Model.Icon["dots-vertical"]);}
                     </button>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navOverflowMenu">
-                        <div class="dropdown-item" data-toggle="modal" data-target="#colorPaletteModal">@{WriteLiteral(Model.Icon["palette"]);} @Model.Language["note_colors"]</div>
-                        <div class="dropdown-divider"></div>
                         <div class="dropdown-item" v-bind:class="{ active: Header1Active }" onclick="toggleFormat('heading', 1);">@{WriteLiteral(Model.Icon["format-header-1"]);} @Model.Language["note_header1"]</div>
                         <div class="dropdown-item" v-bind:class="{ active: Header2Active }" onclick="toggleFormat('heading', 2);">@{WriteLiteral(Model.Icon["format-header-2"]);} @Model.Language["note_header2"]</div>
                         <div class="dropdown-item" v-bind:class="{ active: Header3Active }" onclick="toggleFormat('heading', 3);">@{WriteLiteral(Model.Icon["format-header-3"]);} @Model.Language["note_header3"]</div>
@@ -272,6 +271,9 @@ body { background-color: transparent; }
                         <div class="dropdown-item" v-bind:class="{ active: CodeActive }" onclick="toggleFormat('codeblock');">@{WriteLiteral(Model.Icon["code-braces"]);} @Model.Language["note_code"]</div>
                         <div class="dropdown-item" v-bind:class="{ active: QuoteActive }" onclick="toggleFormat('blockquote');">@{WriteLiteral(Model.Icon["format-quote-close"]);} @Model.Language["note_quotation"]</div>
                         <div class="dropdown-item" onclick="showLinkDialog();">@{WriteLiteral(Model.Icon["link-variant"]);} @Model.Language["note_link"]</div>
+                        <div class="dropdown-divider"></div>
+                        <div class="dropdown-item" data-toggle="modal" data-target="#colorPaletteModal">@{WriteLiteral(Model.Icon["palette"]);} @Model.Language["note_colors"]</div>
+                        <div class="dropdown-item" v-on:click="ShowInfoCommand">@{WriteLiteral(Model.Icon["information"]);} @Model.Language["note_show_info"]</div>
                         @if (Model.ShowManualSynchronization)
                         {
                             <div class="dropdown-divider"></div>

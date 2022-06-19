@@ -13,6 +13,7 @@ weeks_ago před {0} týdny
 months_ago před {0} měsíci
 years_ago před {0} lety
 modified_at Změněno {0}
+created_at Created {0}
 
 error_loading_repository Nebylo možné přečíst poznámky. Aplikace byla zastavena, aby se zabránilo dalšímu poškození již existujících poznámek.
 recover_repository Obnovit poznámky do adresáře
@@ -44,6 +45,7 @@ tag_add Přidat štítek
 feedback_note_to_recycle Poznámka byla přesunuta do koše, odkud ji lze obnovit.
 note_pin Připnout poznámku
 note_open_link Open link
+note_show_info Note informations
 
 checklist_create_new Vytvořit zaškrtávací seznam
 checklist_move_to_top Přesunout na začátek

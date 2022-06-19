@@ -13,6 +13,7 @@ weeks_ago vor {0} Wochen
 months_ago vor {0} Monaten
 years_ago vor {0} Jahren
 modified_at Geändert {0}
+created_at Erstellt {0}
 
 error_loading_repository Die Notizen konnten nicht gelesen werden. Die Anwendung wurde gestoppt um bereits existierende Notizen nicht weiter zu beschädigen.
 recover_repository Sichere Notizenrepository in Verzeichnis
@@ -44,6 +45,7 @@ tag_add Schlagwort hinzufügen
 feedback_note_to_recycle Die Notiz ist in den Papierkorb verschoben worden und kann von dort wieder hergestellt werden.
 note_pin Notiz anheften
 note_open_link Link öffnen
+note_show_info Notizinformationen
 
 checklist_create_new Neue Checkliste erstellen
 checklist_move_to_top Schiebe ganz nach oben
