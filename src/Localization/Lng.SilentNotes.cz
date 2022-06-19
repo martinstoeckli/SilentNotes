@@ -57,6 +57,7 @@ checklist_sort_alphabetical Sort items alphabetically
 checklist_check_all Zaškrtnout vše (hotovo)
 checklist_uncheck_all Odškrtnout vše (nesplněno)
 checklist_disable_all Zakázat vše
+keep_screen_on Keep screen on for {0} min
 
 safe_new Vytvořit trezor
 safe_open Otevřít trezor

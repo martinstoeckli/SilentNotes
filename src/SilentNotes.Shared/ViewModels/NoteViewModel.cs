@@ -29,6 +29,7 @@ namespace SilentNotes.ViewModels
         private readonly IRepositoryStorageService _repositoryService;
         private readonly IFeedbackService _feedbackService;
         private readonly ISettingsService _settingsService;
+        private readonly IEnvironmentService _environmentService;
         private readonly ICryptor _cryptor;
         private readonly SafeListModel _safes;
         private readonly IList<string> _allDistinctAndSortedTags;
@@ -50,6 +51,7 @@ namespace SilentNotes.ViewModels
             IRepositoryStorageService repositoryService,
             IFeedbackService feedbackService,
             ISettingsService settingsService,
+            IEnvironmentService environmentService,
             ICryptor cryptor,
             SafeListModel safes,
             IList<string> allDistinctAndSortedTags,
@@ -59,6 +61,7 @@ namespace SilentNotes.ViewModels
             _repositoryService = repositoryService;
             _feedbackService = feedbackService;
             _settingsService = settingsService;
+            _environmentService = environmentService;
             _searchableTextConverter = searchableTextConverter;
             _cryptor = cryptor;
             _safes = safes;
@@ -72,10 +75,24 @@ namespace SilentNotes.ViewModels
             AddTagCommand = new RelayCommand<string>(AddTag);
             DeleteTagCommand = new RelayCommand<string>(DeleteTag);
             ShowInfoCommand = new RelayCommand(ShowInfo);
+            KeepScreenOnCommand = new RelayCommand(KeepScreenOn);
 
             Model = noteFromRepository;
             _originalWasPinned = IsPinned;
             _unlockedContent = IsInSafe ? UnlockIfSafeOpen(Model.HtmlContent) : Model.HtmlContent;
+        }
+
+        /// <inheritdoc/>
+        public override void OnClosing()
+        {
+            try
+            {
+                _environmentService?.KeepScreenOn?.Stop();
+            }
+            catch (Exception)
+            {
+            }
+            base.OnClosing();
         }
 
         /// <summary>
@@ -590,6 +607,33 @@ namespace SilentNotes.ViewModels
             sb.Append(Language.LoadTextFmt("created_at", creationDate));
 
             _feedbackService.ShowMessageAsync(sb.ToString(), Language.LoadText("note_show_info"), MessageBoxButtons.Ok, true);
+        }
+
+        /// <summary>
+        /// Gets the command which can keep the screen open, or prevents the app from going to sleep.
+        /// </summary>
+        [VueDataBinding(VueBindingMode.Command)]
+        public ICommand KeepScreenOnCommand { get; private set; }
+
+        private void KeepScreenOn()
+        {
+            int duration = 1;
+            _environmentService?.KeepScreenOn?.Start();
+            _environmentService?.KeepScreenOn?.StopAfter(new TimeSpan(0, duration, 0));
+        }
+
+        public bool CanKeepScreenOn
+        {
+            get { return _environmentService?.KeepScreenOn != null; }
+        }
+
+        public string KeepScreenOnTitle
+        {
+            get 
+            {
+                int duration = 2;
+                return Language.LoadTextFmt("keep_screen_on", duration);
+            }
         }
 
         private TimeAgo GetOrCreateTimeAgo()

@@ -57,6 +57,7 @@ checklist_sort_alphabetical Alphabetisch sortieren
 checklist_check_all Setze alle (erledigt)
 checklist_uncheck_all Leere alle (unerledigt)
 checklist_disable_all Deaktiviere alle
+keep_screen_on Anzeige offen halten für {0} min
 
 safe_new Tresor einrichten
 safe_open Tresor öffnen

@@ -57,6 +57,7 @@ checklist_sort_alphabetical Ögeleri alfabetik olarak sırala
 checklist_check_all Tümünü işaretle
 checklist_uncheck_all Tüm işaretleri kaldır
 checklist_disable_all Tümünü devre dışı bırak
+keep_screen_on Keep screen on for {0} min
 
 safe_new Kasa oluştur
 safe_open Kasayı aç

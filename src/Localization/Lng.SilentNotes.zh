@@ -57,6 +57,7 @@ checklist_sort_alphabetical Sort items alphabetically
 checklist_check_all 全部选中（完成）
 checklist_uncheck_all 全部取消选中（待办）
 checklist_disable_all 全部禁用
+keep_screen_on Keep screen on for {0} min
 
 safe_new 创建保险箱
 safe_open 打开保险箱

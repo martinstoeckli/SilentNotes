@@ -99,6 +99,7 @@ namespace SilentNotes.Controllers
                 _repositoryService,
                 Ioc.GetOrCreate<IFeedbackService>(),
                 settingsService,
+                Ioc.GetOrCreate<IEnvironmentService>(),
                 cryptor,
                 noteRepository.Safes,
                 noteRepository.CollectActiveTags(),
