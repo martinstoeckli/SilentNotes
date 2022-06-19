@@ -44,7 +44,7 @@ note_push_to_server El ile not yükle
 tag_add Etiket ekle
 feedback_note_to_recycle Not geri dönüşüm kutusuna taşındı.
 note_pin Notu sabitle
-note_open_link Open link
+note_open_link Bağlantıyı aç
 note_show_info Note informations
 
 checklist_create_new Liste oluştur
