@@ -13,6 +13,7 @@ weeks_ago {0} settimane fa
 months_ago {0} mesi fa
 years_ago {0} anni fa
 modified_at Modificato {0}
+created_at Created {0}
 
 error_loading_repository Impossibile leggere gli appunti. Il programma è stato fermato per evitare ulteriori danni agli appunti già esistenti.
 recover_repository Ripristina il deposito in una cartella
@@ -44,6 +45,7 @@ tag_add Aggiungi etichetta
 feedback_note_to_recycle L'appunto è stato spostato nel Cestino e può essere recuperato da lì.
 note_pin Appunto in evidenza
 note_open_link Open link
+note_show_info Note informations
 
 checklist_create_new Crea una nuova lista di controllo
 checklist_move_to_top Sposta in cima

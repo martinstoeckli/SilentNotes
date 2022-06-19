@@ -13,6 +13,7 @@ weeks_ago {0} hafta önce
 months_ago {0} ay önce
 years_ago {0} yıl önce
 modified_at {0} düzenlendi
+created_at Created {0}
 
 error_loading_repository Notlar açılamadı. Mevcut notların zarar görmemesi için uygulama durduruldu.
 recover_repository Dosya deposundaki notları dizine yükle
@@ -44,6 +45,7 @@ tag_add Etiket ekle
 feedback_note_to_recycle Not geri dönüşüm kutusuna taşındı.
 note_pin Notu sabitle
 note_open_link Bağlantıyı aç
+note_show_info Note informations
 
 checklist_create_new Liste oluştur
 checklist_move_to_top En üste taşı

@@ -13,6 +13,7 @@ weeks_ago {0} 星期前
 months_ago {0} 月前
 years_ago {0} 年前
 modified_at 修改 {0}
+created_at Created {0}
 
 error_loading_repository 无法阅读笔记。 应用程序已停止以避免进一步损坏现有笔记。
 recover_repository 将笔记存储库恢复到目录
@@ -44,6 +45,7 @@ tag_add 添加标签
 feedback_note_to_recycle 笔记已移至回收站，可以从那里恢复。
 note_pin 置顶笔记
 note_open_link Open link
+note_show_info Note informations
 
 checklist_create_new 创建清单
 checklist_move_to_top 移动至顶部

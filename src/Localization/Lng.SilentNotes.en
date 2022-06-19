@@ -13,6 +13,7 @@ weeks_ago {0} weeks ago
 months_ago {0} month ago
 years_ago {0} years ago
 modified_at Modified {0}
+created_at Created {0}
 
 error_loading_repository Could not read the notes. The application was stopped, to avoid further damage of already existing notes.
 recover_repository Recover note repository to directory
@@ -44,6 +45,7 @@ tag_add Add tag
 feedback_note_to_recycle The note has been moved to the recycle bin and can be restored from there.
 note_pin Pin note
 note_open_link Open link
+note_show_info Note informations
 
 checklist_create_new Create new checklist
 checklist_move_to_top Move to top

@@ -181,8 +181,9 @@ div.dark .detail-view.checklist .ProseMirror p::after { content: @{WriteLiteral(
             @* // For debugging purposes, get the complete HTML in NoteController.ShowInView().
             editor.commands.setContent('@{WriteLiteral(Model.GetEscapedUnlockedHtmlContent());}'); *@
 
+            // The 'input' event can be delayed for IME composition.
             var searchPatternElement = document.getElementById('SearchPattern');
-            searchPatternElement.addEventListener('input', function (event) {
+            searchPatternElement.addEventListener('keyup', function (event) {
                 searchByFilter();
                 ProseMirrorBundle.selectNextWhileTyping(editor);
             });
@@ -230,8 +231,6 @@ div.dark .detail-view.checklist .ProseMirror p::after { content: @{WriteLiteral(
                     @{WriteLiteral(Model.Icon["dots-vertical"]);}
                 </button>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navOverflowMenu">
-                    <div class="dropdown-item" data-toggle="modal" data-target="#colorPaletteModal">@{WriteLiteral(Model.Icon["palette"]);} @Model.Language["note_colors"]</div>
-                    <div class="dropdown-divider"></div>
                     <div class="dropdown-item" onclick="bundleViewModelUpdates(function () {ProseMirrorBundle.sortChecklistPendingToTop(editor)}); return false;">@{WriteLiteral(Model.Icon["sort-bool-descending-variant"]);} @Model.Language["checklist_move_pending_to_top"]</div>
                     <div class="dropdown-item" onclick="bundleViewModelUpdates(function () {ProseMirrorBundle.sortChecklistAlphabetical(editor)}); return false;">@{WriteLiteral(Model.Icon["sort-alphabetical-ascending"]);} @Model.Language["checklist_sort_alphabetical"]</div>
                     <div class="dropdown-divider"></div>
@@ -241,6 +240,9 @@ div.dark .detail-view.checklist .ProseMirror p::after { content: @{WriteLiteral(
                     <div class="dropdown-divider"></div>
                     <div class="dropdown-item" v-bind:class="{ active: Header1Active }" onclick="toggleFormat('heading', 1);">@{WriteLiteral(Model.Icon["format-header-1"]);} @Model.Language["note_header1"]</div>
                     <div class="dropdown-item" v-bind:class="{ active: Header2Active }" onclick="toggleFormat('heading', 2);">@{WriteLiteral(Model.Icon["format-header-2"]);} @Model.Language["note_header2"]</div>
+                    <div class="dropdown-divider"></div>
+                    <div class="dropdown-item" data-toggle="modal" data-target="#colorPaletteModal">@{WriteLiteral(Model.Icon["palette"]);} @Model.Language["note_colors"]</div>
+                    <div class="dropdown-item" v-on:click="ShowInfoCommand">@{WriteLiteral(Model.Icon["information"]);} @Model.Language["note_show_info"]</div>
                     @if (Model.ShowManualSynchronization)
                     {
                         <div class="dropdown-divider"></div>

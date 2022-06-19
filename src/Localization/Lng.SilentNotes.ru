@@ -13,6 +13,7 @@ weeks_ago {0} н. тому
 months_ago {0} м. тому
 years_ago {0} г. тому
 modified_at Изменено {0}
+created_at Created {0}
 
 error_loading_repository Не удалось прочитать заметки. Приложение было остановлено, чтобы избежать дальнейшего повреждения уже существующих заметок.
 recover_repository Восстановить хранилище заметок в каталог
@@ -44,6 +45,7 @@ tag_add Ярлык
 feedback_note_to_recycle Заметка перемещена в корзину и может быть восстановлена оттуда.
 note_pin Закрепить заметку
 note_open_link Open link
+note_show_info Note informations
 
 checklist_create_new Создать новый чек-лист
 checklist_move_to_top Переместить в начало

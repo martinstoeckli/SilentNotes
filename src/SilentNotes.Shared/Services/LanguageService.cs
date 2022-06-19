@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -80,6 +81,21 @@ namespace SilentNotes.Services
             {
                 return text;
             }
+        }
+
+        /// <inheritdoc/>
+        public string FormatDateTime(DateTime dateTime, string format)
+        {
+            CultureInfo culture;
+            try
+            {
+                culture = CultureInfo.GetCultureInfo(_languageCode);
+            }
+            catch (Exception)
+            {
+                culture = CultureInfo.InvariantCulture;
+            }
+            return dateTime.ToString(format, culture);
         }
 
         private bool LazyLoadTextResources()
