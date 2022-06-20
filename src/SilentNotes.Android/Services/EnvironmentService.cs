@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
 using Android.Content.Res;
+using Android.OS;
 using Android.Views;
 using SilentNotes.Services;
 
@@ -54,34 +55,62 @@ namespace SilentNotes.Android.Services
         /// <inheritdoc/>
         void IKeepScreenOn.Start()
         {
-            _rootActivity.Window.AddFlags(WindowManagerFlags.KeepScreenOn);
+            _rootActivity.RunOnUiThread(() =>
+            {
+                _rootActivity.Window.AddFlags(WindowManagerFlags.KeepScreenOn);
+                OnStateChanged(true);
+            });
         }
 
         /// <inheritdoc/>
         void IKeepScreenOn.Stop()
         {
-            _cancellationTokenSource?.Cancel();
+            var cancellationTokenSource = _cancellationTokenSource;
             _cancellationTokenSource = null;
-            _rootActivity.Window.ClearFlags(WindowManagerFlags.KeepScreenOn);
+
+            // If a timer is active, deactivate it.
+            cancellationTokenSource?.Cancel();
+
+            _rootActivity.RunOnUiThread(() =>
+            {
+                _rootActivity.Window.ClearFlags(WindowManagerFlags.KeepScreenOn);
+                OnStateChanged(false);
+            });
         }
 
         /// <inheritdoc/>
         void IKeepScreenOn.StopAfter(System.TimeSpan duration)
         {
-            // If a timer is already active, deactivate it.
-            _cancellationTokenSource?.Cancel();
+            var cancellationTokenSource = _cancellationTokenSource;
             _cancellationTokenSource = null;
 
-            // Create (renew) timer
+            // If a timer is already active, deactivate it.
+            cancellationTokenSource?.Cancel();
+
+            // Start or renew the timer
             _cancellationTokenSource = new CancellationTokenSource();
             CancellationToken token = _cancellationTokenSource.Token;
-
             Task.Delay(duration, token).ContinueWith(_ =>
             {
                 _cancellationTokenSource = null;
-                if (!token.IsCancellationRequested)
-                    KeepScreenOn.Stop();
+                if (token.IsCancellationRequested)
+                    return;
+
+                // Timer was not cancelled, so the KeepScreenOn should be stopped.
+                _rootActivity.RunOnUiThread(() =>
+                {
+                    _rootActivity.Window.ClearFlags(WindowManagerFlags.KeepScreenOn); // must be called on UI thread
+                    OnStateChanged(false);
+                });
             });
+        }
+
+        /// <inheritdoc/>
+        public event System.EventHandler<bool> StateChanged;
+
+        private void OnStateChanged(bool isStarted)
+        {
+            StateChanged?.Invoke(this, isStarted);
         }
     }
 }

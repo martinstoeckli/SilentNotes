@@ -58,6 +58,7 @@ checklist_check_all Отметить все (готово)
 checklist_uncheck_all Снять отметки со всех (ожидание)
 checklist_disable_all Отключить все
 keep_screen_on Keep screen on for {0} min
+keep_screen_on_duration Duration of "keep screen on" 🕑 {0} min
 
 safe_new Создать сейф
 safe_open Открыть сейф

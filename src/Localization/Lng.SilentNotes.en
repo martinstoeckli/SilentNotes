@@ -58,6 +58,7 @@ checklist_check_all Check all (done)
 checklist_uncheck_all Uncheck all (pending)
 checklist_disable_all Disable all
 keep_screen_on Keep screen on for {0} min
+keep_screen_on_duration Duration of "keep screen on" 🕑 {0} min
 
 safe_new Create safe
 safe_open Open safe

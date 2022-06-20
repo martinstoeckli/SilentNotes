@@ -851,13 +851,15 @@ WriteLiteral("                        <div");
 
 WriteLiteral(" class=\"dropdown-item\"");
 
+WriteLiteral(" v-bind:class=\"{ active: KeepScreenOnActive }\"");
+
 WriteLiteral(" v-on:click=\"KeepScreenOnCommand\"");
 
 WriteLiteral(">");
 
 
 #line 247 "ChecklistRazorView.cshtml"
-                                                                                      WriteLiteral(Model.Icon["alarm-plus"]);
+                                                                                                                                    WriteLiteral(Model.Icon["alarm-plus"]);
 
 #line default
 #line hidden
@@ -865,7 +867,7 @@ WriteLiteral(" ");
 
 
 #line 247 "ChecklistRazorView.cshtml"
-                                                                                                                          Write(Model.KeepScreenOnTitle);
+                                                                                                                                                                        Write(Model.KeepScreenOnTitle);
 
 
 #line default

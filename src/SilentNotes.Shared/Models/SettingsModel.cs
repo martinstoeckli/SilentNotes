@@ -41,6 +41,7 @@ namespace SilentNotes.Models
             NoteMaxHeightScale = 1.0;
             UseColorForAllNotesInDarkMode = false;
             ColorForAllNotesInDarkModeHex = "#323232";
+            KeepScreenUpDuration = 15;
         }
 
         /// <summary>
@@ -131,6 +132,12 @@ namespace SilentNotes.Models
         /// </summary>
         [XmlElement("note_max_height_scale")]
         public double NoteMaxHeightScale { get; set; }
+
+        /// <summary>
+        /// Gets or sets the duration [min] of the function "KeepScreenOn".
+        /// </summary>
+        [XmlElement("keep_screen_up_duration")]
+        public int KeepScreenUpDuration { get; set; }
 
         /// <summary>
         /// Gets or sets the place where a new note will be inserted by default.

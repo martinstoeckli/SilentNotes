@@ -31,5 +31,10 @@ namespace SilentNotes.Services
         /// </summary>
         /// <param name="duration">Time span after which the keep screen off is stopped automatically.</param>
         void StopAfter(TimeSpan duration);
+
+        /// <summary>
+        /// This event will be called whenever the state changes.
+        /// </summary>
+        event EventHandler<bool> StateChanged;
     }
 }
