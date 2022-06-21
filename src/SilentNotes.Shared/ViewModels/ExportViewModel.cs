@@ -138,7 +138,7 @@ namespace SilentNotes.ViewModels
                     List<string> allTags = repository.CollectActiveTags();
                     foreach (NoteModel note in EnumerateNotesToExport(repository, ExportUnprotectedNotes, ExportProtectedNotes))
                     {
-                        NoteViewModel noteViewModel = new NoteViewModel(null, null, null, null, null, null, null, null, null, _noteCryptor, repository.Safes, allTags, note);
+                        NoteViewModel noteViewModel = new NoteViewModel(null, null, null, null, null, null, null, null, null, null, _noteCryptor, repository.Safes, allTags, note);
 
                         string filename = CreateFilenameForNote(note.Id);
                         string html = AddHtmlSkeleton(note.Id, noteViewModel.UnlockedHtmlContent);

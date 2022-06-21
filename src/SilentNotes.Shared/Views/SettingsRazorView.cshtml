@@ -69,16 +69,9 @@
     <div id="content" class="container-fluid p-4">
         <svg class="background-icon" width='24' height='24' viewBox='0 0 24 24'><use xlink:href="#svg-settings" /></svg>
 
-        <h2>@Model.Language["gui"]</h2>
+        <h2>@Model.Language["gui_texture"]</h2>
         <form class="mb-4 col-md-9 col-lg-6">
             <div class="form-row form-group">
-                <label class="col-form-label" for="FontSizeStep">@Model.Language["gui_font_size"]</label>
-                <div class="form-control">
-                    <input class="custom-range col-sm-6" type="range" id="FontSizeStep" v-model="FontSizeStep" min="-3" max="3" step="1">
-                </div>
-            </div>
-            <div class="form-row form-group">
-                <label class="col-form-label" for="Theme">@Model.Language["gui_texture"]</label>
                 <div id="theme-control" class="form-control">
                     <div id="Theme" class="dropdown d-flex">
                         <button class="theme-preview btn h-100 flex-fill" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-bind:style="{ backgroundImage: 'url(' + SelectedThemeImage + ')' }">
@@ -137,7 +130,16 @@
                     </div>
                 </div>
             </div>
+        </form>
 
+        <h2>@Model.Language["gui"]</h2>
+        <form class="mb-4 col-md-9 col-lg-6">
+            <div class="form-row form-group">
+                <label class="col-form-label" for="FontSizeStep">@Model.Language["gui_font_size"]</label>
+                <div class="form-control">
+                    <input class="custom-range col-sm-6" type="range" id="FontSizeStep" v-model="FontSizeStep" min="-3" max="3" step="1">
+                </div>
+            </div>
             <div class="form-row form-group">
                 <label class="col-form-label" for="NoteMaxHeightStep">@Model.Language["gui_note_max_size"]</label>
                 <div class="form-control">
@@ -161,6 +163,16 @@
                     </div>
                 </div>
             </div>
+
+            @if (Model.CanKeepScreenOn)
+            {
+                <div class="form-row form-group">
+                    <label class="col-form-label" for="KeepScreenOpenStep">{{KeepScreenOnDurationTitle}}</label>
+                    <div class="form-control">
+                        <input class="custom-range col-sm-6" type="range" id="KeepScreenOpenStep" v-model="KeepScreenOnDuration" min="1" max="30" step="1">
+                    </div>
+                </div>
+            }
         </form>
 
         <h2>@Model.Language["sync"]</h2>

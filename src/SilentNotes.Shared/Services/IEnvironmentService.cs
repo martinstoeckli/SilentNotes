@@ -23,6 +23,13 @@ namespace SilentNotes.Services
         /// prefer a dark theme.
         /// </summary>
         bool InDarkMode { get; }
+
+        /// <summary>
+        /// Gets an interface which can be used to keep the screen on, or prevents that an app is
+        /// going to sleep. This property can be null, if the OS doesn't support/need this
+        /// functionality.
+        /// </summary>
+        IKeepScreenOn KeepScreenOn { get; }
     }
 
     /// <summary>

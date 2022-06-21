@@ -273,6 +273,10 @@ body { background-color: transparent; }
                         <div class="dropdown-item" onclick="showLinkDialog();">@{WriteLiteral(Model.Icon["link-variant"]);} @Model.Language["note_link"]</div>
                         <div class="dropdown-divider"></div>
                         <div class="dropdown-item" data-toggle="modal" data-target="#colorPaletteModal">@{WriteLiteral(Model.Icon["palette"]);} @Model.Language["note_colors"]</div>
+                        @if (Model.CanKeepScreenOn)
+                        {
+                            <div class="dropdown-item" v-bind:class="{ active: KeepScreenOnActive }" v-on:click="KeepScreenOnCommand">@{WriteLiteral(Model.Icon["alarm-plus"]);} @Model.KeepScreenOnTitle</div>
+                        }
                         <div class="dropdown-item" v-on:click="ShowInfoCommand">@{WriteLiteral(Model.Icon["information"]);} @Model.Language["note_show_info"]</div>
                         @if (Model.ShowManualSynchronization)
                         {

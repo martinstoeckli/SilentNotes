@@ -30,6 +30,7 @@ namespace SilentNotes.ViewModels
         public const int ReferenceNoteMaxSize = 160;
         public const int ReferenceNoteMinSize = 115;
         private readonly ISettingsService _settingsService;
+        private readonly IEnvironmentService _environmentService;
         private readonly IStoryBoardService _storyBoardService;
         private readonly IFeedbackService _feedbackService;
         private readonly IFilePickerService _filePickerService;
@@ -47,6 +48,7 @@ namespace SilentNotes.ViewModels
             IThemeService themeService,
             IBaseUrlService webviewBaseUrl,
             ISettingsService settingsService,
+            IEnvironmentService environmentService,
             IStoryBoardService storyBoardService,
             IFeedbackService feedbackService,
             ICloudStorageClientFactory cloudStorageClientFactory,
@@ -54,6 +56,7 @@ namespace SilentNotes.ViewModels
             : base(navigationService, languageService, svgIconService, themeService, webviewBaseUrl)
         {
             _settingsService = settingsService;
+            _environmentService = environmentService;
             _storyBoardService = storyBoardService;
             _feedbackService = feedbackService;
             _cloudStorageClientFactory = cloudStorageClientFactory;
@@ -123,6 +126,41 @@ namespace SilentNotes.ViewModels
                     value,
                     true);
             }
+        }
+
+        /// <summary>
+        /// Gets or sets the <see cref="NoteMaxHeight"/> expressed for the -4...+4 slider.
+        /// </summary>
+        [VueDataBinding(VueBindingMode.TwoWay)]
+        public int KeepScreenOnDuration
+        {
+            get
+            {
+                return Model.KeepScreenUpDuration;
+            }
+
+            set
+            {
+                if (ChangePropertyIndirect<int>(
+                    () => Model.KeepScreenUpDuration,
+                    (v) => Model.KeepScreenUpDuration = v,
+                    value,
+                    true))
+                {
+                    OnPropertyChanged(nameof(KeepScreenOnDurationTitle));
+                }
+            }
+        }
+
+        public bool CanKeepScreenOn
+        {
+            get { return _environmentService?.KeepScreenOn != null; }
+        }
+
+        [VueDataBinding(VueBindingMode.OneWayToView)]
+        public string KeepScreenOnDurationTitle
+        {
+            get { return Language.LoadTextFmt("keep_screen_on_duration", KeepScreenOnDuration); }
         }
 
         /// <summary>

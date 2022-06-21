@@ -43,6 +43,7 @@ namespace SilentNotes.Controllers
                 Ioc.GetOrCreate<IThemeService>(),
                 Ioc.GetOrCreate<IBaseUrlService>(),
                 Ioc.GetOrCreate<ISettingsService>(),
+                Ioc.GetOrCreate<IEnvironmentService>(),
                 Ioc.GetOrCreate<IStoryBoardService>(),
                 Ioc.GetOrCreate<IFeedbackService>(),
                 Ioc.GetOrCreate<ICloudStorageClientFactory>(),

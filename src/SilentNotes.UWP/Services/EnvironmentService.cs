@@ -31,5 +31,11 @@ namespace SilentNotes.UWP.Services
 
         /// <inheritdoc/>
         public bool InDarkMode { get; }
+
+        /// <inheritdoc/>
+        public IKeepScreenOn KeepScreenOn
+        {
+            get { return null; }
+        }
     }
 }
