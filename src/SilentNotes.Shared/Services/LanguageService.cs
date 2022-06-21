@@ -168,22 +168,23 @@ namespace SilentNotes.Services
 
         /// <summary>
         /// Splits a line from a file in two parts, id and text. The id is expected at the begin of
-        /// the line, separated by a space. It's allowed to have none or multiple whitespace
-        /// characters instead of the recommended single space.
+        /// the line, separated by a '='. It's allowed to have none or multiple whitespace
+        /// characters around the separator.
         /// </summary>
         /// <param name="line">Line form resource file.</param>
         /// <param name="key">Retreives the found id.</param>
         /// <param name="text">Retreives the found text.</param>
         /// <returns>Returns true if line was valid, otherwise false.</returns>
-        internal static bool TrySplitLine(string line, out string key, out string text)
+        private static bool TrySplitLine(string line, out string key, out string text)
         {
             key = null;
             text = null;
-            if (string.IsNullOrWhiteSpace(line))
+            if (line == null)
                 return false;
 
             line = line.Trim();
-            int delimiterPos = line.IndexOf(' ');
+
+            int delimiterPos = line.IndexOf('=');
             if (delimiterPos < 1)
                 return false;
 

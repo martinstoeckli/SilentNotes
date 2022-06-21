@@ -9,6 +9,15 @@ namespace SilentNotes.Services
 {
     /// <summary>
     /// The language service can load localized text resources.
+    /// The resources are expected to be of the format:
+    /// <example>
+    /// key1=value1
+    /// key2 = value2 with\ntwo lines.
+    /// </example>
+    /// "key" and "value" are delimited by a '=' character.
+    /// Whitespace characters around the delimiter are removed.
+    /// Lines beginning with the sequence '//' are recognized as comments and ignored.
+    /// The sequence '\n' in a value are replaced with a CrLf.
     /// </summary>
     public interface ILanguageService
     {
