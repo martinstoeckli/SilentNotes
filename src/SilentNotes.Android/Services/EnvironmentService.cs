@@ -90,18 +90,20 @@ namespace SilentNotes.Android.Services
             // Start or renew the timer
             _cancellationTokenSource = new CancellationTokenSource();
             CancellationToken token = _cancellationTokenSource.Token;
-            Task.Delay(duration, token).ContinueWith(_ =>
-            {
-                _cancellationTokenSource = null;
-                if (token.IsCancellationRequested)
-                    return;
+            Task.Delay(duration, token).ContinueWith(_ => { StopAfterTimeout(token); });
+        }
 
-                // Timer was not cancelled, so the KeepScreenOn should be stopped.
-                _rootActivity.RunOnUiThread(() =>
-                {
-                    _rootActivity.Window.ClearFlags(WindowManagerFlags.KeepScreenOn); // must be called on UI thread
-                    OnStateChanged(false);
-                });
+        private void StopAfterTimeout(CancellationToken token)
+        {
+            _cancellationTokenSource = null;
+            if (token.IsCancellationRequested)
+                return;
+
+            // Timer was not cancelled, so the KeepScreenOn should be stopped.
+            _rootActivity.RunOnUiThread(() =>
+            {
+                _rootActivity.Window.ClearFlags(WindowManagerFlags.KeepScreenOn); // must be called on UI thread
+                OnStateChanged(false);
             });
         }
 

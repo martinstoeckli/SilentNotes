@@ -10,7 +10,7 @@ using System.Text;
 namespace SilentNotes.Services
 {
     /// <summary>
-    /// Allows to keep the screen on, or prevents the app from going to sleep.
+    /// Allows to keep the screen on (prevents the app from going to sleep).
     /// </summary>
     public interface IKeepScreenOn
     {
