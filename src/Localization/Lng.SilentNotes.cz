@@ -13,7 +13,7 @@ weeks_ago = před {0} týdny
 months_ago = před {0} měsíci
 years_ago = před {0} lety
 modified_at = Změněno {0}
-created_at = Created {0}
+created_at = Vytvořeno {0}
 
 error_loading_repository = Nebylo možné přečíst poznámky. Aplikace byla zastavena, aby se zabránilo dalšímu poškození již existujících poznámek.
 recover_repository = Obnovit poznámky do adresáře
@@ -44,8 +44,8 @@ note_push_to_server = Ručně nahrát poznámku
 tag_add = Přidat štítek
 feedback_note_to_recycle = Poznámka byla přesunuta do koše, odkud ji lze obnovit.
 note_pin = Připnout poznámku
-note_open_link = Open link
-note_show_info = Note informations
+note_open_link = Otevřít odkaz
+note_show_info = Informace o poznámce
 
 checklist_create_new = Vytvořit zaškrtávací seznam
 checklist_move_to_top = Přesunout na začátek
@@ -53,12 +53,12 @@ checklist_move_up = Posunout nahoru
 checklist_move_down = Posunout dolu
 checklist_move_to_bottom = Přesunout na konec
 checklist_move_pending_to_top = Přesunout všechny nesplněné položky na začátek
-checklist_sort_alphabetical = Sort items alphabetically
+checklist_sort_alphabetical = Seřadit položky abecedně
 checklist_check_all = Zaškrtnout vše (hotovo)
 checklist_uncheck_all = Odškrtnout vše (nesplněno)
 checklist_disable_all = Zakázat vše
-keep_screen_on = Keep screen on for {0} min
-keep_screen_on_duration = Duration of "keep screen on" 🕑 {0} min
+keep_screen_on = Nevypínat obrazovku {0} min
+keep_screen_on_duration = Doba trvání "Nevypínat obrazovku" 🕑 {0} min
 
 safe_new = Vytvořit trezor
 safe_open = Otevřít trezor
