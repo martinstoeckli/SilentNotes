@@ -12,8 +12,8 @@ days_ago = {0} 天前
 weeks_ago = {0} 星期前
 months_ago = {0} 月前
 years_ago = {0} 年前
-modified_at = 修改 {0}
-created_at = Created {0}
+modified_at = 修改于 {0}
+created_at = 创建于 {0}
 
 error_loading_repository = 无法阅读笔记。 应用程序已停止以避免进一步损坏现有笔记。
 recover_repository = 将笔记存储库恢复到目录
@@ -44,8 +44,8 @@ note_push_to_server = 手动上传笔记
 tag_add = 添加标签
 feedback_note_to_recycle = 笔记已移至回收站，可以从那里恢复。
 note_pin = 置顶笔记
-note_open_link = Open link
-note_show_info = Note informations
+note_open_link = 打开链接
+note_show_info = 笔记信息
 
 checklist_create_new = 创建清单
 checklist_move_to_top = 移动至顶部
@@ -53,12 +53,12 @@ checklist_move_up = 上移
 checklist_move_down = 下移
 checklist_move_to_bottom = 移动至底部
 checklist_move_pending_to_top = 将待办事项移至顶部
-checklist_sort_alphabetical = Sort items alphabetically
+checklist_sort_alphabetical = 按字母顺序排列
 checklist_check_all = 全部选中（完成）
 checklist_uncheck_all = 全部取消选中（待办）
 checklist_disable_all = 全部禁用
-keep_screen_on = Keep screen on for {0} min
-keep_screen_on_duration = Duration of "keep screen on" 🕑 {0} min
+keep_screen_on = 保持屏幕亮起 {0} 分钟
+keep_screen_on_duration = “屏幕亮起”时长 🕑 {0} 分钟
 
 safe_new = 创建保险箱
 safe_open = 打开保险箱
