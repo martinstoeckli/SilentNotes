@@ -35,6 +35,7 @@ namespace SilentNotes.Android
         Theme = "@style/MainTheme.SplashScreen",
         MainLauncher = true,
         LaunchMode = LaunchMode.SingleTask,
+        Exported = true,
         ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
     public class MainActivity : Activity, IHtmlView
     {
