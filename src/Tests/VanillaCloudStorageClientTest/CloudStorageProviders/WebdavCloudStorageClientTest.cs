@@ -183,6 +183,14 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
             Assert.AreEqual("unittest.dat", fileNames[0]);
         }
 
+        [Test]
+        public void ParseKoofrNetResponseCorrectly()
+        {
+            List<string> fileNames = WebdavCloudStorageClient.ParseWebdavResponseForFileNames(GetKoofrNetResponse());
+            Assert.AreEqual(2, fileNames.Count);
+            Assert.AreEqual("silentnotes_repository.silentnotes", fileNames[0]);
+            Assert.AreEqual("unittest.dat", fileNames[1]);
+        }
 
         private string GetWebdavFileListResponse()
         {
@@ -523,6 +531,46 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
         <D:resourcetype>
           <D:collection />
         </D:resourcetype>
+      </D:prop>
+      <D:status>HTTP/1.1 200 OK</D:status>
+    </D:propstat>
+  </D:response>
+</D:multistatus>";
+            using (TextReader rextReader = new StringReader(response))
+            {
+                return XDocument.Load(rextReader);
+            }
+        }
+
+        private XDocument GetKoofrNetResponse()
+        {
+            string response = @"
+<D:multistatus xmlns:D='DAV:'>
+  <D:response>
+    <D:href>/dav/Koofr/SilentNotes</D:href>
+    <D:propstat>
+      <D:prop>
+        <D:resourcetype>
+          <D:collection xmlns:D='DAV:' />
+        </D:resourcetype>
+      </D:prop>
+      <D:status>HTTP/1.1 200 OK</D:status>
+    </D:propstat>
+  </D:response>
+  <D:response>
+    <D:href>/dav/Koofr/SilentNotes/silentnotes_repository.silentnotes</D:href>
+    <D:propstat>
+      <D:prop>
+        <D:resourcetype></D:resourcetype>
+      </D:prop>
+      <D:status>HTTP/1.1 200 OK</D:status>
+    </D:propstat>
+  </D:response>
+  <D:response>
+    <D:href>/dav/Koofr/SilentNotes/unittest.dat</D:href>
+    <D:propstat>
+      <D:prop>
+        <D:resourcetype></D:resourcetype>
       </D:prop>
       <D:status>HTTP/1.1 200 OK</D:status>
     </D:propstat>
