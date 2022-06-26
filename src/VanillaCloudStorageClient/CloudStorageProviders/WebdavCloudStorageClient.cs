@@ -145,7 +145,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
                     .FirstOrDefault();
 
                 // Files have an empty resourcetype
-                bool isFile = (resourceTypeElement != null) && (resourceTypeElement.IsEmpty);
+                bool isFile = ExistsAndHasNoChilds(resourceTypeElement);
                 if (isFile)
                 {
                     // Extract the "href" element, it contains the filename
@@ -162,6 +162,17 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
                 }
             }
             return result;
+        }
+
+        /// <summary>
+        /// Checks whether the XElement is either an empty element (self closing), or doesn't have
+        /// any child elements (opening and closing tag without children).
+        /// </summary>
+        /// <param name="element">Xml element to check.</param>
+        /// <returns>True if it is an empty element, otherwise false.</returns>
+        private static bool ExistsAndHasNoChilds(XElement element)
+        {
+            return (element != null) && !element.HasElements;
         }
     }
 }
