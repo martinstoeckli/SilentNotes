@@ -120,9 +120,9 @@ div.dark .detail-view.checklist .ProseMirror p::after { content: @{WriteLiteral(
 
         // By setting the content after loading the page, we can avoid that the content has to be
         // declared statically as javascript and therefore would occupy memory twice.
-        function setNoteContent(text) {
+        function initializeNoteContent(text) {
             try {
-                editor.commands.setContent(text);
+                editor.chain().setMeta('addToHistory', false).setContent(text).run();
                 ProseMirrorBundle.scrollToTop(editor);
             }
             catch (ex) {

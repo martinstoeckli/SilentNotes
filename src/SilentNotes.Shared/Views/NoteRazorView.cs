@@ -215,32 +215,33 @@ WriteLiteral("px !important;\r\n}\r\n.color-btn { color: black; }\r\n.color-btn.
 "etNoteHtmlContent() {\r\n            return editor.getHTML();\r\n        }\r\n\r\n      " +
 "  // By setting the content after loading the page, we can avoid that the conten" +
 "t has to be\r\n        // declared statically as javascript and therefore would oc" +
-"cupy memory twice.\r\n        function setNoteContent(text) {\r\n            try {\r\n" +
-"                editor.commands.setContent(text);\r\n                ProseMirrorBu" +
-"ndle.scrollToTop(editor);\r\n            }\r\n            catch (ex) {\r\n            " +
-"    editor.setEditable(false);\r\n                document.getElementById(\'myedito" +
-"r\').textContent = ex.message;\r\n            }\r\n        }\r\n\r\n        function isSe" +
-"archDialogHidden() {\r\n            return getSearchDialogElement().classList.cont" +
-"ains(\'hidden\');\r\n        }\r\n\r\n        function toggleSearchDialog() {\r\n         " +
-"   showSearchDialog(isSearchDialogHidden());\r\n        }\r\n\r\n        function show" +
-"SearchDialog(visible) {\r\n            if (visible) {\r\n                // Open dia" +
-"log\r\n                var filter = ProseMirrorBundle.getSelectedText(editor);\r\n  " +
-"              if (filter) {\r\n                    vm.SearchPattern = filter.trim(" +
-");\r\n                }\r\n                searchByFilter();\r\n                getSea" +
-"rchDialogElement().classList.remove(\'hidden\');\r\n                document.getElem" +
-"entById(\'SearchPattern\').focus();\r\n            }\r\n            else {\r\n          " +
-"      // Close dialog\r\n                vm.SearchPattern = \'\';\r\n                g" +
-"etSearchDialogElement().classList.add(\'hidden\');\r\n                searchByFilter" +
-"();\r\n            }\r\n        }\r\n\r\n        function searchByFilter() {\r\n          " +
-"  ProseMirrorBundle.searchAndHighlight(editor, vm.SearchPattern);\r\n        }\r\n\r\n" +
-"        function toggleShoppingMode() {\r\n            vm.ShoppingModeActive = !vm" +
-".ShoppingModeActive;\r\n            editor.setEditable(!vm.ShoppingModeActive);\r\n " +
-"       }\r\n\r\n        function vueLoaded() {\r\n            var editorElement = docu" +
-"ment.getElementById(\'myeditor\');\r\n            editor = ProseMirrorBundle.initial" +
-"izeEditor(editorElement);\r\n            editor.on(\'selectionUpdate\', function (ed" +
-"itor) {\r\n                refreshActiveFormatState();\r\n            });\r\n         " +
-"   editor.on(\'update\', function (editor) {\r\n                triggerViewModelUpda" +
-"te();\r\n            });\r\n\r\n            ");
+"cupy memory twice.\r\n        function initializeNoteContent(text) {\r\n            " +
+"try {\r\n                editor.chain().setMeta(\'addToHistory\', false).setContent(" +
+"text).run();\r\n                ProseMirrorBundle.scrollToTop(editor);\r\n          " +
+"  }\r\n            catch (ex) {\r\n                editor.setEditable(false);\r\n     " +
+"           document.getElementById(\'myeditor\').textContent = ex.message;\r\n      " +
+"      }\r\n        }\r\n\r\n        function isSearchDialogHidden() {\r\n            ret" +
+"urn getSearchDialogElement().classList.contains(\'hidden\');\r\n        }\r\n\r\n       " +
+" function toggleSearchDialog() {\r\n            showSearchDialog(isSearchDialogHid" +
+"den());\r\n        }\r\n\r\n        function showSearchDialog(visible) {\r\n            " +
+"if (visible) {\r\n                // Open dialog\r\n                var filter = Pro" +
+"seMirrorBundle.getSelectedText(editor);\r\n                if (filter) {\r\n        " +
+"            vm.SearchPattern = filter.trim();\r\n                }\r\n              " +
+"  searchByFilter();\r\n                getSearchDialogElement().classList.remove(\'" +
+"hidden\');\r\n                document.getElementById(\'SearchPattern\').focus();\r\n  " +
+"          }\r\n            else {\r\n                // Close dialog\r\n              " +
+"  vm.SearchPattern = \'\';\r\n                getSearchDialogElement().classList.add" +
+"(\'hidden\');\r\n                searchByFilter();\r\n            }\r\n        }\r\n\r\n    " +
+"    function searchByFilter() {\r\n            ProseMirrorBundle.searchAndHighligh" +
+"t(editor, vm.SearchPattern);\r\n        }\r\n\r\n        function toggleShoppingMode()" +
+" {\r\n            vm.ShoppingModeActive = !vm.ShoppingModeActive;\r\n            edi" +
+"tor.setEditable(!vm.ShoppingModeActive);\r\n        }\r\n\r\n        function vueLoade" +
+"d() {\r\n            var editorElement = document.getElementById(\'myeditor\');\r\n   " +
+"         editor = ProseMirrorBundle.initializeEditor(editorElement);\r\n          " +
+"  editor.on(\'selectionUpdate\', function (editor) {\r\n                refreshActiv" +
+"eFormatState();\r\n            });\r\n            editor.on(\'update\', function (edit" +
+"or) {\r\n                triggerViewModelUpdate();\r\n            });\r\n\r\n           " +
+" ");
 
 WriteLiteral("\r\n\r\n            document.addEventListener(\'custom-link-clicked\', function () {\r\n " +
 "               showLinkDialog();\r\n            });\r\n\r\n            var linkDialogE" +
