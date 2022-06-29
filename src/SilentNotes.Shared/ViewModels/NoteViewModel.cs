@@ -610,6 +610,7 @@ namespace SilentNotes.ViewModels
 
             string prettyTime = GetOrCreateTimeAgo().PrettyPrint(Model.ModifiedAt, DateTime.UtcNow);
             sb.Append(" (").Append(prettyTime).AppendLine(")");
+            sb.AppendLine();
 
             string creationDate = Language.FormatDateTime(Model.CreatedAt.ToLocalTime(), "d");
             sb.Append(Language.LoadTextFmt("created_at", creationDate));

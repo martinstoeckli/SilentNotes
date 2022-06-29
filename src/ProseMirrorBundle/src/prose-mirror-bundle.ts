@@ -8,6 +8,7 @@ import CodeBlock from '@tiptap/extension-code-block'
 import Document from '@tiptap/extension-document'
 import HardBreak from '@tiptap/extension-hard-break'
 import Heading from '@tiptap/extension-heading'
+import History from '@tiptap/extension-history'
 import Italic from '@tiptap/extension-italic'
 import ListItem from '@tiptap/extension-list-item'
 import OrderedList from '@tiptap/extension-ordered-list'
@@ -50,6 +51,9 @@ export function initializeEditor(editorElement: HTMLElement): any {
         Heading.configure({
           levels: [1, 2, 3],
         }),
+        History.configure({
+          depth: 200,
+        }),        
         Italic,
         CustomLink.configure({
           autolink: false,
@@ -99,6 +103,9 @@ export function initializeEditor(editorElement: HTMLElement): any {
         Heading.configure({
           levels: [1, 2],
         }),
+        History.configure({
+          depth: 200,
+        }),        
         CheckableParagraph, // Preserves the class attribute needed for the checkboxes
         Text,
         TextStyle,
