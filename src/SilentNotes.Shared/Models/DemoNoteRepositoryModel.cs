@@ -46,7 +46,7 @@ namespace SilentNotes.Models
                 CreatedAt = DateTime.Parse("2017-09-10T09:25:16.6787213Z"),
                 ModifiedAt = DateTime.Parse("2018-12-18T12:52:39.8746458Z"),
                 Tags = new List<string> { "Shopping" },
-                HtmlContent = @"<h1>Shopping list</h1><p class='done'>Milk</p><p class='done'>Toast</p><p>Sun cream</p><p>Garbage bags</p><h1>Bakery</h1><p>Croissants</p><p>Marmelade</p><p class='disabled'>Torte</p>"
+                HtmlContent = @"<h1>🛒 Shopping list</h1><p class='done'>Milk</p><p class='done'>Toast</p><p>Sun cream</p><p>Garbage bags</p><h1>Bakery</h1><p>Croissants</p><p>Marmelade</p><p class='disabled'>Torte</p>"
             });
 
             Notes.Add(new NoteModel
@@ -62,13 +62,24 @@ namespace SilentNotes.Models
 
             Notes.Add(new NoteModel
             {
+                Id = new Guid("265d5706-8e46-4aee-93d4-424718ed13dd"),
+                NoteType = NoteType.Checklist,
+                BackgroundColorHex = "#fbf4c1",
+                InRecyclingBin = false,
+                CreatedAt = DateTime.Parse("2017-09-10T09:51:49.7504749Z"),
+                ModifiedAt = DateTime.Parse("2018-12-18T12:51:34.2026179Z"),
+                HtmlContent = @"<h1>🚴‍ Bike tour</h1><p class='done'>Tent</p><p class='done'>Sleeping bag</p><p>Maps</p><p>Change €-$</p><p>Spare tire / repair kit</p><p>Swimsuit</p><p>Sun cream</p><p>Towel</p><p>Power adapter</p><p>Gas cooker</p><p>Mess kit</p><p>Detergent</p><p>Spare clothes</p>"
+            });
+
+            Notes.Add(new NoteModel
+            {
                 Id = new Guid("c35de588-b92f-49a4-a19e-319f045619f5"),
                 NoteType = NoteType.Text,
                 BackgroundColorHex = "#d9f8c8",
                 InRecyclingBin = false,
                 CreatedAt = DateTime.Parse("2017-09-10T09:51:49.7504749Z"),
                 ModifiedAt = DateTime.Parse("2018-12-18T12:51:34.2026179Z"),
-                HtmlContent = @"<h1>Radio Songs</h1><ol><li>Spider's web (Katie Melua)</li><li>Seven mountains (77 Bombay Street)</li><li>Waiting for A.M. (Glen Of Guinness)</li></ol>"
+                HtmlContent = @"<h1>🎧 Radio Songs</h1><ol><li>Spider's web (Katie Melua)</li><li>Seven mountains (77 Bombay Street)</li><li>Waiting for A.M. (Glen Of Guinness)</li></ol>"
             });
 
             Notes.Add(new NoteModel
