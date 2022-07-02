@@ -1,0 +1,7 @@
+SilentNotes version 7.0.0
+
+* Der Editor wurde durch TipTap/ProseMirror ersetzt, welcher mehr Potential für zukünftige Entwicklungen bietet.
+* Eine "Anzeige offen halten" Timerfunktion wurde implementiert, welche verhindert, dass sich die App während dem Lesen einer Notiz automatisch ausschaltet.
+* Kann jetzt Informationen zu einer Notiz anzeigen (Erstellungs- und Änderungsdatum).
+* Konnte die Aufstartzeit leicht verbessern.
+* Das WebDav Protokoll wurde generischer gemacht, um zusätzliche WebDav Server zu unterstützen.

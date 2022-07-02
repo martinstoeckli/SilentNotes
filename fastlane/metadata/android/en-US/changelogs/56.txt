@@ -1,0 +1,7 @@
+SilentNotes version 7.0.0
+
+* Replaced the editor with TipTap/ProseMirror which has more potential for future developments.
+* Implemented a "keep screen on" timer function, which prevents the app from going to sleep while reading a note.
+* Can now show informations about the note (creation- and modification date).
+* Could improve startup time slightly.
+* Made WebDav protocol more generic to support more WebDav servers.
