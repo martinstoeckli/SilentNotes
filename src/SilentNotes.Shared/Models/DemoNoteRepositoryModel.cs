@@ -103,15 +103,12 @@ namespace SilentNotes.Models
                 CreatedAt = DateTime.Parse("2018-12-18T12:53:09.3660557Z"),
                 ModifiedAt = DateTime.Parse("2018-12-18T13:25:55.8335803Z"),
                 Tags = new List<string> { "Recipes", "Cooking" },
-                HtmlContent = @"<h1>Recipe Yellow Split Pea Soup</h1><pre class='ql-syntax' spellcheck='false'>1.25 l    Water              put in pressure cooker.
+                HtmlContent = @"<h1>Recipe Yellow Split Pea Soup</h1><pre><code>1.25 l    Water              put in pressure cooker.
 200 g     Yellow beans       add to cooker.
 2         Bouillon cube      crumble and add to cooker.
-          Herbs              as much as you like.
-</pre><p><br></p><pre class='ql-syntax' spellcheck='false'>0.25      Celery
-2         Carrots            grate vegetables and add to cooker.
-</pre><p>Bring the soup to boil, stir well so that no beans are 'sticking' to the bottom of the cooker, only now close the pressure cooker.</p><p><br></p><pre class='ql-syntax' spellcheck='false'>Time         30 min
-Temperature  4 out of 10
-</pre><p>Mix the soup with a blender and add some cream if you like.</p>"
+          Herbs              as much as you like.</code></pre><p></p><pre><code>0.25      Celery
+2         Carrots            grate vegetables and add to cooker.</code></pre><p>Bring the soup to boil, stir well so that no beans are 'sticking' to the bottom of the cooker, only now close the pressure cooker.</p><p></p><pre><code>Time         30 min
+Temperature  4 out of 10</code></pre><p>Mix the soup with a blender and add some cream if you like.</p>"
             });
 
             Notes.Add(new NoteModel

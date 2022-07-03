@@ -49,7 +49,7 @@ namespace SilentNotes.UWP
         private void AdjustWindowSizeInDemoMode()
         {
             // Set size to get 4:3 screenshots (800:600). border = 1 title bar = 32
-            ApplicationView.PreferredLaunchViewSize = new Windows.Foundation.Size(800 - 2 * 1, 600 - 32 - 2 * 1);
+            ApplicationView.PreferredLaunchViewSize = new Windows.Foundation.Size(800 - 1, 600 - 32 - 1);
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
         }
 
