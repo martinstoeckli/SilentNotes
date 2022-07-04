@@ -601,8 +601,6 @@ WriteLiteral(" aria-haspopup=\"true\"");
 
 WriteLiteral(" aria-expanded=\"false\"");
 
-WriteLiteral(" v-bind:disabled=\"ShoppingModeActive\"");
-
 WriteLiteral(">\r\n");
 
 
@@ -627,7 +625,7 @@ WriteLiteral(">\r\n                        <div");
 
 WriteLiteral(" class=\"dropdown-item\"");
 
-WriteLiteral(" v-bind:class=\"{ active: Header1Active }\"");
+WriteLiteral(" v-bind:class=\"{ active: Header1Active, disabled: ShoppingModeActive }\"");
 
 WriteLiteral(" onclick=\"toggleFormat(\'heading\', 1);\"");
 
@@ -635,7 +633,7 @@ WriteLiteral(">");
 
 
 #line 264 "NoteRazorView.cshtml"
-                                                                                                                                    WriteLiteral(Model.Icon["format-header-1"]);
+                                                                                                                                                                  WriteLiteral(Model.Icon["format-header-1"]);
 
 #line default
 #line hidden
@@ -643,7 +641,7 @@ WriteLiteral(" ");
 
 
 #line 264 "NoteRazorView.cshtml"
-                                                                                                                                                                             Write(Model.Language["note_header1"]);
+                                                                                                                                                                                                           Write(Model.Language["note_header1"]);
 
 
 #line default
@@ -652,7 +650,7 @@ WriteLiteral("</div>\r\n                        <div");
 
 WriteLiteral(" class=\"dropdown-item\"");
 
-WriteLiteral(" v-bind:class=\"{ active: Header2Active }\"");
+WriteLiteral(" v-bind:class=\"{ active: Header2Active, disabled: ShoppingModeActive }\"");
 
 WriteLiteral(" onclick=\"toggleFormat(\'heading\', 2);\"");
 
@@ -660,7 +658,7 @@ WriteLiteral(">");
 
 
 #line 265 "NoteRazorView.cshtml"
-                                                                                                                                    WriteLiteral(Model.Icon["format-header-2"]);
+                                                                                                                                                                  WriteLiteral(Model.Icon["format-header-2"]);
 
 #line default
 #line hidden
@@ -668,7 +666,7 @@ WriteLiteral(" ");
 
 
 #line 265 "NoteRazorView.cshtml"
-                                                                                                                                                                             Write(Model.Language["note_header2"]);
+                                                                                                                                                                                                           Write(Model.Language["note_header2"]);
 
 
 #line default
@@ -677,7 +675,7 @@ WriteLiteral("</div>\r\n                        <div");
 
 WriteLiteral(" class=\"dropdown-item\"");
 
-WriteLiteral(" v-bind:class=\"{ active: Header3Active }\"");
+WriteLiteral(" v-bind:class=\"{ active: Header3Active, disabled: ShoppingModeActive }\"");
 
 WriteLiteral(" onclick=\"toggleFormat(\'heading\', 3);\"");
 
@@ -685,7 +683,7 @@ WriteLiteral(">");
 
 
 #line 266 "NoteRazorView.cshtml"
-                                                                                                                                    WriteLiteral(Model.Icon["format-header-3"]);
+                                                                                                                                                                  WriteLiteral(Model.Icon["format-header-3"]);
 
 #line default
 #line hidden
@@ -693,7 +691,7 @@ WriteLiteral(" ");
 
 
 #line 266 "NoteRazorView.cshtml"
-                                                                                                                                                                             Write(Model.Language["note_header3"]);
+                                                                                                                                                                                                           Write(Model.Language["note_header3"]);
 
 
 #line default
@@ -702,7 +700,7 @@ WriteLiteral("</div>\r\n                        <div");
 
 WriteLiteral(" class=\"dropdown-item show-only-on-narrow-browser\"");
 
-WriteLiteral(" v-bind:class=\"{ active: UnderlineActive }\"");
+WriteLiteral(" v-bind:class=\"{ active: UnderlineActive, disabled: ShoppingModeActive }\"");
 
 WriteLiteral(" onclick=\"toggleFormat(\'underline\');\"");
 
@@ -710,7 +708,7 @@ WriteLiteral(">");
 
 
 #line 267 "NoteRazorView.cshtml"
-                                                                                                                                                                 WriteLiteral(Model.Icon["format-underline"]);
+                                                                                                                                                                                               WriteLiteral(Model.Icon["format-underline"]);
 
 #line default
 #line hidden
@@ -718,7 +716,7 @@ WriteLiteral(" ");
 
 
 #line 267 "NoteRazorView.cshtml"
-                                                                                                                                                                                                           Write(Model.Language["note_underline"]);
+                                                                                                                                                                                                                                         Write(Model.Language["note_underline"]);
 
 
 #line default
@@ -727,7 +725,7 @@ WriteLiteral("</div>\r\n                        <div");
 
 WriteLiteral(" class=\"dropdown-item show-only-on-narrow-browser\"");
 
-WriteLiteral(" v-bind:class=\"{ active: StrikeActive }\"");
+WriteLiteral(" v-bind:class=\"{ active: StrikeActive, disabled: ShoppingModeActive }\"");
 
 WriteLiteral(" onclick=\"toggleFormat(\'strike\');\"");
 
@@ -735,7 +733,7 @@ WriteLiteral(">");
 
 
 #line 268 "NoteRazorView.cshtml"
-                                                                                                                                                           WriteLiteral(Model.Icon["format-strikethrough"]);
+                                                                                                                                                                                         WriteLiteral(Model.Icon["format-strikethrough"]);
 
 #line default
 #line hidden
@@ -743,7 +741,7 @@ WriteLiteral(" ");
 
 
 #line 268 "NoteRazorView.cshtml"
-                                                                                                                                                                                                         Write(Model.Language["note_strike"]);
+                                                                                                                                                                                                                                       Write(Model.Language["note_strike"]);
 
 
 #line default
@@ -752,7 +750,7 @@ WriteLiteral("</div>\r\n                        <div");
 
 WriteLiteral(" class=\"dropdown-item show-only-on-narrow-browser\"");
 
-WriteLiteral(" v-bind:class=\"{ active: ListOrderedActive }\"");
+WriteLiteral(" v-bind:class=\"{ active: ListOrderedActive, disabled: ShoppingModeActive }\"");
 
 WriteLiteral(" onclick=\"toggleFormat(\'orderedlist\');\"");
 
@@ -760,7 +758,7 @@ WriteLiteral(">");
 
 
 #line 269 "NoteRazorView.cshtml"
-                                                                                                                                                                     WriteLiteral(Model.Icon["format-list-numbers"]);
+                                                                                                                                                                                                   WriteLiteral(Model.Icon["format-list-numbers"]);
 
 #line default
 #line hidden
@@ -768,7 +766,7 @@ WriteLiteral(" ");
 
 
 #line 269 "NoteRazorView.cshtml"
-                                                                                                                                                                                                                  Write(Model.Language["note_list_ordered"]);
+                                                                                                                                                                                                                                                Write(Model.Language["note_list_ordered"]);
 
 
 #line default
@@ -777,7 +775,7 @@ WriteLiteral("</div>\r\n                        <div");
 
 WriteLiteral(" class=\"dropdown-item show-only-on-narrow-browser\"");
 
-WriteLiteral(" v-bind:class=\"{ active: ListBulletActive }\"");
+WriteLiteral(" v-bind:class=\"{ active: ListBulletActive, disabled: ShoppingModeActive }\"");
 
 WriteLiteral(" onclick=\"toggleFormat(\'bulletlist\');\"");
 
@@ -785,7 +783,7 @@ WriteLiteral(">");
 
 
 #line 270 "NoteRazorView.cshtml"
-                                                                                                                                                                   WriteLiteral(Model.Icon["format-list-bulleted"]);
+                                                                                                                                                                                                 WriteLiteral(Model.Icon["format-list-bulleted"]);
 
 #line default
 #line hidden
@@ -793,7 +791,7 @@ WriteLiteral(" ");
 
 
 #line 270 "NoteRazorView.cshtml"
-                                                                                                                                                                                                                 Write(Model.Language["note_list_unordered"]);
+                                                                                                                                                                                                                                               Write(Model.Language["note_list_unordered"]);
 
 
 #line default
@@ -802,7 +800,7 @@ WriteLiteral("</div>\r\n                        <div");
 
 WriteLiteral(" class=\"dropdown-item\"");
 
-WriteLiteral(" v-bind:class=\"{ active: CodeActive }\"");
+WriteLiteral(" v-bind:class=\"{ active: CodeActive, disabled: ShoppingModeActive }\"");
 
 WriteLiteral(" onclick=\"toggleFormat(\'codeblock\');\"");
 
@@ -810,7 +808,7 @@ WriteLiteral(">");
 
 
 #line 271 "NoteRazorView.cshtml"
-                                                                                                                                WriteLiteral(Model.Icon["code-braces"]);
+                                                                                                                                                              WriteLiteral(Model.Icon["code-braces"]);
 
 #line default
 #line hidden
@@ -818,7 +816,7 @@ WriteLiteral(" ");
 
 
 #line 271 "NoteRazorView.cshtml"
-                                                                                                                                                                     Write(Model.Language["note_code"]);
+                                                                                                                                                                                                   Write(Model.Language["note_code"]);
 
 
 #line default
@@ -827,7 +825,7 @@ WriteLiteral("</div>\r\n                        <div");
 
 WriteLiteral(" class=\"dropdown-item\"");
 
-WriteLiteral(" v-bind:class=\"{ active: QuoteActive }\"");
+WriteLiteral(" v-bind:class=\"{ active: QuoteActive, disabled: ShoppingModeActive }\"");
 
 WriteLiteral(" onclick=\"toggleFormat(\'blockquote\');\"");
 
@@ -835,7 +833,7 @@ WriteLiteral(">");
 
 
 #line 272 "NoteRazorView.cshtml"
-                                                                                                                                  WriteLiteral(Model.Icon["format-quote-close"]);
+                                                                                                                                                                WriteLiteral(Model.Icon["format-quote-close"]);
 
 #line default
 #line hidden
@@ -843,7 +841,7 @@ WriteLiteral(" ");
 
 
 #line 272 "NoteRazorView.cshtml"
-                                                                                                                                                                              Write(Model.Language["note_quotation"]);
+                                                                                                                                                                                                            Write(Model.Language["note_quotation"]);
 
 
 #line default
@@ -852,13 +850,15 @@ WriteLiteral("</div>\r\n                        <div");
 
 WriteLiteral(" class=\"dropdown-item\"");
 
+WriteLiteral(" v-bind:class=\"{ disabled: ShoppingModeActive }\"");
+
 WriteLiteral(" onclick=\"showLinkDialog();\"");
 
 WriteLiteral(">");
 
 
 #line 273 "NoteRazorView.cshtml"
-                                                                                 WriteLiteral(Model.Icon["link-variant"]);
+                                                                                                                                 WriteLiteral(Model.Icon["link-variant"]);
 
 #line default
 #line hidden
@@ -866,7 +866,7 @@ WriteLiteral(" ");
 
 
 #line 273 "NoteRazorView.cshtml"
-                                                                                                                       Write(Model.Language["note_link"]);
+                                                                                                                                                                       Write(Model.Language["note_link"]);
 
 
 #line default
@@ -879,6 +879,8 @@ WriteLiteral("></div>\r\n                        <div");
 
 WriteLiteral(" class=\"dropdown-item\"");
 
+WriteLiteral(" v-bind:class=\"{ disabled: ShoppingModeActive }\"");
+
 WriteLiteral(" data-toggle=\"modal\"");
 
 WriteLiteral(" data-target=\"#colorPaletteModal\"");
@@ -887,7 +889,7 @@ WriteLiteral(">");
 
 
 #line 275 "NoteRazorView.cshtml"
-                                                                                                          WriteLiteral(Model.Icon["palette"]);
+                                                                                                                                                          WriteLiteral(Model.Icon["palette"]);
 
 #line default
 #line hidden
@@ -895,7 +897,7 @@ WriteLiteral(" ");
 
 
 #line 275 "NoteRazorView.cshtml"
-                                                                                                                                           Write(Model.Language["note_colors"]);
+                                                                                                                                                                                           Write(Model.Language["note_colors"]);
 
 
 #line default
@@ -954,13 +956,15 @@ WriteLiteral("                        <div");
 
 WriteLiteral(" class=\"dropdown-item\"");
 
+WriteLiteral(" v-bind:class=\"{ disabled: ShoppingModeActive }\"");
+
 WriteLiteral(" v-on:click=\"ShowInfoCommand\"");
 
 WriteLiteral(">");
 
 
 #line 280 "NoteRazorView.cshtml"
-                                                                                  WriteLiteral(Model.Icon["information"]);
+                                                                                                                                  WriteLiteral(Model.Icon["information"]);
 
 #line default
 #line hidden
@@ -968,7 +972,7 @@ WriteLiteral(" ");
 
 
 #line 280 "NoteRazorView.cshtml"
-                                                                                                                       Write(Model.Language["note_show_info"]);
+                                                                                                                                                                       Write(Model.Language["note_show_info"]);
 
 
 #line default
@@ -993,11 +997,15 @@ WriteLiteral("                            <div");
 
 WriteLiteral(" class=\"dropdown-divider\"");
 
+WriteLiteral(" v-bind:class=\"{ disabled: ShoppingModeActive }\"");
+
 WriteLiteral("></div>\r\n");
 
 WriteLiteral("                            <div");
 
 WriteLiteral(" class=\"dropdown-item\"");
+
+WriteLiteral(" v-bind:class=\"{ disabled: ShoppingModeActive }\"");
 
 WriteLiteral(" v-on:click=\"PushNoteToOnlineStorageCommand\"");
 
@@ -1005,7 +1013,7 @@ WriteLiteral(">");
 
 
 #line 284 "NoteRazorView.cshtml"
-                                                                                                     WriteLiteral(Model.Icon["cloud-upload"]);
+                                                                                                                                                     WriteLiteral(Model.Icon["cloud-upload"]);
 
 #line default
 #line hidden
@@ -1013,7 +1021,7 @@ WriteLiteral(" ");
 
 
 #line 284 "NoteRazorView.cshtml"
-                                                                                                                                           Write(Model.Language["note_push_to_server"]);
+                                                                                                                                                                                           Write(Model.Language["note_push_to_server"]);
 
 
 #line default
@@ -1024,13 +1032,15 @@ WriteLiteral("                            <div");
 
 WriteLiteral(" class=\"dropdown-item\"");
 
+WriteLiteral(" v-bind:class=\"{ disabled: ShoppingModeActive }\"");
+
 WriteLiteral(" v-on:click=\"PullNoteFromOnlineStorageCommand\"");
 
 WriteLiteral(">");
 
 
 #line 285 "NoteRazorView.cshtml"
-                                                                                                       WriteLiteral(Model.Icon["cloud-download"]);
+                                                                                                                                                       WriteLiteral(Model.Icon["cloud-download"]);
 
 #line default
 #line hidden
@@ -1038,7 +1048,7 @@ WriteLiteral(" ");
 
 
 #line 285 "NoteRazorView.cshtml"
-                                                                                                                                               Write(Model.Language["note_pull_from_server"]);
+                                                                                                                                                                                               Write(Model.Language["note_pull_from_server"]);
 
 
 #line default

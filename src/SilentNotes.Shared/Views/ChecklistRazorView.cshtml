@@ -227,31 +227,31 @@ div.dark .detail-view.checklist .ProseMirror p::after { content: @{WriteLiteral(
             <button class="nav-item" onclick="toggleSearchDialog(); return false;" title="@Model.Language["search"]">@{WriteLiteral(Model.Icon["magnify"]);}</button>
 
             <div class="dropdown">
-                <button class="nav-item" id="navOverflowMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-bind:disabled="ShoppingModeActive">
+                <button class="nav-item" id="navOverflowMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     @{WriteLiteral(Model.Icon["dots-vertical"]);}
                 </button>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navOverflowMenu">
-                    <div class="dropdown-item" onclick="bundleViewModelUpdates(function () {ProseMirrorBundle.sortChecklistPendingToTop(editor)}); return false;">@{WriteLiteral(Model.Icon["sort-bool-descending-variant"]);} @Model.Language["checklist_move_pending_to_top"]</div>
-                    <div class="dropdown-item" onclick="bundleViewModelUpdates(function () {ProseMirrorBundle.sortChecklistAlphabetical(editor)}); return false;">@{WriteLiteral(Model.Icon["sort-alphabetical-ascending"]);} @Model.Language["checklist_sort_alphabetical"]</div>
+                    <div class="dropdown-item" v-bind:class="{ disabled: ShoppingModeActive }" onclick="bundleViewModelUpdates(function () {ProseMirrorBundle.sortChecklistPendingToTop(editor)}); return false;">@{WriteLiteral(Model.Icon["sort-bool-descending-variant"]);} @Model.Language["checklist_move_pending_to_top"]</div>
+                    <div class="dropdown-item" v-bind:class="{ disabled: ShoppingModeActive }" onclick="bundleViewModelUpdates(function () {ProseMirrorBundle.sortChecklistAlphabetical(editor)}); return false;">@{WriteLiteral(Model.Icon["sort-alphabetical-ascending"]);} @Model.Language["checklist_sort_alphabetical"]</div>
                     <div class="dropdown-divider"></div>
-                    <div class="dropdown-item" onclick="bundleViewModelUpdates(function () {ProseMirrorBundle.setCheckStateForAllToTodo(editor)}); return false;">@{WriteLiteral(Model.Icon["checkbox-multiple-blank-outline"]);} @Model.Language["checklist_uncheck_all"]</div>
-                    <div class="dropdown-item" onclick="bundleViewModelUpdates(function () {ProseMirrorBundle.setCheckStateForAllToDone(editor)}); return false;">@{WriteLiteral(Model.Icon["check-box-multiple-outline"]);} @Model.Language["checklist_check_all"]</div>
-                    <div class="dropdown-item" onclick="bundleViewModelUpdates(function () {ProseMirrorBundle.setCheckStateForAllToDisabled(editor)}); return false;">@{WriteLiteral(Model.Icon["checkbox-blank-off-outline"]);} @Model.Language["checklist_disable_all"]</div>
+                    <div class="dropdown-item" v-bind:class="{ disabled: ShoppingModeActive }" onclick="bundleViewModelUpdates(function () {ProseMirrorBundle.setCheckStateForAllToTodo(editor)}); return false;">@{WriteLiteral(Model.Icon["checkbox-multiple-blank-outline"]);} @Model.Language["checklist_uncheck_all"]</div>
+                    <div class="dropdown-item" v-bind:class="{ disabled: ShoppingModeActive }" onclick="bundleViewModelUpdates(function () {ProseMirrorBundle.setCheckStateForAllToDone(editor)}); return false;">@{WriteLiteral(Model.Icon["check-box-multiple-outline"]);} @Model.Language["checklist_check_all"]</div>
+                    <div class="dropdown-item" v-bind:class="{ disabled: ShoppingModeActive }" onclick="bundleViewModelUpdates(function () {ProseMirrorBundle.setCheckStateForAllToDisabled(editor)}); return false;">@{WriteLiteral(Model.Icon["checkbox-blank-off-outline"]);} @Model.Language["checklist_disable_all"]</div>
                     <div class="dropdown-divider"></div>
-                    <div class="dropdown-item" v-bind:class="{ active: Header1Active }" onclick="toggleFormat('heading', 1);">@{WriteLiteral(Model.Icon["format-header-1"]);} @Model.Language["note_header1"]</div>
-                    <div class="dropdown-item" v-bind:class="{ active: Header2Active }" onclick="toggleFormat('heading', 2);">@{WriteLiteral(Model.Icon["format-header-2"]);} @Model.Language["note_header2"]</div>
+                    <div class="dropdown-item" v-bind:class="{ active: Header1Active, disabled: ShoppingModeActive }" onclick="toggleFormat('heading', 1);">@{WriteLiteral(Model.Icon["format-header-1"]);} @Model.Language["note_header1"]</div>
+                    <div class="dropdown-item" v-bind:class="{ active: Header2Active, disabled: ShoppingModeActive }" onclick="toggleFormat('heading', 2);">@{WriteLiteral(Model.Icon["format-header-2"]);} @Model.Language["note_header2"]</div>
                     <div class="dropdown-divider"></div>
-                    <div class="dropdown-item" data-toggle="modal" data-target="#colorPaletteModal">@{WriteLiteral(Model.Icon["palette"]);} @Model.Language["note_colors"]</div>
+                    <div class="dropdown-item" v-bind:class="{ disabled: ShoppingModeActive }" data-toggle="modal" data-target="#colorPaletteModal">@{WriteLiteral(Model.Icon["palette"]);} @Model.Language["note_colors"]</div>
                     @if (Model.CanKeepScreenOn)
                     {
                         <div class="dropdown-item" v-bind:class="{ active: KeepScreenOnActive }" v-on:click="KeepScreenOnCommand">@{WriteLiteral(Model.Icon["alarm-plus"]);} @Model.KeepScreenOnTitle</div>
                     }
-                    <div class="dropdown-item" v-on:click="ShowInfoCommand">@{WriteLiteral(Model.Icon["information"]);} @Model.Language["note_show_info"]</div>
+                    <div class="dropdown-item" v-bind:class="{ disabled: ShoppingModeActive }" v-on:click="ShowInfoCommand">@{WriteLiteral(Model.Icon["information"]);} @Model.Language["note_show_info"]</div>
                     @if (Model.ShowManualSynchronization)
                     {
                         <div class="dropdown-divider"></div>
-                        <div class="dropdown-item" v-on:click="PushNoteToOnlineStorageCommand">@{WriteLiteral(Model.Icon["cloud-upload"]);} @Model.Language["note_push_to_server"]</div>
-                        <div class="dropdown-item" v-on:click="PullNoteFromOnlineStorageCommand">@{WriteLiteral(Model.Icon["cloud-download"]);} @Model.Language["note_pull_from_server"]</div>
+                        <div class="dropdown-item" v-bind:class="{ disabled: ShoppingModeActive }" v-on:click="PushNoteToOnlineStorageCommand">@{WriteLiteral(Model.Icon["cloud-upload"]);} @Model.Language["note_push_to_server"]</div>
+                        <div class="dropdown-item" v-bind:class="{ disabled: ShoppingModeActive }" v-on:click="PullNoteFromOnlineStorageCommand">@{WriteLiteral(Model.Icon["cloud-download"]);} @Model.Language["note_pull_from_server"]</div>
                     }
                 </div>
             </div>

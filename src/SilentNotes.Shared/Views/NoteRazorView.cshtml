@@ -257,32 +257,32 @@ body { background-color: transparent; }
                 <button class="nav-item" onclick="toggleSearchDialog(); return false;" title="@Model.Language["search"]">@{WriteLiteral(Model.Icon["magnify"]);}</button>
 
                 <div class="dropdown">
-                    <button class="nav-item" id="navOverflowMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-bind:disabled="ShoppingModeActive">
+                    <button class="nav-item" id="navOverflowMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         @{WriteLiteral(Model.Icon["dots-vertical"]);}
                     </button>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navOverflowMenu">
-                        <div class="dropdown-item" v-bind:class="{ active: Header1Active }" onclick="toggleFormat('heading', 1);">@{WriteLiteral(Model.Icon["format-header-1"]);} @Model.Language["note_header1"]</div>
-                        <div class="dropdown-item" v-bind:class="{ active: Header2Active }" onclick="toggleFormat('heading', 2);">@{WriteLiteral(Model.Icon["format-header-2"]);} @Model.Language["note_header2"]</div>
-                        <div class="dropdown-item" v-bind:class="{ active: Header3Active }" onclick="toggleFormat('heading', 3);">@{WriteLiteral(Model.Icon["format-header-3"]);} @Model.Language["note_header3"]</div>
-                        <div class="dropdown-item show-only-on-narrow-browser" v-bind:class="{ active: UnderlineActive }" onclick="toggleFormat('underline');">@{WriteLiteral(Model.Icon["format-underline"]);} @Model.Language["note_underline"]</div>
-                        <div class="dropdown-item show-only-on-narrow-browser" v-bind:class="{ active: StrikeActive }" onclick="toggleFormat('strike');">@{WriteLiteral(Model.Icon["format-strikethrough"]);} @Model.Language["note_strike"]</div>
-                        <div class="dropdown-item show-only-on-narrow-browser" v-bind:class="{ active: ListOrderedActive }" onclick="toggleFormat('orderedlist');">@{WriteLiteral(Model.Icon["format-list-numbers"]);} @Model.Language["note_list_ordered"]</div>
-                        <div class="dropdown-item show-only-on-narrow-browser" v-bind:class="{ active: ListBulletActive }" onclick="toggleFormat('bulletlist');">@{WriteLiteral(Model.Icon["format-list-bulleted"]);} @Model.Language["note_list_unordered"]</div>
-                        <div class="dropdown-item" v-bind:class="{ active: CodeActive }" onclick="toggleFormat('codeblock');">@{WriteLiteral(Model.Icon["code-braces"]);} @Model.Language["note_code"]</div>
-                        <div class="dropdown-item" v-bind:class="{ active: QuoteActive }" onclick="toggleFormat('blockquote');">@{WriteLiteral(Model.Icon["format-quote-close"]);} @Model.Language["note_quotation"]</div>
-                        <div class="dropdown-item" onclick="showLinkDialog();">@{WriteLiteral(Model.Icon["link-variant"]);} @Model.Language["note_link"]</div>
+                        <div class="dropdown-item" v-bind:class="{ active: Header1Active, disabled: ShoppingModeActive }" onclick="toggleFormat('heading', 1);">@{WriteLiteral(Model.Icon["format-header-1"]);} @Model.Language["note_header1"]</div>
+                        <div class="dropdown-item" v-bind:class="{ active: Header2Active, disabled: ShoppingModeActive }" onclick="toggleFormat('heading', 2);">@{WriteLiteral(Model.Icon["format-header-2"]);} @Model.Language["note_header2"]</div>
+                        <div class="dropdown-item" v-bind:class="{ active: Header3Active, disabled: ShoppingModeActive }" onclick="toggleFormat('heading', 3);">@{WriteLiteral(Model.Icon["format-header-3"]);} @Model.Language["note_header3"]</div>
+                        <div class="dropdown-item show-only-on-narrow-browser" v-bind:class="{ active: UnderlineActive, disabled: ShoppingModeActive }" onclick="toggleFormat('underline');">@{WriteLiteral(Model.Icon["format-underline"]);} @Model.Language["note_underline"]</div>
+                        <div class="dropdown-item show-only-on-narrow-browser" v-bind:class="{ active: StrikeActive, disabled: ShoppingModeActive }" onclick="toggleFormat('strike');">@{WriteLiteral(Model.Icon["format-strikethrough"]);} @Model.Language["note_strike"]</div>
+                        <div class="dropdown-item show-only-on-narrow-browser" v-bind:class="{ active: ListOrderedActive, disabled: ShoppingModeActive }" onclick="toggleFormat('orderedlist');">@{WriteLiteral(Model.Icon["format-list-numbers"]);} @Model.Language["note_list_ordered"]</div>
+                        <div class="dropdown-item show-only-on-narrow-browser" v-bind:class="{ active: ListBulletActive, disabled: ShoppingModeActive }" onclick="toggleFormat('bulletlist');">@{WriteLiteral(Model.Icon["format-list-bulleted"]);} @Model.Language["note_list_unordered"]</div>
+                        <div class="dropdown-item" v-bind:class="{ active: CodeActive, disabled: ShoppingModeActive }" onclick="toggleFormat('codeblock');">@{WriteLiteral(Model.Icon["code-braces"]);} @Model.Language["note_code"]</div>
+                        <div class="dropdown-item" v-bind:class="{ active: QuoteActive, disabled: ShoppingModeActive }" onclick="toggleFormat('blockquote');">@{WriteLiteral(Model.Icon["format-quote-close"]);} @Model.Language["note_quotation"]</div>
+                        <div class="dropdown-item" v-bind:class="{ disabled: ShoppingModeActive }" onclick="showLinkDialog();">@{WriteLiteral(Model.Icon["link-variant"]);} @Model.Language["note_link"]</div>
                         <div class="dropdown-divider"></div>
-                        <div class="dropdown-item" data-toggle="modal" data-target="#colorPaletteModal">@{WriteLiteral(Model.Icon["palette"]);} @Model.Language["note_colors"]</div>
+                        <div class="dropdown-item" v-bind:class="{ disabled: ShoppingModeActive }" data-toggle="modal" data-target="#colorPaletteModal">@{WriteLiteral(Model.Icon["palette"]);} @Model.Language["note_colors"]</div>
                         @if (Model.CanKeepScreenOn)
                         {
                             <div class="dropdown-item" v-bind:class="{ active: KeepScreenOnActive }" v-on:click="KeepScreenOnCommand">@{WriteLiteral(Model.Icon["alarm-plus"]);} @Model.KeepScreenOnTitle</div>
                         }
-                        <div class="dropdown-item" v-on:click="ShowInfoCommand">@{WriteLiteral(Model.Icon["information"]);} @Model.Language["note_show_info"]</div>
+                        <div class="dropdown-item" v-bind:class="{ disabled: ShoppingModeActive }" v-on:click="ShowInfoCommand">@{WriteLiteral(Model.Icon["information"]);} @Model.Language["note_show_info"]</div>
                         @if (Model.ShowManualSynchronization)
                         {
-                            <div class="dropdown-divider"></div>
-                            <div class="dropdown-item" v-on:click="PushNoteToOnlineStorageCommand">@{WriteLiteral(Model.Icon["cloud-upload"]);} @Model.Language["note_push_to_server"]</div>
-                            <div class="dropdown-item" v-on:click="PullNoteFromOnlineStorageCommand">@{WriteLiteral(Model.Icon["cloud-download"]);} @Model.Language["note_pull_from_server"]</div>
+                            <div class="dropdown-divider" v-bind:class="{ disabled: ShoppingModeActive }"></div>
+                            <div class="dropdown-item" v-bind:class="{ disabled: ShoppingModeActive }" v-on:click="PushNoteToOnlineStorageCommand">@{WriteLiteral(Model.Icon["cloud-upload"]);} @Model.Language["note_push_to_server"]</div>
+                            <div class="dropdown-item" v-bind:class="{ disabled: ShoppingModeActive }" v-on:click="PullNoteFromOnlineStorageCommand">@{WriteLiteral(Model.Icon["cloud-download"]);} @Model.Language["note_pull_from_server"]</div>
                         }
                     </div>
                 </div>
