@@ -279,23 +279,23 @@ WriteLiteral("; }\r\n\r\n.color-btn { color: black; }\r\n.color-btn.dark { color
 "rchDialog(isSearchDialogHidden());\r\n        }\r\n\r\n        function showSearchDial" +
 "og(visible) {\r\n            if (visible) {\r\n                // Open dialog\r\n     " +
 "           var filter = ProseMirrorBundle.getSelectedText(editor);\r\n            " +
-"    if (filter) {\r\n                    vm.SearchPattern = filter.trim();\r\n      " +
-"          }\r\n                searchByFilter();\r\n                getSearchDialogE" +
-"lement().classList.remove(\'hidden\');\r\n                document.getElementById(\'S" +
-"earchPattern\').focus();\r\n            }\r\n            else {\r\n                // C" +
-"lose dialog\r\n                vm.SearchPattern = \'\';\r\n                getSearchDi" +
-"alogElement().classList.add(\'hidden\');\r\n                searchByFilter();\r\n     " +
-"       }\r\n        }\r\n\r\n        function searchByFilter() {\r\n            ProseMir" +
-"rorBundle.searchAndHighlight(editor, vm.SearchPattern);\r\n        }\r\n\r\n        fu" +
-"nction toggleShoppingMode() {\r\n            vm.ShoppingModeActive = !vm.ShoppingM" +
-"odeActive;\r\n            editor.setEditable(!vm.ShoppingModeActive);\r\n        }\r\n" +
-"\r\n        function vueLoaded() {\r\n            var editorElement = document.getEl" +
-"ementById(\'myeditor\');\r\n            editor = ProseMirrorBundle.initializeCheckli" +
-"st(editorElement);\r\n            editor.on(\'selectionUpdate\', function (editor) {" +
-"\r\n                refreshActiveFormatState();\r\n            });\r\n            edit" +
-"or.on(\'update\', function (editor) {\r\n                triggerViewModelUpdate();\r\n" +
-"            });\r\n            ProseMirrorBundle.registerIsShoppingModeActive(func" +
-"tion () { return vm.ShoppingModeActive; });\r\n\r\n            ");
+"    if (filter !== null) {\r\n                    vm.SearchPattern = filter.trim()" +
+";\r\n                }\r\n                getSearchDialogElement().classList.remove(" +
+"\'hidden\');\r\n                document.getElementById(\'SearchPattern\').focus();\r\n " +
+"               searchByFilter();\r\n            }\r\n            else {\r\n           " +
+"     // Close dialog\r\n                vm.SearchPattern = \'\';\r\n                ge" +
+"tSearchDialogElement().classList.add(\'hidden\');\r\n                searchByFilter(" +
+");\r\n            }\r\n        }\r\n\r\n        function searchByFilter() {\r\n           " +
+" ProseMirrorBundle.searchAndHighlight(editor, vm.SearchPattern);\r\n        }\r\n\r\n " +
+"       function toggleShoppingMode() {\r\n            vm.ShoppingModeActive = !vm." +
+"ShoppingModeActive;\r\n            editor.setEditable(!vm.ShoppingModeActive);\r\n  " +
+"      }\r\n\r\n        function vueLoaded() {\r\n            var editorElement = docum" +
+"ent.getElementById(\'myeditor\');\r\n            editor = ProseMirrorBundle.initiali" +
+"zeChecklist(editorElement);\r\n            editor.on(\'selectionUpdate\', function (" +
+"editor) {\r\n                refreshActiveFormatState();\r\n            });\r\n       " +
+"     editor.on(\'update\', function (editor) {\r\n                triggerViewModelUp" +
+"date();\r\n            });\r\n            ProseMirrorBundle.registerIsShoppingModeAc" +
+"tive(function () { return vm.ShoppingModeActive; });\r\n\r\n            ");
 
 WriteLiteral(@"
 

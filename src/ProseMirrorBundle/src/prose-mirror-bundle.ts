@@ -215,7 +215,7 @@ function getCaseSensitiveFormat(formatName: string): string {
  * @param {string}  needle - The text to search for.
 */
 export function searchAndHighlight(editor: Editor, needle: string, minLength: number = 2): void {
-  if (needle.length < minLength)
+  if ((needle === null) || (needle.length < minLength))
     needle = '';
   editor.commands.setSearchTerm(needle);
 }

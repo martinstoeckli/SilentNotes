@@ -225,23 +225,23 @@ WriteLiteral("px !important;\r\n}\r\n.color-btn { color: black; }\r\n.color-btn.
 " function toggleSearchDialog() {\r\n            showSearchDialog(isSearchDialogHid" +
 "den());\r\n        }\r\n\r\n        function showSearchDialog(visible) {\r\n            " +
 "if (visible) {\r\n                // Open dialog\r\n                var filter = Pro" +
-"seMirrorBundle.getSelectedText(editor);\r\n                if (filter) {\r\n        " +
-"            vm.SearchPattern = filter.trim();\r\n                }\r\n              " +
-"  searchByFilter();\r\n                getSearchDialogElement().classList.remove(\'" +
-"hidden\');\r\n                document.getElementById(\'SearchPattern\').focus();\r\n  " +
-"          }\r\n            else {\r\n                // Close dialog\r\n              " +
-"  vm.SearchPattern = \'\';\r\n                getSearchDialogElement().classList.add" +
-"(\'hidden\');\r\n                searchByFilter();\r\n            }\r\n        }\r\n\r\n    " +
-"    function searchByFilter() {\r\n            ProseMirrorBundle.searchAndHighligh" +
-"t(editor, vm.SearchPattern);\r\n        }\r\n\r\n        function toggleShoppingMode()" +
-" {\r\n            vm.ShoppingModeActive = !vm.ShoppingModeActive;\r\n            edi" +
-"tor.setEditable(!vm.ShoppingModeActive);\r\n        }\r\n\r\n        function vueLoade" +
-"d() {\r\n            var editorElement = document.getElementById(\'myeditor\');\r\n   " +
-"         editor = ProseMirrorBundle.initializeEditor(editorElement);\r\n          " +
-"  editor.on(\'selectionUpdate\', function (editor) {\r\n                refreshActiv" +
-"eFormatState();\r\n            });\r\n            editor.on(\'update\', function (edit" +
-"or) {\r\n                triggerViewModelUpdate();\r\n            });\r\n\r\n           " +
-" ");
+"seMirrorBundle.getSelectedText(editor);\r\n                if (filter !== null) {\r" +
+"\n                    vm.SearchPattern = filter.trim();\r\n                }\r\n     " +
+"           getSearchDialogElement().classList.remove(\'hidden\');\r\n               " +
+" document.getElementById(\'SearchPattern\').focus();\r\n                searchByFilt" +
+"er();\r\n            }\r\n            else {\r\n                // Close dialog\r\n     " +
+"           vm.SearchPattern = \'\';\r\n                getSearchDialogElement().clas" +
+"sList.add(\'hidden\');\r\n                searchByFilter();\r\n            }\r\n        " +
+"}\r\n\r\n        function searchByFilter() {\r\n            ProseMirrorBundle.searchAn" +
+"dHighlight(editor, vm.SearchPattern);\r\n        }\r\n\r\n        function toggleShopp" +
+"ingMode() {\r\n            vm.ShoppingModeActive = !vm.ShoppingModeActive;\r\n      " +
+"      editor.setEditable(!vm.ShoppingModeActive);\r\n        }\r\n\r\n        function" +
+" vueLoaded() {\r\n            var editorElement = document.getElementById(\'myedito" +
+"r\');\r\n            editor = ProseMirrorBundle.initializeEditor(editorElement);\r\n " +
+"           editor.on(\'selectionUpdate\', function (editor) {\r\n                ref" +
+"reshActiveFormatState();\r\n            });\r\n            editor.on(\'update\', funct" +
+"ion (editor) {\r\n                triggerViewModelUpdate();\r\n            });\r\n\r\n  " +
+"          ");
 
 WriteLiteral("\r\n\r\n            document.addEventListener(\'custom-link-clicked\', function () {\r\n " +
 "               showLinkDialog();\r\n            });\r\n\r\n            var linkDialogE" +

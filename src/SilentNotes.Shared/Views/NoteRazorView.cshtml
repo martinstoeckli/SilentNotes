@@ -157,12 +157,12 @@ body { background-color: transparent; }
             if (visible) {
                 // Open dialog
                 var filter = ProseMirrorBundle.getSelectedText(editor);
-                if (filter) {
+                if (filter !== null) {
                     vm.SearchPattern = filter.trim();
                 }
-                searchByFilter();
                 getSearchDialogElement().classList.remove('hidden');
                 document.getElementById('SearchPattern').focus();
+                searchByFilter();
             }
             else {
                 // Close dialog

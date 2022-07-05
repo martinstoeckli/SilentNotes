@@ -171,7 +171,7 @@ namespace SilentNotes.Services
             {
                 new NoteModel { HtmlContent = _languageService.LoadText("welcome_note"), BackgroundColorHex = "#fbf4c1" },
                 new NoteModel { HtmlContent = _languageService.LoadText("welcome_note_2"), BackgroundColorHex = "#d9f8c8" },
-                new NoteModel { HtmlContent = _languageService.LoadText("welcome_note_3"), BackgroundColorHex = "#d0f8f9" },
+                new NoteModel { HtmlContent = _languageService.LoadText("welcome_note_3"), BackgroundColorHex = "#d0f8f9", NoteType = NoteType.Checklist },
             };
             repositoryModel.Notes.AddRange(notes);
         }
