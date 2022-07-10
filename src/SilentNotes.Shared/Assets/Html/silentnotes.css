@@ -402,8 +402,8 @@ a[data-tooltip]:hover:after {
 	text-align: right !important;
 	vertical-align: top;
 }
-.note-viewer li p {
-    display: inline-block;
+.note-viewer li>p:first-child {
+    display: inline;
 }
 
 .note-viewer pre {
