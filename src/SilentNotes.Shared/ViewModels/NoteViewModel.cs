@@ -605,15 +605,15 @@ namespace SilentNotes.ViewModels
         {
             StringBuilder sb = new StringBuilder();
 
+            string creationDate = Language.FormatDateTime(Model.CreatedAt.ToLocalTime(), "d");
+            sb.AppendLine(Language.LoadTextFmt("created_at", creationDate));
+            sb.AppendLine();
+
             string modificationDate = Language.FormatDateTime(Model.ModifiedAt.ToLocalTime(), "g");
             sb.Append(Language.LoadTextFmt("modified_at", modificationDate));
 
             string prettyTime = GetOrCreateTimeAgo().PrettyPrint(Model.ModifiedAt, DateTime.UtcNow);
-            sb.Append(" (").Append(prettyTime).AppendLine(")");
-            sb.AppendLine();
-
-            string creationDate = Language.FormatDateTime(Model.CreatedAt.ToLocalTime(), "d");
-            sb.Append(Language.LoadTextFmt("created_at", creationDate));
+            sb.Append(" (").Append(prettyTime).Append(")");
 
             _feedbackService.ShowMessageAsync(sb.ToString(), Language.LoadText("note_show_info"), MessageBoxButtons.Ok, true);
         }
