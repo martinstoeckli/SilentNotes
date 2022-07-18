@@ -30,7 +30,8 @@ a:hover { color: #7ba7cc; }
 #tag-container.dark .tag-item { color: white !important; }
 #tag-container .tag-item svg { fill: #707070 }
 #tag-container.dark .tag-item svg { fill: #a0a0a0 }
-#tag-selector { background-color: #2090ea; }
+#tag-selector { background-color: #696969; }
+#tag-selector svg { fill: #d3d3d3; }
 
 .background-icon { fill: #424242; }
 .fab { background-color: #2090ea; }
