@@ -24,7 +24,7 @@ namespace SilentNotes.ViewModels
     /// </summary>
     public class NoteRepositoryViewModel : ViewModelBase
     {
-        private const string EmptyTagFilter = "...";
+        private const string EmptyTagFilter = "*";
         private readonly IStoryBoardService _storyBoardService;
         private readonly IRepositoryStorageService _repositoryService;
         private readonly IFeedbackService _feedbackService;

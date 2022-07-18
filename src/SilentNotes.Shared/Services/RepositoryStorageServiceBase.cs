@@ -4,6 +4,7 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Xml.Linq;
 using SilentNotes.Models;
@@ -171,7 +172,7 @@ namespace SilentNotes.Services
             {
                 new NoteModel { HtmlContent = _languageService.LoadText("welcome_note"), BackgroundColorHex = "#fbf4c1" },
                 new NoteModel { HtmlContent = _languageService.LoadText("welcome_note_2"), BackgroundColorHex = "#d9f8c8" },
-                new NoteModel { HtmlContent = _languageService.LoadText("welcome_note_3"), BackgroundColorHex = "#d0f8f9", NoteType = NoteType.Checklist },
+                new NoteModel { HtmlContent = _languageService.LoadText("welcome_note_3"), BackgroundColorHex = "#d0f8f9", NoteType = NoteType.Checklist, Tags = new List<string> { "Security" } },
             };
             repositoryModel.Notes.AddRange(notes);
         }
