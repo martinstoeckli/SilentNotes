@@ -217,31 +217,30 @@ WriteLiteral("px !important;\r\n}\r\n.color-btn { color: black; }\r\n.color-btn.
 "t has to be\r\n        // declared statically as javascript and therefore would oc" +
 "cupy memory twice.\r\n        function initializeNoteContent(text) {\r\n            " +
 "try {\r\n                editor.chain().setMeta(\'addToHistory\', false).setContent(" +
-"text).run();\r\n                ProseMirrorBundle.scrollToTop(editor);\r\n          " +
-"  }\r\n            catch (ex) {\r\n                editor.setEditable(false);\r\n     " +
-"           document.getElementById(\'myeditor\').textContent = ex.message;\r\n      " +
-"      }\r\n        }\r\n\r\n        function isSearchDialogHidden() {\r\n            ret" +
-"urn getSearchDialogElement().classList.contains(\'hidden\');\r\n        }\r\n\r\n       " +
-" function toggleSearchDialog() {\r\n            showSearchDialog(isSearchDialogHid" +
-"den());\r\n        }\r\n\r\n        function showSearchDialog(visible) {\r\n            " +
-"if (visible) {\r\n                // Open dialog\r\n                var filter = Pro" +
-"seMirrorBundle.getSelectedText(editor);\r\n                if (filter !== null) {\r" +
-"\n                    vm.SearchPattern = filter.trim();\r\n                }\r\n     " +
-"           getSearchDialogElement().classList.remove(\'hidden\');\r\n               " +
-" document.getElementById(\'SearchPattern\').focus();\r\n                searchByFilt" +
-"er();\r\n            }\r\n            else {\r\n                // Close dialog\r\n     " +
-"           vm.SearchPattern = \'\';\r\n                getSearchDialogElement().clas" +
-"sList.add(\'hidden\');\r\n                searchByFilter();\r\n            }\r\n        " +
-"}\r\n\r\n        function searchByFilter() {\r\n            ProseMirrorBundle.searchAn" +
-"dHighlight(editor, vm.SearchPattern);\r\n        }\r\n\r\n        function toggleShopp" +
-"ingMode() {\r\n            vm.ShoppingModeActive = !vm.ShoppingModeActive;\r\n      " +
-"      editor.setEditable(!vm.ShoppingModeActive);\r\n        }\r\n\r\n        function" +
-" vueLoaded() {\r\n            var editorElement = document.getElementById(\'myedito" +
-"r\');\r\n            editor = ProseMirrorBundle.initializeEditor(editorElement);\r\n " +
-"           editor.on(\'selectionUpdate\', function (editor) {\r\n                ref" +
-"reshActiveFormatState();\r\n            });\r\n            editor.on(\'update\', funct" +
-"ion (editor) {\r\n                triggerViewModelUpdate();\r\n            });\r\n\r\n  " +
-"          ");
+"text).scrollToTop().run();\r\n            }\r\n            catch (ex) {\r\n           " +
+"     editor.setEditable(false);\r\n                document.getElementById(\'myedit" +
+"or\').textContent = ex.message;\r\n            }\r\n        }\r\n\r\n        function isS" +
+"earchDialogHidden() {\r\n            return getSearchDialogElement().classList.con" +
+"tains(\'hidden\');\r\n        }\r\n\r\n        function toggleSearchDialog() {\r\n        " +
+"    showSearchDialog(isSearchDialogHidden());\r\n        }\r\n\r\n        function sho" +
+"wSearchDialog(visible) {\r\n            if (visible) {\r\n                // Open di" +
+"alog\r\n                var filter = ProseMirrorBundle.getSelectedText(editor);\r\n " +
+"               if (filter !== null) {\r\n                    vm.SearchPattern = fi" +
+"lter.trim();\r\n                }\r\n                getSearchDialogElement().classL" +
+"ist.remove(\'hidden\');\r\n                document.getElementById(\'SearchPattern\')." +
+"focus();\r\n                searchByFilter();\r\n            }\r\n            else {\r\n" +
+"                // Close dialog\r\n                vm.SearchPattern = \'\';\r\n       " +
+"         getSearchDialogElement().classList.add(\'hidden\');\r\n                sear" +
+"chByFilter();\r\n            }\r\n        }\r\n\r\n        function searchByFilter() {\r\n" +
+"            ProseMirrorBundle.searchAndHighlight(editor, vm.SearchPattern);\r\n   " +
+"     }\r\n\r\n        function toggleShoppingMode() {\r\n            vm.ShoppingModeAc" +
+"tive = !vm.ShoppingModeActive;\r\n            editor.setEditable(!vm.ShoppingModeA" +
+"ctive);\r\n        }\r\n\r\n        function vueLoaded() {\r\n            var editorElem" +
+"ent = document.getElementById(\'myeditor\');\r\n            editor = ProseMirrorBund" +
+"le.initializeEditor(editorElement);\r\n            editor.on(\'selectionUpdate\', fu" +
+"nction (editor) {\r\n                refreshActiveFormatState();\r\n            });\r" +
+"\n            editor.on(\'update\', function (editor) {\r\n                triggerVie" +
+"wModelUpdate();\r\n            });\r\n\r\n            ");
 
 WriteLiteral("\r\n\r\n            document.addEventListener(\'custom-link-clicked\', function () {\r\n " +
 "               showLinkDialog();\r\n            });\r\n\r\n            var linkDialogE" +
@@ -252,17 +251,18 @@ WriteLiteral("\r\n\r\n            document.addEventListener(\'custom-link-clicke
 "d();\r\n                }\r\n            });\r\n\r\n            // The \'input\' event can" +
 " be delayed by Android IME composition, so we use \'keyup\'.\r\n            var sear" +
 "chPatternElement = document.getElementById(\'SearchPattern\');\r\n            search" +
-"PatternElement.addEventListener(\'keyup\', function (event) {\r\n                sea" +
-"rchByFilter();\r\n                ProseMirrorBundle.selectNextWhileTyping(editor);" +
-"\r\n            });\r\n\r\n            editor.setEditable(!vm.ShoppingModeActive);\r\n\r\n" +
-"            $(\"#tags\").autocomplete({\r\n                source: getTagSuggestions" +
-",\r\n                treshold: 0,\r\n                maximumItems: 10,\r\n            " +
-"    value: \"value\",\r\n                label: \"value\",\r\n                dropType: " +
-"\"dropup\",\r\n                onSelectItem: function (item, inputField) {\r\n        " +
-"            addTag();\r\n                },\r\n            });\r\n            getTagsE" +
-"lement().addEventListener(\"keyup\", function(event) {\r\n                if (event." +
-"key === \'Enter\' || event.keyCode === 13) {\r\n                    addTag();\r\n     " +
-"           }\r\n            });\r\n        }\r\n\r\n");
+"PatternElement.addEventListener(\'keyup\', function (event) {\r\n                vm." +
+"SearchPattern = searchPatternElement.value;\r\n                searchByFilter();\r\n" +
+"                ProseMirrorBundle.selectNextWhileTyping(editor);\r\n            })" +
+";\r\n\r\n            editor.setEditable(!vm.ShoppingModeActive);\r\n\r\n            $(\"#" +
+"tags\").autocomplete({\r\n                source: getTagSuggestions,\r\n             " +
+"   treshold: 0,\r\n                maximumItems: 10,\r\n                value: \"valu" +
+"e\",\r\n                label: \"value\",\r\n                dropType: \"dropup\",\r\n     " +
+"           onSelectItem: function (item, inputField) {\r\n                    addT" +
+"ag();\r\n                },\r\n            });\r\n            getTagsElement().addEven" +
+"tListener(\"keyup\", function(event) {\r\n                if (event.key === \'Enter\' " +
+"|| event.keyCode === 13) {\r\n                    addTag();\r\n                }\r\n  " +
+"          });\r\n        }\r\n\r\n");
 
 
 #line 237 "NoteRazorView.cshtml"
@@ -1256,6 +1256,8 @@ WriteLiteral(">\r\n                <input");
 WriteLiteral(" id=\"SearchPattern\"");
 
 WriteLiteral(" v-model=\"SearchPattern\"");
+
+WriteLiteral(" type=\"text\"");
 
 WriteLiteral(" autocomplete=\"off\"");
 

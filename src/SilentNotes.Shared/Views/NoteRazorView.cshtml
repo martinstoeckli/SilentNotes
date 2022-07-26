@@ -136,8 +136,7 @@ body { background-color: transparent; }
         // declared statically as javascript and therefore would occupy memory twice.
         function initializeNoteContent(text) {
             try {
-                editor.chain().setMeta('addToHistory', false).setContent(text).run();
-                ProseMirrorBundle.scrollToTop(editor);
+                editor.chain().setMeta('addToHistory', false).setContent(text).scrollToTop().run();
             }
             catch (ex) {
                 editor.setEditable(false);
@@ -210,6 +209,7 @@ body { background-color: transparent; }
             // The 'input' event can be delayed by Android IME composition, so we use 'keyup'.
             var searchPatternElement = document.getElementById('SearchPattern');
             searchPatternElement.addEventListener('keyup', function (event) {
+                vm.SearchPattern = searchPatternElement.value;
                 searchByFilter();
                 ProseMirrorBundle.selectNextWhileTyping(editor);
             });
@@ -319,7 +319,7 @@ body { background-color: transparent; }
 
         <div id="search-dialog" class="hidden">
             <div class="nav-filter">
-                <input id="SearchPattern" v-model="SearchPattern" autocomplete="off" />
+                <input id="SearchPattern" v-model="SearchPattern" type="text" autocomplete="off" />
                 <svg id="search-next" width='24' height='24' viewBox='0 0 24 24' class="" v-on:click="FindNextCommand"><use xlink:href="#svg-chevron-down" /></svg>
                 <svg id="search-previous" width='24' height='24' viewBox='0 0 24 24' class="" v-on:click="FindPreviousCommand"><use xlink:href="#svg-chevron-up" /></svg>
                 <svg id="filter-cancel-icon" width='24' height='24' viewBox='0 0 24 24' class="" onclick="showSearchDialog(false);"><use xlink:href="#svg-close-circle-outline" /></svg>

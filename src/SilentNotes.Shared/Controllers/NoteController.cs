@@ -110,8 +110,6 @@ namespace SilentNotes.Controllers
             {
                 new VueBindingShortcut("f", "ToggleSearchDialogCommand") { Ctrl = true },
                 new VueBindingShortcut(VueBindingShortcut.KeyEscape, "CloseSearchDialogCommand"),
-                new VueBindingShortcut(VueBindingShortcut.KeyHome, "ScrollToTopCommand") { Ctrl = true },
-                new VueBindingShortcut(VueBindingShortcut.KeyEnd, "ScrollToBottomCommand") { Ctrl = true },
                 new VueBindingShortcut("l", "ShowLinkDialog") { Ctrl = true },
                 new VueBindingShortcut("F3", "FindNextCommand"),
                 new VueBindingShortcut("F3", "FindPreviousCommand") { Shift = true },
@@ -134,8 +132,6 @@ namespace SilentNotes.Controllers
             VueBindings.DeclareAdditionalVueData("SearchPattern", String.Format("'{0}'", startingSearchFilter));
             VueBindings.DeclareAdditionalVueMethod("ToggleSearchDialogCommand", "toggleSearchDialog();");
             VueBindings.DeclareAdditionalVueMethod("CloseSearchDialogCommand", "showSearchDialog(false);");
-            VueBindings.DeclareAdditionalVueMethod("ScrollToTopCommand", "ProseMirrorBundle.scrollToTop(editor);");
-            VueBindings.DeclareAdditionalVueMethod("ScrollToBottomCommand", "ProseMirrorBundle.scrollToBottom(editor);");
             VueBindings.DeclareAdditionalVueMethod("ShowLinkDialog", "showLinkDialog();");
             VueBindings.DeclareAdditionalVueMethod("FindNextCommand", "ProseMirrorBundle.selectNext(editor);");
             VueBindings.DeclareAdditionalVueMethod("FindPreviousCommand", "ProseMirrorBundle.selectPrevious(editor);");

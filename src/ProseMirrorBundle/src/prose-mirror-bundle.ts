@@ -22,6 +22,7 @@ import { Selection } from 'prosemirror-state'
 import { CustomLink } from "./custom-link-extension";
 import { SearchNReplace } from './search-n-replace'
 import { CheckableParagraph, registerIsShoppingModeActive as checklistRegisterIsShoppingModeActive, moveChecklistUp, moveChecklistDown, sortPendingToTop, setCheckStateForAll, sortAlphabetical } from "./checkable-paragraph-extension";
+import { ScrollTo } from './scroll-to-extension'
 
 /**
  * This method will be exported and can be called from the HTML document with the "prose_mirror_bundle"
@@ -71,6 +72,7 @@ export function initializeEditor(editorElement: HTMLElement): any {
           caseSensitive: false,
           disableRegex: true,
         }),
+        ScrollTo,
       ],
       editable: true,
     });
@@ -114,6 +116,7 @@ export function initializeEditor(editorElement: HTMLElement): any {
           caseSensitive: false,
           disableRegex: true,
         }),
+        ScrollTo,
       ],
       editable: true,
     });
@@ -125,36 +128,6 @@ export function initializeEditor(editorElement: HTMLElement): any {
 
 export function registerIsShoppingModeActive(delegate: () => boolean) {
   checklistRegisterIsShoppingModeActive(delegate);
-}
-
-/**
- * Scrolls to the top of the document. It does the same as focus('start') but without setting the focus.
- * @param {Editor}  editor - A TipTap editor instance.
-*/
-export function scrollToTop(editor: Editor): void {
-  editor.chain().setTextSelection({ from: 0, to: 0 }).scrollIntoView().run();
-}
-
-/**
- * Scrolls to the end of the document. It does the same as focus('end') but without setting the focus.
- * @param {Editor}  editor - A TipTap editor instance.
-*/
-export function scrollToBottom(editor: Editor): void {
-  const selection = Selection.atEnd(editor.state.doc);
-  editor.chain().setTextSelection({ from: selection.$from.pos, to: selection.$to.pos }).scrollIntoView().run();
-}
-
-/**
- * Scrolls to the current position/selection of the document. It does the same as scrollIntoView()
- * but without requiring the focus on the editor, thus it can be called from the search box while
- * typing or in shopping mode when the editor is disabled.
- * @param {Editor}  editor - A TipTap editor instance.
-*/
-function scrollToSelection(editor: Editor): void {
-  const { node } = editor.view.domAtPos(editor.state.selection.anchor);
-  if (node) {
-      (node as any).scrollIntoView?.(false);
-  }
 }
 
 /**
@@ -247,6 +220,19 @@ export function selectNext(editor: Editor): void {
 export function selectPrevious(editor: Editor): void {
   editor.chain().focus().selectPrevious().run();
   scrollToSelection(editor);
+}
+
+/**
+ * Scrolls to the current position/selection of the document. It does the same as scrollIntoView()
+ * but without requiring the focus on the editor, thus it can be called from the search box while
+ * typing or in shopping mode when the editor is disabled.
+ * @param {Editor}  editor - A TipTap editor instance.
+*/
+function scrollToSelection(editor: Editor): void {
+  const { node } = editor.view.domAtPos(editor.state.selection.anchor);
+  if (node) {
+      (node as any).scrollIntoView?.(false);
+  }
 }
 
 /**

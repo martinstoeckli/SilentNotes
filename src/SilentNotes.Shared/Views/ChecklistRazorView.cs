@@ -270,38 +270,39 @@ WriteLiteral("; }\r\n\r\n.color-btn { color: black; }\r\n.color-btn.dark { color
 "e can avoid that the content has to be\r\n        // declared statically as javasc" +
 "ript and therefore would occupy memory twice.\r\n        function initializeNoteCo" +
 "ntent(text) {\r\n            try {\r\n                editor.chain().setMeta(\'addToH" +
-"istory\', false).setContent(text).run();\r\n                ProseMirrorBundle.scrol" +
-"lToTop(editor);\r\n            }\r\n            catch (ex) {\r\n                editor" +
-".setEditable(false);\r\n                document.getElementById(\'myeditor\').textCo" +
-"ntent = ex.message;\r\n            }\r\n        }\r\n\r\n        function isSearchDialog" +
-"Hidden() {\r\n            return getSearchDialogElement().classList.contains(\'hidd" +
-"en\');\r\n        }\r\n\r\n        function toggleSearchDialog() {\r\n            showSea" +
-"rchDialog(isSearchDialogHidden());\r\n        }\r\n\r\n        function showSearchDial" +
-"og(visible) {\r\n            if (visible) {\r\n                // Open dialog\r\n     " +
-"           var filter = ProseMirrorBundle.getSelectedText(editor);\r\n            " +
-"    if (filter !== null) {\r\n                    vm.SearchPattern = filter.trim()" +
-";\r\n                }\r\n                getSearchDialogElement().classList.remove(" +
-"\'hidden\');\r\n                document.getElementById(\'SearchPattern\').focus();\r\n " +
-"               searchByFilter();\r\n            }\r\n            else {\r\n           " +
-"     // Close dialog\r\n                vm.SearchPattern = \'\';\r\n                ge" +
-"tSearchDialogElement().classList.add(\'hidden\');\r\n                searchByFilter(" +
-");\r\n            }\r\n        }\r\n\r\n        function searchByFilter() {\r\n           " +
-" ProseMirrorBundle.searchAndHighlight(editor, vm.SearchPattern);\r\n        }\r\n\r\n " +
-"       function toggleShoppingMode() {\r\n            vm.ShoppingModeActive = !vm." +
-"ShoppingModeActive;\r\n            editor.setEditable(!vm.ShoppingModeActive);\r\n  " +
-"      }\r\n\r\n        function vueLoaded() {\r\n            var editorElement = docum" +
-"ent.getElementById(\'myeditor\');\r\n            editor = ProseMirrorBundle.initiali" +
-"zeChecklist(editorElement);\r\n            editor.on(\'selectionUpdate\', function (" +
-"editor) {\r\n                refreshActiveFormatState();\r\n            });\r\n       " +
-"     editor.on(\'update\', function (editor) {\r\n                triggerViewModelUp" +
-"date();\r\n            });\r\n            ProseMirrorBundle.registerIsShoppingModeAc" +
-"tive(function () { return vm.ShoppingModeActive; });\r\n\r\n            ");
+"istory\', false).setContent(text).scrollToTop().run();\r\n            }\r\n          " +
+"  catch (ex) {\r\n                editor.setEditable(false);\r\n                docu" +
+"ment.getElementById(\'myeditor\').textContent = ex.message;\r\n            }\r\n      " +
+"  }\r\n\r\n        function isSearchDialogHidden() {\r\n            return getSearchDi" +
+"alogElement().classList.contains(\'hidden\');\r\n        }\r\n\r\n        function toggl" +
+"eSearchDialog() {\r\n            showSearchDialog(isSearchDialogHidden());\r\n      " +
+"  }\r\n\r\n        function showSearchDialog(visible) {\r\n            if (visible) {\r" +
+"\n                // Open dialog\r\n                var filter = ProseMirrorBundle." +
+"getSelectedText(editor);\r\n                if (filter !== null) {\r\n              " +
+"      vm.SearchPattern = filter.trim();\r\n                }\r\n                getS" +
+"earchDialogElement().classList.remove(\'hidden\');\r\n                document.getEl" +
+"ementById(\'SearchPattern\').focus();\r\n                searchByFilter();\r\n        " +
+"    }\r\n            else {\r\n                // Close dialog\r\n                vm.S" +
+"earchPattern = \'\';\r\n                getSearchDialogElement().classList.add(\'hidd" +
+"en\');\r\n                searchByFilter();\r\n            }\r\n        }\r\n\r\n        fu" +
+"nction searchByFilter() {\r\n            ProseMirrorBundle.searchAndHighlight(edit" +
+"or, vm.SearchPattern);\r\n        }\r\n\r\n        function toggleShoppingMode() {\r\n  " +
+"          vm.ShoppingModeActive = !vm.ShoppingModeActive;\r\n            editor.se" +
+"tEditable(!vm.ShoppingModeActive);\r\n        }\r\n\r\n        function vueLoaded() {\r" +
+"\n            var editorElement = document.getElementById(\'myeditor\');\r\n         " +
+"   editor = ProseMirrorBundle.initializeChecklist(editorElement);\r\n            e" +
+"ditor.on(\'selectionUpdate\', function (editor) {\r\n                refreshActiveFo" +
+"rmatState();\r\n            });\r\n            editor.on(\'update\', function (editor)" +
+" {\r\n                triggerViewModelUpdate();\r\n            });\r\n            Pros" +
+"eMirrorBundle.registerIsShoppingModeActive(function () { return vm.ShoppingModeA" +
+"ctive; });\r\n\r\n            ");
 
 WriteLiteral(@"
 
             // The 'input' event can be delayed for IME composition.
             var searchPatternElement = document.getElementById('SearchPattern');
             searchPatternElement.addEventListener('keyup', function (event) {
+                vm.SearchPattern = searchPatternElement.value;
                 searchByFilter();
                 ProseMirrorBundle.selectNextWhileTyping(editor);
             });
@@ -1192,6 +1193,8 @@ WriteLiteral(">\r\n            <input");
 WriteLiteral(" id=\"SearchPattern\"");
 
 WriteLiteral(" v-model=\"SearchPattern\"");
+
+WriteLiteral(" type=\"text\"");
 
 WriteLiteral(" autocomplete=\"off\"");
 
