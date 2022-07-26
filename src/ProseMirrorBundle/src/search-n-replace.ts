@@ -16,18 +16,6 @@ declare module '@tiptap/core' {
        * @description Set search term in extension.
        */
       setSearchTerm: (searchTerm: string) => ReturnType,
-    //   /**
-    //    * @description Set replace term in extension.
-    //    */
-    //   setReplaceTerm: (replaceTerm: string) => ReturnType,
-    //   /**
-    //    * @description Replace first instance of search result with given replace term.
-    //    */
-    //   replace: () => ReturnType,
-    //   /**
-    //    * @description Replace all instances of search result with given replace term.
-    //    */
-    //   replaceAll: () => ReturnType,
 
       /**
        * @description Searches for the next match and sets the selection to this match.
@@ -128,58 +116,6 @@ function processSearches(doc: ProsemirrorNode, searchTerm: RegExp, searchResultC
   }
 }
 
-// const replace = (replaceTerm: string, results: Result[], { state, dispatch }: any) => {
-//   const firstResult = results[0]
-
-//   if (!firstResult) return
-
-//   const { from, to } = results[0]
-
-//   if (dispatch) dispatch(state.tr.insertText(replaceTerm, from, to))
-// }
-
-// const rebaseNextResult = (replaceTerm: string, index: number, lastOffset: number, results: Result[]): [number, Result[]] | null => {
-//   const nextIndex = index + 1
-
-//   if (!results[nextIndex]) return null
-
-//   const { from: currentFrom, to: currentTo } = results[index]
-
-//   const offset = (currentTo - currentFrom - replaceTerm.length) + lastOffset
-
-//   const { from, to } = results[nextIndex]
-
-//   results[nextIndex] = {
-//     to: to - offset,
-//     from: from - offset,
-//   }
-
-//   return [offset, results]
-// }
-
-// const replaceAll = (replaceTerm: string, results: Result[], { tr, dispatch }: any) => {
-//   let offset = 0
-
-//   let ourResults = results.slice()
-
-//   if (!ourResults.length) return
-
-//   for (let i = 0; i < ourResults.length; i += 1) {
-//     const { from, to } = ourResults[i]
-
-//     tr.insertText(replaceTerm, from, to)
-
-//     const rebaseNextResultResponse = rebaseNextResult(replaceTerm, i, offset, ourResults)
-
-//     if (rebaseNextResultResponse) {
-//       offset = rebaseNextResultResponse[0]
-//       ourResults = rebaseNextResultResponse[1]
-//     }
-//   }
-
-//   dispatch(tr)
-// }
-
 const selectNext = (canKeepPos: boolean, continueAtBegin: boolean, results: Result[], { state }: any) => {
   const { from } = state.selection
 
@@ -246,37 +182,7 @@ export const SearchNReplace = Extension.create<SearchOptions>({
         dispatch(state.tr)
         return false
       },
-    //   setReplaceTerm: (replaceTerm: string) => ({ state, dispatch }) => {
-    //     this.options.replaceTerm = replaceTerm
-    //     this.options.results = []
-
-    //     dispatch(state.tr)
-
-    //     return false
-    //   },
-    //   replace: () => ({ state, dispatch }) => {
-    //     const { replaceTerm, results } = this.options
-
-    //     replace(replaceTerm, results, { state, dispatch })
-
-    //     this.options.results.shift()
-
-    //     dispatch(state.tr)
-
-    //     return false
-    //   },
-    //   replaceAll: () => ({ state, tr, dispatch }) => {
-    //     const { replaceTerm, results } = this.options
-
-    //     replaceAll(replaceTerm, results, { tr, dispatch })
-
-    //     this.options.results = []
-
-    //     dispatch(state.tr)
-
-    //     return false
-    //   },
-
+      
       selectNext: (canKeepPos: boolean, continueAtBegin: boolean) => ({ state, dispatch }) => {
         const { results } = this.options
         selectNext(canKeepPos, continueAtBegin, results, { state })

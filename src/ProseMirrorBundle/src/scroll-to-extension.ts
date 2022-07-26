@@ -1,7 +1,11 @@
-import { Extension } from '@tiptap/core';
-import { TextSelection } from 'prosemirror-state'
+import { Extension } from '@tiptap/core'
+import { TextSelection, EditorState, Transaction } from 'prosemirror-state'
 
 declare module '@tiptap/core' {
+  /**
+   * Supports scrolling to the top [Ctrl-Home] or to the bottom [Ctrl-End] of the document without
+   * requiring to set the focus. This can be useful, if the document is shown readonly.
+   */
   interface Commands<ReturnType> {
     scrollto: {
       /**
@@ -23,44 +27,14 @@ export const ScrollTo = Extension.create({
   addCommands() {
     return {
       scrollToTop: () => ({ tr, state, dispatch }) => {
-        const { doc } = tr
-        
-        const minPos = TextSelection.atStart(doc).from;
-        const selection = TextSelection.create(doc, minPos, minPos)
-        const isSameSelection = state.selection.eq(selection)
-      
-        // const selection = TextSelection.create(doc, 0, 0)
-        if (dispatch) {
-          if (!isSameSelection) {
-            tr.setSelection(selection).scrollIntoView()
-          }
-      
-          // `tr.setSelection` resets the stored marks
-          // so we’ll restore them if the selection is the same as before
-          if (isSameSelection && tr.storedMarks) {
-            tr.setStoredMarks(tr.storedMarks)
-          }
-        }
+        const minPos = TextSelection.atStart(tr.doc).from;
+        scrollToPos(minPos, tr, state, dispatch)
         return true
       },
 
       scrollToBottom: () => ({ tr, state, dispatch }) => {
-        const { doc } = tr
-        const maxPos = TextSelection.atEnd(doc).to;
-        const selection = TextSelection.create(doc, maxPos, maxPos)
-        const isSameSelection = state.selection.eq(selection)
-      
-        if (dispatch) {
-          if (!isSameSelection) {
-            tr.setSelection(selection).scrollIntoView()
-          }
-      
-          // `tr.setSelection` resets the stored marks
-          // so we’ll restore them if the selection is the same as before
-          if (isSameSelection && tr.storedMarks) {
-            tr.setStoredMarks(tr.storedMarks)
-          }
-        }
+        const maxPos = TextSelection.atEnd(tr.doc).to;
+        scrollToPos(maxPos, tr, state, dispatch)
         return true
       },
     }
@@ -73,3 +47,12 @@ export const ScrollTo = Extension.create({
     }
   },
 })
+
+function scrollToPos(pos: number, tr: Transaction, state: EditorState, dispatch: any) {
+  const selection = TextSelection.create(tr.doc, pos, pos)
+  const isSameSelection = state.selection.eq(selection)
+
+  if (dispatch && !isSameSelection) {
+    tr.setSelection(selection).scrollIntoView()
+  }
+}
