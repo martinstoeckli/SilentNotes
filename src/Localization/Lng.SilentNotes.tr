@@ -20,6 +20,10 @@ recover_repository = Dosya deposundaki notları dizine yükle
 welcome_note = <h1>Merhaba 💛</h1><p>Gizliliğinize değer veriyoruz. SilentNotes kişisel verilerinizi toplamaz ve reklamsız çalışır. Kaynak kodu herkese açıktır.</p>
 welcome_note_2 = <h1>Notları sıralama</h1><p>Notun üstündeki çapraz ok düğmesine basılı tutarak notların sırasını değiştirebilirsiniz.</p>
 welcome_note_3 = <h1>Şifre ile koruma</h1><p>Notlarınızı korumak için kasa özelliğini açın ve notlarınızı kilitleyin.</p>
+welcome_note_tag = Security
+
+filter_show_all_notes = All notes
+filter_only_without_tags = Without tags
 
 note_create_new = Not oluştur
 note_undelete = Notu geri yükle

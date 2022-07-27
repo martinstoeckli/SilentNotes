@@ -307,21 +307,22 @@ WriteLiteral(" aria-haspopup=\"true\"");
 
 WriteLiteral(" aria-expanded=\"false\"");
 
-WriteLiteral(">\r\n                <template>\r\n                    <span");
+WriteLiteral(">\r\n                <span");
 
 WriteLiteral(" class=\"tag-selector-text\"");
 
-WriteLiteral(" v-if=\"SelectedTag!=\'*\'\"");
+WriteAttribute ("v-if", " v-if=\"", "\""
+, Tuple.Create<string,object,bool> ("", "SelectedTag==\'", true)
 
-WriteLiteral(" v-bind:title=\"SelectedTag\"");
+#line 134 "NoteRepositoryRazorView.cshtml"
+                             , Tuple.Create<string,object,bool> ("", Model.AllNotesTagFilter
 
-WriteLiteral(">{{SelectedTag}}</span>\r\n                    <span");
-
-WriteLiteral(" class=\"tag-selector-text\"");
-
-WriteLiteral(" v-if=\"SelectedTag==\'*\'\"");
-
-WriteLiteral(" ><svg");
+#line default
+#line hidden
+, false)
+, Tuple.Create<string,object,bool> ("", "\'", true)
+);
+WriteLiteral("><svg");
 
 WriteLiteral(" width=\'22\'");
 
@@ -333,8 +334,42 @@ WriteLiteral("><use");
 
 WriteLiteral(" xlink:href=\'#svg-tag-multiple\'");
 
-WriteLiteral(" /></svg></span>\r\n                </template>                \r\n            </butt" +
-"on>\r\n            <div");
+WriteLiteral(" /></svg></span>\r\n                <span");
+
+WriteLiteral(" class=\"tag-selector-text\"");
+
+WriteAttribute ("v-else-if", " v-else-if=\"", "\""
+, Tuple.Create<string,object,bool> ("", "SelectedTag==\'", true)
+
+#line 135 "NoteRepositoryRazorView.cshtml"
+                                  , Tuple.Create<string,object,bool> ("", Model.WithoutTagFilter
+
+#line default
+#line hidden
+, false)
+, Tuple.Create<string,object,bool> ("", "\'", true)
+);
+WriteLiteral("><svg");
+
+WriteLiteral(" width=\'22\'");
+
+WriteLiteral(" height=\'22\'");
+
+WriteLiteral(" viewBox=\'0 0 24 24\'");
+
+WriteLiteral("><use");
+
+WriteLiteral(" xlink:href=\'#svg-tag-off\'");
+
+WriteLiteral(" /></svg></span>\r\n                <span");
+
+WriteLiteral(" class=\"tag-selector-text\"");
+
+WriteLiteral(" v-else");
+
+WriteLiteral(" v-bind:title=\"SelectedTag\"");
+
+WriteLiteral(">{{SelectedTag}}</span>\r\n            </button>\r\n            <div");
 
 WriteLiteral(" class=\"dropdown-menu\"");
 
@@ -346,18 +381,17 @@ WriteLiteral(">\r\n                    <div");
 
 WriteLiteral(" class=\"dropdown-item\"");
 
-WriteLiteral(" v-if=\"Tag!=\'*\'\"");
+WriteAttribute ("v-if", " v-if=\"", "\""
+, Tuple.Create<string,object,bool> ("", "Tag==\'", true)
 
-WriteLiteral(" onclick=\"setSelectedTag(event);\"");
+#line 140 "NoteRepositoryRazorView.cshtml"
+                    , Tuple.Create<string,object,bool> ("", Model.AllNotesTagFilter
 
-WriteLiteral(" v-bind:data-tag=\"Tag\"");
-
-WriteLiteral(">{{Tag}}</div>\r\n                    <div");
-
-WriteLiteral(" class=\"dropdown-item\"");
-
-WriteLiteral(" v-if=\"Tag==\'*\'\"");
-
+#line default
+#line hidden
+, false)
+, Tuple.Create<string,object,bool> ("", "\'", true)
+);
 WriteLiteral(" onclick=\"setSelectedTag(event);\"");
 
 WriteLiteral(" v-bind:data-tag=\"Tag\"");
@@ -374,8 +408,49 @@ WriteLiteral("><use");
 
 WriteLiteral(" xlink:href=\'#svg-tag-multiple\'");
 
-WriteLiteral(" /></svg>*</div>\r\n                </template>\r\n            </div>\r\n        </div>" +
-"\r\n        <div");
+WriteLiteral(" /></svg> {{Tag}}</div>\r\n                    <div");
+
+WriteLiteral(" class=\"dropdown-item\"");
+
+WriteAttribute ("v-else-if", " v-else-if=\"", "\""
+, Tuple.Create<string,object,bool> ("", "Tag==\'", true)
+
+#line 141 "NoteRepositoryRazorView.cshtml"
+                         , Tuple.Create<string,object,bool> ("", Model.WithoutTagFilter
+
+#line default
+#line hidden
+, false)
+, Tuple.Create<string,object,bool> ("", "\'", true)
+);
+WriteLiteral(" onclick=\"setSelectedTag(event);\"");
+
+WriteLiteral(" v-bind:data-tag=\"Tag\"");
+
+WriteLiteral("><svg");
+
+WriteLiteral(" width=\'22\'");
+
+WriteLiteral(" height=\'22\'");
+
+WriteLiteral(" viewBox=\'0 0 24 24\'");
+
+WriteLiteral("><use");
+
+WriteLiteral(" xlink:href=\'#svg-tag-off\'");
+
+WriteLiteral(" /></svg> {{Tag}}</div>\r\n                    <div");
+
+WriteLiteral(" class=\"dropdown-item\"");
+
+WriteLiteral(" v-else");
+
+WriteLiteral(" onclick=\"setSelectedTag(event);\"");
+
+WriteLiteral(" v-bind:data-tag=\"Tag\"");
+
+WriteLiteral(">{{Tag}}</div>\r\n                </template>\r\n            </div>\r\n        </div>\r\n" +
+"        <div");
 
 WriteLiteral(" class=\"nav-item nav-filter flex-grow-1 align-self-center\"");
 
@@ -978,6 +1053,20 @@ WriteLiteral("\r\n");
 
 #line 200 "NoteRepositoryRazorView.cshtml"
           WriteLiteral(Model.Icon.LoadIcon("tag-multiple", new[] { new KeyValuePair<string, string>("id", "svg-tag-multiple") }));
+
+#line default
+#line hidden
+WriteLiteral("\r\n");
+
+
+#line 201 "NoteRepositoryRazorView.cshtml"
+        
+
+#line default
+#line hidden
+
+#line 201 "NoteRepositoryRazorView.cshtml"
+          WriteLiteral(Model.Icon.LoadIcon("tag-off", new[] { new KeyValuePair<string, string>("id", "svg-tag-off") }));
 
 #line default
 #line hidden

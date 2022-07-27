@@ -20,6 +20,10 @@ recover_repository = Sichere Notizenrepository in Verzeichnis
 welcome_note = <h1>Willkommen 💛</h1><p>SilentNotes respektiert Ihre Privatsphäre, es sammelt keine Benutzerdaten, verzichtet auf Werbung und ist Open Source.
 welcome_note_2 = <h1>Notizen ordnen</h1><p>Ziehen Sie das Doppelpfeil-Icon einer Notiz um die Reihenfolge zu ändern.</p>
 welcome_note_3 = <h1>Passwortschutz</h1><p>Öffnen Sie den Tresor und benützen Sie das Schloss-Icon um eine Notiz zu schützen.</p>
+welcome_note_tag = Sicherheit
+
+filter_show_all_notes = Alle Notizen
+filter_only_without_tags = Ohne Schlagwörter
 
 note_create_new = Neue Notiz erstellen
 note_undelete = Notiz wiederherstellen

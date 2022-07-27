@@ -24,7 +24,6 @@ namespace SilentNotes.ViewModels
     /// </summary>
     public class NoteRepositoryViewModel : ViewModelBase
     {
-        private const string EmptyTagFilter = "*";
         private readonly IStoryBoardService _storyBoardService;
         private readonly IRepositoryStorageService _repositoryService;
         private readonly IFeedbackService _feedbackService;
@@ -63,9 +62,7 @@ namespace SilentNotes.ViewModels
 
             _repositoryService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepository);
             Model = noteRepository;
-
-            Tags = Model.CollectActiveTags();
-            Tags.Insert(0, EmptyTagFilter);
+            UpdateTags();
 
             // Initialize commands and events
             ShowNoteCommand = new RelayCommand<object>(ShowNote);
@@ -375,10 +372,7 @@ namespace SilentNotes.ViewModels
             // Remove note from filtered list
             int selectedIndex = FilteredNotes.IndexOf(selectedNote);
             FilteredNotes.RemoveAt(selectedIndex);
-
-            Tags = Model.CollectActiveTags();
-            Tags.Insert(0, EmptyTagFilter);
-            OnPropertyChanged("Tags");
+            UpdateTags();
 
             // If the note was the last one containing the selected tag, the filter should be cleared
             if (!SelectedTagExistsInTags())
@@ -405,12 +399,12 @@ namespace SilentNotes.ViewModels
             get
             {
                 SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
-                return string.IsNullOrEmpty(settings.SelectedTag) ? EmptyTagFilter : settings.SelectedTag;
+                return string.IsNullOrEmpty(settings.SelectedTag) ? AllNotesTagFilter : settings.SelectedTag;
             }
 
             set
             {
-                string newValue = (value == EmptyTagFilter ? null : value);
+                string newValue = (value == AllNotesTagFilter ? null : value);
                 SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
                 if (ChangePropertyIndirect(() => settings.SelectedTag, (string v) => settings.SelectedTag = v, newValue, true))
                 {
@@ -420,6 +414,30 @@ namespace SilentNotes.ViewModels
                     _settingsService.TrySaveSettingsToLocalDevice(settings);
                 }
             }
+        }
+
+        private void UpdateTags()
+        {
+            Tags = Model.CollectActiveTags();
+            Tags.Insert(0, AllNotesTagFilter);
+            Tags.Insert(1, WithoutTagFilter);
+            OnPropertyChanged(nameof(Tags));
+        }
+
+        /// <summary>
+        /// Gets the localized tag filter to show all notes.
+        /// </summary>
+        public string AllNotesTagFilter
+        {
+            get { return string.Format("«{0}»", Language.LoadText("filter_show_all_notes")); }
+        }
+
+        /// <summary>
+        /// Gets the localized tag filter to show all notes without tags.
+        /// </summary>
+        public string WithoutTagFilter
+        {
+            get { return string.Format("«{0}»", Language.LoadText("filter_only_without_tags")); }
         }
 
         /// <summary>
