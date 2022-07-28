@@ -103,14 +103,34 @@ namespace SilentNotesTest
         }
 
         [Test]
+        public void TryGetKeyWorksCorrectly()
+        {
+            KeyValueList<string, string> list = new KeyValueList<string, string>();
+            list["one"] = "once";
+
+            bool result;
+            string key;
+            result = list.TryGetKey("once", out key);
+            Assert.IsTrue(result);
+            Assert.AreEqual("one", key);
+
+            result = list.TryGetKey("notexisting", out key);
+            Assert.IsFalse(result);
+            Assert.IsNull(key);
+        }
+
+        [Test]
         public void ListRespectsEqualityComparer()
         {
             // case insensitive comparer
-            KeyValueList<string, string> list = new KeyValueList<string, string>(StringComparer.InvariantCultureIgnoreCase);
+            KeyValueList<string, string> list = new KeyValueList<string, string>(StringComparer.InvariantCultureIgnoreCase, StringComparer.InvariantCultureIgnoreCase);
             list["one"] = "once";
 
             var result = list["OnE"];
             Assert.AreEqual("once", result);
+
+            list.TryGetKey("OnCe", out result);
+            Assert.AreEqual("one", result);
         }
 
         [Test]

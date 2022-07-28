@@ -351,9 +351,9 @@ WriteAttribute ("v-else-if", " v-else-if=\"", "\""
 );
 WriteLiteral("><svg");
 
-WriteLiteral(" width=\'22\'");
+WriteLiteral(" width=\'20\'");
 
-WriteLiteral(" height=\'22\'");
+WriteLiteral(" height=\'20\'");
 
 WriteLiteral(" viewBox=\'0 0 24 24\'");
 
@@ -429,9 +429,9 @@ WriteLiteral(" v-bind:data-tag=\"Tag\"");
 
 WriteLiteral("><svg");
 
-WriteLiteral(" width=\'22\'");
+WriteLiteral(" width=\'20\'");
 
-WriteLiteral(" height=\'22\'");
+WriteLiteral(" height=\'20\'");
 
 WriteLiteral(" viewBox=\'0 0 24 24\'");
 

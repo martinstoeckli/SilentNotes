@@ -132,13 +132,13 @@ div.dark .note-viewer.over-view.checklist p.disabled::before { content: @{WriteL
         <div class="btn-group btn-group-sm align-self-center ml-auto mr-1">
             <button id="tag-selector" type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span class="tag-selector-text" v-if="SelectedTag=='@Model.AllNotesTagFilter'"><svg width='22' height='22' viewBox='0 0 24 24'><use xlink:href='#svg-tag-multiple' /></svg></span>
-                <span class="tag-selector-text" v-else-if="SelectedTag=='@Model.WithoutTagFilter'"><svg width='22' height='22' viewBox='0 0 24 24'><use xlink:href='#svg-tag-off' /></svg></span>
+                <span class="tag-selector-text" v-else-if="SelectedTag=='@Model.WithoutTagFilter'"><svg width='20' height='20' viewBox='0 0 24 24'><use xlink:href='#svg-tag-off' /></svg></span>
                 <span class="tag-selector-text" v-else v-bind:title="SelectedTag">{{SelectedTag}}</span>
             </button>
             <div class="dropdown-menu">
                 <template v-for="Tag in Tags">
                     <div class="dropdown-item" v-if="Tag=='@Model.AllNotesTagFilter'" onclick="setSelectedTag(event);" v-bind:data-tag="Tag"><svg width='22' height='22' viewBox='0 0 24 24'><use xlink:href='#svg-tag-multiple' /></svg> {{Tag}}</div>
-                    <div class="dropdown-item" v-else-if="Tag=='@Model.WithoutTagFilter'" onclick="setSelectedTag(event);" v-bind:data-tag="Tag"><svg width='22' height='22' viewBox='0 0 24 24'><use xlink:href='#svg-tag-off' /></svg> {{Tag}}</div>
+                    <div class="dropdown-item" v-else-if="Tag=='@Model.WithoutTagFilter'" onclick="setSelectedTag(event);" v-bind:data-tag="Tag"><svg width='20' height='20' viewBox='0 0 24 24'><use xlink:href='#svg-tag-off' /></svg> {{Tag}}</div>
                     <div class="dropdown-item" v-else onclick="setSelectedTag(event);" v-bind:data-tag="Tag">{{Tag}}</div>
                 </template>
             </div>

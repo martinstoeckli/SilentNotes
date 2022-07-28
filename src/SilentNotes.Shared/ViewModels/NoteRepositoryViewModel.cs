@@ -31,6 +31,7 @@ namespace SilentNotes.ViewModels
         private readonly IEnvironmentService _environmentService;
         private readonly SearchableHtmlConverter _searchableTextConverter;
         private readonly ICryptor _noteCryptor;
+        private readonly KeyValueList<string, string> _specialTagLocalizations;
         private NoteRepositoryModel _model;
 
         /// <summary>
@@ -60,6 +61,10 @@ namespace SilentNotes.ViewModels
             AllNotes = new List<NoteViewModel>();
             FilteredNotes = new ObservableCollection<NoteViewModel>();
 
+            _specialTagLocalizations = new KeyValueList<string, string>();
+            _specialTagLocalizations[NoteFilter.SpecialTags.AllNotes] = string.Format("«{0}»", Language.LoadText("filter_show_all_notes"));
+            _specialTagLocalizations[NoteFilter.SpecialTags.NotesWithoutTags] = string.Format("«{0}»", Language.LoadText("filter_only_without_tags"));
+
             _repositoryService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepository);
             Model = noteRepository;
             UpdateTags();
@@ -87,7 +92,7 @@ namespace SilentNotes.ViewModels
             if (!SelectedTagExistsInTags())
                 settings.SelectedTag = null;
 
-            if (!string.IsNullOrEmpty(settings.SelectedTag) || !string.IsNullOrEmpty(settings.Filter))
+            if ((settings.SelectedTag != NoteFilter.SpecialTags.AllNotes) || !string.IsNullOrEmpty(settings.Filter))
             {
                 OnPropertyChanged(nameof(SelectedTag));
                 OnPropertyChanged(nameof(Filter));
@@ -101,7 +106,11 @@ namespace SilentNotes.ViewModels
         {
             // An invalid selected tag can exist if the user edited a note (deleted a tag) and
             // returned to the overview, which still remembers this selected tag.
-            NoteFilter noteFilter = new NoteFilter(null, SelectedTag);
+            SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
+            if (NoteFilter.SpecialTags.IsSpecialTag(settings.SelectedTag))
+                return true;
+
+            NoteFilter noteFilter = new NoteFilter(null, settings.SelectedTag);
             return noteFilter.ContainsTag(Tags);
         }
 
@@ -399,12 +408,20 @@ namespace SilentNotes.ViewModels
             get
             {
                 SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
-                return string.IsNullOrEmpty(settings.SelectedTag) ? AllNotesTagFilter : settings.SelectedTag;
+                if (_specialTagLocalizations.TryGetValue(settings.SelectedTag, out string localizedSelectedTag))
+                    return localizedSelectedTag;
+                else
+                    return settings.SelectedTag;
             }
 
             set
             {
-                string newValue = (value == AllNotesTagFilter ? null : value);
+                string newValue;
+                if (_specialTagLocalizations.TryGetKey(value, out string key))
+                    newValue = key;
+                else
+                    newValue = value;
+
                 SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
                 if (ChangePropertyIndirect(() => settings.SelectedTag, (string v) => settings.SelectedTag = v, newValue, true))
                 {
@@ -429,7 +446,7 @@ namespace SilentNotes.ViewModels
         /// </summary>
         public string AllNotesTagFilter
         {
-            get { return string.Format("«{0}»", Language.LoadText("filter_show_all_notes")); }
+            get { return _specialTagLocalizations[NoteFilter.SpecialTags.AllNotes]; }
         }
 
         /// <summary>
@@ -437,7 +454,7 @@ namespace SilentNotes.ViewModels
         /// </summary>
         public string WithoutTagFilter
         {
-            get { return string.Format("«{0}»", Language.LoadText("filter_only_without_tags")); }
+            get { return _specialTagLocalizations[NoteFilter.SpecialTags.NotesWithoutTags]; }
         }
 
         /// <summary>
