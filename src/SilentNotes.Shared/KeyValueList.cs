@@ -22,12 +22,13 @@ namespace SilentNotes
     public class KeyValueList<TKey, TValue> : List<KeyValueList<TKey, TValue>.Pair>
     {
         private readonly IEqualityComparer<TKey> _keyComparer;
+        private readonly IEqualityComparer<TValue> _valueComparer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="KeyValueList{TKey, TValue}"/> class.
         /// </summary>
         public KeyValueList()
-            : this(EqualityComparer<TKey>.Default)
+            : this(null, null)
         {
         }
 
@@ -42,10 +43,23 @@ namespace SilentNotes
         /// comparer of this datatype. The comparer is used for searching by the left element.
         /// This allows e.g. for case insensitive searching.</param>
         public KeyValueList(IEqualityComparer<TKey> keyComparer)
+            : this(keyComparer, null)
         {
-            _keyComparer = keyComparer;
-            if (_keyComparer == null)
-                _keyComparer = EqualityComparer<TKey>.Default;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="KeyValueList{TKey, TValue}"/> class.
+        /// </summary>
+        /// <param name="keyComparer">User defined comparer, or null to use the default
+        /// comparer of this datatype. The comparer is used for searching by the left element.
+        /// This allows e.g. for case insensitive searching.</param>
+        /// <param name="valueComparer">User defined comparer, or null to use the default
+        /// comparer of this datatype. The comparer is used for searching by the right element.
+        /// This allows e.g. for case insensitive searching.</param>
+        public KeyValueList(IEqualityComparer<TKey> keyComparer, IEqualityComparer<TValue> valueComparer)
+        {
+            _keyComparer = keyComparer ?? EqualityComparer<TKey>.Default;
+            _valueComparer = valueComparer ?? EqualityComparer<TValue>.Default;
         }
 
         /// <summary>
@@ -141,6 +155,28 @@ namespace SilentNotes
         }
 
         /// <summary>
+        /// Tries to find the first key-value pair in the list with a given value, and returns its key.
+        /// </summary>
+        /// <param name="value">Value to search for.</param>
+        /// <param name="key">Retrieves the key of the found key-value pair or its null
+        /// representation, if no such key was found.</param>
+        /// <returns>Returns true if the value was found, otherwise false.</returns>
+        public bool TryGetKey(TValue value, out TKey key)
+        {
+            Pair item = FindByValue(value);
+            if (item != null)
+            {
+                key = item.Key;
+                return true;
+            }
+            else
+            {
+                key = default(TKey);
+                return false;
+            }
+        }
+
+        /// <summary>
         /// Checks whether the list contains a pair with a given key.
         /// </summary>
         /// <param name="key">Key to search for.</param>
@@ -168,6 +204,16 @@ namespace SilentNotes
         protected Pair FindByKey(TKey key)
         {
             return this.FirstOrDefault(item => _keyComparer.Equals(key, item.Key));
+        }
+
+        /// <summary>
+        /// Searches for the first key-value pair in the list, with a given value.
+        /// </summary>
+        /// <param name="key">Key to search for.</param>
+        /// <returns>Found key-value pair or null if no such key was found.</returns>
+        protected Pair FindByValue(TValue value)
+        {
+            return this.FirstOrDefault(item => _valueComparer.Equals(value, item.Value));
         }
     }
 }

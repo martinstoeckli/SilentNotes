@@ -21,7 +21,8 @@ namespace SilentNotes.Workers
         /// Initializes a new instance of the <see cref="NoteFilter"/> class.
         /// </summary>
         /// <param name="pattern">User defined search filter.</param>
-        /// <param name="tag">User defined tag to search for.</param>
+        /// <param name="tag">User defined tag to search for or a value of <see cref="SpecialTags"/>.
+        /// </param>
         public NoteFilter(string pattern, string tag)
         {
             _pattern = pattern;
@@ -53,14 +54,45 @@ namespace SilentNotes.Workers
         public bool ContainsTag(IEnumerable<string> noteTags)
         {
             // There is no tag to search for
-            if (String.IsNullOrEmpty(_tag))
+            if (String.IsNullOrEmpty(_tag) || (_tag == SpecialTags.AllNotes))
                 return true;
 
+            // Check for special tags
+            bool hasTags = (noteTags != null) && noteTags.Any();
+            if (_tag == SpecialTags.NotesWithoutTags)
+                return !hasTags;
+
             // There is a tag to search for, but no tags in the list
-            if (noteTags == null)
+            if (!hasTags)
                 return false;
 
             return noteTags.Contains(_tag, StringComparer.InvariantCultureIgnoreCase);
+        }
+
+        /// <summary>
+        /// List of tags with a special meaning.
+        /// </summary>
+        public static class SpecialTags
+        {
+            /// <summary>
+            /// Show all notes, do not filter them.
+            /// </summary>
+            public const string AllNotes = null;
+
+            /// <summary>
+            /// Searches for notes without attached tags.
+            /// </summary>
+            public const string NotesWithoutTags = "8ed5a509-59a3-44f4-8360-a02f0d3854b6";
+
+            /// <summary>
+            /// Checks whether a given tag is a special tag.
+            /// </summary>
+            /// <param name="tag">Tag to check.</param>
+            /// <returns>Returns true if the tag is a special tag, otherwise false.</returns>
+            public static bool IsSpecialTag(string tag)
+            {
+                return (tag == AllNotes) || (tag == SpecialTags.NotesWithoutTags);
+            }
         }
     }
 }

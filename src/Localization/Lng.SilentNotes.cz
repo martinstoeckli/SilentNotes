@@ -20,6 +20,10 @@ recover_repository = Obnovit poznámky do adresáře
 welcome_note = <h1>Vitejte 💛</h1><p>SilentNotes respektují vaše soukromí. Nejsou shromažďována osobní data, neobsahuje reklamy a je open source.</p>
 welcome_note_2 = <h1>Řazení poznámek</h1><p>Pořadí poznámky změníte tažením ikony v pravém horním rohu.</p>
 welcome_note_3 = <h1>Ochrana heslem</h1><p>Otevřte trezor a kliknutím na ikonu zámku zaheslujte poznámku.</p>
+welcome_note_tag = Security
+
+filter_show_all_notes = All notes
+filter_only_without_tags = Without tags
 
 note_create_new = Vytvořit novou poznámku
 note_undelete = Obnovit poznámku

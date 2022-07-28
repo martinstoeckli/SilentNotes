@@ -131,15 +131,15 @@ div.dark .note-viewer.over-view.checklist p.disabled::before { content: @{WriteL
     <nav id="navigation" class="d-flex">
         <div class="btn-group btn-group-sm align-self-center ml-auto mr-1">
             <button id="tag-selector" type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <template>
-                    <span class="tag-selector-text" v-if="SelectedTag!='*'" v-bind:title="SelectedTag">{{SelectedTag}}</span>
-                    <span class="tag-selector-text" v-if="SelectedTag=='*'" ><svg width='22' height='22' viewBox='0 0 24 24'><use xlink:href='#svg-tag-multiple' /></svg></span>
-                </template>                
+                <span class="tag-selector-text" v-if="SelectedTag=='@Model.AllNotesTagFilter'"><svg width='22' height='22' viewBox='0 0 24 24'><use xlink:href='#svg-tag-multiple' /></svg></span>
+                <span class="tag-selector-text" v-else-if="SelectedTag=='@Model.WithoutTagFilter'"><svg width='20' height='20' viewBox='0 0 24 24'><use xlink:href='#svg-tag-off' /></svg></span>
+                <span class="tag-selector-text" v-else v-bind:title="SelectedTag">{{SelectedTag}}</span>
             </button>
             <div class="dropdown-menu">
                 <template v-for="Tag in Tags">
-                    <div class="dropdown-item" v-if="Tag!='*'" onclick="setSelectedTag(event);" v-bind:data-tag="Tag">{{Tag}}</div>
-                    <div class="dropdown-item" v-if="Tag=='*'" onclick="setSelectedTag(event);" v-bind:data-tag="Tag"><svg width='22' height='22' viewBox='0 0 24 24'><use xlink:href='#svg-tag-multiple' /></svg>*</div>
+                    <div class="dropdown-item" v-if="Tag=='@Model.AllNotesTagFilter'" onclick="setSelectedTag(event);" v-bind:data-tag="Tag"><svg width='22' height='22' viewBox='0 0 24 24'><use xlink:href='#svg-tag-multiple' /></svg> {{Tag}}</div>
+                    <div class="dropdown-item" v-else-if="Tag=='@Model.WithoutTagFilter'" onclick="setSelectedTag(event);" v-bind:data-tag="Tag"><svg width='20' height='20' viewBox='0 0 24 24'><use xlink:href='#svg-tag-off' /></svg> {{Tag}}</div>
+                    <div class="dropdown-item" v-else onclick="setSelectedTag(event);" v-bind:data-tag="Tag">{{Tag}}</div>
                 </template>
             </div>
         </div>
@@ -198,6 +198,7 @@ div.dark .note-viewer.over-view.checklist p.disabled::before { content: @{WriteL
         @{WriteLiteral(Model.Icon.LoadIcon("pin", new[] { new KeyValuePair<string, string>("id", "svg-pin") }));}
         @{WriteLiteral(Model.Icon.LoadIcon("order-bool-ascending-variant", new[] { new KeyValuePair<string, string>("id", "svg-order-bool-ascending-variant") }));}
         @{WriteLiteral(Model.Icon.LoadIcon("tag-multiple", new[] { new KeyValuePair<string, string>("id", "svg-tag-multiple") }));}
+        @{WriteLiteral(Model.Icon.LoadIcon("tag-off", new[] { new KeyValuePair<string, string>("id", "svg-tag-off") }));}
     </div>
 </div></body>
 </html>

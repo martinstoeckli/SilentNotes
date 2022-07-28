@@ -28,5 +28,25 @@ namespace SilentNotesTest.Workers
 
             Assert.IsTrue(filter.ContainsTag(null));
         }
+
+        [Test]
+        public void ContainsTag_Applies_SpecialTagNotesWithoutTags()
+        {
+            NoteFilter filter = new NoteFilter(string.Empty, NoteFilter.SpecialTags.NotesWithoutTags);
+
+            List<string> nonEmptyTagList = new List<string> { "something", "MyTag" };
+            Assert.IsFalse(filter.ContainsTag(nonEmptyTagList));
+
+            List<string> emptyTagList = new List<string>();
+            Assert.IsTrue(filter.ContainsTag(emptyTagList));
+        }
+
+        [Test]
+        public void IsSpecialTag_RecognizesTag()
+        {
+            Assert.IsTrue(NoteFilter.SpecialTags.IsSpecialTag(NoteFilter.SpecialTags.AllNotes));
+            Assert.IsTrue(NoteFilter.SpecialTags.IsSpecialTag(NoteFilter.SpecialTags.NotesWithoutTags));
+            Assert.IsFalse(NoteFilter.SpecialTags.IsSpecialTag("real tag"));
+        }
     }
 }
