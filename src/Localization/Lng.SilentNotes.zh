@@ -20,10 +20,10 @@ recover_repository = 将笔记存储库恢复到目录
 welcome_note = <h1>欢迎 💛</h1><p>SilentNotes 尊重您的隐私。它不收集个人数据，无广告并且是开源的。</p>
 welcome_note_2 = <h1>笔记排序</h1><p>拖动笔记上的双箭头图标以更改顺序。</p>
 welcome_note_3 = <h1>密码保护</h1><p>打开保险箱并使用锁图标来保护笔记。</p>
-welcome_note_tag = Security
+welcome_note_tag = 安全
 
-filter_show_all_notes = All notes
-filter_only_without_tags = Without tags
+filter_show_all_notes = 全部笔记
+filter_only_without_tags = 无标签
 
 note_create_new = 创建笔记
 note_undelete = 恢复笔记
