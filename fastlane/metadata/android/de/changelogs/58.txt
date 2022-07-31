@@ -1,0 +1,4 @@
+SilentNotes version 7.1.0
+
+* Verbesserungen der Schlagwortsuche.
+* Problem behoben, dass die Anzeige beim Ändern eines To-Do-Listen Eintrags an den Anfang des Documents gescrollt ist.
