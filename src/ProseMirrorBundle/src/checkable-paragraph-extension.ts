@@ -57,6 +57,11 @@ function clickHandler(options: ClickHandlerOptions): Plugin {
         const editor: Editor = options.editor;
         if (clickedOnTheLeftSide) {
           rotateNodeState(editor, pos);
+          // On Android the keyboard can popup, which changes the focus and causes a scrolling to
+          // the selected element, thus we select the text to prevent scrolling to the top.
+          if (editor.isEditable) {
+            editor.commands.setTextSelection(pos);
+          }
         }
         else {
           if (!isShoppingModeActive()) {
