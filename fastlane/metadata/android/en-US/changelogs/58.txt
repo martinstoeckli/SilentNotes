@@ -1,4 +1,4 @@
 SilentNotes version 7.1.0
 
-* Improvement of the tag search.
+* Improvement of the tagging system.
 * Fixed problem that changing the state of a to-do list item scrolled to the top of the document.
