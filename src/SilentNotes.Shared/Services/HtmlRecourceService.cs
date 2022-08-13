@@ -19,18 +19,21 @@ namespace SilentNotes.Services
             {
                 switch (id)
                 {
-                    case "bootstrapcss":
-                        return "bootstrap.min.css";
-                    case "bootstrapjs":
-                        return "bootstrap.bundle.min.js";
-                    case "bootstrapautocompletejs":
-                        return "bootstrap-4-autocomplete.js";
-                    case "vuejs":
-                        return "vue.min.js"; // v2.6.12 (v3 is not ECMAScript 5 compliant)
-                    case "jqueryjs":
-                        return "jquery-3.5.1.slim.min.js";
-                    case "prosemirror":
-                        return "prose-mirror-bundle.js";
+                    case "bootstrap-css": return "bootstrap5.min.css";
+                    //case "bootstrap-js": return "bootstrap-bundle.js";
+                    case "bootstrap-js": return "bootstrap5.bundle.min.js";
+                    case "bootstrapcss": return "bootstrap.min.css";
+                    case "bootstrapjs": return "bootstrap.bundle.min.js";
+                    case "bootstrapautocompletejs": return "bootstrap-4-autocomplete.js";
+                    case "vue-js": return "vue.min.js"; // v2.6.12 (v3 is not ECMAScript 5 compliant)
+                    case "vuejs": return "vue.min.js"; // v2.6.12 (v3 is not ECMAScript 5 compliant)
+                    case "jqueryjs": return "jquery-3.5.1.slim.min.js";
+                    case "prosemirror": return "prose-mirror-bundle.js";
+                    case "silentnotes-css": return "silentnotes2.css";
+                    case "silentnotes-light-css": return "silentnotes2.light.css";
+                    case "silentnotes-dark-css": return "silentnotes2.dark.css";
+                    case "silentnotes-notecard-css": return "silentnotes2-notecard.css";
+                    case "silentnotes-js": return "silentnotes.js";
                     default:
                         return string.Empty;
                 }

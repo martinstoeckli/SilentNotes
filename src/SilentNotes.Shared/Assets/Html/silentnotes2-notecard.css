@@ -1,0 +1,54 @@
+.note-card {
+	padding: 12px;
+	min-height: 115px;
+	max-height: 160px;
+	overflow: hidden;
+	box-shadow: 2px 1px 4px rgba(0, 0, 0, 0.4);
+	font-size: 0.9em;
+	user-select: none;
+	cursor: default;
+}
+.note-card a {
+    pointer-events: none; /* ignore clicks on links */
+    cursor: default;
+}
+.note-card a:hover {
+	cursor: default;
+}
+
+.note-handle {
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+	position: absolute;
+	top: 14px;
+	right: 18px;
+	width: 26px;
+	height: 26px;
+	border-radius: 13px;
+	cursor: pointer;
+}
+.sortable-handle {
+	right: 18px;
+}
+.safe-handle {
+	right: 50px;
+}
+.recycle-handle {
+	right: 18px;
+	top: auto;
+	bottom: 14px;	
+}
+
+.pin {
+	width: 26px;
+	height: 26px;
+	left: 3px;
+	top: 7px;
+	bottom: auto;
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+	position: absolute;
+	fill: #e60000;
+}

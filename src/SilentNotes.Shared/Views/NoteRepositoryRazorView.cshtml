@@ -9,14 +9,15 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no">
 
-    <link href="@Model.HtmlRecource["bootstrapcss"]" rel="stylesheet" />
-    <link href="silentnotes.css" rel="stylesheet" />
-    <link href="@(Model.Theme.DarkMode ? "silentnotes.dark.css" : "silentnotes.light.css")" rel="stylesheet" />
+    <link href="@Model.HtmlRecource["bootstrap-css"]" rel="stylesheet" />
+    <link href="@Model.HtmlRecource["silentnotes-css"]" rel="stylesheet" />
+    <link href="@(Model.Theme.DarkMode ? @Model.HtmlRecource["silentnotes-dark-css"] : @Model.HtmlRecource["silentnotes-light-css"])" rel="stylesheet" />
+    <link href="@Model.HtmlRecource["silentnotes-notecard-css"]" rel="stylesheet" />
 
-    <script src="@Model.HtmlRecource["vuejs"]"></script>
+    <script src="@Model.HtmlRecource["vue-js"]"></script>
+    <script src="@Model.HtmlRecource["bootstrap-js"]"></script>
     <script src="@Model.HtmlRecource["jqueryjs"]"></script>
-    <script src="@Model.HtmlRecource["bootstrapjs"]"></script>
-    <script src="silentnotes.js"></script>
+    <script src="@Model.HtmlRecource["silentnotes-js"]"></script>
     <script src="Sortable.min.js"></script>
 
     <style type="text/css">
@@ -27,10 +28,6 @@ body {
 
 .note-viewer {
     font-size: @(Model.NoteBaseFontSize)px !important;
-}
-.note-viewer a {
-    pointer-events: none; /* ignore clicks on links */
-    cursor: default;
 }
 .note-card {
     min-height: @(Model.NoteMinHeight)px;
@@ -43,27 +40,6 @@ div .note-viewer.over-view.checklist p.done::before { content: @{WriteLiteral(Mo
 div.dark .note-viewer.over-view.checklist p.done::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("check-box-outline", new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") }));}; }
 div .note-viewer.over-view.checklist p.disabled::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("checkbox-blank-outline", new[] { new KeyValuePair<string, string>("fill", "#000000") }));}; }
 div.dark .note-viewer.over-view.checklist p.disabled::before { content: @{WriteLiteral(Model.Icon.LoadIconAsCssUrl("checkbox-blank-outline", new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") }));}; }
-
-.nav-filter {
-    margin: 0 1em 0 0;
-    padding: 0 5px 0 10px;
-    max-width: 280px;
-    height: 28px;
-    border-radius: 14px;
-}
-.nav-filter input {
-    border: none;
-    border-width: 0;
-    outline: none;
-    font-size: 1.1em;
-    width: calc(100% - 24px);
-}
-.nav-filter #filter-icon-placeholder {
-    width: 24px;
-}
-#tag-selector {
-	height: 28px;
-}
 
 .locked {
     position: absolute;
@@ -128,77 +104,96 @@ div.dark .note-viewer.over-view.checklist p.disabled::before { content: @{WriteL
     </script>
 </head>
 <body><div id="vueDataBinding">
-    <nav id="navigation" class="d-flex">
-        <div class="btn-group btn-group-sm align-self-center ml-auto mr-1">
-            <button id="tag-selector" type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="tag-selector-text" v-if="SelectedTag=='@Model.AllNotesTagFilter'"><svg width='22' height='22' viewBox='0 0 24 24'><use xlink:href='#svg-tag-multiple' /></svg></span>
-                <span class="tag-selector-text" v-else-if="SelectedTag=='@Model.WithoutTagFilter'"><svg width='20' height='20' viewBox='0 0 24 24'><use xlink:href='#svg-tag-off' /></svg></span>
-                <span class="tag-selector-text" v-else v-bind:title="SelectedTag">{{SelectedTag}}</span>
-            </button>
-            <div class="dropdown-menu">
-                <template v-for="Tag in Tags">
-                    <div class="dropdown-item" v-if="Tag=='@Model.AllNotesTagFilter'" onclick="setSelectedTag(event);" v-bind:data-tag="Tag"><svg width='22' height='22' viewBox='0 0 24 24'><use xlink:href='#svg-tag-multiple' /></svg> {{Tag}}</div>
-                    <div class="dropdown-item" v-else-if="Tag=='@Model.WithoutTagFilter'" onclick="setSelectedTag(event);" v-bind:data-tag="Tag"><svg width='20' height='20' viewBox='0 0 24 24'><use xlink:href='#svg-tag-off' /></svg> {{Tag}}</div>
-                    <div class="dropdown-item" v-else onclick="setSelectedTag(event);" v-bind:data-tag="Tag">{{Tag}}</div>
-                </template>
-            </div>
-        </div>
-        <div class="nav-item nav-filter flex-grow-1 align-self-center">
-            <input id="Filter" class="" v-on:input="Filter = $event.target.value;" autocomplete="off" v-focus value="@Model.Filter"/>
-            <div id="filter-icon-placeholder">
-                <svg id="filter-icon" v-show="!IsFiltered" width='24' height='24' viewBox='0 0 24 24'><use xlink:href="#svg-magnify" /></svg>
-                <svg id="filter-cancel-icon" v-cloak v-show="IsFiltered" width='24' height='24' viewBox='0 0 24 24' v-on:click="ClearFilterCommand"><use xlink:href="#svg-close-circle-outline" /></svg>
-            </div>
-        </div>
+<aside>
+    <nav>
+        <div id="nav-group-left" class="nav-group"></div>
 
-        <button class="nav-item" v-on:click="SynchronizeCommand" title="@Model.Language["sync_notes"]">@{WriteLiteral(Model.Icon["cloud-sync"]);}</button>
+        <div id="nav-group-right" class="nav-group">
+            <span class="dropdown">
+                <button id="tag-selector" class="nav-item nav-item-button dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                    <span class="tag-selector-text" v-if="SelectedTag=='@Model.AllNotesTagFilter'"><svg width='22' height='22' viewBox='0 0 24 24'><use xlink:href='#svg-tag-multiple'/></svg></span>
+                    <span class="tag-selector-text" v-else-if="SelectedTag=='@Model.WithoutTagFilter'"><svg width='20' height='20' viewBox='0 0 24 24'><use xlink:href='#svg-tag-off'/></svg></span>
+                    <span class="tag-selector-text" v-else v-bind:title="SelectedTag">{{SelectedTag}}</span>
+                </button>
+                <div class="dropdown-menu">
+                    <template v-for="Tag in Tags">
+                        <div class="dropdown-item" v-if="Tag=='@Model.AllNotesTagFilter'" onclick="setSelectedTag(event);" v-bind:data-tag="Tag"><svg width='22' height='22' viewBox='0 0 24 24'><use xlink:href='#svg-tag-multiple'/></svg> {{Tag}}</div>
+                        <div class="dropdown-item" v-else-if="Tag=='@Model.WithoutTagFilter'" onclick="setSelectedTag(event);" v-bind:data-tag="Tag"><svg width='20' height='20' viewBox='0 0 24 24'><use xlink:href='#svg-tag-off'/></svg> {{Tag}}</div>
+                        <div class="dropdown-item" v-else onclick="setSelectedTag(event);" v-bind:data-tag="Tag">{{Tag}}</div>
+                    </template>
+                </div>
+            </span>
 
-        <div class="dropdown">
-            <button class="nav-item" id="navOverflowMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                @{WriteLiteral(Model.Icon["dots-vertical"]);}
-            </button>
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navOverflowMenu">
-                <div class="dropdown-item" v-on:click="NewNoteCommand"><svg><use xlink:href="#svg-note-text-outline" /></svg> @Model.Language["note_create_new"]</div>
-                <div class="dropdown-item" v-on:click="NewChecklistCommand"><svg><use xlink:href="#svg-order-bool-ascending-variant" /></svg> @Model.Language["checklist_create_new"]</div>
-                <div class="dropdown-item" v-on:click="ShowRecycleBinCommand">@{WriteLiteral(Model.Icon["delete-empty"]);} @Model.Language["show_recyclebin"]</div>
-                <div class="dropdown-item" v-on:click="ShowExportCommand">@{WriteLiteral(Model.Icon["export"]);} @Model.Language["show_export"]</div>
-                <div class="dropdown-divider"></div>
-                <div class="dropdown-item" @if (Model.IsAnySafeOpen) { @("hidden") ; } v-on:click="OpenSafeCommand">@{WriteLiteral(Model.Icon["safe-square-outline"]);} @Model.Language["safe_open"]</div>
-                <div class="dropdown-item" @if (!Model.IsAnySafeOpen) { @("hidden") ; } v-on:click="CloseSafeCommand">@{WriteLiteral(Model.Icon["safe-square-outline"]);} @Model.Language["safe_close"]</div>
-                <div class="dropdown-item" v-on:click="ChangeSafePasswordCommand">@{WriteLiteral(Model.Icon["lock-reset"]);} @Model.Language["safe_change_password"]</div>
-                <div class="dropdown-divider"></div>
-                <div class="dropdown-item" v-on:click="ShowTransferCodeCommand">@{WriteLiteral(Model.Icon["key"]);} @Model.Language["show_transfer_code"]</div>
-                <div class="dropdown-item" v-on:click="ShowSettingsCommand">@{WriteLiteral(Model.Icon["settings"]);} @Model.Language["show_settings"]</div>
-                <div class="dropdown-item" v-on:click="ShowInfoCommand">@{WriteLiteral(Model.Icon["information"]);} @Model.Language["show_info"]</div>
+            <div class="nav-item nav-item-filter">
+                <input id="Filter" class="" v-on:input="Filter = $event.target.value;" autocomplete="off" v-focus value="@Model.Filter"/>
+                <div id="filter-icon-placeholder">
+                    <svg id="filter-icon" v-show="!IsFiltered" width='24' height='24' viewBox='0 0 24 24'><use xlink:href="#svg-magnify"/></svg>
+                    <svg id="filter-cancel-icon" v-cloak v-show="IsFiltered" width='24' height='24' viewBox='0 0 24 24' v-on:click="ClearFilterCommand"><use xlink:href="#svg-close-circle-outline"/></svg>
+                </div>
             </div>
+    
+            <div class="nav-item nav-item-separator"></div>
+
+            <button class="nav-item nav-item-button" v-on:click="SynchronizeCommand" title="@Model.Language["sync_notes"]"><svg width='24' height='24' viewBox='0 0 24 24'><use xlink:href='#svg-cloud-sync'/></svg></button>
+
+            <span class="dropdown">
+                <button id="navOverflowMenu" class="nav-item nav-item-button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <svg width='24' height='24' viewBox='0 0 24 24'><use xlink:href='#svg-dots-vertical' /></svg>
+                </button>
+                <div class="dropdown-menu dropdown-menu-end">
+                    <div class="dropdown-item" v-on:click="NewNoteCommand"><svg><use xlink:href="#svg-note-text-outline"/></svg> @Model.Language["note_create_new"]</div>
+                    <div class="dropdown-item" v-on:click="NewChecklistCommand"><svg><use xlink:href="#svg-order-bool-ascending-variant"/></svg> @Model.Language["checklist_create_new"]</div>
+                    <div class="dropdown-item" v-on:click="ShowRecycleBinCommand"><svg width='24' height='24' viewBox='0 0 24 24'><use xlink:href="#svg-delete-empty"/></svg> @Model.Language["show_recyclebin"]</div>
+                    <div class="dropdown-item" v-on:click="ShowExportCommand"><svg width='24' height='24' viewBox='0 0 24 24'><use xlink:href="#svg-export"/></svg> @Model.Language["show_export"]</div>
+                    <div class="dropdown-divider"></div>
+                    <div class="dropdown-item"  v-on:click="OpenSafeCommand"><svg width='24' height='24' viewBox='0 0 24 24'><use xlink:href="#svg-safe-square-outline"/></svg> @Model.Language["safe_open"]</div>
+                    <div class="dropdown-item" hidden v-on:click="CloseSafeCommand"><svg width='24' height='24' viewBox='0 0 24 24'><use xlink:href="#svg-safe-square-outline"/></svg> @Model.Language["safe_close"]</div>
+                    <div class="dropdown-item" v-on:click="ChangeSafePasswordCommand"><svg width='24' height='24' viewBox='0 0 24 24'><use xlink:href="#svg-lock-reset"/></svg> @Model.Language["safe_change_password"]</div>
+                    <div class="dropdown-divider"></div>
+                    <div class="dropdown-item" v-on:click="ShowTransferCodeCommand"><svg width='24' height='24' viewBox='0 0 24 24'><use xlink:href="#svg-key"/></svg> @Model.Language["show_transfer_code"]</div>
+                    <div class="dropdown-item" v-on:click="ShowSettingsCommand"><svg width='24' height='24' viewBox='0 0 24 24'><use xlink:href="#svg-settings"/></svg> @Model.Language["show_settings"]</div>
+                    <div class="dropdown-item" v-on:click="ShowInfoCommand"><svg width='24' height='24' viewBox='0 0 24 24'><use xlink:href="#svg-information"/></svg> @Model.Language["show_info"]</div>
+                </div>
+            </span>
         </div>
     </nav>
+</aside>
 
-    <div class="fab dropup">
-        <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#">@{WriteLiteral(Model.Icon["plus"]);}</a>
-        <div class="dropdown-menu">
-            <a v-on:click="NewNoteCommand" href="#"><svg><use xlink:href="#svg-note-text-outline" /></svg></a>
-            <a v-on:click="NewChecklistCommand" href="#"><svg><use xlink:href="#svg-order-bool-ascending-variant" /></svg></a>
-        </div>
-    </div>
+<main id="content" v-pre class="p-2">
+    <ul id="note-repository"></ul>
+</main>
 
-    <div id="content" v-pre class="p-2">
-        <ul id="note-repository"></ul>
+<div class="fab dropup">
+    <a class="dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-expanded="false" href="#"><svg width='24' height='24' viewBox='0 0 24 24'><use xlink:href="#svg-plus"/></svg></a>
+    <div class="dropdown-menu">
+        <a v-on:click="NewNoteCommand" href="#"><svg><use xlink:href="#svg-note-text-outline" /></svg></a>
+        <a v-on:click="NewChecklistCommand" href="#"><svg><use xlink:href="#svg-order-bool-ascending-variant" /></svg></a>
     </div>
+</div>
 
-    <div hidden>
-        @{WriteLiteral(Model.Icon.LoadIcon("magnify", new[] { new KeyValuePair<string, string>("id", "svg-magnify") }));}
-        @{WriteLiteral(Model.Icon.LoadIcon("close-circle-outline", new[] { new KeyValuePair<string, string>("id", "svg-close-circle-outline") }));}
-        @{WriteLiteral(Model.Icon.LoadIcon("arrow-all", new[] { new KeyValuePair<string, string>("id", "svg-arrow-all") }));}
-        @{WriteLiteral(Model.Icon.LoadIcon("lock", new[] { new KeyValuePair<string, string>("id", "svg-lock") }));}
-        @{WriteLiteral(Model.Icon.LoadIcon("lock-open-variant", new[] { new KeyValuePair<string, string>("id", "svg-lock-open-variant") }));}
-        @{WriteLiteral(Model.Icon.LoadIcon("lock-outline", new[] { new KeyValuePair<string, string>("id", "svg-lock-outline") }));}
-        @{WriteLiteral(Model.Icon.LoadIcon("delete", new[] { new KeyValuePair<string, string>("id", "svg-delete") }));}
-        @{WriteLiteral(Model.Icon.LoadIcon("note-text-outline", new[] { new KeyValuePair<string, string>("id", "svg-note-text-outline") }));}
-        @{WriteLiteral(Model.Icon.LoadIcon("pin", new[] { new KeyValuePair<string, string>("id", "svg-pin") }));}
-        @{WriteLiteral(Model.Icon.LoadIcon("order-bool-ascending-variant", new[] { new KeyValuePair<string, string>("id", "svg-order-bool-ascending-variant") }));}
-        @{WriteLiteral(Model.Icon.LoadIcon("tag-multiple", new[] { new KeyValuePair<string, string>("id", "svg-tag-multiple") }));}
-        @{WriteLiteral(Model.Icon.LoadIcon("tag-off", new[] { new KeyValuePair<string, string>("id", "svg-tag-off") }));}
-    </div>
+<div hidden>
+    @{WriteLiteral(Model.Icon.LoadIcon("magnify", new[] { new KeyValuePair<string, string>("id", "svg-magnify") }));}
+    @{WriteLiteral(Model.Icon.LoadIcon("close-circle-outline", new[] { new KeyValuePair<string, string>("id", "svg-close-circle-outline") }));}
+    @{WriteLiteral(Model.Icon.LoadIcon("arrow-all", new[] { new KeyValuePair<string, string>("id", "svg-arrow-all") }));}
+    @{WriteLiteral(Model.Icon.LoadIcon("lock", new[] { new KeyValuePair<string, string>("id", "svg-lock") }));}
+    @{WriteLiteral(Model.Icon.LoadIcon("lock-open-variant", new[] { new KeyValuePair<string, string>("id", "svg-lock-open-variant") }));}
+    @{WriteLiteral(Model.Icon.LoadIcon("lock-outline", new[] { new KeyValuePair<string, string>("id", "svg-lock-outline") }));}
+    @{WriteLiteral(Model.Icon.LoadIcon("delete", new[] { new KeyValuePair<string, string>("id", "svg-delete") }));}
+    @{WriteLiteral(Model.Icon.LoadIcon("note-text-outline", new[] { new KeyValuePair<string, string>("id", "svg-note-text-outline") }));}
+    @{WriteLiteral(Model.Icon.LoadIcon("pin", new[] { new KeyValuePair<string, string>("id", "svg-pin") }));}
+    @{WriteLiteral(Model.Icon.LoadIcon("order-bool-ascending-variant", new[] { new KeyValuePair<string, string>("id", "svg-order-bool-ascending-variant") }));}
+    @{WriteLiteral(Model.Icon.LoadIcon("tag-multiple", new[] { new KeyValuePair<string, string>("id", "svg-tag-multiple") }));}
+    @{WriteLiteral(Model.Icon.LoadIcon("tag-off", new[] { new KeyValuePair<string, string>("id", "svg-tag-off") }));}
+    @{WriteLiteral(Model.Icon.LoadIcon("cloud-sync", new[] { new KeyValuePair<string, string>("id", "svg-cloud-sync") }));}
+    @{WriteLiteral(Model.Icon.LoadIcon("dots-vertical", new[] { new KeyValuePair<string, string>("id", "svg-dots-vertical") }));}
+    @{WriteLiteral(Model.Icon.LoadIcon("delete-empty", new[] { new KeyValuePair<string, string>("id", "svg-delete-empty") }));}
+    @{WriteLiteral(Model.Icon.LoadIcon("export", new[] { new KeyValuePair<string, string>("id", "svg-export") }));}
+    @{WriteLiteral(Model.Icon.LoadIcon("safe-square-outline", new[] { new KeyValuePair<string, string>("id", "svg-safe-square-outline") }));}
+    @{WriteLiteral(Model.Icon.LoadIcon("lock-reset", new[] { new KeyValuePair<string, string>("id", "svg-lock-reset") }));}
+    @{WriteLiteral(Model.Icon.LoadIcon("key", new[] { new KeyValuePair<string, string>("id", "svg-key") }));}
+    @{WriteLiteral(Model.Icon.LoadIcon("settings", new[] { new KeyValuePair<string, string>("id", "svg-settings") }));}
+    @{WriteLiteral(Model.Icon.LoadIcon("information", new[] { new KeyValuePair<string, string>("id", "svg-information") }));}
+    @{WriteLiteral(Model.Icon.LoadIcon("plus", new[] { new KeyValuePair<string, string>("id", "svg-plus") }));}
+</div>
 </div></body>
 </html>

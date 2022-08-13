@@ -1,0 +1,30 @@
+{
+  "name": "silentnotes-bootstrap",
+  "version": "1.0.0",
+  "description": "Transpiles and bundles the required JS files of Bootstrap for SilentNotes",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/martinstoeckli/SilentNotes"
+  },
+  "scripts": {
+    "build": "webpack --mode=production --config webpack.config.js"
+  },
+  "keywords": [],
+  "author": "Martin Stoeckli",
+  "license": "MPL-2.0",
+  "dependencies": {
+    "@popperjs/core": "^2.11.6",
+    "bootstrap": "^5.2.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "latest",
+    "@babel/core": "latest",
+    "@babel/preset-env": "latest",
+    "babel-loader": "latest",
+    "babel-preset-minify": "latest",
+    "core-js": "^3.24.1",
+    "terser-webpack-plugin": "latest",
+    "webpack": "latest",
+    "webpack-cli": "^4.10.0"
+  }
+}

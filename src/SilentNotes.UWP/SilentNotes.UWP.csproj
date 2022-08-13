@@ -156,11 +156,20 @@
     <Content Include="..\SilentNotes.Shared\Assets\Html\bootstrap-4-autocomplete.js">
       <Link>Assets\Html\bootstrap-4-autocomplete.js</Link>
     </Content>
+    <Content Include="..\SilentNotes.Shared\Assets\Html\bootstrap-bundle.js">
+      <Link>Assets\Html\bootstrap-bundle.js</Link>
+    </Content>
     <Content Include="..\SilentNotes.Shared\Assets\Html\bootstrap.bundle.min.js">
       <Link>Assets\Html\bootstrap.bundle.min.js</Link>
     </Content>
     <Content Include="..\SilentNotes.Shared\Assets\Html\bootstrap.min.css">
       <Link>Assets\Html\bootstrap.min.css</Link>
+    </Content>
+    <Content Include="..\SilentNotes.Shared\Assets\Html\bootstrap5.bundle.min.js">
+      <Link>Assets\Html\bootstrap5.bundle.min.js</Link>
+    </Content>
+    <Content Include="..\SilentNotes.Shared\Assets\Html\bootstrap5.min.css">
+      <Link>Assets\Html\bootstrap5.min.css</Link>
     </Content>
     <Content Include="..\SilentNotes.Shared\Assets\Html\cloud_service_dropbox.png">
       <Link>Assets\Html\cloud_service_dropbox.png</Link>
@@ -218,6 +227,18 @@
     </Content>
     <Content Include="..\SilentNotes.Shared\Assets\Html\silentnotes.light.css">
       <Link>Assets\Html\silentnotes.light.css</Link>
+    </Content>
+    <Content Include="..\SilentNotes.Shared\Assets\Html\silentnotes2-notecard.css">
+      <Link>Assets\Html\silentnotes2-notecard.css</Link>
+    </Content>
+    <Content Include="..\SilentNotes.Shared\Assets\Html\silentnotes2.css">
+      <Link>Assets\Html\silentnotes2.css</Link>
+    </Content>
+    <Content Include="..\SilentNotes.Shared\Assets\Html\silentnotes2.dark.css">
+      <Link>Assets\Html\silentnotes2.dark.css</Link>
+    </Content>
+    <Content Include="..\SilentNotes.Shared\Assets\Html\silentnotes2.light.css">
+      <Link>Assets\Html\silentnotes2.light.css</Link>
     </Content>
     <Content Include="..\SilentNotes.Shared\Assets\Html\SilentNotes256.png">
       <Link>Assets\Html\SilentNotes256.png</Link>

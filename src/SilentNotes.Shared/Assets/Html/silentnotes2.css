@@ -1,0 +1,303 @@
+html, body, aside, main, #vueDataBinding { margin: 0; padding: 0; border: 0 none; }
+a { text-decoration: none; }
+a, img, li, input { -webkit-tap-highlight-color: transparent; }
+input::-ms-clear { display: none; }
+[v-cloak] { display: none }
+
+html {
+	height: 100%;
+	width: 100vw;
+	font-size: 14px;
+}
+body {
+	height: 100%;
+	width: 100vw;
+}
+#vueDataBinding {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	width: 100%;
+}
+
+aside {
+	overflow: visible; /* Make dropdown visible */
+	height: 42px;
+	width: 100vw;
+}
+nav {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	height: 100%;
+	width: 100%;
+	padding-left: 6px;
+	padding-right: 6px;
+}
+nav .nav-group{
+	display: inline-flex;
+	align-items: center;
+	height: 38px;
+	width: auto;
+}
+nav .nav-item {
+	display: inline-block;
+	margin: 0;
+	padding: 0;
+	height: 100%;
+	border-style: none;
+	border-width: 0;
+}
+nav .nav-item-separator { width: 1em; }
+nav .nav-item-button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
+	min-width: 38px;
+}
+nav .nav-item-button:focus {
+	outline: 0; /* removes pressed dots */
+}
+nav .nav-item-button svg {
+	height: 28px;
+	width: 28px;
+}
+nav .dropdown {
+	height: 100%;
+}
+nav .dropdown-toggle {
+	padding-left: 6px;
+	padding-right: 6px;
+}
+nav .dropdown-item {
+	cursor: default;
+	display: inline-flex;
+	align-items: center;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+nav .dropdown-item svg {
+	margin-right: 0.6em;
+	height: 26px;
+	width: 26px;
+}
+nav .tag-selector-text {
+	display: inline-block;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	/* max-width is media depending */
+}
+nav .nav-item-filter {
+	display: inline-flex;
+	align-items: center;
+    padding: 0 5px 0 10px;
+    max-width: 280px;
+	height: 28px;
+    border-radius: 14px;
+}
+nav .nav-item-filter input {
+    border: none;
+    border-width: 0;
+    outline: none;
+    font-size: 1.1em;
+    width: calc(100% - 24px);
+}
+nav .nav-item-filter input:focus { outline: none; }
+nav .nav-item-filter #filter-icon-placeholder { width: 24px; }
+
+main {
+	flex: 1; /* takes the remaining height */
+	overflow: auto; /* scroll just the "main" */
+	height: 100%;
+	width: 100vw;
+}
+
+ol, ul { list-style: none; margin:0; padding:0;}
+
+.fab {
+	position: fixed;
+	display: inline-block;
+	right: 2em;
+	bottom: 2em;
+	z-index: 1030;
+	width: 56px;
+	height: 56px;
+	border-radius: 50%;
+	box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+.fab a {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	margin: 0;
+	padding: 0;
+	width: 56px;
+	height: 56px;
+}
+.fab img {
+	width: 36px;
+	height: 36px;
+}
+.fab svg {
+	width: 36px;
+	height: 36px;
+}
+.fab div.dropdown-menu {
+	padding: 0 0 6px 8px;
+	width: 56px;
+	min-width: 56px;
+	background: none;
+	border: none;
+}
+.fab div.dropdown-menu a {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	margin: 0 0 16px 0;
+	padding: 0;
+	width: 40px;
+	height: 40px;
+	background-color: white;
+	border-radius: 50%;
+	box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+	cursor: pointer;
+}
+.fab .dropdown-menu svg {
+	width: 24px;
+	height: 24px;
+}
+.fab.dropup .dropdown-toggle::after {
+	display: none;
+}
+
+.wraplist {
+	display: block;
+	margin: 0;
+	padding: 0;
+}
+.wraplist-item {
+	display: block;
+	padding: 6px 5px 6px 5px;
+	width: auto;
+	vertical-align: top;
+}
+
+.sortable-item {
+	position: relative;
+}
+
+/* narrow browser */
+@media screen and (max-width: 540px) {
+	.show-only-on-wide-browser {
+		display: none;
+	}
+}
+/* wide browser */
+@media screen and (min-width: 540.1px) {
+	.show-only-on-narrow-browser { display: none; }
+	.wraplist-item {
+		display: inline-block;
+		width: 240px;
+	}
+}
+/* narrow device - phone */
+@media screen and (max-device-width: 540px) {
+	html { font-size: 17px; }
+	aside { height: 48px; }
+	.tag-selector-text { max-width: 5em; }
+}
+/* wide device - desktop */
+@media screen and (min-device-width: 540.1px) {
+	.tag-selector-text { max-width: 8em; }
+}
+
+/* Text formatting */
+
+.note-viewer h1 {
+	margin: 0.7em 0 0.3em 0 !important;
+	font: normal bold 1.35em/1.1 "Segoe UI",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol" !important;
+}
+.note-viewer h2 {
+	margin: 0.8em 0 0.2em 0 !important;
+	font: normal bold 1.2em/1.1 "Segoe UI",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol" !important;
+}
+.note-viewer h3 {
+	margin: 0.8em 0 0.2em 0 !important;
+	font: normal bold 1.1em/1.1 "Segoe UI",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol" !important;
+}
+
+.note-viewer p {
+	margin: 0 0 0.2em 0 !important;
+	font: normal normal 1em/1.4 "Segoe UI",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol" !important;
+}
+
+.note-viewer ol {
+	margin: 0.5em 0 0.5em 0 !important;
+	padding: 0 !important;
+	font: normal normal 1em/1.4 "Segoe UI",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol" !important;
+	list-style: none;
+	counter-reset: sn-counter;
+}
+.note-viewer ol > li {
+	margin-left: 1.8em !important;
+	padding: 0 !important;
+	counter-increment: sn-counter;
+}
+.note-viewer ol > li::before {
+	display: inline-block;
+	margin: 0 0 0 -1.8em !important;
+	padding: 0 0.3em 0 0 !important;
+	width: 1.8em !important;
+	content: counter(sn-counter) ".";
+	text-align: right !important;
+	vertical-align: top;
+}
+
+.note-viewer ul {
+	margin: 0.5em 0 0.5em 0 !important;
+	padding: 0 !important;
+	font: normal normal 1em/1.4 "Segoe UI",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol" !important;
+	/* list-style-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='-32 -32 64 64' fill='blue' ><circle r='16' /></svg>"); */
+}
+.note-viewer ul > li {
+	margin-left: 1.8em !important;
+	padding: 0 !important;
+}
+.note-viewer ul > li::before {
+	display: inline-block;
+	margin: 0 0 0 -1.8em !important;
+	padding: 0 0.3em 0 0 !important;
+	width: 1.8em !important;
+	white-space: nowrap;
+	content: '•';
+	text-align: right !important;
+	vertical-align: top;
+}
+.note-viewer li>p:first-child {
+    display: inline;
+}
+
+.note-viewer pre {
+	margin: 0.5em 0 0.5em 0 !important;
+	padding: 1em !important;
+	font: normal normal 0.9em/1.2 Consolas,monospace,"Courier New" !important;
+	overflow: auto !important;
+	white-space: pre !important;
+	text-wrap: none !important;
+}
+
+.note-viewer blockquote {
+	margin: 0.5em 0 0.5em 0 !important;
+	padding: 0 0 0 1em !important;
+	font: normal normal 1em/1.5 "Segoe UI",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol" !important;
+	border-left: 3px solid rgba(128, 128, 128, 0.4) !important;
+}
+.note-viewer.dark blockquote {
+	border-left: 3px solid rgba(211, 211, 211, 0.6) !important;
+}
+.note-viewer a { text-decoration: none !important; }
+.note-viewer a:hover { text-decoration: underline !important; }
