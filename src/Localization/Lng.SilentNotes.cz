@@ -5,6 +5,8 @@ yes = Ano
 no = Ne
 continue = Pokračovat
 search = Vyhledat
+undo = Undo
+redo = Redo
 
 today = dnes
 yesterday = včera

@@ -5,6 +5,8 @@ no = No
 back = Back
 continue = Continue
 search = Search
+undo = Undo
+redo = Redo
 
 today = today
 yesterday = yesterday

@@ -5,6 +5,8 @@ no = Hayır
 back = Geri
 continue = Devam Et
 search = Ara
+undo = Undo
+redo = Redo
 
 today = Bugün
 yesterday = Dün

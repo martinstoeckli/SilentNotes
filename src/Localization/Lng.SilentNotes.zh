@@ -5,6 +5,8 @@ no = 否
 back = 返回
 continue = 继续
 search = 搜索
+undo = Undo
+redo = Redo
 
 today = 今天
 yesterday = 昨天
