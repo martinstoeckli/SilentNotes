@@ -5,6 +5,8 @@ no = Нет
 back = Назад
 continue = Продолжить
 search = Поиск
+undo = Undo
+redo = Redo
 
 today = сегодня
 yesterday = вчера

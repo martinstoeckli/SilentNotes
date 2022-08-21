@@ -108,6 +108,14 @@ body { background-color: transparent; }
             linkDialog.hide();
         }
 
+        function undo() {
+            editor.commands.undo();
+        }
+
+        function redo() {
+            editor.commands.redo();
+        }
+
         function addTag() {
             var tagText = getTagsElement().value.trim();
             if (vm.ShoppingModeActive || tagText === '')
@@ -252,8 +260,9 @@ body { background-color: transparent; }
                     <button class="nav-item" onclick="toggleFormat('orderedlist');" v-bind:class="{ active: ListOrderedActive }" v-bind:disabled="ShoppingModeActive" title="@Model.Language["note_list_ordered"]">@{WriteLiteral(Model.Icon["format-list-numbers"]);}</button>
                     <button class="nav-item" onclick="toggleFormat('bulletlist');" v-bind:class="{ active: ListBulletActive }" v-bind:disabled="ShoppingModeActive" title="@Model.Language["note_list_unordered"]">@{WriteLiteral(Model.Icon["format-list-bulleted"]);}</button>
                 </span>
+                <button class="nav-item" onclick="undo(); return false;" v-bind:disabled="ShoppingModeActive" title="@Model.Language["undo"]"><svg width='128' height='128' viewBox='0 0 24 24'><use xlink:href="#svg-undo" /></svg></button>
+                <button class="nav-item" onclick="redo(); return false;" v-bind:disabled="ShoppingModeActive" title="@Model.Language["redo"]"><svg width='128' height='128' viewBox='0 0 24 24'><use xlink:href="#svg-redo" /></svg></button>
                 <button class="nav-item" onclick="toggleShoppingMode(); return false;" v-bind:class="{ active: ShoppingModeActive }" title="@Model.Language["note_shopping_mode"]">@{WriteLiteral(Model.Icon["keyboard_off_outline"]);}</button>
-                <button class="nav-item" v-on:click="TogglePinnedCommand" v-bind:class="{ active: IsPinned }" v-bind:disabled="ShoppingModeActive" title="@Model.Language["note_pin"]">@{WriteLiteral(Model.Icon["pin"]);}</button>
                 <button class="nav-item" onclick="toggleSearchDialog(); return false;" title="@Model.Language["search"]">@{WriteLiteral(Model.Icon["magnify"]);}</button>
 
                 <div class="dropdown">
@@ -277,6 +286,7 @@ body { background-color: transparent; }
                         {
                             <div class="dropdown-item" v-bind:class="{ active: KeepScreenOnActive }" v-on:click="KeepScreenOnCommand">@{WriteLiteral(Model.Icon["alarm-plus"]);} @Model.KeepScreenOnTitle</div>
                         }
+                        <div class="dropdown-item" v-bind:class="{ active: IsPinned, disabled: ShoppingModeActive }" v-on:click="TogglePinnedCommand">@{WriteLiteral(Model.Icon["pin"]);} @Model.Language["note_pin"]</div>
                         <div class="dropdown-item" v-bind:class="{ disabled: ShoppingModeActive }" v-on:click="ShowInfoCommand">@{WriteLiteral(Model.Icon["information"]);} @Model.Language["note_show_info"]</div>
                         @if (Model.ShowManualSynchronization)
                         {
@@ -369,6 +379,8 @@ body { background-color: transparent; }
             @{WriteLiteral(Model.Icon.LoadIcon("open-in-new", new[] { new KeyValuePair<string, string>("id", "svg-open-in-new") }));}
             @{WriteLiteral(Model.Icon.LoadIcon("chevron-up", new[] { new KeyValuePair<string, string>("id", "svg-chevron-up") }));}
             @{WriteLiteral(Model.Icon.LoadIcon("chevron-down", new[] { new KeyValuePair<string, string>("id", "svg-chevron-down") }));}
+            @{WriteLiteral(Model.Icon.LoadIcon("undo", new[] { new KeyValuePair<string, string>("id", "svg-undo") }));}
+            @{WriteLiteral(Model.Icon.LoadIcon("redo", new[] { new KeyValuePair<string, string>("id", "svg-redo") }));}
         </div>
     </div>
 </body>

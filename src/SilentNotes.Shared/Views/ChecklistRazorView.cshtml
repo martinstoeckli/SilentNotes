@@ -94,6 +94,14 @@ div.dark .detail-view.checklist .ProseMirror p::after { content: @{WriteLiteral(
             vm.ListOrderedActive = ProseMirrorBundle.isFormatActive(editor, 'orderedlist');
         }
 
+        function undo() {
+            editor.commands.undo();
+        }
+
+        function redo() {
+            editor.commands.redo();
+        }
+
         function addTag() {
             var tagText = getTagsElement().value.trim();
             if (vm.ShoppingModeActive || tagText === '')
@@ -223,7 +231,6 @@ div.dark .detail-view.checklist .ProseMirror p::after { content: @{WriteLiteral(
             <button class="nav-item" onclick="ProseMirrorBundle.moveChecklist(editor, false, true); return false;" v-bind:disabled="ShoppingModeActive" title="@Model.Language["checklist_move_down"]">@{WriteLiteral(Model.Icon["arrow-down"]);}</button>
             <button class="nav-item" onclick="ProseMirrorBundle.moveChecklist(editor, false, false); return false;" v-bind:disabled="ShoppingModeActive" title="@Model.Language["checklist_move_to_bottom"]">@{WriteLiteral(Model.Icon["arrow-collapse-down"]);}</button>
             <button class="nav-item" onclick="toggleShoppingMode(); return false;" v-bind:class="{ active: ShoppingModeActive }" title="@Model.Language["note_shopping_mode"]">@{WriteLiteral(Model.Icon["keyboard_off_outline"]);}</button>
-            <button class="nav-item" v-on:click="TogglePinnedCommand" v-bind:class="{ active: IsPinned }" v-bind:disabled="ShoppingModeActive" title="@Model.Language["note_pin"]">@{WriteLiteral(Model.Icon["pin"]);}</button> 
             <button class="nav-item" onclick="toggleSearchDialog(); return false;" title="@Model.Language["search"]">@{WriteLiteral(Model.Icon["magnify"]);}</button>
 
             <div class="dropdown">
@@ -241,11 +248,14 @@ div.dark .detail-view.checklist .ProseMirror p::after { content: @{WriteLiteral(
                     <div class="dropdown-item" v-bind:class="{ active: Header1Active, disabled: ShoppingModeActive }" onclick="toggleFormat('heading', 1);">@{WriteLiteral(Model.Icon["format-header-1"]);} @Model.Language["note_header1"]</div>
                     <div class="dropdown-item" v-bind:class="{ active: Header2Active, disabled: ShoppingModeActive }" onclick="toggleFormat('heading', 2);">@{WriteLiteral(Model.Icon["format-header-2"]);} @Model.Language["note_header2"]</div>
                     <div class="dropdown-divider"></div>
+                    <div class="dropdown-item" v-bind:class="{ disabled: ShoppingModeActive }" onclick="undo(); return false;"><svg width='128' height='128' viewBox='0 0 24 24'><use xlink:href="#svg-undo" /></svg> @Model.Language["undo"]</div>
+                    <div class="dropdown-item" v-bind:class="{ disabled: ShoppingModeActive }" onclick="redo(); return false;"><svg width='128' height='128' viewBox='0 0 24 24'><use xlink:href="#svg-redo" /></svg> @Model.Language["redo"]</div>
                     <div class="dropdown-item" v-bind:class="{ disabled: ShoppingModeActive }" data-toggle="modal" data-target="#colorPaletteModal">@{WriteLiteral(Model.Icon["palette"]);} @Model.Language["note_colors"]</div>
                     @if (Model.CanKeepScreenOn)
                     {
                         <div class="dropdown-item" v-bind:class="{ active: KeepScreenOnActive }" v-on:click="KeepScreenOnCommand">@{WriteLiteral(Model.Icon["alarm-plus"]);} @Model.KeepScreenOnTitle</div>
                     }
+                    <div class="dropdown-item" v-bind:class="{ active: IsPinned, disabled: ShoppingModeActive }" v-on:click="TogglePinnedCommand">@{WriteLiteral(Model.Icon["pin"]);} @Model.Language["note_pin"]</div>
                     <div class="dropdown-item" v-bind:class="{ disabled: ShoppingModeActive }" v-on:click="ShowInfoCommand">@{WriteLiteral(Model.Icon["information"]);} @Model.Language["note_show_info"]</div>
                     @if (Model.ShowManualSynchronization)
                     {
@@ -318,6 +328,8 @@ div.dark .detail-view.checklist .ProseMirror p::after { content: @{WriteLiteral(
         @{WriteLiteral(Model.Icon.LoadIcon("plus", new[] { new KeyValuePair<string, string>("id", "svg-plus") }));}
         @{WriteLiteral(Model.Icon.LoadIcon("chevron-up", new[] { new KeyValuePair<string, string>("id", "svg-chevron-up") }));}
         @{WriteLiteral(Model.Icon.LoadIcon("chevron-down", new[] { new KeyValuePair<string, string>("id", "svg-chevron-down") }));}
+        @{WriteLiteral(Model.Icon.LoadIcon("undo", new[] { new KeyValuePair<string, string>("id", "svg-undo") }));}
+        @{WriteLiteral(Model.Icon.LoadIcon("redo", new[] { new KeyValuePair<string, string>("id", "svg-redo") }));}
     </div>
 </div></body>
 </html>
