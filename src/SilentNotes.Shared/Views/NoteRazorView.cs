@@ -503,40 +503,13 @@ WriteLiteral("                <button");
 
 WriteLiteral(" class=\"nav-item\"");
 
-WriteLiteral(" onclick=\"toggleShoppingMode(); return false;\"");
-
-WriteLiteral(" v-bind:class=\"{ active: ShoppingModeActive }\"");
-
-WriteAttribute ("title", " title=\"", "\""
-
-#line 263 "NoteRazorView.cshtml"
-                                                                                                     , Tuple.Create<string,object,bool> ("", Model.Language["note_shopping_mode"]
-
-#line default
-#line hidden
-, false)
-);
-WriteLiteral(">");
-
-
-#line 263 "NoteRazorView.cshtml"
-                                                                                                                                                                                     WriteLiteral(Model.Icon["keyboard_off_outline"]);
-
-#line default
-#line hidden
-WriteLiteral("</button>\r\n");
-
-WriteLiteral("                <button");
-
-WriteLiteral(" class=\"nav-item\"");
-
 WriteLiteral(" onclick=\"undo(); return false;\"");
 
 WriteLiteral(" v-bind:disabled=\"ShoppingModeActive\"");
 
 WriteAttribute ("title", " title=\"", "\""
 
-#line 264 "NoteRazorView.cshtml"
+#line 263 "NoteRazorView.cshtml"
                                                                               , Tuple.Create<string,object,bool> ("", Model.Language["undo"]
 
 #line default
@@ -567,7 +540,7 @@ WriteLiteral(" v-bind:disabled=\"ShoppingModeActive\"");
 
 WriteAttribute ("title", " title=\"", "\""
 
-#line 265 "NoteRazorView.cshtml"
+#line 264 "NoteRazorView.cshtml"
                                                                               , Tuple.Create<string,object,bool> ("", Model.Language["redo"]
 
 #line default
@@ -587,6 +560,33 @@ WriteLiteral("><use");
 WriteLiteral(" xlink:href=\"#svg-redo\"");
 
 WriteLiteral(" /></svg></button>\r\n");
+
+WriteLiteral("                <button");
+
+WriteLiteral(" class=\"nav-item\"");
+
+WriteLiteral(" onclick=\"toggleShoppingMode(); return false;\"");
+
+WriteLiteral(" v-bind:class=\"{ active: ShoppingModeActive }\"");
+
+WriteAttribute ("title", " title=\"", "\""
+
+#line 265 "NoteRazorView.cshtml"
+                                                                                                     , Tuple.Create<string,object,bool> ("", Model.Language["note_shopping_mode"]
+
+#line default
+#line hidden
+, false)
+);
+WriteLiteral(">");
+
+
+#line 265 "NoteRazorView.cshtml"
+                                                                                                                                                                                     WriteLiteral(Model.Icon["keyboard_off_outline"]);
+
+#line default
+#line hidden
+WriteLiteral("</button>\r\n");
 
 WriteLiteral("                <button");
 
