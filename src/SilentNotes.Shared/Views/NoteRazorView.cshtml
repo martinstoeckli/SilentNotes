@@ -39,10 +39,17 @@ body { background-color: transparent; }
     <script>
         var editor;
         var linkDialog;
+        var ignoreViewModelUpdate = true;
+
+        /* Starts notifying the viewmodel about changes. Call it as soon as the content is completely loaded. */
+        function startSendingViewModelUpdates() {
+            ignoreViewModelUpdate = false;
+        }
 
         /* Notifies the viewmodel about changes in the note content. */
         function triggerViewModelUpdate() {
-            vuePropertyChanged('UnlockedHtmlContent', null);
+            if (!ignoreViewModelUpdate)
+                vuePropertyChanged('UnlockedHtmlContent', null);
         }
 
         function getSearchDialogElement() {
