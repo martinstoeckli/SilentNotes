@@ -47,7 +47,12 @@ div.dark .detail-view.checklist .ProseMirror p::after { content: @{WriteLiteral(
     </style>
     <script>
         var editor;
-        var ignoreViewModelUpdate = false;
+        var ignoreViewModelUpdate = true;
+
+        /* Starts notifying the viewmodel about changes. Call it as soon as the content is completely loaded. */
+        function startSendingViewModelUpdates() {
+            ignoreViewModelUpdate = false;
+        }
 
         /* Notifies the viewmodel about changes in the note content. */
         function triggerViewModelUpdate() {

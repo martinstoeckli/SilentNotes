@@ -192,13 +192,14 @@ namespace SilentNotes.Controllers
             // which would have to be interpreted by the WebView and would increase the size of the content.
             // Loading it here avoids this performance issue.
             string escapedContent = _viewModel.GetEscapedUnlockedHtmlContent();
-            StringBuilder script = new StringBuilder(escapedContent.Length + 20);
+            StringBuilder script = new StringBuilder(escapedContent.Length + 90);
             script.Append("initializeNoteContent('");
             script.Append(escapedContent);
             script.Append("');");
             bool isNewNote = _viewModel.SearchableContent.Trim().Length == 0;
             if (isNewNote)
                 script.Append("toggleFormat('heading', 1);");
+            script.Append("startSendingViewModelUpdates();");
             View.ExecuteJavaScript(script.ToString());
         }
     }
