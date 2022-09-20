@@ -5,8 +5,8 @@ no = No
 back = Indietro
 continue = Continua
 search = Cerca
-undo = Undo
-redo = Redo
+undo = Annulla
+redo = Ripristina
 
 today = oggi
 yesterday = ieri

@@ -1,0 +1,5 @@
+SilentNotes version 7.2.0
+
+* Problem behoben, dass ein erfolgreiches Login ein abgelaufenes Refreshtoken in den Einstellungen nicht ersetzt hat.
+* Potentielles Problem behoben, dass der Editor noch während dem Laden eine Notiz hätte überschreiben können.
+* Rückgängig/Wiederherstellen Funktion hinzugefügt.
