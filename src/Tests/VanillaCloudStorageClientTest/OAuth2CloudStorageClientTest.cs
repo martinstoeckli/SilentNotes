@@ -107,6 +107,30 @@ namespace VanillaCloudStorageClientTest
             Assert.AreEqual("8/A1AAbbZZ9", newToken.RefreshToken);
         }
 
+        [Test]
+        public void RefreshToken_WhenRefreshTokenExpired_Throws()
+        {
+            _httpTest.RespondWith(
+@"{
+    ""error"": ""invalid_grant"",
+    ""error_description"": ""AADSTS70000: The user could not be authenticated as the grant is expired. The user must sign in again.\r\nTrace ID: afe52903-9975-4945-a9bf-f07b390ff101\r\nCorrelation ID: a90a7d1c-25de-4bda-b739-dd5911524a69\r\nTimestamp: 2000-01-01 11:11:11Z"",
+    ""error_codes"": [70000],
+    ""timestamp"": ""2000-01-01 11:11:11Z"",
+    ""trace_id"": ""afe52903-9975-4945-a9bf-f07b390ff101"",
+    ""correlation_id"": ""a90a7d1c-25de-4bda-b739-dd5911524a69"",
+    ""error_uri"": ""https://login.microsoftonline.com/error?code=70000""
+}", 400);
+
+            CloudStorageToken oldToken = new CloudStorageToken
+            {
+                AccessToken = "dummy",
+                RefreshToken = "8/A1AAbbZZ9",
+            };
+
+            IOAuth2CloudStorageClient client = new TestClient(GetGoogleConfig());
+            Assert.ThrowsAsync<RefreshTokenExpiredException>(() => RefreshTokenAsync(client, oldToken));
+        }
+
         private async Task<CloudStorageToken> RefreshTokenAsync(IOAuth2CloudStorageClient client, CloudStorageToken token)
         {
             return await client.RefreshTokenAsync(token);
