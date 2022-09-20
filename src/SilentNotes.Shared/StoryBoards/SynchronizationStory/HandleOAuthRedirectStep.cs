@@ -5,6 +5,7 @@
 
 using System;
 using System.Threading.Tasks;
+using SilentNotes.Models;
 using SilentNotes.Services;
 using VanillaCloudStorageClient;
 
@@ -18,6 +19,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
     {
         private readonly ILanguageService _languageService;
         private readonly IFeedbackService _feedbackService;
+        private readonly ISettingsService _settingsService;
         private readonly ICloudStorageClientFactory _cloudStorageClientFactory;
 
         /// <summary>
@@ -28,11 +30,13 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
             IStoryBoard storyBoard,
             ILanguageService languageService,
             IFeedbackService feedbackService,
+            ISettingsService settingsService,
             ICloudStorageClientFactory cloudStorageClientFactory)
             : base(stepId, storyBoard)
         {
             _languageService = languageService;
             _feedbackService = feedbackService;
+            _settingsService = settingsService;
             _cloudStorageClientFactory = cloudStorageClientFactory;
         }
 
@@ -61,6 +65,13 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
                     {
                         // User has granted access.
                         credentials.Token = token;
+
+                        // The new/refreshed tokens have to been replaced in any case, so we don't
+                        // have to wait on ExistsCloudRepositoryStep for storing them. See issue #186
+                        SettingsModel settings = _settingsService.LoadSettingsOrDefault();
+                        settings.Credentials = credentials;
+                        _settingsService.TrySaveSettingsToLocalDevice(settings);
+
                         await StoryBoard.ContinueWith(SynchronizationStoryStepId.ExistsCloudRepository);
                     }
                     else

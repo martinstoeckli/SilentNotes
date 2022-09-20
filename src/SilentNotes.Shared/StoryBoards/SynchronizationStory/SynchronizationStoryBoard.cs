@@ -47,6 +47,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
                 this,
                 Ioc.GetOrCreate<ILanguageService>(),
                 feedbackService,
+                Ioc.GetOrCreate<ISettingsService>(),
                 Ioc.GetOrCreate<ICloudStorageClientFactory>()));
             RegisterStep(new ExistsCloudRepositoryStep(
                 SynchronizationStoryStepId.ExistsCloudRepository,
