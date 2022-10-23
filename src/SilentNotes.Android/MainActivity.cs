@@ -60,6 +60,9 @@ namespace SilentNotes.Android
             Startup.InitializeApplication(this, _activityResultAwaiter);
             ConsumeActionSendIntentParameter(Intent);
 
+            // Prevent notes from being visible in list of recent apps and screenshots
+            Window.AddFlags(WindowManagerFlags.Secure);
+
             // Load main window of single page application.
             base.OnCreate(bundle);
             SetContentView(Resource.Layout.Main);
@@ -145,10 +148,6 @@ namespace SilentNotes.Android
             base.OnPause();
             try
             {
-                // With turning off the view, we prevent the content of possibly encrypted notes to
-                // become visible in the list of recent apps.
-                _webView.Visibility = ViewStates.Invisible;
-
                 INavigationService navigationService = Ioc.GetOrCreate<INavigationService>();
                 _lastNavigation = navigationService?.CurrentNavigation;
                 navigationService.CurrentController?.StoreUnsavedData();
@@ -172,10 +171,6 @@ namespace SilentNotes.Android
         protected override void OnResume()
         {
             base.OnResume();
-
-            // Turn on the view again, see OnPause().
-            if (_webView.Visibility != ViewStates.Visible)
-                _webView.Visibility = ViewStates.Visible;
 
             INavigationService navigationService = Ioc.GetOrCreate<INavigationService>();
             IStoryBoardService storyBoardService = Ioc.GetOrCreate<IStoryBoardService>();
