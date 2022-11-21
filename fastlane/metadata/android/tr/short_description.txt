@@ -1,1 +1,1 @@
-Uçtan uca şifreleme ile notlarınızı telefonunuz ve bilgisayarınız arasında kolayca eşitleyebileceğiniz bir not uygulaması.
+Uçtan uca şifreleme ve bilgisayara eşitleme destekli not alma uygulaması.
