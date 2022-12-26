@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.Input;
 using SilentNotes.Controllers;
 using SilentNotes.Crypto;
 using SilentNotes.HtmlView;

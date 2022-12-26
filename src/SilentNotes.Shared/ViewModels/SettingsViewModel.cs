@@ -9,6 +9,7 @@ using System.Drawing;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.Input;
 using SilentNotes.Controllers;
 using SilentNotes.Crypto.SymmetricEncryption;
 using SilentNotes.HtmlView;

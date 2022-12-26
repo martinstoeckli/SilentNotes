@@ -10,6 +10,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.Input;
 using SilentNotes.Controllers;
 using SilentNotes.Crypto;
 using SilentNotes.HtmlView;

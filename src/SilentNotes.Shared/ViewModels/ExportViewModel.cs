@@ -9,6 +9,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.Input;
 using SilentNotes.Controllers;
 using SilentNotes.Crypto;
 using SilentNotes.HtmlView;

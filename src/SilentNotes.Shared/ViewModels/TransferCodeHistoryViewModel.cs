@@ -5,6 +5,7 @@
 
 using System.Collections.Generic;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.Input;
 using SilentNotes.Controllers;
 using SilentNotes.HtmlView;
 using SilentNotes.Models;
