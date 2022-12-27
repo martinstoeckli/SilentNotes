@@ -4,6 +4,7 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System.Drawing;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using SilentNotes.HtmlView;
 using SilentNotes.Services;
 using SilentNotes.ViewModels;
@@ -108,7 +109,7 @@ namespace SilentNotes.Controllers
         /// <param name="htmlView">The interface to the webview.</param>
         protected virtual void SetHtmlViewBackgroundColor(IHtmlView htmlView)
         {
-            IThemeService themeService = Ioc.GetOrCreate<IThemeService>();
+            IThemeService themeService = Ioc.Default.GetService<IThemeService>();
             Color defaultBackgroundColor = themeService.DarkMode
                 ? Color.FromArgb(255, 18, 18, 18)
                 : Color.FromArgb(255, 240, 240, 240);

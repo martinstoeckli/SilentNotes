@@ -4,6 +4,7 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using SilentNotes.Services;
 using SilentNotes.Workers;
 
@@ -26,41 +27,41 @@ namespace SilentNotes.StoryBoards.PullPushStory
             RegisterStep(new ExistsCloudRepositoryStep(
                 PullPushStoryStepId.ExistsCloudRepository,
                 this,
-                Ioc.GetOrCreate<ILanguageService>(),
-                Ioc.GetOrCreate<IFeedbackService>(),
-                Ioc.GetOrCreate<ISettingsService>(),
-                Ioc.GetOrCreate<ICloudStorageClientFactory>()));
+                Ioc.Default.GetService<ILanguageService>(),
+                Ioc.Default.GetService<IFeedbackService>(),
+                Ioc.Default.GetService<ISettingsService>(),
+                Ioc.Default.GetService<ICloudStorageClientFactory>()));
             RegisterStep(new DownloadCloudRepositoryStep(
                 PullPushStoryStepId.DownloadCloudRepository,
                 this,
-                Ioc.GetOrCreate<ILanguageService>(),
-                Ioc.GetOrCreate<IFeedbackService>(),
-                Ioc.GetOrCreate<ICloudStorageClientFactory>(),
-                Ioc.GetOrCreate<ISettingsService>()));
+                Ioc.Default.GetService<ILanguageService>(),
+                Ioc.Default.GetService<IFeedbackService>(),
+                Ioc.Default.GetService<ICloudStorageClientFactory>(),
+                Ioc.Default.GetService<ISettingsService>()));
             RegisterStep(new DecryptCloudRepositoryStep(
                 PullPushStoryStepId.DecryptCloudRepository,
                 this,
-                Ioc.GetOrCreate<ILanguageService>(),
-                Ioc.GetOrCreate<IFeedbackService>(),
-                Ioc.GetOrCreate<ISettingsService>(),
-                Ioc.GetOrCreate<INoteRepositoryUpdater>()));
+                Ioc.Default.GetService<ILanguageService>(),
+                Ioc.Default.GetService<IFeedbackService>(),
+                Ioc.Default.GetService<ISettingsService>(),
+                Ioc.Default.GetService<INoteRepositoryUpdater>()));
             RegisterStep(new IsSameRepositoryStep(
                 PullPushStoryStepId.IsSameRepository,
                 this,
-                Ioc.GetOrCreate<ILanguageService>(),
-                Ioc.GetOrCreate<IFeedbackService>(),
-                Ioc.GetOrCreate<IRepositoryStorageService>()));
+                Ioc.Default.GetService<ILanguageService>(),
+                Ioc.Default.GetService<IFeedbackService>(),
+                Ioc.Default.GetService<IRepositoryStorageService>()));
             RegisterStep(new StoreMergedRepositoryAndQuitStep(
                 PullPushStoryStepId.StoreMergedRepositoryAndQuit,
                 this,
                 noteId,
                 direction,
-                Ioc.GetOrCreate<ILanguageService>(),
-                Ioc.GetOrCreate<IFeedbackService>(),
-                Ioc.GetOrCreate<ISettingsService>(),
-                Ioc.GetOrCreate<ICryptoRandomService>(),
-                Ioc.GetOrCreate<IRepositoryStorageService>(),
-                Ioc.GetOrCreate<ICloudStorageClientFactory>()));
+                Ioc.Default.GetService<ILanguageService>(),
+                Ioc.Default.GetService<IFeedbackService>(),
+                Ioc.Default.GetService<ISettingsService>(),
+                Ioc.Default.GetService<ICryptoRandomService>(),
+                Ioc.Default.GetService<IRepositoryStorageService>(),
+                Ioc.Default.GetService<ICloudStorageClientFactory>()));
         }
     }
 

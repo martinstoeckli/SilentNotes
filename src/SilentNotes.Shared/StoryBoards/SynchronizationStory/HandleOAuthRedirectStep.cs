@@ -57,7 +57,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
                 StoryBoard.RemoveFromSession(SynchronizationStorySessionKey.OauthCodeVerifier);
                 StoryBoard.RemoveFromSession(SynchronizationStorySessionKey.OauthRedirectUrl);
 
-                ICloudStorageClient cloudStorageClient = _cloudStorageClientFactory.GetOrCreate(credentials.CloudStorageId);
+                ICloudStorageClient cloudStorageClient = _cloudStorageClientFactory.GetByKey(credentials.CloudStorageId);
                 if (cloudStorageClient is IOAuth2CloudStorageClient oauthStorageClient)
                 {
                     CloudStorageToken token = await oauthStorageClient.FetchTokenAsync(redirectUrl, oauthState, oauthCodeVerifier);

@@ -59,7 +59,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
                 byte[] encryptedRepository = EncryptRepository(
                     localRepository, transferCode, _cryptoRandomService, settings.SelectedEncryptionAlgorithm);
 
-                ICloudStorageClient cloudStorageClient = _cloudStorageClientFactory.GetOrCreate(credentials.CloudStorageId);
+                ICloudStorageClient cloudStorageClient = _cloudStorageClientFactory.GetByKey(credentials.CloudStorageId);
                 await cloudStorageClient.UploadFileAsync(Config.RepositoryFileName, encryptedRepository, credentials);
 
                 // All went well, time to save the transfer code, if a new one was created

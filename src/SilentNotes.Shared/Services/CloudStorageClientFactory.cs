@@ -15,7 +15,7 @@ namespace SilentNotes.Services
     /// Implementation of the <see cref="ICloudStorageClientFactory"/> class, for SilentNotes.
     /// This is the place to add all information, when adding a new cloud storage client.
     /// </summary>
-    public class CloudStorageClientFactory : ICloudStorageClientFactory
+    public class CloudStorageClientFactory : ServiceFactory<string, ICloudStorageClient>, ICloudStorageClientFactory
     {
         public const string CloudStorageIdFtp = "ftp";
         public const string CloudStorageIdWebdav = "webdav";
@@ -31,29 +31,21 @@ namespace SilentNotes.Services
         /// Initializes a new instance of the <see cref="CloudStorageClientFactory"/> class.
         /// </summary>
         public CloudStorageClientFactory()
+            : base(true)
         {
-            Ioc.RegisterFactoryWithKey<ICloudStorageClient>(CloudStorageIdFtp, () => new FtpCloudStorageClient());
-            Ioc.RegisterFactoryWithKey<ICloudStorageClient>(CloudStorageIdWebdav, () => new WebdavCloudStorageClient());
-            Ioc.RegisterFactoryWithKey<ICloudStorageClient>(CloudStorageIdDropbox, () => new DropboxCloudStorageClient(
+            Add(CloudStorageIdFtp, () => new FtpCloudStorageClient());
+            Add(CloudStorageIdWebdav, () => new WebdavCloudStorageClient());
+            Add(CloudStorageIdDropbox, () => new DropboxCloudStorageClient(
                 DeobfuscateClientId("b2JmdXNjYXRpb24kdHdvZmlzaF9nY20kaUNDQnhZRDFqTG4veUJQNSRwYmtkZjIkNEVrVTFOVVdZSkJpTWtQR2VNU0lhdz09JDEwMDAkqkhIg8kDs04BHHfD2Dldq7jC8LUT3AqPnyY6THmJJw=="),
                 "ch.martinstoeckli.silentnotes://oauth2redirect/"));
-            Ioc.RegisterFactoryWithKey<ICloudStorageClient>(CloudStorageIdGoogleDrive, () => new GoogleCloudStorageClient(
+            Add(CloudStorageIdGoogleDrive, () => new GoogleCloudStorageClient(
                 DeobfuscateClientId("b2JmdXNjYXRpb24kdHdvZmlzaF9nY20kZlR5K1A4L05ka2pVZ2NkRURiTGZMdz09JHBia2RmMiRUYys0QkNwSzRzTCtLZS85LzNEVnh3PT0kMTAwMCS5o32MdtKqjqthaSYKFg+9Bvv9XRQTpPQhnYnPdk9ZIrwxZbYBARv+vG1oFpSdHzRFS3Hgsc0QorFWVVy2Xt4c6RPSYs2kFLa4h36KduqrLwKP5wD4qQuT"),
                 "ch.martinstoeckli.silentnotes:/oauth2redirect/"));
-            Ioc.RegisterFactoryWithKey<ICloudStorageClient>(CloudStorageIdOneDrive, () => new OnedriveCloudStorageClient(
+            Add(CloudStorageIdOneDrive, () => new OnedriveCloudStorageClient(
                 DeobfuscateClientId("b2JmdXNjYXRpb24kdHdvZmlzaF9nY20kMm91Sjk4dVloa3FzVTJMbFV3YzlYZz09JHBia2RmMiRIWDNzazgzdExLUExDRldjeis0RUtnPT0kMTAwMCQhu6dFgd6/j2A9388wATVBekdrXdLcCUHg1gMjKNJlrmAeWWKhJ+Wewi4eALJkqHyF1Np3"),
                 "ch.martinstoeckli.silentnotes://oauth2redirect/"));
-            Ioc.RegisterFactoryWithKey<ICloudStorageClient>(CloudStorageIdNextcloudWebdav, () => new WebdavCloudStorageClient());
-            Ioc.RegisterFactoryWithKey<ICloudStorageClient>(CloudStorageIdGmx, () => new GmxCloudStorageClient());
-        }
-
-        /// <inheritdoc/>
-        public ICloudStorageClient GetOrCreate(string cloudStorageId)
-        {
-            if (string.IsNullOrWhiteSpace(cloudStorageId))
-                throw new ArgumentNullException(nameof(cloudStorageId));
-
-            return Ioc.GetOrCreateWithKey<ICloudStorageClient>(cloudStorageId.ToLowerInvariant());
+            Add(CloudStorageIdNextcloudWebdav, () => new WebdavCloudStorageClient());
+            Add(CloudStorageIdGmx, () => new GmxCloudStorageClient());
         }
 
         /// <inheritdoc/>

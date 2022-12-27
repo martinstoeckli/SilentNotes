@@ -48,7 +48,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
             if (StoryBoard.Mode.ShouldUseGui())
             {
                 SerializeableCloudStorageCredentials credentials = StoryBoard.LoadFromSession<SerializeableCloudStorageCredentials>(SynchronizationStorySessionKey.CloudStorageCredentials);
-                ICloudStorageClient cloudStorageClient = _cloudStorageClientFactory.GetOrCreate(credentials.CloudStorageId);
+                ICloudStorageClient cloudStorageClient = _cloudStorageClientFactory.GetByKey(credentials.CloudStorageId);
                 if (cloudStorageClient is IOAuth2CloudStorageClient oauthStorageClient)
                 {
                     // Show waiting page

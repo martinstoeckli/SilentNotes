@@ -5,6 +5,7 @@
 
 using System;
 using System.Text;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using SilentNotes.Crypto;
 using SilentNotes.HtmlView;
 using SilentNotes.Models;
@@ -79,7 +80,7 @@ namespace SilentNotes.Controllers
         public override void ShowInView(IHtmlView htmlView, KeyValueList<string, string> variables, Navigation redirectedFrom)
         {
             base.ShowInView(htmlView, variables, redirectedFrom);
-            ISettingsService settingsService = Ioc.GetOrCreate<ISettingsService>();
+            ISettingsService settingsService = Ioc.Default.GetService<ISettingsService>();
             _repositoryService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepository);
 
             variables.TryGetValue(ControllerParameters.SearchFilter, out string startingSearchFilter);
@@ -88,18 +89,18 @@ namespace SilentNotes.Controllers
             Guid noteId = new Guid(variables[ControllerParameters.NoteId]);
             NoteModel note = noteRepository.Notes.FindById(noteId);
 
-            ICryptor cryptor = new Cryptor(NoteModel.CryptorPackageName, Ioc.GetOrCreate<ICryptoRandomService>());
+            ICryptor cryptor = new Cryptor(NoteModel.CryptorPackageName, Ioc.Default.GetService<ICryptoRandomService>());
             _viewModel = new NoteViewModel(
-                Ioc.GetOrCreate<INavigationService>(),
-                Ioc.GetOrCreate<ILanguageService>(),
-                Ioc.GetOrCreate<ISvgIconService>(),
-                Ioc.GetOrCreate<IThemeService>(),
-                Ioc.GetOrCreate<IBaseUrlService>(),
+                Ioc.Default.GetService<INavigationService>(),
+                Ioc.Default.GetService<ILanguageService>(),
+                Ioc.Default.GetService<ISvgIconService>(),
+                Ioc.Default.GetService<IThemeService>(),
+                Ioc.Default.GetService<IBaseUrlService>(),
                 null,
                 _repositoryService,
-                Ioc.GetOrCreate<IFeedbackService>(),
+                Ioc.Default.GetService<IFeedbackService>(),
                 settingsService,
-                Ioc.GetOrCreate<IEnvironmentService>(),
+                Ioc.Default.GetService<IEnvironmentService>(),
                 cryptor,
                 noteRepository.Safes,
                 noteRepository.CollectActiveTags(),
@@ -155,7 +156,7 @@ namespace SilentNotes.Controllers
         {
             if (IsExternalLink(uri))
             {
-                INativeBrowserService nativeBrowser = Ioc.GetOrCreate<INativeBrowserService>();
+                INativeBrowserService nativeBrowser = Ioc.Default.GetService<INativeBrowserService>();
                 nativeBrowser.OpenWebsite(uri);
             }
         }

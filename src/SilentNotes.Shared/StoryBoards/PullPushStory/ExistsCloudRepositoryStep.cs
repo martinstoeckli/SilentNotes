@@ -40,7 +40,7 @@ namespace SilentNotes.StoryBoards.PullPushStory
                 return;
             }
 
-            ICloudStorageClient cloudStorageClient = _cloudStorageClientFactory.GetOrCreate(credentials.CloudStorageId);
+            ICloudStorageClient cloudStorageClient = _cloudStorageClientFactory.GetByKey(credentials.CloudStorageId);
             try
             {
                 bool stopBecauseNewOAuthLoginIsRequired = false;

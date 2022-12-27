@@ -35,7 +35,7 @@ namespace SilentNotes.StoryBoards.PullPushStory
         public override async Task Run()
         {
             SerializeableCloudStorageCredentials credentials = _settingsService.LoadSettingsOrDefault().Credentials;
-            ICloudStorageClient cloudStorageClient = _cloudStorageClientFactory.GetOrCreate(credentials.CloudStorageId);
+            ICloudStorageClient cloudStorageClient = _cloudStorageClientFactory.GetByKey(credentials.CloudStorageId);
 
             try
             {

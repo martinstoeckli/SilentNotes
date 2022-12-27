@@ -15,6 +15,7 @@ using Android.Runtime;
 using Android.Util;
 using Android.Views;
 using Android.Webkit;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using Java.IO;
 using SilentNotes.Controllers;
 using SilentNotes.HtmlView;
@@ -137,7 +138,7 @@ namespace SilentNotes.Android
             // active in the meantime. As long as the user doesn't swipe away the app from the
             // "recent apps", it can finish the job, that's exactly what we need.
             // Tested with Android 5.0, 8.1
-            IAutoSynchronizationService syncService = Ioc.GetOrCreate<IAutoSynchronizationService>();
+            IAutoSynchronizationService syncService = Ioc.Default.GetService<IAutoSynchronizationService>();
             syncService.SynchronizeAtShutdown();
             base.OnStop();
         }
@@ -148,13 +149,13 @@ namespace SilentNotes.Android
             base.OnPause();
             try
             {
-                INavigationService navigationService = Ioc.GetOrCreate<INavigationService>();
+                INavigationService navigationService = Ioc.Default.GetService<INavigationService>();
                 _lastNavigation = navigationService?.CurrentNavigation;
                 navigationService.CurrentController?.StoreUnsavedData();
                 navigationService.CurrentController?.Dispose();
 
                 // Make sure that all open safes are closed.
-                IRepositoryStorageService repositoryService = Ioc.GetOrCreate<IRepositoryStorageService>();
+                IRepositoryStorageService repositoryService = Ioc.Default.GetService<IRepositoryStorageService>();
                 repositoryService.LoadRepositoryOrDefault(out NoteRepositoryModel repositoryModel);
                 repositoryModel?.Safes.ForEach(safe => safe.Close());
             }
@@ -172,14 +173,14 @@ namespace SilentNotes.Android
         {
             base.OnResume();
 
-            INavigationService navigationService = Ioc.GetOrCreate<INavigationService>();
-            IStoryBoardService storyBoardService = Ioc.GetOrCreate<IStoryBoardService>();
+            INavigationService navigationService = Ioc.Default.GetService<INavigationService>();
+            IStoryBoardService storyBoardService = Ioc.Default.GetService<IStoryBoardService>();
 
             if (!string.IsNullOrEmpty(_actionSendParameter))
             {
                 // Create new note and show it
-                IRepositoryStorageService repositoryStorageService = Ioc.GetOrCreate<IRepositoryStorageService>();
-                ISettingsService settingsService = Ioc.GetOrCreate<ISettingsService>();
+                IRepositoryStorageService repositoryStorageService = Ioc.Default.GetService<IRepositoryStorageService>();
+                ISettingsService settingsService = Ioc.Default.GetService<ISettingsService>();
 
                 repositoryStorageService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepository);
                 NoteModel note = new NoteModel
@@ -210,7 +211,7 @@ namespace SilentNotes.Android
                 else
                     navigationService.Navigate(new Navigation(ControllerNames.NoteRepository));
 
-                IAutoSynchronizationService syncService = Ioc.GetOrCreate<IAutoSynchronizationService>();
+                IAutoSynchronizationService syncService = Ioc.Default.GetService<IAutoSynchronizationService>();
                 syncService.SynchronizeAtStartup(); // no awaiting, run in background
             }
         }
@@ -233,7 +234,7 @@ namespace SilentNotes.Android
         /// <inheritdoc/>
         public void LoadHtml(string html)
         {
-            IBaseUrlService baseUrl = Ioc.GetOrCreate<IBaseUrlService>();
+            IBaseUrlService baseUrl = Ioc.Default.GetService<IBaseUrlService>();
             _webView.LoadDataWithBaseURL(baseUrl.HtmlBase, html, "text/html", "UTF-8", null);
         }
 
@@ -279,7 +280,7 @@ namespace SilentNotes.Android
             if (url.EndsWith("BackPressed"))
             {
                 // Delegate the back pressed to the current controller
-                INavigationService navigation = Ioc.GetOrCreate<INavigationService>();
+                INavigationService navigation = Ioc.Default.GetService<INavigationService>();
                 navigation.CurrentController.OnGoBackPressed(out bool handled);
 
                 // If not handled by the controller, close the application

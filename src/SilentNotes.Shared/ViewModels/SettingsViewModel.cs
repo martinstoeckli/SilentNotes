@@ -398,7 +398,7 @@ namespace SilentNotes.ViewModels
         private async Task<bool> TryDeleteCloudNoteRepository()
         {
             var credentials = Model.Credentials;
-            ICloudStorageClient cloudStorageClient = _cloudStorageClientFactory.GetOrCreate(credentials.CloudStorageId);
+            ICloudStorageClient cloudStorageClient = _cloudStorageClientFactory.GetByKey(credentials.CloudStorageId);
             try
             {
                 await cloudStorageClient.DeleteFileAsync(Config.RepositoryFileName, credentials);

@@ -25,7 +25,7 @@ namespace SilentNotes.Services
         /// <exception cref="CloudStorageException">Is thrown when the <paramref name="cloudStorageId"/>
         /// is is not known.</exception>
         /// <returns>A new instance of a cloud storage client.</returns>
-        ICloudStorageClient GetOrCreate(string cloudStorageId);
+        ICloudStorageClient GetByKey(string cloudStorageId);
 
         /// <summary>
         /// Enumerates the ids of all available cloud storage clients.

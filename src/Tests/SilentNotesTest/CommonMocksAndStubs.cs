@@ -87,7 +87,7 @@ namespace SilentNotesTest
         {
             Mock<ICloudStorageClientFactory> result = new Mock<ICloudStorageClientFactory>();
             result.
-                Setup(m => m.GetOrCreate(It.IsAny<string>())).
+                Setup(m => m.GetByKey(It.IsAny<string>())).
                 Returns(cloudStorageClient);
             return result.Object;
         }

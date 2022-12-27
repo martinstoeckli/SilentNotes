@@ -3,6 +3,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using CommunityToolkit.Mvvm.DependencyInjection;
 using SilentNotes.HtmlView;
 using SilentNotes.Services;
 using SilentNotes.StoryBoards.SynchronizationStory;
@@ -37,18 +38,18 @@ namespace SilentNotes.Controllers
         public override void ShowInView(IHtmlView htmlView, KeyValueList<string, string> variables, Navigation redirectedFrom)
         {
             base.ShowInView(htmlView, variables, redirectedFrom);
-            IStoryBoardService storyBoardService = Ioc.GetOrCreate<IStoryBoardService>();
+            IStoryBoardService storyBoardService = Ioc.Default.GetService<IStoryBoardService>();
             SerializeableCloudStorageCredentials credentials = storyBoardService.ActiveStory.LoadFromSession<SerializeableCloudStorageCredentials>(SynchronizationStorySessionKey.CloudStorageCredentials);
 
             _viewModel = new CloudStorageAccountViewModel(
-                Ioc.GetOrCreate<INavigationService>(),
-                Ioc.GetOrCreate<ILanguageService>(),
-                Ioc.GetOrCreate<ISvgIconService>(),
-                Ioc.GetOrCreate<IThemeService>(),
-                Ioc.GetOrCreate<IBaseUrlService>(),
+                Ioc.Default.GetService<INavigationService>(),
+                Ioc.Default.GetService<ILanguageService>(),
+                Ioc.Default.GetService<ISvgIconService>(),
+                Ioc.Default.GetService<IThemeService>(),
+                Ioc.Default.GetService<IBaseUrlService>(),
                 storyBoardService,
-                Ioc.GetOrCreate<IFeedbackService>(),
-                Ioc.GetOrCreate<ICloudStorageClientFactory>(),
+                Ioc.Default.GetService<IFeedbackService>(),
+                Ioc.Default.GetService<ICloudStorageClientFactory>(),
                 credentials);
 
             VueBindingShortcut[] shortcuts = new[]

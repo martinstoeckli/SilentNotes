@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using SilentNotes.Controllers;
 using SilentNotes.HtmlView;
 
@@ -34,14 +35,14 @@ namespace SilentNotes.Services
 
             Navigation redirectedFrom = null;
             CurrentNavigation = navigateTo;
-            CurrentController = Ioc.CreateWithKey<IController>(CurrentNavigation.ControllerId);
+            CurrentController = Ioc.Default.GetService<ControllerFactory>().GetByKey(CurrentNavigation.ControllerId);
 
             // Check if a redirection is necessary
             if (CurrentController.NeedsNavigationRedirect(CurrentNavigation, out Navigation redirectTo))
             {
                 redirectedFrom = CurrentNavigation;
                 CurrentNavigation = redirectTo;
-                CurrentController = Ioc.CreateWithKey<IController>(CurrentNavigation.ControllerId);
+                CurrentController = Ioc.Default.GetService<ControllerFactory>().GetByKey(CurrentNavigation.ControllerId);
             }
             CurrentController.ShowInView(_htmlView, CurrentNavigation.Variables, redirectedFrom);
         }

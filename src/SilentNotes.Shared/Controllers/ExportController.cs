@@ -3,6 +3,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using CommunityToolkit.Mvvm.DependencyInjection;
 using SilentNotes.HtmlView;
 using SilentNotes.Services;
 using SilentNotes.ViewModels;
@@ -30,15 +31,15 @@ namespace SilentNotes.Controllers
         {
             base.ShowInView(htmlView, variables, redirectedFrom);
             _viewModel = new ExportViewModel(
-                Ioc.GetOrCreate<INavigationService>(),
-                Ioc.GetOrCreate<ILanguageService>(),
-                Ioc.GetOrCreate<ISvgIconService>(),
-                Ioc.GetOrCreate<IThemeService>(),
-                Ioc.GetOrCreate<IBaseUrlService>(),
-                Ioc.GetOrCreate<IFeedbackService>(),
-                Ioc.GetOrCreate<ICryptoRandomService>(),
-                Ioc.GetOrCreate<IRepositoryStorageService>(),
-                Ioc.GetOrCreate<IFolderPickerService>());
+                Ioc.Default.GetService<INavigationService>(),
+                Ioc.Default.GetService<ILanguageService>(),
+                Ioc.Default.GetService<ISvgIconService>(),
+                Ioc.Default.GetService<IThemeService>(),
+                Ioc.Default.GetService<IBaseUrlService>(),
+                Ioc.Default.GetService<IFeedbackService>(),
+                Ioc.Default.GetService<ICryptoRandomService>(),
+                Ioc.Default.GetService<IRepositoryStorageService>(),
+                Ioc.Default.GetService<IFolderPickerService>());
 
             VueBindingShortcut[] shortcuts = new[]
             {

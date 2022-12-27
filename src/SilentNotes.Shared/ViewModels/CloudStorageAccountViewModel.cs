@@ -43,7 +43,7 @@ namespace SilentNotes.ViewModels
             _feedbackService = feedbackService ?? throw new ArgumentNullException(nameof(feedbackService));
             Model = model;
 
-            _credentialsRequirements = cloudStorageClientFactory.GetOrCreate(Model.CloudStorageId).CredentialsRequirements;
+            _credentialsRequirements = cloudStorageClientFactory.GetByKey(Model.CloudStorageId).CredentialsRequirements;
             CloudServiceName = cloudStorageClientFactory.GetCloudStorageMetadata(Model.CloudStorageId).Title;
 
             GoBackCommand = new RelayCommand(GoBack);
