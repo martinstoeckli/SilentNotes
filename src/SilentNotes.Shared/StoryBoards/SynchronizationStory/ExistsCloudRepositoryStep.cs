@@ -44,7 +44,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         public override async Task Run()
         {
             SerializeableCloudStorageCredentials credentials = StoryBoard.LoadFromSession<SerializeableCloudStorageCredentials>(SynchronizationStorySessionKey.CloudStorageCredentials);
-            ICloudStorageClient cloudStorageClient = _cloudStorageClientFactory.GetOrCreate(credentials.CloudStorageId);
+            ICloudStorageClient cloudStorageClient = _cloudStorageClientFactory.GetByKey(credentials.CloudStorageId);
             try
             {
                 bool stopBecauseNewOAuthLoginIsRequired = false;

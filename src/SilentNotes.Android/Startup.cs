@@ -4,6 +4,8 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using Android.App;
+using CommunityToolkit.Mvvm.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using SilentNotes.Android.Services;
 using SilentNotes.HtmlView;
 using SilentNotes.Services;
@@ -22,51 +24,56 @@ namespace SilentNotes.Android
         /// <param name="rootActivity">The main activity of the Android app.</param>
         public static void InitializeApplication(Activity rootActivity, ActivityResultAwaiter rootActivityResultWaiter)
         {
-            Ioc.Reset();
-            RegisterServices(rootActivity, rootActivityResultWaiter);
-            StartupShared.RegisterControllers();
-            StartupShared.RegisterRazorViews();
-            StartupShared.RegisterCloudStorageClientFactory();
+            ServiceCollection services = new ServiceCollection();
+
+            RegisterServices(services, rootActivity, rootActivityResultWaiter);
+            StartupShared.RegisterControllers(services);
+            StartupShared.RegisterRazorViews(services);
+            StartupShared.RegisterCloudStorageClientFactory(services);
+
+            Ioc.Default.ConfigureServices(services.BuildServiceProvider());
         }
 
-        private static void RegisterServices(Activity rootActivity, ActivityResultAwaiter rootActivityResultWaiter)
+        private static void RegisterServices(ServiceCollection services, Activity rootActivity, ActivityResultAwaiter rootActivityResultWaiter)
         {
-            Ioc.RegisterFactory<IEnvironmentService>(() => new EnvironmentService(OperatingSystem.Android, rootActivity));
-            Ioc.RegisterFactory<IHtmlView>(() => rootActivity as IHtmlView);
-            Ioc.RegisterFactory<IBaseUrlService>(() => new BaseUrlService());
-            Ioc.RegisterFactory<ILanguageService>(() => new LanguageService(new LanguageServiceResourceReader(rootActivity), "SilentNotes", new LanguageCodeService().GetSystemLanguageCode()));
-            Ioc.RegisterFactory<ISvgIconService>(() => new SvgIconService());
-            Ioc.RegisterFactory<INavigationService>(() => new NavigationService(
-                Ioc.GetOrCreate<IHtmlView>()));
-            Ioc.RegisterFactory<INativeBrowserService>(() => new NativeBrowserService(rootActivity));
-            Ioc.RegisterFactory<IXmlFileService>(() => new XmlFileService());
-            Ioc.RegisterFactory<IVersionService>(() => new VersionService(rootActivity));
-            Ioc.RegisterFactory<ISettingsService>(() => new SettingsService(
+            services.AddSingleton<IEnvironmentService>((serviceProvider) => new EnvironmentService(OperatingSystem.Android, rootActivity));
+            services.AddSingleton<IHtmlView>((serviceProvider) => rootActivity as IHtmlView);
+            services.AddSingleton<IBaseUrlService>((serviceProvider) => new BaseUrlService());
+            services.AddSingleton<ILanguageService>((serviceProvider) => new LanguageService(new LanguageServiceResourceReader(rootActivity), "SilentNotes", new LanguageCodeService().GetSystemLanguageCode()));
+            services.AddSingleton<ISvgIconService>((serviceProvider) => new SvgIconService());
+            services.AddSingleton<INavigationService>((serviceProvider) => new NavigationService(
+                serviceProvider.GetService<IHtmlView>()));
+            services.AddSingleton<INativeBrowserService>((serviceProvider) => new NativeBrowserService(rootActivity));
+            services.AddSingleton<IXmlFileService>((serviceProvider) => new XmlFileService());
+            services.AddSingleton<IVersionService>((serviceProvider) => new VersionService(rootActivity));
+            services.AddSingleton<ISettingsService>((serviceProvider) => new SettingsService(
                 rootActivity,
-                Ioc.GetOrCreate<IXmlFileService>(),
-                Ioc.GetOrCreate<IDataProtectionService>()));
-            Ioc.RegisterFactory<IRepositoryStorageService>(() => new RepositoryStorageService(
+                serviceProvider.GetService<IXmlFileService>(),
+                serviceProvider.GetService<IDataProtectionService>()));
+            services.AddSingleton<IRepositoryStorageService>((serviceProvider) => new RepositoryStorageService(
                 rootActivity,
-                Ioc.GetOrCreate<IXmlFileService>(),
-                Ioc.GetOrCreate<ILanguageService>()));
-            Ioc.RegisterFactory<ICryptoRandomService>(() => new CryptoRandomService());
-            Ioc.RegisterFactory<INoteRepositoryUpdater>(() => new NoteRepositoryUpdater());
-            Ioc.RegisterFactory<IStoryBoardService>(() => new StoryBoardService());
-            Ioc.RegisterFactory<IFeedbackService>(() => new FeedbackService(
-                rootActivity, Ioc.GetOrCreate<ILanguageService>()));
-            Ioc.RegisterFactory<IDataProtectionService>(() => new DataProtectionService(
+                serviceProvider.GetService<IXmlFileService>(),
+                serviceProvider.GetService<ILanguageService>()));
+            services.AddSingleton<ICryptoRandomService>((serviceProvider) => new CryptoRandomService());
+            services.AddSingleton<INoteRepositoryUpdater>((serviceProvider) => new NoteRepositoryUpdater());
+            services.AddSingleton<IStoryBoardService>((serviceProvider) => new StoryBoardService());
+            services.AddSingleton<IFeedbackService>((serviceProvider) => new FeedbackService(
                 rootActivity,
-                Ioc.GetOrCreate<ICryptoRandomService>()));
-            Ioc.RegisterFactory<IInternetStateService>(() => new InternetStateService(rootActivity));
-            Ioc.RegisterFactory<IAutoSynchronizationService>(() => new AutoSynchronizationService(
-                Ioc.GetOrCreate<IInternetStateService>(),
-                Ioc.GetOrCreate<ISettingsService>(),
-                Ioc.GetOrCreate<IRepositoryStorageService>(),
-                Ioc.GetOrCreate<INavigationService>()));
-            Ioc.RegisterFactory<IThemeService>(() => new ThemeService(
-                Ioc.GetOrCreate<ISettingsService>(), Ioc.GetOrCreate<IEnvironmentService>()));
-            Ioc.RegisterFactory<IFolderPickerService>(() => new FolderPickerService(rootActivity, rootActivityResultWaiter));
-            Ioc.RegisterFactory<IFilePickerService>(() => new FilePickerService(rootActivity, rootActivityResultWaiter));
+                serviceProvider.GetService<ILanguageService>()));
+            services.AddSingleton<IDataProtectionService>((serviceProvider) => new DataProtectionService(
+                rootActivity,
+                serviceProvider.GetService<ICryptoRandomService>()));
+            services.AddSingleton<IInternetStateService>((serviceProvider) => new InternetStateService(rootActivity));
+            services.AddSingleton<IAutoSynchronizationService>((serviceProvider) => new AutoSynchronizationService(
+                serviceProvider.GetService<IInternetStateService>(),
+                serviceProvider.GetService<ISettingsService>(),
+                serviceProvider.GetService<IRepositoryStorageService>(),
+                serviceProvider.GetService<INavigationService>()));
+            services.AddSingleton<IThemeService>((serviceProvider) => new ThemeService(
+                serviceProvider.GetService<ISettingsService>(),
+                serviceProvider.GetService<IEnvironmentService>()));
+            services.AddSingleton<IFolderPickerService>((serviceProvider) => new FolderPickerService(rootActivity, rootActivityResultWaiter));
+            services.AddSingleton<IFilePickerService>((serviceProvider) => new FilePickerService(rootActivity, rootActivityResultWaiter));
         }
     }
 }

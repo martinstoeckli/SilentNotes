@@ -4,6 +4,7 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using SilentNotes.HtmlView;
 using SilentNotes.Services;
 using SilentNotes.ViewModels;
@@ -31,13 +32,13 @@ namespace SilentNotes.Controllers
         {
             base.ShowInView(htmlView, variables, redirectedFrom);
             _viewModel = new InfoViewModel(
-                Ioc.GetOrCreate<INavigationService>(),
-                Ioc.GetOrCreate<ILanguageService>(),
-                Ioc.GetOrCreate<ISvgIconService>(),
-                Ioc.GetOrCreate<IThemeService>(),
-                Ioc.GetOrCreate<IBaseUrlService>(),
-                Ioc.GetOrCreate<IVersionService>(),
-                Ioc.GetOrCreate<INativeBrowserService>());
+                Ioc.Default.GetService<INavigationService>(),
+                Ioc.Default.GetService<ILanguageService>(),
+                Ioc.Default.GetService<ISvgIconService>(),
+                Ioc.Default.GetService<IThemeService>(),
+                Ioc.Default.GetService<IBaseUrlService>(),
+                Ioc.Default.GetService<IVersionService>(),
+                Ioc.Default.GetService<INativeBrowserService>());
 
             VueBindingShortcut[] shortcuts = new[]
             {

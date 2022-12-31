@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using SilentNotes.Services;
 using SilentNotes.Workers;
 
@@ -23,14 +24,14 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
             : base(mode)
         {
             IFeedbackService feedbackService = mode.ShouldShowToasts()
-                ? Ioc.GetOrCreate<IFeedbackService>()
+                ? Ioc.Default.GetService<IFeedbackService>()
                 : new DummyFeedbackService();
             INavigationService navigationService = mode.ShouldUseGui()
-                ? Ioc.GetOrCreate<INavigationService>()
+                ? Ioc.Default.GetService<INavigationService>()
                 : new DummyNavigationService();
 
             RegisterStep(new IsCloudServiceSetStep(
-                SynchronizationStoryStepId.IsCloudServiceSet, this, Ioc.GetOrCreate<ISettingsService>()));
+                SynchronizationStoryStepId.IsCloudServiceSet, this, Ioc.Default.GetService<ISettingsService>()));
             RegisterStep(new ShowFirstTimeDialogStep(
                 SynchronizationStoryStepId.ShowFirstTimeDialog, this, navigationService));
             RegisterStep(new ShowCloudStorageChoiceStep(
@@ -39,31 +40,31 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
                 SynchronizationStoryStepId.ShowCloudStorageAccount,
                 this,
                 navigationService,
-                Ioc.GetOrCreate<INativeBrowserService>(),
-                Ioc.GetOrCreate<ICryptoRandomService>(),
-                Ioc.GetOrCreate<ICloudStorageClientFactory>()));
+                Ioc.Default.GetService<INativeBrowserService>(),
+                Ioc.Default.GetService<ICryptoRandomService>(),
+                Ioc.Default.GetService<ICloudStorageClientFactory>()));
             RegisterStep(new HandleOAuthRedirectStep(
                 SynchronizationStoryStepId.HandleOAuthRedirect,
                 this,
-                Ioc.GetOrCreate<ILanguageService>(),
+                Ioc.Default.GetService<ILanguageService>(),
                 feedbackService,
-                Ioc.GetOrCreate<ISettingsService>(),
-                Ioc.GetOrCreate<ICloudStorageClientFactory>()));
+                Ioc.Default.GetService<ISettingsService>(),
+                Ioc.Default.GetService<ICloudStorageClientFactory>()));
             RegisterStep(new ExistsCloudRepositoryStep(
                 SynchronizationStoryStepId.ExistsCloudRepository,
                 this,
-                Ioc.GetOrCreate<ILanguageService>(),
+                Ioc.Default.GetService<ILanguageService>(),
                 feedbackService,
-                Ioc.GetOrCreate<ISettingsService>(),
-                Ioc.GetOrCreate<ICloudStorageClientFactory>()));
+                Ioc.Default.GetService<ISettingsService>(),
+                Ioc.Default.GetService<ICloudStorageClientFactory>()));
             RegisterStep(new DownloadCloudRepositoryStep(
                 SynchronizationStoryStepId.DownloadCloudRepository,
                 this,
-                Ioc.GetOrCreate<ILanguageService>(),
+                Ioc.Default.GetService<ILanguageService>(),
                 feedbackService,
-                Ioc.GetOrCreate<ICloudStorageClientFactory>()));
+                Ioc.Default.GetService<ICloudStorageClientFactory>()));
             RegisterStep(new ExistsTransferCodeStep(
-                SynchronizationStoryStepId.ExistsTransferCode, this, Ioc.GetOrCreate<ISettingsService>()));
+                SynchronizationStoryStepId.ExistsTransferCode, this, Ioc.Default.GetService<ISettingsService>()));
             RegisterStep(new ShowTransferCodeStep(
                 SynchronizationStoryStepId.ShowTransferCode,
                 this,
@@ -72,12 +73,12 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
             RegisterStep(new DecryptCloudRepositoryStep(
                 SynchronizationStoryStepId.DecryptCloudRepository,
                 this,
-                Ioc.GetOrCreate<ILanguageService>(),
+                Ioc.Default.GetService<ILanguageService>(),
                 feedbackService,
-                Ioc.GetOrCreate<ISettingsService>(),
-                Ioc.GetOrCreate<INoteRepositoryUpdater>()));
+                Ioc.Default.GetService<ISettingsService>(),
+                Ioc.Default.GetService<INoteRepositoryUpdater>()));
             RegisterStep(new IsSameRepositoryStep(
-                SynchronizationStoryStepId.IsSameRepository, this, Ioc.GetOrCreate<IRepositoryStorageService>()));
+                SynchronizationStoryStepId.IsSameRepository, this, Ioc.Default.GetService<IRepositoryStorageService>()));
             RegisterStep(new ShowMergeChoiceStep(
                 SynchronizationStoryStepId.ShowMergeChoice,
                 this,
@@ -86,33 +87,33 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
             RegisterStep(new StoreMergedRepositoryAndQuitStep(
                 SynchronizationStoryStepId.StoreMergedRepositoryAndQuit,
                 this,
-                Ioc.GetOrCreate<ILanguageService>(),
+                Ioc.Default.GetService<ILanguageService>(),
                 feedbackService,
-                Ioc.GetOrCreate<ISettingsService>(),
-                Ioc.GetOrCreate<ICryptoRandomService>(),
-                Ioc.GetOrCreate<IRepositoryStorageService>(),
-                Ioc.GetOrCreate<ICloudStorageClientFactory>()));
+                Ioc.Default.GetService<ISettingsService>(),
+                Ioc.Default.GetService<ICryptoRandomService>(),
+                Ioc.Default.GetService<IRepositoryStorageService>(),
+                Ioc.Default.GetService<ICloudStorageClientFactory>()));
             RegisterStep(new StoreLocalRepositoryToCloudAndQuitStep(
                 SynchronizationStoryStepId.StoreLocalRepositoryToCloudAndQuit,
                 this,
-                Ioc.GetOrCreate<ILanguageService>(),
+                Ioc.Default.GetService<ILanguageService>(),
                 feedbackService,
-                Ioc.GetOrCreate<ISettingsService>(),
-                Ioc.GetOrCreate<ICryptoRandomService>(),
-                Ioc.GetOrCreate<IRepositoryStorageService>(),
-                Ioc.GetOrCreate<ICloudStorageClientFactory>()));
+                Ioc.Default.GetService<ISettingsService>(),
+                Ioc.Default.GetService<ICryptoRandomService>(),
+                Ioc.Default.GetService<IRepositoryStorageService>(),
+                Ioc.Default.GetService<ICloudStorageClientFactory>()));
             RegisterStep(new StoreCloudRepositoryToDeviceAndQuitStep(
                 SynchronizationStoryStepId.StoreCloudRepositoryToDeviceAndQuit,
                 this,
-                Ioc.GetOrCreate<ILanguageService>(),
+                Ioc.Default.GetService<ILanguageService>(),
                 feedbackService,
-                Ioc.GetOrCreate<IRepositoryStorageService>()));
+                Ioc.Default.GetService<IRepositoryStorageService>()));
             RegisterStep(new StopAndShowRepositoryStep(
                 SynchronizationStoryStepId.StopAndShowRepository,
                 this,
                 feedbackService,
                 navigationService,
-                Ioc.GetOrCreate<IStoryBoardService>()));
+                Ioc.Default.GetService<IStoryBoardService>()));
         }
 
         /// <summary>

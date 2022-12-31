@@ -4,6 +4,7 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using SilentNotes.Services;
 using SilentNotes.StoryBoards.SynchronizationStory;
 using Windows.ApplicationModel;
@@ -33,7 +34,7 @@ namespace SilentNotes.UWP
             Startup.InitializeApplication();
 
             // To respond to the OS dark mode settings, the RequestedTheme should be removed from App.xaml.
-            IThemeService themeService = Ioc.GetOrCreate<IThemeService>();
+            IThemeService themeService = Ioc.Default.GetService<IThemeService>();
             RequestedTheme = themeService.DarkMode ? ApplicationTheme.Dark : ApplicationTheme.Light;
 
             // Uncomment following line to make screenshots in Demo mode.
@@ -94,7 +95,7 @@ namespace SilentNotes.UWP
                 Window.Current.Activate();
             }
 
-            IAutoSynchronizationService syncService = Ioc.GetOrCreate<IAutoSynchronizationService>();
+            IAutoSynchronizationService syncService = Ioc.Default.GetService<IAutoSynchronizationService>();
             syncService.SynchronizeAtStartup(); // no awaiting, run in background
         }
 
@@ -131,12 +132,12 @@ namespace SilentNotes.UWP
                     gotExtendedSession = await extendedSession.RequestExtensionAsync() == ExtendedExecutionResult.Allowed;
 
                     // Save application state and stop any background activity
-                    INavigationService navigationService = Ioc.GetOrCreate<INavigationService>();
+                    INavigationService navigationService = Ioc.Default.GetService<INavigationService>();
                     navigationService.CurrentController?.StoreUnsavedData();
 
                     if (gotExtendedSession)
                     {
-                        IAutoSynchronizationService syncService = Ioc.GetOrCreate<IAutoSynchronizationService>();
+                        IAutoSynchronizationService syncService = Ioc.Default.GetService<IAutoSynchronizationService>();
                         await syncService.SynchronizeAtShutdown();
                     }
                 }
@@ -174,7 +175,7 @@ namespace SilentNotes.UWP
             Window.Current.Activate();
 
             // Reenter the synchronization story
-            IStoryBoardService storyBoardService = Ioc.GetOrCreate<IStoryBoardService>();
+            IStoryBoardService storyBoardService = Ioc.Default.GetService<IStoryBoardService>();
             if (storyBoardService.ActiveStory is SynchronizationStoryBoard)
             {
                 storyBoardService.ActiveStory.StoreToSession(SynchronizationStorySessionKey.OauthRedirectUrl, url);

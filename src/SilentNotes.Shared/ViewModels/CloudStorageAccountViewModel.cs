@@ -7,6 +7,7 @@ using System;
 using System.Security;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.Input;
 using SilentNotes.HtmlView;
 using SilentNotes.Services;
 using SilentNotes.StoryBoards.SynchronizationStory;
@@ -42,7 +43,7 @@ namespace SilentNotes.ViewModels
             _feedbackService = feedbackService ?? throw new ArgumentNullException(nameof(feedbackService));
             Model = model;
 
-            _credentialsRequirements = cloudStorageClientFactory.GetOrCreate(Model.CloudStorageId).CredentialsRequirements;
+            _credentialsRequirements = cloudStorageClientFactory.GetByKey(Model.CloudStorageId).CredentialsRequirements;
             CloudServiceName = cloudStorageClientFactory.GetCloudStorageMetadata(Model.CloudStorageId).Title;
 
             GoBackCommand = new RelayCommand(GoBack);
@@ -102,7 +103,7 @@ namespace SilentNotes.ViewModels
         public string Url
         {
             get { return Model.Url; }
-            set { ChangePropertyIndirect(() => Model.Url, (string v) => Model.Url = v, value, true); }
+            set { SetPropertyAndModified(Model.Url, value, (string v) => Model.Url = v); }
         }
 
         /// <inheritdoc />
@@ -110,7 +111,7 @@ namespace SilentNotes.ViewModels
         public string Username
         {
             get { return Model.Username; }
-            set { ChangePropertyIndirect(() => Model.Username, (string v) => Model.Username = v, value, true); }
+            set { SetPropertyAndModified(Model.Username, value, (string v) => Model.Username = v); }
         }
 
         /// <inheritdoc />
@@ -136,14 +137,14 @@ namespace SilentNotes.ViewModels
         public bool Secure
         {
             get { return Model.Secure; }
-            set { ChangePropertyIndirect(() => Model.Secure, (bool v) => Model.Secure = v, value, true); }
+            set { SetPropertyAndModified(Model.Secure, value, (bool v) => Model.Secure = v); }
         }
 
         [VueDataBinding(VueBindingMode.TwoWay)]
         public bool AcceptInvalidCertificate
         {
             get { return Model.AcceptInvalidCertificate; }
-            set { ChangePropertyIndirect(() => Model.AcceptInvalidCertificate, (bool v) => Model.AcceptInvalidCertificate = v, value, true); }
+            set { SetPropertyAndModified(Model.AcceptInvalidCertificate, value, (bool v) => Model.AcceptInvalidCertificate = v); }
         }
 
         /// <summary>

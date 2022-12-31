@@ -9,6 +9,7 @@ using System.Drawing;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.Input;
 using SilentNotes.Controllers;
 using SilentNotes.Crypto.SymmetricEncryption;
 using SilentNotes.HtmlView;
@@ -92,18 +93,14 @@ namespace SilentNotes.ViewModels
         [VueDataBinding(VueBindingMode.TwoWay)]
         public int FontSizeStep
         {
-            get
-            {
-                return _fontSizeConverter.ModelFactorToSliderStep(Model.FontScale);
-            }
+            get { return _fontSizeConverter.ModelFactorToSliderStep(Model.FontScale); }
 
             set
             {
-                ChangePropertyIndirect<int>(
-                    () => _fontSizeConverter.ModelFactorToSliderStep(Model.FontScale),
-                    (v) => Model.FontScale = _fontSizeConverter.SliderStepToModelFactor(v),
+                SetPropertyAndModified(
+                    _fontSizeConverter.ModelFactorToSliderStep(Model.FontScale),
                     value,
-                    true);
+                    (v) => Model.FontScale = _fontSizeConverter.SliderStepToModelFactor(v));
             }
         }
 
@@ -113,18 +110,14 @@ namespace SilentNotes.ViewModels
         [VueDataBinding(VueBindingMode.TwoWay)]
         public int NoteMaxHeightStep
         {
-            get
-            {
-                return _noteMaxHeightConverter.ModelFactorToSliderStep(Model.NoteMaxHeightScale);
-            }
+            get { return _noteMaxHeightConverter.ModelFactorToSliderStep(Model.NoteMaxHeightScale); }
 
             set
             {
-                ChangePropertyIndirect<int>(
-                    () => _noteMaxHeightConverter.ModelFactorToSliderStep(Model.NoteMaxHeightScale),
-                    (v) => Model.NoteMaxHeightScale = _noteMaxHeightConverter.SliderStepToModelFactor(v),
+                SetPropertyAndModified(
+                    _noteMaxHeightConverter.ModelFactorToSliderStep(Model.NoteMaxHeightScale),
                     value,
-                    true);
+                    (v) => Model.NoteMaxHeightScale = _noteMaxHeightConverter.SliderStepToModelFactor(v));
             }
         }
 
@@ -134,18 +127,11 @@ namespace SilentNotes.ViewModels
         [VueDataBinding(VueBindingMode.TwoWay)]
         public int KeepScreenOnDuration
         {
-            get
-            {
-                return Model.KeepScreenUpDuration;
-            }
+            get { return Model.KeepScreenUpDuration; }
 
             set
             {
-                if (ChangePropertyIndirect<int>(
-                    () => Model.KeepScreenUpDuration,
-                    (v) => Model.KeepScreenUpDuration = v,
-                    value,
-                    true))
+                if (SetPropertyAndModified(Model.KeepScreenUpDuration, value, (v) => Model.KeepScreenUpDuration = v))
                 {
                     OnPropertyChanged(nameof(KeepScreenOnDurationTitle));
                 }
@@ -173,8 +159,10 @@ namespace SilentNotes.ViewModels
 
             set
             {
-                if (ChangePropertyIndirect(() => Model.SelectedTheme, (string v) => Model.SelectedTheme = v, value, true))
+                if (SetPropertyAndModified(Model.SelectedTheme, value, (string v) => Model.SelectedTheme = v))
+                {
                     OnPropertyChanged(nameof(SelectedThemeImage));
+                }
             }
         }
 
@@ -192,7 +180,7 @@ namespace SilentNotes.ViewModels
         public bool UseSolidColorTheme
         {
             get { return Model.UseSolidColorTheme; }
-            set { ChangePropertyIndirect(() => Model.UseSolidColorTheme, (bool v) => Model.UseSolidColorTheme = v, value, true); }
+            set { SetPropertyAndModified(Model.UseSolidColorTheme, value, (bool v) => Model.UseSolidColorTheme = v); }
         }
 
         /// <summary>
@@ -203,7 +191,7 @@ namespace SilentNotes.ViewModels
         public string ColorForSolidThemeHex
         {
             get { return Model.ColorForSolidTheme; }
-            set { ChangePropertyIndirect(() => Model.ColorForSolidTheme, (string v) => Model.ColorForSolidTheme = v, value, true); }
+            set { SetPropertyAndModified(Model.ColorForSolidTheme, value, (string v) => Model.ColorForSolidTheme = v); }
         }
 
         /// <summary>
@@ -216,7 +204,7 @@ namespace SilentNotes.ViewModels
 
             set
             {
-                ChangePropertyIndirect(() => Model.ThemeMode.ToString(), (string v) => Model.ThemeMode = (ThemeMode)Enum.Parse(typeof(ThemeMode), value), value, true);
+                SetPropertyAndModified(Model.ThemeMode.ToString(), value, (string v) => Model.ThemeMode = (ThemeMode)Enum.Parse(typeof(ThemeMode), value));
                 _navigationService.Navigate(new Navigation(ControllerNames.Settings));
             }
         }
@@ -229,7 +217,7 @@ namespace SilentNotes.ViewModels
         public bool UseColorForAllNotesInDarkMode
         {
             get { return Model.UseColorForAllNotesInDarkMode; }
-            set { ChangePropertyIndirect(() => Model.UseColorForAllNotesInDarkMode, (bool v) => Model.UseColorForAllNotesInDarkMode = v, value, true); }
+            set { SetPropertyAndModified(Model.UseColorForAllNotesInDarkMode, value, (bool v) => Model.UseColorForAllNotesInDarkMode = v); }
         }
 
         /// <summary>
@@ -240,7 +228,7 @@ namespace SilentNotes.ViewModels
         public string ColorForAllNotesInDarkModeHex
         {
             get { return Model.ColorForAllNotesInDarkModeHex; }
-            set { ChangePropertyIndirect(() => Model.ColorForAllNotesInDarkModeHex, (string v) => Model.ColorForAllNotesInDarkModeHex = v, value, true); }
+            set { SetPropertyAndModified(Model.ColorForAllNotesInDarkModeHex, value, (string v) => Model.ColorForAllNotesInDarkModeHex = v); }
         }
 
         /// <summary>
@@ -258,8 +246,7 @@ namespace SilentNotes.ViewModels
         public string DefaultNoteColorHex
         {
             get { return Model.DefaultNoteColorHex; }
-
-            set { ChangePropertyIndirect(() => Model.DefaultNoteColorHex, (string v) => Model.DefaultNoteColorHex = v, value, true); }
+            set { SetPropertyAndModified(Model.DefaultNoteColorHex, value, (string v) => Model.DefaultNoteColorHex = v); }
         }
 
         /// <summary>
@@ -269,8 +256,7 @@ namespace SilentNotes.ViewModels
         public string SelectedNoteInsertionMode
         {
             get { return Model.DefaultNoteInsertion.ToString(); }
-
-            set { ChangePropertyIndirect(() => Model.DefaultNoteInsertion.ToString(), (string v) => Model.DefaultNoteInsertion = (NoteInsertionMode)Enum.Parse(typeof(NoteInsertionMode), value), value, true); }
+            set { SetPropertyAndModified(Model.DefaultNoteInsertion.ToString(), value, (string v) => Model.DefaultNoteInsertion = (NoteInsertionMode)Enum.Parse(typeof(NoteInsertionMode), value)); }
         }
 
         /// <summary>
@@ -281,7 +267,7 @@ namespace SilentNotes.ViewModels
         public bool HideClosedSafeNotes
         {
             get { return Model.HideClosedSafeNotes; }
-            set { ChangePropertyIndirect(() => Model.HideClosedSafeNotes, (bool v) => Model.HideClosedSafeNotes = v, value, true); }
+            set { SetPropertyAndModified(Model.HideClosedSafeNotes, value, (bool v) => Model.HideClosedSafeNotes = v); }
         }
 
         /// <summary>
@@ -320,7 +306,7 @@ namespace SilentNotes.ViewModels
                 return result.Value;
             }
 
-            set { ChangePropertyIndirect(() => Model.SelectedEncryptionAlgorithm, (string v) => Model.SelectedEncryptionAlgorithm = v, value, true); }
+            set { SetPropertyAndModified(Model.SelectedEncryptionAlgorithm, value, (string v) => Model.SelectedEncryptionAlgorithm = v); }
         }
 
         /// <summary>
@@ -330,8 +316,7 @@ namespace SilentNotes.ViewModels
         public string SelectedAutoSyncMode
         {
             get { return Model.AutoSyncMode.ToString(); }
-
-            set { ChangePropertyIndirect(() => Model.AutoSyncMode.ToString(), (string v) => Model.AutoSyncMode = (AutoSynchronizationMode)Enum.Parse(typeof(AutoSynchronizationMode), value), value, true); }
+            set { SetPropertyAndModified(Model.AutoSyncMode.ToString(), value, (string v) => Model.AutoSyncMode = (AutoSynchronizationMode)Enum.Parse(typeof(AutoSynchronizationMode), value)); }
         }
 
         /// <inheritdoc/>
@@ -383,7 +368,7 @@ namespace SilentNotes.ViewModels
             // Remove account from settings
             if ((dialogResult == MessageBoxResult.Yes) || (dialogResult == MessageBoxResult.No))
             {
-                ChangePropertyIndirect(() => Model.Credentials, (v) => Model.Credentials = v, null, true, nameof(AccountSummary));
+                SetPropertyAndModified(Model.Credentials, null, (v) => Model.Credentials = v, nameof(AccountSummary));
                 OnPropertyChanged(nameof(ClearCloudSettingsDisabled));
             }
         }
@@ -397,7 +382,7 @@ namespace SilentNotes.ViewModels
         private async Task<bool> TryDeleteCloudNoteRepository()
         {
             var credentials = Model.Credentials;
-            ICloudStorageClient cloudStorageClient = _cloudStorageClientFactory.GetOrCreate(credentials.CloudStorageId);
+            ICloudStorageClient cloudStorageClient = _cloudStorageClientFactory.GetByKey(credentials.CloudStorageId);
             try
             {
                 await cloudStorageClient.DeleteFileAsync(Config.RepositoryFileName, credentials);

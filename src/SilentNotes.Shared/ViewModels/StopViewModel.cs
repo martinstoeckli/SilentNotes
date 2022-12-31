@@ -5,6 +5,7 @@
 
 using System.IO;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.Input;
 using SilentNotes.HtmlView;
 using SilentNotes.Services;
 

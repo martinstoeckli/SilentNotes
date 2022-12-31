@@ -6,9 +6,11 @@
 using System;
 using System.Drawing;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using SilentNotes.Controllers;
 using SilentNotes.HtmlView;
 using SilentNotes.Services;
+using SilentNotes.UWP.Services;
 using SilentNotes.Workers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -35,14 +37,13 @@ namespace SilentNotes.UWP
             _webView.NavigationCompleted += NavigationCompletedEventHandler;
             _webView.NewWindowRequested += NewWindowRequestedEventHandler;
             _webView.UnsupportedUriSchemeIdentified += UnsupportedUriSchemeIdentifiedEventHandler;
-
-            Startup.InitializeApplicationWithMainPage(this);
+            Ioc.Default.GetService<MainPageService>().MainPage = this;
         }
 
         private void Page_Loading(FrameworkElement sender, object args)
         {
             // Is triggered when the <see cref="MainPage"/> is loading.
-            INavigationService navigation = Ioc.GetOrCreate<INavigationService>();
+            INavigationService navigation = Ioc.Default.GetService<INavigationService>();
             navigation.Navigate(new Navigation(ControllerNames.NoteRepository));
         }
 

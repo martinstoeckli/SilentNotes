@@ -9,6 +9,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.Input;
 using SilentNotes.Controllers;
 using SilentNotes.Crypto;
 using SilentNotes.HtmlView;
@@ -208,7 +209,7 @@ namespace SilentNotes.ViewModels
 
             set 
             {
-                if (ChangeProperty(ref _exportUnprotectedNotes, value, false))
+                if (SetProperty(ref _exportUnprotectedNotes, value))
                     OnPropertyChanged(nameof(OkCommandDisabled));
             }
         }
@@ -224,7 +225,7 @@ namespace SilentNotes.ViewModels
 
             set
             {
-                if (ChangeProperty(ref _exportProtectedNotes, value, false))
+                if (SetProperty(ref _exportProtectedNotes, value))
                     OnPropertyChanged(nameof(OkCommandDisabled));
             }
         }

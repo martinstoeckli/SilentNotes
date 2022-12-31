@@ -10,6 +10,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.Input;
 using SilentNotes.Controllers;
 using SilentNotes.Crypto;
 using SilentNotes.HtmlView;
@@ -157,9 +158,10 @@ namespace SilentNotes.ViewModels
             {
                 if (value == null)
                     value = string.Empty;
-                if (ChangeProperty(ref _unlockedContent, value, true))
+                if (SetProperty(ref _unlockedContent, value))
                 {
                     MarkSearchableContentAsDirty();
+                    Modified = true;
                     Model.RefreshModifiedAt();
                 }
             }
@@ -278,7 +280,7 @@ namespace SilentNotes.ViewModels
                     }
                 }
 
-                if (ChangePropertyIndirect(() => Model.BackgroundColorHex, (string v) => Model.BackgroundColorHex = v, value, true))
+                if (SetPropertyAndModified(Model.BackgroundColorHex, value, (string v) => Model.BackgroundColorHex = v))
                 {
                     Model.RefreshModifiedAt();
                     OnPropertyChanged(nameof(IsDark));
@@ -331,7 +333,7 @@ namespace SilentNotes.ViewModels
 
             set
             {
-                if (ChangePropertyIndirect(() => Model.InRecyclingBin, (bool v) => Model.InRecyclingBin = v, value, true))
+                if (SetPropertyAndModified(Model.InRecyclingBin, value, (bool v) => Model.InRecyclingBin = v))
                     Model.RefreshModifiedAt();
             }
         }
@@ -557,7 +559,7 @@ namespace SilentNotes.ViewModels
         public bool ShoppingModeActive
         {
             get { return Model.ShoppingModeActive; }
-            set { ChangePropertyIndirect(() => Model.ShoppingModeActive, (v) => Model.ShoppingModeActive = v, value, true); }
+            set { SetPropertyAndModified(Model.ShoppingModeActive, value, (v) => Model.ShoppingModeActive = v); }
         }
 
         /// <summary>
@@ -581,7 +583,7 @@ namespace SilentNotes.ViewModels
         public bool IsPinned
         {
             get { return Model.IsPinned; }
-            set { ChangePropertyIndirect(() => Model.IsPinned, (v) => Model.IsPinned = v, value, false); }
+            set { SetProperty(Model.IsPinned, value, (v) => Model.IsPinned = v); }
         }
 
         /// <summary>
@@ -661,7 +663,7 @@ namespace SilentNotes.ViewModels
         public bool KeepScreenOnActive
         {
             get { return _isKeepScreenOnActive; }
-            set { ChangeProperty(ref _isKeepScreenOnActive, value, false); }
+            set { SetProperty(ref _isKeepScreenOnActive, value); }
         }
 
         /// <summary>

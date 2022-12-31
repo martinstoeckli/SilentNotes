@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Security;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.Input;
 using SilentNotes.Controllers;
 using SilentNotes.HtmlView;
 using SilentNotes.Models;
@@ -128,21 +129,21 @@ namespace SilentNotes.ViewModels
         public bool InvalidOldPasswordError
         {
             get { return _invalidOldPasswordError; }
-            set { ChangeProperty(ref _invalidOldPasswordError, value, false); }
+            set { SetProperty(ref _invalidOldPasswordError, value); }
         }
 
         [VueDataBinding(VueBindingMode.OneWayToView)]
         public bool InvalidPasswordError
         {
             get { return _invalidPasswordError; }
-            set { ChangeProperty(ref _invalidPasswordError, value, false); }
+            set { SetProperty(ref _invalidPasswordError, value); }
         }
 
         [VueDataBinding(VueBindingMode.OneWayToView)]
         public bool InvalidPasswordConfirmationError
         {
             get { return _invalidPasswordConfirmationError; }
-            set { ChangeProperty(ref _invalidPasswordConfirmationError, value, false); }
+            set { SetProperty(ref _invalidPasswordConfirmationError, value); }
         }
 
         /// <summary>

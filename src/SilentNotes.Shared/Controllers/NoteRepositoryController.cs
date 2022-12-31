@@ -5,6 +5,7 @@
 
 using System;
 using System.ComponentModel;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using SilentNotes.HtmlView;
 using SilentNotes.Services;
 using SilentNotes.ViewModels;
@@ -64,23 +65,23 @@ namespace SilentNotes.Controllers
         public override void ShowInView(IHtmlView htmlView, KeyValueList<string, string> variables, Navigation redirectedFrom)
         {
             base.ShowInView(htmlView, variables, redirectedFrom);
-            IRepositoryStorageService repositoryService = Ioc.GetOrCreate<IRepositoryStorageService>();
+            IRepositoryStorageService repositoryService = Ioc.Default.GetService<IRepositoryStorageService>();
             _scrollToNote = variables?.GetValueOrDefault(ControllerParameters.NoteId);
 
             RepositoryStorageLoadResult loadResult = repositoryService.LoadRepositoryOrDefault(out _);
             if (loadResult != RepositoryStorageLoadResult.InvalidRepository)
             {
                 _viewModel = new NoteRepositoryViewModel(
-                    Ioc.GetOrCreate<INavigationService>(),
-                    Ioc.GetOrCreate<ILanguageService>(),
-                    Ioc.GetOrCreate<ISvgIconService>(),
-                    Ioc.GetOrCreate<IThemeService>(),
-                    Ioc.GetOrCreate<IBaseUrlService>(),
-                    Ioc.GetOrCreate<IStoryBoardService>(),
-                    Ioc.GetOrCreate<IFeedbackService>(),
-                    Ioc.GetOrCreate<ISettingsService>(),
-                    Ioc.GetOrCreate<IEnvironmentService>(),
-                    Ioc.GetOrCreate<ICryptoRandomService>(),
+                    Ioc.Default.GetService<INavigationService>(),
+                    Ioc.Default.GetService<ILanguageService>(),
+                    Ioc.Default.GetService<ISvgIconService>(),
+                    Ioc.Default.GetService<IThemeService>(),
+                    Ioc.Default.GetService<IBaseUrlService>(),
+                    Ioc.Default.GetService<IStoryBoardService>(),
+                    Ioc.Default.GetService<IFeedbackService>(),
+                    Ioc.Default.GetService<ISettingsService>(),
+                    Ioc.Default.GetService<IEnvironmentService>(),
+                    Ioc.Default.GetService<ICryptoRandomService>(),
                     repositoryService);
 
                 VueBindingShortcut[] shortcuts = new[]
@@ -110,14 +111,14 @@ namespace SilentNotes.Controllers
             {
                 // Show error message and stop loading the application
                 _stopViewModel = new StopViewModel(
-                    Ioc.GetOrCreate<INavigationService>(),
-                    Ioc.GetOrCreate<ILanguageService>(),
-                    Ioc.GetOrCreate<ISvgIconService>(),
-                    Ioc.GetOrCreate<IThemeService>(),
-                    Ioc.GetOrCreate<IBaseUrlService>(),
-                    Ioc.GetOrCreate<IVersionService>(),
+                    Ioc.Default.GetService<INavigationService>(),
+                    Ioc.Default.GetService<ILanguageService>(),
+                    Ioc.Default.GetService<ISvgIconService>(),
+                    Ioc.Default.GetService<IThemeService>(),
+                    Ioc.Default.GetService<IBaseUrlService>(),
+                    Ioc.Default.GetService<IVersionService>(),
                     repositoryService,
-                    Ioc.GetOrCreate<IFolderPickerService>());
+                    Ioc.Default.GetService<IFolderPickerService>());
 
                 VueBindings = new VueDataBinding(_stopViewModel, View, null);
                 _stopViewModel.VueDataBindingScript = VueBindings.BuildVueScript();

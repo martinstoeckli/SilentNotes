@@ -6,6 +6,7 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using CommunityToolkit.Mvvm.ComponentModel;
 using SilentNotes.Services;
 
 namespace SilentNotes.ViewModels
@@ -13,7 +14,7 @@ namespace SilentNotes.ViewModels
     /// <summary>
     /// Base class for all other view models.
     /// </summary>
-    public abstract class ViewModelBase : INotifyPropertyChanged, IViewModel
+    public abstract class ViewModelBase : ObservableObject, IViewModel
     {
         /// <summary>Gets the injected navigation service.</summary>
         protected readonly INavigationService _navigationService;
@@ -60,70 +61,21 @@ namespace SilentNotes.ViewModels
         public bool Modified { get; set; }
 
         /// <summary>
-        /// This event can be consumed by a view, to find out when a certain property has changed,
-        /// so it can be updated.
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        /// <summary>
-        /// Raises the property changed event, to inform the view of changes.
-        /// Calling this method is usually not necessary, because the method <see cref="ChangeProperty{T}(ref T, T, bool, string)"/>
-        /// will call it automatically.
-        /// </summary>
-        /// <param name="propertyName">Name of the property which has changed.</param>
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        /// <summary>
-        /// Assigns a new value to the property and raises the PropertyChanged event if necessary.
+        /// Assigns a new value to the property, raises the PropertyChanged event and sets the
+        /// <see cref="Modified"/> flag if the value has changed.
         /// </summary>
         /// <typeparam name="T">The type of the property to change.</typeparam>
-        /// <param name="propertyMember">The backing field in the viewmodel.</param>
+        /// <param name="oldValue">The old value of the property from the model.</param>
         /// <param name="newValue">The new value of the property.</param>
-        /// <param name="updateModified">Value indicating whether the <see cref="Modified"/> flag
-        /// should be updated if the value changes.</param>
-        /// <param name="propertyName">(optional) The name of the property to change.</param>
-        /// <returns>Returns true if the PropertyChanged event was raised, otherwise false.</returns>
-        protected bool ChangeProperty<T>(ref T propertyMember, T newValue, bool updateModified, [CallerMemberName] string propertyName = null)
-        {
-            if (object.Equals(propertyMember, newValue))
-                return false;
-
-            propertyMember = newValue;
-            OnPropertyChanged(propertyName);
-            if (updateModified)
-                Modified = true;
-            return true;
-        }
-
-        /// <summary>
-        /// Assigns a new value to the property and raises the PropertyChanged event if necessary.
-        /// </summary>
-        /// <typeparam name="T">The type of the property to change.</typeparam>
-        /// <param name="getterFromModel">Gets the value of the property from the model.</param>
         /// <param name="setterToModel">Sets the value of the property to the model.</param>
-        /// <param name="newValue">The new value of the property.</param>
-        /// <param name="updateModified">Value indicating whether the <see cref="Modified"/></param>
-        /// should be updated if the value changes.
         /// <param name="propertyName">(optional) The name of the property to change.</param>
-        /// <returns>Returns true if the PropertyChanged event was raised, otherwise false.</returns>
-        protected bool ChangePropertyIndirect<T>(Func<T> getterFromModel, Action<T> setterToModel, T newValue, bool updateModified, [CallerMemberName] string propertyName = null)
+        /// <returns>Returns true if the value really was different and has changed, otherwise false.</returns>
+        protected bool SetPropertyAndModified<T>(T oldValue, T newValue, Action<T> setterToModel, [CallerMemberName] string propertyName = null)
         {
-            T oldValue = getterFromModel();
-
-            // If both values are equal, then do not change anything
-            if ((oldValue == null) && (newValue == null))
-                return false;
-            if ((oldValue != null) && oldValue.Equals(newValue))
-                return false;
-
-            setterToModel(newValue);
-            OnPropertyChanged(propertyName);
-            if (updateModified)
+            bool result = SetProperty(oldValue, newValue, setterToModel, propertyName);
+            if (result)
                 Modified = true;
-            return true;
+            return result;
         }
 
         /// <summary>

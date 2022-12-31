@@ -3,6 +3,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using CommunityToolkit.Mvvm.DependencyInjection;
 using SilentNotes.HtmlView;
 using SilentNotes.Services;
 using SilentNotes.ViewModels;
@@ -36,13 +37,13 @@ namespace SilentNotes.Controllers
         {
             base.ShowInView(htmlView, variables, redirectedFrom);
             _viewModel = new CloudStorageOauthWaitingViewModel(
-                Ioc.GetOrCreate<INavigationService>(),
-                Ioc.GetOrCreate<ILanguageService>(),
-                Ioc.GetOrCreate<ISvgIconService>(),
-                Ioc.GetOrCreate<IThemeService>(),
-                Ioc.GetOrCreate<IBaseUrlService>(),
-                Ioc.GetOrCreate<IStoryBoardService>(),
-                Ioc.GetOrCreate<IFeedbackService>());
+                Ioc.Default.GetService<INavigationService>(),
+                Ioc.Default.GetService<ILanguageService>(),
+                Ioc.Default.GetService<ISvgIconService>(),
+                Ioc.Default.GetService<IThemeService>(),
+                Ioc.Default.GetService<IBaseUrlService>(),
+                Ioc.Default.GetService<IStoryBoardService>(),
+                Ioc.Default.GetService<IFeedbackService>());
 
             VueBindings = new VueDataBinding(_viewModel, View);
             _viewModel.VueDataBindingScript = VueBindings.BuildVueScript();

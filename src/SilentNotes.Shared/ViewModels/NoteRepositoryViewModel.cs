@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.Input;
 using SilentNotes.Controllers;
 using SilentNotes.Crypto;
 using SilentNotes.HtmlView;
@@ -199,7 +200,7 @@ namespace SilentNotes.ViewModels
             set
             {
                 SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
-                if (ChangePropertyIndirect(() => settings.Filter, (string v) => settings.Filter = v, value, false))
+                if (SetProperty(settings.Filter, value, (string v) => settings.Filter = v))
                 {
                     OnPropertyChanged(nameof(Filter));
                     OnPropertyChanged(nameof(IsFiltered));
@@ -423,7 +424,7 @@ namespace SilentNotes.ViewModels
                     newValue = value;
 
                 SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
-                if (ChangePropertyIndirect(() => settings.SelectedTag, (string v) => settings.SelectedTag = v, newValue, true))
+                if (SetPropertyAndModified(settings.SelectedTag, newValue, (string v) => settings.SelectedTag = v))
                 {
                     OnPropertyChanged(nameof(SelectedTag));
                     ApplyFilter();
