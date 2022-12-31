@@ -60,7 +60,7 @@ namespace SilentNotes.ViewModels
         public bool ShowTransfercodeHistoryVisible
         {
             get { return _showTransfercodeHistoryVisible; }
-            set { ChangeProperty(ref _showTransfercodeHistoryVisible, value, false); }
+            set { SetProperty(ref _showTransfercodeHistoryVisible, value); }
         }
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace SilentNotes.ViewModels
         public bool TransfercodeHistoryVisible
         {
             get { return _showTransfercodeHistory; }
-            set { ChangeProperty(ref _showTransfercodeHistory, value, false); }
+            set { SetProperty(ref _showTransfercodeHistory, value); }
         }
 
         /// <summary>

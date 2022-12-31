@@ -103,7 +103,7 @@ namespace SilentNotes.ViewModels
         public string Url
         {
             get { return Model.Url; }
-            set { ChangePropertyIndirect(() => Model.Url, (string v) => Model.Url = v, value, true); }
+            set { SetPropertyAndModified(Model.Url, value, (string v) => Model.Url = v); }
         }
 
         /// <inheritdoc />
@@ -111,7 +111,7 @@ namespace SilentNotes.ViewModels
         public string Username
         {
             get { return Model.Username; }
-            set { ChangePropertyIndirect(() => Model.Username, (string v) => Model.Username = v, value, true); }
+            set { SetPropertyAndModified(Model.Username, value, (string v) => Model.Username = v); }
         }
 
         /// <inheritdoc />
@@ -137,14 +137,14 @@ namespace SilentNotes.ViewModels
         public bool Secure
         {
             get { return Model.Secure; }
-            set { ChangePropertyIndirect(() => Model.Secure, (bool v) => Model.Secure = v, value, true); }
+            set { SetPropertyAndModified(Model.Secure, value, (bool v) => Model.Secure = v); }
         }
 
         [VueDataBinding(VueBindingMode.TwoWay)]
         public bool AcceptInvalidCertificate
         {
             get { return Model.AcceptInvalidCertificate; }
-            set { ChangePropertyIndirect(() => Model.AcceptInvalidCertificate, (bool v) => Model.AcceptInvalidCertificate = v, value, true); }
+            set { SetPropertyAndModified(Model.AcceptInvalidCertificate, value, (bool v) => Model.AcceptInvalidCertificate = v); }
         }
 
         /// <summary>
