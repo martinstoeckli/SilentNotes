@@ -7,7 +7,6 @@ import Code from '@tiptap/extension-code'
 import CodeBlock from '@tiptap/extension-code-block'
 import Document from '@tiptap/extension-document'
 import HardBreak from '@tiptap/extension-hard-break'
-import Heading from '@tiptap/extension-heading'
 import History from '@tiptap/extension-history'
 import Italic from '@tiptap/extension-italic'
 import ListItem from '@tiptap/extension-list-item'
@@ -19,6 +18,7 @@ import TextStyle from '@tiptap/extension-text-style'
 import Underline from '@tiptap/extension-underline'
 import { Selection } from 'prosemirror-state'
 
+import { CustomHeading } from "./custom-heading-extension";
 import { CustomLink } from "./custom-link-extension";
 import { SearchNReplace } from './search-n-replace'
 import { CheckableParagraph, registerIsShoppingModeActive as checklistRegisterIsShoppingModeActive, moveChecklistUp, moveChecklistDown, sortPendingToTop, setCheckStateForAll, sortAlphabetical } from "./checkable-paragraph-extension";
@@ -49,7 +49,7 @@ export function initializeEditor(editorElement: HTMLElement): any {
         CodeBlock,
         Document,
         HardBreak,
-        Heading.configure({
+        CustomHeading.configure({
           levels: [1, 2, 3],
         }),
         History.configure({
@@ -102,7 +102,7 @@ export function initializeEditor(editorElement: HTMLElement): any {
       extensions: [
         Document,
         HardBreak,
-        Heading.configure({
+        CustomHeading.configure({
           levels: [1, 2],
         }),
         History.configure({
