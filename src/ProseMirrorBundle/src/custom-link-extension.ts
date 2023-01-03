@@ -39,6 +39,7 @@ export type CustomClickHandlerOptions = {
 }
 
 // Taken and modified from clickHandler.ts
+// Instead of directly opening the link, the 'custom-link-clicked' event is triggered.
 function customClickHandler(options: CustomClickHandlerOptions): Plugin {
   return new Plugin({
     key: new PluginKey('handleClickLink'),
