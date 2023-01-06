@@ -1,0 +1,7 @@
+SilentNotes version 7.2.1
+
+* Android: Screenshot protection für Notizen aktiviert.
+* Windows: Tastenkürzel entfernt, welche das Tippen von Spezialzeichen (@, #) verhindert haben.
+* Auf neueste Version des TipTap/ProseMirror editors aktualisiert.
+* Auf npm Version 9.2.0 aktualisiert.
+* Gewechselt zu communitytoolkit-mvvm.
