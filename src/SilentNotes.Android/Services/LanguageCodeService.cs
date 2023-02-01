@@ -10,7 +10,7 @@ namespace SilentNotes.Android.Services
     /// <summary>
     /// Implementation of the <see cref="ILanguageCodeProvider"/> interface for the Android platform.
     /// </summary>
-    public class LanguageCodeService : ILanguageCodeProvider
+    internal class LanguageCodeService : ILanguageCodeProvider
     {
         /// <inheritdoc/>
         public string GetSystemLanguageCode()

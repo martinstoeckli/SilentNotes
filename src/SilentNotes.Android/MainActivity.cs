@@ -17,6 +17,7 @@ using Android.Views;
 using Android.Webkit;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Java.IO;
+using SilentNotes.Android.Services;
 using SilentNotes.Controllers;
 using SilentNotes.HtmlView;
 using SilentNotes.Models;
@@ -57,8 +58,10 @@ namespace SilentNotes.Android
             // Clear the splash screen theme, which is declared as attribute of the activity.
             SetTheme(Resource.Style.MainTheme);
 
-            _activityResultAwaiter = new ActivityResultAwaiter(this);
-            Startup.InitializeApplication(this, _activityResultAwaiter);
+            // Initialize the Ioc and make the new main window available to the services.
+            Startup.InitializeApplication();
+            Ioc.Default.GetService<IAppContextService>().Initialize(this);
+
             ConsumeActionSendIntentParameter(Intent);
 
             // Prevent notes from being visible in list of recent apps and screenshots

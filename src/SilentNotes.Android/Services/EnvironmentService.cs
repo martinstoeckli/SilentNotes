@@ -5,10 +5,7 @@
 
 using System.Threading;
 using System.Threading.Tasks;
-using Android.App;
-using Android.Content;
 using Android.Content.Res;
-using Android.OS;
 using Android.Views;
 using SilentNotes.Services;
 
@@ -17,20 +14,20 @@ namespace SilentNotes.Android.Services
     /// <summary>
     /// Implementation of the <see cref="IEnvironmentService"/> for the Android platform.
     /// </summary>
-    public class EnvironmentService : IEnvironmentService, IKeepScreenOn
+    internal class EnvironmentService : IEnvironmentService, IKeepScreenOn
     {
-        private readonly Activity _rootActivity;
+        private readonly IAppContextService _appContext;
         private CancellationTokenSource _cancellationTokenSource;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EnvironmentService"/> class.
         /// </summary>
         /// <param name="os">Sets the <see cref="Os"/> property.</param>
-        /// <param name="rootActivity">The context of the Android app.</param>
-        public EnvironmentService(OperatingSystem os, Activity rootActivity)
+        /// <param name="appContextService">A service which knows about the current main activity.</param>
+        public EnvironmentService(OperatingSystem os, IAppContextService appContextService)
         {
             Os = os;
-            _rootActivity = rootActivity;
+            _appContext = appContextService;
         }
 
         /// <inheritdoc/>
@@ -41,7 +38,7 @@ namespace SilentNotes.Android.Services
         {
             get
             {
-                UiMode nightModeFlags = _rootActivity.Resources.Configuration.UiMode & UiMode.NightMask;
+                UiMode nightModeFlags = _appContext.RootActivity.Resources.Configuration.UiMode & UiMode.NightMask;
                 return nightModeFlags == UiMode.NightYes;
             }
         }
@@ -55,9 +52,9 @@ namespace SilentNotes.Android.Services
         /// <inheritdoc/>
         void IKeepScreenOn.Start()
         {
-            _rootActivity.RunOnUiThread(() =>
+            _appContext.RootActivity.RunOnUiThread(() =>
             {
-                _rootActivity.Window.AddFlags(WindowManagerFlags.KeepScreenOn);
+                _appContext.RootActivity.Window.AddFlags(WindowManagerFlags.KeepScreenOn);
                 OnStateChanged(true);
             });
         }
@@ -71,9 +68,9 @@ namespace SilentNotes.Android.Services
             // If a timer is active, deactivate it.
             cancellationTokenSource?.Cancel();
 
-            _rootActivity.RunOnUiThread(() =>
+            _appContext.RootActivity.RunOnUiThread(() =>
             {
-                _rootActivity.Window.ClearFlags(WindowManagerFlags.KeepScreenOn);
+                _appContext.RootActivity.Window.ClearFlags(WindowManagerFlags.KeepScreenOn);
                 OnStateChanged(false);
             });
         }
@@ -100,9 +97,9 @@ namespace SilentNotes.Android.Services
                 return;
 
             // Timer was not cancelled, so the KeepScreenOn should be stopped.
-            _rootActivity.RunOnUiThread(() =>
+            _appContext.RootActivity.RunOnUiThread(() =>
             {
-                _rootActivity.Window.ClearFlags(WindowManagerFlags.KeepScreenOn); // must be called on UI thread
+                _appContext.RootActivity.Window.ClearFlags(WindowManagerFlags.KeepScreenOn); // must be called on UI thread
                 OnStateChanged(false);
             });
         }

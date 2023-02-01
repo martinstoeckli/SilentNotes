@@ -26,7 +26,7 @@ namespace SilentNotes.Android.Services
     ///   https://msicc.net/xamarin-android-asymmetric-encryption-without-any-user-input-or-hardcoded-values/
     ///   https://proandroiddev.com/secure-data-in-android-encryption-in-android-part-2-991a89e55a23
     /// </summary>
-    public class DataProtectionService : IDataProtectionService
+    internal class DataProtectionService : IDataProtectionService
     {
         private const string KeyStoreName = "AndroidKeyStore";
         private const string KeyAlias = "ch.martinstoeckli.silentnotes";
@@ -34,16 +34,14 @@ namespace SilentNotes.Android.Services
         private const int KeySize = 2048;
         private const char Separator = '$';
 
-        private readonly Context _applicationContext;
         private readonly ICryptoRandomService _randomService;
         private KeyStore _androidKeyStore;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DataProtectionService"/> class.
         /// </summary>
-        public DataProtectionService(Context applicationContext, ICryptoRandomService randomService)
+        public DataProtectionService(ICryptoRandomService randomService)
         {
-            _applicationContext = applicationContext;
             _randomService = randomService;
         }
 

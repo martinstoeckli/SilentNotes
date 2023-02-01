@@ -6,7 +6,6 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using Android.Content;
 using SilentNotes.Services;
 
 namespace SilentNotes.Android.Services
@@ -14,17 +13,17 @@ namespace SilentNotes.Android.Services
     /// <summary>
     /// Implementation of the <see cref="ILanguageServiceResourceReader"/> interface for the Android platform.
     /// </summary>
-    public class LanguageServiceResourceReader : ILanguageServiceResourceReader
+    internal class LanguageServiceResourceReader : ILanguageServiceResourceReader
     {
-        private readonly Context _applicationContext;
+        private readonly IAppContextService _appContext;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LanguageServiceResourceReader"/> class.
         /// </summary>
-        /// <param name="applicationContext">The Android application context.</param>
-        public LanguageServiceResourceReader(Context applicationContext)
+        /// <param name="appContextService">A service which knows about the current main activity.</param>
+        public LanguageServiceResourceReader(IAppContextService appContextService)
         {
-            _applicationContext = applicationContext;
+            _appContext = appContextService;
         }
 
         /// <inheritdoc/>
@@ -35,7 +34,7 @@ namespace SilentNotes.Android.Services
             Stream result;
             try
             {
-                result = _applicationContext.Assets.Open(resourceFileName);
+                result = _appContext.RootActivity.Assets.Open(resourceFileName);
             }
             catch (Exception)
             {

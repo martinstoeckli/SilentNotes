@@ -100,11 +100,13 @@
     <Compile Include="Services\FeedbackService.cs" />
     <Compile Include="Services\FilePickerService.cs" />
     <Compile Include="Services\FolderPickerService.cs" />
+    <Compile Include="Services\HtmlViewService.cs" />
     <Compile Include="Services\InternetStateService.cs" />
     <Compile Include="Services\LanguageCodeService.cs" />
     <Compile Include="Services\LanguageServiceResourceReader.cs" />
     <Compile Include="Services\NativeBrowserService.cs" />
     <Compile Include="Services\RepositoryStorageService.cs" />
+    <Compile Include="Services\AppContextService.cs" />
     <Compile Include="Services\SettingsService.cs" />
     <Compile Include="Services\EnvironmentService.cs" />
     <Compile Include="Services\VersionService.cs" />

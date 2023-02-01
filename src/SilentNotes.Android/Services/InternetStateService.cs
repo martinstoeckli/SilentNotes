@@ -5,7 +5,6 @@
 
 using Android.Content;
 using Android.Net;
-using Android.OS;
 using SilentNotes.Services;
 
 namespace SilentNotes.Android.Services
@@ -13,17 +12,17 @@ namespace SilentNotes.Android.Services
     /// <summary>
     /// Implementation of the <see cref="IInternetStateService"/> interface for the Android platform.
     /// </summary>
-    public class InternetStateService : IInternetStateService
+    internal class InternetStateService : IInternetStateService
     {
-        private readonly Context _applicationContext;
+        private readonly IAppContextService _appContext;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InternetStateService"/> class.
         /// </summary>
-        /// <param name="applicationContext">The Android application context.</param>
-        public InternetStateService(Context applicationContext)
+        /// <param name="appContextService">A service which knows about the current main activity.</param>
+        public InternetStateService(IAppContextService appContextService)
         {
-            _applicationContext = applicationContext;
+            _appContext = appContextService;
         }
 
         /// <inheritdoc/>
@@ -46,7 +45,7 @@ namespace SilentNotes.Android.Services
 
         private ConnectivityManager GetConnectivityManager()
         {
-            return (ConnectivityManager)_applicationContext.GetSystemService(Context.ConnectivityService);
+            return (ConnectivityManager)_appContext.RootActivity.GetSystemService(Context.ConnectivityService);
         }
     }
 }

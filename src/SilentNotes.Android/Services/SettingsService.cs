@@ -5,7 +5,6 @@
 
 using System.Text;
 using System.Xml.Linq;
-using Android.Content;
 using AndroidX.Core.Content;
 using SilentNotes.Crypto;
 using SilentNotes.Services;
@@ -15,18 +14,18 @@ namespace SilentNotes.Android.Services
     /// <summary>
     /// Implements the <see cref="ISettingsService"/> interface for the Android platform.
     /// </summary>
-    public class SettingsService : SettingsServiceBase
+    internal class SettingsService : SettingsServiceBase
     {
         private const string snpsk = "53EC49B1-6600+406b;B84F-0B9CFA1D2BE1"; // backwards compatibility
-        private readonly Context _appContext;
+        private readonly IAppContextService _appContext;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SettingsService"/> class.
         /// </summary>
-        public SettingsService(Context appContext, IXmlFileService xmlFileService, IDataProtectionService dataProtectionService)
+        public SettingsService(IAppContextService appContextService, IXmlFileService xmlFileService, IDataProtectionService dataProtectionService)
             : base(xmlFileService, dataProtectionService)
         {
-            _appContext = appContext;
+            _appContext = appContextService;
         }
 
         /// <summary>
@@ -37,7 +36,7 @@ namespace SilentNotes.Android.Services
         /// <returns>The full directory path for storing the config.</returns>
         protected override string GetDirectoryPath()
         {
-            return ContextCompat.GetNoBackupFilesDir(_appContext).AbsolutePath;
+            return ContextCompat.GetNoBackupFilesDir(_appContext.RootActivity).AbsolutePath;
         }
 
         /// <inheritdoc/>

@@ -10,7 +10,7 @@ namespace SilentNotes.Android.Services
     /// <summary>
     /// Android specific implementation of the <see cref="IBaseUrlService"/> interface.
     /// </summary>
-    public class BaseUrlService : IBaseUrlService
+    internal class BaseUrlService : IBaseUrlService
     {
         /// <inheritdoc/>
         public string HtmlBase

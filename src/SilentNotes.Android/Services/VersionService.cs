@@ -11,17 +11,17 @@ namespace SilentNotes.Android.Services
     /// <summary>
     /// Implementation of the <see cref="IVersionService"/> interface for the Android platform.
     /// </summary>
-    public class VersionService : IVersionService
+    internal class VersionService : IVersionService
     {
-        private readonly Context _applicationContext;
+        private readonly IAppContextService _appContext;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VersionService"/> class.
         /// </summary>
-        /// <param name="applicationContext">The Android application context.</param>
-        public VersionService(Context applicationContext)
+        /// <param name="appContextService">A service which knows about the current main activity.</param>
+        public VersionService(IAppContextService appContextService)
         {
-            _applicationContext = applicationContext;
+            _appContext = appContextService;
         }
 
         /// <inheritdoc/>
@@ -30,7 +30,8 @@ namespace SilentNotes.Android.Services
             try
             {
                 // Android does not support 4 digit versions, instead one can read the version string.
-                return _applicationContext.PackageManager.GetPackageInfo(_applicationContext.PackageName, 0).VersionName;
+                Context context = _appContext.RootActivity;
+                return context.PackageManager.GetPackageInfo(context.PackageName, 0).VersionName;
             }
             catch
             {
