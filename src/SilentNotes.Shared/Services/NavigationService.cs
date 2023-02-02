@@ -43,7 +43,7 @@ namespace SilentNotes.Services
                 CurrentNavigation = redirectTo;
                 CurrentController = Ioc.Default.GetService<ControllerFactory>().GetByKey(CurrentNavigation.ControllerId);
             }
-            CurrentController.ShowInView(_htmlViewService.HtmlView, CurrentNavigation.Variables, redirectedFrom);
+            CurrentController.ShowInView(_htmlViewService, CurrentNavigation.Variables, redirectedFrom);
         }
 
         private void CleanupCurrentController()

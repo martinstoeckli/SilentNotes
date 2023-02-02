@@ -15,33 +15,33 @@ namespace SilentNotes.UWP.Services
     /// <summary>
     /// Implementation of the <see cref="IFeedbackService"/> interface for the UWP platform.
     /// </summary>
-    public class FeedbackService : IFeedbackService
+    internal class FeedbackService : IFeedbackService
     {
-        private readonly MainPage _mainPage;
+        private readonly IMainWindowService _mainWindow;
         private readonly ILanguageService _languageService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FeedbackService"/> class.
         /// </summary>
-        /// <param name="mainPage">The main page of the aplication.</param>
+        /// <param name="mainWindowService">Service which knows about the application main window.</param>
         /// <param name="languageService">A language service.</param>
-        public FeedbackService(MainPage mainPage, ILanguageService languageService)
+        public FeedbackService(IMainWindowService mainWindowService, ILanguageService languageService)
         {
-            _mainPage = mainPage;
+            _mainWindow = mainWindowService;
             _languageService = languageService;
         }
 
         /// <inheritdoc/>
         public void ShowToast(string message)
         {
-            Task.Run(async () => await _mainPage.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            Task.Run(async () => await _mainWindow.MainPage.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 // Set new text
-                TextBlock toastText = _mainPage.FindName("ToastText") as TextBlock;
+                TextBlock toastText = _mainWindow.MainPage.FindName("ToastText") as TextBlock;
                 toastText.Text = message;
 
                 // Start fade-in fade-out animation
-                Storyboard toastStoryboard = _mainPage.Resources["ToastFadeInOut"] as Storyboard;
+                Storyboard toastStoryboard = _mainWindow.MainPage.Resources["ToastFadeInOut"] as Storyboard;
                 toastStoryboard.Begin();
             }));
         }
@@ -49,9 +49,9 @@ namespace SilentNotes.UWP.Services
         /// <inheritdoc/>
         public void ShowBusyIndicator(bool visible)
         {
-            Task.Run(async () => await _mainPage.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            Task.Run(async () => await _mainWindow.MainPage.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                ProgressRing busyIndicator = _mainPage.FindName("BusyIndicator") as ProgressRing;
+                ProgressRing busyIndicator = _mainWindow.MainPage.FindName("BusyIndicator") as ProgressRing;
                 busyIndicator.IsActive = visible;
             })).Wait(100);
         }

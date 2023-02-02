@@ -62,9 +62,9 @@ namespace SilentNotes.Controllers
         }
 
         /// <inheritdoc/>
-        public override void ShowInView(IHtmlView htmlView, KeyValueList<string, string> variables, Navigation redirectedFrom)
+        public override void ShowInView(IHtmlViewService htmlViewService, KeyValueList<string, string> variables, Navigation redirectedFrom)
         {
-            base.ShowInView(htmlView, variables, redirectedFrom);
+            base.ShowInView(htmlViewService, variables, redirectedFrom);
             IRepositoryStorageService repositoryService = Ioc.Default.GetService<IRepositoryStorageService>();
             _scrollToNote = variables?.GetValueOrDefault(ControllerParameters.NoteId);
 
@@ -105,7 +105,7 @@ namespace SilentNotes.Controllers
                 _viewModel.PropertyChanged += ViewmodelPropertyChangedEventHandler;
 
                 string html = _viewService.GenerateHtml(_viewModel);
-                View.LoadHtml(html);
+                View.HtmlView.LoadHtml(html);
             }
             else
             {
@@ -125,7 +125,7 @@ namespace SilentNotes.Controllers
                 VueBindings.StartListening();
 
                 string html = _viewStop.GenerateHtml(_stopViewModel);
-                View.LoadHtml(html);
+                View.HtmlView.LoadHtml(html);
             }
         }
 
@@ -135,15 +135,15 @@ namespace SilentNotes.Controllers
             {
                 // Update the note list in the (HTML) view.
                 string html = _viewContentService.GenerateHtml(_viewModel);
-                View.ReplaceNode("note-repository", html);
-                View.ExecuteJavaScript("makeSortable();");
+                View.HtmlView.ReplaceNode("note-repository", html);
+                View.HtmlView.ExecuteJavaScript("makeSortable();");
             }
             else if (e.PropertyName == "ClearFilter")
             {
                 // Unfortunately on Android, vue v-model does not report each key press, instead it
                 // waits on keyboard composition. Thus we have to handle the binding with v-on:input
                 // which does not automatically update the input field when the vue property changes.
-                View.ExecuteJavaScript("document.getElementById('Filter').value = '';");
+                View.HtmlView.ExecuteJavaScript("document.getElementById('Filter').value = '';");
             }
         }
 
@@ -166,7 +166,7 @@ namespace SilentNotes.Controllers
             if (!string.IsNullOrEmpty(_scrollToNote))
             {
                 string scrollToNoteScript = string.Format("var note = document.querySelector('[data-note=\"{0}\"]'); if (note) note.scrollIntoView();", _scrollToNote);
-                View.ExecuteJavaScript(scrollToNoteScript);
+                View.HtmlView.ExecuteJavaScript(scrollToNoteScript);
             }
         }
 
@@ -179,7 +179,7 @@ namespace SilentNotes.Controllers
                 bindingVisible,
                 bindingInvisible,
                 noteId.ToString());
-            View.ExecuteJavaScript(script);
+            View.HtmlView.ExecuteJavaScript(script);
         }
 
         private void UnhandledViewBindingEventHandler(object sender, VueBindingUnhandledViewBindingEventArgs e)

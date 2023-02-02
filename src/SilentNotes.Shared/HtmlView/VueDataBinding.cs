@@ -13,6 +13,7 @@ using System.Security;
 using System.Text;
 using System.Web;
 using System.Windows.Input;
+using SilentNotes.Services;
 using SilentNotes.Workers;
 using VanillaCloudStorageClient;
 
@@ -54,7 +55,7 @@ namespace SilentNotes.HtmlView
     {
         private readonly object _dotnetViewModel;
         private readonly INotifyPropertyChanged _viewModelNotifier;
-        private readonly IHtmlView _htmlView;
+        private readonly IHtmlViewService _htmlView;
         private readonly VueBindingDescriptions _bindingDescriptions;
         private readonly List<VueBindingShortcut> _bindingShortcuts;
         private readonly List<KeyValuePair<string, string>> _additionalVueDatas;
@@ -68,21 +69,21 @@ namespace SilentNotes.HtmlView
         /// </summary>
         /// <param name="dotnetViewModel">A C# viewmodel, which must support the <see cref="INotifyPropertyChanged"/>
         /// interface.</param>
-        /// <param name="htmlView">A html view interface.</param>
+        /// <param name="htmlViewService">A service which knows about the WebView.</param>
         /// <param name="shortcuts">Optional enumeration of keyboard shortcuts.</param>
-        public VueDataBinding(object dotnetViewModel, IHtmlView htmlView, IEnumerable<VueBindingShortcut> shortcuts = null)
+        public VueDataBinding(object dotnetViewModel, IHtmlViewService htmlViewService, IEnumerable<VueBindingShortcut> shortcuts = null)
         {
             if (dotnetViewModel == null)
                 throw new ArgumentNullException(nameof(dotnetViewModel));
-            if (htmlView == null)
-                throw new ArgumentNullException(nameof(htmlView));
+            if (htmlViewService == null)
+                throw new ArgumentNullException(nameof(htmlViewService));
             _suppressedViewmodelPropertyChangedEvent = null;
 
             _dotnetViewModel = dotnetViewModel;
             _viewModelNotifier = dotnetViewModel as INotifyPropertyChanged;
             if (_viewModelNotifier == null)
                 throw new ArgumentException("The parameter must support the interface INotifyPropertyChanged.", nameof(dotnetViewModel));
-            _htmlView = htmlView;
+            _htmlView = htmlViewService;
 
             // Search for properties which require data binding
             _bindingDescriptions = new VueBindingDescriptions(DetectMarkedViewmodelAttributes(_dotnetViewModel));
@@ -276,7 +277,7 @@ document.addEventListener('DOMContentLoaded', function () {
         public void InitializeVue()
         {
             string vueScript = BuildVueScript();
-            _htmlView.ExecuteJavaScript(vueScript);
+            _htmlView.HtmlView.ExecuteJavaScript(vueScript);
         }
 
         /// <summary>
@@ -292,7 +293,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (!IsListening)
             {
                 IsListening = true;
-                _htmlView.Navigating += NavigatingEventHandler;
+                _htmlView.HtmlView.Navigating += NavigatingEventHandler;
                 _viewModelNotifier.PropertyChanged += ViewmodelPropertyChangedHandler;
             }
         }
@@ -305,7 +306,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (IsListening)
             {
                 _viewModelNotifier.PropertyChanged -= ViewmodelPropertyChangedHandler;
-                _htmlView.Navigating -= NavigatingEventHandler;
+                _htmlView.HtmlView.Navigating -= NavigatingEventHandler;
                 IsListening = false;
             }
         }
@@ -470,7 +471,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 {
                     string script = string.Format(
                         "var newValue = {2}; if ({0}.{1} != newValue) {0}.{1} = newValue;", "vm", binding.PropertyName, formattedValue);
-                    _htmlView.ExecuteJavaScript(script);
+                    _htmlView.HtmlView.ExecuteJavaScript(script);
                     return true;
                 }
                 catch (Exception)

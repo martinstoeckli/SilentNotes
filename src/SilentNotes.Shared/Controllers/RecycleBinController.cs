@@ -38,9 +38,9 @@ namespace SilentNotes.Controllers
         }
 
         /// <inheritdoc/>
-        public override void ShowInView(IHtmlView htmlView, KeyValueList<string, string> variables, Navigation redirectedFrom)
+        public override void ShowInView(IHtmlViewService htmlViewService, KeyValueList<string, string> variables, Navigation redirectedFrom)
         {
-            base.ShowInView(htmlView, variables, redirectedFrom);
+            base.ShowInView(htmlViewService, variables, redirectedFrom);
             _viewModel = new RecycleBinViewModel(
                 Ioc.Default.GetService<INavigationService>(),
                 Ioc.Default.GetService<ILanguageService>(),
@@ -63,7 +63,7 @@ namespace SilentNotes.Controllers
             string html = _viewService.GenerateHtml(_viewModel);
             string htmlNotes = _viewContentService.GenerateHtml(_viewModel);
             html = html.Replace("<ul id=\"recycled-notes\"></ul>", htmlNotes);
-            htmlView.LoadHtml(html);
+            View.HtmlView.LoadHtml(html);
         }
 
         /// <inheritdoc/>

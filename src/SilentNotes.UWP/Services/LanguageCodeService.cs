@@ -11,7 +11,7 @@ namespace SilentNotes.UWP.Services
     /// <summary>
     /// Implementation of the <see cref="ILanguageCodeProvider"/> interface for the UWP platform.
     /// </summary>
-    public class LanguageCodeService : ILanguageCodeProvider
+    internal class LanguageCodeService : ILanguageCodeProvider
     {
         /// <inheritdoc/>
         public string GetSystemLanguageCode()

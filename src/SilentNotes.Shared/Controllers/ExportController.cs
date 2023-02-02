@@ -27,9 +27,9 @@ namespace SilentNotes.Controllers
         }
 
         /// <inheritdoc/>
-        public override void ShowInView(IHtmlView htmlView, KeyValueList<string, string> variables, Navigation redirectedFrom)
+        public override void ShowInView(IHtmlViewService htmlViewService, KeyValueList<string, string> variables, Navigation redirectedFrom)
         {
-            base.ShowInView(htmlView, variables, redirectedFrom);
+            base.ShowInView(htmlViewService, variables, redirectedFrom);
             _viewModel = new ExportViewModel(
                 Ioc.Default.GetService<INavigationService>(),
                 Ioc.Default.GetService<ILanguageService>(),
@@ -50,7 +50,7 @@ namespace SilentNotes.Controllers
             VueBindings.StartListening();
 
             string html = _viewService.GenerateHtml(_viewModel);
-            View.LoadHtml(html);
+            View.HtmlView.LoadHtml(html);
         }
 
         /// <inheritdoc/>

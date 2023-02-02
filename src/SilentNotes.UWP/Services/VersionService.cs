@@ -12,7 +12,7 @@ namespace SilentNotes.UWP.Services
     /// <summary>
     /// Implementation of the <see cref="IVersionService"/> interface for the UWP platform.
     /// </summary>
-    public class VersionService : IVersionService
+    internal class VersionService : IVersionService
     {
         /// <inheritdoc/>
         public string GetApplicationVersion(string format = "{0}.{1}.{2}")

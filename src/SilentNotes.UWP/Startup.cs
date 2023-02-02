@@ -5,7 +5,6 @@
 
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
-using SilentNotes.HtmlView;
 using SilentNotes.Services;
 using SilentNotes.UWP.Services;
 using SilentNotes.Workers;
@@ -34,12 +33,15 @@ namespace SilentNotes.UWP
 
         private static void RegisterServices(ServiceCollection services)
         {
+            services.AddSingleton<IMainWindowService>((serviceProvider) => new MainWindowService());
+            services.AddSingleton<IHtmlViewService>((serviceProvider) => new HtmlViewService(
+                serviceProvider.GetService<IMainWindowService>()));
             services.AddSingleton<IEnvironmentService>((serviceProvider) => new EnvironmentService(OperatingSystem.Windows));
             services.AddSingleton<IBaseUrlService>((serviceProvider) => new BaseUrlService());
             services.AddSingleton<ILanguageService>((serviceProvider) => new LanguageService(new LanguageServiceResourceReader(), "SilentNotes", new LanguageCodeService().GetSystemLanguageCode()));
             services.AddSingleton<ISvgIconService>((serviceProvider) => new SvgIconService());
             services.AddSingleton<INavigationService>((serviceProvider) => new NavigationService(
-                serviceProvider.GetService<IHtmlView>()));
+                serviceProvider.GetService<IHtmlViewService>()));
             services.AddSingleton<INativeBrowserService>((serviceProvider) => new NativeBrowserService());
             services.AddSingleton<IXmlFileService>((serviceProvider) => new XmlFileService());
             services.AddSingleton<IVersionService>((serviceProvider) => new VersionService());
@@ -64,13 +66,8 @@ namespace SilentNotes.UWP
                 serviceProvider.GetService<IEnvironmentService>()));
             services.AddSingleton<IFolderPickerService>((serviceProvider) => new FolderPickerService());
             services.AddSingleton<IFilePickerService>((serviceProvider) => new FilePickerService());
-
-            // The main page is not yet known but can be set to the service as soon as the page exists.
-            services.AddSingleton<MainPageService>((serviceProvider) => new MainPageService());
-            services.AddSingleton<IHtmlView>((serviceProvider) =>
-                serviceProvider.GetService<MainPageService>().MainPage);
             services.AddSingleton<IFeedbackService>((serviceProvider) => new FeedbackService(
-                serviceProvider.GetService<MainPageService>().MainPage,
+                serviceProvider.GetService<IMainWindowService>(),
                 serviceProvider.GetService<ILanguageService>()));
         }
     }

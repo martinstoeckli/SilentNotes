@@ -62,9 +62,9 @@ namespace SilentNotes.Controllers
         }
 
         /// <summary>
-        /// Gets the html view or null if not yet set.
+        /// Gets a service which knows about the WebView.
         /// </summary>
-        protected IHtmlView View { get; private set; }
+        protected IHtmlViewService View { get; private set; }
 
         /// <summary>
         /// Gets the viewmodel interface.
@@ -91,11 +91,11 @@ namespace SilentNotes.Controllers
         }
 
         /// <inheritdoc/>
-        public virtual void ShowInView(IHtmlView htmlView, KeyValueList<string, string> variables, Navigation redirectedFrom)
+        public virtual void ShowInView(IHtmlViewService htmlViewService, KeyValueList<string, string> variables, Navigation redirectedFrom)
         {
-            View = htmlView;
+            View = htmlViewService;
             RedirectedFrom = redirectedFrom;
-            SetHtmlViewBackgroundColor(htmlView);
+            SetHtmlViewBackgroundColor(View.HtmlView);
             VueBindings?.Dispose();
             VueBindings = null;
         }

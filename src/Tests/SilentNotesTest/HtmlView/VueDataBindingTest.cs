@@ -4,6 +4,7 @@ using System.Windows.Input;
 using Moq;
 using NUnit.Framework;
 using SilentNotes.HtmlView;
+using SilentNotes.Services;
 
 namespace SilentNotesTest.HtmView
 {
@@ -14,7 +15,7 @@ namespace SilentNotesTest.HtmView
         public void VueScriptContainsMarkedCommands()
         {
             TestViewModel viewmodel = new TestViewModel();
-            Mock<IHtmlView> view = new Mock<IHtmlView>();
+            Mock<IHtmlViewService> view = new Mock<IHtmlViewService>();
 
             VueDataBinding binding = new VueDataBinding(viewmodel, view.Object);
             string script = binding.BuildVueScript();
@@ -28,7 +29,7 @@ namespace SilentNotesTest.HtmView
         public void VueScriptContainsMarkedProperties()
         {
             TestViewModel viewmodel = new TestViewModel();
-            Mock<IHtmlView> view = new Mock<IHtmlView>();
+            Mock<IHtmlViewService> view = new Mock<IHtmlViewService>();
 
             VueDataBinding binding = new VueDataBinding(viewmodel, view.Object);
             string script = binding.BuildVueScript();
@@ -44,8 +45,12 @@ namespace SilentNotesTest.HtmView
         {
             TestViewModel viewmodel = new TestViewModel();
             Mock<IHtmlView> viewMock = new Mock<IHtmlView>();
+            Mock<IHtmlViewService> htmlViewServiceMock = new Mock<IHtmlViewService>();
+            htmlViewServiceMock
+                .SetupGet(p => p.HtmlView)
+                .Returns(viewMock.Object);
 
-            VueDataBinding binding = new VueDataBinding(viewmodel, viewMock.Object);
+            VueDataBinding binding = new VueDataBinding(viewmodel, htmlViewServiceMock.Object);
             binding.StartListening();
 
             // Simulate view change
@@ -63,8 +68,12 @@ namespace SilentNotesTest.HtmView
         {
             TestViewModel viewmodel = new TestViewModel();
             Mock<IHtmlView> viewMock = new Mock<IHtmlView>();
+            Mock<IHtmlViewService> htmlViewServiceMock = new Mock<IHtmlViewService>();
+            htmlViewServiceMock
+                .SetupGet(p => p.HtmlView)
+                .Returns(viewMock.Object);
 
-            VueDataBinding binding = new VueDataBinding(viewmodel, viewMock.Object);
+            VueDataBinding binding = new VueDataBinding(viewmodel, htmlViewServiceMock.Object);
             binding.StartListening();
 
             // Simulate view change
@@ -80,8 +89,12 @@ namespace SilentNotesTest.HtmView
         {
             TestViewModel viewmodel = new TestViewModel();
             Mock<IHtmlView> viewMock = new Mock<IHtmlView>();
+            Mock<IHtmlViewService> htmlViewServiceMock = new Mock<IHtmlViewService>();
+            htmlViewServiceMock
+                .SetupGet(p => p.HtmlView)
+                .Returns(viewMock.Object);
 
-            VueDataBinding binding = new VueDataBinding(viewmodel, viewMock.Object);
+            VueDataBinding binding = new VueDataBinding(viewmodel, htmlViewServiceMock.Object);
             binding.StartListening();
 
             // Simulate Viewmodel change
@@ -95,7 +108,7 @@ namespace SilentNotesTest.HtmView
         public void TryFormatForView_FormatsAccordingToType()
         {
             TestViewModel viewmodel = new TestViewModel();
-            Mock<IHtmlView> viewMock = new Mock<IHtmlView>();
+            Mock<IHtmlViewService> viewMock = new Mock<IHtmlViewService>();
             VueDataBinding binding = new VueDataBinding(viewmodel, viewMock.Object);
             string formattedValue;
 

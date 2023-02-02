@@ -7,7 +7,6 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using SilentNotes.Services;
-using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Streams;
 
@@ -16,7 +15,7 @@ namespace SilentNotes.UWP.Services
     /// <summary>
     /// Implementation of the <see cref="IFilePickerService"/> interface for the UWP platform.
     /// </summary>
-    public class FilePickerService : IFilePickerService
+    internal class FilePickerService : IFilePickerService
     {
         private Windows.Storage.IStorageFile _pickedFile;
 

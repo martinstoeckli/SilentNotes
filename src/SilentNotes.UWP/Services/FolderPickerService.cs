@@ -13,7 +13,7 @@ namespace SilentNotes.UWP.Services
     /// <summary>
     /// Implementation of the <see cref="IFolderPickerService"/> interface for the UWP platform.
     /// </summary>
-    public class FolderPickerService : IFolderPickerService
+    internal class FolderPickerService : IFolderPickerService
     {
         private Windows.Storage.IStorageFolder _pickedFolder;
 

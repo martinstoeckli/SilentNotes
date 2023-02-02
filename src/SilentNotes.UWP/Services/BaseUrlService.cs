@@ -10,7 +10,7 @@ namespace SilentNotes.UWP.Services
     /// <summary>
     /// Implementation of the <see cref="IBaseUrlService"/> interface for the UWP platform.
     /// </summary>
-    public class BaseUrlService : IBaseUrlService
+    internal class BaseUrlService : IBaseUrlService
     {
         /// <inheritdoc/>
         public string HtmlBase
