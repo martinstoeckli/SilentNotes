@@ -92,7 +92,7 @@ namespace SilentNotes.Android
         /// <inheritdoc/>
         protected override void OnDestroy()
         {
-            _activityResultAwaiter.Dispose();
+            Ioc.Default.GetService<IActivityResultAwaiter>().RedirectedOnDestroy();
             base.OnDestroy();
         }
 
@@ -230,7 +230,8 @@ namespace SilentNotes.Android
         /// <inheritdoc/>
         protected override void OnActivityResult(int requestCode, [GeneratedEnum] Result resultCode, Intent data)
         {
-            _activityResultAwaiter.OnActivityResult(requestCode, resultCode, data);
+            Ioc.Default.GetService<IActivityResultAwaiter>().RedirectedOnActivityResult(
+                requestCode, resultCode, data);
             base.OnActivityResult(requestCode, resultCode, data);
         }
 

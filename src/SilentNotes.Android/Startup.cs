@@ -88,9 +88,13 @@ namespace SilentNotes.Android
                 serviceProvider.GetService<ISettingsService>(),
                 serviceProvider.GetService<IEnvironmentService>()));
             services.AddSingleton<IFolderPickerService>((serviceProvider) => new FolderPickerService(
-                serviceProvider.GetService<IAppContextService>()));
+                serviceProvider.GetService<IAppContextService>(),
+                serviceProvider.GetService<IActivityResultAwaiter>()));
             services.AddSingleton<IFilePickerService>((serviceProvider) => new FilePickerService(
-                serviceProvider.GetService<IAppContextService>()));
+                serviceProvider.GetService<IAppContextService>(),
+                serviceProvider.GetService<IActivityResultAwaiter>()));
+
+            services.AddSingleton<IActivityResultAwaiter>((ServiceProvider) => new ActivityResultAwaiter());
         }
     }
 }

@@ -21,15 +21,18 @@ namespace SilentNotes.Android.Services
     internal class FolderPickerService : IFolderPickerService
     {
         private readonly IAppContextService _appContext;
+        private readonly IActivityResultAwaiter _activityResultAwaiter;
         private Uri _pickedUri;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FolderPickerService"/> class.
         /// </summary>
         /// <param name="appContextService">A service which knows about the current main activity.</param>
-        public FolderPickerService(IAppContextService appContextService)
+        /// <param name="activityResultAwaiter">An activity result awaiter.</param>
+        public FolderPickerService(IAppContextService appContextService, IActivityResultAwaiter activityResultAwaiter)
         {
             _appContext = appContextService;
+            _activityResultAwaiter = activityResultAwaiter;
         }
 
         /// <inheritdoc/>
@@ -40,14 +43,13 @@ namespace SilentNotes.Android.Services
             folderPickerIntent.AddFlags(ActivityFlags.GrantWriteUriPermission);
             folderPickerIntent.PutExtra("android.content.extra.SHOW_ADVANCED", true);
 
-            using (ActivityResultAwaiter awaiter = new ActivityResultAwaiter(_appContext.RootActivity))
+            var activityResult = await _activityResultAwaiter.StartActivityAndWaitForResult(
+                _appContext.RootActivity, folderPickerIntent);
+
+            if (activityResult.ResultCode == Result.Ok)
             {
-                var activityResult = await awaiter.StartActivityAndWaitForResult(folderPickerIntent);
-                if (activityResult.ResultCode == Result.Ok)
-                {
-                    _pickedUri = activityResult.Data?.Data;
-                    return true;
-                }
+                _pickedUri = activityResult.Data?.Data;
+                return true;
             }
             return false;
         }
@@ -69,7 +71,7 @@ namespace SilentNotes.Android.Services
                     return true;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
             }
