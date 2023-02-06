@@ -4,7 +4,6 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
-using SilentNotes.HtmlView;
 using SilentNotes.Services;
 
 namespace SilentNotes.Controllers
@@ -28,12 +27,13 @@ namespace SilentNotes.Controllers
         /// <summary>
         /// Shows the content of a viewmodel in the (Html)view.
         /// </summary>
-        /// <param name="htmlView">Interface to a WebView control which will dislay the Html.</param>
+        /// <param name="htmlViewService">A service which knows about the WebView control which
+        /// will display the Html.</param>
         /// <param name="variables">Collection of routing variables.</param>
         /// <param name="redirectedFrom">If the original navigation target did a redirect, this
         /// parameter contains the original navigation, otherwise null. This way the controller can
         /// call the original navigation target after doing its work.</param>
-        void ShowInView(IHtmlView htmlView, KeyValueList<string, string> variables, Navigation redirectedFrom);
+        void ShowInView(IHtmlViewService htmlViewService, KeyValueList<string, string> variables, Navigation redirectedFrom);
 
         /// <summary>
         /// This method can be used to make changes persistent. It is usually called when the view

@@ -37,7 +37,9 @@ namespace SilentNotes.UWP
             _webView.NavigationCompleted += NavigationCompletedEventHandler;
             _webView.NewWindowRequested += NewWindowRequestedEventHandler;
             _webView.UnsupportedUriSchemeIdentified += UnsupportedUriSchemeIdentifiedEventHandler;
-            Ioc.Default.GetService<MainPageService>().MainPage = this;
+
+            // Now that the main page is known, make it available to the services.
+            Ioc.Default.GetService<IMainWindowService>().Initialize(this);
         }
 
         private void Page_Loading(FrameworkElement sender, object args)

@@ -13,7 +13,7 @@ namespace SilentNotes.UWP.Services
     /// <summary>
     /// Implementation of the <see cref="ILanguageServiceResourceReader"/> interface for the UWP platform.
     /// </summary>
-    public class LanguageServiceResourceReader : ILanguageServiceResourceReader
+    internal class LanguageServiceResourceReader : ILanguageServiceResourceReader
     {
         /// <inheritdoc/>
         public async Task<Stream> TryOpenResourceStream(string domain, string languageCode)

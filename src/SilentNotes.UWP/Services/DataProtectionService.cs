@@ -17,7 +17,7 @@ namespace SilentNotes.UWP.Services
     /// Credits to:
     ///   https://msicc.net/using-the-built-in-uwp-data-protection-for-data-encryption/
     /// </summary>
-    public class DataProtectionService : IDataProtectionService
+    internal class DataProtectionService : IDataProtectionService
     {
         private const string ProtectionScope = "LOCAL = machine";
 

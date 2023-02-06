@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.Linq;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using SilentNotes.Controllers;
-using SilentNotes.HtmlView;
 
 namespace SilentNotes.Services
 {
@@ -17,15 +16,15 @@ namespace SilentNotes.Services
     /// </summary>
     public class NavigationService : INavigationService
     {
-        private readonly IHtmlView _htmlView;
+        private readonly IHtmlViewService _htmlViewService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NavigationService"/> class.
         /// </summary>
         /// <param name="htmlView">WebView control of the main page.</param>
-        public NavigationService(IHtmlView htmlView)
+        public NavigationService(IHtmlViewService htmlView)
         {
-            _htmlView = htmlView;
+            _htmlViewService = htmlView;
         }
 
         /// <inheritdoc/>
@@ -44,7 +43,7 @@ namespace SilentNotes.Services
                 CurrentNavigation = redirectTo;
                 CurrentController = Ioc.Default.GetService<ControllerFactory>().GetByKey(CurrentNavigation.ControllerId);
             }
-            CurrentController.ShowInView(_htmlView, CurrentNavigation.Variables, redirectedFrom);
+            CurrentController.ShowInView(_htmlViewService, CurrentNavigation.Variables, redirectedFrom);
         }
 
         private void CleanupCurrentController()

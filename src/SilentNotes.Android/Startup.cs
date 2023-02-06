@@ -18,15 +18,23 @@ namespace SilentNotes.Android
     /// </summary>
     public class Startup
     {
+        private static bool _isInitialized = false;
+
         /// <summary>
-        /// Sets up the application and initializes the services.
+        /// Sets up the application and initializes the services. The Ioc can be initialized only
+        /// once in the application life time, thus consecutive calls to this function will be ignored.
+        /// Services must get the app context dynamically from the <see cref="IAppContextService"/>
+        /// and should not store a reference to it.
         /// </summary>
-        /// <param name="rootActivity">The main activity of the Android app.</param>
-        public static void InitializeApplication(Activity rootActivity, ActivityResultAwaiter rootActivityResultWaiter)
+        public static void InitializeApplication()
         {
+            if (_isInitialized)
+                return;
+            _isInitialized = true;
+
             ServiceCollection services = new ServiceCollection();
 
-            RegisterServices(services, rootActivity, rootActivityResultWaiter);
+            RegisterServices(services);
             StartupShared.RegisterControllers(services);
             StartupShared.RegisterRazorViews(services);
             StartupShared.RegisterCloudStorageClientFactory(services);
@@ -34,36 +42,43 @@ namespace SilentNotes.Android
             Ioc.Default.ConfigureServices(services.BuildServiceProvider());
         }
 
-        private static void RegisterServices(ServiceCollection services, Activity rootActivity, ActivityResultAwaiter rootActivityResultWaiter)
+        private static void RegisterServices(ServiceCollection services)
         {
-            services.AddSingleton<IEnvironmentService>((serviceProvider) => new EnvironmentService(OperatingSystem.Android, rootActivity));
-            services.AddSingleton<IHtmlView>((serviceProvider) => rootActivity as IHtmlView);
+            services.AddSingleton<IAppContextService>((serviceProvider) => new AppContextService());
+            services.AddTransient<IHtmlViewService>((serviceProvider) =>
+                serviceProvider.GetService<IAppContextService>() as IHtmlViewService);
+            services.AddSingleton<IEnvironmentService>((serviceProvider) => new EnvironmentService(
+                OperatingSystem.Android, serviceProvider.GetService<IAppContextService>()));
             services.AddSingleton<IBaseUrlService>((serviceProvider) => new BaseUrlService());
-            services.AddSingleton<ILanguageService>((serviceProvider) => new LanguageService(new LanguageServiceResourceReader(rootActivity), "SilentNotes", new LanguageCodeService().GetSystemLanguageCode()));
+            services.AddSingleton<ILanguageService>((serviceProvider) => new LanguageService(
+                new LanguageServiceResourceReader(serviceProvider.GetService<IAppContextService>()),
+                "SilentNotes",
+                new LanguageCodeService().GetSystemLanguageCode()));
             services.AddSingleton<ISvgIconService>((serviceProvider) => new SvgIconService());
             services.AddSingleton<INavigationService>((serviceProvider) => new NavigationService(
-                serviceProvider.GetService<IHtmlView>()));
-            services.AddSingleton<INativeBrowserService>((serviceProvider) => new NativeBrowserService(rootActivity));
+                serviceProvider.GetService<IHtmlViewService>()));
+            services.AddSingleton<INativeBrowserService>((serviceProvider) => new NativeBrowserService(serviceProvider.GetService<IAppContextService>()));
             services.AddSingleton<IXmlFileService>((serviceProvider) => new XmlFileService());
-            services.AddSingleton<IVersionService>((serviceProvider) => new VersionService(rootActivity));
+            services.AddSingleton<IVersionService>((serviceProvider) => new VersionService(
+                serviceProvider.GetService<IAppContextService>()));
             services.AddSingleton<ISettingsService>((serviceProvider) => new SettingsService(
-                rootActivity,
+                serviceProvider.GetService<IAppContextService>(),
                 serviceProvider.GetService<IXmlFileService>(),
                 serviceProvider.GetService<IDataProtectionService>()));
             services.AddSingleton<IRepositoryStorageService>((serviceProvider) => new RepositoryStorageService(
-                rootActivity,
+                serviceProvider.GetService<IAppContextService>(),
                 serviceProvider.GetService<IXmlFileService>(),
                 serviceProvider.GetService<ILanguageService>()));
             services.AddSingleton<ICryptoRandomService>((serviceProvider) => new CryptoRandomService());
             services.AddSingleton<INoteRepositoryUpdater>((serviceProvider) => new NoteRepositoryUpdater());
             services.AddSingleton<IStoryBoardService>((serviceProvider) => new StoryBoardService());
             services.AddSingleton<IFeedbackService>((serviceProvider) => new FeedbackService(
-                rootActivity,
+                serviceProvider.GetService<IAppContextService>(),
                 serviceProvider.GetService<ILanguageService>()));
             services.AddSingleton<IDataProtectionService>((serviceProvider) => new DataProtectionService(
-                rootActivity,
                 serviceProvider.GetService<ICryptoRandomService>()));
-            services.AddSingleton<IInternetStateService>((serviceProvider) => new InternetStateService(rootActivity));
+            services.AddSingleton<IInternetStateService>((serviceProvider) => new InternetStateService(
+                serviceProvider.GetService<IAppContextService>()));
             services.AddSingleton<IAutoSynchronizationService>((serviceProvider) => new AutoSynchronizationService(
                 serviceProvider.GetService<IInternetStateService>(),
                 serviceProvider.GetService<ISettingsService>(),
@@ -72,8 +87,13 @@ namespace SilentNotes.Android
             services.AddSingleton<IThemeService>((serviceProvider) => new ThemeService(
                 serviceProvider.GetService<ISettingsService>(),
                 serviceProvider.GetService<IEnvironmentService>()));
-            services.AddSingleton<IFolderPickerService>((serviceProvider) => new FolderPickerService(rootActivity, rootActivityResultWaiter));
-            services.AddSingleton<IFilePickerService>((serviceProvider) => new FilePickerService(rootActivity, rootActivityResultWaiter));
+            services.AddSingleton<IActivityResultAwaiter>((ServiceProvider) => new ActivityResultAwaiter());
+            services.AddSingleton<IFolderPickerService>((serviceProvider) => new FolderPickerService(
+                serviceProvider.GetService<IAppContextService>(),
+                serviceProvider.GetService<IActivityResultAwaiter>()));
+            services.AddSingleton<IFilePickerService>((serviceProvider) => new FilePickerService(
+                serviceProvider.GetService<IAppContextService>(),
+                serviceProvider.GetService<IActivityResultAwaiter>()));
         }
     }
 }

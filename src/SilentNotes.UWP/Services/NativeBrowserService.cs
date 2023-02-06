@@ -12,7 +12,7 @@ namespace SilentNotes.UWP.Services
     /// <summary>
     /// Implementation of the <see cref="INativeBrowserService"/> interface for the UWP platform.
     /// </summary>
-    public class NativeBrowserService : INativeBrowserService
+    internal class NativeBrowserService : INativeBrowserService
     {
         /// <inheritdoc/>
         public void OpenWebsite(string url)

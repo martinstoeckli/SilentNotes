@@ -11,7 +11,7 @@ namespace SilentNotes.UWP.Services
     /// <summary>
     /// Implementation of the <see cref="IRepositoryStorageService"/> interface for the UWP platform.
     /// </summary>
-    public class RepositoryStorageService : RepositoryStorageServiceBase, IRepositoryStorageService
+    internal class RepositoryStorageService : RepositoryStorageServiceBase, IRepositoryStorageService
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="RepositoryStorageService"/> class.

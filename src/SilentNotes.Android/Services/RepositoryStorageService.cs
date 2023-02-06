@@ -3,7 +3,6 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-using Android.Content;
 using AndroidX.Core.Content;
 using SilentNotes.Services;
 
@@ -12,23 +11,23 @@ namespace SilentNotes.Android.Services
     /// <summary>
     /// Implementation of the <see cref="IRepositoryStorageService"/> interface for the Android platform.
     /// </summary>
-    public class RepositoryStorageService : RepositoryStorageServiceBase, IRepositoryStorageService
+    internal class RepositoryStorageService : RepositoryStorageServiceBase, IRepositoryStorageService
     {
-        private readonly Context _appContext;
+        private readonly IAppContextService _appContext;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RepositoryStorageService"/> class.
         /// </summary>
-        public RepositoryStorageService(Context appContext, IXmlFileService xmlFileService, ILanguageService languageService)
+        public RepositoryStorageService(IAppContextService appContextService, IXmlFileService xmlFileService, ILanguageService languageService)
             : base(xmlFileService, languageService)
         {
-            _appContext = appContext;
+            _appContext = appContextService;
         }
 
         /// <inheritdoc/>
         protected override string GetDirectoryPath()
         {
-            return ContextCompat.GetNoBackupFilesDir(_appContext).AbsolutePath;
+            return ContextCompat.GetNoBackupFilesDir(_appContext.RootActivity).AbsolutePath;
         }
     }
 }

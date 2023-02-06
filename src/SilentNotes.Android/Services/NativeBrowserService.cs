@@ -13,17 +13,17 @@ namespace SilentNotes.Android.Services
     /// <summary>
     /// Implementation of the <see cref="INativeBrowserService"/> interface for the Android platform.
     /// </summary>
-    public class NativeBrowserService : INativeBrowserService
+    internal class NativeBrowserService : INativeBrowserService
     {
-        private readonly Context _applicationContext;
+        private readonly IAppContextService _appContext;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NativeBrowserService"/> class.
         /// </summary>
-        /// <param name="applicationContext">The Android application context.</param>
-        public NativeBrowserService(Context applicationContext)
+        /// <param name="appContextService">Service to get the Android application context.</param>
+        public NativeBrowserService(IAppContextService appContextService)
         {
-            _applicationContext = applicationContext;
+            _appContext = appContextService;
         }
 
         /// <inheritdoc/>
@@ -31,7 +31,7 @@ namespace SilentNotes.Android.Services
         {
             Uri webpage = Uri.Parse(url);
             Intent intent = new Intent(Intent.ActionView, webpage);
-            _applicationContext.StartActivity(intent);
+            _appContext.RootActivity.StartActivity(intent);
         }
 
         /// <inheritdoc/>
@@ -40,7 +40,7 @@ namespace SilentNotes.Android.Services
             // Use the Android custom tabs to display the webpage inside the app.
             CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
             CustomTabsIntent customTabsIntent = builder.Build();
-            customTabsIntent.LaunchUrl(_applicationContext, Uri.Parse(url));
+            customTabsIntent.LaunchUrl(_appContext.RootActivity, Uri.Parse(url));
         }
     }
 }

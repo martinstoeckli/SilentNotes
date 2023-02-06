@@ -11,7 +11,7 @@ namespace SilentNotes.UWP.Services
     /// <summary>
     /// Implementation of the <see cref="IInternetStateService"/> interface for the UWP platform.
     /// </summary>
-    public class InternetStateService : IInternetStateService
+    internal class InternetStateService : IInternetStateService
     {
         /// <inheritdoc/>
         public bool IsInternetConnected()

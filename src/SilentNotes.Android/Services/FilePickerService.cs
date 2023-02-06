@@ -17,19 +17,20 @@ namespace SilentNotes.Android.Services
     /// <summary>
     /// Implementation of the <see cref="IFilePickerService"/> interface for the Android platform.
     /// </summary>
-    public class FilePickerService : IFilePickerService
+    internal class FilePickerService : IFilePickerService
     {
-        private readonly Context _context;
-        private readonly ActivityResultAwaiter _activityResultAwaiter;
+        private readonly IAppContextService _appContext;
+        private readonly IActivityResultAwaiter _activityResultAwaiter;
         private Uri _pickedUri;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FolderPickerService"/> class.
         /// </summary>
-        /// <param name="activityResultAwaiter">Can start activities and get their result.</param>
-        public FilePickerService(Context context, ActivityResultAwaiter activityResultAwaiter)
+        /// <param name="appContextService">A service which knows about the current main activity.</param>
+        /// <param name="activityResultAwaiter">An activity result awaiter.</param>
+        public FilePickerService(IAppContextService appContextService, IActivityResultAwaiter activityResultAwaiter)
         {
-            _context = context;
+            _appContext = appContextService;
             _activityResultAwaiter = activityResultAwaiter;
         }
 
@@ -41,7 +42,9 @@ namespace SilentNotes.Android.Services
             filePickerIntent.AddCategory(Intent.CategoryOpenable);
             filePickerIntent.SetType("application/*");
 
-            var activityResult = await _activityResultAwaiter.StartActivityAndWaitForResult(filePickerIntent);
+            var activityResult = await _activityResultAwaiter.StartActivityAndWaitForResult(
+                _appContext.RootActivity, filePickerIntent);
+
             if (activityResult.ResultCode == Result.Ok)
             {
                 _pickedUri = activityResult.Data?.Data;
@@ -56,8 +59,8 @@ namespace SilentNotes.Android.Services
             if (_pickedUri == null)
                 throw new Exception("Pick a file first before it can be read.");
 
-            DocumentFile file = DocumentFile.FromSingleUri(_context, _pickedUri);
-            using (Stream stream = _context.ContentResolver.OpenInputStream(file.Uri))
+            DocumentFile file = DocumentFile.FromSingleUri(_appContext.RootActivity, _pickedUri);
+            using (Stream stream = _appContext.RootActivity.ContentResolver.OpenInputStream(file.Uri))
             {
                 byte[] result = new byte[stream.Length];
                 await stream.ReadAsync(result, 0, (int)stream.Length);

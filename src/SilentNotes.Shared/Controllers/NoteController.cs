@@ -39,7 +39,7 @@ namespace SilentNotes.Controllers
         {
             if (View != null)
             {
-                View.Navigating -= NavigatingEventHandler;
+                View.HtmlView.Navigating -= NavigatingEventHandler;
             }
             if (VueBindings != null)
             {
@@ -77,9 +77,9 @@ namespace SilentNotes.Controllers
         }
 
         /// <inheritdoc/>
-        public override void ShowInView(IHtmlView htmlView, KeyValueList<string, string> variables, Navigation redirectedFrom)
+        public override void ShowInView(IHtmlViewService htmlViewService, KeyValueList<string, string> variables, Navigation redirectedFrom)
         {
-            base.ShowInView(htmlView, variables, redirectedFrom);
+            base.ShowInView(htmlViewService, variables, redirectedFrom);
             ISettingsService settingsService = Ioc.Default.GetService<ISettingsService>();
             _repositoryService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepository);
 
@@ -105,7 +105,7 @@ namespace SilentNotes.Controllers
                 noteRepository.Safes,
                 noteRepository.CollectActiveTags(),
                 note);
-            SetHtmlViewBackgroundColor(htmlView);
+            SetHtmlViewBackgroundColor(View.HtmlView);
 
             VueBindingShortcut[] shortcuts = new[]
             {
@@ -142,7 +142,7 @@ namespace SilentNotes.Controllers
             VueBindings.StartListening();
 
             string html = _viewService.GenerateHtml(_viewModel);
-            View.LoadHtml(html);
+            View.HtmlView.LoadHtml(html);
         }
 
         /// <inheritdoc/>
@@ -179,7 +179,7 @@ namespace SilentNotes.Controllers
         {
             if (string.Equals(e.PropertyName, nameof(_viewModel.UnlockedHtmlContent)))
             {
-                string content = await View.ExecuteJavaScriptReturnString("getNoteHtmlContent();");
+                string content = await View.HtmlView.ExecuteJavaScriptReturnString("getNoteHtmlContent();");
                 _viewModel.UnlockedHtmlContent = content;
             }
         }
@@ -187,7 +187,7 @@ namespace SilentNotes.Controllers
         private void ViewLoadedEventHandler(object sender, EventArgs e)
         {
             VueBindings.ViewLoadedEvent -= ViewLoadedEventHandler;
-            View.Navigating += NavigatingEventHandler;
+            View.HtmlView.Navigating += NavigatingEventHandler;
 
             // To load the content in the view, the javascript would have to be written into the page,
             // which would have to be interpreted by the WebView and would increase the size of the content.
@@ -201,7 +201,7 @@ namespace SilentNotes.Controllers
             if (isNewNote)
                 script.Append("toggleFormat('heading', 1);");
             script.Append("startSendingViewModelUpdates();");
-            View.ExecuteJavaScript(script.ToString());
+            View.HtmlView.ExecuteJavaScript(script.ToString());
         }
     }
 }

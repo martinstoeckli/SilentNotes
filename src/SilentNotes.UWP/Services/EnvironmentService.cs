@@ -11,7 +11,7 @@ namespace SilentNotes.UWP.Services
     /// <summary>
     /// Implementation of the <see cref="IEnvironmentService"/> for the UWP platform.
     /// </summary>
-    public class EnvironmentService : IEnvironmentService
+    internal class EnvironmentService : IEnvironmentService
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="EnvironmentService"/> class.

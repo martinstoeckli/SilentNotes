@@ -11,7 +11,7 @@ namespace SilentNotes.UWP.Services
     /// <summary>
     /// Implementation of the <see cref="ICryptoRandomService"/> interface for the UWP platform.
     /// </summary>
-    public class CryptoRandomService : ICryptoRandomService
+    internal class CryptoRandomService : ICryptoRandomService
     {
         /// <inheritdoc/>
         public byte[] GetRandomBytes(int numberOfBytes)

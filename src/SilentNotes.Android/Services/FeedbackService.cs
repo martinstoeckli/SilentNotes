@@ -15,37 +15,37 @@ namespace SilentNotes.Android.Services
     /// <summary>
     /// Implementation of the <see cref="IFeedbackService"/> interface for the Android platform.
     /// </summary>
-    public class FeedbackService : IFeedbackService
+    internal class FeedbackService : IFeedbackService
     {
-        private readonly Activity _rootActivity;
+        private readonly IAppContextService _appContext;
         private readonly ILanguageService _languageService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FeedbackService"/> class.
         /// </summary>
-        /// <param name="rootActivity">The context of the Android app.</param>
+        /// <param name="appContextService">A service which knows about the current main activity.</param>
         /// <param name="languageService">A language service.</param>
-        public FeedbackService(Activity rootActivity, ILanguageService languageService)
+        public FeedbackService(IAppContextService appContextService, ILanguageService languageService)
         {
-            _rootActivity = rootActivity;
+            _appContext = appContextService;
             _languageService = languageService;
         }
 
         /// <inheritdoc/>
         public void ShowToast(string message)
         {
-            _rootActivity.RunOnUiThread(() =>
+            _appContext.RootActivity.RunOnUiThread(() =>
             {
-                Toast.MakeText(_rootActivity, message, ToastLength.Long).Show();
+                Toast.MakeText(_appContext.RootActivity, message, ToastLength.Long).Show();
             });
         }
 
         /// <inheritdoc/>
         public void ShowBusyIndicator(bool visible)
         {
-            _rootActivity.RunOnUiThread(() =>
+            _appContext.RootActivity.RunOnUiThread(() =>
             {
-                ProgressBar busyIndicator = _rootActivity.FindViewById<ProgressBar>(Resource.Id.busyIndicator);
+                ProgressBar busyIndicator = _appContext.RootActivity.FindViewById<ProgressBar>(Resource.Id.busyIndicator);
                 if (visible)
                     busyIndicator.Visibility = ViewStates.Visible;
                 else
@@ -58,7 +58,7 @@ namespace SilentNotes.Android.Services
         {
             ButtonArrangement arrangement = new ButtonArrangement(buttons, _languageService);
             AlertDialogHelper.DialogResult dialogResult = await AlertDialogHelper.ShowAsync(
-                _rootActivity,
+                _appContext.RootActivity,
                 message,
                 title,
                 arrangement.PrimaryButtonText,

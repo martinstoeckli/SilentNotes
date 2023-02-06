@@ -11,7 +11,7 @@ namespace SilentNotes.UWP.Services
     /// <summary>
     /// Implements the <see cref="ISettingsService"/> interface for the UWP platform.
     /// </summary>
-    public class SettingsService : SettingsServiceBase
+    internal class SettingsService : SettingsServiceBase
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="SettingsService"/> class.
