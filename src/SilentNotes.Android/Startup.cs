@@ -45,8 +45,8 @@ namespace SilentNotes.Android
         private static void RegisterServices(ServiceCollection services)
         {
             services.AddSingleton<IAppContextService>((serviceProvider) => new AppContextService());
-            services.AddSingleton<IHtmlViewService>((serviceProvider) => new HtmlViewService(
-                serviceProvider.GetService<IAppContextService>()));
+            services.AddTransient<IHtmlViewService>((serviceProvider) =>
+                serviceProvider.GetService<IAppContextService>() as IHtmlViewService);
             services.AddSingleton<IEnvironmentService>((serviceProvider) => new EnvironmentService(
                 OperatingSystem.Android, serviceProvider.GetService<IAppContextService>()));
             services.AddSingleton<IBaseUrlService>((serviceProvider) => new BaseUrlService());
@@ -87,14 +87,13 @@ namespace SilentNotes.Android
             services.AddSingleton<IThemeService>((serviceProvider) => new ThemeService(
                 serviceProvider.GetService<ISettingsService>(),
                 serviceProvider.GetService<IEnvironmentService>()));
+            services.AddSingleton<IActivityResultAwaiter>((ServiceProvider) => new ActivityResultAwaiter());
             services.AddSingleton<IFolderPickerService>((serviceProvider) => new FolderPickerService(
                 serviceProvider.GetService<IAppContextService>(),
                 serviceProvider.GetService<IActivityResultAwaiter>()));
             services.AddSingleton<IFilePickerService>((serviceProvider) => new FilePickerService(
                 serviceProvider.GetService<IAppContextService>(),
                 serviceProvider.GetService<IActivityResultAwaiter>()));
-
-            services.AddSingleton<IActivityResultAwaiter>((ServiceProvider) => new ActivityResultAwaiter());
         }
     }
 }

@@ -3,6 +3,8 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using SilentNotes.HtmlView;
+using SilentNotes.Services;
 using Windows.UI.Xaml.Controls;
 
 namespace SilentNotes.UWP.Services
@@ -29,7 +31,7 @@ namespace SilentNotes.UWP.Services
     /// <summary>
     /// Implementation of the <see cref="IMainWindowService"/> interface.
     /// </summary>
-    internal class MainWindowService: IMainWindowService
+    internal class MainWindowService: IMainWindowService, IHtmlViewService
     {
         /// <inheritdoc/>
         public void Initialize(MainPage mainPage)
@@ -39,5 +41,11 @@ namespace SilentNotes.UWP.Services
 
         /// <inheritdoc/>
         public MainPage MainPage { get; private set; }
+
+        /// <inheritdoc/>
+        public IHtmlView HtmlView 
+        {
+            get { return MainPage as IHtmlView; }
+        }
     }
 }

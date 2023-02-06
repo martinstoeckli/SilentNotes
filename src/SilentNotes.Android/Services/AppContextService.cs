@@ -5,6 +5,8 @@
 
 using Android.App;
 using Android.Content;
+using SilentNotes.HtmlView;
+using SilentNotes.Services;
 
 namespace SilentNotes.Android.Services
 {
@@ -36,7 +38,7 @@ namespace SilentNotes.Android.Services
     /// <summary>
     /// Implementation of the <see cref="IAppContextService"/> interface.
     /// </summary>
-    internal class AppContextService : IAppContextService
+    internal class AppContextService : IAppContextService, IHtmlViewService
     {
         /// <inheritdoc/>
         public void Initialize(Activity rootActivity)
@@ -46,5 +48,11 @@ namespace SilentNotes.Android.Services
 
         /// <inheritdoc/>
         public Activity RootActivity { get; private set; }
+
+        /// <inheritdoc/>
+        public IHtmlView HtmlView 
+        {
+            get { return RootActivity as IHtmlView; }
+        }
     }
 }

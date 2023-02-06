@@ -34,8 +34,8 @@ namespace SilentNotes.UWP
         private static void RegisterServices(ServiceCollection services)
         {
             services.AddSingleton<IMainWindowService>((serviceProvider) => new MainWindowService());
-            services.AddSingleton<IHtmlViewService>((serviceProvider) => new HtmlViewService(
-                serviceProvider.GetService<IMainWindowService>()));
+            services.AddTransient<IHtmlViewService>((serviceProvider) =>
+                serviceProvider.GetService<IMainWindowService>() as IHtmlViewService);
             services.AddSingleton<IEnvironmentService>((serviceProvider) => new EnvironmentService(OperatingSystem.Windows));
             services.AddSingleton<IBaseUrlService>((serviceProvider) => new BaseUrlService());
             services.AddSingleton<ILanguageService>((serviceProvider) => new LanguageService(new LanguageServiceResourceReader(), "SilentNotes", new LanguageCodeService().GetSystemLanguageCode()));

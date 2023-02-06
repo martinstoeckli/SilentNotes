@@ -119,7 +119,6 @@
     <Compile Include="Services\FeedbackService.cs" />
     <Compile Include="Services\FilePickerService.cs" />
     <Compile Include="Services\FolderPickerService.cs" />
-    <Compile Include="Services\HtmlViewService.cs" />
     <Compile Include="Services\MainWindowService.cs" />
     <Compile Include="Services\LanguageCodeService.cs" />
     <Compile Include="Services\LanguageServiceResourceReader.cs" />
