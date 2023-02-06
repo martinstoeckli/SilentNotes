@@ -3,8 +3,10 @@
     <style name="MainTheme" parent="MainTheme.Base">
     </style>
 
-    <style name="MainTheme.SplashScreen" parent="MainTheme">
-        <item name="android:windowBackground">@drawable/splash_screen</item>
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">#387aa8</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_screen</item>
+        <item name="postSplashScreenTheme">@style/MainTheme</item>
     </style>
 
     <!-- Base theme applied no matter what API -->

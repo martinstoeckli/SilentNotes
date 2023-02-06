@@ -34,14 +34,13 @@ namespace SilentNotes.Android
     [Activity(
         Label = "SilentNotes",
         Icon = "@drawable/ic_launcher",
-        Theme = "@style/MainTheme.SplashScreen",
+        Theme = "@style/Theme.App.Starting",
         MainLauncher = true,
         LaunchMode = LaunchMode.SingleTask,
         Exported = true,
         ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
     public class MainActivity : Activity, IHtmlView
     {
-        private ActivityResultAwaiter _activityResultAwaiter;
         private WebView _webView;
         private Navigation _lastNavigation;
         private string _actionSendParameter;
@@ -49,14 +48,13 @@ namespace SilentNotes.Android
         /// <inheritdoc/>
         protected override void OnCreate(Bundle bundle)
         {
+            AndroidX.Core.SplashScreen.SplashScreen.InstallSplashScreen(this);
+
 #if DEBUG
             // Allow debugging of JavaScript inside of the WebView.
             // Debugging can be activated in Chrome by calling "chrome://inspect"
             WebView.SetWebContentsDebuggingEnabled(true);
 #endif
-
-            // Clear the splash screen theme, which is declared as attribute of the activity.
-            SetTheme(Resource.Style.MainTheme);
 
             // Initialize the Ioc and make the new main window available to the services.
             Startup.InitializeApplication();
