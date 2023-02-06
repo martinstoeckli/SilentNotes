@@ -55,16 +55,49 @@ namespace SilentNotes.Android
 			public const int fontProviderQuery = 2130771975;
 			
 			// aapt resource value: 0x7F010008
-			public const int fontStyle = 2130771976;
+			public const int fontProviderSystemFontFamily = 2130771976;
 			
 			// aapt resource value: 0x7F010009
-			public const int fontVariationSettings = 2130771977;
+			public const int fontStyle = 2130771977;
 			
 			// aapt resource value: 0x7F01000A
-			public const int fontWeight = 2130771978;
+			public const int fontVariationSettings = 2130771978;
 			
 			// aapt resource value: 0x7F01000B
-			public const int ttcIndex = 2130771979;
+			public const int fontWeight = 2130771979;
+			
+			// aapt resource value: 0x7F01000C
+			public const int lStar = 2130771980;
+			
+			// aapt resource value: 0x7F01000D
+			public const int nestedScrollViewStyle = 2130771981;
+			
+			// aapt resource value: 0x7F01000E
+			public const int postSplashScreenTheme = 2130771982;
+			
+			// aapt resource value: 0x7F01000F
+			public const int queryPatterns = 2130771983;
+			
+			// aapt resource value: 0x7F010010
+			public const int shortcutMatchRequired = 2130771984;
+			
+			// aapt resource value: 0x7F010011
+			public const int splashScreenIconSize = 2130771985;
+			
+			// aapt resource value: 0x7F010012
+			public const int ttcIndex = 2130771986;
+			
+			// aapt resource value: 0x7F010013
+			public const int windowSplashScreenAnimatedIcon = 2130771987;
+			
+			// aapt resource value: 0x7F010014
+			public const int windowSplashScreenAnimationDuration = 2130771988;
+			
+			// aapt resource value: 0x7F010015
+			public const int windowSplashScreenBackground = 2130771989;
+			
+			// aapt resource value: 0x7F010016
+			public const int windowSplashScreenIconBackgroundColor = 2130771990;
 			
 			static Attribute()
 			{
@@ -188,6 +221,27 @@ namespace SilentNotes.Android
 			// aapt resource value: 0x7F030017
 			public const int notification_top_pad_large_text = 2130903063;
 			
+			// aapt resource value: 0x7F030018
+			public const int splashscreen_icon_mask_size_no_background = 2130903064;
+			
+			// aapt resource value: 0x7F030019
+			public const int splashscreen_icon_mask_size_with_background = 2130903065;
+			
+			// aapt resource value: 0x7F03001A
+			public const int splashscreen_icon_mask_stroke_no_background = 2130903066;
+			
+			// aapt resource value: 0x7F03001B
+			public const int splashscreen_icon_mask_stroke_with_background = 2130903067;
+			
+			// aapt resource value: 0x7F03001C
+			public const int splashscreen_icon_size = 2130903068;
+			
+			// aapt resource value: 0x7F03001D
+			public const int splashscreen_icon_size_no_background = 2130903069;
+			
+			// aapt resource value: 0x7F03001E
+			public const int splashscreen_icon_size_with_background = 2130903070;
+			
 			static Dimension()
 			{
 				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
@@ -202,55 +256,64 @@ namespace SilentNotes.Android
 		{
 			
 			// aapt resource value: 0x7F040000
-			public const int ic_launcher = 2130968576;
+			public const int compat_splash_screen = 2130968576;
 			
 			// aapt resource value: 0x7F040001
-			public const int ic_launcher_background = 2130968577;
-			
-			// aapt resource value: 0x7F040002
-			public const int ic_launcher_foreground = 2130968578;
-			
-			// aapt resource value: 0x7F040003
-			public const int notification_action_background = 2130968579;
-			
-			// aapt resource value: 0x7F040004
-			public const int notification_bg = 2130968580;
+			public const int compat_splash_screen_no_icon_background = 2130968577;
 			
 			// aapt resource value: 0x7F040005
-			public const int notification_bg_low = 2130968581;
+			public const int icon_background = 2130968581;
+			
+			// aapt resource value: 0x7F040002
+			public const int ic_launcher = 2130968578;
+			
+			// aapt resource value: 0x7F040003
+			public const int ic_launcher_background = 2130968579;
+			
+			// aapt resource value: 0x7F040004
+			public const int ic_launcher_foreground = 2130968580;
 			
 			// aapt resource value: 0x7F040006
-			public const int notification_bg_low_normal = 2130968582;
+			public const int notification_action_background = 2130968582;
 			
 			// aapt resource value: 0x7F040007
-			public const int notification_bg_low_pressed = 2130968583;
+			public const int notification_bg = 2130968583;
 			
 			// aapt resource value: 0x7F040008
-			public const int notification_bg_normal = 2130968584;
+			public const int notification_bg_low = 2130968584;
 			
 			// aapt resource value: 0x7F040009
-			public const int notification_bg_normal_pressed = 2130968585;
+			public const int notification_bg_low_normal = 2130968585;
 			
 			// aapt resource value: 0x7F04000A
-			public const int notification_icon_background = 2130968586;
+			public const int notification_bg_low_pressed = 2130968586;
 			
 			// aapt resource value: 0x7F04000B
-			public const int notification_template_icon_bg = 2130968587;
+			public const int notification_bg_normal = 2130968587;
 			
 			// aapt resource value: 0x7F04000C
-			public const int notification_template_icon_low_bg = 2130968588;
+			public const int notification_bg_normal_pressed = 2130968588;
 			
 			// aapt resource value: 0x7F04000D
-			public const int notification_tile_bg = 2130968589;
+			public const int notification_icon_background = 2130968589;
 			
 			// aapt resource value: 0x7F04000E
-			public const int notify_panel_notification_icon_bg = 2130968590;
+			public const int notification_template_icon_bg = 2130968590;
 			
 			// aapt resource value: 0x7F04000F
-			public const int silent_notes_256 = 2130968591;
+			public const int notification_template_icon_low_bg = 2130968591;
 			
 			// aapt resource value: 0x7F040010
-			public const int splash_screen = 2130968592;
+			public const int notification_tile_bg = 2130968592;
+			
+			// aapt resource value: 0x7F040011
+			public const int notify_panel_notification_icon_bg = 2130968593;
+			
+			// aapt resource value: 0x7F040012
+			public const int silent_notes_256 = 2130968594;
+			
+			// aapt resource value: 0x7F040013
+			public const int splash_screen = 2130968595;
 			
 			static Drawable()
 			{
@@ -449,46 +512,64 @@ namespace SilentNotes.Android
 			public const int right_side = 2131034172;
 			
 			// aapt resource value: 0x7F05003D
-			public const int tag_accessibility_actions = 2131034173;
+			public const int splashscreen_icon_view = 2131034173;
 			
 			// aapt resource value: 0x7F05003E
-			public const int tag_accessibility_clickable_spans = 2131034174;
+			public const int tag_accessibility_actions = 2131034174;
 			
 			// aapt resource value: 0x7F05003F
-			public const int tag_accessibility_heading = 2131034175;
+			public const int tag_accessibility_clickable_spans = 2131034175;
 			
 			// aapt resource value: 0x7F050040
-			public const int tag_accessibility_pane_title = 2131034176;
+			public const int tag_accessibility_heading = 2131034176;
 			
 			// aapt resource value: 0x7F050041
-			public const int tag_screen_reader_focusable = 2131034177;
+			public const int tag_accessibility_pane_title = 2131034177;
 			
 			// aapt resource value: 0x7F050042
-			public const int tag_transition_group = 2131034178;
+			public const int tag_on_apply_window_listener = 2131034178;
 			
 			// aapt resource value: 0x7F050043
-			public const int tag_unhandled_key_event_manager = 2131034179;
+			public const int tag_on_receive_content_listener = 2131034179;
 			
 			// aapt resource value: 0x7F050044
-			public const int tag_unhandled_key_listeners = 2131034180;
+			public const int tag_on_receive_content_mime_types = 2131034180;
 			
 			// aapt resource value: 0x7F050045
-			public const int text = 2131034181;
+			public const int tag_screen_reader_focusable = 2131034181;
 			
 			// aapt resource value: 0x7F050046
-			public const int text2 = 2131034182;
+			public const int tag_state_description = 2131034182;
 			
 			// aapt resource value: 0x7F050047
-			public const int time = 2131034183;
+			public const int tag_transition_group = 2131034183;
 			
 			// aapt resource value: 0x7F050048
-			public const int title = 2131034184;
+			public const int tag_unhandled_key_event_manager = 2131034184;
 			
 			// aapt resource value: 0x7F050049
-			public const int view_tree_lifecycle_owner = 2131034185;
+			public const int tag_unhandled_key_listeners = 2131034185;
 			
 			// aapt resource value: 0x7F05004A
-			public const int webView = 2131034186;
+			public const int tag_window_insets_animation_callback = 2131034186;
+			
+			// aapt resource value: 0x7F05004B
+			public const int text = 2131034187;
+			
+			// aapt resource value: 0x7F05004C
+			public const int text2 = 2131034188;
+			
+			// aapt resource value: 0x7F05004D
+			public const int time = 2131034189;
+			
+			// aapt resource value: 0x7F05004E
+			public const int title = 2131034190;
+			
+			// aapt resource value: 0x7F05004F
+			public const int view_tree_lifecycle_owner = 2131034191;
+			
+			// aapt resource value: 0x7F050050
+			public const int webView = 2131034192;
 			
 			static Id()
 			{
@@ -504,7 +585,10 @@ namespace SilentNotes.Android
 		{
 			
 			// aapt resource value: 0x7F060000
-			public const int status_bar_notification_info_maxnum = 2131099648;
+			public const int default_icon_animation_duration = 2131099648;
+			
+			// aapt resource value: 0x7F060001
+			public const int status_bar_notification_info_maxnum = 2131099649;
 			
 			static Integer()
 			{
@@ -549,6 +633,9 @@ namespace SilentNotes.Android
 			// aapt resource value: 0x7F070009
 			public const int notification_template_part_time = 2131165193;
 			
+			// aapt resource value: 0x7F07000A
+			public const int splash_screen_view = 2131165194;
+			
 			static Layout()
 			{
 				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
@@ -591,34 +678,64 @@ namespace SilentNotes.Android
 		{
 			
 			// aapt resource value: 0x7F090000
-			public const int MainTheme = 2131296256;
+			public const int Base_Theme_SplashScreen = 2131296256;
 			
 			// aapt resource value: 0x7F090001
-			public const int MainTheme_Base = 2131296257;
+			public const int Base_Theme_SplashScreen_DayNight = 2131296257;
 			
 			// aapt resource value: 0x7F090002
-			public const int MainTheme_SplashScreen = 2131296258;
+			public const int Base_Theme_SplashScreen_Light = 2131296258;
 			
 			// aapt resource value: 0x7F090003
-			public const int TextAppearance_Compat_Notification = 2131296259;
+			public const int Base_v21_Theme_SplashScreen = 2131296259;
 			
 			// aapt resource value: 0x7F090004
-			public const int TextAppearance_Compat_Notification_Info = 2131296260;
+			public const int Base_v21_Theme_SplashScreen_Light = 2131296260;
 			
 			// aapt resource value: 0x7F090005
-			public const int TextAppearance_Compat_Notification_Line2 = 2131296261;
+			public const int Base_v27_Theme_SplashScreen = 2131296261;
 			
 			// aapt resource value: 0x7F090006
-			public const int TextAppearance_Compat_Notification_Time = 2131296262;
+			public const int Base_v27_Theme_SplashScreen_Light = 2131296262;
 			
 			// aapt resource value: 0x7F090007
-			public const int TextAppearance_Compat_Notification_Title = 2131296263;
+			public const int MainTheme = 2131296263;
 			
 			// aapt resource value: 0x7F090008
-			public const int Widget_Compat_NotificationActionContainer = 2131296264;
+			public const int MainTheme_Base = 2131296264;
 			
 			// aapt resource value: 0x7F090009
-			public const int Widget_Compat_NotificationActionText = 2131296265;
+			public const int TextAppearance_Compat_Notification = 2131296265;
+			
+			// aapt resource value: 0x7F09000A
+			public const int TextAppearance_Compat_Notification_Info = 2131296266;
+			
+			// aapt resource value: 0x7F09000B
+			public const int TextAppearance_Compat_Notification_Line2 = 2131296267;
+			
+			// aapt resource value: 0x7F09000C
+			public const int TextAppearance_Compat_Notification_Time = 2131296268;
+			
+			// aapt resource value: 0x7F09000D
+			public const int TextAppearance_Compat_Notification_Title = 2131296269;
+			
+			// aapt resource value: 0x7F09000E
+			public const int Theme_App_Starting = 2131296270;
+			
+			// aapt resource value: 0x7F09000F
+			public const int Theme_SplashScreen = 2131296271;
+			
+			// aapt resource value: 0x7F090010
+			public const int Theme_SplashScreen_Common = 2131296272;
+			
+			// aapt resource value: 0x7F090011
+			public const int Theme_SplashScreen_IconBackground = 2131296273;
+			
+			// aapt resource value: 0x7F090012
+			public const int Widget_Compat_NotificationActionContainer = 2131296274;
+			
+			// aapt resource value: 0x7F090013
+			public const int Widget_Compat_NotificationActionText = 2131296275;
 			
 			static Style()
 			{
@@ -633,14 +750,27 @@ namespace SilentNotes.Android
 		public partial class Styleable
 		{
 			
-			// aapt resource value: { 0x10101A5,0x101031F,0x7F010000 }
+			// aapt resource value: { 0x7F01000F,0x7F010010 }
+			public static int[] Capability = new int[] {
+					2130771983,
+					2130771984};
+			
+			// aapt resource value: 0
+			public const int Capability_queryPatterns = 0;
+			
+			// aapt resource value: 1
+			public const int Capability_shortcutMatchRequired = 1;
+			
+			// aapt resource value: { 0x10101A5,0x101031F,0x1010647,0x7F010000,0x7F01000C }
 			public static int[] ColorStateListItem = new int[] {
 					16843173,
 					16843551,
-					2130771968};
+					16844359,
+					2130771968,
+					2130771980};
 			
-			// aapt resource value: 2
-			public const int ColorStateListItem_alpha = 2;
+			// aapt resource value: 3
+			public const int ColorStateListItem_alpha = 3;
 			
 			// aapt resource value: 1
 			public const int ColorStateListItem_android_alpha = 1;
@@ -648,16 +778,23 @@ namespace SilentNotes.Android
 			// aapt resource value: 0
 			public const int ColorStateListItem_android_color = 0;
 			
-			// aapt resource value: { 0x7F010002,0x7F010003,0x7F010004,0x7F010005,0x7F010006,0x7F010007 }
+			// aapt resource value: 2
+			public const int ColorStateListItem_android_lStar = 2;
+			
+			// aapt resource value: 4
+			public const int ColorStateListItem_lStar = 4;
+			
+			// aapt resource value: { 0x7F010002,0x7F010003,0x7F010004,0x7F010005,0x7F010006,0x7F010007,0x7F010008 }
 			public static int[] FontFamily = new int[] {
 					2130771970,
 					2130771971,
 					2130771972,
 					2130771973,
 					2130771974,
-					2130771975};
+					2130771975,
+					2130771976};
 			
-			// aapt resource value: { 0x1010532,0x1010533,0x101053F,0x101056F,0x1010570,0x7F010001,0x7F010008,0x7F010009,0x7F01000A,0x7F01000B }
+			// aapt resource value: { 0x1010532,0x1010533,0x101053F,0x101056F,0x1010570,0x7F010001,0x7F010009,0x7F01000A,0x7F01000B,0x7F010012 }
 			public static int[] FontFamilyFont = new int[] {
 					16844082,
 					16844083,
@@ -665,10 +802,10 @@ namespace SilentNotes.Android
 					16844143,
 					16844144,
 					2130771969,
-					2130771976,
 					2130771977,
 					2130771978,
-					2130771979};
+					2130771979,
+					2130771986};
 			
 			// aapt resource value: 0
 			public const int FontFamilyFont_android_font = 0;
@@ -717,6 +854,9 @@ namespace SilentNotes.Android
 			
 			// aapt resource value: 5
 			public const int FontFamily_fontProviderQuery = 5;
+			
+			// aapt resource value: 6
+			public const int FontFamily_fontProviderSystemFontFamily = 6;
 			
 			// aapt resource value: { 0x101019D,0x101019E,0x10101A1,0x10101A2,0x10101A3,0x10101A4,0x1010201,0x101020B,0x1010510,0x1010511,0x1010512,0x1010513 }
 			public static int[] GradientColor = new int[] {
