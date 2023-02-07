@@ -1,0 +1,4 @@
+SilentNotes version 7.2.2
+
+* Android < 12: Fehler beim Starten der Anwendung behoben, nachdem sie mit der Zurücktaste geschlossen wurde.
+* Android: Targeting Android 12 (API 31)
