@@ -187,6 +187,52 @@ namespace SilentNotesTest.Workers
         }
 
         [Test]
+        public void OuterJoinTakesNewNotesFromClient()
+        {
+            NoteRepositoryModel clientRepo = new NoteRepositoryModel();
+            NoteModel note101 = new NoteModel();
+            NoteModel note102 = new NoteModel();
+            NoteModel note103 = new NoteModel();
+            clientRepo.Notes.Add(note101); // first note only on client
+            clientRepo.Notes.Add(note102);
+            clientRepo.Notes.Add(note103); // last note only on client
+            NoteRepositoryModel serverRepo = new NoteRepositoryModel();
+            NoteModel note202 = note102.Clone();
+            serverRepo.Notes.Add(note202);
+
+            NoteRepositoryMerger merger = new NoteRepositoryMerger();
+            NoteRepositoryModel result = merger.Merge(clientRepo, serverRepo);
+
+            Assert.AreEqual(3, result.Notes.Count);
+            Assert.AreEqual(note101.Id, result.Notes[0].Id);
+            Assert.AreEqual(note102.Id, result.Notes[1].Id);
+            Assert.AreEqual(note103.Id, result.Notes[2].Id);
+        }
+
+        [Test]
+        public void OuterJoinTakesNewNotesFromServer()
+        {
+            NoteRepositoryModel clientRepo = new NoteRepositoryModel();
+            NoteModel note102 = new NoteModel();
+            clientRepo.Notes.Add(note102);
+            NoteRepositoryModel serverRepo = new NoteRepositoryModel();
+            NoteModel note201 = new NoteModel(); // first note only on server
+            NoteModel note202 = note102.Clone();
+            NoteModel note203 = new NoteModel(); // last note only on server
+            serverRepo.Notes.Add(note201);
+            serverRepo.Notes.Add(note202);
+            serverRepo.Notes.Add(note203);
+
+            NoteRepositoryMerger merger = new NoteRepositoryMerger();
+            NoteRepositoryModel result = merger.Merge(clientRepo, serverRepo);
+
+            Assert.AreEqual(3, result.Notes.Count);
+            Assert.AreEqual(note201.Id, result.Notes[0].Id);
+            Assert.AreEqual(note202.Id, result.Notes[1].Id);
+            Assert.AreEqual(note203.Id, result.Notes[2].Id);
+        }
+
+        [Test]
         public void UseOrderCorrectlyIfNoNewNotes()
         {
             NoteRepositoryModel clientRepo = new NoteRepositoryModel();
