@@ -199,8 +199,6 @@ namespace SilentNotes.Android
             {
                 if (storyBoardService.ActiveStory is SynchronizationStoryBoard synchronizationStory)
                 {
-                    // Create a copy of the active story, which uses the Ioc of this new process
-                    storyBoardService.ActiveStory = new SynchronizationStoryBoard(synchronizationStory);
                     storyBoardService.ActiveStory.ContinueWith(SynchronizationStoryStepId.HandleOAuthRedirect);
                 }
             }
@@ -307,7 +305,7 @@ namespace SilentNotes.Android
         private bool IsStartedByOAuthRedirectIndent(IStoryBoardService storyBoardService)
         {
             return (storyBoardService.ActiveStory != null) &&
-                storyBoardService.ActiveStory.TryLoadFromSession(SynchronizationStorySessionKey.OauthRedirectUrl, out string _);
+                storyBoardService.ActiveStory.Session.TryLoad(SynchronizationStorySessionKey.OauthRedirectUrl, out string _);
         }
 
         private class WebviewValueCallback : Java.Lang.Object, IValueCallback

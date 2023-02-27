@@ -44,18 +44,18 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         {
             try
             {
-                if (!StoryBoard.TryLoadFromSession(SynchronizationStorySessionKey.CloudStorageCredentials, out SerializeableCloudStorageCredentials credentials))
+                if (!StoryBoard.Session.TryLoad(SynchronizationStorySessionKey.CloudStorageCredentials, out SerializeableCloudStorageCredentials credentials))
                     throw new ArgumentNullException(nameof(credentials));
-                if (!StoryBoard.TryLoadFromSession(SynchronizationStorySessionKey.OauthState, out string oauthState))
+                if (!StoryBoard.Session.TryLoad(SynchronizationStorySessionKey.OauthState, out string oauthState))
                     throw new ArgumentNullException(nameof(oauthState));
-                if (!StoryBoard.TryLoadFromSession(SynchronizationStorySessionKey.OauthCodeVerifier, out string oauthCodeVerifier))
+                if (!StoryBoard.Session.TryLoad(SynchronizationStorySessionKey.OauthCodeVerifier, out string oauthCodeVerifier))
                     throw new ArgumentNullException(nameof(oauthState));
-                if (!StoryBoard.TryLoadFromSession(SynchronizationStorySessionKey.OauthRedirectUrl, out string redirectUrl))
+                if (!StoryBoard.Session.TryLoad(SynchronizationStorySessionKey.OauthRedirectUrl, out string redirectUrl))
                     throw new ArgumentNullException(nameof(redirectUrl));
 
-                StoryBoard.RemoveFromSession(SynchronizationStorySessionKey.OauthState);
-                StoryBoard.RemoveFromSession(SynchronizationStorySessionKey.OauthCodeVerifier);
-                StoryBoard.RemoveFromSession(SynchronizationStorySessionKey.OauthRedirectUrl);
+                StoryBoard.Session.Remove(SynchronizationStorySessionKey.OauthState);
+                StoryBoard.Session.Remove(SynchronizationStorySessionKey.OauthCodeVerifier);
+                StoryBoard.Session.Remove(SynchronizationStorySessionKey.OauthRedirectUrl);
 
                 ICloudStorageClient cloudStorageClient = _cloudStorageClientFactory.GetByKey(credentials.CloudStorageId);
                 if (cloudStorageClient is IOAuth2CloudStorageClient oauthStorageClient)

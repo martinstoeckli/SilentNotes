@@ -21,7 +21,7 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
 
             Mock<IStoryBoard> storyBoard = new Mock<IStoryBoard>();
             storyBoard.
-                Setup(m => m.LoadFromSession<SerializeableCloudStorageCredentials>(It.Is<SynchronizationStorySessionKey>(p => p == SynchronizationStorySessionKey.CloudStorageCredentials))).
+                Setup(m => m.Session.Load<SerializeableCloudStorageCredentials>(It.Is<SynchronizationStorySessionKey>(p => p == SynchronizationStorySessionKey.CloudStorageCredentials))).
                 Returns(credentialsFromSession);
             Mock<ISettingsService> settingsService = new Mock<ISettingsService>();
             settingsService.
@@ -58,7 +58,7 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
 
             Mock<IStoryBoard> storyBoard = new Mock<IStoryBoard>();
             storyBoard.
-                Setup(m => m.LoadFromSession<SerializeableCloudStorageCredentials>(It.Is<SynchronizationStorySessionKey>(p => p == SynchronizationStorySessionKey.CloudStorageCredentials))).
+                Setup(m => m.Session.Load<SerializeableCloudStorageCredentials>(It.Is<SynchronizationStorySessionKey>(p => p == SynchronizationStorySessionKey.CloudStorageCredentials))).
                 Returns(credentialsFromSession);
             Mock<ISettingsService> settingsService = new Mock<ISettingsService>();
             settingsService.

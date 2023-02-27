@@ -23,7 +23,7 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
 
             Mock<IStoryBoard> storyBoard = new Mock<IStoryBoard>();
             storyBoard.
-                Setup(m => m.LoadFromSession<byte[]>(It.Is<SynchronizationStorySessionKey>(p => p == SynchronizationStorySessionKey.BinaryCloudRepository))).
+                Setup(m => m.Session.Load<byte[]>(It.Is<SynchronizationStorySessionKey>(p => p == SynchronizationStorySessionKey.BinaryCloudRepository))).
                 Returns(encryptedRepository);
             Mock<ISettingsService> settingsService = new Mock<ISettingsService>();
             settingsService.
@@ -57,7 +57,7 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
 
             Mock<IStoryBoard> storyBoard = new Mock<IStoryBoard>();
             storyBoard.
-                Setup(m => m.LoadFromSession<byte[]>(It.Is<SynchronizationStorySessionKey>(p => p == SynchronizationStorySessionKey.BinaryCloudRepository))).
+                Setup(m => m.Session.Load<byte[]>(It.Is<SynchronizationStorySessionKey>(p => p == SynchronizationStorySessionKey.BinaryCloudRepository))).
                 Returns(encryptedRepository);
             Mock<ISettingsService> settingsService = new Mock<ISettingsService>();
             settingsService.
@@ -91,7 +91,7 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
 
             Mock<IStoryBoard> storyBoard = new Mock<IStoryBoard>();
             storyBoard.
-                Setup(m => m.LoadFromSession<byte[]>(It.Is<SynchronizationStorySessionKey>(p => p == SynchronizationStorySessionKey.BinaryCloudRepository))).
+                Setup(m => m.Session.Load<byte[]>(It.Is<SynchronizationStorySessionKey>(p => p == SynchronizationStorySessionKey.BinaryCloudRepository))).
                 Returns(encryptedRepository);
             Mock<ISettingsService> settingsService = new Mock<ISettingsService>();
             settingsService.
@@ -130,7 +130,7 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
 
             Mock<IStoryBoard> storyBoard = new Mock<IStoryBoard>();
             storyBoard.
-                Setup(m => m.LoadFromSession<byte[]>(It.Is<SynchronizationStorySessionKey>(p => p == SynchronizationStorySessionKey.BinaryCloudRepository))).
+                Setup(m => m.Session.Load<byte[]>(It.Is<SynchronizationStorySessionKey>(p => p == SynchronizationStorySessionKey.BinaryCloudRepository))).
                 Returns(encryptedRepository);
             Mock<IFeedbackService> feedbackService = new Mock<IFeedbackService>();
             Mock<ISettingsService> settingsService = new Mock<ISettingsService>();
@@ -167,7 +167,7 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
 
             Mock<IStoryBoard> storyBoard = new Mock<IStoryBoard>();
             storyBoard.
-                Setup(m => m.LoadFromSession<byte[]>(It.Is<SynchronizationStorySessionKey>(p => p == SynchronizationStorySessionKey.BinaryCloudRepository))).
+                Setup(m => m.Session.Load<byte[]>(It.Is<SynchronizationStorySessionKey>(p => p == SynchronizationStorySessionKey.BinaryCloudRepository))).
                 Returns(encryptedRepository);
             Mock<IFeedbackService> feedbackService = new Mock<IFeedbackService>();
             Mock<ISettingsService> settingsService = new Mock<ISettingsService>();

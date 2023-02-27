@@ -19,10 +19,10 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
 
             Mock<IStoryBoard> storyBoard = new Mock<IStoryBoard>();
             storyBoard.
-                Setup(m => m.LoadFromSession<SerializeableCloudStorageCredentials>(It.Is<SynchronizationStorySessionKey>(p => p == SynchronizationStorySessionKey.CloudStorageCredentials))).
+                Setup(m => m.Session.Load<SerializeableCloudStorageCredentials>(It.Is<SynchronizationStorySessionKey>(p => p == SynchronizationStorySessionKey.CloudStorageCredentials))).
                 Returns(credentialsFromSession);
             storyBoard.
-                Setup(m => m.TryLoadFromSession(It.Is<SynchronizationStorySessionKey>(p => p == SynchronizationStorySessionKey.BinaryCloudRepository), out repositoryFromSession)).
+                Setup(m => m.Session.TryLoad(It.Is<SynchronizationStorySessionKey>(p => p == SynchronizationStorySessionKey.BinaryCloudRepository), out repositoryFromSession)).
                 Returns(false);
             Mock<ICloudStorageClient> cloudStorageClient = new Mock<ICloudStorageClient>();
             cloudStorageClient.
@@ -39,7 +39,7 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
             Assert.DoesNotThrowAsync(step.Run);
 
             // Repository was stored in session
-            storyBoard.Verify(m => m.StoreToSession(It.Is<SynchronizationStorySessionKey>(p => p == SynchronizationStorySessionKey.BinaryCloudRepository), It.Is<object>(p => p == repository)), Times.Once);
+            storyBoard.Verify(m => m.Session.Store(It.Is<SynchronizationStorySessionKey>(p => p == SynchronizationStorySessionKey.BinaryCloudRepository), It.Is<object>(p => p == repository)), Times.Once);
 
             // Next step is called
             storyBoard.Verify(m => m.ContinueWith(It.Is<SynchronizationStoryStepId>(x => x == SynchronizationStoryStepId.ExistsTransferCode)), Times.Once);
@@ -54,10 +54,10 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
 
             Mock<IStoryBoard> storyBoard = new Mock<IStoryBoard>();
             storyBoard.
-                Setup(m => m.LoadFromSession<SerializeableCloudStorageCredentials>(It.Is<SynchronizationStorySessionKey>(p => p == SynchronizationStorySessionKey.CloudStorageCredentials))).
+                Setup(m => m.Session.Load<SerializeableCloudStorageCredentials>(It.Is<SynchronizationStorySessionKey>(p => p == SynchronizationStorySessionKey.CloudStorageCredentials))).
                 Returns(credentialsFromSession);
             storyBoard.
-                Setup(m => m.TryLoadFromSession(It.Is<SynchronizationStorySessionKey>(p => p == SynchronizationStorySessionKey.BinaryCloudRepository), out repositoryFromSession)).
+                Setup(m => m.Session.TryLoad(It.Is<SynchronizationStorySessionKey>(p => p == SynchronizationStorySessionKey.BinaryCloudRepository), out repositoryFromSession)).
                 Returns(false);
             Mock<IFeedbackService> feedbackService = new Mock<IFeedbackService>();
             Mock<ICloudStorageClient> cloudStorageClient = new Mock<ICloudStorageClient>();

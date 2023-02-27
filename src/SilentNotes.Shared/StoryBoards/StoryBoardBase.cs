@@ -16,7 +16,6 @@ namespace SilentNotes.StoryBoards
     public class StoryBoardBase : IStoryBoard
     {
         private readonly List<IStoryBoardStep> _steps;
-        protected Dictionary<Enum, object> _session;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StoryBoardBase"/> class.
@@ -27,7 +26,7 @@ namespace SilentNotes.StoryBoards
         public StoryBoardBase(StoryBoardMode mode = StoryBoardMode.GuiAndToasts)
         {
             Mode = mode;
-            _session = new Dictionary<Enum, object>();
+            Session = new StoryBoardSession();
             _steps = new List<IStoryBoardStep>();
         }
 
@@ -56,46 +55,7 @@ namespace SilentNotes.StoryBoards
         }
 
         /// <inheritdoc/>
-        public void StoreToSession(Enum key, object value)
-        {
-            _session[key] = value;
-        }
-
-        /// <inheritdoc/>
-        public void RemoveFromSession(Enum key)
-        {
-            _session.Remove(key);
-        }
-
-        /// <inheritdoc/>
-        [DebuggerStepThrough]
-        public bool TryLoadFromSession<T>(Enum key, out T value)
-        {
-            if (_session.TryGetValue(key, out var dictionaryValue) && (dictionaryValue is T typedValue))
-            {
-                value = typedValue;
-                return true;
-            }
-            value = default(T);
-            return false;
-        }
-
-        /// <inheritdoc/>
-        [DebuggerStepThrough]
-        public T LoadFromSession<T>(Enum key)
-        {
-            bool successful = TryLoadFromSession<T>(key, out T result);
-            if (successful)
-                return result;
-            else
-                throw new ArgumentOutOfRangeException(nameof(key));
-        }
-
-        /// <inheritdoc/>
-        public void ClearSession()
-        {
-            _session.Clear();
-        }
+        public IStoryBoardSession Session { get; }
 
         /// <summary>
         /// Searches for a registered step in the story board.

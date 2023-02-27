@@ -34,7 +34,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
             
             if (settings.HasCloudStorageClient)
             {
-                StoryBoard.StoreToSession(SynchronizationStorySessionKey.CloudStorageCredentials, settings.Credentials);
+                StoryBoard.Session.Store(SynchronizationStorySessionKey.CloudStorageCredentials, settings.Credentials);
                 await StoryBoard.ContinueWith(SynchronizationStoryStepId.ExistsCloudRepository);
             }
             else
