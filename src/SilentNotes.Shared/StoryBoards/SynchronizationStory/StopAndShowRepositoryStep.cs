@@ -39,7 +39,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         /// <inheritdoc/>
         public override Task Run()
         {
-            StoryBoard.ClearSession();
+            StoryBoard.Session.Clear();
             _storyBoardService.ActiveStory = null;
             _feedbackService.ShowBusyIndicator(false);
             if (StoryBoard.Mode.ShouldUseGui())

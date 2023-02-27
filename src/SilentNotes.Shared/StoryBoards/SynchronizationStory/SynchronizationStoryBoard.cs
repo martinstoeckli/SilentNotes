@@ -117,17 +117,6 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SynchronizationStoryBoard"/> class, and
-        /// adopts the session of another story board.
-        /// </summary>
-        /// <param name="otherStoryBoard">Copy the session variables from this story board.</param>
-        public SynchronizationStoryBoard(SynchronizationStoryBoard otherStoryBoard)
-            : this(otherStoryBoard.Mode)
-        {
-            _session = new Dictionary<Enum, object>(otherStoryBoard._session);
-        }
-
-        /// <summary>
         /// This exception can be thrown, when a repository has a revision, which is supported only
         /// by more recent applications.
         /// </summary>

@@ -60,7 +60,7 @@ namespace SilentNotes.ViewModels
             bool codeIsValid = TransferCode.TrySanitizeUserInput(Code, out string sanitizedCode);
             if (codeIsValid)
             {
-                _storyBoardService.ActiveStory?.StoreToSession(SynchronizationStorySessionKey.UserEnteredTransferCode, sanitizedCode);
+                _storyBoardService.ActiveStory?.Session.Store(SynchronizationStorySessionKey.UserEnteredTransferCode, sanitizedCode);
                 await (_storyBoardService.ActiveStory?.ContinueWith(SynchronizationStoryStepId.DecryptCloudRepository)
                     ?? Task.CompletedTask);
             }

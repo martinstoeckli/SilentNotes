@@ -79,7 +79,7 @@ namespace SilentNotes.ViewModels
         {
             string cloudStorageId = value.ToString();
             SerializeableCloudStorageCredentials credentials = new SerializeableCloudStorageCredentials { CloudStorageId = cloudStorageId };
-            _storyBoardService.ActiveStory?.StoreToSession(SynchronizationStorySessionKey.CloudStorageCredentials, credentials);
+            _storyBoardService.ActiveStory?.Session.Store(SynchronizationStorySessionKey.CloudStorageCredentials, credentials);
             await (_storyBoardService.ActiveStory?.ContinueWith(SynchronizationStoryStepId.ShowCloudStorageAccount)
                 ?? Task.CompletedTask);
         }

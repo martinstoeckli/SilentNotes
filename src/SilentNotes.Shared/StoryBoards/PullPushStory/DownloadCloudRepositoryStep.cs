@@ -41,7 +41,7 @@ namespace SilentNotes.StoryBoards.PullPushStory
             {
                 // The repository can be cached for this story, download the repository only once.
                 byte[] binaryCloudRepository = await cloudStorageClient.DownloadFileAsync(Config.RepositoryFileName, credentials);
-                StoryBoard.StoreToSession(PullPushStorySessionKey.BinaryCloudRepository, binaryCloudRepository);
+                StoryBoard.Session.Store(PullPushStorySessionKey.BinaryCloudRepository, binaryCloudRepository);
                 await StoryBoard.ContinueWith(PullPushStoryStepId.DecryptCloudRepository);
             }
             catch (Exception ex)

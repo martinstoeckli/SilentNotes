@@ -90,7 +90,7 @@ namespace SilentNotes.ViewModels
         private async void Ok()
         {
             _feedbackService.ShowBusyIndicator(true);
-            _storyBoardService.ActiveStory?.StoreToSession(SynchronizationStorySessionKey.CloudStorageCredentials, Model);
+            _storyBoardService.ActiveStory?.Session.Store(SynchronizationStorySessionKey.CloudStorageCredentials, Model);
             await (_storyBoardService.ActiveStory?.ContinueWith(SynchronizationStoryStepId.ExistsCloudRepository)
                    ?? Task.CompletedTask);
         }

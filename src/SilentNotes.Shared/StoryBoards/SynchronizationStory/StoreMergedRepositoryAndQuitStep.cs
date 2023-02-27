@@ -52,8 +52,8 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         {
             try
             {
-                NoteRepositoryModel cloudRepository = StoryBoard.LoadFromSession<NoteRepositoryModel>(SynchronizationStorySessionKey.CloudRepository);
-                SerializeableCloudStorageCredentials credentials = StoryBoard.LoadFromSession<SerializeableCloudStorageCredentials>(SynchronizationStorySessionKey.CloudStorageCredentials);
+                NoteRepositoryModel cloudRepository = StoryBoard.Session.Load<NoteRepositoryModel>(SynchronizationStorySessionKey.CloudRepository);
+                SerializeableCloudStorageCredentials credentials = StoryBoard.Session.Load<SerializeableCloudStorageCredentials>(SynchronizationStorySessionKey.CloudStorageCredentials);
                 _repositoryStorageService.LoadRepositoryOrDefault(out NoteRepositoryModel localRepository);
                 SettingsModel settings = _settingsService.LoadSettingsOrDefault();
 

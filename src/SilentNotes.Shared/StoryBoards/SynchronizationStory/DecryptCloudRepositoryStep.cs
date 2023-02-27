@@ -49,7 +49,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
             try
             {
                 SettingsModel settings = _settingsService.LoadSettingsOrDefault();
-                byte[] binaryCloudRepository = StoryBoard.LoadFromSession<byte[]>(SynchronizationStorySessionKey.BinaryCloudRepository);
+                byte[] binaryCloudRepository = StoryBoard.Session.Load<byte[]>(SynchronizationStorySessionKey.BinaryCloudRepository);
 
                 // Try to decode with all possible transfer codes
                 bool successfullyDecryptedRepository = TryDecryptWithAllTransferCodes(
@@ -66,12 +66,12 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
                     NoteRepositoryModel cloudRepository = XmlUtils.DeserializeFromXmlDocument<NoteRepositoryModel>(cloudRepositoryXml);
 
                     // Continue with next step
-                    StoryBoard.StoreToSession(SynchronizationStorySessionKey.CloudRepository, cloudRepository);
+                    StoryBoard.Session.Store(SynchronizationStorySessionKey.CloudRepository, cloudRepository);
                     await StoryBoard.ContinueWith(SynchronizationStoryStepId.IsSameRepository);
                 }
                 else
                 {
-                    bool existsUserEnteredTransferCode = StoryBoard.TryLoadFromSession<string>(SynchronizationStorySessionKey.UserEnteredTransferCode, out _);
+                    bool existsUserEnteredTransferCode = StoryBoard.Session.TryLoad<string>(SynchronizationStorySessionKey.UserEnteredTransferCode, out _);
                     if (existsUserEnteredTransferCode)
                     {
                         // Keep transfercode page open and show message
@@ -146,7 +146,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         private List<string> ListTransferCodesToTry(SettingsModel settings)
         {
             var result = new List<string>();
-            bool existsUserEnteredTransferCode = StoryBoard.TryLoadFromSession<string>(SynchronizationStorySessionKey.UserEnteredTransferCode, out string userEnteredTransferCode);
+            bool existsUserEnteredTransferCode = StoryBoard.Session.TryLoad<string>(SynchronizationStorySessionKey.UserEnteredTransferCode, out string userEnteredTransferCode);
             if (existsUserEnteredTransferCode)
             {
                 result.Add(userEnteredTransferCode);

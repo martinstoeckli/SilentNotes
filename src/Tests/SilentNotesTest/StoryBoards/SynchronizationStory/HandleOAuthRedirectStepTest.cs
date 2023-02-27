@@ -20,10 +20,10 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
 
             Mock<IStoryBoard> storyBoard = new Mock<IStoryBoard>();
             storyBoard.
-                Setup(m => m.TryLoadFromSession(It.Is<SynchronizationStorySessionKey>(p => p == SynchronizationStorySessionKey.CloudStorageCredentials), out credentialsFromSession)).
+                Setup(m => m.Session.TryLoad(It.Is<SynchronizationStorySessionKey>(p => p == SynchronizationStorySessionKey.CloudStorageCredentials), out credentialsFromSession)).
                 Returns(true);
             storyBoard.
-                Setup(m => m.TryLoadFromSession(It.IsAny<SynchronizationStorySessionKey>(), out dummy)).
+                Setup(m => m.Session.TryLoad(It.IsAny<SynchronizationStorySessionKey>(), out dummy)).
                 Returns(true);
 
             Mock<ISettingsService> settingsService = new Mock<ISettingsService>();

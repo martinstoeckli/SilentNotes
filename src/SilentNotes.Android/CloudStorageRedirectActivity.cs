@@ -33,7 +33,7 @@ namespace SilentNotes.Android
             string redirectUrl = Intent.Data.ToString();
             IStoryBoardService storyBoardService = new StoryBoardService();
             if (storyBoardService.ActiveStory != null)
-                storyBoardService.ActiveStory.StoreToSession(SynchronizationStorySessionKey.OauthRedirectUrl, redirectUrl);
+                storyBoardService.ActiveStory.Session.Store(SynchronizationStorySessionKey.OauthRedirectUrl, redirectUrl);
 
             // Clear the activity holding the custom tab and return to already running main activity.
             Intent intent = new Intent(this, typeof(MainActivity));
