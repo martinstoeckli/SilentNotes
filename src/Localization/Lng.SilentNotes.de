@@ -160,11 +160,13 @@ pushpull_success = Diese Notiz wurden erfolgreich synchronisiert.
 pushpull_error_need_sync_first = Konnte diese Notiz nicht mit dem Online-Speicher synchronisieren, bitte führen Sie einmalig eine manuelle Synchronisation aller Notizen durch.
 pushpull_error_no_cloud_note = Diese Notiz existiert nicht auf dem Online-Speicher, bitte führen Sie vorher eine normale Synchronisation aller Notizen durch.
 
+security = Sicherheit
 encryption = Verschlüsselung
 encryption_algorithm = Verschlüsselungsverfahren
 encryption_algo_xchacha20 = XChaCha20-Poly1305 [empfohlen]
 encryption_algo_aesgcm = AES-256-GCM
 encryption_algo_twofishgcm = Twofish-256-GCM
+security_prevent_screenshots = Erstellen von Screenshots verhindern
 
 gui = Benutzeroberfläche
 gui_font_size = Schriftgrösse (kleiner ‹ normal › grösser)
@@ -180,5 +182,6 @@ gui_theme_color_cannot_change = Gleiche Farbe für alle Notizen ist eingestellt.
 gui_note_insertion = Hinzufügen neuer Notizen
 gui_note_insertion_top = Neue Notiz oben einfügen
 gui_note_insertion_bottom = Neue Notiz unten anfügen
+gui_remember_last_tag_filter = Schlagwortsuche für nächsten Start merken
 gui_hide_closed_safe_notes = Notizen von geschlossenem Tresor ausblenden
 gui_localization_test = Neue Sprachdatei testen

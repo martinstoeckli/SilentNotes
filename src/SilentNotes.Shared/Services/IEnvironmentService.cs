@@ -30,6 +30,12 @@ namespace SilentNotes.Services
         /// functionality.
         /// </summary>
         IKeepScreenOn KeepScreenOn { get; }
+
+        /// <summary>
+        /// Gets an interface which can be used to prevent screenshots. This property can be null,
+        /// if the OS doesn't support/need this functionality.
+        /// </summary>
+        IScreenshots Screenshots { get; }
     }
 
     /// <summary>

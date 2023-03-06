@@ -260,6 +260,17 @@ namespace SilentNotes.ViewModels
         }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the last selected tag to filter the notes
+        /// should be remembered across startups.
+        /// </summary>
+        [VueDataBinding(VueBindingMode.TwoWay)]
+        public bool RememberLastTagFilter
+        {
+            get { return Model.RememberLastTagFilter; }
+            set { SetPropertyAndModified(Model.RememberLastTagFilter, value, (bool v) => Model.RememberLastTagFilter = v); }
+        }
+
+        /// <summary>
         /// Gets or sets a value indicating whether notes should be hidden in the overview, if they
         /// are part of a closed safe.
         /// </summary>
@@ -307,6 +318,31 @@ namespace SilentNotes.ViewModels
             }
 
             set { SetPropertyAndModified(Model.SelectedEncryptionAlgorithm, value, (string v) => Model.SelectedEncryptionAlgorithm = v); }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether taking screenshots should be forbidden or allowed.
+        /// </summary>
+        [VueDataBinding(VueBindingMode.TwoWay)]
+        public bool PreventScreenshots 
+        {
+            get { return Model.PreventScreenshots; }
+            set 
+            {
+                if (SetPropertyAndModified(Model.PreventScreenshots, value, (bool v) => Model.PreventScreenshots = v))
+                {
+                    if (_environmentService.Screenshots != null)
+                        _environmentService.Screenshots.PreventScreenshots = value;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the operating system is able to prevent screenshots.
+        /// </summary>
+        public bool CanPreventScreenshots
+        {
+            get { return _environmentService.Screenshots != null; }
         }
 
         /// <summary>

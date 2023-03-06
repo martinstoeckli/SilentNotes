@@ -37,5 +37,11 @@ namespace SilentNotes.UWP.Services
         {
             get { return null; }
         }
+
+        /// <inheritdoc/>
+        public IScreenshots Screenshots
+        {
+            get { return null; }
+        }
     }
 }

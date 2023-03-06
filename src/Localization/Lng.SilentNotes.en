@@ -160,11 +160,13 @@ pushpull_success = Successfully synchronized this note.
 pushpull_error_need_sync_first = Could not synchronize this note with the cloud, please do once a manual synchronization of all notes.
 pushpull_error_no_cloud_note = This note does not exist on the online-storage, please do a synchronization of all notes first.
 
+security = Security
 encryption = Encryption
 encryption_algorithm = Encryption mode
 encryption_algo_xchacha20 = XChaCha20-Poly1305 [recommended]
 encryption_algo_aesgcm = AES256-GCM
 encryption_algo_twofishgcm = Twofish256-GCM
+security_prevent_screenshots = Prevent creation of screenshots
 
 gui = User interface
 gui_font_size = Font size (smaller ‹ normal › larger)
@@ -180,5 +182,6 @@ gui_theme_color_cannot_change = Same color for all notes is set.
 gui_note_insertion = Placing of new notes
 gui_note_insertion_top = Insert new notes at the top
 gui_note_insertion_bottom = Append new notes at the bottom
+gui_remember_last_tag_filter = Remember search tag for next launch
 gui_hide_closed_safe_notes = Hide notes of closed safe
 gui_localization_test = Test new language file

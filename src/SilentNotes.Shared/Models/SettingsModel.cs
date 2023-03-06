@@ -39,6 +39,7 @@ namespace SilentNotes.Models
             ColorForSolidTheme = "#121212";
             DefaultNoteColorHex = StartDefaultNoteColorHex;
             NoteMaxHeightScale = 1.0;
+            RememberLastTagFilter = false;
             UseColorForAllNotesInDarkMode = false;
             ColorForAllNotesInDarkModeHex = "#323232";
             KeepScreenUpDuration = 15;
@@ -146,6 +147,13 @@ namespace SilentNotes.Models
         public NoteInsertionMode DefaultNoteInsertion { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the last selected tag to filter the notes
+        /// should be remembered across startups.
+        /// </summary>
+        [XmlElement("remember_last_tag_filter")]
+        public bool RememberLastTagFilter { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether notes should be hidden in the overview, if they
         /// are part of a closed safe.
         /// </summary>
@@ -224,6 +232,12 @@ namespace SilentNotes.Models
         {
             return BouncyCastleXChaCha20.CryptoAlgorithmName;
         }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether taking screenshots should be forbidden or allowed.
+        /// </summary>
+        [XmlElement("prevent_screenshots")]
+        public bool PreventScreenshots { get; set; }
 
         /// <summary>
         /// Gets a value indicating whether a cloud storage is set.

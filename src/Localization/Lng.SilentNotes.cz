@@ -159,11 +159,13 @@ pushpull_success = Poznámka byla úspěšně synchronizována.
 pushpull_error_need_sync_first = Nepodařilo se synchronizovat poznámku, prosím proveďte manuální synchronizaci všech poznámek.
 pushpull_error_no_cloud_note = Tato poznámka neexistuje v online úložišti, prosím proveďtě synchoznizaci všech poznámek.
 
+security = Bezpečnost
 encryption = Šifrování
 encryption_algorithm = Režim šifrování
 encryption_algo_xchacha20 = XChaCha20-Poly1305 [doporučeno]
 encryption_algo_aesgcm = AES256-GCM
 encryption_algo_twofishgcm = Twofish256-GCM
+security_prevent_screenshots = Prevent creation of screenshots
 
 gui = Uživatelské rozhraní
 gui_font_size = Velikost písma (menší ‹ běžné › větší)
@@ -179,5 +181,6 @@ gui_theme_color_cannot_change = Byla nastavena jednotná barva pro všechny pozn
 gui_note_insertion = Pozice nových poznámek
 gui_note_insertion_top = Vkládat nové poznámky na začátek
 gui_note_insertion_bottom = Vkládat nové poznámky na konec
+gui_remember_last_tag_filter = Remember search tag for next launch
 gui_hide_closed_safe_notes = Skrýt poznámky uzamčeného trezoru
 gui_localization_test = Vyzkoušet soubor s překladem

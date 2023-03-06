@@ -14,7 +14,7 @@ namespace SilentNotes.Android.Services
     /// <summary>
     /// Implementation of the <see cref="IEnvironmentService"/> for the Android platform.
     /// </summary>
-    internal class EnvironmentService : IEnvironmentService, IKeepScreenOn
+    internal class EnvironmentService : IEnvironmentService, IKeepScreenOn, IScreenshots
     {
         private readonly IAppContextService _appContext;
         private CancellationTokenSource _cancellationTokenSource;
@@ -110,6 +110,24 @@ namespace SilentNotes.Android.Services
         private void OnStateChanged(bool isStarted)
         {
             StateChanged?.Invoke(this, isStarted);
+        }
+
+        /// <inheritdoc/>
+        public IScreenshots Screenshots
+        {
+            get { return this; }
+        }
+
+        /// <inheritdoc/>
+        bool IScreenshots.PreventScreenshots
+        {
+            set
+            {
+                if (value)
+                    _appContext.RootActivity.Window.AddFlags(WindowManagerFlags.Secure);
+                else
+                    _appContext.RootActivity.Window.ClearFlags(WindowManagerFlags.Secure);
+            }
         }
     }
 }

@@ -180,5 +180,6 @@ gui_theme_color_cannot_change = 所有笔记使用相同颜色已设置。
 gui_note_insertion = 放置新笔记
 gui_note_insertion_top = 在顶部插入新笔记
 gui_note_insertion_bottom = 在底部附加新笔记
+gui_remember_last_tag_filter = Remember last used tag for next launch
 gui_hide_closed_safe_notes = 保险箱关闭时隐藏其中的笔记
 gui_localization_test = 测试新的语言文件

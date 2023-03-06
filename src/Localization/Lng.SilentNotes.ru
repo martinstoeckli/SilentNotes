@@ -160,11 +160,13 @@ pushpull_success = Эта заметка успешно синхронизиро
 pushpull_error_need_sync_first = Не удалось синхронизировать эту заметку с облаком, выполните однократную синхронизацию всех заметок вручную.
 pushpull_error_no_cloud_note = Эта заметка отсутствует в сетевом хранилище, пожалуйста, сначала синхронизируйте все заметки.
 
+security = Security
 encryption = Шифрование
 encryption_algorithm = Режим шифрования
 encryption_algo_xchacha20 = XChaCha20-Poly1305 [рекомендовано]
 encryption_algo_aesgcm = AES256-GCM
 encryption_algo_twofishgcm = Twofish256-GCM
+security_prevent_screenshots = Prevent creation of screenshots
 
 gui = Внешний вид
 gui_font_size = Размер шрифта (меньше ‹ обычный › больше)
@@ -180,5 +182,6 @@ gui_theme_color_cannot_change = Установлен одинаковый цве
 gui_note_insertion = Размещение новых заметок
 gui_note_insertion_top = Вставлять новые заметки вверху
 gui_note_insertion_bottom = Добавлять новые заметки внизу
+gui_remember_last_tag_filter = Remember search tag for next launch
 gui_hide_closed_safe_notes = Скрыть заметки закрытого сейфа
 gui_localization_test = Тестировать новый языковой файл

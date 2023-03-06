@@ -63,7 +63,10 @@ namespace SilentNotes.Android
             ConsumeActionSendIntentParameter(Intent);
 
             // Prevent notes from being visible in list of recent apps and screenshots
-            Window.AddFlags(WindowManagerFlags.Secure);
+            ISettingsService settingsService = Ioc.Default.GetService<ISettingsService>();
+            SettingsModel settings = settingsService.LoadSettingsOrDefault();
+            if (settings.PreventScreenshots)
+                Ioc.Default.GetService<IEnvironmentService>().Screenshots.PreventScreenshots = true;
 
             // Load main window of single page application.
             base.OnCreate(bundle);
@@ -75,16 +78,16 @@ namespace SilentNotes.Android
                 (url) => OnNavigating(url),
                 () => OnNavigationCompleted()));
 
-            WebSettings settings = _webView.Settings;
-            settings.JavaScriptEnabled = true;
-            settings.BlockNetworkLoads = true; // only local content allowed
-            settings.AllowFileAccess = false; // no local files but from the asset directory
-            settings.SetPluginState(WebSettings.PluginState.Off); // no plugins allowed
-            settings.CacheMode = CacheModes.NoCache; // is already local content
-            settings.JavaScriptCanOpenWindowsAutomatically = false; // same as default
-            settings.SetSupportMultipleWindows(false); // same as default
-            settings.TextZoom = 100; // Ignores system font size, so the app controls the font size
-            settings.SaveFormData = false;
+            WebSettings webSettings = _webView.Settings;
+            webSettings.JavaScriptEnabled = true;
+            webSettings.BlockNetworkLoads = true; // only local content allowed
+            webSettings.AllowFileAccess = false; // no local files but from the asset directory
+            webSettings.SetPluginState(WebSettings.PluginState.Off); // no plugins allowed
+            webSettings.CacheMode = CacheModes.NoCache; // is already local content
+            webSettings.JavaScriptCanOpenWindowsAutomatically = false; // same as default
+            webSettings.SetSupportMultipleWindows(false); // same as default
+            webSettings.TextZoom = 100; // Ignores system font size, so the app controls the font size
+            webSettings.SaveFormData = false;
         }
 
         /// <inheritdoc/>
