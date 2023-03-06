@@ -160,11 +160,13 @@ pushpull_success = Successfully 已成功同步此笔记。
 pushpull_error_need_sync_first = 无法将此笔记与云端同步，请手动同步所有笔记。
 pushpull_error_no_cloud_note = 在线存储中不存在此笔记，请先将所有笔记同步。
 
+security = 安全
 encryption = 加密
 encryption_algorithm = 加密模式
 encryption_algo_xchacha20 = XChaCha20-Poly1305 [推荐]
 encryption_algo_aesgcm = AES256-GCM
 encryption_algo_twofishgcm = Twofish256-GCM
+security_prevent_screenshots = Prevent creation of screenshots
 
 gui = 用户界面
 gui_font_size = 字体大小 (更小 ‹ 常规 › 更大)
