@@ -159,7 +159,7 @@
                 <div class="form-group">
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="RememberLastTagFilter" v-model="RememberLastTagFilter">
-                            <label class="form-check-label" for="RememberLastTagFilter">@Model.Language["gui_remember_last_tag_filter"]</label>
+                        <label class="form-check-label" for="RememberLastTagFilter">@Model.Language["gui_remember_last_tag_filter"]</label>
                     </div>
                 </div>
             </div>
@@ -202,7 +202,7 @@
             <button type="button" class="btn btn-danger mb-2 mr-1" v-on:click="ClearCloudSettingsCommand" v-bind:disabled="ClearCloudSettingsDisabled" title="@Model.Language["cloud_clear_settings_desc"]">@Model.Language["cloud_clear_settings"]</button>
         </form>
 
-        <h2>@Model.Language["encryption"]</h2>
+        <h2>@Model.Language["security"]</h2>
         <form class="mb-4 col-md-9 col-lg-6">
             <div class="form-row form-group">
                 <label class="col-form-label" for="SelectedEncryptionAlgorithm">@Model.Language["encryption_algorithm"]</label>
@@ -213,6 +213,18 @@
                     }
                 </select>
             </div>
+
+            @if (Model.CanPreventScreenshots)
+            {
+                <div class="form-row">
+                    <div class="form-group">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="PreventScreenshots" v-model="PreventScreenshots">
+                            <label class="form-check-label" for="PreventScreenshots">@Model.Language["security_prevent_screenshots"]</label>
+                        </div>
+                    </div>
+                </div>
+            }
         </form>
     </div>
 

@@ -234,6 +234,12 @@ namespace SilentNotes.Models
         }
 
         /// <summary>
+        /// Gets or sets a value indicating whether taking screenshots should be forbidden or allowed.
+        /// </summary>
+        [XmlElement("prevent_screenshots")]
+        public bool PreventScreenshots { get; set; }
+
+        /// <summary>
         /// Gets a value indicating whether a cloud storage is set.
         /// </summary>
         public bool HasCloudStorageClient

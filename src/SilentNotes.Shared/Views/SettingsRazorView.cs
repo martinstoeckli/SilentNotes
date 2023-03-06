@@ -808,7 +808,7 @@ WriteLiteral(" id=\"RememberLastTagFilter\"");
 
 WriteLiteral(" v-model=\"RememberLastTagFilter\"");
 
-WriteLiteral(">\r\n                            <label");
+WriteLiteral(">\r\n                        <label");
 
 WriteLiteral(" class=\"form-check-label\"");
 
@@ -818,7 +818,7 @@ WriteLiteral(">");
 
 
 #line 162 "SettingsRazorView.cshtml"
-                                                                                   Write(Model.Language["gui_remember_last_tag_filter"]);
+                                                                               Write(Model.Language["gui_remember_last_tag_filter"]);
 
 
 #line default
@@ -1083,7 +1083,7 @@ WriteLiteral("</button>\r\n        </form>\r\n\r\n        <h2>");
 
 
 #line 205 "SettingsRazorView.cshtml"
-       Write(Model.Language["encryption"]);
+       Write(Model.Language["security"]);
 
 
 #line default
@@ -1164,17 +1164,79 @@ WriteLiteral("</option>\r\n");
 
 #line default
 #line hidden
-WriteLiteral("                </select>\r\n            </div>\r\n        </form>\r\n    </div>\r\n\r\n   " +
-" <div hidden>\r\n");
+WriteLiteral("                </select>\r\n            </div>\r\n\r\n");
 
 
-#line 220 "SettingsRazorView.cshtml"
+#line 217 "SettingsRazorView.cshtml"
+            
+
+#line default
+#line hidden
+
+#line 217 "SettingsRazorView.cshtml"
+             if (Model.CanPreventScreenshots)
+            {
+
+
+#line default
+#line hidden
+WriteLiteral("                <div");
+
+WriteLiteral(" class=\"form-row\"");
+
+WriteLiteral(">\r\n                    <div");
+
+WriteLiteral(" class=\"form-group\"");
+
+WriteLiteral(">\r\n                        <div");
+
+WriteLiteral(" class=\"form-check\"");
+
+WriteLiteral(">\r\n                            <input");
+
+WriteLiteral(" class=\"form-check-input\"");
+
+WriteLiteral(" type=\"checkbox\"");
+
+WriteLiteral(" id=\"PreventScreenshots\"");
+
+WriteLiteral(" v-model=\"PreventScreenshots\"");
+
+WriteLiteral(">\r\n                            <label");
+
+WriteLiteral(" class=\"form-check-label\"");
+
+WriteLiteral(" for=\"PreventScreenshots\"");
+
+WriteLiteral(">");
+
+
+#line 223 "SettingsRazorView.cshtml"
+                                                                                Write(Model.Language["security_prevent_screenshots"]);
+
+
+#line default
+#line hidden
+WriteLiteral("</label>\r\n                        </div>\r\n                    </div>\r\n           " +
+"     </div>\r\n");
+
+
+#line 227 "SettingsRazorView.cshtml"
+            }
+
+
+#line default
+#line hidden
+WriteLiteral("        </form>\r\n    </div>\r\n\r\n    <div hidden>\r\n");
+
+
+#line 232 "SettingsRazorView.cshtml"
         
 
 #line default
 #line hidden
 
-#line 220 "SettingsRazorView.cshtml"
+#line 232 "SettingsRazorView.cshtml"
           WriteLiteral(Model.Icon.LoadIcon("settings", new[] { new KeyValuePair<string, string>("id", "svg-settings") }));
 
 #line default

@@ -321,6 +321,31 @@ namespace SilentNotes.ViewModels
         }
 
         /// <summary>
+        /// Gets or sets a value indicating whether taking screenshots should be forbidden or allowed.
+        /// </summary>
+        [VueDataBinding(VueBindingMode.TwoWay)]
+        public bool PreventScreenshots 
+        {
+            get { return Model.PreventScreenshots; }
+            set 
+            {
+                if (SetPropertyAndModified(Model.PreventScreenshots, value, (bool v) => Model.PreventScreenshots = v))
+                {
+                    if (_environmentService.Screenshots != null)
+                        _environmentService.Screenshots.PreventScreenshots = value;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the operating system is able to prevent screenshots.
+        /// </summary>
+        public bool CanPreventScreenshots
+        {
+            get { return _environmentService.Screenshots != null; }
+        }
+
+        /// <summary>
         /// Gets or sets the auto sync mode selected by the user.
         /// </summary>
         [VueDataBinding(VueBindingMode.TwoWay)]
