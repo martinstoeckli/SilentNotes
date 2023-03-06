@@ -158,6 +158,15 @@
             <div class="form-row">
                 <div class="form-group">
                     <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="RememberLastTagFilter" v-model="RememberLastTagFilter">
+                            <label class="form-check-label" for="RememberLastTagFilter">@Model.Language["gui_remember_last_tag_filter"]</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="HideClosedSafeNotes" v-model="HideClosedSafeNotes">
                         <label class="form-check-label" for="HideClosedSafeNotes">@Model.Language["gui_hide_closed_safe_notes"]</label>
                     </div>

@@ -260,6 +260,17 @@ namespace SilentNotes.ViewModels
         }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the last selected tag to filter the notes
+        /// should be remembered across startups.
+        /// </summary>
+        [VueDataBinding(VueBindingMode.TwoWay)]
+        public bool RememberLastTagFilter
+        {
+            get { return Model.RememberLastTagFilter; }
+            set { SetPropertyAndModified(Model.RememberLastTagFilter, value, (bool v) => Model.RememberLastTagFilter = v); }
+        }
+
+        /// <summary>
         /// Gets or sets a value indicating whether notes should be hidden in the overview, if they
         /// are part of a closed safe.
         /// </summary>

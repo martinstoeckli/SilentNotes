@@ -180,5 +180,6 @@ gui_theme_color_cannot_change = Tüm notlar için aynı renk ayarlandı.
 gui_note_insertion = Yeni notların varsayılan konumu
 gui_note_insertion_top = Yeni notları en üste yerleştir
 gui_note_insertion_bottom = Yeni notları en alta yerleştir
+gui_remember_last_tag_filter = Remember last used tag for next launch
 gui_hide_closed_safe_notes = Kasa kilitlenince korunan notları gizle
 gui_localization_test = Yeni bir dil dosyasını dene

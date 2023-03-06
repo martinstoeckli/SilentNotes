@@ -180,5 +180,6 @@ gui_theme_color_cannot_change = Установлен одинаковый цве
 gui_note_insertion = Размещение новых заметок
 gui_note_insertion_top = Вставлять новые заметки вверху
 gui_note_insertion_bottom = Добавлять новые заметки внизу
+gui_remember_last_tag_filter = Remember last used tag for next launch
 gui_hide_closed_safe_notes = Скрыть заметки закрытого сейфа
 gui_localization_test = Тестировать новый языковой файл

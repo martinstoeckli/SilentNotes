@@ -180,5 +180,6 @@ gui_theme_color_cannot_change = Same color for all notes is set.
 gui_note_insertion = Placing of new notes
 gui_note_insertion_top = Insert new notes at the top
 gui_note_insertion_bottom = Append new notes at the bottom
+gui_remember_last_tag_filter = Remember last used tag for next launch
 gui_hide_closed_safe_notes = Hide notes of closed safe
 gui_localization_test = Test new language file

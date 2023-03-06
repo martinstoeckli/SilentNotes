@@ -39,6 +39,7 @@ namespace SilentNotes.Models
             ColorForSolidTheme = "#121212";
             DefaultNoteColorHex = StartDefaultNoteColorHex;
             NoteMaxHeightScale = 1.0;
+            RememberLastTagFilter = false;
             UseColorForAllNotesInDarkMode = false;
             ColorForAllNotesInDarkModeHex = "#323232";
             KeepScreenUpDuration = 15;
@@ -144,6 +145,13 @@ namespace SilentNotes.Models
         /// </summary>
         [XmlElement("default_note_insertion")]
         public NoteInsertionMode DefaultNoteInsertion { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the last selected tag to filter the notes
+        /// should be remembered across startups.
+        /// </summary>
+        [XmlElement("remember_last_tag_filter")]
+        public bool RememberLastTagFilter { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether notes should be hidden in the overview, if they

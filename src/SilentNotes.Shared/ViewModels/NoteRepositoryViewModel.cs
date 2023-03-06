@@ -91,7 +91,7 @@ namespace SilentNotes.ViewModels
             // If a filter was set before e.g. opening a note, set the same filter again.
             SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
             if (!SelectedTagExistsInTags())
-                settings.SelectedTag = null;
+                settings.SelectedTag = NoteFilter.SpecialTags.AllNotes;
 
             if ((settings.SelectedTag != NoteFilter.SpecialTags.AllNotes) || !string.IsNullOrEmpty(settings.Filter))
             {

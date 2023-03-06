@@ -212,6 +212,9 @@ namespace SilentNotes.Services
         protected virtual void AfterLoading(SettingsModel settings)
         {
             settings.Credentials?.DecryptAfterDeserialization(DecryptProperty);
+
+            if (!settings.RememberLastTagFilter)
+                settings.SelectedTag = null;
         }
 
         private string EncryptProperty(string plainText)

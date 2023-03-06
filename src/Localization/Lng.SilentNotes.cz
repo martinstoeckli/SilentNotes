@@ -179,5 +179,6 @@ gui_theme_color_cannot_change = Byla nastavena jednotná barva pro všechny pozn
 gui_note_insertion = Pozice nových poznámek
 gui_note_insertion_top = Vkládat nové poznámky na začátek
 gui_note_insertion_bottom = Vkládat nové poznámky na konec
+gui_remember_last_tag_filter = Remember last used tag for next launch
 gui_hide_closed_safe_notes = Skrýt poznámky uzamčeného trezoru
 gui_localization_test = Vyzkoušet soubor s překladem

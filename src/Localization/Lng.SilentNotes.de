@@ -180,5 +180,6 @@ gui_theme_color_cannot_change = Gleiche Farbe für alle Notizen ist eingestellt.
 gui_note_insertion = Hinzufügen neuer Notizen
 gui_note_insertion_top = Neue Notiz oben einfügen
 gui_note_insertion_bottom = Neue Notiz unten anfügen
+gui_remember_last_tag_filter = Zuletzt verwendetes Schlagwort für nächsten Start merken
 gui_hide_closed_safe_notes = Notizen von geschlossenem Tresor ausblenden
 gui_localization_test = Neue Sprachdatei testen
