@@ -178,7 +178,7 @@ namespace SilentNotes.UWP
             IStoryBoardService storyBoardService = Ioc.Default.GetService<IStoryBoardService>();
             if (storyBoardService.ActiveStory is SynchronizationStoryBoard)
             {
-                storyBoardService.ActiveStory.StoreToSession(SynchronizationStorySessionKey.OauthRedirectUrl, url);
+                storyBoardService.ActiveStory.Session.Store(SynchronizationStorySessionKey.OauthRedirectUrl, url);
                 storyBoardService.ActiveStory.ContinueWith(SynchronizationStoryStepId.HandleOAuthRedirect);
             }
             return true;
