@@ -166,7 +166,7 @@ encryption_algorithm = Şifreleme tipi
 encryption_algo_xchacha20 = XChaCha20-Poly1305 [önerilen]
 encryption_algo_aesgcm = AES256-GCM
 encryption_algo_twofishgcm = Twofish256-GCM
-security_prevent_screenshots = Prevent creation of screenshots
+security_prevent_screenshots = Ekran görüntüsü alınmasını engelle
 
 gui = Arayüz
 gui_font_size = Yazı tipi boyutu (küçük ‹ orta › büyük)
@@ -182,6 +182,6 @@ gui_theme_color_cannot_change = Tüm notlar için aynı renk ayarlandı.
 gui_note_insertion = Yeni notların varsayılan konumu
 gui_note_insertion_top = Yeni notları en üste yerleştir
 gui_note_insertion_bottom = Yeni notları en alta yerleştir
-gui_remember_last_tag_filter = Remember search tag for next launch
+gui_remember_last_tag_filter = Uygulamayı bir sonraki başlatışımda arama etiketini hatırla
 gui_hide_closed_safe_notes = Kasa kilitlenince korunan notları gizle
 gui_localization_test = Yeni bir dil dosyasını dene

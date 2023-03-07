@@ -166,7 +166,7 @@ encryption_algorithm = Modalità di codifica
 encryption_algo_xchacha20 = XChaCha20-Poly1305 [consigliata]
 encryption_algo_aesgcm = AES256-GCM
 encryption_algo_twofishgcm = Twofish256-GCM
-security_prevent_screenshots = Prevent creation of screenshots
+security_prevent_screenshots = Previeni la creazione delle schermate
 
 gui = Interfaccia Utente
 gui_font_size = Dimensioni del carattere (più piccolo ‹ normale › più grande)
@@ -182,6 +182,6 @@ gui_theme_color_cannot_change = È stato impostato lo stesso colore per tutti gl
 gui_note_insertion = Posizionamento dei nuovi appunti
 gui_note_insertion_top = Inserisci i nuovi appunti in cima
 gui_note_insertion_bottom = Colloca i nuovi appunti in fondo
-gui_remember_last_tag_filter = Remember search tag for next launch
+gui_remember_last_tag_filter = Ricorda la ricerca delle etichette per il prossimo avvio
 gui_hide_closed_safe_notes = Nascondi gli appunti della cassaforte chiusa
 gui_localization_test = Prova il nuovo file della lingua
