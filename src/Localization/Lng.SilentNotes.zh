@@ -166,7 +166,7 @@ encryption_algorithm = 加密模式
 encryption_algo_xchacha20 = XChaCha20-Poly1305 [推荐]
 encryption_algo_aesgcm = AES256-GCM
 encryption_algo_twofishgcm = Twofish256-GCM
-security_prevent_screenshots = Prevent creation of screenshots
+security_prevent_screenshots = 防止截屏
 
 gui = 用户界面
 gui_font_size = 字体大小 (更小 ‹ 常规 › 更大)
@@ -182,6 +182,6 @@ gui_theme_color_cannot_change = 所有笔记使用相同颜色已设置。
 gui_note_insertion = 放置新笔记
 gui_note_insertion_top = 在顶部插入新笔记
 gui_note_insertion_bottom = 在底部附加新笔记
-gui_remember_last_tag_filter = Remember last used tag for next launch
+gui_remember_last_tag_filter = 下次启动时记住筛选标签
 gui_hide_closed_safe_notes = 保险箱关闭时隐藏其中的笔记
 gui_localization_test = 测试新的语言文件
