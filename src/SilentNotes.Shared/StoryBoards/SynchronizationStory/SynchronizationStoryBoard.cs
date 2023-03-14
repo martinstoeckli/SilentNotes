@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using SilentNotes.Services;
 using SilentNotes.Workers;
@@ -114,6 +115,46 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
                 feedbackService,
                 navigationService,
                 Ioc.Default.GetService<IStoryBoardService>()));
+        }
+
+        /// <summary>
+        /// Executes the parts of the story which can be run silently without UI in a background service.
+        /// This allows to execute the synchronization in an Android background service, which can
+        /// stay alive a short time after the app was closed.
+        /// </summary>
+        public static async Task<StoryBoardStepResult> RunSilent()
+        {
+            StoryBoardStepResult result;
+            IStoryBoardSession session = new StoryBoardSession();
+            ISettingsService settingsService = Ioc.Default.GetService<ISettingsService>();
+            IFeedbackService feedbackService = new DummyFeedbackService();
+            ILanguageService languageService = Ioc.Default.GetService<ILanguageService>();
+            ICloudStorageClientFactory cloudStorageFactory = Ioc.Default.GetService<ICloudStorageClientFactory>();
+            ICryptoRandomService cryptoRandomService = Ioc.Default.GetService<ICryptoRandomService>();
+            IRepositoryStorageService repositoryStorageService = Ioc.Default.GetService<IRepositoryStorageService>();
+
+            result = IsCloudServiceSetStep.RunSilent(session, settingsService);
+            if (result.NextStepIs(SynchronizationStoryStepId.ExistsCloudRepository))
+            {
+                result = await ExistsCloudRepositoryStep.RunSilent(StoryBoardMode.Silent, session, settingsService, languageService, cloudStorageFactory);
+                if (result.NextStepIs(SynchronizationStoryStepId.DownloadCloudRepository))
+                {
+                    result = await DownloadCloudRepositoryStep.RunSilent(session, cloudStorageFactory);
+                    if (result.NextStepIs(SynchronizationStoryStepId.ExistsTransferCode))
+                    {
+                        result = ExistsTransferCodeStep.RunSilent(settingsService);
+                        if (result.NextStepIs(SynchronizationStoryStepId.DecryptCloudRepository))
+                        {
+
+                        }
+                    }
+                }
+                else if (result.NextStepIs(SynchronizationStoryStepId.StoreLocalRepositoryToCloudAndQuit))
+                {
+                    result = await StoreLocalRepositoryToCloudAndQuitStep.RunSilent(session, settingsService, languageService, cryptoRandomService, repositoryStorageService, cloudStorageFactory);
+                }
+            }
+            return result;
         }
 
         /// <summary>

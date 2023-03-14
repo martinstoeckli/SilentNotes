@@ -10,6 +10,7 @@ using SilentNotes.Workers;
 
 namespace SilentNotes.StoryBoards.PullPushStory
 {
+    // todo: PullPushStory
     /// <summary>
     /// Story for manual synchronization of a single note with the cloud.
     /// This story can only be triggered by the user and has no Gui input.
@@ -22,7 +23,7 @@ namespace SilentNotes.StoryBoards.PullPushStory
         /// <param name="noteId">Sets the <see cref="NoteId"/> property.</param>
         /// <param name="direction">Sets the <see cref="Direction"/> property.</param>
         public PullPushStoryBoard(Guid noteId, PullPushDirection direction)
-            : base(StoryBoardMode.GuiAndToasts)
+            : base(StoryBoardMode.Gui)
         {
             RegisterStep(new ExistsCloudRepositoryStep(
                 PullPushStoryStepId.ExistsCloudRepository,

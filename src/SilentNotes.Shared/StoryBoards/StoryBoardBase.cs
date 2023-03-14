@@ -23,7 +23,7 @@ namespace SilentNotes.StoryBoards
         /// method <see cref="RegisterStep(IStoryBoardStep)"/>.
         /// </summary>
         /// <param name="mode">Sets the property <see cref="Mode"/>.</param>
-        public StoryBoardBase(StoryBoardMode mode = StoryBoardMode.GuiAndToasts)
+        public StoryBoardBase(StoryBoardMode mode = StoryBoardMode.Gui)
         {
             Mode = mode;
             Session = new StoryBoardSession();
@@ -49,6 +49,9 @@ namespace SilentNotes.StoryBoards
         /// <inheritdoc/>
         public async Task ContinueWith(Enum stepId)
         {
+            if (stepId == null)
+                return;
+
             IStoryBoardStep step = FindRegisteredStep(stepId);
             if (step != null)
                 await step.Run();
@@ -64,6 +67,8 @@ namespace SilentNotes.StoryBoards
         /// <returns>The found step, or null if no such step could be found.</returns>
         protected IStoryBoardStep FindRegisteredStep(Enum stepId)
         {
+            if (stepId == null)
+                return null;
             return _steps.Find(step => step.Id.Equals(stepId));
         }
     }

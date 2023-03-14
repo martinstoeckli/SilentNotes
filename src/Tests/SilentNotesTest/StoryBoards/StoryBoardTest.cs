@@ -42,6 +42,18 @@ namespace SilentNotesTest.StoryBoards
         }
 
         [Test]
+        public void ContinuesWithNullDoesntThrow()
+        {
+            Mock<IStoryBoardStep> step1 = new Mock<IStoryBoardStep>();
+            step1.SetupGet(x => x.Id).Returns(StepId.Step1);
+
+            IStoryBoard board = new StoryBoardBase();
+            board.RegisterStep(step1.Object);
+
+            Assert.DoesNotThrowAsync(() => board.ContinueWith(null));
+        }
+
+        [Test]
         public void LoadingFromSessionRequiresCorrectType()
         {
             IStoryBoard board = new StoryBoardBase();

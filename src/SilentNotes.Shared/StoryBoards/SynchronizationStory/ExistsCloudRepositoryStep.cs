@@ -43,11 +43,41 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         /// <inheritdoc/>
         public override async Task Run()
         {
-            SerializeableCloudStorageCredentials credentials = StoryBoard.Session.Load<SerializeableCloudStorageCredentials>(SynchronizationStorySessionKey.CloudStorageCredentials);
-            ICloudStorageClient cloudStorageClient = _cloudStorageClientFactory.GetByKey(credentials.CloudStorageId);
+            StoryBoardStepResult result = await RunSilent(
+                StoryBoard.Mode,
+                StoryBoard.Session, _settingsService,
+                _languageService,
+                _cloudStorageClientFactory);
+
+            if (result.HasError)
+            {
+                ShowExceptionMessage(result.Error, _feedbackService, _languageService);
+                return;
+            }
+
+            if (result.HasToast)
+                _feedbackService.ShowToast(result.Toast);
+
+            if (result.HasNextStep)
+                await StoryBoard.ContinueWith(result.NextStepId);
+        }
+
+        /// <summary>
+        /// Executes the parts of the step which can be run silently without UI in a background service.
+        /// </summary>
+        public static async Task<StoryBoardStepResult> RunSilent(
+            StoryBoardMode mode,
+            IStoryBoardSession session,
+            ISettingsService settingsService,
+            ILanguageService languageService,
+            ICloudStorageClientFactory cloudStorageClientFactory)
+        {
+            SerializeableCloudStorageCredentials credentials = session.Load<SerializeableCloudStorageCredentials>(SynchronizationStorySessionKey.CloudStorageCredentials);
+            ICloudStorageClient cloudStorageClient = cloudStorageClientFactory.GetByKey(credentials.CloudStorageId);
+
             try
             {
-                bool stopBecauseNewOAuthLoginIsRequired = false;
+                bool stopBecauseManualOAuthLoginIsRequired = false;
                 if ((cloudStorageClient is OAuth2CloudStorageClient oauthStorageClient) &&
                     credentials.Token.NeedsRefresh())
                 {
@@ -55,26 +85,27 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
                     {
                         // Get a new access token by using the refresh token
                         credentials.Token = await oauthStorageClient.RefreshTokenAsync(credentials.Token);
-                        SaveCredentialsToSettings(credentials);
+                        SaveCredentialsToSettings(settingsService, credentials);
                     }
                     catch (RefreshTokenExpiredException)
                     {
                         // Refresh-token cannot be used to get new access-tokens anymore, a new
                         // authorization by the user is required.
-                        stopBecauseNewOAuthLoginIsRequired = true;
+                        stopBecauseManualOAuthLoginIsRequired = true;
                     }
                 }
 
-                if (stopBecauseNewOAuthLoginIsRequired)
+                if (stopBecauseManualOAuthLoginIsRequired)
                 {
-                    switch (StoryBoard.Mode)
+                    switch (mode)
                     {
-                        case StoryBoardMode.GuiAndToasts:
-                            await StoryBoard.ContinueWith(SynchronizationStoryStepId.ShowCloudStorageAccount);
-                            break;
-                        case StoryBoardMode.ToastsOnly:
-                            _feedbackService.ShowToast(_languageService["sync_error_oauth_refresh"]);
-                            break;
+                        case StoryBoardMode.Gui:
+                            // If GUI is allowed, ask for new login
+                            return new StoryBoardStepResult(SynchronizationStoryStepId.ShowCloudStorageAccount);
+                        case StoryBoardMode.Silent:
+                            return new StoryBoardStepResult(null, languageService["sync_error_oauth_refresh"]);
+                        default:
+                            throw new ArgumentOutOfRangeException(nameof(mode));
                     }
                 }
                 else
@@ -82,28 +113,28 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
                     bool repositoryExists = await cloudStorageClient.ExistsFileAsync(Config.RepositoryFileName, credentials);
 
                     // If no error occured the credentials are ok and we can safe them
-                    SaveCredentialsToSettings(credentials);
+                    SaveCredentialsToSettings(settingsService, credentials);
 
                     if (repositoryExists)
-                        await StoryBoard.ContinueWith(SynchronizationStoryStepId.DownloadCloudRepository);
+                        return new StoryBoardStepResult(SynchronizationStoryStepId.DownloadCloudRepository);
                     else
-                        await StoryBoard.ContinueWith(SynchronizationStoryStepId.StoreLocalRepositoryToCloudAndQuit);
+                        return new StoryBoardStepResult(SynchronizationStoryStepId.StoreLocalRepositoryToCloudAndQuit);
                 }
             }
             catch (Exception ex)
             {
                 // Keep the current page open and show the error message
-                ShowExceptionMessage(ex, _feedbackService, _languageService);
+                return new StoryBoardStepResult(ex);
             }
         }
 
-        protected void SaveCredentialsToSettings(SerializeableCloudStorageCredentials credentials)
+        protected static void SaveCredentialsToSettings(ISettingsService settingsService, SerializeableCloudStorageCredentials credentials)
         {
-            SettingsModel settings = _settingsService.LoadSettingsOrDefault();
+            SettingsModel settings = settingsService.LoadSettingsOrDefault();
             if (!credentials.AreEqualOrNull(settings.Credentials))
             {
                 settings.Credentials = credentials;
-                _settingsService.TrySaveSettingsToLocalDevice(settings);
+                settingsService.TrySaveSettingsToLocalDevice(settings);
             }
         }
     }

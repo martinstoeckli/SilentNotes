@@ -11,6 +11,7 @@ using VanillaCloudStorageClient;
 
 namespace SilentNotes.StoryBoards.PullPushStory
 {
+    // todo: PullPushStory
     /// <summary>
     /// This step belongs to the <see cref="PullPushStoryBoard"/>. It checks whether a
     /// repository exists in the cloud storage.
@@ -51,7 +52,7 @@ namespace SilentNotes.StoryBoards.PullPushStory
                     {
                         // Get a new access token by using the refresh token
                         credentials.Token = await oauthStorageClient.RefreshTokenAsync(credentials.Token);
-                        SaveCredentialsToSettings(credentials);
+                        SaveCredentialsToSettings(_settingsService, credentials);
                     }
                     catch (RefreshTokenExpiredException)
                     {

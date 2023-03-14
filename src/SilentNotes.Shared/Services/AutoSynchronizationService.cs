@@ -54,7 +54,7 @@ namespace SilentNotes.Services
             // Do the synchronization with the cloud storage in a background thread
             await Task.Run(async () =>
             {
-                SynchronizationStoryBoard syncStory = new SynchronizationStoryBoard(StoryBoardMode.ToastsOnly);
+                SynchronizationStoryBoard syncStory = new SynchronizationStoryBoard(StoryBoardMode.Silent);
                 await syncStory.Start();
             }).ConfigureAwait(true); // Come back to the UI thread
 

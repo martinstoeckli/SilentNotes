@@ -440,7 +440,7 @@ namespace SilentNotes.ViewModels
         {
             try
             {
-                _storyBoardService.ActiveStory = new SynchronizationStoryBoard(StoryBoardMode.GuiAndToasts);
+                _storyBoardService.ActiveStory = new SynchronizationStoryBoard(StoryBoardMode.Gui);
                 await _storyBoardService.ActiveStory.ContinueWith(SynchronizationStoryStepId.ShowCloudStorageChoice);
             }
             catch (Exception)

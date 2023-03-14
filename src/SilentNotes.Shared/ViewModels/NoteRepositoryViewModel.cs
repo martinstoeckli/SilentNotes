@@ -470,7 +470,7 @@ namespace SilentNotes.ViewModels
             try
             {
                 OnStoringUnsavedData();
-                _storyBoardService.ActiveStory = new SynchronizationStoryBoard(StoryBoardMode.GuiAndToasts);
+                _storyBoardService.ActiveStory = new SynchronizationStoryBoard(StoryBoardMode.Gui);
                 await _storyBoardService.ActiveStory.Start();
             }
             catch (Exception)
