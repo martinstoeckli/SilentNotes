@@ -7,6 +7,7 @@ using System;
 using System.Threading.Tasks;
 using SilentNotes.Models;
 using SilentNotes.Services;
+using SilentNotes.StoryBoards.SynchronizationStory;
 using VanillaCloudStorageClient;
 
 namespace SilentNotes.StoryBoards.PullPushStory
@@ -43,7 +44,7 @@ namespace SilentNotes.StoryBoards.PullPushStory
         {
             try
             {
-                NoteRepositoryModel cloudRepository = StoryBoard.Session.Load<NoteRepositoryModel>(PullPushStorySessionKey.CloudRepository);
+                NoteRepositoryModel cloudRepository = StoryBoard.Session.Load<NoteRepositoryModel>(SynchronizationStorySessionKey.CloudRepository);
                 _repositoryStorageService.LoadRepositoryOrDefault(out NoteRepositoryModel localRepository);
                 SettingsModel settings = _settingsService.LoadSettingsOrDefault();
                 SerializeableCloudStorageCredentials credentials = settings.Credentials;

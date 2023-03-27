@@ -57,19 +57,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
                 _cryptoRandomService,
                 _repositoryStorageService,
                 _cloudStorageClientFactory);
-
-            if (result.HasError)
-            {
-                ShowExceptionMessage(result.Error, _feedbackService, _languageService);
-                return;
-            }
-
-            if (result.HasMessage && StoryBoard.Mode == StoryBoardMode.Gui)
-                await _feedbackService.ShowMessageAsync(result.Message, null, MessageBoxButtons.Ok, false);
-
-            if (result.HasToast)
-                _feedbackService.ShowToast(result.Toast);
-
+            await StoryBoard.ShowFeedback(result, _feedbackService, _languageService);
             if (result.HasNextStep)
                 await StoryBoard.ContinueWith(result.NextStepId);
         }

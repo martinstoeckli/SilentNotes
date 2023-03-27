@@ -6,6 +6,7 @@
 using System;
 using System.Threading.Tasks;
 using SilentNotes.Services;
+using SilentNotes.StoryBoards.SynchronizationStory;
 using VanillaCloudStorageClient;
 
 namespace SilentNotes.StoryBoards.PullPushStory
@@ -16,39 +17,28 @@ namespace SilentNotes.StoryBoards.PullPushStory
     /// </summary>
     public class DownloadCloudRepositoryStep : SynchronizationStory.DownloadCloudRepositoryStep
     {
-        private readonly ISettingsService _settingsService;
-
         /// <inheritdoc/>
         public DownloadCloudRepositoryStep(
             Enum stepId,
             IStoryBoard storyBoard,
             ILanguageService languageService,
             IFeedbackService feedbackService,
-            ICloudStorageClientFactory cloudStorageClientFactory,
-            ISettingsService settingsService)
+            ICloudStorageClientFactory cloudStorageClientFactory)
             : base(stepId, storyBoard, languageService, feedbackService, cloudStorageClientFactory)
         {
-            _settingsService = settingsService;
         }
 
         /// <inheritdoc/>
         public override async Task Run()
         {
-            SerializeableCloudStorageCredentials credentials = _settingsService.LoadSettingsOrDefault().Credentials;
-            ICloudStorageClient cloudStorageClient = _cloudStorageClientFactory.GetByKey(credentials.CloudStorageId);
+            // Reuse SynchronizationStory
+            StoryBoardStepResult result = await SynchronizationStory.DownloadCloudRepositoryStep.RunSilent(StoryBoard.Session, _cloudStorageClientFactory);
 
-            try
-            {
-                // The repository can be cached for this story, download the repository only once.
-                byte[] binaryCloudRepository = await cloudStorageClient.DownloadFileAsync(Config.RepositoryFileName, credentials);
-                StoryBoard.Session.Store(PullPushStorySessionKey.BinaryCloudRepository, binaryCloudRepository);
+            // Instead of reimplementing the whole story, we require a manual sync in case of a problem.
+            if (result.NextStepIs(SynchronizationStoryStepId.ExistsTransferCode))
                 await StoryBoard.ContinueWith(PullPushStoryStepId.DecryptCloudRepository);
-            }
-            catch (Exception ex)
-            {
-                // Keep the current page open and show the error message
-                ShowExceptionMessage(ex, _feedbackService, _languageService);
-            }
+            else
+                _feedbackService.ShowToast(_languageService["pushpull_error_need_sync_first"]);
         }
     }
 }

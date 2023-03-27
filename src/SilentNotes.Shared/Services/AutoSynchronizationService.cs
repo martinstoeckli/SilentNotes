@@ -5,6 +5,7 @@
 
 using System;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using SilentNotes.Controllers;
 using SilentNotes.Models;
 using SilentNotes.StoryBoards;
@@ -52,11 +53,14 @@ namespace SilentNotes.Services
             long oldFingerprint = localRepository.GetModificationFingerprint();
 
             // Do the synchronization with the cloud storage in a background thread
-            await Task.Run(async () =>
+            StoryBoardStepResult stepResult = await Task.Run(async () =>
             {
-                SynchronizationStoryBoard syncStory = new SynchronizationStoryBoard(StoryBoardMode.Silent);
-                await syncStory.Start();
+                return await SynchronizationStoryBoard.RunSilent();
             }).ConfigureAwait(true); // Come back to the UI thread
+
+            IFeedbackService feedbackService = Ioc.Default.GetService<IFeedbackService>();
+            ILanguageService languageService = Ioc.Default.GetService<ILanguageService>();
+            await SynchronizationStoryBoard.ShowFeedback(stepResult, feedbackService, languageService);
 
             // Memorize fingerprint of the synchronized respository
             _repositoryStorageService.LoadRepositoryOrDefault(out localRepository);
@@ -83,8 +87,7 @@ namespace SilentNotes.Services
             if (currentFingerprint == LastSynchronizationFingerprint)
                 return;
 
-            SynchronizationStoryBoard syncStory = new SynchronizationStoryBoard(StoryBoardMode.Silent);
-            await syncStory.Start();
+            StoryBoardStepResult stepResult = await SynchronizationStoryBoard.RunSilent();
         }
 
         /// <inheritdoc/>

@@ -19,11 +19,8 @@ namespace SilentNotes.StoryBoards
         /// <param name="toast">Sets the <see cref="Toast"/> property.</param>
         /// <param name="message">Sets the <see cref="Message"/> property.</param>
         public StoryBoardStepResult(Enum nextStepId, string toast = null, string message = null)
+            : this(nextStepId, toast, message, null)
         {
-            NextStepId = nextStepId;
-            Toast = toast;
-            Message = message;
-            Error = null;
         }
 
         /// <summary>
@@ -31,10 +28,22 @@ namespace SilentNotes.StoryBoards
         /// </summary>
         /// <param name="error">Sets the <see cref="Error"/> property.</param>
         public StoryBoardStepResult(Exception error)
+            : this(null, null, null, error)
         {
-            NextStepId = null;
-            Toast = null;
-            Message = null;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StepResult"/> class.
+        /// </summary>
+        /// <param name="nextStepId">Sets the <see cref="NextStepId"/> property.</param>
+        /// <param name="toast">Sets the <see cref="Toast"/> property.</param>
+        /// <param name="message">Sets the <see cref="Message"/> property.</param>
+        /// <param name="error">Sets the <see cref="Error"/> property.</param>
+        private StoryBoardStepResult(Enum nextStepId, string toast, string message, Exception error)
+        {
+            NextStepId = nextStepId;
+            Toast = toast;
+            Message = message;
             Error = error;
         }
 

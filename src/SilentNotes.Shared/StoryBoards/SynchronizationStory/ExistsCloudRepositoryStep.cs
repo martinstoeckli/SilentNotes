@@ -48,16 +48,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
                 StoryBoard.Session, _settingsService,
                 _languageService,
                 _cloudStorageClientFactory);
-
-            if (result.HasError)
-            {
-                ShowExceptionMessage(result.Error, _feedbackService, _languageService);
-                return;
-            }
-
-            if (result.HasToast)
-                _feedbackService.ShowToast(result.Toast);
-
+            await StoryBoard.ShowFeedback(result, _feedbackService, _languageService);
             if (result.HasNextStep)
                 await StoryBoard.ContinueWith(result.NextStepId);
         }
@@ -72,11 +63,11 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
             ILanguageService languageService,
             ICloudStorageClientFactory cloudStorageClientFactory)
         {
-            SerializeableCloudStorageCredentials credentials = session.Load<SerializeableCloudStorageCredentials>(SynchronizationStorySessionKey.CloudStorageCredentials);
-            ICloudStorageClient cloudStorageClient = cloudStorageClientFactory.GetByKey(credentials.CloudStorageId);
-
             try
             {
+                SerializeableCloudStorageCredentials credentials = session.Load<SerializeableCloudStorageCredentials>(SynchronizationStorySessionKey.CloudStorageCredentials);
+                ICloudStorageClient cloudStorageClient = cloudStorageClientFactory.GetByKey(credentials.CloudStorageId);
+
                 bool stopBecauseManualOAuthLoginIsRequired = false;
                 if ((cloudStorageClient is OAuth2CloudStorageClient oauthStorageClient) &&
                     credentials.Token.NeedsRefresh())

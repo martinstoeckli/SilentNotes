@@ -10,7 +10,6 @@ using SilentNotes.Workers;
 
 namespace SilentNotes.StoryBoards.PullPushStory
 {
-    // todo: PullPushStory
     /// <summary>
     /// Story for manual synchronization of a single note with the cloud.
     /// This story can only be triggered by the user and has no Gui input.
@@ -37,8 +36,7 @@ namespace SilentNotes.StoryBoards.PullPushStory
                 this,
                 Ioc.Default.GetService<ILanguageService>(),
                 Ioc.Default.GetService<IFeedbackService>(),
-                Ioc.Default.GetService<ICloudStorageClientFactory>(),
-                Ioc.Default.GetService<ISettingsService>()));
+                Ioc.Default.GetService<ICloudStorageClientFactory>()));
             RegisterStep(new DecryptCloudRepositoryStep(
                 PullPushStoryStepId.DecryptCloudRepository,
                 this,
@@ -76,15 +74,6 @@ namespace SilentNotes.StoryBoards.PullPushStory
         DecryptCloudRepository,
         IsSameRepository,
         StoreMergedRepositoryAndQuit,
-    }
-
-    /// <summary>
-    /// Enumeration of all available session keys of the <see cref="PullPushStoryBoard"/>.
-    /// </summary>
-    public enum PullPushStorySessionKey
-    {
-        BinaryCloudRepository,
-        CloudRepository,
     }
 
     /// <summary>

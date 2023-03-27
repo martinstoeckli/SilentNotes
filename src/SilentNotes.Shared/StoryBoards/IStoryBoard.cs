@@ -5,6 +5,7 @@
 
 using System;
 using System.Threading.Tasks;
+using SilentNotes.Services;
 
 namespace SilentNotes.StoryBoards
 {
@@ -43,6 +44,15 @@ namespace SilentNotes.StoryBoards
         /// go forwards and backwards in the story. A null value is always ignored.</param>
         /// <returns>An asynchronous task.</returns>
         Task ContinueWith(Enum stepId);
+
+        /// <summary>
+        /// Gives user feedback about errors and messages of the step result.
+        /// </summary>
+        /// <param name="stepResult">The result of running a story step in silent mode.</param>
+        /// <param name="feedbackService">A feedback service or null if the step doesn't produce messages/toasts.</param>
+        /// <param name="languageService">A language service or null if the step doesn't produce messages/toasts.</param>
+        /// <returns>An asynchronous task.</returns>
+        Task ShowFeedback(StoryBoardStepResult stepResult, IFeedbackService feedbackService, ILanguageService languageService);
 
         /// <summary>
         /// Gets the session of the story board, where data can be passed from step to step.

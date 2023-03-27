@@ -128,34 +128,22 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
             byte[] encryptedRepository = CreateEncryptedRepository(transferCode);
             encryptedRepository[8]++; // make it invalid
 
-            Mock<IStoryBoard> storyBoard = new Mock<IStoryBoard>();
-            storyBoard.
-                Setup(m => m.Session.Load<byte[]>(It.Is<SynchronizationStorySessionKey>(p => p == SynchronizationStorySessionKey.BinaryCloudRepository))).
-                Returns(encryptedRepository);
-            Mock<IFeedbackService> feedbackService = new Mock<IFeedbackService>();
+            StoryBoardSession session = new StoryBoardSession();
+            session.Store(SynchronizationStorySessionKey.BinaryCloudRepository, encryptedRepository);
+
             Mock<ISettingsService> settingsService = new Mock<ISettingsService>();
             settingsService.
                 Setup(m => m.LoadSettingsOrDefault()).Returns(settingsModel);
             Mock<INoteRepositoryUpdater> updater = new Mock<INoteRepositoryUpdater>();
 
             // Run step
-            var step = new DecryptCloudRepositoryStep(
-                SynchronizationStoryStepId.DecryptCloudRepository,
-                storyBoard.Object,
-                CommonMocksAndStubs.LanguageService(),
-                feedbackService.Object,
-                settingsService.Object,
-                updater.Object);
-            Assert.DoesNotThrowAsync(step.Run);
+            StoryBoardStepResult result = DecryptCloudRepositoryStep.RunSilent(session, settingsService.Object, CommonMocksAndStubs.LanguageService(), updater.Object);
 
-            // Error message shown
-            feedbackService.Verify(m => m.ShowToast(It.IsAny<string>()), Times.Once);
+            Assert.IsNotNull(result.Error); // Error message shown
+            Assert.IsNull(result.NextStepId); // no next step is called
 
             // No changes should be done to the settings
             settingsService.Verify(m => m.TrySaveSettingsToLocalDevice(It.IsNotNull<SettingsModel>()), Times.Never);
-
-            // no next step is called
-            storyBoard.Verify(m => m.ContinueWith(It.IsAny<SynchronizationStoryStepId>()), Times.Never);
         }
 
         [Test]
@@ -165,11 +153,9 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
             var settingsModel = CreateSettingsModel(transferCode);
             byte[] encryptedRepository = CreateEncryptedRepository(transferCode);
 
-            Mock<IStoryBoard> storyBoard = new Mock<IStoryBoard>();
-            storyBoard.
-                Setup(m => m.Session.Load<byte[]>(It.Is<SynchronizationStorySessionKey>(p => p == SynchronizationStorySessionKey.BinaryCloudRepository))).
-                Returns(encryptedRepository);
-            Mock<IFeedbackService> feedbackService = new Mock<IFeedbackService>();
+            StoryBoardSession session = new StoryBoardSession();
+            session.Store(SynchronizationStorySessionKey.BinaryCloudRepository, encryptedRepository);
+
             Mock<ISettingsService> settingsService = new Mock<ISettingsService>();
             settingsService.
                 Setup(m => m.LoadSettingsOrDefault()).Returns(settingsModel);
@@ -179,20 +165,10 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
                 Returns(true);
 
             // Run step
-            var step = new DecryptCloudRepositoryStep(
-                SynchronizationStoryStepId.DecryptCloudRepository,
-                storyBoard.Object,
-                CommonMocksAndStubs.LanguageService(),
-                feedbackService.Object,
-                settingsService.Object,
-                updater.Object);
-            Assert.DoesNotThrowAsync(step.Run);
+            StoryBoardStepResult result = DecryptCloudRepositoryStep.RunSilent(session, settingsService.Object, CommonMocksAndStubs.LanguageService(), updater.Object);
 
-            // Error message shown
-            feedbackService.Verify(m => m.ShowToast(It.IsAny<string>()), Times.Once);
-
-            // no next step is called
-            storyBoard.Verify(m => m.ContinueWith(It.IsAny<SynchronizationStoryStepId>()), Times.Never);
+            Assert.IsNotNull(result.Error); // Error message shown
+            Assert.IsNull(result.NextStepId); // no next step is called
         }
 
         private static SettingsModel CreateSettingsModel(string transferCode)

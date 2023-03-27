@@ -24,9 +24,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         public SynchronizationStoryBoard(StoryBoardMode mode)
             : base(mode)
         {
-            IFeedbackService feedbackService = mode.ShouldShowToasts()
-                ? Ioc.Default.GetService<IFeedbackService>()
-                : new DummyFeedbackService();
+            IFeedbackService feedbackService = Ioc.Default.GetService<IFeedbackService>();
             INavigationService navigationService = mode.ShouldUseGui()
                 ? Ioc.Default.GetService<INavigationService>()
                 : new DummyNavigationService();
@@ -118,21 +116,27 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         }
 
         /// <summary>
-        /// Executes the parts of the story which can be run silently without UI in a background service.
-        /// This allows to execute the synchronization in an Android background service, which can
-        /// stay alive a short time after the app was closed.
+        /// Executes the parts of the story which can be run silently without UI in a background
+        /// service. It can be called when the app is starting up or shutting down. If successful,
+        /// the story returns the <see cref="SynchronizationStoryStepId.StopAndShowRepository"/>
+        /// step.
         /// </summary>
+        /// <remarks>
+        /// This allows to execute the synchronization in an Android background service, which can
+        /// stay alive a short time longer than the app itself.
+        /// </remarks>
         public static async Task<StoryBoardStepResult> RunSilent()
         {
             StoryBoardStepResult result;
             IStoryBoardSession session = new StoryBoardSession();
             ISettingsService settingsService = Ioc.Default.GetService<ISettingsService>();
-            IFeedbackService feedbackService = new DummyFeedbackService();
             ILanguageService languageService = Ioc.Default.GetService<ILanguageService>();
             ICloudStorageClientFactory cloudStorageFactory = Ioc.Default.GetService<ICloudStorageClientFactory>();
             ICryptoRandomService cryptoRandomService = Ioc.Default.GetService<ICryptoRandomService>();
             IRepositoryStorageService repositoryStorageService = Ioc.Default.GetService<IRepositoryStorageService>();
+            INoteRepositoryUpdater noteRepositoryUpdater = Ioc.Default.GetService<INoteRepositoryUpdater>();
 
+            // Steps which do not lead to a successful synchronisation without user interaction are ignored
             result = IsCloudServiceSetStep.RunSilent(session, settingsService);
             if (result.NextStepIs(SynchronizationStoryStepId.ExistsCloudRepository))
             {
@@ -145,7 +149,15 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
                         result = ExistsTransferCodeStep.RunSilent(settingsService);
                         if (result.NextStepIs(SynchronizationStoryStepId.DecryptCloudRepository))
                         {
-
+                            result = DecryptCloudRepositoryStep.RunSilent(session, settingsService, languageService, noteRepositoryUpdater);
+                            if (result.NextStepIs(SynchronizationStoryStepId.IsSameRepository))
+                            {
+                                result = IsSameRepositoryStep.RunSilent(session, repositoryStorageService);
+                                if (result.NextStepIs(SynchronizationStoryStepId.StoreMergedRepositoryAndQuit))
+                                {
+                                    result = await StoreMergedRepositoryAndQuitStep.RunSilent(session, settingsService, languageService, cryptoRandomService, repositoryStorageService, cloudStorageFactory);
+                                }
+                            }
                         }
                     }
                 }

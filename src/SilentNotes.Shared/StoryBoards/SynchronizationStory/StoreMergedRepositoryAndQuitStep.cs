@@ -50,12 +50,35 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         /// <inheritdoc/>
         public override async Task Run()
         {
+            StoryBoardStepResult result = await RunSilent(
+                StoryBoard.Session,
+                _settingsService,
+                _languageService,
+                _cryptoRandomService,
+                _repositoryStorageService,
+                _cloudStorageClientFactory);
+            await StoryBoard.ShowFeedback(result, _feedbackService, _languageService);
+            if (result.HasNextStep)
+                await StoryBoard.ContinueWith(result.NextStepId);
+        }
+
+        /// <summary>
+        /// Executes the parts of the step which can be run silently without UI in a background service.
+        /// </summary>
+        public static async Task<StoryBoardStepResult> RunSilent(
+            IStoryBoardSession session,
+            ISettingsService settingsService,
+            ILanguageService languageService,
+            ICryptoRandomService cryptoRandomService,
+            IRepositoryStorageService repositoryStorageService,
+            ICloudStorageClientFactory cloudStorageClientFactory)
+        {
             try
             {
-                NoteRepositoryModel cloudRepository = StoryBoard.Session.Load<NoteRepositoryModel>(SynchronizationStorySessionKey.CloudRepository);
-                SerializeableCloudStorageCredentials credentials = StoryBoard.Session.Load<SerializeableCloudStorageCredentials>(SynchronizationStorySessionKey.CloudStorageCredentials);
-                _repositoryStorageService.LoadRepositoryOrDefault(out NoteRepositoryModel localRepository);
-                SettingsModel settings = _settingsService.LoadSettingsOrDefault();
+                NoteRepositoryModel cloudRepository = session.Load<NoteRepositoryModel>(SynchronizationStorySessionKey.CloudRepository);
+                SerializeableCloudStorageCredentials credentials = session.Load<SerializeableCloudStorageCredentials>(SynchronizationStorySessionKey.CloudStorageCredentials);
+                repositoryStorageService.LoadRepositoryOrDefault(out NoteRepositoryModel localRepository);
+                SettingsModel settings = settingsService.LoadSettingsOrDefault();
 
                 // Merge repositories
                 NoteRepositoryMerger merger = new NoteRepositoryMerger();
@@ -64,30 +87,29 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
                 // Store merged repository locally when different
                 if (!RepositoriesAreEqual(mergedRepository, localRepository))
                 {
-                    _repositoryStorageService.TrySaveRepository(mergedRepository);
+                    repositoryStorageService.TrySaveRepository(mergedRepository);
                 }
 
                 // Store merged repository to the cloud when different, otherwise spare the slow upload
                 if (!RepositoriesAreEqual(mergedRepository, cloudRepository))
                 {
                     byte[] encryptedRepository = EncryptRepository(
-                        mergedRepository, settings.TransferCode, _cryptoRandomService, settings.SelectedEncryptionAlgorithm);
+                        mergedRepository, settings.TransferCode, cryptoRandomService, settings.SelectedEncryptionAlgorithm);
 
-                    ICloudStorageClient cloudStorageClient = _cloudStorageClientFactory.GetByKey(credentials.CloudStorageId);
+                    ICloudStorageClient cloudStorageClient = cloudStorageClientFactory.GetByKey(credentials.CloudStorageId);
                     await cloudStorageClient.UploadFileAsync(Config.RepositoryFileName, encryptedRepository, credentials);
                 }
 
-                await StoryBoard.ContinueWith(SynchronizationStoryStepId.StopAndShowRepository);
-                _feedbackService.ShowToast(_languageService["sync_success"]);
+                return new StoryBoardStepResult(SynchronizationStoryStepId.StopAndShowRepository, languageService["sync_success"]);
             }
             catch (Exception ex)
             {
                 // Keep the current page open and show the error message
-                ShowExceptionMessage(ex, _feedbackService, _languageService);
+                return new StoryBoardStepResult(ex);
             }
         }
 
-        private bool RepositoriesAreEqual(NoteRepositoryModel repository1, NoteRepositoryModel repository2)
+        private static bool RepositoriesAreEqual(NoteRepositoryModel repository1, NoteRepositoryModel repository2)
         {
             return repository1.GetModificationFingerprint() == repository2.GetModificationFingerprint();
         }

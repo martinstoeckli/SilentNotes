@@ -16,8 +16,11 @@ namespace SilentNotesTest.StoryBoards.PullPushStory
         {
             SerializeableCloudStorageCredentials credentials = new SerializeableCloudStorageCredentials { CloudStorageId = CloudStorageClientFactory.CloudStorageIdDropbox };
             SettingsModel settingsModel = new SettingsModel { Credentials = credentials, TransferCode = "abc" };
+            StoryBoardSession session = new StoryBoardSession();
 
             Mock<IStoryBoard> storyBoard = new Mock<IStoryBoard>();
+            storyBoard.
+                SetupGet(m => m.Session).Returns(session);
             Mock<ISettingsService> settingsService = new Mock<ISettingsService>();
             settingsService.
                 Setup(m => m.LoadSettingsOrDefault()).Returns(settingsModel);

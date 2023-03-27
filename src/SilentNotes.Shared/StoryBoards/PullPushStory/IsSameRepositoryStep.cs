@@ -7,6 +7,7 @@ using System;
 using System.Threading.Tasks;
 using SilentNotes.Models;
 using SilentNotes.Services;
+using SilentNotes.StoryBoards.SynchronizationStory;
 
 namespace SilentNotes.StoryBoards.PullPushStory
 {
@@ -35,17 +36,14 @@ namespace SilentNotes.StoryBoards.PullPushStory
         /// <inheritdoc/>
         public override async Task Run()
         {
-            _repositoryStorageService.LoadRepositoryOrDefault(out NoteRepositoryModel localRepository);
-            NoteRepositoryModel cloudRepository = StoryBoard.Session.Load<NoteRepositoryModel>(PullPushStorySessionKey.CloudRepository);
+            // Reuse SynchronizationStory
+            StoryBoardStepResult result = SynchronizationStory.IsSameRepositoryStep.RunSilent(StoryBoard.Session, _repositoryStorageService);
 
-            if (localRepository.Id == cloudRepository.Id)
-            {
+            // Instead of reimplementing the whole story, we require a manual sync in case of a problem.
+            if (result.NextStepIs(SynchronizationStoryStepId.StoreMergedRepositoryAndQuit))
                 await StoryBoard.ContinueWith(PullPushStoryStepId.StoreMergedRepositoryAndQuit);
-            }
             else
-            {
                 _feedbackService.ShowToast(_languageService["pushpull_error_need_sync_first"]);
-            }
         }
     }
 }

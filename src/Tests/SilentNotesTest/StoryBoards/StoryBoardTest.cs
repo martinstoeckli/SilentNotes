@@ -1,5 +1,7 @@
-﻿using Moq;
+﻿using System;
+using Moq;
 using NUnit.Framework;
+using SilentNotes.Services;
 using SilentNotes.StoryBoards;
 
 namespace SilentNotesTest.StoryBoards
@@ -104,6 +106,42 @@ namespace SilentNotesTest.StoryBoards
             board.Session.Store(SessionId.Key1, "Caramel");
 
             Assert.DoesNotThrow(() => board.Session.Remove(SessionId.Key2));
+        }
+
+        [Test]
+        public void ShowFeedbackShowsError()
+        {
+            StoryBoardStepResult result = new StoryBoardStepResult(new Exception("test"));
+            IStoryBoard board = new StoryBoardBase();
+
+            Mock<IFeedbackService> feedbackService = new Mock<IFeedbackService>();
+
+            board.ShowFeedback(result, feedbackService.Object, CommonMocksAndStubs.LanguageService());
+            feedbackService.Verify(m => m.ShowToast(It.IsAny<string>()), Times.Once);
+        }
+
+        [Test]
+        public void ShowFeedbackShowsMessage()
+        {
+            StoryBoardStepResult result = new StoryBoardStepResult(null, null, "test");
+            IStoryBoard board = new StoryBoardBase();
+
+            Mock<IFeedbackService> feedbackService = new Mock<IFeedbackService>();
+
+            board.ShowFeedback(result, feedbackService.Object, CommonMocksAndStubs.LanguageService());
+            feedbackService.Verify(m => m.ShowMessageAsync(It.Is<string>(v => v == "test"), It.IsAny<string>(), It.IsAny<MessageBoxButtons>(), It.IsAny<bool>()), Times.Once);
+        }
+
+        [Test]
+        public void ShowFeedbackShowsToast()
+        {
+            StoryBoardStepResult result = new StoryBoardStepResult(null, "test", null);
+            IStoryBoard board = new StoryBoardBase();
+
+            Mock<IFeedbackService> feedbackService = new Mock<IFeedbackService>();
+
+            board.ShowFeedback(result, feedbackService.Object, CommonMocksAndStubs.LanguageService());
+            feedbackService.Verify(m => m.ShowToast(It.Is<string>(v => v == "test")), Times.Once);
         }
 
         private enum StepId

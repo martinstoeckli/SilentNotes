@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using SilentNotes.Services;
 
 namespace SilentNotes.StoryBoards
 {
@@ -55,6 +56,35 @@ namespace SilentNotes.StoryBoards
             IStoryBoardStep step = FindRegisteredStep(stepId);
             if (step != null)
                 await step.Run();
+        }
+
+        /// <inheritdoc/>
+        public static async Task ShowFeedback(StoryBoardStepResult stepResult, IFeedbackService feedbackService, ILanguageService languageService)
+        {
+            if (stepResult.HasError)
+            {
+                if ((feedbackService != null) && (languageService != null))
+                    SilentNotes.StoryBoards.SynchronizationStory.SynchronizationStoryBoardStepBase.ShowExceptionMessage(stepResult.Error, feedbackService, languageService);
+                return;
+            }
+
+            if (stepResult.HasMessage)
+            {
+                if (feedbackService != null)
+                    await feedbackService.ShowMessageAsync(stepResult.Message, null, MessageBoxButtons.Ok, false);
+            }
+
+            if (stepResult.HasToast)
+            {
+                if (feedbackService != null)
+                    feedbackService.ShowToast(stepResult.Toast);
+            }
+        }
+
+        /// <inheritdoc/>
+        async Task IStoryBoard.ShowFeedback(StoryBoardStepResult stepResult, IFeedbackService feedbackService, ILanguageService languageService)
+        {
+            await ShowFeedback(stepResult, feedbackService, languageService);
         }
 
         /// <inheritdoc/>

@@ -42,13 +42,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
             StoryBoardStepResult result = await RunSilent(
                 StoryBoard.Session,
                 _cloudStorageClientFactory);
-
-            if (result.HasError)
-            {
-                ShowExceptionMessage(result.Error, _feedbackService, _languageService);
-                return;
-            }
-
+            await StoryBoard.ShowFeedback(result, _feedbackService, _languageService);
             if (result.HasNextStep)
                 await StoryBoard.ContinueWith(result.NextStepId);
         }
@@ -60,11 +54,11 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
             IStoryBoardSession session,
             ICloudStorageClientFactory cloudStorageClientFactory)
         {
-            SerializeableCloudStorageCredentials credentials = session.Load<SerializeableCloudStorageCredentials>(SynchronizationStorySessionKey.CloudStorageCredentials);
-            ICloudStorageClient cloudStorageClient = cloudStorageClientFactory.GetByKey(credentials.CloudStorageId);
-
             try
             {
+                SerializeableCloudStorageCredentials credentials = session.Load<SerializeableCloudStorageCredentials>(SynchronizationStorySessionKey.CloudStorageCredentials);
+                ICloudStorageClient cloudStorageClient = cloudStorageClientFactory.GetByKey(credentials.CloudStorageId);
+
                 // The repository can be cached for this story, download the repository only once.
                 byte[] binaryCloudRepository;
                 if (!session.TryLoad(SynchronizationStorySessionKey.BinaryCloudRepository, out binaryCloudRepository))

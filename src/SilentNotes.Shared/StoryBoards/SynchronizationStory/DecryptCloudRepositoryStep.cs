@@ -46,48 +46,66 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         /// <inheritdoc/>
         public override async Task Run()
         {
+            StoryBoardStepResult result = RunSilent(
+                StoryBoard.Session,
+                _settingsService,
+                _languageService,
+                _noteRepositoryUpdater);
+            await StoryBoard.ShowFeedback(result, _feedbackService, _languageService);
+            if (result.HasNextStep)
+                await StoryBoard.ContinueWith(result.NextStepId);
+        }
+
+        /// <summary>
+        /// Executes the parts of the step which can be run silently without UI in a background service.
+        /// </summary>
+        public static StoryBoardStepResult RunSilent(
+            IStoryBoardSession session,
+            ISettingsService settingsService,
+            ILanguageService languageService,
+            INoteRepositoryUpdater noteRepositoryUpdater)
+        {
             try
             {
-                SettingsModel settings = _settingsService.LoadSettingsOrDefault();
-                byte[] binaryCloudRepository = StoryBoard.Session.Load<byte[]>(SynchronizationStorySessionKey.BinaryCloudRepository);
+                byte[] binaryCloudRepository = session.Load<byte[]>(SynchronizationStorySessionKey.BinaryCloudRepository);
 
                 // Try to decode with all possible transfer codes
                 bool successfullyDecryptedRepository = TryDecryptWithAllTransferCodes(
-                    settings, binaryCloudRepository, out byte[] decryptedRepository);
+                    session, settingsService, binaryCloudRepository, out byte[] decryptedRepository);
 
                 if (successfullyDecryptedRepository)
                 {
                     // Deserialize and update repository
                     XDocument cloudRepositoryXml = XmlUtils.LoadFromXmlBytes(decryptedRepository);
-                    if (_noteRepositoryUpdater.IsTooNewForThisApp(cloudRepositoryXml))
+                    if (noteRepositoryUpdater.IsTooNewForThisApp(cloudRepositoryXml))
                         throw new SynchronizationStoryBoard.UnsuportedRepositoryRevisionException();
 
-                    _noteRepositoryUpdater.Update(cloudRepositoryXml);
+                    noteRepositoryUpdater.Update(cloudRepositoryXml);
                     NoteRepositoryModel cloudRepository = XmlUtils.DeserializeFromXmlDocument<NoteRepositoryModel>(cloudRepositoryXml);
 
                     // Continue with next step
-                    StoryBoard.Session.Store(SynchronizationStorySessionKey.CloudRepository, cloudRepository);
-                    await StoryBoard.ContinueWith(SynchronizationStoryStepId.IsSameRepository);
+                    session.Store(SynchronizationStorySessionKey.CloudRepository, cloudRepository);
+                    return new StoryBoardStepResult(SynchronizationStoryStepId.IsSameRepository);
                 }
                 else
                 {
-                    bool existsUserEnteredTransferCode = StoryBoard.Session.TryLoad<string>(SynchronizationStorySessionKey.UserEnteredTransferCode, out _);
+                    bool existsUserEnteredTransferCode = session.TryLoad<string>(SynchronizationStorySessionKey.UserEnteredTransferCode, out _);
                     if (existsUserEnteredTransferCode)
                     {
                         // Keep transfercode page open and show message
-                        _feedbackService.ShowToast(_languageService["sync_error_transfercode"]);
+                        return new StoryBoardStepResult(null, languageService["sync_error_transfercode"], null);
                     }
                     else
                     {
                         // Open transfercode page
-                        await StoryBoard.ContinueWith(SynchronizationStoryStepId.ShowTransferCode);
+                        return new StoryBoardStepResult(SynchronizationStoryStepId.ShowTransferCode);
                     }
                 }
             }
             catch (Exception ex)
             {
                 // Keep the current page open and show the error message
-                ShowExceptionMessage(ex, _feedbackService, _languageService);
+                return new StoryBoardStepResult(ex);
             }
         }
 
@@ -101,13 +119,14 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         /// <param name="decryptedRepository">The decrypted repository, or null if the decryption
         /// was not successful.</param>
         /// <returns>Returns true if the decryption was successful, otherwise false.</returns>
-        protected bool TryDecryptWithAllTransferCodes(SettingsModel settings, byte[] binaryCloudRepository, out byte[] decryptedRepository)
+        protected static bool TryDecryptWithAllTransferCodes(IStoryBoardSession session, ISettingsService settingsService, byte[] binaryCloudRepository, out byte[] decryptedRepository)
         {
             bool result = false;
             decryptedRepository = null;
 
+            SettingsModel settings = settingsService.LoadSettingsOrDefault();
             ICryptor decryptor = new Cryptor("SilentNotes", null);
-            List<string> transferCodesToTry = ListTransferCodesToTry(settings);
+            List<string> transferCodesToTry = ListTransferCodesToTry(session, settings);
             int index = 0;
             while (!result && index < transferCodesToTry.Count)
             {
@@ -118,7 +137,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
                     // Store transfercode and encryption mode if necessary
                     if (AdoptTransferCode(settings, transferCodeCandidate))
                     {
-                        _settingsService.TrySaveSettingsToLocalDevice(settings);
+                        settingsService.TrySaveSettingsToLocalDevice(settings);
                     }
                 }
                 index++;
@@ -143,10 +162,10 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
             return false;
         }
 
-        private List<string> ListTransferCodesToTry(SettingsModel settings)
+        private static List<string> ListTransferCodesToTry(IStoryBoardSession session, SettingsModel settings)
         {
             var result = new List<string>();
-            bool existsUserEnteredTransferCode = StoryBoard.Session.TryLoad<string>(SynchronizationStorySessionKey.UserEnteredTransferCode, out string userEnteredTransferCode);
+            bool existsUserEnteredTransferCode = session.TryLoad<string>(SynchronizationStorySessionKey.UserEnteredTransferCode, out string userEnteredTransferCode);
             if (existsUserEnteredTransferCode)
             {
                 result.Add(userEnteredTransferCode);
@@ -160,7 +179,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
             return result;
         }
 
-        private bool TryDecryptRepositoryWithTransfercode(ICryptor decryptor, byte[] binaryCloudRepository, string transferCode, out byte[] decryptedRepository)
+        private static bool TryDecryptRepositoryWithTransfercode(ICryptor decryptor, byte[] binaryCloudRepository, string transferCode, out byte[] decryptedRepository)
         {
             try
             {

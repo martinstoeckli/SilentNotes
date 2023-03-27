@@ -36,16 +36,5 @@ namespace SilentNotes.StoryBoards
         {
             return mode == StoryBoardMode.Gui;
         }
-
-        // todo: remove
-        /// <summary>
-        /// Checks whether the story should show messages.
-        /// </summary>
-        /// <param name="mode">Mode to check.</param>
-        /// <returns>Returns true if it should show messages, otherwise false.</returns>
-        public static bool ShouldShowToasts(this StoryBoardMode mode)
-        {
-            return mode != StoryBoardMode.Silent;
-        }
     }
 }
