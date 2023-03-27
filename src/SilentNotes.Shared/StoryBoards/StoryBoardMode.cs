@@ -26,7 +26,6 @@ namespace SilentNotes.StoryBoards
     /// </summary>
     public static class StoryBoardModeExtensions
     {
-        // todo: remove
         /// <summary>
         /// Checks whether this mode should show dialogs for user input.
         /// </summary>
