@@ -45,7 +45,7 @@ namespace SilentNotes.Android.Services
 
         private ConnectivityManager GetConnectivityManager()
         {
-            return (ConnectivityManager)_appContext.RootActivity.GetSystemService(Context.ConnectivityService);
+            return (ConnectivityManager)_appContext.Context.GetSystemService(Context.ConnectivityService);
         }
     }
 }

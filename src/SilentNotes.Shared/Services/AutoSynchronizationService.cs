@@ -10,6 +10,7 @@ using SilentNotes.Controllers;
 using SilentNotes.Models;
 using SilentNotes.StoryBoards;
 using SilentNotes.StoryBoards.SynchronizationStory;
+using SilentNotes.Workers;
 
 namespace SilentNotes.Services
 {
@@ -55,7 +56,13 @@ namespace SilentNotes.Services
             // Do the synchronization with the cloud storage in a background thread
             StoryBoardStepResult stepResult = await Task.Run(async () =>
             {
-                return await SynchronizationStoryBoard.RunSilent();
+                return await SynchronizationStoryBoard.RunSilent(
+                    Ioc.Default.GetService<ISettingsService>(),
+                    Ioc.Default.GetService<ILanguageService>(),
+                    Ioc.Default.GetService<ICloudStorageClientFactory>(),
+                    Ioc.Default.GetService<ICryptoRandomService>(),
+                    Ioc.Default.GetService<IRepositoryStorageService>(),
+                    Ioc.Default.GetService<INoteRepositoryUpdater>());
             }).ConfigureAwait(true); // Come back to the UI thread
 
             IFeedbackService feedbackService = Ioc.Default.GetService<IFeedbackService>();
@@ -87,7 +94,13 @@ namespace SilentNotes.Services
             if (currentFingerprint == LastSynchronizationFingerprint)
                 return;
 
-            StoryBoardStepResult stepResult = await SynchronizationStoryBoard.RunSilent();
+            StoryBoardStepResult stepResult = await SynchronizationStoryBoard.RunSilent(
+                Ioc.Default.GetService<ISettingsService>(),
+                Ioc.Default.GetService<ILanguageService>(),
+                Ioc.Default.GetService<ICloudStorageClientFactory>(),
+                Ioc.Default.GetService<ICryptoRandomService>(),
+                Ioc.Default.GetService<IRepositoryStorageService>(),
+                Ioc.Default.GetService<INoteRepositoryUpdater>());
         }
 
         /// <inheritdoc/>

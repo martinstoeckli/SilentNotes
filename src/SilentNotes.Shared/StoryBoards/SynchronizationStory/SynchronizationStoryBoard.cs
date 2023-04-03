@@ -125,16 +125,16 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         /// This allows to execute the synchronization in an Android background service, which can
         /// stay alive a short time longer than the app itself.
         /// </remarks>
-        public static async Task<StoryBoardStepResult> RunSilent()
+        public static async Task<StoryBoardStepResult> RunSilent(
+            ISettingsService settingsService,
+            ILanguageService languageService,
+            ICloudStorageClientFactory cloudStorageFactory,
+            ICryptoRandomService cryptoRandomService,
+            IRepositoryStorageService repositoryStorageService,
+            INoteRepositoryUpdater noteRepositoryUpdater)
         {
             StoryBoardStepResult result;
             IStoryBoardSession session = new StoryBoardSession();
-            ISettingsService settingsService = Ioc.Default.GetService<ISettingsService>();
-            ILanguageService languageService = Ioc.Default.GetService<ILanguageService>();
-            ICloudStorageClientFactory cloudStorageFactory = Ioc.Default.GetService<ICloudStorageClientFactory>();
-            ICryptoRandomService cryptoRandomService = Ioc.Default.GetService<ICryptoRandomService>();
-            IRepositoryStorageService repositoryStorageService = Ioc.Default.GetService<IRepositoryStorageService>();
-            INoteRepositoryUpdater noteRepositoryUpdater = Ioc.Default.GetService<INoteRepositoryUpdater>();
 
             // Steps which do not lead to a successful synchronisation without user interaction are ignored
             result = IsCloudServiceSetStep.RunSilent(session, settingsService);

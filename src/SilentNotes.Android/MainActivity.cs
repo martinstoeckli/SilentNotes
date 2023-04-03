@@ -13,7 +13,6 @@ using Android.Graphics;
 using Android.OS;
 using Android.Runtime;
 using Android.Util;
-using Android.Views;
 using Android.Webkit;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Java.IO;
@@ -82,7 +81,6 @@ namespace SilentNotes.Android
             webSettings.JavaScriptEnabled = true;
             webSettings.BlockNetworkLoads = true; // only local content allowed
             webSettings.AllowFileAccess = false; // no local files but from the asset directory
-            webSettings.SetPluginState(WebSettings.PluginState.Off); // no plugins allowed
             webSettings.CacheMode = CacheModes.NoCache; // is already local content
             webSettings.JavaScriptCanOpenWindowsAutomatically = false; // same as default
             webSettings.SetSupportMultipleWindows(false); // same as default
@@ -138,10 +136,8 @@ namespace SilentNotes.Android
         /// <inheritdoc/>
         protected override void OnStop()
         {
-            // The synchronization continues when we do not await it, even if another app became
-            // active in the meantime. As long as the user doesn't swipe away the app from the
-            // "recent apps", it can finish the job, that's exactly what we need.
-            // Tested with Android 5.0, 8.1
+            // We do not await the synchronization, it runs in a background service which can stay
+            // alive a bit longer than the app itself.
             IAutoSynchronizationService syncService = Ioc.Default.GetService<IAutoSynchronizationService>();
             syncService.SynchronizeAtShutdown();
             base.OnStop();

@@ -42,7 +42,7 @@ namespace SilentNotes.Android
             Ioc.Default.ConfigureServices(services.BuildServiceProvider());
         }
 
-        private static void RegisterServices(ServiceCollection services)
+        internal static void RegisterServices(ServiceCollection services)
         {
             services.AddSingleton<IAppContextService>((serviceProvider) => new AppContextService());
             services.AddTransient<IHtmlViewService>((serviceProvider) =>
@@ -79,11 +79,15 @@ namespace SilentNotes.Android
                 serviceProvider.GetService<ICryptoRandomService>()));
             services.AddSingleton<IInternetStateService>((serviceProvider) => new InternetStateService(
                 serviceProvider.GetService<IAppContextService>()));
-            services.AddSingleton<IAutoSynchronizationService>((serviceProvider) => new AutoSynchronizationService(
-                serviceProvider.GetService<IInternetStateService>(),
-                serviceProvider.GetService<ISettingsService>(),
-                serviceProvider.GetService<IRepositoryStorageService>(),
-                serviceProvider.GetService<INavigationService>()));
+
+            // todo: remove namespace
+            services.AddSingleton<IAutoSynchronizationService>((serviceProvider) => new SilentNotes.Android.Services.AutoSynchronizationService());
+
+            //services.AddSingleton<IAutoSynchronizationService>((serviceProvider) => new AutoSynchronizationService(
+            //    serviceProvider.GetService<IInternetStateService>(),
+            //    serviceProvider.GetService<ISettingsService>(),
+            //    serviceProvider.GetService<IRepositoryStorageService>(),
+            //    serviceProvider.GetService<INavigationService>()));
             services.AddSingleton<IThemeService>((serviceProvider) => new ThemeService(
                 serviceProvider.GetService<ISettingsService>(),
                 serviceProvider.GetService<IEnvironmentService>()));

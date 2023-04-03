@@ -36,7 +36,7 @@ namespace SilentNotes.Android.Services
         /// <returns>The full directory path for storing the config.</returns>
         protected override string GetDirectoryPath()
         {
-            return ContextCompat.GetNoBackupFilesDir(_appContext.RootActivity).AbsolutePath;
+            return ContextCompat.GetNoBackupFilesDir(_appContext.Context).AbsolutePath;
         }
 
         /// <inheritdoc/>

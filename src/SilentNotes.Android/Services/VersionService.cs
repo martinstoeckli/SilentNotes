@@ -30,7 +30,7 @@ namespace SilentNotes.Android.Services
             try
             {
                 // Android does not support 4 digit versions, instead one can read the version string.
-                Context context = _appContext.RootActivity;
+                Context context = _appContext.Context;
                 return context.PackageManager.GetPackageInfo(context.PackageName, 0).VersionName;
             }
             catch

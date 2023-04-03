@@ -38,7 +38,7 @@ namespace SilentNotes.Android.Services
         {
             get
             {
-                UiMode nightModeFlags = _appContext.RootActivity.Resources.Configuration.UiMode & UiMode.NightMask;
+                UiMode nightModeFlags = _appContext.Context.Resources.Configuration.UiMode & UiMode.NightMask;
                 return nightModeFlags == UiMode.NightYes;
             }
         }
