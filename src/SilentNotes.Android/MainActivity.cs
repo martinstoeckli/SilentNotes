@@ -175,6 +175,8 @@ namespace SilentNotes.Android
 
             INavigationService navigationService = Ioc.Default.GetService<INavigationService>();
             IStoryBoardService storyBoardService = Ioc.Default.GetService<IStoryBoardService>();
+            IAutoSynchronizationService autoSynchronizationService = Ioc.Default.GetService<IAutoSynchronizationService>();
+            autoSynchronizationService.Stop();
 
             if (!string.IsNullOrEmpty(_actionSendParameter))
             {
@@ -208,9 +210,7 @@ namespace SilentNotes.Android
                     navigationService.Navigate(_lastNavigation);
                 else
                     navigationService.Navigate(new Navigation(ControllerNames.NoteRepository));
-
-                IAutoSynchronizationService syncService = Ioc.Default.GetService<IAutoSynchronizationService>();
-                syncService.SynchronizeAtStartup(); // no awaiting, run in background
+                autoSynchronizationService.SynchronizeAtStartup(); // no awaiting, run in background
             }
         }
 

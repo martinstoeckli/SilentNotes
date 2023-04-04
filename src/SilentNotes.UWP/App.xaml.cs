@@ -62,6 +62,8 @@ namespace SilentNotes.UWP
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
             Frame rootFrame = Window.Current.Content as Frame;
+            IAutoSynchronizationService autoSynchronizationService = Ioc.Default.GetService<IAutoSynchronizationService>();
+            autoSynchronizationService.Stop();
 
             // Do not repeat app initialization when the Window already has content,
             // just ensure that the window is active
@@ -95,8 +97,7 @@ namespace SilentNotes.UWP
                 Window.Current.Activate();
             }
 
-            IAutoSynchronizationService syncService = Ioc.Default.GetService<IAutoSynchronizationService>();
-            syncService.SynchronizeAtStartup(); // no awaiting, run in background
+            autoSynchronizationService.SynchronizeAtStartup(); // no awaiting, run in background
         }
 
         /// <summary>

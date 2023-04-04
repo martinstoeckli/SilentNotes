@@ -30,6 +30,7 @@ namespace SilentNotes.ViewModels
         private readonly IFeedbackService _feedbackService;
         private readonly ISettingsService _settingsService;
         private readonly IEnvironmentService _environmentService;
+        private readonly IAutoSynchronizationService _autoSynchronizationService;
         private readonly SearchableHtmlConverter _searchableTextConverter;
         private readonly ICryptor _noteCryptor;
         private readonly KeyValueList<string, string> _specialTagLocalizations;
@@ -48,6 +49,7 @@ namespace SilentNotes.ViewModels
             IFeedbackService feedbackService,
             ISettingsService settingsService,
             IEnvironmentService environmentService,
+            IAutoSynchronizationService autoSynchronizationService,
             ICryptoRandomSource randomSource,
             IRepositoryStorageService repositoryService)
             : base(navigationService, languageService, svgIconService, themeService, webviewBaseUrl)
@@ -57,6 +59,7 @@ namespace SilentNotes.ViewModels
             _feedbackService = feedbackService;
             _settingsService = settingsService;
             _environmentService = environmentService;
+            _autoSynchronizationService = autoSynchronizationService;
             _noteCryptor = new Cryptor(NoteModel.CryptorPackageName, randomSource);
             _searchableTextConverter = new SearchableHtmlConverter();
             AllNotes = new List<NoteViewModel>();
@@ -466,12 +469,16 @@ namespace SilentNotes.ViewModels
 
         private async void Synchronize()
         {
+            if (_autoSynchronizationService.IsRunning)
+                return;
+
             _feedbackService.ShowBusyIndicator(true);
             try
             {
                 OnStoringUnsavedData();
                 _storyBoardService.ActiveStory = new SynchronizationStoryBoard(StoryBoardMode.Gui);
                 await _storyBoardService.ActiveStory.Start();
+                _autoSynchronizationService.LastSynchronizationFingerprint = Model.GetModificationFingerprint();
             }
             catch (Exception)
             {

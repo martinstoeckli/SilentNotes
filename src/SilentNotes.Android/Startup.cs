@@ -75,8 +75,6 @@ namespace SilentNotes.Android
                 serviceProvider.GetService<ILanguageService>()));
             services.AddSingleton<IDataProtectionService>((serviceProvider) => new DataProtectionService(
                 serviceProvider.GetService<ICryptoRandomService>()));
-            services.AddSingleton<IInternetStateService>((serviceProvider) => new InternetStateService(
-                serviceProvider.GetService<IAppContextService>()));
             services.AddSingleton<IAutoSynchronizationService>((serviceProvider) => new AutoSynchronizationService());
             services.AddSingleton<IThemeService>((serviceProvider) => new ThemeService(
                 serviceProvider.GetService<ISettingsService>(),

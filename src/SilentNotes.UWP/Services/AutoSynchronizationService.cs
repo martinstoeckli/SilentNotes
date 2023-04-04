@@ -18,7 +18,7 @@ namespace SilentNotes.UWP.Services
     /// <summary>
     /// Implementation of the <see cref="IAutoSynchronizationService"/> interface.
     /// </summary>
-    public class AutoSynchronizationService : IAutoSynchronizationService
+    public class AutoSynchronizationService : AutoSynchronizationServiceBase, IAutoSynchronizationService
     {
         private readonly IInternetStateService _internetStateService;
         private readonly ISettingsService _settingsService;
@@ -46,10 +46,17 @@ namespace SilentNotes.UWP.Services
         }
 
         /// <inheritdoc/>
-        public async Task SynchronizeAtStartup()
+        public override async Task SynchronizeAtStartup()
         {
+            IsRunning = true;
+            IFeedbackService feedbackService = Ioc.Default.GetService<IFeedbackService>();
+            ILanguageService languageService = Ioc.Default.GetService<ILanguageService>();
+
             if (!ShouldSynchronize())
+            {
+                IsRunning = false;
                 return;
+            }
 
             _repositoryStorageService.LoadRepositoryOrDefault(out NoteRepositoryModel localRepository);
             long oldFingerprint = localRepository.GetModificationFingerprint();
@@ -66,14 +73,13 @@ namespace SilentNotes.UWP.Services
                     Ioc.Default.GetService<INoteRepositoryUpdater>());
             }).ConfigureAwait(true); // Come back to the UI thread
 
-            IFeedbackService feedbackService = Ioc.Default.GetService<IFeedbackService>();
-            ILanguageService languageService = Ioc.Default.GetService<ILanguageService>();
             await SynchronizationStoryBoard.ShowFeedback(stepResult, feedbackService, languageService);
 
             // Memorize fingerprint of the synchronized respository
             _repositoryStorageService.LoadRepositoryOrDefault(out localRepository);
             long newFingerprint = localRepository.GetModificationFingerprint();
             LastSynchronizationFingerprint = newFingerprint;
+            IsRunning = false;
 
             // Reload active page, but only if notes are visible and the repository differs
             if (oldFingerprint != newFingerprint)
@@ -84,7 +90,7 @@ namespace SilentNotes.UWP.Services
         }
 
         /// <inheritdoc/>
-        public async Task SynchronizeAtShutdown()
+        public override async Task SynchronizeAtShutdown()
         {
             if (!ShouldSynchronize())
                 return;
@@ -95,6 +101,7 @@ namespace SilentNotes.UWP.Services
             if (currentFingerprint == LastSynchronizationFingerprint)
                 return;
 
+            IsRunning = true;
             StoryBoardStepResult stepResult = await SynchronizationStoryBoard.RunSilent(
                 Ioc.Default.GetService<ISettingsService>(),
                 Ioc.Default.GetService<ILanguageService>(),
@@ -102,10 +109,14 @@ namespace SilentNotes.UWP.Services
                 Ioc.Default.GetService<ICryptoRandomService>(),
                 Ioc.Default.GetService<IRepositoryStorageService>(),
                 Ioc.Default.GetService<INoteRepositoryUpdater>());
+            IsRunning = false;
         }
 
         /// <inheritdoc/>
-        public long LastSynchronizationFingerprint { get; set; }
+        public override void Stop()
+        {
+            IsRunning = false;
+        }
 
         /// <summary>
         /// Checks whether the synchronization should and can be done or not.

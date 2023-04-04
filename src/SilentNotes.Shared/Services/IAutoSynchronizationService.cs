@@ -27,6 +27,17 @@ namespace SilentNotes.Services
         Task SynchronizeAtShutdown();
 
         /// <summary>
+        /// Stops any running synchronization.
+        /// </summary>
+        /// <returns>A task which can be called async.</returns>
+        void Stop();
+
+        /// <summary>
+        /// Gets a value indicating whether an auto synchronization is currently running.
+        /// </summary>
+        bool IsRunning { get; }
+
+        /// <summary>
         /// Gets or sets a fingerprint of the last synchronization, which allows to detect a
         /// session without modifications in the repository. The value can be updated/overwritten
         /// when the user does a manual synchronization. It can be used by the service to avoid
