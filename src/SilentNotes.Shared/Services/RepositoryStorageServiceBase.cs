@@ -147,6 +147,12 @@ namespace SilentNotes.Services
         }
 
         /// <inheritdoc/>
+        public void ClearCache()
+        {
+            _cachedRepository = null;
+        }
+
+        /// <inheritdoc/>
         public byte[] LoadRepositoryFile()
         {
             try

@@ -34,7 +34,7 @@ namespace SilentNotes.Android.Services
             Stream result;
             try
             {
-                result = _appContext.RootActivity.Assets.Open(resourceFileName);
+                result = _appContext.Context.Assets.Open(resourceFileName);
             }
             catch (Exception)
             {

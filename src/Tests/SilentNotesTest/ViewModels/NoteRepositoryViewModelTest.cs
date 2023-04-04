@@ -145,6 +145,7 @@ namespace SilentNotesTest.ViewModels
                 new Mock<IFeedbackService>().Object,
                 settingsService.Object,
                 CommonMocksAndStubs.EnvironmentService(),
+                new Mock<IAutoSynchronizationService>().Object,
                 CommonMocksAndStubs.CryptoRandomService(),
                 repositoryStorageService.Object);
         }

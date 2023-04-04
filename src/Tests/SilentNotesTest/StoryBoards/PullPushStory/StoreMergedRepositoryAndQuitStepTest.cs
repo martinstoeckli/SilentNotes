@@ -7,6 +7,8 @@ using SilentNotes.StoryBoards;
 using SilentNotes.StoryBoards.PullPushStory;
 using VanillaCloudStorageClient;
 
+using SynchronizationStorySessionKey = SilentNotes.StoryBoards.SynchronizationStory.SynchronizationStorySessionKey;
+
 namespace SilentNotesTest.StoryBoards.PullPushStory
 {
     [TestFixture]
@@ -23,7 +25,7 @@ namespace SilentNotesTest.StoryBoards.PullPushStory
 
             Mock<IStoryBoard> storyBoard = new Mock<IStoryBoard>();
             storyBoard.
-                Setup(m => m.Session.Load<NoteRepositoryModel>(It.Is<PullPushStorySessionKey>(p => p == PullPushStorySessionKey.CloudRepository))).
+                Setup(m => m.Session.Load<NoteRepositoryModel>(It.Is<SynchronizationStorySessionKey>(p => p == SynchronizationStorySessionKey.CloudRepository))).
                 Returns(cloudRepositoryModel);
             Mock<ISettingsService> settingsService = new Mock<ISettingsService>();
             Mock<IRepositoryStorageService> repositoryStorageService = new Mock<IRepositoryStorageService>();
@@ -59,7 +61,7 @@ namespace SilentNotesTest.StoryBoards.PullPushStory
 
             Mock<IStoryBoard> storyBoard = new Mock<IStoryBoard>();
             storyBoard.
-                Setup(m => m.Session.Load<NoteRepositoryModel>(It.Is<PullPushStorySessionKey>(p => p == PullPushStorySessionKey.CloudRepository))).
+                Setup(m => m.Session.Load<NoteRepositoryModel>(It.Is<SynchronizationStorySessionKey>(p => p == SynchronizationStorySessionKey.CloudRepository))).
                 Returns(repositoryModel); // same as from repositoryStorageService
             Mock<ISettingsService> settingsService = new Mock<ISettingsService>();
             settingsService.
@@ -112,7 +114,7 @@ namespace SilentNotesTest.StoryBoards.PullPushStory
 
             Mock<IStoryBoard> storyBoard = new Mock<IStoryBoard>();
             storyBoard.
-                Setup(m => m.Session.Load<NoteRepositoryModel>(It.Is<PullPushStorySessionKey>(p => p == PullPushStorySessionKey.CloudRepository))).
+                Setup(m => m.Session.Load<NoteRepositoryModel>(It.Is<SynchronizationStorySessionKey>(p => p == SynchronizationStorySessionKey.CloudRepository))).
                 Returns(cloudRepositoryModel);
             Mock<ISettingsService> settingsService = new Mock<ISettingsService>();
             settingsService.
@@ -172,7 +174,7 @@ namespace SilentNotesTest.StoryBoards.PullPushStory
 
             Mock<IStoryBoard> storyBoard = new Mock<IStoryBoard>();
             storyBoard.
-                Setup(m => m.Session.Load<NoteRepositoryModel>(It.Is<PullPushStorySessionKey>(p => p == PullPushStorySessionKey.CloudRepository))).
+                Setup(m => m.Session.Load<NoteRepositoryModel>(It.Is<SynchronizationStorySessionKey>(p => p == SynchronizationStorySessionKey.CloudRepository))).
                 Returns(cloudRepositoryModel);
             Mock<ISettingsService> settingsService = new Mock<ISettingsService>();
             settingsService.

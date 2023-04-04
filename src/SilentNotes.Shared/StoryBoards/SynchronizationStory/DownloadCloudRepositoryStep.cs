@@ -39,24 +39,39 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         /// <inheritdoc/>
         public override async Task Run()
         {
-            SerializeableCloudStorageCredentials credentials = StoryBoard.Session.Load<SerializeableCloudStorageCredentials>(SynchronizationStorySessionKey.CloudStorageCredentials);
-            ICloudStorageClient cloudStorageClient = _cloudStorageClientFactory.GetByKey(credentials.CloudStorageId);
+            StoryBoardStepResult result = await RunSilent(
+                StoryBoard.Session,
+                _cloudStorageClientFactory);
+            await StoryBoard.ShowFeedback(result, _feedbackService, _languageService);
+            if (result.HasNextStep)
+                await StoryBoard.ContinueWith(result.NextStepId);
+        }
 
+        /// <summary>
+        /// Executes the parts of the step which can be run silently without UI in a background service.
+        /// </summary>
+        public static async Task<StoryBoardStepResult> RunSilent(
+            IStoryBoardSession session,
+            ICloudStorageClientFactory cloudStorageClientFactory)
+        {
             try
             {
+                SerializeableCloudStorageCredentials credentials = session.Load<SerializeableCloudStorageCredentials>(SynchronizationStorySessionKey.CloudStorageCredentials);
+                ICloudStorageClient cloudStorageClient = cloudStorageClientFactory.GetByKey(credentials.CloudStorageId);
+
                 // The repository can be cached for this story, download the repository only once.
                 byte[] binaryCloudRepository;
-                if (!StoryBoard.Session.TryLoad(SynchronizationStorySessionKey.BinaryCloudRepository, out binaryCloudRepository))
+                if (!session.TryLoad(SynchronizationStorySessionKey.BinaryCloudRepository, out binaryCloudRepository))
                 {
                     binaryCloudRepository = await cloudStorageClient.DownloadFileAsync(Config.RepositoryFileName, credentials);
-                    StoryBoard.Session.Store(SynchronizationStorySessionKey.BinaryCloudRepository, binaryCloudRepository);
+                    session.Store(SynchronizationStorySessionKey.BinaryCloudRepository, binaryCloudRepository);
                 }
-                await StoryBoard.ContinueWith(SynchronizationStoryStepId.ExistsTransferCode);
+                return new StoryBoardStepResult(SynchronizationStoryStepId.ExistsTransferCode);
             }
             catch (Exception ex)
             {
                 // Keep the current page open and show the error message
-                ShowExceptionMessage(ex, _feedbackService, _languageService);
+                return new StoryBoardStepResult(ex);
             }
         }
     }

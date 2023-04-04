@@ -88,6 +88,9 @@
     <PackageReference Include="Xamarin.AndroidX.DocumentFile">
       <Version>1.0.1.16</Version>
     </PackageReference>
+    <PackageReference Include="Xamarin.AndroidX.Work.Runtime">
+      <Version>2.7.1.6</Version>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActionSendActivity.cs" />
@@ -96,14 +99,15 @@
     <Compile Include="CloudStorageRedirectActivity.cs" />
     <Compile Include="HybridWebViewClient.cs" />
     <Compile Include="MainActivity.cs" />
+    <Compile Include="ObserverHelper.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\AutoSynchronizationService.cs" />
     <Compile Include="Services\CryptoRandomService.cs" />
     <Compile Include="Services\DataProtectionService.cs" />
     <Compile Include="Services\FeedbackService.cs" />
     <Compile Include="Services\FilePickerService.cs" />
     <Compile Include="Services\FolderPickerService.cs" />
-    <Compile Include="Services\InternetStateService.cs" />
     <Compile Include="Services\LanguageCodeService.cs" />
     <Compile Include="Services\LanguageServiceResourceReader.cs" />
     <Compile Include="Services\NativeBrowserService.cs" />

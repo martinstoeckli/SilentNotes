@@ -1,4 +1,9 @@
-﻿using System;
+﻿// Copyright © 2018 Martin Stoeckli.
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+using System;
 using System.Threading.Tasks;
 using SilentNotes.Models;
 using SilentNotes.Services;
@@ -45,43 +50,65 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         /// <inheritdoc/>
         public override async Task Run()
         {
+            StoryBoardStepResult result = await RunSilent(
+                StoryBoard.Session,
+                _settingsService,
+                _languageService,
+                _cryptoRandomService,
+                _repositoryStorageService,
+                _cloudStorageClientFactory);
+            await StoryBoard.ShowFeedback(result, _feedbackService, _languageService);
+            if (result.HasNextStep)
+                await StoryBoard.ContinueWith(result.NextStepId);
+        }
+
+        /// <summary>
+        /// Executes the parts of the step which can be run silently without UI in a background service.
+        /// </summary>
+        public static async Task<StoryBoardStepResult> RunSilent(
+            IStoryBoardSession session,
+            ISettingsService settingsService,
+            ILanguageService languageService,
+            ICryptoRandomService cryptoRandomService,
+            IRepositoryStorageService repositoryStorageService,
+            ICloudStorageClientFactory cloudStorageClientFactory)
+        {
             try
             {
-                SerializeableCloudStorageCredentials credentials = StoryBoard.Session.Load<SerializeableCloudStorageCredentials>(SynchronizationStorySessionKey.CloudStorageCredentials);
-                _repositoryStorageService.LoadRepositoryOrDefault(out NoteRepositoryModel localRepository);
-                SettingsModel settings = _settingsService.LoadSettingsOrDefault();
+                SerializeableCloudStorageCredentials credentials = session.Load<SerializeableCloudStorageCredentials>(SynchronizationStorySessionKey.CloudStorageCredentials);
+                repositoryStorageService.LoadRepositoryOrDefault(out NoteRepositoryModel localRepository);
+                SettingsModel settings = settingsService.LoadSettingsOrDefault();
                 string transferCode = settings.TransferCode;
 
                 bool needsNewTransferCode = !TransferCode.IsCodeSet(transferCode);
                 if (needsNewTransferCode)
-                    transferCode = TransferCode.GenerateCode(_cryptoRandomService);
+                    transferCode = TransferCode.GenerateCode(cryptoRandomService);
 
                 byte[] encryptedRepository = EncryptRepository(
-                    localRepository, transferCode, _cryptoRandomService, settings.SelectedEncryptionAlgorithm);
+                    localRepository, transferCode, cryptoRandomService, settings.SelectedEncryptionAlgorithm);
 
-                ICloudStorageClient cloudStorageClient = _cloudStorageClientFactory.GetByKey(credentials.CloudStorageId);
+                ICloudStorageClient cloudStorageClient = cloudStorageClientFactory.GetByKey(credentials.CloudStorageId);
                 await cloudStorageClient.UploadFileAsync(Config.RepositoryFileName, encryptedRepository, credentials);
 
                 // All went well, time to save the transfer code, if a new one was created
+                string message = null;
                 if (needsNewTransferCode)
                 {
                     settings.TransferCode = transferCode;
-                    _settingsService.TrySaveSettingsToLocalDevice(settings);
+                    settingsService.TrySaveSettingsToLocalDevice(settings);
 
                     string formattedTransferCode = TransferCode.FormatTransferCodeForDisplay(transferCode);
-                    string messageNewCreated = _languageService.LoadTextFmt("transfer_code_created", formattedTransferCode);
-                    string messageWriteDown = _languageService.LoadText("transfer_code_writedown");
-                    if (StoryBoard.Mode.ShouldUseGui())
-                        await _feedbackService.ShowMessageAsync(messageNewCreated + Environment.NewLine + messageWriteDown, null, MessageBoxButtons.Ok, false);
+                    string messageNewCreated = languageService.LoadTextFmt("transfer_code_created", formattedTransferCode);
+                    string messageWriteDown = languageService.LoadText("transfer_code_writedown");
+                    message = messageNewCreated + Environment.NewLine + messageWriteDown;
                 }
 
-                await StoryBoard.ContinueWith(SynchronizationStoryStepId.StopAndShowRepository);
-                _feedbackService.ShowToast(_languageService["sync_success"]);
+                return new StoryBoardStepResult(SynchronizationStoryStepId.StopAndShowRepository, languageService["sync_success"], message);
             }
             catch (Exception ex)
             {
                 // Keep the current page open and show the error message
-                ShowExceptionMessage(ex, _feedbackService, _languageService);
+                return new StoryBoardStepResult(ex);
             }
         }
     }

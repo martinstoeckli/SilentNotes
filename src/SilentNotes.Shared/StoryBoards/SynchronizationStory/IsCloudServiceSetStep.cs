@@ -30,16 +30,26 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         /// <inheritdoc/>
         public override async Task Run()
         {
-            SettingsModel settings = _settingsService.LoadSettingsOrDefault();
-            
+            StoryBoardStepResult result = RunSilent(StoryBoard.Session, _settingsService);
+            if (result.HasNextStep)
+                await StoryBoard.ContinueWith(result.NextStepId);
+        }
+
+        /// <summary>
+        /// Executes the parts of the step which can be run silently without UI in a background service.
+        /// </summary>
+        public static StoryBoardStepResult RunSilent(IStoryBoardSession session, ISettingsService settingsService)
+        {
+            SettingsModel settings = settingsService.LoadSettingsOrDefault();
+
             if (settings.HasCloudStorageClient)
             {
-                StoryBoard.Session.Store(SynchronizationStorySessionKey.CloudStorageCredentials, settings.Credentials);
-                await StoryBoard.ContinueWith(SynchronizationStoryStepId.ExistsCloudRepository);
+                session.Store(SynchronizationStorySessionKey.CloudStorageCredentials, settings.Credentials);
+                return new StoryBoardStepResult(SynchronizationStoryStepId.ExistsCloudRepository);
             }
             else
             {
-                await StoryBoard.ContinueWith(SynchronizationStoryStepId.ShowFirstTimeDialog);
+                return new StoryBoardStepResult(SynchronizationStoryStepId.ShowFirstTimeDialog);
             }
         }
     }

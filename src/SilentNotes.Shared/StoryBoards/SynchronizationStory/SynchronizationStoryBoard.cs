@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using SilentNotes.Services;
 using SilentNotes.Workers;
@@ -23,9 +24,7 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         public SynchronizationStoryBoard(StoryBoardMode mode)
             : base(mode)
         {
-            IFeedbackService feedbackService = mode.ShouldShowToasts()
-                ? Ioc.Default.GetService<IFeedbackService>()
-                : new DummyFeedbackService();
+            IFeedbackService feedbackService = Ioc.Default.GetService<IFeedbackService>();
             INavigationService navigationService = mode.ShouldUseGui()
                 ? Ioc.Default.GetService<INavigationService>()
                 : new DummyNavigationService();
@@ -114,6 +113,60 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
                 feedbackService,
                 navigationService,
                 Ioc.Default.GetService<IStoryBoardService>()));
+        }
+
+        /// <summary>
+        /// Executes the parts of the story which can be run silently without UI in a background
+        /// service. It can be called when the app is starting up or shutting down. If successful,
+        /// the story returns the <see cref="SynchronizationStoryStepId.StopAndShowRepository"/>
+        /// step.
+        /// </summary>
+        /// <remarks>
+        /// This allows to execute the synchronization in an Android background service, which can
+        /// stay alive a short time longer than the app itself.
+        /// </remarks>
+        public static async Task<StoryBoardStepResult> RunSilent(
+            ISettingsService settingsService,
+            ILanguageService languageService,
+            ICloudStorageClientFactory cloudStorageFactory,
+            ICryptoRandomService cryptoRandomService,
+            IRepositoryStorageService repositoryStorageService,
+            INoteRepositoryUpdater noteRepositoryUpdater)
+        {
+            StoryBoardStepResult result;
+            IStoryBoardSession session = new StoryBoardSession();
+
+            // Steps which do not lead to a successful synchronisation without user interaction are ignored
+            result = IsCloudServiceSetStep.RunSilent(session, settingsService);
+            if (result.NextStepIs(SynchronizationStoryStepId.ExistsCloudRepository))
+            {
+                result = await ExistsCloudRepositoryStep.RunSilent(StoryBoardMode.Silent, session, settingsService, languageService, cloudStorageFactory);
+                if (result.NextStepIs(SynchronizationStoryStepId.DownloadCloudRepository))
+                {
+                    result = await DownloadCloudRepositoryStep.RunSilent(session, cloudStorageFactory);
+                    if (result.NextStepIs(SynchronizationStoryStepId.ExistsTransferCode))
+                    {
+                        result = ExistsTransferCodeStep.RunSilent(settingsService);
+                        if (result.NextStepIs(SynchronizationStoryStepId.DecryptCloudRepository))
+                        {
+                            result = DecryptCloudRepositoryStep.RunSilent(session, settingsService, languageService, noteRepositoryUpdater);
+                            if (result.NextStepIs(SynchronizationStoryStepId.IsSameRepository))
+                            {
+                                result = IsSameRepositoryStep.RunSilent(session, repositoryStorageService);
+                                if (result.NextStepIs(SynchronizationStoryStepId.StoreMergedRepositoryAndQuit))
+                                {
+                                    result = await StoreMergedRepositoryAndQuitStep.RunSilent(session, settingsService, languageService, cryptoRandomService, repositoryStorageService, cloudStorageFactory);
+                                }
+                            }
+                        }
+                    }
+                }
+                else if (result.NextStepIs(SynchronizationStoryStepId.StoreLocalRepositoryToCloudAndQuit))
+                {
+                    result = await StoreLocalRepositoryToCloudAndQuitStep.RunSilent(session, settingsService, languageService, cryptoRandomService, repositoryStorageService, cloudStorageFactory);
+                }
+            }
+            return result;
         }
 
         /// <summary>

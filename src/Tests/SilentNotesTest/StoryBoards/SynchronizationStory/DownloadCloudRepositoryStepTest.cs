@@ -1,6 +1,6 @@
-﻿using Moq;
+﻿using System.Threading.Tasks;
+using Moq;
 using NUnit.Framework;
-using SilentNotes.Services;
 using SilentNotes.StoryBoards;
 using SilentNotes.StoryBoards.SynchronizationStory;
 using VanillaCloudStorageClient;
@@ -11,74 +11,50 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
     public class DownloadCloudRepositoryStepTest
     {
         [Test]
-        public void SuccessfulFlowEndsInNextStep()
+        public async Task SuccessfulFlowEndsInNextStep()
         {
             SerializeableCloudStorageCredentials credentialsFromSession = new SerializeableCloudStorageCredentials();
             byte[] repositoryFromSession = null;
             byte[] repository = new byte[8];
 
-            Mock<IStoryBoard> storyBoard = new Mock<IStoryBoard>();
-            storyBoard.
-                Setup(m => m.Session.Load<SerializeableCloudStorageCredentials>(It.Is<SynchronizationStorySessionKey>(p => p == SynchronizationStorySessionKey.CloudStorageCredentials))).
-                Returns(credentialsFromSession);
-            storyBoard.
-                Setup(m => m.Session.TryLoad(It.Is<SynchronizationStorySessionKey>(p => p == SynchronizationStorySessionKey.BinaryCloudRepository), out repositoryFromSession)).
-                Returns(false);
+            StoryBoardSession session = new StoryBoardSession();
+            session.Store(SynchronizationStorySessionKey.CloudStorageCredentials, credentialsFromSession);
+            session.Store(SynchronizationStorySessionKey.BinaryCloudRepository, repositoryFromSession);
+
             Mock<ICloudStorageClient> cloudStorageClient = new Mock<ICloudStorageClient>();
             cloudStorageClient.
                 Setup(m => m.DownloadFileAsync(It.IsAny<string>(), It.IsAny<CloudStorageCredentials>())).
                 ReturnsAsync(repository);
 
             // Run step
-            var step = new DownloadCloudRepositoryStep(
-                SynchronizationStoryStepId.DownloadCloudRepository,
-                storyBoard.Object,
-                CommonMocksAndStubs.LanguageService(),
-                CommonMocksAndStubs.FeedbackService(),
-                CommonMocksAndStubs.CloudStorageClientFactory(cloudStorageClient.Object));
-            Assert.DoesNotThrowAsync(step.Run);
+            StoryBoardStepResult result = await DownloadCloudRepositoryStep.RunSilent(session, CommonMocksAndStubs.CloudStorageClientFactory(cloudStorageClient.Object));
 
             // Repository was stored in session
-            storyBoard.Verify(m => m.Session.Store(It.Is<SynchronizationStorySessionKey>(p => p == SynchronizationStorySessionKey.BinaryCloudRepository), It.Is<object>(p => p == repository)), Times.Once);
+            Assert.AreEqual(repository, session.Load<byte[]>(SynchronizationStorySessionKey.BinaryCloudRepository));
 
             // Next step is called
-            storyBoard.Verify(m => m.ContinueWith(It.Is<SynchronizationStoryStepId>(x => x == SynchronizationStoryStepId.ExistsTransferCode)), Times.Once);
+            Assert.AreEqual(SynchronizationStoryStepId.ExistsTransferCode, result.NextStepId);
         }
 
         [Test]
-        public void ErrorMessageIsShownInCaseOfException()
+        public async Task ErrorMessageIsShownInCaseOfException()
         {
             SerializeableCloudStorageCredentials credentialsFromSession = new SerializeableCloudStorageCredentials();
             byte[] repositoryFromSession = null;
-            byte[] repository = new byte[8];
 
-            Mock<IStoryBoard> storyBoard = new Mock<IStoryBoard>();
-            storyBoard.
-                Setup(m => m.Session.Load<SerializeableCloudStorageCredentials>(It.Is<SynchronizationStorySessionKey>(p => p == SynchronizationStorySessionKey.CloudStorageCredentials))).
-                Returns(credentialsFromSession);
-            storyBoard.
-                Setup(m => m.Session.TryLoad(It.Is<SynchronizationStorySessionKey>(p => p == SynchronizationStorySessionKey.BinaryCloudRepository), out repositoryFromSession)).
-                Returns(false);
-            Mock<IFeedbackService> feedbackService = new Mock<IFeedbackService>();
+            StoryBoardSession session = new StoryBoardSession();
+            session.Store(SynchronizationStorySessionKey.CloudStorageCredentials, credentialsFromSession);
+            session.Store(SynchronizationStorySessionKey.BinaryCloudRepository, repositoryFromSession);
+
             Mock<ICloudStorageClient> cloudStorageClient = new Mock<ICloudStorageClient>();
             cloudStorageClient.
                 Setup(m => m.DownloadFileAsync(It.IsAny<string>(), It.IsAny<CloudStorageCredentials>())).
                 Throws<ConnectionFailedException>();
 
             // Run step
-            var step = new DownloadCloudRepositoryStep(
-                SynchronizationStoryStepId.DownloadCloudRepository,
-                storyBoard.Object,
-                CommonMocksAndStubs.LanguageService(),
-                feedbackService.Object,
-                CommonMocksAndStubs.CloudStorageClientFactory(cloudStorageClient.Object));
-            Assert.DoesNotThrowAsync(step.Run);
-
-            // Error message was shown
-            feedbackService.Verify(m => m.ShowToast(It.IsAny<string>()), Times.Once);
-
-            // Next step is called
-            storyBoard.Verify(m => m.ContinueWith(It.Is<SynchronizationStoryStepId>(x => x == SynchronizationStoryStepId.ExistsTransferCode)), Times.Never);
+            StoryBoardStepResult result = await DownloadCloudRepositoryStep.RunSilent(session, CommonMocksAndStubs.CloudStorageClientFactory(cloudStorageClient.Object));
+            Assert.IsNotNull(result.Error); // Error message is shown
+            Assert.IsNull(result.NextStepId); // Next step is not called
         }
     }
 }

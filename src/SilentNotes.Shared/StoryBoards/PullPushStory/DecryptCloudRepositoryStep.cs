@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using SilentNotes.Models;
 using SilentNotes.Services;
+using SilentNotes.StoryBoards.SynchronizationStory;
 using SilentNotes.Workers;
 
 namespace SilentNotes.StoryBoards.PullPushStory
@@ -33,39 +34,14 @@ namespace SilentNotes.StoryBoards.PullPushStory
         /// <inheritdoc/>
         public override async Task Run()
         {
-            try
-            {
-                SettingsModel settings = _settingsService.LoadSettingsOrDefault();
-                byte[] binaryCloudRepository = StoryBoard.Session.Load<byte[]>(PullPushStorySessionKey.BinaryCloudRepository);
+            // Reuse SynchronizationStory
+            StoryBoardStepResult result = SynchronizationStory.DecryptCloudRepositoryStep.RunSilent(StoryBoard.Session, _settingsService, _languageService, _noteRepositoryUpdater);
 
-                // Try to decode with all possible transfer codes
-                bool successfullyDecryptedRepository = TryDecryptWithAllTransferCodes(
-                    settings, binaryCloudRepository, out byte[] decryptedRepository);
-
-                if (successfullyDecryptedRepository)
-                {
-                    // Deserialize and update repository
-                    XDocument cloudRepositoryXml = XmlUtils.LoadFromXmlBytes(decryptedRepository);
-                    if (_noteRepositoryUpdater.IsTooNewForThisApp(cloudRepositoryXml))
-                        throw new SynchronizationStory.SynchronizationStoryBoard.UnsuportedRepositoryRevisionException();
-
-                    _noteRepositoryUpdater.Update(cloudRepositoryXml);
-                    NoteRepositoryModel cloudRepository = XmlUtils.DeserializeFromXmlDocument<NoteRepositoryModel>(cloudRepositoryXml);
-
-                    // Continue with next step
-                    StoryBoard.Session.Store(PullPushStorySessionKey.CloudRepository, cloudRepository);
-                    await StoryBoard.ContinueWith(PullPushStoryStepId.IsSameRepository);
-                }
-                else
-                {
-                    _feedbackService.ShowToast(_languageService["pushpull_error_need_sync_first"]);
-                }
-            }
-            catch (Exception ex)
-            {
-                // Keep the current page open and show the error message
-                ShowExceptionMessage(ex, _feedbackService, _languageService);
-            }
+            // Instead of reimplementing the whole story, we require a manual sync in case of a problem.
+            if (result.NextStepIs(SynchronizationStoryStepId.IsSameRepository))
+                await StoryBoard.ContinueWith(PullPushStoryStepId.IsSameRepository);
+            else
+                _feedbackService.ShowToast(_languageService["pushpull_error_need_sync_first"]);
         }
     }
 }

@@ -13,16 +13,11 @@ namespace SilentNotes.StoryBoards
     public enum StoryBoardMode
     {
         /// <summary>Shows the complete user interface, inclusive user dialogs and messages.</summary>
-        GuiAndToasts,
+        Gui,
 
-        /// <summary>Shows messages but does not ask for user input or user interaction. This mode
-        /// is appropriate for stories running while the app is starting up, but should run
-        /// automatically without user interactions.</summary>
-        ToastsOnly,
-
-        /// <summary>Runs in silent mode, doesn't show any dialogs or messages. If the story fails,
-        /// it does it silently without informing the user. This mode is appropriate for stories
-        /// running while the app is closing.</summary>
+        /// <summary>Runs in silent mode, doesn't show any dialogs. If the story fails, it does it
+        /// silently without informing the user, or if a feedback service is not a dummy it can show
+        /// a toast. This mode is appropriate for stories running while the app is closing.</summary>
         Silent,
     }
 
@@ -38,27 +33,7 @@ namespace SilentNotes.StoryBoards
         /// <returns>Returns true if if requires the gui, otherwise false.</returns>
         public static bool ShouldUseGui(this StoryBoardMode mode)
         {
-            return mode == StoryBoardMode.GuiAndToasts;
-        }
-
-        /// <summary>
-        /// Checks whether the story should show messages.
-        /// </summary>
-        /// <param name="mode">Mode to check.</param>
-        /// <returns>Returns true if it should show messages, otherwise false.</returns>
-        public static bool ShouldShowToasts(this StoryBoardMode mode)
-        {
-            return mode != StoryBoardMode.Silent;
-        }
-
-        /// <summary>
-        /// Checks whether the story should run without any user interactions or messages.
-        /// </summary>
-        /// <param name="mode">Mode to check.</param>
-        /// <returns>Returns true if it runs silently, otherwise false.</returns>
-        public static bool ShouldRunSilently(this StoryBoardMode mode)
-        {
-            return mode == StoryBoardMode.Silent;
+            return mode == StoryBoardMode.Gui;
         }
     }
 }

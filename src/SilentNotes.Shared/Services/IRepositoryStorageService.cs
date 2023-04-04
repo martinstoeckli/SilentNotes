@@ -29,6 +29,12 @@ namespace SilentNotes.Services
         bool TrySaveRepository(NoteRepositoryModel repositoryModel);
 
         /// <summary>
+        /// Clears the cache, so the next time the repository is loaded it is read from the local
+        /// storage again.
+        /// </summary>
+        void ClearCache();
+
+        /// <summary>
         /// Loads the note repository from the local storage and returns its binary content.
         /// This method is e.g. used to recover the file, to read the repository use
         /// <see cref="LoadRepositoryOrDefault(out NoteRepositoryModel)"/> instead.

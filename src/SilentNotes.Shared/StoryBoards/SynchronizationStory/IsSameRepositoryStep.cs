@@ -30,16 +30,30 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         /// <inheritdoc/>
         public override async Task Run()
         {
-            _repositoryStorageService.LoadRepositoryOrDefault(out NoteRepositoryModel localRepository);
-            NoteRepositoryModel cloudRepository = StoryBoard.Session.Load<NoteRepositoryModel>(SynchronizationStorySessionKey.CloudRepository);
+            StoryBoardStepResult result = RunSilent(
+                StoryBoard.Session,
+                _repositoryStorageService);
+            if (result.HasNextStep)
+                await StoryBoard.ContinueWith(result.NextStepId);
+        }
+
+        /// <summary>
+        /// Executes the parts of the step which can be run silently without UI in a background service.
+        /// </summary>
+        public static StoryBoardStepResult RunSilent(
+            IStoryBoardSession session,
+            IRepositoryStorageService repositoryStorageService)
+        {
+            repositoryStorageService.LoadRepositoryOrDefault(out NoteRepositoryModel localRepository);
+            NoteRepositoryModel cloudRepository = session.Load<NoteRepositoryModel>(SynchronizationStorySessionKey.CloudRepository);
 
             if (localRepository.Id == cloudRepository.Id)
             {
-                await StoryBoard.ContinueWith(SynchronizationStoryStepId.StoreMergedRepositoryAndQuit);
+                return new StoryBoardStepResult(SynchronizationStoryStepId.StoreMergedRepositoryAndQuit);
             }
             else
             {
-                await StoryBoard.ContinueWith(SynchronizationStoryStepId.ShowMergeChoice);
+                return new StoryBoardStepResult(SynchronizationStoryStepId.ShowMergeChoice);
             }
         }
     }

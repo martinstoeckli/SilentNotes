@@ -22,7 +22,7 @@ namespace SilentNotes.StoryBoards.PullPushStory
         /// <param name="noteId">Sets the <see cref="NoteId"/> property.</param>
         /// <param name="direction">Sets the <see cref="Direction"/> property.</param>
         public PullPushStoryBoard(Guid noteId, PullPushDirection direction)
-            : base(StoryBoardMode.GuiAndToasts)
+            : base(StoryBoardMode.Gui)
         {
             RegisterStep(new ExistsCloudRepositoryStep(
                 PullPushStoryStepId.ExistsCloudRepository,
@@ -36,8 +36,7 @@ namespace SilentNotes.StoryBoards.PullPushStory
                 this,
                 Ioc.Default.GetService<ILanguageService>(),
                 Ioc.Default.GetService<IFeedbackService>(),
-                Ioc.Default.GetService<ICloudStorageClientFactory>(),
-                Ioc.Default.GetService<ISettingsService>()));
+                Ioc.Default.GetService<ICloudStorageClientFactory>()));
             RegisterStep(new DecryptCloudRepositoryStep(
                 PullPushStoryStepId.DecryptCloudRepository,
                 this,
@@ -75,15 +74,6 @@ namespace SilentNotes.StoryBoards.PullPushStory
         DecryptCloudRepository,
         IsSameRepository,
         StoreMergedRepositoryAndQuit,
-    }
-
-    /// <summary>
-    /// Enumeration of all available session keys of the <see cref="PullPushStoryBoard"/>.
-    /// </summary>
-    public enum PullPushStorySessionKey
-    {
-        BinaryCloudRepository,
-        CloudRepository,
     }
 
     /// <summary>

@@ -7,6 +7,7 @@ using System;
 using System.Threading.Tasks;
 using SilentNotes.Models;
 using SilentNotes.Services;
+using SilentNotes.StoryBoards.SynchronizationStory;
 using VanillaCloudStorageClient;
 
 namespace SilentNotes.StoryBoards.PullPushStory
@@ -32,53 +33,23 @@ namespace SilentNotes.StoryBoards.PullPushStory
         /// <inheritdoc/>
         public override async Task Run()
         {
+            // Instead of reimplementing the whole story, we require a previous manual sync.
             SettingsModel settings = _settingsService.LoadSettingsOrDefault();
-            SerializeableCloudStorageCredentials credentials = settings.Credentials;
             if (!settings.HasCloudStorageClient || !settings.HasTransferCode)
             {
                 _feedbackService.ShowToast(_languageService["pushpull_error_need_sync_first"]);
                 return;
             }
 
-            ICloudStorageClient cloudStorageClient = _cloudStorageClientFactory.GetByKey(credentials.CloudStorageId);
-            try
-            {
-                bool stopBecauseNewOAuthLoginIsRequired = false;
-                if ((cloudStorageClient is OAuth2CloudStorageClient oauthStorageClient) &&
-                    credentials.Token.NeedsRefresh())
-                {
-                    try
-                    {
-                        // Get a new access token by using the refresh token
-                        credentials.Token = await oauthStorageClient.RefreshTokenAsync(credentials.Token);
-                        SaveCredentialsToSettings(credentials);
-                    }
-                    catch (RefreshTokenExpiredException)
-                    {
-                        // Refresh-token cannot be used to get new access-tokens anymore, a new
-                        // authorization by the user is required.
-                        stopBecauseNewOAuthLoginIsRequired = true;
-                    }
-                }
+            // Reuse SynchronizationStory
+            StoryBoard.Session.Store(SynchronizationStorySessionKey.CloudStorageCredentials, settings.Credentials);
+            StoryBoardStepResult result = await SynchronizationStory.ExistsCloudRepositoryStep.RunSilent(StoryBoardMode.Gui, StoryBoard.Session, _settingsService, _languageService, _cloudStorageClientFactory);
 
-                if (stopBecauseNewOAuthLoginIsRequired)
-                {
-                    _feedbackService.ShowToast(_languageService["sync_error_oauth_refresh"]);
-                }
-                else
-                {
-                    bool repositoryExists = await cloudStorageClient.ExistsFileAsync(Config.RepositoryFileName, credentials);
-                    if (repositoryExists)
-                        await StoryBoard.ContinueWith(PullPushStoryStepId.DownloadCloudRepository);
-                    else
-                        _feedbackService.ShowToast(_languageService["pushpull_error_need_sync_first"]);
-                }
-            }
-            catch (Exception ex)
-            {
-                // Keep the current page open and show the error message
-                ShowExceptionMessage(ex, _feedbackService, _languageService);
-            }
+            // Instead of reimplementing the whole story, we require a manual sync in case of a problem.
+            if (result.NextStepIs(SynchronizationStoryStepId.DownloadCloudRepository))
+                await StoryBoard.ContinueWith(PullPushStoryStepId.DownloadCloudRepository);
+            else
+                _feedbackService.ShowToast(_languageService["pushpull_error_need_sync_first"]);
         }
     }
 }

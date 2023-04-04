@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using SilentNotes.Services;
 
 namespace SilentNotes.StoryBoards
 {
@@ -23,7 +24,7 @@ namespace SilentNotes.StoryBoards
         /// method <see cref="RegisterStep(IStoryBoardStep)"/>.
         /// </summary>
         /// <param name="mode">Sets the property <see cref="Mode"/>.</param>
-        public StoryBoardBase(StoryBoardMode mode = StoryBoardMode.GuiAndToasts)
+        public StoryBoardBase(StoryBoardMode mode = StoryBoardMode.Gui)
         {
             Mode = mode;
             Session = new StoryBoardSession();
@@ -49,9 +50,41 @@ namespace SilentNotes.StoryBoards
         /// <inheritdoc/>
         public async Task ContinueWith(Enum stepId)
         {
+            if (stepId == null)
+                return;
+
             IStoryBoardStep step = FindRegisteredStep(stepId);
             if (step != null)
                 await step.Run();
+        }
+
+        /// <inheritdoc/>
+        public static async Task ShowFeedback(StoryBoardStepResult stepResult, IFeedbackService feedbackService, ILanguageService languageService)
+        {
+            if (stepResult.HasError)
+            {
+                if ((feedbackService != null) && (languageService != null))
+                    SilentNotes.StoryBoards.SynchronizationStory.SynchronizationStoryBoardStepBase.ShowExceptionMessage(stepResult.Error, feedbackService, languageService);
+                return;
+            }
+
+            if (stepResult.HasMessage)
+            {
+                if (feedbackService != null)
+                    await feedbackService.ShowMessageAsync(stepResult.Message, null, MessageBoxButtons.Ok, false);
+            }
+
+            if (stepResult.HasToast)
+            {
+                if (feedbackService != null)
+                    feedbackService.ShowToast(stepResult.Toast);
+            }
+        }
+
+        /// <inheritdoc/>
+        async Task IStoryBoard.ShowFeedback(StoryBoardStepResult stepResult, IFeedbackService feedbackService, ILanguageService languageService)
+        {
+            await ShowFeedback(stepResult, feedbackService, languageService);
         }
 
         /// <inheritdoc/>
@@ -64,6 +97,8 @@ namespace SilentNotes.StoryBoards
         /// <returns>The found step, or null if no such step could be found.</returns>
         protected IStoryBoardStep FindRegisteredStep(Enum stepId)
         {
+            if (stepId == null)
+                return null;
             return _steps.Find(step => step.Id.Equals(stepId));
         }
     }

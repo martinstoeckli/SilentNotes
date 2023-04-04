@@ -33,16 +33,27 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
         /// <inheritdoc/>
         public override async Task Run()
         {
-            SettingsModel settings = _settingsService.LoadSettingsOrDefault();
+            StoryBoardStepResult result = RunSilent(_settingsService);
+            if (result.HasNextStep)
+                await StoryBoard.ContinueWith(result.NextStepId);
+        }
+
+        /// <summary>
+        /// Executes the parts of the step which can be run silently without UI in a background service.
+        /// </summary>
+        public static StoryBoardStepResult RunSilent(
+            ISettingsService settingsService)
+        {
+            SettingsModel settings = settingsService.LoadSettingsOrDefault();
 
             // Execute step
             if (settings.HasTransferCode)
             {
-                await StoryBoard.ContinueWith(SynchronizationStoryStepId.DecryptCloudRepository);
+                return new StoryBoardStepResult(SynchronizationStoryStepId.DecryptCloudRepository);
             }
             else
             {
-                await StoryBoard.ContinueWith(SynchronizationStoryStepId.ShowTransferCode);
+                return new StoryBoardStepResult(SynchronizationStoryStepId.ShowTransferCode);
             }
         }
     }

@@ -81,6 +81,7 @@ namespace SilentNotes.Controllers
                     Ioc.Default.GetService<IFeedbackService>(),
                     Ioc.Default.GetService<ISettingsService>(),
                     Ioc.Default.GetService<IEnvironmentService>(),
+                    Ioc.Default.GetService<IAutoSynchronizationService>(),
                     Ioc.Default.GetService<ICryptoRandomService>(),
                     repositoryService);
 

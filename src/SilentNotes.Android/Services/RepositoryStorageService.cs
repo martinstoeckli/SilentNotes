@@ -27,7 +27,7 @@ namespace SilentNotes.Android.Services
         /// <inheritdoc/>
         protected override string GetDirectoryPath()
         {
-            return ContextCompat.GetNoBackupFilesDir(_appContext.RootActivity).AbsolutePath;
+            return ContextCompat.GetNoBackupFilesDir(_appContext.Context).AbsolutePath;
         }
     }
 }

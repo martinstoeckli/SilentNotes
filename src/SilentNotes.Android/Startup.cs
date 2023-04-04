@@ -3,11 +3,9 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-using Android.App;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using SilentNotes.Android.Services;
-using SilentNotes.HtmlView;
 using SilentNotes.Services;
 using SilentNotes.Workers;
 
@@ -42,7 +40,7 @@ namespace SilentNotes.Android
             Ioc.Default.ConfigureServices(services.BuildServiceProvider());
         }
 
-        private static void RegisterServices(ServiceCollection services)
+        internal static void RegisterServices(ServiceCollection services)
         {
             services.AddSingleton<IAppContextService>((serviceProvider) => new AppContextService());
             services.AddTransient<IHtmlViewService>((serviceProvider) =>
@@ -77,13 +75,7 @@ namespace SilentNotes.Android
                 serviceProvider.GetService<ILanguageService>()));
             services.AddSingleton<IDataProtectionService>((serviceProvider) => new DataProtectionService(
                 serviceProvider.GetService<ICryptoRandomService>()));
-            services.AddSingleton<IInternetStateService>((serviceProvider) => new InternetStateService(
-                serviceProvider.GetService<IAppContextService>()));
-            services.AddSingleton<IAutoSynchronizationService>((serviceProvider) => new AutoSynchronizationService(
-                serviceProvider.GetService<IInternetStateService>(),
-                serviceProvider.GetService<ISettingsService>(),
-                serviceProvider.GetService<IRepositoryStorageService>(),
-                serviceProvider.GetService<INavigationService>()));
+            services.AddSingleton<IAutoSynchronizationService>((serviceProvider) => new AutoSynchronizationService());
             services.AddSingleton<IThemeService>((serviceProvider) => new ThemeService(
                 serviceProvider.GetService<ISettingsService>(),
                 serviceProvider.GetService<IEnvironmentService>()));
