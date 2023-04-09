@@ -5,6 +5,12 @@
 
 using System;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.DependencyInjection;
+using SilentNotes.Controllers;
+using SilentNotes.Models;
+using SilentNotes.StoryBoards;
+using SilentNotes.StoryBoards.SynchronizationStory;
+using SilentNotes.Workers;
 
 namespace SilentNotes.Services
 {
@@ -14,10 +20,91 @@ namespace SilentNotes.Services
     public abstract class AutoSynchronizationServiceBase : IAutoSynchronizationService
     {
         /// <inheritdoc/>
-        public abstract Task SynchronizeAtStartup();
+        public virtual async Task SynchronizeAtStartup()
+        {
+            IsRunning = true;
+            using (var runningStateGuard = new Guard(() => IsRunning = false))
+            {
+                IFeedbackService feedbackService = Ioc.Default.GetService<IFeedbackService>();
+                ILanguageService languageService = Ioc.Default.GetService<ILanguageService>();
+                ISettingsService settingsService = Ioc.Default.GetService<ISettingsService>();
+                IInternetStateService internetStateService = Ioc.Default.GetService<IInternetStateService>();
+                IRepositoryStorageService repositoryStorageService = Ioc.Default.GetService<IRepositoryStorageService>();
+                ICloudStorageClientFactory cloudStorageFactory = Ioc.Default.GetService<ICloudStorageClientFactory>();
+                ICryptoRandomService cryptoRandomService = Ioc.Default.GetService<ICryptoRandomService>();
+                INoteRepositoryUpdater noteRepositoryUpdater = Ioc.Default.GetService<INoteRepositoryUpdater>();
+                INavigationService navigationService = Ioc.Default.GetService<INavigationService>();
+
+                if (!ShouldSynchronize(internetStateService, settingsService))
+                    return;
+
+                repositoryStorageService.LoadRepositoryOrDefault(out NoteRepositoryModel localRepository);
+                long oldFingerprint = localRepository.GetModificationFingerprint();
+
+                // Do the synchronization with the cloud storage in a background thread
+                StoryBoardStepResult stepResult = await Task.Run(async () =>
+                {
+                    return await SynchronizationStoryBoard.RunSilent(
+                        settingsService,
+                        languageService,
+                        cloudStorageFactory,
+                        cryptoRandomService,
+                        repositoryStorageService,
+                        noteRepositoryUpdater);
+                }).ConfigureAwait(true); // Come back to the UI thread
+
+                // Memorize fingerprint of the synchronized respository
+                repositoryStorageService.LoadRepositoryOrDefault(out localRepository);
+                long newFingerprint = localRepository.GetModificationFingerprint();
+                LastSynchronizationFingerprint = newFingerprint;
+
+                await SynchronizationStoryBoard.ShowFeedback(stepResult, feedbackService, languageService);
+
+                // Reload active page, but only if notes are visible and the repository differs
+                if (oldFingerprint != newFingerprint)
+                {
+                    navigationService.RepeatNavigationIf(
+                        new[] { ControllerNames.NoteRepository, ControllerNames.Note });
+                }
+            }
+        }
 
         /// <inheritdoc/>
-        public abstract Task SynchronizeAtShutdown();
+        public virtual async Task SynchronizeAtShutdown()
+        {
+            // Still running from startup?
+            if (IsRunning)
+                return;
+
+            IsRunning = true;
+            using (var runningStateGuard = new Guard(() => IsRunning = false))
+            {
+                ILanguageService languageService = Ioc.Default.GetService<ILanguageService>();
+                ISettingsService settingsService = Ioc.Default.GetService<ISettingsService>();
+                IInternetStateService internetStateService = Ioc.Default.GetService<IInternetStateService>();
+                IRepositoryStorageService repositoryStorageService = Ioc.Default.GetService<IRepositoryStorageService>();
+                ICloudStorageClientFactory cloudStorageFactory = Ioc.Default.GetService<ICloudStorageClientFactory>();
+                ICryptoRandomService cryptoRandomService = Ioc.Default.GetService<ICryptoRandomService>();
+                INoteRepositoryUpdater noteRepositoryUpdater = Ioc.Default.GetService<INoteRepositoryUpdater>();
+
+                if (!ShouldSynchronize(internetStateService, settingsService))
+                    return;
+
+                // If there are no modifications since the last synchronization, we can spare this step
+                repositoryStorageService.LoadRepositoryOrDefault(out NoteRepositoryModel localRepository);
+                long currentFingerprint = localRepository.GetModificationFingerprint();
+                if (currentFingerprint == LastSynchronizationFingerprint)
+                    return;
+
+                StoryBoardStepResult stepResult = await SynchronizationStoryBoard.RunSilent(
+                    settingsService,
+                    languageService,
+                    cloudStorageFactory,
+                    cryptoRandomService,
+                    repositoryStorageService,
+                    noteRepositoryUpdater);
+            }
+        }
 
         /// <inheritdoc/>
         public abstract void Stop();
@@ -27,5 +114,30 @@ namespace SilentNotes.Services
 
         /// <inheritdoc/>
         public long LastSynchronizationFingerprint { get; set; }
+
+        /// <summary>
+        /// Checks whether the synchronization should and can be done or not.
+        /// </summary>
+        /// <param name="internetStateService">An internet state service.</param>
+        /// <param name="settingsService">A settings service.</param>
+        /// <returns>Returns true if the synchronization should be done, otherwise false.</returns>
+        protected static bool ShouldSynchronize(IInternetStateService internetStateService, ISettingsService settingsService)
+        {
+            if (!internetStateService.IsInternetConnected())
+                return false;
+
+            AutoSynchronizationMode syncMode = settingsService.LoadSettingsOrDefault().AutoSyncMode;
+            switch (syncMode)
+            {
+                case AutoSynchronizationMode.Never:
+                    return false;
+                case AutoSynchronizationMode.CostFreeInternetOnly:
+                    return internetStateService.IsInternetCostFree();
+                case AutoSynchronizationMode.Always:
+                    return true;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(syncMode));
+            }
+        }
     }
 }

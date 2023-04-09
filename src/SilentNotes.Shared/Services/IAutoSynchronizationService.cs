@@ -27,15 +27,15 @@ namespace SilentNotes.Services
         Task SynchronizeAtShutdown();
 
         /// <summary>
-        /// Stops any running synchronization.
+        /// Stops a background synchronization, if one is still running from the last shutdown.
         /// </summary>
-        /// <returns>A task which can be called async.</returns>
         void Stop();
 
         /// <summary>
-        /// Gets a value indicating whether an auto synchronization is currently running.
+        /// Gets or sets a value indicating whether an auto synchronization is currently running.
+        /// This value can be used to block new user triggered synchronizations, while already running.
         /// </summary>
-        bool IsRunning { get; }
+        bool IsRunning { get; set; }
 
         /// <summary>
         /// Gets or sets a fingerprint of the last synchronization, which allows to detect a
