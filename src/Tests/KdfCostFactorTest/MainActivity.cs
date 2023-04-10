@@ -27,7 +27,7 @@ namespace KdfCostFactorTest
             // The cost factor should be set so the function needs as much time as the application
             // can bear. The more time it requires the more safe from brute-forcing we get, though
             // we have to consider mobile devices with less calculation power.
-            int costFactor = 10000;
+            int costFactor = 20000;
 
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.activity_main);

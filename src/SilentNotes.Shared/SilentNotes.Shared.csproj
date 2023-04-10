@@ -20,10 +20,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="RelayCommand.cs" />
-  </ItemGroup>
-  
-  <ItemGroup>
     <None Remove="StoryBoards\SynchronizationStory\diagram-draw.io.xml" />
   </ItemGroup>
 

@@ -34,6 +34,7 @@ namespace SilentNotes.Android.Services
             if (IsRunning)
                 return Task.CompletedTask;
 
+            IsRunning = true; // cannot be reset to false (no return to GUI thread), wait on stop() of next startup
             IAppContextService appContext = Ioc.Default.GetService<IAppContextService>();
             ISettingsService settingsService = Ioc.Default.GetService<ISettingsService>();
             IInternetStateService internetStateService = Ioc.Default.GetService<IInternetStateService>();

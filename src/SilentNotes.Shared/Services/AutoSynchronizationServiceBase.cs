@@ -23,7 +23,7 @@ namespace SilentNotes.Services
         public virtual async Task SynchronizeAtStartup()
         {
             IsRunning = true;
-            using (var runningStateGuard = new Guard(() => IsRunning = false))
+            try
             {
                 IFeedbackService feedbackService = Ioc.Default.GetService<IFeedbackService>();
                 ILanguageService languageService = Ioc.Default.GetService<ILanguageService>();
@@ -67,6 +67,10 @@ namespace SilentNotes.Services
                         new[] { ControllerNames.NoteRepository, ControllerNames.Note });
                 }
             }
+            finally
+            {
+                IsRunning = false;
+            }
         }
 
         /// <inheritdoc/>
@@ -77,7 +81,7 @@ namespace SilentNotes.Services
                 return;
 
             IsRunning = true;
-            using (var runningStateGuard = new Guard(() => IsRunning = false))
+            try
             {
                 ILanguageService languageService = Ioc.Default.GetService<ILanguageService>();
                 ISettingsService settingsService = Ioc.Default.GetService<ISettingsService>();
@@ -103,6 +107,10 @@ namespace SilentNotes.Services
                     cryptoRandomService,
                     repositoryStorageService,
                     noteRepositoryUpdater);
+            }
+            finally
+            {
+                IsRunning = false;
             }
         }
 
