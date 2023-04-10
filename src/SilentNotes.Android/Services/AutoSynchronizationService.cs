@@ -8,12 +8,10 @@ using System.Threading.Tasks;
 using Android.Content;
 using Android.Runtime;
 using AndroidX.Concurrent.Futures;
-using AndroidX.Lifecycle;
 using AndroidX.Work;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Google.Common.Util.Concurrent;
 using Microsoft.Extensions.DependencyInjection;
-using SilentNotes.Controllers;
 using SilentNotes.Models;
 using SilentNotes.Services;
 using SilentNotes.StoryBoards;
@@ -29,111 +27,32 @@ namespace SilentNotes.Android.Services
     /// </summary>
     internal class AutoSynchronizationService : AutoSynchronizationServiceBase, IAutoSynchronizationService
     {
-        private const string DATA_KEY_SUCCEEDED = "succeeded";
-        private const string DATA_KEY_OLD_FINGERPRINT = "oldfingerprint";
-        private const string DATA_KEY_NEW_FINGERPRINT = "newfingerprint";
-
-        private readonly ObserverHelper _observerHelper;
-        private LiveData _observedLiveData;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AutoSynchronizationService"/> class.
-        /// </summary>
-        public AutoSynchronizationService() 
-        {
-            _observerHelper = new ObserverHelper(OnChanged);
-        }
-
-        /// <inheritdoc/>
-        public override Task SynchronizeAtStartup()
-        {
-            IsRunning = true;
-            IAppContextService appContext = Ioc.Default.GetService<IAppContextService>();
-            ISettingsService settingsService = Ioc.Default.GetService<ISettingsService>();
-            StopListening();
-
-            var autoSyncMode = settingsService.LoadSettingsOrDefault().AutoSyncMode;
-            if (autoSyncMode == AutoSynchronizationMode.Never)
-            {
-                IsRunning = false;
-                return Task.CompletedTask;
-            }
-
-            NetworkType networkType = (autoSyncMode == AutoSynchronizationMode.CostFreeInternetOnly)
-                ? NetworkType.Unmetered
-                : NetworkType.Connected;
-            Constraints constraints = new Constraints.Builder().SetRequiredNetworkType(networkType).Build();
-
-            OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(typeof(ListenableSynchronizationWorker))
-                .AddTag(ListenableSynchronizationWorker.TAG)
-                .SetConstraints(constraints)
-                .Build();
-
-            WorkManager workManager = WorkManager.GetInstance(appContext.Context);
-            workManager
-                .BeginUniqueWork(ListenableSynchronizationWorker.TAG, ExistingWorkPolicy.Replace, workRequest)
-                .Enqueue();
-
-            // Attach observer so we complete the work in SynchronizationAtStartupFinished()
-            LiveData liveDataForObserver = workManager.GetWorkInfosByTagLiveData(ListenableSynchronizationWorker.TAG);
-            StartListening(liveDataForObserver);
-            return Task.CompletedTask;
-        }
-
-        /// <summary>
-        /// Continues the synchronization at startup, after the worker has finished.
-        /// </summary>
-        /// <param name="succeeded">A value indicating whether the silent synchronization was successful.</param>
-        /// <param name="oldFingerprint">The fingerprint of the repository before the synchronization.</param>
-        /// <param name="newFingerprint">The fingerprint of the repository after the synchronization.</param>
-        private void SynchronizationAtStartupFinished(bool succeeded, long oldFingerprint, long newFingerprint)
-        {
-            IRepositoryStorageService repositoryStorageService = Ioc.Default.GetService<IRepositoryStorageService>();
-            IFeedbackService feedbackService = Ioc.Default.GetService<IFeedbackService>();
-            ILanguageService languageService = Ioc.Default.GetService<ILanguageService>();
-            INavigationService navigationService = Ioc.Default.GetService<INavigationService>();
-
-            string message = succeeded
-                ? languageService.LoadText("sync_success")
-                : languageService.LoadText("sync_error_generic");
-            feedbackService.ShowToast(message);
-
-            // Memorize fingerprint of the synchronized respository
-            LastSynchronizationFingerprint = newFingerprint;
-            IsRunning = false;
-
-            // Reload active page, but only if notes are visible and the repository differs
-            if (oldFingerprint != newFingerprint)
-            {
-                repositoryStorageService.ClearCache();
-                navigationService.RepeatNavigationIf(
-                    new[] { ControllerNames.NoteRepository, ControllerNames.Note });
-            }
-        }
-
         /// <inheritdoc/>
         public override Task SynchronizeAtShutdown()
         {
+            // Still running from startup?
+            if (IsRunning)
+                return Task.CompletedTask;
+
+            IsRunning = true; // cannot be reset to false (no return to GUI thread), wait on stop() of next startup
             IAppContextService appContext = Ioc.Default.GetService<IAppContextService>();
             ISettingsService settingsService = Ioc.Default.GetService<ISettingsService>();
+            IInternetStateService internetStateService = Ioc.Default.GetService<IInternetStateService>();
             IRepositoryStorageService repositoryStorageService = Ioc.Default.GetService<IRepositoryStorageService>();
 
-            repositoryStorageService.LoadRepositoryOrDefault(out NoteRepositoryModel localRepository);
-            long currentFingerprint = localRepository.GetModificationFingerprint();
-            repositoryStorageService.ClearCache();
-
-            var autoSyncMode = settingsService.LoadSettingsOrDefault().AutoSyncMode;
-            if (autoSyncMode == AutoSynchronizationMode.Never)
+            if (!ShouldSynchronize(internetStateService, settingsService))
                 return Task.CompletedTask;
 
             // If there are no modifications since the last synchronization, we can spare this step
+            repositoryStorageService.LoadRepositoryOrDefault(out NoteRepositoryModel localRepository);
+            long currentFingerprint = localRepository.GetModificationFingerprint();
             if (currentFingerprint == LastSynchronizationFingerprint)
                 return Task.CompletedTask;
 
-            IsRunning = true;
-            Constraints constraints = (autoSyncMode == AutoSynchronizationMode.CostFreeInternetOnly)
-                ? new Constraints.Builder().SetRequiredNetworkType(NetworkType.Unmetered).Build()
-                : new Constraints.Builder().SetRequiredNetworkType(NetworkType.Connected).Build();
+            // Force a reload at next startup because the sync will be done with an independend storage service.
+            repositoryStorageService.ClearCache();
+
+            Constraints constraints = new Constraints.Builder().SetRequiredNetworkType(NetworkType.Connected).Build();
             Data inputData = new Data.Builder().PutLong(nameof(LastSynchronizationFingerprint), LastSynchronizationFingerprint).Build();
 
             OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(typeof(ListenableSynchronizationWorker))
@@ -158,44 +77,6 @@ namespace SilentNotes.Android.Services
             IAppContextService appContext = Ioc.Default.GetService<IAppContextService>();
             WorkManager workManager = WorkManager.GetInstance(appContext.Context);
             workManager.CancelAllWorkByTag(ListenableSynchronizationWorker.TAG);
-        }
-
-        private void StartListening(LiveData liveDataToObserve)
-        {
-            _observedLiveData = liveDataToObserve;
-            _observedLiveData.ObserveForever(_observerHelper);
-        }
-
-        private void StopListening()
-        {
-            _observedLiveData?.RemoveObserver(_observerHelper);
-            _observedLiveData = null;
-        }
-
-        /// <summary>
-        /// This event is called by the work manager observer.
-        /// </summary>
-        /// <param name="p0">Event arguments.</param>
-        public void OnChanged(Java.Lang.Object p0)
-        {
-            if (p0 is JavaList javaList)
-            {
-                foreach (WorkInfo item in javaList)
-                {
-                    if (item.Tags.Contains(ListenableSynchronizationWorker.TAG))
-                    {
-                        WorkInfo.State state = item.GetState();
-                        if (state.IsFinished)
-                        {
-                            StopListening();
-                            bool succeeded = item.OutputData.GetBoolean(DATA_KEY_SUCCEEDED, false);
-                            long oldFingerprint = item.OutputData.GetLong(DATA_KEY_OLD_FINGERPRINT, -1);
-                            long newFingerprint = item.OutputData.GetLong(DATA_KEY_NEW_FINGERPRINT, -2);
-                            SynchronizationAtStartupFinished(succeeded, oldFingerprint, newFingerprint);
-                        }
-                    }
-                }
-            }
         }
 
         /// <summary>
@@ -231,17 +112,16 @@ namespace SilentNotes.Android.Services
             {
                 Task.Run(async () =>
                 {
-                    Data.Builder outputDataBuilder = new Data.Builder();
                     try
                     {
                         if (_appContext != null)
-                            await RunSilentSynchronizationStory(outputDataBuilder);
+                            await RunSilentSynchronizationStory();
                     }
                     catch (Exception)
                     {
                         // always signal success to the workmanager
                     }
-                    p0.Set(Result.InvokeSuccess(outputDataBuilder.Build()));
+                    p0.Set(Result.InvokeSuccess());
                 });
                 return TAG;
             }
@@ -250,41 +130,27 @@ namespace SilentNotes.Android.Services
 
             /// <summary>
             /// Here the actual work is done. This method should work self-sufficient and should not
-            /// depend on the running app, because it can run after the app was closed.
+            /// depend on the running app, because it can run even after the app was closed.
             /// </summary>
             /// <returns>An asynchronous task.</returns>
-            private async Task RunSilentSynchronizationStory(Data.Builder outputDataBuilder)
+            private async Task RunSilentSynchronizationStory()
             {
                 // Create an environment which is independend of the app.
                 ServiceCollection services = new ServiceCollection();
                 Startup.RegisterServices(services);
                 StartupShared.RegisterCloudStorageClientFactory(services);
                 ServiceProvider serviceProvider = services.BuildServiceProvider();
-
                 IAppContextService appContextService = serviceProvider.GetService<IAppContextService>();
                 appContextService.InitializeWithContextOnly(_appContext);
-
-                NoteRepositoryModel localRepository;
-                IRepositoryStorageService repositoryStorageService = serviceProvider.GetService<IRepositoryStorageService>();
-                repositoryStorageService.LoadRepositoryOrDefault(out localRepository);
-                long oldFingerprint = localRepository.GetModificationFingerprint();
 
                 StoryBoardStepResult result = await SynchronizationStoryBoard.RunSilent(
                     serviceProvider.GetService<ISettingsService>(),
                     serviceProvider.GetService<ILanguageService>(),
                     serviceProvider.GetService<ICloudStorageClientFactory>(),
                     serviceProvider.GetService<ICryptoRandomService>(),
-                    repositoryStorageService,
+                    serviceProvider.GetService<IRepositoryStorageService>(),
                     serviceProvider.GetService<INoteRepositoryUpdater>());
-
-                repositoryStorageService.LoadRepositoryOrDefault(out localRepository);
-                long newFingerprint = localRepository.GetModificationFingerprint();
-                bool succeeded = result.NextStepIs(SynchronizationStoryStepId.StopAndShowRepository);
-
-                outputDataBuilder.PutLong(DATA_KEY_OLD_FINGERPRINT, oldFingerprint);
-                outputDataBuilder.PutLong(DATA_KEY_NEW_FINGERPRINT, newFingerprint);
-                outputDataBuilder.PutBoolean(DATA_KEY_SUCCEEDED, succeeded);
             }
         }
-    }
+   }
 }

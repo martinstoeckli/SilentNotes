@@ -56,11 +56,7 @@ namespace SilentNotes.UWP
             services.AddSingleton<IStoryBoardService>((serviceProvider) => new StoryBoardService());
             services.AddSingleton<IDataProtectionService>((serviceProvider) => new DataProtectionService());
             services.AddSingleton<IInternetStateService>((serviceProvider) => new InternetStateService());
-            services.AddSingleton<IAutoSynchronizationService>((serviceProvider) => new AutoSynchronizationService(
-                serviceProvider.GetService<IInternetStateService>(),
-                serviceProvider.GetService<ISettingsService>(),
-                serviceProvider.GetService<IRepositoryStorageService>(),
-                serviceProvider.GetService<INavigationService>()));
+            services.AddSingleton<IAutoSynchronizationService>((serviceProvider) => new AutoSynchronizationService());
             services.AddSingleton<IThemeService>((serviceProvider) => new ThemeService(
                 serviceProvider.GetService<ISettingsService>(),
                 serviceProvider.GetService<IEnvironmentService>()));
