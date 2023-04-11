@@ -1,0 +1,6 @@
+SilentNotes version 7.3.0
+
+* Android: Synchronisation in Hintergrundservice (WorManager) verschoben, so dass sie auch nach beenden der App abgeschlossen werden kann.
+* Konfigurierbarer Screenshot-Schutz und Schlagwortfilter.
+* Kostenfaktor von key-derivation-function erhöht.
+* Bibliotheksupdate NPM, WebPack, NuGet.
