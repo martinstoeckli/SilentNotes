@@ -1,7 +1,45 @@
 ﻿@page "/"
+@inject ISnackbar Snackbar
 
-<h3>NoteRepositoryPage</h3>
+<MudAppBar Fixed="true" Class="" Dense="true">
+    <MudIconButton Icon="@Icons.Material.Outlined.Menu" Color="Color.Inherit" Class="mr-5" />
+    <MudText>blaskjglsajflk</MudText>
+
+    <MudSpacer />
+
+    <MudTooltip Text="Add new item">
+        <MudIconButton Icon="@Icons.Material.Outlined.Add" />
+    </MudTooltip>
+    <MudIconButton Icon="@Icons.Material.Outlined.Edit" />
+
+    <MudMenu @ref="OverflowMenu" Dense="true" AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight">
+        <ActivatorContent>
+            <MudIconButton Icon="@Icons.Material.Filled.MoreVert" />
+        </ActivatorContent>
+        <ChildContent>
+            <MudNavMenu Rounded="true" Margin="Margin.Dense" Class="pa-1">
+                <MudNavLink OnClick="DoClick" Icon="@Icons.Material.Filled.Dashboard">Dashboard</MudNavLink>
+                <MudDivider />
+                <MudNavGroup Title="Settings" Icon="@Icons.Material.Filled.Settings">
+                    <MudNavLink OnClick="DoClick" Icon="@Icons.Material.Filled.People" IconColor="Color.Success">Users</MudNavLink>
+                    <MudNavLink OnClick="DoClick" Icon="@Icons.Material.Filled.Security" IconColor="Color.Info">Security</MudNavLink>
+                </MudNavGroup>
+            </MudNavMenu>
+        </ChildContent>
+    </MudMenu>
+</MudAppBar>
+
+<div Style="background-color:#aaaaaa">
+    <h3>NoteRepositoryPage</h3>
+
+</div>
 
 @code {
+    private MudMenu OverflowMenu { get; set; }
 
+    private void DoClick(MouseEventArgs args)
+    {
+        Snackbar.Add("OnClick Invoked");
+        OverflowMenu.CloseMenu();
+    }
 }

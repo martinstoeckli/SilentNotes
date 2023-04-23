@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
     <PropertyGroup>
-        <TargetFrameworks>net7.0-maccatalyst;net7.0-android33.0</TargetFrameworks>
+        <TargetFrameworks>net7.0-android33.0</TargetFrameworks>
         <!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
         <!-- <TargetFrameworks>$(TargetFrameworks);net7.0-tizen</TargetFrameworks> -->
         <OutputType>Exe</OutputType>
@@ -27,7 +27,13 @@
     </PropertyGroup>
 
     <PropertyGroup>
+      <BaseOutputPath>..\..\bin</BaseOutputPath>
+      <BaseIntermediateOutputPath></BaseIntermediateOutputPath>
+    </PropertyGroup>
+
+    <PropertyGroup>
       <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net7.0-windows10.0.19041.0</TargetFrameworks>
+      <DefaultLanguage>en</DefaultLanguage>
     </PropertyGroup>
 
     <ItemGroup>

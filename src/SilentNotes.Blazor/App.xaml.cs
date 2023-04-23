@@ -1,4 +1,6 @@
-﻿namespace SilentNotes;
+﻿using Microsoft.AspNetCore.Components.WebView.Maui;
+
+namespace SilentNotes;
 
 public partial class App : Application
 {
@@ -7,5 +9,7 @@ public partial class App : Application
 		InitializeComponent();
 
 		MainPage = new MainPage();
-	}
+        // todo: stom
+        BlazorWebView webView = MainPage.FindByName("blazorWebView") as BlazorWebView;
+    }
 }
