@@ -55,13 +55,22 @@
     </ItemGroup>
 
     <ItemGroup>
+      <None Remove="Resources\Raw\Lng.SilentNotes.cz" />
+      <None Remove="Resources\Raw\Lng.SilentNotes.de" />
+      <None Remove="Resources\Raw\Lng.SilentNotes.en" />
+      <None Remove="Resources\Raw\Lng.SilentNotes.it" />
+      <None Remove="Resources\Raw\Lng.SilentNotes.ru" />
+      <None Remove="Resources\Raw\Lng.SilentNotes.tr" />
+      <None Remove="Resources\Raw\Lng.SilentNotes.zh" />
+    </ItemGroup>
+
+    <ItemGroup>
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
         <PackageReference Include="MudBlazor" Version="6.2.2" />
     </ItemGroup>
 
     <ItemGroup>
       <Folder Include="Models\" />
-      <Folder Include="ViewModels\" />
     </ItemGroup>
 
 </Project>

@@ -1,5 +1,11 @@
 ﻿@page "/"
+@using SilentNotes.Services
+
 @inject ISnackbar Snackbar
+@inject ILanguageService LanguageService
+@inject ISvgIconService IconService
+
+@implements IDisposable
 
 <MudAppBar Fixed="true" Class="" Dense="true">
     <MudIconButton Icon="@Icons.Material.Outlined.Menu" Color="Color.Inherit" Class="mr-5" />
@@ -18,7 +24,7 @@
         </ActivatorContent>
         <ChildContent>
             <MudNavMenu Rounded="true" Margin="Margin.Dense" Class="pa-1">
-                <MudNavLink OnClick="DoClick" Icon="@Icons.Material.Filled.Dashboard">Dashboard</MudNavLink>
+                <MudNavLink OnClick="DoClick" Icon="@IconService.GetSvgLink("note-text-outline")">@LanguageService["note_create_new"]</MudNavLink>
                 <MudDivider />
                 <MudNavGroup Title="Settings" Icon="@Icons.Material.Filled.Settings">
                     <MudNavLink OnClick="DoClick" Icon="@Icons.Material.Filled.People" IconColor="Color.Success">Users</MudNavLink>
@@ -34,6 +40,22 @@
 
 </div>
 
+<div hidden>
+    @* Declaring icons once and linking to them multiple times, can reduce the page size *@
+    @IconService.GetLinkableSvg("magnify");
+    @IconService.GetLinkableSvg("close-circle-outline");
+    @IconService.GetLinkableSvg("arrow-all");
+    @IconService.GetLinkableSvg("lock");
+    @IconService.GetLinkableSvg("lock-open-variant");
+    @IconService.GetLinkableSvg("lock-outline");
+    @IconService.GetLinkableSvg("delete");
+    @IconService.GetLinkableSvg("note-text-outline");
+    @IconService.GetLinkableSvg("pin");
+    @IconService.GetLinkableSvg("order-bool-ascending-variant");
+    @IconService.GetLinkableSvg("tag-multiple");
+    @IconService.GetLinkableSvg("tag-off");
+</div>
+
 @code {
     private MudMenu OverflowMenu { get; set; }
 
@@ -41,5 +63,9 @@
     {
         Snackbar.Add("OnClick Invoked");
         OverflowMenu.CloseMenu();
+    }
+
+    public void Dispose()
+    {
     }
 }
