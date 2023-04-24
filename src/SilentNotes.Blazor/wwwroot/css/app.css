@@ -16,3 +16,7 @@
     right: 0.75rem;
     top: 0.5rem;
 }
+
+.filter-input, .filter-input:hover, .filter-input:before, .filter-input:after, .filter-input:focus, .filter-input:focus-within {
+    border-bottom-style: none !important;
+}
