@@ -8,9 +8,6 @@
 @implements IDisposable
 
 <MudAppBar Fixed="true" Class="" Dense="true">
-    <MudIconButton Icon="@Icons.Material.Outlined.Menu" Color="Color.Inherit" Class="mr-5" />
-    <MudText>blaskjglsajflk</MudText>
-
     <MudSpacer />
 
     <MudPaper Class="d-inline-flex align-center rounded-pill pa-0" MaxHeight="36px" Elevation="0">
@@ -20,7 +17,7 @@
             Immediate="true" />
     </MudPaper>
 
-    <MudIconButton Icon="@IconService[IconNames.CloudSync]" Color="Color.Inherit" />
+    <MudIconButton Class="d-none d-sm-flex" Icon="@IconService[IconNames.CloudSync]" Color="Color.Inherit" />
 
     <MudMenu @ref="OverflowMenu"
         Dense="true"
@@ -31,7 +28,7 @@
         </ActivatorContent>
         <ChildContent>
             <MudNavMenu Rounded="true" Margin="Margin.Dense" Class="px-1">
-                <MudNavLink OnClick="DoClick" Icon="@IconService[IconNames.NoteTextOutline]">@LanguageService["note_create_new"]</MudNavLink>
+                <MudNavLink Class="d-sm-none" OnClick="DoClick" Icon="@IconService[IconNames.NoteTextOutline]">@LanguageService["note_create_new"]</MudNavLink>
                 <MudNavLink OnClick="DoClick" Icon="@IconService[IconNames.OrderBoolAscendingVariant]">@LanguageService["checklist_create_new"]</MudNavLink>
                 <MudNavLink OnClick="DoClick" Icon="@IconService[IconNames.DeleteEmpty]">@LanguageService["show_recyclebin"]</MudNavLink>
                 <MudNavLink OnClick="DoClick" Icon="@IconService[IconNames.Export]">@LanguageService["show_export"]</MudNavLink>
@@ -48,7 +45,7 @@
     </MudMenu>
 </MudAppBar>
 
-<div Style="background-color:#aaaaaa">
+<div id="content" Style="background-color:#aaaaaa">
     <h3>NoteRepositoryPage</h3>
 
 

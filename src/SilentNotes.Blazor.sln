@@ -5,6 +5,8 @@ VisualStudioVersion = 17.5.33530.505
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SilentNotes", "SilentNotes.Blazor\SilentNotes.csproj", "{05DDC644-6399-456A-B255-D1D82353F794}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VanillaCloudStorageClient", "VanillaCloudStorageClient\VanillaCloudStorageClient.csproj", "{5A23DDF4-0101-4612-B250-2A939BE0E024}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,6 +19,10 @@ Global
 		{05DDC644-6399-456A-B255-D1D82353F794}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{05DDC644-6399-456A-B255-D1D82353F794}.Release|Any CPU.Build.0 = Release|Any CPU
 		{05DDC644-6399-456A-B255-D1D82353F794}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{5A23DDF4-0101-4612-B250-2A939BE0E024}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A23DDF4-0101-4612-B250-2A939BE0E024}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A23DDF4-0101-4612-B250-2A939BE0E024}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A23DDF4-0101-4612-B250-2A939BE0E024}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

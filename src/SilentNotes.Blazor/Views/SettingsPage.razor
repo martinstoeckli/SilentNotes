@@ -11,36 +11,68 @@
 
 @implements IDisposable
 
-<h3>SettingsPage</h3>
+@* Main menu *@
+<MudAppBar Fixed="true" Class="" Dense="true">
+    <MudTooltip Text="@LanguageService["back"]">
+        <MudIconButton Href="/" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" />
+    </MudTooltip>
 
-<MudCheckBox @bind-Checked="@ViewModel.UseSolidColorTheme" Label="@LanguageService["gui_theme_solid_color"]"/>
+    <MudSpacer />
 
-<MudColorPicker @bind-Text="@ViewModel.ColorForSolidThemeHex"
-    DisableToolbar="true" DisableAlpha="true"
-    ColorPickerView="ColorPickerView.Spectrum" ColorPickerMode="ColorPickerMode.HEX"
-    AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight" />
+    <MudMenu Dense="true" AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight">
+        <ActivatorContent>
+            <MudIconButton Icon="@IconService[IconNames.DotsVertical]" Color="Color.Inherit" />
+        </ActivatorContent>
+        <ChildContent>
+            <MudNavMenu Rounded="true" Margin="Margin.Dense" Class="px-1">
+                <MudNavLink Icon="@IconService[IconNames.Earth]">@LanguageService["gui_localization_test"]</MudNavLink>
+            </MudNavMenu>
+        </ChildContent>
+    </MudMenu>
+</MudAppBar>
 
-<MudPaper Style="@ColorExampleStyle">sugusu</MudPaper>
+<div id="content">
+    <MudIcon Class="background-icon" Icon="@IconService[IconNames.Settings]" Style="@($"right:-128px; top:-154px; color:{SelectedTheme.Palette.BackgroundGrey}")" />
+
+    <h3>SettingsPage</h3>
+
+    <MudCheckBox @bind-Checked="@ViewModel.UseSolidColorTheme" Label="@LanguageService["gui_theme_solid_color"]" />
+
+    <MudColorPicker @bind-Text="@ViewModel.ColorForSolidThemeHex"
+                    DisableToolbar="true" DisableAlpha="true"
+                    ColorPickerView="ColorPickerView.Spectrum" ColorPickerMode="ColorPickerMode.HEX"
+                    AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight" />
+
+    <MudPaper Style="@ColorSampleStyle">kljh</MudPaper>
+</div>
 
 @code {
     private SettingsViewModel ViewModel { get; set; }
-    private string ColorExampleStyle { get; set; }
+
+    [CascadingParameter]
+    public MudTheme SelectedTheme { get; set; }
+
+    private string ColorSampleStyle 
+    { 
+        get { return string.Format("background-color:{0}", ViewModel.ColorForSolidThemeHex); }
+    }
 
     protected override void OnInitialized()
     {
         SettingsModel settings = SettingsService.LoadSettingsOrDefault();
         ViewModel = new SettingsViewModel(settings);
-        ViewModel.PropertyChanged += PropertyChanged;
+        //ViewModel.PropertyChanged += PropertyChanged;
     }
 
     public void Dispose()
     {
-        ViewModel.PropertyChanged -= PropertyChanged;
+        //ViewModel.PropertyChanged -= PropertyChanged;
     }
 
-    private void PropertyChanged(object sender, PropertyChangedEventArgs e)
-    {
-        if (e.PropertyName == nameof(SettingsViewModel.ColorForSolidThemeHex))
-            ColorExampleStyle = string.Format("background-color:{0}", ViewModel.ColorForSolidThemeHex);
-    }
+    //private void PropertyChanged(object sender, PropertyChangedEventArgs e)
+    //{
+    //    if (e.PropertyName == nameof(SettingsViewModel.ColorForSolidThemeHex))
+    //        StateHasChanged();
+    //    ColorExampleStyle = string.Format("background-color:{0}", ViewModel.ColorForSolidThemeHex);
+    //}
 }

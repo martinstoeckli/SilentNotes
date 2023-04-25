@@ -1,16 +1,24 @@
 ﻿@inherits LayoutComponentBase
 
-<MudThemeProvider @bind-IsDarkMode="@_isDarkMode" Theme="_theme" />
+<MudThemeProvider @bind-IsDarkMode="@_isDarkMode" Theme="SelectedTheme" />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
 <MudLayout>
-    <MudMainContent Style="height:100vh background-color:antiquewhite">
-        @Body
+    <MudMainContent>
+        <CascadingValue Value="SelectedTheme">
+            @Body
+        </CascadingValue>
     </MudMainContent>
 </MudLayout>
 
 @code {
-    private MudTheme _theme = new();
+    public MudTheme SelectedTheme { get; set; }
+
     private bool _isDarkMode = false;
+
+    protected override void OnInitialized()
+    {
+        SelectedTheme = new MudTheme();
+    }
 }
