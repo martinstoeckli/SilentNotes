@@ -1,0 +1,46 @@
+﻿@page "/settings"
+@using System.ComponentModel
+@using SilentNotes.Models
+@using SilentNotes.ViewModels
+@using SilentNotes.Services
+
+@inject ISnackbar Snackbar
+@inject ILanguageService LanguageService
+@inject ISvgIconService IconService
+@inject ISettingsService SettingsService
+
+@implements IDisposable
+
+<h3>SettingsPage</h3>
+
+<MudCheckBox @bind-Checked="@ViewModel.UseSolidColorTheme" Label="@LanguageService["gui_theme_solid_color"]"/>
+
+<MudColorPicker @bind-Text="@ViewModel.ColorForSolidThemeHex"
+    DisableToolbar="true" DisableAlpha="true"
+    ColorPickerView="ColorPickerView.Spectrum" ColorPickerMode="ColorPickerMode.HEX"
+    AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight" />
+
+<MudPaper Style="@ColorExampleStyle">sugusu</MudPaper>
+
+@code {
+    private SettingsViewModel ViewModel { get; set; }
+    private string ColorExampleStyle { get; set; }
+
+    protected override void OnInitialized()
+    {
+        SettingsModel settings = SettingsService.LoadSettingsOrDefault();
+        ViewModel = new SettingsViewModel(settings);
+        ViewModel.PropertyChanged += PropertyChanged;
+    }
+
+    public void Dispose()
+    {
+        ViewModel.PropertyChanged -= PropertyChanged;
+    }
+
+    private void PropertyChanged(object sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(SettingsViewModel.ColorForSolidThemeHex))
+            ColorExampleStyle = string.Format("background-color:{0}", ViewModel.ColorForSolidThemeHex);
+    }
+}

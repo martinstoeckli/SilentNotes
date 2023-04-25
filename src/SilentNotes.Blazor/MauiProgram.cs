@@ -13,14 +13,14 @@ namespace SilentNotes;
 public static class MauiProgram
 {
     public static MauiApp CreateMauiApp()
-	{
-		var builder = MauiApp.CreateBuilder();
-		builder
-			.UseMauiApp<App>()
-			.ConfigureFonts(fonts =>
-			{
-				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
-			});
+    {
+        var builder = MauiApp.CreateBuilder();
+        builder
+            .UseMauiApp<App>()
+            .ConfigureFonts(fonts =>
+            {
+                fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
+            });
 
         builder.Services.AddMauiBlazorWebView();
         builder.Services.AddMudServices(config =>
@@ -48,6 +48,12 @@ public static class MauiProgram
 
     private static void RegisterPlatformServices(IServiceCollection services)
     {
+        services.AddSingleton<ICryptoRandomService>((serviceProvider) => new CryptoRandomService());
+        services.AddSingleton<IDataProtectionService>((serviceProvider) => new DataProtectionService());
+        services.AddSingleton<IXmlFileService>((serviceProvider) => new XmlFileService());
+        services.AddSingleton<ISettingsService>((serviceProvider) => new SettingsService(
+            serviceProvider.GetService<IXmlFileService>(),
+            serviceProvider.GetService<IDataProtectionService>()));
     }
 
 #elif ANDROID
@@ -55,6 +61,14 @@ public static class MauiProgram
     private static void RegisterPlatformServices(IServiceCollection services)
     {
         services.AddSingleton<IAppContextService>((serviceProvider) => new AppContextService());
+        services.AddSingleton<ICryptoRandomService>((serviceProvider) => new CryptoRandomService());
+        services.AddSingleton<IDataProtectionService>((serviceProvider) => new DataProtectionService(
+            serviceProvider.GetService<ICryptoRandomService>()));
+        services.AddSingleton<IXmlFileService>((serviceProvider) => new XmlFileService());
+        services.AddSingleton<ISettingsService>((serviceProvider) => new SettingsService(
+            serviceProvider.GetService<IAppContextService>(),
+            serviceProvider.GetService<IXmlFileService>(),
+            serviceProvider.GetService<IDataProtectionService>()));
     }
 
 #endif
