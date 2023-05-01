@@ -1,0 +1,158 @@
+﻿:root {
+	--font-color-light-background: black;
+	--font-color-dark-background: white;
+	--note-handle-mx: 10px;
+	--note-handle-my: 8px;
+}
+
+html { font-size: 14px; }
+h1 { font-size: 1.7em; }
+h2 { font-size: 1.3em; }
+h3 { font-size: 1.1em; }
+.h-colored {
+	color: var(--mud-palette-primary-darken);
+}
+
+.form-row {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	margin: 0;
+	padding: 0;
+}
+.form-group {
+	display: flex;
+	align-items: baseline;
+	margin: 0;
+	padding: 0;
+}
+.form-control {
+}
+
+.background-icon {
+	position: fixed;
+	display: inline-block;
+	right: 0;
+	top: 0;
+	width: 360px;
+	height: 360px;
+	z-index: -1;
+	color: var(--mud-palette-background-grey)
+}
+
+.fab {
+	position: fixed;
+	right: 2em;
+	bottom: 2em;
+}
+
+.filter-input, .filter-input:hover, .filter-input:before, .filter-input:after, .filter-input:focus, .filter-input:focus-within {
+	border-bottom-style: none !important;
+}
+
+.note-list {
+	display: flex;
+	flex-wrap: wrap;
+/*	gap: 112px 12px;*/
+/*	row-gap: 12px;*/
+/*	column-gap: 12px;*/
+}
+.note-item {
+	display: block;
+	width: 100%;
+	padding: 0 6px; /* flex gap not working on Android 7, only padding and margin */
+	margin: 6px 0;
+}
+/* sm breakpoint */
+@media screen and (min-width: 600px) {
+	.note-item {
+		display: inline-block;
+		width: 240px;
+	}
+}
+
+/* The note light/dark is independend of the theme */
+.note-light {
+	color: var(--font-color-light-background);
+}
+.note-dark {
+	color: var(--font-color-dark-background);
+}
+
+.note-card {
+	position: relative;
+	padding: 12px;
+	overflow: hidden;
+	font-size: 0.9em;
+	user-select: none;
+	cursor: default;
+}
+.note-card a:hover {
+	cursor: default;
+}
+
+.note-locked {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+}
+.note-locked svg {
+	width: 36px;
+	height: 36px;
+	fill: rgba(160, 160, 160, 0.4);
+}
+.note-locked.note-light svg { fill: rgba(204, 204, 204, 0.4); }
+.note-locked.note-dark svg { fill: rgba(204, 204, 204, 0.4); }
+
+.note-handle {
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+	position: absolute;
+	top: var(--note-handle-my);
+	right: var(--note-handle-mx);
+	width: 26px;
+	height: 26px;
+	border-radius: 13px;
+	cursor: pointer;
+}
+.note-handle.note-light { background-color: rgba(172, 172, 172, 0.5); fill: #707070 }
+.note-handle.note-dark { background-color: rgba(204, 204, 204, 0.7); fill: #606060; }
+
+.sortable-handle {
+}
+.safe-handle {
+	right: 50px;
+}
+.recycle-handle {
+	top: auto;
+	bottom: var(--note-handle-my);	
+}
+
+.color-swatch {
+/*	display: inline-block;*/
+	width: 42px;
+	height: 28px;
+	border-radius: 3px;
+	border: 1px solid var(--mud-palette-lines-default);
+}
+
+#blazor-error-ui {
+	background: lightyellow;
+	bottom: 0;
+	box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+	display: none;
+	left: 0;
+	padding: 0.6rem 1.25rem 0.7rem 1.25rem;
+	position: fixed;
+	width: 100%;
+	z-index: 1000;
+}
+
+#blazor-error-ui .dismiss {
+	cursor: pointer;
+	position: absolute;
+	right: 0.75rem;
+	top: 0.5rem;
+}

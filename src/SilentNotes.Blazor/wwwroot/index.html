@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" style="height:100%; width:100%;">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="content-security-policy" content="base-uri 'self'; default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>SilentNotes</title>
+    <base href="/" />
+    <link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" />
+    <link href="css/app.css" rel="stylesheet" />
+    <script src="_content/MudBlazor/MudBlazor.min.js"></script>
+</head>
+
+<body style="height:100%; width:100%;">
+    <div id="app" style="height:100%; width:100%;">
+        <!-- splash dialog shown at startup until ready -->
+        <div style="display:flex; height:100%; width:100%; justify-content:center; align-items:center; background-color:#0080cf">
+            <svg width='48' height='48' viewBox='0 0 24 24'><use xlink:href="#svg-delete" /></svg>
+        </div>
+    </div>
+
+    <div id="blazor-error-ui">
+        An unhandled error has occurred.
+        <a href="" class="reload">Reload</a>
+        <a class="dismiss">🗙</a>
+    </div>
+
+    <script src="_framework/blazor.webview.js" autostart="false"></script>
+
+    <div hidden>
+        <svg id='svg-delete' width='24' height='24' viewBox='0 0 24 24'><path d='M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z' /></svg>
+    </div>
+</body>
+
+</html>

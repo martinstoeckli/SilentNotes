@@ -1,0 +1,23 @@
+﻿@inherits LayoutComponentBase
+
+@using SilentNotes.Services
+
+@inject IThemeService ThemeService
+
+<MudThemeProvider @bind-IsDarkMode="ThemeService.IsDarkMode" Theme="@ThemeService.Theme" />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+<MudLayout>
+    <MudMainContent>
+        @Body
+    </MudMainContent>
+</MudLayout>
+
+@code {
+    protected override void OnInitialized()
+    {
+        // Give the theme service a way to redraw the GUI
+        ThemeService.RefreshGui = StateHasChanged;
+    }
+}
