@@ -31,20 +31,32 @@
     </MudMenu>
 </MudAppBar>
 
-<div id="content">
-    <MudIcon Class="background-icon" Icon="@IconService[IconNames.Settings]" Style="@($"right:-128px; top:-154px; color:{SelectedTheme.Palette.BackgroundGrey}")" />
+@* watermark image *@
+<MudIcon Class="background-icon" Icon="@IconService[IconNames.Settings]" Style="@($"right:-128px; top:-154px;")" />
 
-    <h3>SettingsPage</h3>
+@* body *@
+<MudGrid Class="ma-0 px-4 mud-width-full">
+    <MudItem xs="12" sm="10" md="7">
+        <h3>SettingsPage</h3>
 
-    <MudCheckBox @bind-Checked="@ViewModel.UseSolidColorTheme" Label="@LanguageService["gui_theme_solid_color"]" />
+        <div class="form-row">
+            <div class="form-group">
+                <MudCheckBox @bind-Checked="@ViewModel.UseSolidColorTheme" id="UseSolidColorTheme" />
+                <label for="UseSolidColorTheme" class="mr-2">@LanguageService["gui_theme_solid_color"]</label>
+            </div>
 
-    <MudColorPicker @bind-Text="@ViewModel.ColorForSolidThemeHex"
+            <div class="form-group">
+                <MudElement Class="color-swatch ml-2 mr-0 align-self-end" Style="@ColorSwatchStyle"/>
+                <MudColorPicker @bind-Text="@ViewModel.ColorForSolidThemeHex"
+                    Class="ml-0 mr-4 pa-0"
+                    Style="width:1px"
                     DisableToolbar="true" DisableAlpha="true"
-                    ColorPickerView="ColorPickerView.Spectrum" ColorPickerMode="ColorPickerMode.HEX"
+                    ColorPickerView="ColorPickerView.Grid" ColorPickerMode="ColorPickerMode.HEX"
                     AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight" />
-
-    <MudPaper Style="@ColorSampleStyle">kljh</MudPaper>
-</div>
+            </div>
+        </div>
+    </MudItem>
+</MudGrid>
 
 @code {
     private SettingsViewModel ViewModel { get; set; }
@@ -52,7 +64,7 @@
     [CascadingParameter]
     public MudTheme SelectedTheme { get; set; }
 
-    private string ColorSampleStyle 
+    private string ColorSwatchStyle 
     { 
         get { return string.Format("background-color:{0}", ViewModel.ColorForSolidThemeHex); }
     }
