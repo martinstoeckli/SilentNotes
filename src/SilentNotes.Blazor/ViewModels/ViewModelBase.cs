@@ -46,10 +46,10 @@ namespace SilentNotes.ViewModels
         //{
         //}
 
-        ///// <inheritdoc/>
-        //public virtual void OnStoringUnsavedData()
-        //{
-        //}
+        /// <inheritdoc/>
+        public virtual void OnStoringUnsavedData()
+        {
+        }
 
         ///// <inheritdoc/>
         //public abstract void OnGoBackPressed(out bool handled);

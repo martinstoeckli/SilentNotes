@@ -37,7 +37,7 @@
 @* body *@
 <MudGrid Class="ma-0 px-4 mud-width-full">
     <MudItem xs="12" sm="10" md="7">
-        <h3>SettingsPage</h3>
+        <h2>@LanguageService["gui_texture"]</h2>
 
         <div class="form-row">
             <div class="form-group">
@@ -59,27 +59,29 @@
 </MudGrid>
 
 @code {
-    private SettingsViewModel ViewModel { get; set; }
-
-    [CascadingParameter]
-    public MudTheme SelectedTheme { get; set; }
-
-    private string ColorSwatchStyle 
-    { 
-        get { return string.Format("background-color:{0}", ViewModel.ColorForSolidThemeHex); }
-    }
-
     protected override void OnInitialized()
     {
         SettingsModel settings = SettingsService.LoadSettingsOrDefault();
         ViewModel = new SettingsViewModel(settings);
+
         //ViewModel.PropertyChanged += PropertyChanged;
     }
 
     public void Dispose()
     {
-        //ViewModel.PropertyChanged -= PropertyChanged;
+        System.Diagnostics.Debugger.Log(1, "dd", "dispose");
     }
+
+    private SettingsViewModel ViewModel { get; set; }
+
+    [CascadingParameter]
+    public MudTheme SelectedTheme { get; set; }
+
+    private string ColorSwatchStyle
+    {
+        get { return string.Format("background-color:{0}", ViewModel.ColorForSolidThemeHex); }
+    }
+
 
     //private void PropertyChanged(object sender, PropertyChangedEventArgs e)
     //{

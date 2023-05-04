@@ -1,28 +1,33 @@
 ﻿@page "/"
+@using System.ComponentModel
+@using System.Windows.Input;
+@using SilentNotes.Models
+@using SilentNotes.ViewModels
 @using SilentNotes.Services
 
 @inject ISnackbar Snackbar
 @inject ILanguageService LanguageService
 @inject ISvgIconService IconService
+@inject IRepositoryStorageService RepositoryStorageService
+@inject ISettingsService SettingsService
+@inject ICryptoRandomService CryptoRandomSource
 
 @implements IDisposable
 
-<MudAppBar Fixed="true" Class="" Dense="true">
+@* Main menu *@
+<MudAppBar Fixed="true" Dense="true">
     <MudSpacer />
 
     <MudPaper Class="d-inline-flex align-center rounded-pill pa-0" MaxHeight="36px" Elevation="0">
-        <MudInput @ref="FilterInput" @bind-Value="Filter"
+        <MudInput @bind-Value="ViewModel.Filter"
             Class="filter-input ml-2 mr-1 my-0"
-            Adornment="Adornment.End" AdornmentIcon="@FilterIcon" OnAdornmentClick="ClearFilter"
+            Adornment="Adornment.End" AdornmentIcon="@FilterIcon" OnAdornmentClick="@(() => ViewModel.ClearFilterCommand.Execute(null))"
             Immediate="true" />
     </MudPaper>
 
     <MudIconButton Class="d-none d-sm-flex" Icon="@IconService[IconNames.CloudSync]" Color="Color.Inherit" />
 
-    <MudMenu @ref="OverflowMenu"
-        Dense="true"
-        AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight">
-
+    <MudMenu @ref="OverflowMenu" Dense="true" AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight">
         <ActivatorContent>
             <MudIconButton Icon="@IconService[IconNames.DotsVertical]" Color="Color.Inherit" />
         </ActivatorContent>
@@ -45,61 +50,87 @@
     </MudMenu>
 </MudAppBar>
 
-<div id="content" Style="background-color:#aaaaaa">
-    <h3>NoteRepositoryPage</h3>
-
-
-    <MudFab Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" />
+@* body *@
+<div id="content" class="pl-2 pt-0 pr-2 pb-2">
+    <ul class="wraplist">
+        @foreach (var note in ViewModel.FilteredNotes)
+        {
+            <li @key="note.Id" class="wraplist-item">
+                <div class="note-card">
+                    @if (@note.IsLocked)
+                    {
+                        <span class="locked">@IconService.EmbedSvgLink(IconNames.LockOutline)</span>
+                    }
+                    else
+                    {
+                        <div class="note-viewer over-view">
+                            @((MarkupString)note.GetShortenedUnlockedHtmlContent())
+                        </div>
+                    }
+                </div>
+            </li>
+        }
+    </ul>
 </div>
 
+<MudFab Class="fab" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" />
+
 <div hidden>
-    @* Declare icons which are used more than once as linkable icons, to reduce page size *@
-    @IconService.GetLinkableSvgs( new [] {
-        "magnify",
-        "close-circle-outline",
-        "arrow-all",
-        "lock",
-        "lock-open-variant",
-        "lock-outline",
-        "delete",
-        "pin",
-        "tag-multiple",
-        "tag-off"
+    @* Declare icons which can be reused multiple times, to reduce page size *@
+    @IconService.EmbedLinkableSvgs( new [] {
+        IconNames.Magnify,
+        IconNames.CloseCircleOutline,
+        IconNames.LockOutline,
     });
 </div>
 
 @code {
-    private string _filter;
+    private bool _isDisposed;
 
-    private string Filter 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="NoteRepositoryPage"/> class.
+    /// </summary>
+    protected override Task OnInitializedAsync()
     {
-        get { return _filter; }
-        set 
-        {
-            _filter = value;
-            if (string.IsNullOrEmpty(_filter))
-            {
-                FilterIcon = IconService[IconNames.Magnify];
-                //if (FilterInput != null)
-                //    FilterInput.OnAdornmentClick = EventCallback<MouseEventArgs>.Empty;
-            }
-            else
-            {
-                FilterIcon = IconService[IconNames.CloseCircleOutline];
-                //if (FilterInput != null)
-                //    FilterInput.OnAdornmentClick = new EventCallback<MouseEventArgs>(this, ClearFilter);
-            }
-        }
+        RepositoryStorageLoadResult loadResult = RepositoryStorageService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepositoryModel);
+        if (loadResult == RepositoryStorageLoadResult.InvalidRepository)
+            throw new Exception("Invalid repository");
+
+        ViewModel = new NoteRepositoryViewModel(
+            noteRepositoryModel,
+            SettingsService,
+            CryptoRandomSource);
+        //ViewModel.PropertyChanged += HandlePropertyChanged;
+        return Task.CompletedTask;
     }
 
-    private void ClearFilter()
+    /// <summary>
+    /// Finalizes an ainstance of the <see cref="NoteRepositoryPage"/> class.
+    /// </summary>
+    public void Dispose()
     {
-        Filter = null;
+        if (_isDisposed)
+            return;
+        _isDisposed = true;
+        //ViewModel.PropertyChanged -= HandlePropertyChanged;
     }
 
-    public MudInput<string> FilterInput { get; set; }
+    /// <summary>
+    /// Gets or sets the datacontext of this view.
+    /// </summary>
+    private NoteRepositoryViewModel ViewModel { get; set; }
 
-    private string FilterIcon { get; set; }
+    //private void HandlePropertyChanged(object sender, PropertyChangedEventArgs e)
+    //{
+    //}
+
+    /// <summary>
+    /// Gets the svg icon for filtering (magnifier or clear)
+    /// </summary>
+    private string FilterIcon
+    {
+        get { return IconService.GetSvgLink(ViewModel.IsFiltered ? IconNames.CloseCircleOutline : IconNames.Magnify); }
+    }
 
     private MudMenu OverflowMenu { get; set; }
 
@@ -108,24 +139,4 @@
         Snackbar.Add("OnClick Invoked");
         OverflowMenu.CloseMenu();
     }
-
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-        Filter = null;
-    }
-
-    public void Dispose()
-    {
-    }
-
-    protected override void OnAfterRender(bool firstRender)
-    {
-        base.OnAfterRender(firstRender);
-        if (OverflowMenu != null)
-        {
-            string style = OverflowMenu.Style;
-        }
-    }
-
 }

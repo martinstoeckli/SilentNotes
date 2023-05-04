@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using MudBlazor.Services;
 using SilentNotes.Platforms.Services;
 using SilentNotes.Services;
+using SilentNotes.Workers;
 
 namespace SilentNotes;
 
@@ -42,6 +43,7 @@ public static class MauiProgram
     {
         services.AddSingleton<ISvgIconService>((serviceProvider) => new SvgIconService());
         services.AddSingleton<ILanguageService>((serviceProvider) => new LanguageService(new LanguageServiceResourceReader(), "SilentNotes", new LanguageCodeService().GetSystemLanguageCode()));
+        //services.AddSingleton<INoteRepositoryUpdater>((serviceProvider) => new NoteRepositoryUpdater());
     }
 
 #if WINDOWS
@@ -51,6 +53,9 @@ public static class MauiProgram
         services.AddSingleton<ICryptoRandomService>((serviceProvider) => new CryptoRandomService());
         services.AddSingleton<IDataProtectionService>((serviceProvider) => new DataProtectionService());
         services.AddSingleton<IXmlFileService>((serviceProvider) => new XmlFileService());
+        services.AddSingleton<IRepositoryStorageService>((serviceProvider) => new RepositoryStorageService(
+            serviceProvider.GetService<IXmlFileService>(),
+            serviceProvider.GetService<ILanguageService>()));
         services.AddSingleton<ISettingsService>((serviceProvider) => new SettingsService(
             serviceProvider.GetService<IXmlFileService>(),
             serviceProvider.GetService<IDataProtectionService>()));
@@ -65,6 +70,10 @@ public static class MauiProgram
         services.AddSingleton<IDataProtectionService>((serviceProvider) => new DataProtectionService(
             serviceProvider.GetService<ICryptoRandomService>()));
         services.AddSingleton<IXmlFileService>((serviceProvider) => new XmlFileService());
+        services.AddSingleton<IRepositoryStorageService>((serviceProvider) => new RepositoryStorageService(
+            serviceProvider.GetService<IAppContextService>(),
+            serviceProvider.GetService<IXmlFileService>(),
+            serviceProvider.GetService<ILanguageService>()));
         services.AddSingleton<ISettingsService>((serviceProvider) => new SettingsService(
             serviceProvider.GetService<IAppContextService>(),
             serviceProvider.GetService<IXmlFileService>(),

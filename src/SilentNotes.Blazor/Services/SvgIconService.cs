@@ -125,7 +125,7 @@ namespace SilentNotes.Services
         }
 
         /// <inheritdoc/>
-        public MarkupString GetLinkableSvgs(IEnumerable<string> ids)
+        public MarkupString EmbedLinkableSvgs(IEnumerable<string> ids)
         {
             StringBuilder result = new StringBuilder();
             foreach (string id in ids)
@@ -138,7 +138,7 @@ namespace SilentNotes.Services
         }
 
         /// <inheritdoc/>
-        public MarkupString GetLinkableSvg(string id)
+        public MarkupString EmbedLinkableSvg(string id)
         {
             string result = _svgResources[id];
             result = result.Insert(4, string.Format(" id='svg-{0}'", id));
@@ -149,6 +149,12 @@ namespace SilentNotes.Services
         {
             string result = string.Format("<svg width='{1}' height='{1}' viewBox='0 0 24 24'><use xlink:href='#svg-{0}' /></svg>", id, size);
             return result;
+        }
+
+        public MarkupString EmbedSvgLink(string id, int size = 24)
+        {
+            string result = GetSvgLink(id, size);
+            return (MarkupString)result;
         }
 
         /// <inheritdoc/>

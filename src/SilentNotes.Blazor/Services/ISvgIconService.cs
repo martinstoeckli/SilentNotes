@@ -41,12 +41,12 @@ namespace SilentNotes.Services
         String this[string id] { get; }
 
         /// <summary>
-        /// Like <see cref="GetLinkableSvg(string)"/> it loads a given vector graphic icons, which
+        /// Like <see cref="EmbedLinkableSvg(string)"/> it loads a given vector graphic icons, which
         /// can be defined in a hidden div container and linked to with <see cref="GetSvgLink(string, int)"/>.
         /// </summary>
         /// <param name="ids">List of ids of required icons.</param>
         /// <returns>A string containing the SVG vector graphics.</returns>
-        MarkupString GetLinkableSvgs(IEnumerable<string> ids);
+        MarkupString EmbedLinkableSvgs(IEnumerable<string> ids);
 
         /// <summary>
         /// Loads a given vector graphic icon, which can be defined in a hidden div container and
@@ -56,15 +56,17 @@ namespace SilentNotes.Services
         /// </summary>
         /// <param name="id">Id of the vector graphic.</param>
         /// <returns>A string containing the SVG vector graphic.</returns>
-        MarkupString GetLinkableSvg(string id);
+        MarkupString EmbedLinkableSvg(string id);
 
         /// <summary>
-        /// Creates a link to a vector graphic icon, which was defined by <see cref="GetLinkableSvg(string)"/>.
+        /// Creates a link to a vector graphic icon, which was defined by <see cref="EmbedLinkableSvg(string)"/>.
         /// </summary>
         /// <param name="id">Id of the vector graphic.</param>
         /// <param name="size">An optional size for the icon (width and height).</param>
         /// <returns></returns>
         string GetSvgLink(string id, int size = 24);
+
+        MarkupString EmbedSvgLink(string id, int size = 24);
 
         /// <summary>
         /// Loads a given vector graphic icon and encodes it, so it can be used inside a CSS url().
