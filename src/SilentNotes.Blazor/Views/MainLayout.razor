@@ -1,24 +1,22 @@
 ﻿@inherits LayoutComponentBase
 
-<MudThemeProvider @bind-IsDarkMode="@_isDarkMode" Theme="SelectedTheme" />
+@using SilentNotes.Services
+
+@inject IThemeService ThemeService
+
+<MudThemeProvider @bind-IsDarkMode="ThemeService.IsDarkMode" Theme="@ThemeService.Theme" />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
 <MudLayout>
     <MudMainContent>
-        <CascadingValue Value="SelectedTheme">
-            @Body
-        </CascadingValue>
+        @Body
     </MudMainContent>
 </MudLayout>
 
 @code {
-    public MudTheme SelectedTheme { get; set; }
-
-    private bool _isDarkMode = false;
-
     protected override void OnInitialized()
     {
-        SelectedTheme = new MudTheme();
+        ThemeService.RedrawTheme = StateHasChanged;
     }
 }

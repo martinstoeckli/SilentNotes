@@ -44,6 +44,9 @@ public static class MauiProgram
         services.AddSingleton<ISvgIconService>((serviceProvider) => new SvgIconService());
         services.AddSingleton<ILanguageService>((serviceProvider) => new LanguageService(new LanguageServiceResourceReader(), "SilentNotes", new LanguageCodeService().GetSystemLanguageCode()));
         //services.AddSingleton<INoteRepositoryUpdater>((serviceProvider) => new NoteRepositoryUpdater());
+        services.AddSingleton<IThemeService>((serviceProvider) => new ThemeService(
+            serviceProvider.GetService<ISettingsService>(),
+            serviceProvider.GetService<IEnvironmentService>()));
     }
 
 #if WINDOWS
@@ -53,6 +56,7 @@ public static class MauiProgram
         services.AddSingleton<ICryptoRandomService>((serviceProvider) => new CryptoRandomService());
         services.AddSingleton<IDataProtectionService>((serviceProvider) => new DataProtectionService());
         services.AddSingleton<IXmlFileService>((serviceProvider) => new XmlFileService());
+        services.AddSingleton<IEnvironmentService>((serviceProvider) => new EnvironmentService());
         services.AddSingleton<IRepositoryStorageService>((serviceProvider) => new RepositoryStorageService(
             serviceProvider.GetService<IXmlFileService>(),
             serviceProvider.GetService<ILanguageService>()));
@@ -70,6 +74,8 @@ public static class MauiProgram
         services.AddSingleton<IDataProtectionService>((serviceProvider) => new DataProtectionService(
             serviceProvider.GetService<ICryptoRandomService>()));
         services.AddSingleton<IXmlFileService>((serviceProvider) => new XmlFileService());
+        services.AddSingleton<IEnvironmentService>((serviceProvider) => new EnvironmentService(
+            serviceProvider.GetService<IAppContextService>()));
         services.AddSingleton<IRepositoryStorageService>((serviceProvider) => new RepositoryStorageService(
             serviceProvider.GetService<IAppContextService>(),
             serviceProvider.GetService<IXmlFileService>(),

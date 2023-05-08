@@ -8,6 +8,8 @@
 @inject ILanguageService LanguageService
 @inject ISvgIconService IconService
 @inject ISettingsService SettingsService
+@inject IEnvironmentService EnvironmentService
+@inject IThemeService ThemeService
 
 @implements IDisposable
 
@@ -39,6 +41,13 @@
     <MudItem xs="12" sm="10" md="7">
         <h2>@LanguageService["gui_texture"]</h2>
 
+        <MudSelect @bind-Value="ViewModel.SelectedThemeMode"
+            Variant="Variant.Outlined">
+            <MudSelectItem Value="@("Auto")">@LanguageService["gui_theme_auto"]</MudSelectItem>
+            <MudSelectItem Value="@("Dark")">@LanguageService["gui_theme_dark"]</MudSelectItem>
+            <MudSelectItem Value="@("Light")">@LanguageService["gui_theme_light"]</MudSelectItem>
+        </MudSelect>
+
         <div class="form-row">
             <div class="form-group">
                 <MudCheckBox @bind-Checked="@ViewModel.UseSolidColorTheme" id="UseSolidColorTheme" />
@@ -62,20 +71,16 @@
     protected override void OnInitialized()
     {
         SettingsModel settings = SettingsService.LoadSettingsOrDefault();
-        ViewModel = new SettingsViewModel(settings);
+        ViewModel = new SettingsViewModel(settings, EnvironmentService, ThemeService);
 
         //ViewModel.PropertyChanged += PropertyChanged;
     }
 
     public void Dispose()
     {
-        System.Diagnostics.Debugger.Log(1, "dd", "dispose");
     }
 
     private SettingsViewModel ViewModel { get; set; }
-
-    [CascadingParameter]
-    public MudTheme SelectedTheme { get; set; }
 
     private string ColorSwatchStyle
     {
