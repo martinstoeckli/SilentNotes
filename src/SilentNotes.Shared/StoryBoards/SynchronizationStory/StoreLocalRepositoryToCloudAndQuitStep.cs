@@ -95,10 +95,11 @@ namespace SilentNotes.StoryBoards.SynchronizationStory
                 if (needsNewTransferCode)
                 {
                     settings.TransferCode = transferCode;
+                    settings.NotificationTriggers.Add(new NotificationTriggerModel { Id = NotificationService.TransferCodeNotificationId });
                     settingsService.TrySaveSettingsToLocalDevice(settings);
 
                     string formattedTransferCode = TransferCode.FormatTransferCodeForDisplay(transferCode);
-                    string messageNewCreated = languageService.LoadTextFmt("transfer_code_created", formattedTransferCode);
+                    string messageNewCreated = languageService.LoadTextFmt("transfer_code_created", formattedTransferCode, languageService.LoadText("show_transfer_code"));
                     string messageWriteDown = languageService.LoadText("transfer_code_writedown");
                     message = messageNewCreated + Environment.NewLine + messageWriteDown;
                 }

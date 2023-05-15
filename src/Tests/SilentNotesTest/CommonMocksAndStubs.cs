@@ -1,5 +1,6 @@
 ﻿using System;
 using Moq;
+using SilentNotes.Models;
 using SilentNotes.Services;
 using VanillaCloudStorageClient;
 
@@ -26,6 +27,20 @@ namespace SilentNotesTest
         public static IFeedbackService FeedbackService()
         {
             return new DummyFeedbackService();
+        }
+
+        /// <summary>
+        /// Creates a <see cref="ISettingsService"/> mock which returns <paramref name="settings"/>
+        /// if asked.
+        /// </summary>
+        /// <param name="settings">The settings to provide.</param>
+        /// <returns>Mock for settings service.</returns>
+        public static ISettingsService SettingsService(SettingsModel settings)
+        {
+            Mock<ISettingsService> result = new Mock<ISettingsService>();
+            result.
+                Setup(m => m.LoadSettingsOrDefault()).Returns(settings);
+            return result.Object;
         }
 
         /// <summary>
