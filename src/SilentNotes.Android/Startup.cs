@@ -88,6 +88,10 @@ namespace SilentNotes.Android
             services.AddSingleton<IFilePickerService>((serviceProvider) => new FilePickerService(
                 serviceProvider.GetService<IAppContextService>(),
                 serviceProvider.GetService<IActivityResultAwaiter>()));
+            services.AddSingleton<INotificationService>((serviceProvider) => new NotificationService(
+                serviceProvider.GetService<IFeedbackService>(),
+                serviceProvider.GetService<ILanguageService>(),
+                serviceProvider.GetService<ISettingsService>()));
         }
     }
 }

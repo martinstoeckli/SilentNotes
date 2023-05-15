@@ -62,6 +62,7 @@ namespace SilentNotes.UWP
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
             Frame rootFrame = Window.Current.Content as Frame;
+            INotificationService notificationService = Ioc.Default.GetService<INotificationService>();
             IAutoSynchronizationService autoSynchronizationService = Ioc.Default.GetService<IAutoSynchronizationService>();
             autoSynchronizationService.Stop();
 
@@ -98,6 +99,7 @@ namespace SilentNotes.UWP
             }
 
             autoSynchronizationService.SynchronizeAtStartup(); // no awaiting, run in background
+            notificationService.ShowNextNotification();
         }
 
         /// <summary>

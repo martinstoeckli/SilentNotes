@@ -65,6 +65,10 @@ namespace SilentNotes.UWP
             services.AddSingleton<IFeedbackService>((serviceProvider) => new FeedbackService(
                 serviceProvider.GetService<IMainWindowService>(),
                 serviceProvider.GetService<ILanguageService>()));
+            services.AddSingleton<INotificationService>((serviceProvider) => new NotificationService(
+                serviceProvider.GetService<IFeedbackService>(),
+                serviceProvider.GetService<ILanguageService>(),
+                serviceProvider.GetService<ISettingsService>()));
         }
     }
 }

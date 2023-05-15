@@ -175,6 +175,7 @@ namespace SilentNotes.Android
 
             INavigationService navigationService = Ioc.Default.GetService<INavigationService>();
             IStoryBoardService storyBoardService = Ioc.Default.GetService<IStoryBoardService>();
+            INotificationService notificationService = Ioc.Default.GetService<INotificationService>();
             IAutoSynchronizationService autoSynchronizationService = Ioc.Default.GetService<IAutoSynchronizationService>();
             autoSynchronizationService.Stop();
 
@@ -211,6 +212,7 @@ namespace SilentNotes.Android
                 else
                     navigationService.Navigate(new Navigation(ControllerNames.NoteRepository));
                 autoSynchronizationService.SynchronizeAtStartup(); // no awaiting, run in background
+                notificationService.ShowNextNotification();
             }
         }
 
