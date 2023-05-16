@@ -26,6 +26,7 @@ namespace SilentNotes.Models
         private string _transferCode;
         private List<string> _noteColorsHex;
         private List<string> _transferCodeHistory;
+        private List<NotificationTriggerModel> _notificationTriggers;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SettingsModel"/> class.
@@ -261,6 +262,16 @@ namespace SilentNotes.Models
         [XmlElement("selected_tag")]
         public string SelectedTag { get; set; }
 
+        /// <summary>
+        /// Gets or sets a list of stored startup notification triggers.
+        /// </summary>
+        [XmlArray("notification_triggers")]
+        [XmlArrayItem("notification_trigger")]
+        public List<NotificationTriggerModel> NotificationTriggers
+        {
+            get { return _notificationTriggers ?? (_notificationTriggers = new List<NotificationTriggerModel>()); }
+            set { _notificationTriggers = value; }
+        }
 
         /// <summary>
         /// Gets or sets the currently active note filter.

@@ -47,6 +47,10 @@ public static class MauiProgram
         services.AddSingleton<IThemeService>((serviceProvider) => new ThemeService(
             serviceProvider.GetService<ISettingsService>(),
             serviceProvider.GetService<IEnvironmentService>()));
+        //services.AddSingleton<INotificationService>((serviceProvider) => new NotificationService(
+        //    serviceProvider.GetService<IFeedbackService>(),
+        //    serviceProvider.GetService<ILanguageService>(),
+        //    serviceProvider.GetService<ISettingsService>()));
     }
 
 #if WINDOWS

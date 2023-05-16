@@ -27,18 +27,18 @@ namespace SilentNotes.Services
         /// <summary>
         /// Gets or sets an action which can redraw the GUI to react to changes of the theme.
         /// </summary>
-        Action RedrawTheme { get; set; }
+        Action RefreshGui { get; set; }
 
-        /// <summary>
-        /// Gets a value indicating whether the app should show its dark theme.
-        /// </summary>
-        bool DarkMode { get; }
+        ///// <summary>
+        ///// Gets a value indicating whether the app should show its dark theme.
+        ///// </summary>
+        //bool DarkMode { get; }
 
-        /// <summary>
-        /// Gets the keyword "dark" or "" depending on <see cref="DarkMode"/>, which can be used
-        /// inside the Html class attributes, to refer to the Css dark class.
-        /// </summary>
-        string CssClassDark { get; }
+        ///// <summary>
+        ///// Gets the keyword "dark" or "" depending on <see cref="DarkMode"/>, which can be used
+        ///// inside the Html class attributes, to refer to the Css dark class.
+        ///// </summary>
+        //string CssClassDark { get; }
 
         /// <summary>
         /// Gets a Css attribute string if a solid background is defined or an empty string otherwise.
@@ -46,29 +46,29 @@ namespace SilentNotes.Services
         /// </summary>
         string CssBackgroundColor { get; }
 
-        /// <summary>
-        /// Gets a Css attribute string like:
-        ///   background-image: url(images/image.png);
-        /// </summary>
-        string CssBackgroundImage { get; }
+        ///// <summary>
+        ///// Gets a Css attribute string like:
+        /////   background-image: url(images/image.png);
+        ///// </summary>
+        //string CssBackgroundImage { get; }
 
-        /// <summary>
-        /// Gets a list of all available themes.
-        /// </summary>
-        List<ThemeModel> Themes { get; }
+        ///// <summary>
+        ///// Gets a list of all available themes.
+        ///// </summary>
+        //List<ThemeModel> Themes { get; }
 
-        /// <summary>
-        /// Gets the active theme selected by the user, or the default theme.
-        /// </summary>
-        /// <returns>Active theme.</returns>
-        ThemeModel SelectedTheme { get; }
+        ///// <summary>
+        ///// Gets the active theme selected by the user, or the default theme.
+        ///// </summary>
+        ///// <returns>Active theme.</returns>
+        //ThemeModel SelectedTheme { get; }
 
-        /// <summary>
-        /// Searches for the theme with a given <paramref name="themeId"/>. If no such theme can
-        /// be found, the default theme is returned.
-        /// </summary>
-        /// <param name="themeId">Id of the theme to search for.</param>
-        /// <returns>Found theme or default theme.</returns>
-        ThemeModel FindThemeOrDefault(string themeId);
+        ///// <summary>
+        ///// Searches for the theme with a given <paramref name="themeId"/>. If no such theme can
+        ///// be found, the default theme is returned.
+        ///// </summary>
+        ///// <param name="themeId">Id of the theme to search for.</param>
+        ///// <returns>Found theme or default theme.</returns>
+        //ThemeModel FindThemeOrDefault(string themeId);
     }
 }

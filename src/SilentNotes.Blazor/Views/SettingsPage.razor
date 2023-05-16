@@ -39,7 +39,7 @@
 @* body *@
 <MudGrid Class="ma-0 px-4 mud-width-full">
     <MudItem xs="12" sm="10" md="7">
-        <h2>@LanguageService["gui_texture"]</h2>
+        <h1 class="h-colored">@LanguageService["gui_texture"]</h1>
 
         <MudSelect @bind-Value="ViewModel.SelectedThemeMode"
             Variant="Variant.Outlined">
@@ -64,6 +64,19 @@
                     AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight" />
             </div>
         </div>
+    </MudItem>
+
+
+    <MudItem Class="mt-4" xs="12" sm="10" md="7">
+        <h1 class="h-colored">@LanguageService["gui"]</h1>
+
+        <MudSlider @bind-Value="ViewModel.FontSizeStep"
+                   Min="-3" Max="3" Step="1"
+                   TickMarks="true">@LanguageService["gui_font_size"]</MudSlider>
+
+        <MudSlider @bind-Value="ViewModel.NoteMaxHeightStep"
+                   Min="-4" Max="4" Step="1"
+                   TickMarks="true">@LanguageService["gui_note_max_size"]</MudSlider>
     </MudItem>
 </MudGrid>
 

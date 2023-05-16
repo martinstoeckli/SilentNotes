@@ -55,7 +55,7 @@ namespace SilentNotes.Services
 
             set
             {
-                // MudBlazor requires a setter for binding
+                // Unused, MudBlazor requires a setter for binding
             }
         }
 
@@ -63,52 +63,52 @@ namespace SilentNotes.Services
         public MudTheme Theme { get; set; }
 
         /// <inheritdoc/>
-        public Action RedrawTheme { get; set; }
+        public Action RefreshGui { get; set; }
 
-        private void FillThemes(List<ThemeModel> themes)
-        {
-            themes.Add(new ThemeModel("cork", "cork.jpg"));
-            themes.Add(new ThemeModel("forest", "forest.jpg"));
-            themes.Add(new ThemeModel("stone", "stone.jpg"));
-            themes.Add(new ThemeModel("blackstone", "blackstone.jpg"));
-            themes.Add(new ThemeModel("smarties", "smarties.jpg"));
-            themes.Add(new ThemeModel("grass", "grass.jpg"));
-            themes.Add(new ThemeModel("paper", "paper.jpg"));
-            themes.Add(new ThemeModel("sky", "sky.jpg"));
-            themes.Add(new ThemeModel("water", "water.jpg"));
-            themes.Add(new ThemeModel("sand", "sand.jpg"));
-            themes.Add(new ThemeModel("stars", "stars.jpg"));
-            themes.Add(new ThemeModel("meadow", "meadow.jpg"));
-        }
+        //private void FillThemes(List<ThemeModel> themes)
+        //{
+        //    themes.Add(new ThemeModel("cork", "cork.jpg"));
+        //    themes.Add(new ThemeModel("forest", "forest.jpg"));
+        //    themes.Add(new ThemeModel("stone", "stone.jpg"));
+        //    themes.Add(new ThemeModel("blackstone", "blackstone.jpg"));
+        //    themes.Add(new ThemeModel("smarties", "smarties.jpg"));
+        //    themes.Add(new ThemeModel("grass", "grass.jpg"));
+        //    themes.Add(new ThemeModel("paper", "paper.jpg"));
+        //    themes.Add(new ThemeModel("sky", "sky.jpg"));
+        //    themes.Add(new ThemeModel("water", "water.jpg"));
+        //    themes.Add(new ThemeModel("sand", "sand.jpg"));
+        //    themes.Add(new ThemeModel("stars", "stars.jpg"));
+        //    themes.Add(new ThemeModel("meadow", "meadow.jpg"));
+        //}
+
+        ///// <inheritdoc/>
+        //public bool DarkMode
+        //{
+        //    get
+        //    {
+        //        SettingsModel settings = _settingsService.LoadSettingsOrDefault();
+        //        switch (settings.ThemeMode)
+        //        {
+        //            case ThemeMode.Auto:
+        //                //return _environmentService.InDarkMode;
+        //            case ThemeMode.Dark:
+        //                return true;
+        //            case ThemeMode.Light:
+        //                return false;
+        //            default:
+        //                throw new ArgumentOutOfRangeException(nameof(settings.ThemeMode));
+        //        }
+        //    }
+        //}
+
+        ///// <inheritdoc/>
+        //public string CssClassDark
+        //{
+        //    get { return DarkMode ? "dark" : string.Empty; }
+        //}
 
         /// <inheritdoc/>
-        public bool DarkMode
-        {
-            get
-            {
-                SettingsModel settings = _settingsService.LoadSettingsOrDefault();
-                switch (settings.ThemeMode)
-                {
-                    case ThemeMode.Auto:
-                        //return _environmentService.InDarkMode;
-                    case ThemeMode.Dark:
-                        return true;
-                    case ThemeMode.Light:
-                        return false;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(settings.ThemeMode));
-                }
-            }
-        }
-
-        /// <inheritdoc/>
-        public string CssClassDark
-        {
-            get { return DarkMode ? "dark" : string.Empty; }
-        }
-
-        /// <inheritdoc/>
-        public string CssBackgroundColor 
+        public string CssBackgroundColor
         {
             get
             {
@@ -120,32 +120,32 @@ namespace SilentNotes.Services
             }
         }
 
-        /// <inheritdoc/>
-        public string CssBackgroundImage 
-        {
-            get
-            {
-                SettingsModel settings = _settingsService.LoadSettingsOrDefault();
-                return settings.UseSolidColorTheme
-                    ? string.Empty
-                    : string.Format("background-image: url({0});", SelectedTheme.Image);
-            }
-        }
+        ///// <inheritdoc/>
+        //public string CssBackgroundImage 
+        //{
+        //    get
+        //    {
+        //        SettingsModel settings = _settingsService.LoadSettingsOrDefault();
+        //        return settings.UseSolidColorTheme
+        //            ? string.Empty
+        //            : string.Format("background-image: url({0});", SelectedTheme.Image);
+        //    }
+        //}
 
-        /// <inheritdoc/>
-        public List<ThemeModel> Themes { get; private set; }
+        ///// <inheritdoc/>
+        //public List<ThemeModel> Themes { get; private set; }
 
-        /// <inheritdoc/>
-        public ThemeModel SelectedTheme
-        {
-            get { return FindThemeOrDefault(_settingsService.LoadSettingsOrDefault().SelectedTheme); }
-        }
+        ///// <inheritdoc/>
+        //public ThemeModel SelectedTheme
+        //{
+        //    get { return FindThemeOrDefault(_settingsService.LoadSettingsOrDefault().SelectedTheme); }
+        //}
 
-        /// <inheritdoc/>
-        public ThemeModel FindThemeOrDefault(string themeId)
-        {
-            ThemeModel result = Themes.Find(item => string.Equals(item.Id, themeId));
-            return result ?? (result = Themes[DefaultTheme]);
-        }
+        ///// <inheritdoc/>
+        //public ThemeModel FindThemeOrDefault(string themeId)
+        //{
+        //    ThemeModel result = Themes.Find(item => string.Equals(item.Id, themeId));
+        //    return result ?? (result = Themes[DefaultTheme]);
+        //}
     }
 }

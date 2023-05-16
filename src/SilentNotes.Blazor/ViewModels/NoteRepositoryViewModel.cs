@@ -28,8 +28,10 @@ namespace SilentNotes.ViewModels
         //private readonly IStoryBoardService _storyBoardService;
         //private readonly IRepositoryStorageService _repositoryService;
         //private readonly IFeedbackService _feedbackService;
+        private readonly ILanguageService _languageService;
+        private readonly IThemeService _themeService;
         private readonly ISettingsService _settingsService;
-        //private readonly IEnvironmentService _environmentService;
+        private readonly IEnvironmentService _environmentService;
         //private readonly IAutoSynchronizationService _autoSynchronizationService;
         private readonly SearchableHtmlConverter _searchableTextConverter;
         private readonly ICryptor _noteCryptor;
@@ -41,14 +43,19 @@ namespace SilentNotes.ViewModels
         /// </summary>
         public NoteRepositoryViewModel(
             NoteRepositoryModel model,
+            ILanguageService languageService,
+            IThemeService themeService,
             ISettingsService settingsService,
+            IEnvironmentService environmentService,
             ICryptoRandomSource randomSource)
         {
             //    _storyBoardService = storyBoardService;
             //    _repositoryService = repositoryService;
             //    _feedbackService = feedbackService;
+            _languageService = languageService;
+            _themeService = themeService;
             _settingsService = settingsService;
-            //    _environmentService = environmentService;
+            _environmentService = environmentService;
             //    _autoSynchronizationService = autoSynchronizationService;
             _noteCryptor = new Cryptor(NoteModel.CryptorPackageName, randomSource);
             _searchableTextConverter = new SearchableHtmlConverter();
@@ -199,47 +206,47 @@ namespace SilentNotes.ViewModels
         //    handled = false;
         //}
 
-        ///// <summary>
-        ///// Gets the base font size [px] of the notes, from which the relative sizes are derrived.
-        ///// </summary>
-        //public string NoteBaseFontSize
-        //{
-        //    get
-        //    {
-        //        double defaultBaseFontSize = SettingsViewModel.ReferenceFontSize;
-        //        switch (_environmentService.Os)
-        //        {
-        //            case Services.OperatingSystem.Windows:
-        //                defaultBaseFontSize = SettingsViewModel.ReferenceFontSize - 2;
-        //                break;
-        //        }
-        //        SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
-        //        SliderStepConverter converter = new SliderStepConverter(defaultBaseFontSize, 1.0);
-        //        double fontSize = settings != null
-        //            ? converter.ModelFactorToValue(settings.FontScale)
-        //            : defaultBaseFontSize;
-        //        return FloatingPointUtils.FormatInvariant(fontSize);
-        //    }
-        //}
+        /// <summary>
+        /// Gets the base font size [px] of the notes, from which the relative sizes are derrived.
+        /// </summary>
+        public string NoteBaseFontSize
+        {
+            get
+            {
+                double defaultBaseFontSize = SettingsViewModel.ReferenceFontSize;
+                switch (_environmentService.Os)
+                {
+                    case Services.OperatingSystem.Windows:
+                        defaultBaseFontSize = SettingsViewModel.ReferenceFontSize - 2;
+                        break;
+                }
+                SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
+                SliderStepConverter converter = new SliderStepConverter(defaultBaseFontSize, 1.0);
+                double fontSize = settings != null
+                    ? converter.ModelFactorToValue(settings.FontScale)
+                    : defaultBaseFontSize;
+                return FloatingPointUtils.FormatInvariant(fontSize);
+            }
+        }
 
-        //public int NoteMinHeight
-        //{
-        //    get
-        //    {
-        //        // The minimum must not be bigger than the maximum.
-        //        return Math.Min(SettingsViewModel.ReferenceNoteMinSize, NoteMaxHeight);
-        //    }
-        //}
+        public int NoteMinHeight
+        {
+            get
+            {
+                // The minimum must not be bigger than the maximum.
+                return Math.Min(SettingsViewModel.ReferenceNoteMinSize, NoteMaxHeight);
+            }
+        }
 
-        //public int NoteMaxHeight
-        //{
-        //    get
-        //    {
-        //        SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
-        //        SliderStepConverter noteMaxHeightConverter = new SliderStepConverter(SettingsViewModel.ReferenceNoteMaxSize, 20.0);
-        //        return noteMaxHeightConverter.ModelFactorToValueAsInt(settings.NoteMaxHeightScale);
-        //    }
-        //}
+        public int NoteMaxHeight
+        {
+            get
+            {
+                SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
+                SliderStepConverter noteMaxHeightConverter = new SliderStepConverter(SettingsViewModel.ReferenceNoteMaxSize, 20.0);
+                return noteMaxHeightConverter.ModelFactorToValueAsInt(settings.NoteMaxHeightScale);
+            }
+        }
 
         /// <summary>
         /// Gets or sets a list of viewmodels for all notes of the repository.
@@ -722,6 +729,8 @@ namespace SilentNotes.ViewModels
                     NoteViewModel noteViewModel = new NoteViewModel(
                         note,
                         _searchableTextConverter,
+                        _languageService,
+                        _themeService,
                         _settingsService,
                         _noteCryptor,
                         _model.Safes);

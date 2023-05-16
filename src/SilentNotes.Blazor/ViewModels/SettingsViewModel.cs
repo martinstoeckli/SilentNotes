@@ -18,9 +18,9 @@ namespace SilentNotes.ViewModels
 {
     internal class SettingsViewModel : ViewModelBase
     {
-        //public const double ReferenceFontSize = 15.0; // Used as reference to calculate the font scale
-        //public const int ReferenceNoteMaxSize = 160;
-        //public const int ReferenceNoteMinSize = 115;
+        public const double ReferenceFontSize = 15.0; // Used as reference to calculate the font scale
+        public const int ReferenceNoteMaxSize = 160;
+        public const int ReferenceNoteMinSize = 115;
         //private readonly ISettingsService _settingsService;
         private readonly IEnvironmentService _environmentService;
         private readonly IThemeService _themeService;
@@ -28,8 +28,8 @@ namespace SilentNotes.ViewModels
         //private readonly IFeedbackService _feedbackService;
         //private readonly IFilePickerService _filePickerService;
         //private readonly ICloudStorageClientFactory _cloudStorageClientFactory;
-        //private readonly SliderStepConverter _fontSizeConverter;
-        //private readonly SliderStepConverter _noteMaxHeightConverter;
+        private readonly SliderStepConverter _fontSizeConverter;
+        private readonly SliderStepConverter _noteMaxHeightConverter;
 
         public SettingsViewModel(
             SettingsModel model,
@@ -39,6 +39,9 @@ namespace SilentNotes.ViewModels
             Model = model;
             _environmentService = environmentService;
             _themeService = themeService;
+
+            _fontSizeConverter = new SliderStepConverter(ReferenceFontSize, 1.0);
+            _noteMaxHeightConverter = new SliderStepConverter(ReferenceNoteMaxSize, 20.0);
         }
 
         //    /// <summary>
@@ -89,39 +92,39 @@ namespace SilentNotes.ViewModels
         //        algorithms.Add(new DropdownItemViewModel { Value = BouncyCastleTwofishGcm.CryptoAlgorithmName, Description = Language["encryption_algo_twofishgcm"] });
         //    }
 
-        //    /// <summary>
-        //    /// Gets or sets the <see cref="FontScale"/> expressed for the -3...+3 slider.
-        //    /// </summary>
-        //    [VueDataBinding(VueBindingMode.TwoWay)]
-        //    public int FontSizeStep
-        //    {
-        //        get { return _fontSizeConverter.ModelFactorToSliderStep(Model.FontScale); }
+        /// <summary>
+        /// Gets or sets the <see cref="FontScale"/> expressed for the -3...+3 slider.
+        /// </summary>
+        //[VueDataBinding(VueBindingMode.TwoWay)]
+        public int FontSizeStep
+        {
+            get { return _fontSizeConverter.ModelFactorToSliderStep(Model.FontScale); }
 
-        //        set
-        //        {
-        //            SetPropertyAndModified(
-        //                _fontSizeConverter.ModelFactorToSliderStep(Model.FontScale),
-        //                value,
-        //                (v) => Model.FontScale = _fontSizeConverter.SliderStepToModelFactor(v));
-        //        }
-        //    }
+            set
+            {
+                SetPropertyAndModified(
+                    _fontSizeConverter.ModelFactorToSliderStep(Model.FontScale),
+                    value,
+                    (v) => Model.FontScale = _fontSizeConverter.SliderStepToModelFactor(v));
+            }
+        }
 
-        //    /// <summary>
-        //    /// Gets or sets the <see cref="NoteMaxHeight"/> expressed for the -4...+4 slider.
-        //    /// </summary>
-        //    [VueDataBinding(VueBindingMode.TwoWay)]
-        //    public int NoteMaxHeightStep
-        //    {
-        //        get { return _noteMaxHeightConverter.ModelFactorToSliderStep(Model.NoteMaxHeightScale); }
+        /// <summary>
+        /// Gets or sets the <see cref="NoteMaxHeight"/> expressed for the -4...+4 slider.
+        /// </summary>
+        //[VueDataBinding(VueBindingMode.TwoWay)]
+        public int NoteMaxHeightStep
+        {
+            get { return _noteMaxHeightConverter.ModelFactorToSliderStep(Model.NoteMaxHeightScale); }
 
-        //        set
-        //        {
-        //            SetPropertyAndModified(
-        //                _noteMaxHeightConverter.ModelFactorToSliderStep(Model.NoteMaxHeightScale),
-        //                value,
-        //                (v) => Model.NoteMaxHeightScale = _noteMaxHeightConverter.SliderStepToModelFactor(v));
-        //        }
-        //    }
+            set
+            {
+                SetPropertyAndModified(
+                    _noteMaxHeightConverter.ModelFactorToSliderStep(Model.NoteMaxHeightScale),
+                    value,
+                    (v) => Model.NoteMaxHeightScale = _noteMaxHeightConverter.SliderStepToModelFactor(v));
+            }
+        }
 
         //    /// <summary>
         //    /// Gets or sets the <see cref="NoteMaxHeight"/> expressed for the -4...+4 slider.
@@ -208,7 +211,7 @@ namespace SilentNotes.ViewModels
             {
                 if (SetPropertyAndModified(Model.ThemeMode.ToString(), value, (string v) => Model.ThemeMode = (ThemeMode)Enum.Parse(typeof(ThemeMode), value)))
                 {
-                    _themeService.RedrawTheme();
+                    _themeService.RefreshGui();
                 }
             }
         }

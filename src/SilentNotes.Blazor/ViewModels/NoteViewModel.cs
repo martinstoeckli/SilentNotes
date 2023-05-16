@@ -29,6 +29,8 @@ namespace SilentNotes.ViewModels
         //private static TimeAgo _timeAgo;
         //private readonly IRepositoryStorageService _repositoryService;
         //private readonly IFeedbackService _feedbackService;
+        private readonly ILanguageService _languageService;
+        private readonly IThemeService _themeService;
         private readonly ISettingsService _settingsService;
         //private readonly IEnvironmentService _environmentService;
         private readonly ICryptor _cryptor;
@@ -46,11 +48,15 @@ namespace SilentNotes.ViewModels
         public NoteViewModel(
             NoteModel model,
             SearchableHtmlConverter searchableTextConverter,
+            ILanguageService languageService,
+            IThemeService themeService,
             ISettingsService settingsService,
             ICryptor cryptor,
             SafeListModel safes)
         {
             Model = model;
+            _languageService = languageService;
+            _themeService = themeService;
             _settingsService = settingsService;
             _searchableTextConverter = searchableTextConverter;
             _cryptor = cryptor;
@@ -269,44 +275,45 @@ namespace SilentNotes.ViewModels
         //    get { return _allDistinctAndSortedTags.Where(tag => !Tags.Contains(tag, StringComparer.InvariantCultureIgnoreCase)); }
         //}
 
-        ///// <summary>
-        ///// Gets or sets the background color as hex string, e.g. #ff0000
-        ///// </summary>
-        //[VueDataBinding(VueBindingMode.TwoWay)]
-        //public string BackgroundColorHex
-        //{
-        //    get
-        //    {
-        //        string result = Model.BackgroundColorHex;
-        //        if (Theme.DarkMode)
-        //        {
-        //            SettingsModel settings = _settingsService.LoadSettingsOrDefault();
-        //            if (settings.UseColorForAllNotesInDarkMode)
-        //                result = settings.ColorForAllNotesInDarkModeHex;
-        //        }
-        //        return result;
-        //    }
+        /// <summary>
+        /// Gets or sets the background color as hex string, e.g. #ff0000
+        /// </summary>
+        public string BackgroundColorHex
+        {
+            get
+            {
+                string result = Model.BackgroundColorHex;
+                if (_themeService.IsDarkMode)
+                {
+                    SettingsModel settings = _settingsService.LoadSettingsOrDefault();
+                    if (settings.UseColorForAllNotesInDarkMode)
+                        result = settings.ColorForAllNotesInDarkModeHex;
+                }
+                return result;
+            }
 
-        //    set
-        //    {
-        //        if (Theme.DarkMode)
-        //        {
-        //            SettingsModel settings = _settingsService.LoadSettingsOrDefault();
-        //            if (settings.UseColorForAllNotesInDarkMode)
-        //            {
-        //                OnPropertyChanged(nameof(BackgroundColorHex)); // Redraw unchanged color (Vue binding)
-        //                _feedbackService.ShowToast(Language.LoadText("gui_theme_color_cannot_change"));
-        //                return;
-        //            }
-        //        }
+            set
+            {
+                if (_themeService.IsDarkMode)
+                {
+                    SettingsModel settings = _settingsService.LoadSettingsOrDefault();
+                    if (settings.UseColorForAllNotesInDarkMode)
+                    {
+                        OnPropertyChanged(nameof(BackgroundColorHex)); // Redraw unchanged color (Vue binding)
+                        // todo: stom
+                        //_feedbackService.ShowToast(Language.LoadText("gui_theme_color_cannot_change"));
+                        return;
+                    }
+                }
 
-        //        if (SetPropertyAndModified(Model.BackgroundColorHex, value, (string v) => Model.BackgroundColorHex = v))
-        //        {
-        //            Model.RefreshModifiedAt();
-        //            OnPropertyChanged(nameof(IsDark));
-        //        }
-        //    }
-        //}
+                if (SetPropertyAndModified(Model.BackgroundColorHex, value, (string v) => Model.BackgroundColorHex = v))
+                {
+                    Model.RefreshModifiedAt();
+                    // todo: stom
+                    //OnPropertyChanged(nameof(IsDark));
+                }
+            }
+        }
 
         ///// <summary>
         ///// Gets a list of available background colors.
@@ -316,32 +323,31 @@ namespace SilentNotes.ViewModels
         //    get { return _settingsService.LoadSettingsOrDefault().NoteColorsHex; }
         //}
 
-        ///// <summary>
-        ///// Gets a value indicating whether the background color of the note is a dark color or not.
-        ///// </summary>
-        //[VueDataBinding(VueBindingMode.OneWayToView)]
-        //public bool IsDark
-        //{
-        //    get { return ColorExtensions.HexToColor(BackgroundColorHex).IsDark(); }
-        //}
+        /// <summary>
+        /// Gets a value indicating whether the background color of the note is a dark color or not.
+        /// </summary>
+        private bool IsDark
+        {
+            get { return ColorExtensions.HexToColor(BackgroundColorHex).IsDark(); }
+        }
 
-        ///// <summary>
-        ///// Gets the dark class for a given background color, depending of whether the background
-        ///// color is a light or a dark color.
-        ///// </summary>
-        ///// <param name="backgroundColorHex">Background color of the note. If this parameter is
-        ///// null, the <see cref="BackgroundColorHex"/> of the note itself is used.</param>
-        ///// <returns>Html class "dark" if the background color is dark, otherwise an empty string.</returns>
-        //public string GetDarkClass(string backgroundColorHex = null)
-        //{
-        //    if (string.IsNullOrEmpty(backgroundColorHex))
-        //        backgroundColorHex = BackgroundColorHex;
-        //    Color backgroundColor = ColorExtensions.HexToColor(backgroundColorHex);
-        //    if (backgroundColor.IsDark())
-        //        return "dark";
-        //    else
-        //        return string.Empty;
-        //}
+        /// <summary>
+        /// Gets the dark class for a given background color, depending of whether the background
+        /// color is a light or a dark color.
+        /// </summary>
+        /// <param name="backgroundColorHex">Background color of the note. If this parameter is
+        /// null, the <see cref="BackgroundColorHex"/> of the note itself is used.</param>
+        /// <returns>Html class "dark" if the background color is dark, otherwise an empty string.</returns>
+        public string GetDarkClass(string backgroundColorHex = null)
+        {
+            if (string.IsNullOrEmpty(backgroundColorHex))
+                backgroundColorHex = BackgroundColorHex;
+            System.Drawing.Color backgroundColor = ColorExtensions.HexToColor(backgroundColorHex);
+            if (backgroundColor.IsDark())
+                return "dark";
+            else
+                return string.Empty;
+        }
 
         /// <summary>
         /// Gets or sets a value indicating whether the note is deleted and is part of the

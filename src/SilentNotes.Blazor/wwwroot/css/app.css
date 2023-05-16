@@ -1,13 +1,9 @@
-﻿/*#content {
-	margin: 0;
-	padding: 0;
-	flex: 1 1 0%;
-	overflow: auto;
-}
-*/
-
-label {
-	font-size: var(--mud-typography-body1-size);
+﻿html { font-size: 14px; }
+h1 { font-size: 1.7em; }
+h2 { font-size: 1.3em; }
+h3 { font-size: 1.1em; }
+.h-colored {
+	color: var(--mud-palette-primary-darken);
 }
 
 .form-row {
@@ -73,8 +69,12 @@ label {
 	overflow: hidden;
 	box-shadow: 2px 1px 4px rgba(0, 0, 0, 0.4);
 	font-size: 0.9em;
+	color: black;
 	user-select: none;
 	cursor: default;
+}
+.note-card.dark {
+	color: white;
 }
 .note-card a:hover {
 	cursor: default;

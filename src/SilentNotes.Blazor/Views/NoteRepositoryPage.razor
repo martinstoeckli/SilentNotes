@@ -7,12 +7,27 @@
 
 @inject ISnackbar Snackbar
 @inject ILanguageService LanguageService
+@inject ISettingsService SettingsService
+@inject IThemeService ThemeService
 @inject ISvgIconService IconService
 @inject IRepositoryStorageService RepositoryStorageService
-@inject ISettingsService SettingsService
+@inject IEnvironmentService EnvironmentService
 @inject ICryptoRandomService CryptoRandomSource
 
 @implements IDisposable
+
+<style type="text/css">
+    body {
+        @(ThemeService.CssBackgroundColor)
+    }
+    .note-viewer {
+        font-size: @(ViewModel.NoteBaseFontSize)px !important;
+    }
+    .note-card {
+        min-height: @(ViewModel.NoteMinHeight)px;
+        max-height: @(ViewModel.NoteMaxHeight)px;
+    }
+</style>
 
 @* Main menu *@
 <MudAppBar Fixed="true" Dense="true">
@@ -56,7 +71,7 @@
         @foreach (var note in ViewModel.FilteredNotes)
         {
             <li @key="note.Id" class="wraplist-item">
-                <div class="note-card">
+                <div class="note-card @note.GetDarkClass()" style="background-color:@note.BackgroundColorHex">
                     @if (@note.IsLocked)
                     {
                         <span class="locked">@IconService.EmbedSvgLink(IconNames.LockOutline)</span>
@@ -98,7 +113,10 @@
 
         ViewModel = new NoteRepositoryViewModel(
             noteRepositoryModel,
+            LanguageService,
+            ThemeService,
             SettingsService,
+            EnvironmentService,
             CryptoRandomSource);
         //ViewModel.PropertyChanged += HandlePropertyChanged;
         return Task.CompletedTask;

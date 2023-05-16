@@ -17,6 +17,7 @@
 @code {
     protected override void OnInitialized()
     {
-        ThemeService.RedrawTheme = StateHasChanged;
+        // Give the theme service a way to redraw the GUI
+        ThemeService.RefreshGui = StateHasChanged;
     }
 }
