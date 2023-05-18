@@ -637,13 +637,13 @@ namespace SilentNotes.ViewModels
         //    _navigationService.Navigate(new Navigation(ControllerNames.NoteRepository));
         //}
 
-        ///// <summary>
-        ///// Gets a value indicating whether at least one safe is open.
-        ///// </summary>
-        //public bool IsAnySafeOpen
-        //{
-        //    get { return Model.Safes.Any(safe => safe.IsOpen); }
-        //}
+        /// <summary>
+        /// Gets a value indicating whether at least one safe is open.
+        /// </summary>
+        public bool IsAnySafeOpen
+        {
+            get { return Model.Safes.Any(safe => safe.IsOpen); }
+        }
 
         ///// <summary>
         ///// Gets the command which allows to change the password to encrypt the notes.

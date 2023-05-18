@@ -20,12 +20,12 @@
     body {
         @(ThemeService.CssBackgroundColor)
     }
-    .note-viewer {
-        font-size: @(ViewModel.NoteBaseFontSize)px !important;
-    }
-    .note-card {
+    .note-item, .note-card, .note-locked {
         min-height: @(ViewModel.NoteMinHeight)px;
         max-height: @(ViewModel.NoteMaxHeight)px;
+    }
+    .note-viewer {
+        font-size: @(ViewModel.NoteBaseFontSize)px !important;
     }
 </style>
 
@@ -53,8 +53,12 @@
                 <MudNavLink OnClick="DoClick" Icon="@IconService[IconNames.DeleteEmpty]">@LanguageService["show_recyclebin"]</MudNavLink>
                 <MudNavLink OnClick="DoClick" Icon="@IconService[IconNames.Export]">@LanguageService["show_export"]</MudNavLink>
                 <MudDivider />
-                <MudNavLink OnClick="DoClick" Icon="@IconService[IconNames.SafeSquareOutline]">@LanguageService["safe_open"]</MudNavLink>
-                <MudNavLink OnClick="DoClick" Icon="@IconService[IconNames.SafeSquareOutline]">@LanguageService["safe_close"]</MudNavLink>
+                @if (ViewModel.IsAnySafeOpen) {
+                    <MudNavLink OnClick="DoClick" Icon="@IconService[IconNames.SafeSquareOutline]">@LanguageService["safe_close"]</MudNavLink>
+                }
+                else {
+                    <MudNavLink OnClick="DoClick" Icon="@IconService[IconNames.SafeSquareOutline]">@LanguageService["safe_open"]</MudNavLink>
+                }
                 <MudNavLink OnClick="DoClick" Icon="@IconService[IconNames.LockReset]">@LanguageService["safe_change_password"]</MudNavLink>
                 <MudDivider />
                 <MudNavLink OnClick="DoClick" Icon="@IconService[IconNames.Key]">@LanguageService["show_transfer_code"]</MudNavLink>
@@ -66,21 +70,19 @@
 </MudAppBar>
 
 @* body *@
-<div id="content" class="pl-2 pt-0 pr-2 pb-2">
-    <ul class="wraplist">
+<div id="content" class="px-1 pt-0 pb-2">
+    <ul id="note-repository" class="note-list flex-column flex-sm-row">
         @foreach (var note in ViewModel.FilteredNotes)
         {
-            <li @key="note.Id" class="wraplist-item">
-                <div class="note-card @note.GetDarkClass()" style="background-color:@note.BackgroundColorHex">
+            <li @key="note.Id" class="note-item">
+                <div class="note-card mud-elevation-3 @note.GetDarkClass()" style="background-color:@note.BackgroundColorHex">
                     @if (@note.IsLocked)
                     {
-                        <span class="locked">@IconService.EmbedSvgLink(IconNames.LockOutline)</span>
+                        <div class="note-locked @note.GetDarkClass()">@IconService.EmbedSvgLink(IconNames.LockOutline)</div>
                     }
                     else
                     {
-                        <div class="note-viewer over-view">
-                            @((MarkupString)note.GetShortenedUnlockedHtmlContent())
-                        </div>
+                        <div class="note-viewer over-view">@((MarkupString)note.GetShortenedUnlockedHtmlContent())</div>
                     }
                 </div>
             </li>
@@ -105,7 +107,7 @@
     /// <summary>
     /// Initializes a new instance of the <see cref="NoteRepositoryPage"/> class.
     /// </summary>
-    protected override Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
         RepositoryStorageLoadResult loadResult = RepositoryStorageService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepositoryModel);
         if (loadResult == RepositoryStorageLoadResult.InvalidRepository)
@@ -118,8 +120,6 @@
             SettingsService,
             EnvironmentService,
             CryptoRandomSource);
-        //ViewModel.PropertyChanged += HandlePropertyChanged;
-        return Task.CompletedTask;
     }
 
     /// <summary>
@@ -130,17 +130,12 @@
         if (_isDisposed)
             return;
         _isDisposed = true;
-        //ViewModel.PropertyChanged -= HandlePropertyChanged;
     }
 
     /// <summary>
     /// Gets or sets the datacontext of this view.
     /// </summary>
     private NoteRepositoryViewModel ViewModel { get; set; }
-
-    //private void HandlePropertyChanged(object sender, PropertyChangedEventArgs e)
-    //{
-    //}
 
     /// <summary>
     /// Gets the svg icon for filtering (magnifier or clear)

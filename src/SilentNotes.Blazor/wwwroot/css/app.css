@@ -1,4 +1,8 @@
-﻿html { font-size: 14px; }
+﻿:root {
+  --note-item-min-height: 32px;
+}
+
+html { font-size: 14px; }
 h1 { font-size: 1.7em; }
 h2 { font-size: 1.3em; }
 h3 { font-size: 1.1em; }
@@ -43,20 +47,22 @@ h3 { font-size: 1.1em; }
 	border-bottom-style: none !important;
 }
 
-.wraplist {
-	display: block;
-	margin: 0;
-	padding: 0;
+.note-list {
+	display: flex;
+	flex-wrap: wrap;
+/*	gap: 112px 12px;*/
+/*	row-gap: 12px;*/
+/*	column-gap: 12px;*/
 }
-.wraplist-item {
+.note-item {
 	display: block;
-	padding: 6px 5px 6px 5px;
-	width: auto;
-	vertical-align: top;
+	width: 100%;
+	padding: 0 6px; /* flex gap not working on Android 7, only padding and margin */
+	margin: 6px 0;
 }
-/* wide browser */
-@media screen and (min-width: 540.1px) {
-	.wraplist-item {
+/* sm breakpoint */
+@media screen and (min-width: 600px) {
+	.note-item {
 		display: inline-block;
 		width: 240px;
 	}
@@ -64,14 +70,11 @@ h3 { font-size: 1.1em; }
 
 .note-card {
 	padding: 12px;
-	min-height: 115px;
-	max-height: 160px;
 	overflow: hidden;
-	box-shadow: 2px 1px 4px rgba(0, 0, 0, 0.4);
 	font-size: 0.9em;
-	color: black;
 	user-select: none;
 	cursor: default;
+	color: black;
 }
 .note-card.dark {
 	color: white;
@@ -80,6 +83,20 @@ h3 { font-size: 1.1em; }
 	cursor: default;
 }
 
+.note-locked {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+}
+.note-locked svg {
+	width: 36px;
+	height: 36px;
+	fill: rgba(160, 160, 160, 0.4);
+}
+.note-locked.dark svg {
+	fill: rgba(204, 204, 204, 0.4);
+}
 
 .color-swatch {
 /*	display: inline-block;*/
