@@ -4,6 +4,7 @@
 @using SilentNotes.ViewModels
 @using SilentNotes.Services
 
+@inject INavigationService NavigationService
 @inject ISnackbar Snackbar
 @inject ILanguageService LanguageService
 @inject ISvgIconService IconService
@@ -16,7 +17,7 @@
 @* Main menu *@
 <MudAppBar Fixed="true" Class="" Dense="true">
     <MudTooltip Text="@LanguageService["back"]">
-        <MudIconButton Href="/" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" />
+        <MudIconButton OnClick="@(() => NavigationService.Back())" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" />
     </MudTooltip>
 
     <MudSpacer />

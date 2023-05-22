@@ -3,7 +3,9 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Logging;
+using Microsoft.JSInterop;
 using MudBlazor.Services;
 using SilentNotes.Platforms.Services;
 using SilentNotes.Services;
@@ -51,6 +53,9 @@ public static class MauiProgram
         //    serviceProvider.GetService<IFeedbackService>(),
         //    serviceProvider.GetService<ILanguageService>(),
         //    serviceProvider.GetService<ISettingsService>()));
+        services.AddScoped<INavigationService>((serviceProvider) => new NavigationService(
+            serviceProvider.GetService<NavigationManager>(),
+            serviceProvider.GetService<IJSRuntime>()));
     }
 
 #if WINDOWS

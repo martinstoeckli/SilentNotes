@@ -58,6 +58,17 @@ public partial class App : Application, IDisposable
         base.CleanUp();
     }
 
+    protected override Window CreateWindow(IActivationState activationState)
+    {
+        Window window = base.CreateWindow(activationState);
+
+        window.Resumed += (s, e) =>
+        {
+            // Custom logic
+        };
+        return window;
+    }
+
     //private ValueTask CheckFromState(LocationChangingContext context)
     //{
 
