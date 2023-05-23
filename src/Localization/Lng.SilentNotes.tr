@@ -100,11 +100,11 @@ show_transfer_code = Aktarım kodunu göster
 transfer_not_existing = Aktarım kodu ilk eşitlemeden sonra kullanılabilir olacaktır.
 transfer_code = Aktarım kodu
 transfer_code_usage = Bu aktarım kodu sayesinde bulutta depoladığınız notların kilidini açabilirsiniz.
-transfer_code_required = Lütfen aktarım kodunu girin. Aktarım koduna eşitlenmiş bir cihazdaki ‹Aktarım kodunu göster› seçeneğinden ulaşabilirsiniz.
+transfer_code_required = Lütfen aktarım kodunu girin. Aktarım koduna eşitlenmiş bir cihazdaki ‹{0}› seçeneğinden ulaşabilirsiniz.
 transfer_code_show_history = Eski aktarım kodlarını göster
 transfer_code_created = Yeni bir aktarım kodu oluşturuldu: ‹{0}›. Aktarım koduna istediğiniz zaman ‹{1}› seçeneğinden ulaşabilirsiniz.
 transfer_code_writedown = Notları diğer cihazlarla eşitlemek için veya çevrimiçi yedeklere erişmek için aktarım kodu gerekir, bu sebeple aktarım kodunu bir yere yazmanızı tavsiye ederiz.
-transfer_code_notification = 💡 Please don't forget to write down the transfercode, you can get it from the menu «{0}»! Without the transfercode a new installation of SilentNotes won't be able to decrypt the notes from the online storage.
+transfer_code_notification = 💡 Lütfen aktarım kodunu yazmayı unutmayın! Kodu ‹{0}› menüsünden alabilirsiniz. SilentNotes'un yeni bir kurulumu, çevrimiçi depodaki korunan notları aktarım kodu olmadan açamaz.
 
 show_info = Hakkında
 version = Sürüm

@@ -43,7 +43,7 @@
 
         <h1>@Model.Language["transfer_code"]</h1>
 
-        <p>@Model.Language["transfer_code_required"]</p>
+        <p>@Model.Language.LoadTextFmt("transfer_code_required", Model.Language["show_transfer_code"])</p>
 
         <form class="mb-4 col-md-9">
             <div class="form-row form-group">

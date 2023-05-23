@@ -23,7 +23,7 @@ using SilentNotes.ViewModels;
 #line hidden
 
 
-[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "16.9.0.273")]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "17.5.0.173")]
 public partial class TransferCodeRazorView : TransferCodeRazorViewBase
 {
 
@@ -207,7 +207,7 @@ WriteLiteral("</h1>\r\n\r\n        <p>");
 
 
 #line 46 "TransferCodeRazorView.cshtml"
-      Write(Model.Language["transfer_code_required"]);
+      Write(Model.Language.LoadTextFmt("transfer_code_required", Model.Language["show_transfer_code"]));
 
 
 #line default

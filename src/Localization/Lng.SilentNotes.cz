@@ -100,11 +100,11 @@ show_transfer_code = Zobrazit přenosový kód
 transfer_not_existing = Přenosový kód bude k dispozici po první synchronizaci.
 transfer_code = Přenosový kód
 transfer_code_usage = Přenosovým kódem lze dešifrovat poznámky uložené v cloudu.
-transfer_code_required = Prosím zadejte přenosový kód. Kód můžete získat z již synchronizovaného zařízení přes «Zobrazit přenosový kód» v menu
+transfer_code_required = Prosím zadejte přenosový kód. Kód můžete získat z již synchronizovaného zařízení přes ‹{0}› v menu
 transfer_code_show_history = Zobrazit historii přenosových kódů
 transfer_code_created = Byl vygenerován nový přenosový kód {0}, lze jej kdykoliv zobrazit pomocí ‹{1}›.
 transfer_code_writedown = Doporučujeme si zapsat přenosový kód, je potřeba k synchronizaci s dalšími zařízeními nebo při obnově zálohy.
-transfer_code_notification = 💡 Please don't forget to write down the transfercode, you can get it from the menu «{0}»! Without the transfercode a new installation of SilentNotes won't be able to decrypt the notes from the online storage.
+transfer_code_notification = 💡 Nezapomeňte si zapsat přenosový kód, můžete si ho zobrazit z menu ‹{0}›!. Bez něj nebude schopna nová instalace SilentNotes dešifrovat Vaše poznámky z online úložiště.
 
 show_info = Informace
 version = Verze

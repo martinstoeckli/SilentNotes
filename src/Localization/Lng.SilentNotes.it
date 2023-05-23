@@ -100,11 +100,11 @@ show_transfer_code = Visualizza codice di trasferimento
 transfer_not_existing = Il codice di trasferimento sarà disponibile dopo la prima sincronizzazione.
 transfer_code = Codice di trasferimento
 transfer_code_usage = Con questo codice di trasferimento è possibile decifrare gli appunti memorizzati nel cloud.
-transfer_code_required = Inserisci il codice di trasferimento. È possibile ottenere il codice da una periferica già sincronizzata usando la voce del menu «Visualizza codice di trasferimento»
+transfer_code_required = Inserisci il codice di trasferimento. È possibile ottenere il codice da una periferica già sincronizzata usando la voce del menu ‹{0}›
 transfer_code_show_history = Visualizza i vecchi codici di trasferimento
 transfer_code_created = Un nuovo codice di trasferimento ‹{0}› è stato generato, può essere controllato in qualunque momento usando il menu ‹{1}›.
 transfer_code_writedown = Consigliamo di scrivere il codice di trasferimento a parte, sarà necessario per sincronizzare gli appunti con altre periferiche o quando si dovrà accedere al backup online successivamente.
-transfer_code_notification = 💡 Please don't forget to write down the transfercode, you can get it from the menu «{0}»! Without the transfercode a new installation of SilentNotes won't be able to decrypt the notes from the online storage.
+transfer_code_notification = 💡 Non dimenticarti di scrivere il codice di trasferimento, puoi ottenerlo dal menu ‹{0}›! Senza il codice di trasferimento una nuova installazione di SilentNotes non sarà in grado di decifrare gli appunti dalla memorizzazione online.
 
 show_info = Informazioni
 version = Versione
