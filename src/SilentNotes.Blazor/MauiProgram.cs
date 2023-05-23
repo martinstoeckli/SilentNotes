@@ -53,6 +53,8 @@ public static class MauiProgram
         //    serviceProvider.GetService<IFeedbackService>(),
         //    serviceProvider.GetService<ILanguageService>(),
         //    serviceProvider.GetService<ISettingsService>()));
+
+        // Scoped services (some Blazor services like IJSRuntime seem to be scoped)
         services.AddScoped<INavigationService>((serviceProvider) => new NavigationService(
             serviceProvider.GetService<NavigationManager>(),
             serviceProvider.GetService<IJSRuntime>()));

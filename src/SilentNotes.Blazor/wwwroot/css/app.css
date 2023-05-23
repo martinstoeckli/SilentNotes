@@ -1,5 +1,8 @@
 ﻿:root {
-  --note-item-min-height: 32px;
+	--font-color-light-background: black;
+	--font-color-dark-background: white;
+	--note-handle-mx: 10px;
+	--note-handle-my: 8px;
 }
 
 html { font-size: 14px; }
@@ -68,16 +71,21 @@ h3 { font-size: 1.1em; }
 	}
 }
 
+/* The note light/dark is independend of the theme */
+.note-light {
+	color: var(--font-color-light-background);
+}
+.note-dark {
+	color: var(--font-color-dark-background);
+}
+
 .note-card {
+	position: relative;
 	padding: 12px;
 	overflow: hidden;
 	font-size: 0.9em;
 	user-select: none;
 	cursor: default;
-	color: black;
-}
-.note-card.dark {
-	color: white;
 }
 .note-card a:hover {
 	cursor: default;
@@ -94,8 +102,32 @@ h3 { font-size: 1.1em; }
 	height: 36px;
 	fill: rgba(160, 160, 160, 0.4);
 }
-.note-locked.dark svg {
-	fill: rgba(204, 204, 204, 0.4);
+.note-locked.note-light svg { fill: rgba(204, 204, 204, 0.4); }
+.note-locked.note-dark svg { fill: rgba(204, 204, 204, 0.4); }
+
+.note-handle {
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+	position: absolute;
+	top: var(--note-handle-my);
+	right: var(--note-handle-mx);
+	width: 26px;
+	height: 26px;
+	border-radius: 13px;
+	cursor: pointer;
+}
+.note-handle.note-light { background-color: rgba(172, 172, 172, 0.5); fill: #707070 }
+.note-handle.note-dark { background-color: rgba(204, 204, 204, 0.7); fill: #606060; }
+
+.sortable-handle {
+}
+.safe-handle {
+	right: 50px;
+}
+.recycle-handle {
+	top: auto;
+	bottom: var(--note-handle-my);	
 }
 
 .color-swatch {

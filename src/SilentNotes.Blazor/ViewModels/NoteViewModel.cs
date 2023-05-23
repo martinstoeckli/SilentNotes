@@ -332,21 +332,21 @@ namespace SilentNotes.ViewModels
         }
 
         /// <summary>
-        /// Gets the dark class for a given background color, depending of whether the background
-        /// color is a light or a dark color.
+        /// Gets a class attribute for a given background color, "note-light" for bright background
+        /// colors, "note-dark" for dark background colors.
         /// </summary>
         /// <param name="backgroundColorHex">Background color of the note. If this parameter is
         /// null, the <see cref="BackgroundColorHex"/> of the note itself is used.</param>
-        /// <returns>Html class "dark" if the background color is dark, otherwise an empty string.</returns>
-        public string GetDarkClass(string backgroundColorHex = null)
+        /// <returns>Html class "note-dark" if the background color is dark, otherwise "note-light".</returns>
+        public string LightOrDarkClass(string backgroundColorHex = null)
         {
             if (string.IsNullOrEmpty(backgroundColorHex))
                 backgroundColorHex = BackgroundColorHex;
             System.Drawing.Color backgroundColor = ColorExtensions.HexToColor(backgroundColorHex);
             if (backgroundColor.IsDark())
-                return "dark";
+                return "note-dark";
             else
-                return string.Empty;
+                return "note-light";
         }
 
         /// <summary>

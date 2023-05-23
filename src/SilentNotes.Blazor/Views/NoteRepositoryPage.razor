@@ -75,15 +75,17 @@
         @foreach (var note in ViewModel.FilteredNotes)
         {
             <li @key="note.Id" class="note-item">
-                <div class="note-card mud-elevation-3 @note.GetDarkClass()" style="background-color:@note.BackgroundColorHex">
+                <div class="note-card mud-elevation-3 @note.LightOrDarkClass()" style="background-color:@note.BackgroundColorHex">
                     @if (@note.IsLocked)
                     {
-                        <div class="note-locked @note.GetDarkClass()">@IconService.EmbedSvgLink(IconNames.LockOutline)</div>
+                        <div class="note-locked">@IconService.EmbedSvgLink(IconNames.LockOutline)</div>
                     }
                     else
                     {
                         <div class="note-viewer over-view">@((MarkupString)note.GetShortenedUnlockedHtmlContent())</div>
                     }
+                    <div class="note-handle sortable-handle @note.LightOrDarkClass()">@IconService.EmbedSvgLink(IconNames.ArrowAll, 22)</div>
+                    <div class="note-handle recycle-handle @note.LightOrDarkClass()" onclick="">@IconService.EmbedSvgLink(IconNames.Delete, 19)</div>
                 </div>
             </li>
         }
@@ -98,6 +100,8 @@
         IconNames.Magnify,
         IconNames.CloseCircleOutline,
         IconNames.LockOutline,
+        IconNames.ArrowAll,
+        IconNames.Delete,
     });
 </div>
 
