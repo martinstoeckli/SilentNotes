@@ -100,10 +100,11 @@ show_transfer_code = Transfercode anzeigen
 transfer_not_existing = Der Transfercode ist erst verfügbar nach der ersten Synchronisation.
 transfer_code = Transfercode
 transfer_code_usage = Mit diesem Transfercode können Sie die in der Cloud gespeicherten Notizen entschlüsseln.
-transfer_code_required = Bitte geben Sie den Transfercode ein. Sie erhalten den Code von einem bereits synchronisierten Gerät, indem sie dort den Menupunkt «Transfercode anzeigen» benutzen.
+transfer_code_required = Bitte geben Sie den Transfercode ein. Sie erhalten den Code von einem bereits synchronisierten Gerät, indem sie dort den Menupunkt ‹{0}› benutzen.
 transfer_code_show_history = Ältere Transfercodes anzeigen
-transfer_code_created = Ein neuer Transfercode ‹{0}› wurde generiert, er kann jederzeit im Menu unter ‹Transfercode anzeigen› nachgeschaut werden.
+transfer_code_created = Ein neuer Transfercode ‹{0}› wurde generiert, er kann jederzeit im Menu unter ‹{1}› nachgeschaut werden.
 transfer_code_writedown = Wir empfehlen den Transfercode aufzuschreiben, Sie benötigen ihn um die Notizen mit anderen Geräten zu synchronisieren, oder wenn Sie später auf das Online Backup zugreifen müssen.
+transfer_code_notification = 💡 Bitte vergessen Sie nicht den Transfercode aufzuschreiben, Sie finden ihn via Menu ‹{0}›! Ohne den Transfercode kann eine Neuinstallation von SilentNotes die Notizen vom Online-Speicher nicht entschlüsseln.
 
 show_info = Information
 version = Version

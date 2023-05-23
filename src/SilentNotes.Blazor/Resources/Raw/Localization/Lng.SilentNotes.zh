@@ -100,10 +100,11 @@ show_transfer_code = 展示传输码
 transfer_not_existing = 传输码将在第一次同步后可用。
 transfer_code = 传输码
 transfer_code_usage = 使用传输码您可以解密存储在云上的笔记。
-transfer_code_required = 请输入传输码。您可以从已同步的设备中获取传输码，方法是使用其菜单项“展示传输码”
+transfer_code_required = 请输入传输码。您可以从已同步的设备中获取传输码，方法是使用其菜单项“{0}”
 transfer_code_show_history = 展示历史传输码
-transfer_code_created = 新传输码“{0}”已生成，可以随时使用菜单“展示传输码”查看。
+transfer_code_created = 新传输码“{0}”已生成，可以随时使用菜单“{1}”查看。
 transfer_code_writedown = 我们建议您将传输码写下，您需要它来与其他设备同步笔记，或者当您以后必须访问在线备份时。
+transfer_code_notification = 💡 请务必写下传输码，您可以从菜单“{0}”获取！没有传输码新安装的 SilentNotes 将无法从在线存储中解密笔记。
 
 show_info = 信息
 version = 版本
