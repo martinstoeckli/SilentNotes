@@ -20,7 +20,7 @@ namespace SilentNotes.ViewModels
     {
         public const double ReferenceFontSize = 15.0; // Used as reference to calculate the font scale
         public const int ReferenceNoteMaxSize = 160;
-        public const int ReferenceNoteMinSize = 64;
+        public const int ReferenceNoteMinSize = 72;
         //private readonly ISettingsService _settingsService;
         private readonly IEnvironmentService _environmentService;
         private readonly IThemeService _themeService;

@@ -53,9 +53,6 @@ h3 { font-size: 1.1em; }
 .note-list {
 	display: flex;
 	flex-wrap: wrap;
-/*	gap: 112px 12px;*/
-/*	row-gap: 12px;*/
-/*	column-gap: 12px;*/
 }
 .note-item {
 	display: block;
@@ -102,8 +99,8 @@ h3 { font-size: 1.1em; }
 	height: 36px;
 	fill: rgba(160, 160, 160, 0.4);
 }
-.note-locked.note-light svg { fill: rgba(204, 204, 204, 0.4); }
-.note-locked.note-dark svg { fill: rgba(204, 204, 204, 0.4); }
+.note-light .note-locked svg { fill: rgba(172, 172, 172, 0.5); }
+.note-dark .note-locked svg { fill: rgba(204, 204, 204, 0.4); }
 
 .note-handle {
 	display: inline-flex;
@@ -117,8 +114,8 @@ h3 { font-size: 1.1em; }
 	border-radius: 13px;
 	cursor: pointer;
 }
-.note-handle.note-light { background-color: rgba(172, 172, 172, 0.5); fill: #707070 }
-.note-handle.note-dark { background-color: rgba(204, 204, 204, 0.7); fill: #606060; }
+.note-light .note-handle { background-color: rgba(172, 172, 172, 0.5); fill: #707070 }
+.note-dark .note-handle { background-color: rgba(204, 204, 204, 0.7); fill: #606060; }
 
 .sortable-handle {
 }
@@ -127,7 +124,7 @@ h3 { font-size: 1.1em; }
 }
 .recycle-handle {
 	top: auto;
-	bottom: var(--note-handle-my);	
+	bottom: var(--note-handle-my);
 }
 
 .color-swatch {
@@ -137,6 +134,110 @@ h3 { font-size: 1.1em; }
 	border-radius: 3px;
 	border: 1px solid var(--mud-palette-lines-default);
 }
+
+/* Text formatting */
+
+.note-viewer h1 {
+	margin: 0.7em 0 0.3em 0 !important;
+	font: normal bold 1.35em/1.1 "Segoe UI",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol" !important;
+}
+.note-viewer h2 {
+	margin: 0.8em 0 0.2em 0 !important;
+	font: normal bold 1.2em/1.1 "Segoe UI",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol" !important;
+}
+.note-viewer h3 {
+	margin: 0.8em 0 0.2em 0 !important;
+	font: normal bold 1.1em/1.1 "Segoe UI",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol" !important;
+}
+
+.note-viewer p {
+	margin: 0 0 0.2em 0 !important;
+	font: normal normal 1em/1.4 "Segoe UI",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol" !important;
+}
+
+.note-viewer ol {
+	margin: 0.5em 0 0.5em 0 !important;
+	padding: 0 !important;
+	font: normal normal 1em/1.4 "Segoe UI",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol" !important;
+	list-style: none;
+	counter-reset: sn-counter;
+}
+.note-viewer ol > li {
+	margin-left: 1.8em !important;
+	padding: 0 !important;
+	counter-increment: sn-counter;
+}
+.note-viewer ol > li::before {
+	display: inline-block;
+	margin: 0 0 0 -1.8em !important;
+	padding: 0 0.3em 0 0 !important;
+	width: 1.8em !important;
+	content: counter(sn-counter) ".";
+	text-align: right !important;
+	vertical-align: top;
+}
+
+.note-viewer ul {
+	margin: 0.5em 0 0.5em 0 !important;
+	padding: 0 !important;
+	font: normal normal 1em/1.4 "Segoe UI",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol" !important;
+	/* list-style-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='-32 -32 64 64' fill='blue' ><circle r='16' /></svg>"); */
+}
+.note-viewer ul > li {
+	margin-left: 1.8em !important;
+	padding: 0 !important;
+}
+.note-viewer ul > li::before {
+	display: inline-block;
+	margin: 0 0 0 -1.8em !important;
+	padding: 0 0.3em 0 0 !important;
+	width: 1.8em !important;
+	white-space: nowrap;
+	content: '•';
+	text-align: right !important;
+	vertical-align: top;
+}
+.note-viewer li>p:first-child {
+    display: inline;
+}
+
+.note-viewer pre {
+	margin: 0.5em 0 0.5em 0 !important;
+	padding: 1em !important;
+	font: normal normal 0.9em/1.2 Consolas,monospace,"Courier New" !important;
+	overflow: auto !important;
+	white-space: pre !important;
+	text-wrap: none !important;
+}
+
+.note-viewer blockquote {
+	margin: 0.5em 0 0.5em 0 !important;
+	padding: 0 0 0 1em !important;
+	font: normal normal 1em/1.5 "Segoe UI",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol" !important;
+	border-left: 3px solid rgba(128, 128, 128, 0.4) !important;
+}
+.note-viewer.dark blockquote {
+	border-left: 3px solid rgba(211, 211, 211, 0.6) !important;
+}
+.note-viewer a { text-decoration: none !important; }
+.note-viewer a:hover { text-decoration: underline !important; }
+
+.note-light .note-viewer h1 { color: rgba(70, 130, 180, 1) !important; }
+.note-light .note-viewer h2 { color: rgba(70, 130, 180, 0.85) !important; }
+.note-light .note-viewer h3 { color: rgba(70, 130, 180, 0.7) !important; }
+.note-light .note-viewer ol > li::before { color: steelblue; }
+.note-light .note-viewer ul > li::before { color: steelblue !important; }
+.note-light .note-viewer pre { background-color: rgba(128, 128, 128, 0.2) !important; color: black !important; }
+.note-light .note-viewer a { color: rgba(70, 130, 180, 0.80) !important; }
+.note-light .note-viewer a:hover { color: rgba(70, 130, 180, 0.80) !important; }
+.note-dark .note-viewer h1 { color: rgba(173, 216, 230, 1) !important; }
+.note-dark .note-viewer h2 { color: rgba(173, 216, 230, 0.94) !important; }
+.note-dark .note-viewer h3 { color: rgba(173, 216, 230, 0.88) !important; }
+.note-dark .note-viewer ol > li::before { color: lightblue; }
+.note-dark .note-viewer ul > li::before { color: lightblue !important; }
+.note-dark .note-viewer pre { background-color: rgba(211, 211, 211, 0.3) !important; color: white !important; }
+.note-dark .note-viewer a { color: rgba(173, 216, 230, 0.90) !important; }
+.note-dark .note-viewer a:hover { color: rgba(173, 216, 230, 0.90) !important; }
 
 #blazor-error-ui {
 	background: lightyellow;

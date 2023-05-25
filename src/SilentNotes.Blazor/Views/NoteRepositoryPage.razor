@@ -34,7 +34,7 @@
     <MudSpacer />
 
     <MudPaper Class="d-inline-flex align-center rounded-pill pa-0" MaxHeight="36px" Elevation="0">
-        <MudInput @bind-Value="ViewModel.Filter"
+        <MudInput @ref="_filterInput" @bind-Value="ViewModel.Filter"
             Class="filter-input ml-2 mr-1 my-0"
             Adornment="Adornment.End" AdornmentIcon="@FilterIcon" OnAdornmentClick="@(() => ViewModel.ClearFilterCommand.Execute(null))"
             Immediate="true" />
@@ -84,8 +84,8 @@
                     {
                         <div class="note-viewer over-view">@((MarkupString)note.GetShortenedUnlockedHtmlContent())</div>
                     }
-                    <div class="note-handle sortable-handle @note.LightOrDarkClass()">@IconService.EmbedSvgLink(IconNames.ArrowAll, 22)</div>
-                    <div class="note-handle recycle-handle @note.LightOrDarkClass()" onclick="">@IconService.EmbedSvgLink(IconNames.Delete, 19)</div>
+                    <div class="note-handle sortable-handle">@IconService.EmbedSvgLink(IconNames.ArrowAll, 22)</div>
+                    <div class="note-handle recycle-handle" onclick="">@IconService.EmbedSvgLink(IconNames.Delete, 19)</div>
                 </div>
             </li>
         }
@@ -107,6 +107,7 @@
 
 @code {
     private bool _isDisposed;
+    private MudInput<string> _filterInput;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="NoteRepositoryPage"/> class.
@@ -134,6 +135,13 @@
         if (_isDisposed)
             return;
         _isDisposed = true;
+    }
+
+    /// <inheritdoc/>
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+            await _filterInput.FocusAsync();
     }
 
     /// <summary>
