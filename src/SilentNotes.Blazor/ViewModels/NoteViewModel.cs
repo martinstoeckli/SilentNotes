@@ -138,13 +138,13 @@ namespace SilentNotes.ViewModels
             get { return Model.Id; }
         }
 
-        ///// <summary>
-        ///// Gets the type of the note as css class.
-        ///// </summary>
-        //public string CssClassNoteType
-        //{
-        //    get { return Model.NoteType.ToString().ToLowerInvariant(); }
-        //}
+        /// <summary>
+        /// Gets the type of the note as css class.
+        /// </summary>
+        public string CssClassNoteType
+        {
+            get { return Model.NoteType.ToString().ToLowerInvariant(); }
+        }
 
         /// <summary>
         /// Gets a searchable representation of the <see cref="UnlockedHtmlContent"/>. This searchable

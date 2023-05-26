@@ -102,6 +102,15 @@ h3 { font-size: 1.1em; }
 .note-light .note-locked svg { fill: rgba(172, 172, 172, 0.5); }
 .note-dark .note-locked svg { fill: rgba(204, 204, 204, 0.4); }
 
+.pin {
+	display: inline-flex;
+	position: absolute;
+	left: 0;
+	top: 5px;
+	fill: #e60000;
+	filter: drop-shadow(1px 2px 2px rgb(0 0 0 / 0.4));
+}
+
 .note-handle {
 	display: inline-flex;
 	justify-content: center;
@@ -238,6 +247,48 @@ h3 { font-size: 1.1em; }
 .note-dark .note-viewer pre { background-color: rgba(211, 211, 211, 0.3) !important; color: white !important; }
 .note-dark .note-viewer a { color: rgba(173, 216, 230, 0.90) !important; }
 .note-dark .note-viewer a:hover { color: rgba(173, 216, 230, 0.90) !important; }
+
+/* Checklist in overview. The svg content: url() is set in view with the IconService. */
+
+.note-viewer.over-view.checklist p {
+	position: relative;
+	padding: 0.2em 2em 0.2em 2em;
+	overflow: hidden;
+	min-height: 2em;
+	max-height: 3em;
+	border-radius: 4px;
+}
+.note-viewer.over-view.checklist p::before {
+	display: inline-block;
+	position: absolute;
+	left: 0.1em;
+	vertical-align: middle;
+}
+.note-viewer.over-view.checklist p.disabled {
+	text-decoration: line-through;
+}
+.note-viewer.over-view.checklist p.disabled::before {
+	opacity: .2;
+}
+
+.note-light .note-viewer.over-view.checklist p,
+.note-light .detail-view.checklist .ProseMirror p { background-color: rgba(128, 128, 128, 0.2); }
+
+.note-light .note-viewer.over-view.checklist p.done,
+.note-light .detail-view.checklist .ProseMirror p.done { background: #ccf0a8; }
+
+.note-light .note-viewer.over-view.checklist p.disabled,
+.note-light .detail-view.checklist .ProseMirror p.disabled { color: rgba(0, 0, 0, 0.5); text-decoration-color: rgba(0, 0, 0, 0.25); }
+
+.note-dark .note-viewer.over-view.checklist p,
+.note-dark .detail-view.checklist .ProseMirror p { background-color: rgba(211, 211, 211, 0.3); }
+
+.note-dark .note-viewer.over-view.checklist p.done,
+.note-dark .detail-view.checklist .ProseMirror p.done { background: #467c46; }
+
+.note-dark .note-viewer.over-view.checklist p.disabled,
+.note-dark .detail-view.checklist .ProseMirror p.disabled { color: rgba(255, 255, 255, 0.5); text-decoration-color: rgba(255, 255, 255, 0.25); }
+
 
 #blazor-error-ui {
 	background: lightyellow;

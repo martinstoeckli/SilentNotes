@@ -77,6 +77,6 @@ namespace SilentNotes.Services
         /// <param name="attributes">Optional attributes, which can be added to the icon, so it can
         /// be customized.</param>
         /// <returns>A string containing the SVG url, like: url("data:image/svg+xml,...").</returns>
-        //string LoadIconAsCssUrl(string id, IEnumerable<KeyValuePair<string, string>> attributes = null);
+        string LoadIconAsCssUrl(string id, IEnumerable<KeyValuePair<string, string>> attributes = null);
     }
 }

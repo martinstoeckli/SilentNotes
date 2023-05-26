@@ -102,22 +102,6 @@ namespace SilentNotes.Services
         //    get { return LoadIcon(id); }
         //}
 
-        ///// <inheritdoc/>
-        //public MarkupString LoadIcon(string id, IEnumerable<KeyValuePair<string, string>> attributes = null)
-        //{
-        //    string result = _svgResources[id];
-        //    if (attributes != null)
-        //    {
-        //        StringBuilder sb = new StringBuilder();
-        //        foreach (KeyValuePair<string, string> attribute in attributes)
-        //        {
-        //            sb.Append(' ').Append(attribute.Key).Append("='").Append(attribute.Value).Append("'");
-        //        }
-        //        result = result.Insert(4, sb.ToString());
-        //    }
-        //    return (MarkupString)result;
-        //}
-
         /// <inheritdoc/>
         public string this[string id]
         {
@@ -158,20 +142,36 @@ namespace SilentNotes.Services
         }
 
         /// <inheritdoc/>
-        //public string LoadIconAsCssUrl(string id, IEnumerable<KeyValuePair<string, string>> attributes = null)
-        //{
-        //    var enrichedAttributes = attributes != null
-        //        ? new List<KeyValuePair<string, string>>(attributes)
-        //        : new List<KeyValuePair<string, string>>();
-        //    enrichedAttributes.Insert(0, new KeyValuePair<string, string>("xmlns", "http://www.w3.org/2000/svg"));
+        public string LoadIconAsCssUrl(string id, IEnumerable<KeyValuePair<string, string>> attributes = null)
+        {
+            var enrichedAttributes = attributes != null
+                ? new List<KeyValuePair<string, string>>(attributes)
+                : new List<KeyValuePair<string, string>>();
+            enrichedAttributes.Insert(0, new KeyValuePair<string, string>("xmlns", "http://www.w3.org/2000/svg"));
 
-        //    string svg = LoadIcon(id, enrichedAttributes);
+            string svg = LoadIcon(id, enrichedAttributes);
 
-        //    // base64 encoding seems to be the only safe choice for cross browser compatibility.
-        //    // Especially AndroidQ WebView hat problems with only Uri.EscapeUriString().
-        //    string encodedSvg = Convert.ToBase64String(Encoding.UTF8.GetBytes(svg));
-        //    return string.Format(@"url(""data:image/svg+xml;base64,{0}"")", encodedSvg);
-        //}
+            // base64 encoding seems to be the only safe choice for cross browser compatibility.
+            // Especially AndroidQ WebView hat problems with only Uri.EscapeUriString().
+            string encodedSvg = Convert.ToBase64String(Encoding.UTF8.GetBytes(svg));
+            return string.Format(@"url(""data:image/svg+xml;base64,{0}"")", encodedSvg);
+        }
+
+        private string LoadIcon(string id, IEnumerable<KeyValuePair<string, string>> attributes = null)
+        {
+            string result = _svgResources[id];
+            if (attributes != null)
+            {
+                StringBuilder sb = new StringBuilder();
+                foreach (KeyValuePair<string, string> attribute in attributes)
+                {
+                    sb.Append(' ').Append(attribute.Key).Append("='").Append(attribute.Value).Append("'");
+                }
+                result = result.Insert(4, sb.ToString());
+            }
+            return result;
+        }
+
 
         ///// <inheritdoc/>
         //private string LoadIconSvgPath(string id)
