@@ -13,6 +13,8 @@ h3 { font-size: 1.1em; }
 	color: var(--mud-palette-primary-darken);
 }
 
+.toggled svg { fill: #87cefa; }
+
 .form-row {
 	display: flex;
 	align-items: baseline;

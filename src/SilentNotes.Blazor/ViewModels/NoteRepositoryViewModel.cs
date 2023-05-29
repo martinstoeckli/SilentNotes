@@ -3,10 +3,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
 //using SilentNotes.Controllers;
@@ -183,7 +180,7 @@ namespace SilentNotes.ViewModels
                 return true;
 
             NoteFilter noteFilter = new NoteFilter(null, settings.SelectedTag);
-            return noteFilter.ContainsTag(Tags);
+            return noteFilter.ContainsTag(Tags.Select(tag => tag.Value));
         }
 
         ///// <inheritdoc/>
@@ -467,22 +464,20 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets a list of all tags which are used in the notes.
         /// </summary>
-        public List<string> Tags { get; private set; }
+        public List<ListItemViewModel<string>> Tags { get; private set; }
 
-        public List<ListItemViewModel> Tugs { get; private set; }
-
-        public object SelectedTug
+        public object SelectedTag
         {
             get
             {
                 SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
-                ListItemViewModel result = Tugs.Find(item => string.Equals(item.Value, settings.SelectedTag));
-                return result ?? Tugs[0];
+                ListItemViewModel<string> result = Tags.Find(item => string.Equals(item.Value, settings.SelectedTag, StringComparison.InvariantCultureIgnoreCase));
+                return result ?? Tags[0];
             }
 
             set
             {
-                string newValue = ((ListItemViewModel)value).Value?.ToString();
+                string newValue = ((ListItemViewModel<string>)value).Value;
                 SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
                 if (SetPropertyAndModified(settings.SelectedTag, newValue, (string v) => settings.SelectedTag = v))
                 {
@@ -496,60 +491,38 @@ namespace SilentNotes.ViewModels
         }
 
         /// <summary>
-        /// Gets or sets the selected tag string, or the special tag "all" in case that no tag is selected.
+        /// Gets a value indicating whether the notes are filtered by a tag or not.
         /// </summary>
-        public string SelectedTag
+        public bool IsFilteredByTag
         {
-            get
-            {
-                SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
-                if (_specialTagLocalizations.TryGetValue(settings.SelectedTag, out string localizedSelectedTag))
-                    return localizedSelectedTag;
-                else
-                    return settings.SelectedTag;
-            }
-
-            set
-            {
-                string newValue;
-                if (_specialTagLocalizations.TryGetKey(value, out string key))
-                    newValue = key;
-                else
-                    newValue = value;
-
-                SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
-                if (SetPropertyAndModified(settings.SelectedTag, newValue, (string v) => settings.SelectedTag = v))
-                {
-                    OnPropertyChanged(nameof(SelectedTag));
-                    ApplyFilter();
-                    OnPropertyChanged("Notes");
-                    _settingsService.TrySaveSettingsToLocalDevice(settings);
-                }
-            }
+            get { return SelectedTag != Tags[0]; } // The first tag is "all notes".
         }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the side drawer displaying the tags is open or not.
+        /// </summary>
+        public bool IsDrawerOpen { get; set; }
 
         private void UpdateTags()
         {
-            Tags = Model.CollectActiveTags();
-
-            Tugs = new List<ListItemViewModel>();
-            Tugs.Add(new ListItemViewModel 
+            Tags = new List<ListItemViewModel<string>>();
+            Tags.Add(new ListItemViewModel<string> 
             { 
                 Value = NoteFilter.SpecialTags.AllNotes,
                 Text = _specialTagLocalizations[NoteFilter.SpecialTags.AllNotes],
                 IconName = IconNames.TagMultiple,
             });
-            Tugs.Add(new ListItemViewModel
+            Tags.Add(new ListItemViewModel<string>
             {
                 Value = NoteFilter.SpecialTags.NotesWithoutTags,
                 Text = _specialTagLocalizations[NoteFilter.SpecialTags.NotesWithoutTags],
                 IconName = IconNames.TagOff,
             });
-            Tugs.Add(new ListItemViewModel
+            Tags.Add(new ListItemViewModel<string>
             {
                 IsDivider = true,
             });
-            Tugs.AddRange(Model.CollectActiveTags().Select(tag => new ListItemViewModel() 
+            Tags.AddRange(Model.CollectActiveTags().Select(tag => new ListItemViewModel<string>() 
             {
                 Text = tag,
                 Value = tag,

@@ -266,16 +266,22 @@ namespace SilentNotes.ViewModels
         //        set { SetPropertyAndModified(Model.DefaultNoteInsertion.ToString(), value, (string v) => Model.DefaultNoteInsertion = (NoteInsertionMode)Enum.Parse(typeof(NoteInsertionMode), value)); }
         //    }
 
-        //    /// <summary>
-        //    /// Gets or sets a value indicating whether the last selected tag to filter the notes
-        //    /// should be remembered across startups.
-        //    /// </summary>
-        //    [VueDataBinding(VueBindingMode.TwoWay)]
-        //    public bool RememberLastTagFilter
-        //    {
-        //        get { return Model.RememberLastTagFilter; }
-        //        set { SetPropertyAndModified(Model.RememberLastTagFilter, value, (bool v) => Model.RememberLastTagFilter = v); }
-        //    }
+        /// <summary>
+        /// Gets or sets a value indicating whether the last selected tag to filter the notes
+        /// should be remembered across startups.
+        /// </summary>
+        public bool RememberLastTagFilter
+        {
+            get { return Model.RememberLastTagFilter; }
+            set { SetPropertyAndModified(Model.RememberLastTagFilter, value, (bool v) => Model.RememberLastTagFilter = v); }
+        }
+
+        // todo:
+        public bool StartWithTagsOpen
+        {
+            get { return Model.StartWithTagsOpen; }
+            set { SetPropertyAndModified(Model.StartWithTagsOpen, value, (bool v) => Model.StartWithTagsOpen = v); }
+        }
 
         //    /// <summary>
         //    /// Gets or sets a value indicating whether notes should be hidden in the overview, if they

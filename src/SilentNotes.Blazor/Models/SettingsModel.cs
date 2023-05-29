@@ -155,6 +155,13 @@ namespace SilentNotes.Models
         public bool RememberLastTagFilter { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the drawer with the tag list should be kept open
+        /// on wide screens.
+        /// </summary>
+        [XmlElement("start_with_tags_open")]
+        public bool StartWithTagsOpen { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether notes should be hidden in the overview, if they
         /// are part of a closed safe.
         /// </summary>
