@@ -289,7 +289,6 @@ h3 { font-size: 1.1em; }
 .note-dark .note-viewer.over-view.checklist p.disabled,
 .note-dark .detail-view.checklist .ProseMirror p.disabled { color: rgba(255, 255, 255, 0.5); text-decoration-color: rgba(255, 255, 255, 0.25); }
 
-
 #blazor-error-ui {
 	background: lightyellow;
 	bottom: 0;

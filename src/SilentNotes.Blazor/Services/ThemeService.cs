@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using MudBlazor;
+using MudBlazor.Utilities;
 using SilentNotes.Models;
 
 namespace SilentNotes.Services
@@ -29,7 +30,17 @@ namespace SilentNotes.Services
             _settingsService = settingsService;
             _environmentService = environmentService;
 
-            Theme = new MudTheme();
+            Theme = new MudTheme()
+            {
+                Palette = new PaletteLight()
+                {
+                    //AppbarBackground = new MudColor("#323232"),
+                },
+                PaletteDark = new PaletteDark()
+                {
+                    //AppbarBackground = new MudColor("#323232"),
+                },
+            };
             //Themes = new List<ThemeModel>();
             //FillThemes(Themes);
         }

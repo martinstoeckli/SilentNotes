@@ -28,14 +28,13 @@ namespace SilentNotes.ViewModels
         //private readonly IStoryBoardService _storyBoardService;
         //private readonly IRepositoryStorageService _repositoryService;
         //private readonly IFeedbackService _feedbackService;
-        private readonly ILanguageService _languageService;
         private readonly IThemeService _themeService;
         private readonly ISettingsService _settingsService;
         private readonly IEnvironmentService _environmentService;
         //private readonly IAutoSynchronizationService _autoSynchronizationService;
         private readonly SearchableHtmlConverter _searchableTextConverter;
         private readonly ICryptor _noteCryptor;
-        //private readonly KeyValueList<string, string> _specialTagLocalizations;
+        private readonly KeyValueList<string, string> _specialTagLocalizations;
         private NoteRepositoryModel _model;
 
         /// <summary>
@@ -52,7 +51,7 @@ namespace SilentNotes.ViewModels
             //    _storyBoardService = storyBoardService;
             //    _repositoryService = repositoryService;
             //    _feedbackService = feedbackService;
-            _languageService = languageService;
+            Language = languageService;
             _themeService = themeService;
             _settingsService = settingsService;
             _environmentService = environmentService;
@@ -62,13 +61,13 @@ namespace SilentNotes.ViewModels
             AllNotes = new List<NoteViewModel>();
             FilteredNotes = new ObservableCollection<NoteViewModel>();
 
-            //    _specialTagLocalizations = new KeyValueList<string, string>();
-            //    _specialTagLocalizations[NoteFilter.SpecialTags.AllNotes] = string.Format("«{0}»", Language.LoadText("filter_show_all_notes"));
-            //    _specialTagLocalizations[NoteFilter.SpecialTags.NotesWithoutTags] = string.Format("«{0}»", Language.LoadText("filter_only_without_tags"));
+            _specialTagLocalizations = new KeyValueList<string, string>();
+            _specialTagLocalizations[NoteFilter.SpecialTags.AllNotes] = string.Format("«{0}»", Language.LoadText("filter_show_all_notes"));
+            _specialTagLocalizations[NoteFilter.SpecialTags.NotesWithoutTags] = string.Format("«{0}»", Language.LoadText("filter_only_without_tags"));
 
             //    _repositoryService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepository);
             Model = model;
-            //    UpdateTags();
+            UpdateTags();
 
             //    // Initialize commands and events
             //    ShowNoteCommand = new RelayCommand<object>(ShowNote);
@@ -88,20 +87,22 @@ namespace SilentNotes.ViewModels
 
             Modified = false;
 
-            //    // If a filter was set before e.g. opening a note, set the same filter again.
-            //    SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
-            //    if (!SelectedTagExistsInTags())
-            //        settings.SelectedTag = NoteFilter.SpecialTags.AllNotes;
+            // If a filter was set before e.g. opening a note, set the same filter again.
+            SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
+            if (!SelectedTagExistsInTags())
+                settings.SelectedTag = NoteFilter.SpecialTags.AllNotes;
 
-            //    if ((settings.SelectedTag != NoteFilter.SpecialTags.AllNotes) || !string.IsNullOrEmpty(settings.Filter))
-            //    {
-            //        OnPropertyChanged(nameof(SelectedTag));
-            //        OnPropertyChanged(nameof(Filter));
-            //        OnPropertyChanged(nameof(IsFiltered));
-            //        ApplyFilter();
-            //        OnPropertyChanged("Notes");
-            //    }
+            if ((settings.SelectedTag != NoteFilter.SpecialTags.AllNotes) || !string.IsNullOrEmpty(settings.Filter))
+            {
+                OnPropertyChanged(nameof(SelectedTag));
+                OnPropertyChanged(nameof(Filter));
+                OnPropertyChanged(nameof(IsFiltered));
+                ApplyFilter();
+                OnPropertyChanged("Notes");
+            }
         }
+
+        private ILanguageService Language { get; }
 
         ///// <summary>
         ///// Initializes a new instance of the <see cref="NoteRepositoryViewModel"/> class.
@@ -173,17 +174,17 @@ namespace SilentNotes.ViewModels
         //    }
         //}
 
-        //private bool SelectedTagExistsInTags()
-        //{
-        //    // An invalid selected tag can exist if the user edited a note (deleted a tag) and
-        //    // returned to the overview, which still remembers this selected tag.
-        //    SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
-        //    if (NoteFilter.SpecialTags.IsSpecialTag(settings.SelectedTag))
-        //        return true;
+        private bool SelectedTagExistsInTags()
+        {
+            // An invalid selected tag can exist if the user edited a note (deleted a tag) and
+            // returned to the overview, which still remembers this selected tag.
+            SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
+            if (NoteFilter.SpecialTags.IsSpecialTag(settings.SelectedTag))
+                return true;
 
-        //    NoteFilter noteFilter = new NoteFilter(null, settings.SelectedTag);
-        //    return noteFilter.ContainsTag(Tags);
-        //}
+            NoteFilter noteFilter = new NoteFilter(null, settings.SelectedTag);
+            return noteFilter.ContainsTag(Tags);
+        }
 
         ///// <inheritdoc/>
         //public override void OnStoringUnsavedData()
@@ -463,70 +464,114 @@ namespace SilentNotes.ViewModels
         //    _feedbackService.ShowToast(Language.LoadText("feedback_note_to_recycle"));
         //}
 
-        ///// <summary>
-        ///// Gets a list of all tags which are used in the notes, plus the <see cref="EmptyTagFilter"/>.
-        ///// </summary>
-        //[VueDataBinding(VueBindingMode.OneWayToView)]
-        //public List<string> Tags { get; private set; }
+        /// <summary>
+        /// Gets a list of all tags which are used in the notes.
+        /// </summary>
+        public List<string> Tags { get; private set; }
 
-        ///// <summary>
-        ///// Gets or sets the selected tag string, or the <see cref="EmptyTagFilter"/> in case that no
-        ///// tag is selected.
-        ///// </summary>
-        //[VueDataBinding(VueBindingMode.TwoWay)]
-        //public string SelectedTag
-        //{
-        //    get
-        //    {
-        //        SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
-        //        if (_specialTagLocalizations.TryGetValue(settings.SelectedTag, out string localizedSelectedTag))
-        //            return localizedSelectedTag;
-        //        else
-        //            return settings.SelectedTag;
-        //    }
+        public List<ListItemViewModel> Tugs { get; private set; }
 
-        //    set
-        //    {
-        //        string newValue;
-        //        if (_specialTagLocalizations.TryGetKey(value, out string key))
-        //            newValue = key;
-        //        else
-        //            newValue = value;
+        public object SelectedTug
+        {
+            get
+            {
+                SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
+                ListItemViewModel result = Tugs.Find(item => string.Equals(item.Value, settings.SelectedTag));
+                return result ?? Tugs[0];
+            }
 
-        //        SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
-        //        if (SetPropertyAndModified(settings.SelectedTag, newValue, (string v) => settings.SelectedTag = v))
-        //        {
-        //            OnPropertyChanged(nameof(SelectedTag));
-        //            ApplyFilter();
-        //            OnPropertyChanged("Notes");
-        //            _settingsService.TrySaveSettingsToLocalDevice(settings);
-        //        }
-        //    }
-        //}
+            set
+            {
+                string newValue = ((ListItemViewModel)value).Value?.ToString();
+                SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
+                if (SetPropertyAndModified(settings.SelectedTag, newValue, (string v) => settings.SelectedTag = v))
+                {
+                    OnPropertyChanged(nameof(SelectedTag));
+                    ApplyFilter();
+                    OnPropertyChanged("Notes");
+                    _settingsService.TrySaveSettingsToLocalDevice(settings);
+                }
 
-        //private void UpdateTags()
-        //{
-        //    Tags = Model.CollectActiveTags();
-        //    Tags.Insert(0, AllNotesTagFilter);
-        //    Tags.Insert(1, WithoutTagFilter);
-        //    OnPropertyChanged(nameof(Tags));
-        //}
+            }
+        }
 
-        ///// <summary>
-        ///// Gets the localized tag filter to show all notes.
-        ///// </summary>
-        //public string AllNotesTagFilter
-        //{
-        //    get { return _specialTagLocalizations[NoteFilter.SpecialTags.AllNotes]; }
-        //}
+        /// <summary>
+        /// Gets or sets the selected tag string, or the special tag "all" in case that no tag is selected.
+        /// </summary>
+        public string SelectedTag
+        {
+            get
+            {
+                SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
+                if (_specialTagLocalizations.TryGetValue(settings.SelectedTag, out string localizedSelectedTag))
+                    return localizedSelectedTag;
+                else
+                    return settings.SelectedTag;
+            }
 
-        ///// <summary>
-        ///// Gets the localized tag filter to show all notes without tags.
-        ///// </summary>
-        //public string WithoutTagFilter
-        //{
-        //    get { return _specialTagLocalizations[NoteFilter.SpecialTags.NotesWithoutTags]; }
-        //}
+            set
+            {
+                string newValue;
+                if (_specialTagLocalizations.TryGetKey(value, out string key))
+                    newValue = key;
+                else
+                    newValue = value;
+
+                SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
+                if (SetPropertyAndModified(settings.SelectedTag, newValue, (string v) => settings.SelectedTag = v))
+                {
+                    OnPropertyChanged(nameof(SelectedTag));
+                    ApplyFilter();
+                    OnPropertyChanged("Notes");
+                    _settingsService.TrySaveSettingsToLocalDevice(settings);
+                }
+            }
+        }
+
+        private void UpdateTags()
+        {
+            Tags = Model.CollectActiveTags();
+
+            Tugs = new List<ListItemViewModel>();
+            Tugs.Add(new ListItemViewModel 
+            { 
+                Value = NoteFilter.SpecialTags.AllNotes,
+                Text = _specialTagLocalizations[NoteFilter.SpecialTags.AllNotes],
+                IconName = IconNames.TagMultiple,
+            });
+            Tugs.Add(new ListItemViewModel
+            {
+                Value = NoteFilter.SpecialTags.NotesWithoutTags,
+                Text = _specialTagLocalizations[NoteFilter.SpecialTags.NotesWithoutTags],
+                IconName = IconNames.TagOff,
+            });
+            Tugs.Add(new ListItemViewModel
+            {
+                IsDivider = true,
+            });
+            Tugs.AddRange(Model.CollectActiveTags().Select(tag => new ListItemViewModel() 
+            {
+                Text = tag,
+                Value = tag,
+            }));
+            OnPropertyChanged(nameof(Tags));
+        }
+
+        /// <summary>
+        /// Gets the localized tag filter to show all notes.
+        /// </summary>
+        public string AllNotesTagFilter
+        {
+            get { return _specialTagLocalizations[NoteFilter.SpecialTags.AllNotes]; }
+        }
+
+        /// <summary>
+        /// Gets the localized tag filter to show all notes without tags.
+        /// </summary>
+        public string WithoutTagFilter
+        {
+            get { return _specialTagLocalizations[NoteFilter.SpecialTags.NotesWithoutTags]; }
+        }
 
         ///// <summary>
         ///// Gets the command which handles the synchronization with the web server.
@@ -729,7 +774,7 @@ namespace SilentNotes.ViewModels
                     NoteViewModel noteViewModel = new NoteViewModel(
                         note,
                         _searchableTextConverter,
-                        _languageService,
+                        Language,
                         _themeService,
                         _settingsService,
                         _noteCryptor,
