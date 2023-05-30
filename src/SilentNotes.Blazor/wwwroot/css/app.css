@@ -42,7 +42,7 @@ h3 { font-size: 1.1em; }
 	color: var(--mud-palette-background-grey)
 }
 
-.fab {
+.fab-position {
 	position: fixed;
 	right: 2em;
 	bottom: 2em;

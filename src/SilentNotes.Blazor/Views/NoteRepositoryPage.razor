@@ -60,15 +60,15 @@
         <MudIconButton Class="d-none d-sm-flex" Icon="@IconService[IconNames.CloudSync]" Color="Color.Inherit" />
     </MudTooltip>
 
-    @* Menu *@
+    @* Overflow menu *@
     <MudMenu @ref="_overflowMenu" Dense="true" AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight">
         <ActivatorContent>
             <MudIconButton Icon="@IconService[IconNames.DotsVertical]" Color="Color.Inherit" />
         </ActivatorContent>
         <ChildContent>
             <MudNavMenu Rounded="true" Margin="Margin.Dense" Class="px-1">
-                <MudNavLink Class="d-sm-none" OnClick="DoClick" Icon="@IconService[IconNames.NoteTextOutline]">@LanguageService["note_create_new"]</MudNavLink>
-                <MudNavLink OnClick="DoClick" Icon="@IconService[IconNames.OrderBoolAscendingVariant]">@LanguageService["checklist_create_new"]</MudNavLink>
+                <MudNavLink Class="d-sm-none" OnClick="DoClick" Icon="@IconService.GetSvgLink(IconNames.NoteTextOutline)">@LanguageService["note_create_new"]</MudNavLink>
+                <MudNavLink OnClick="DoClick" Icon="@IconService.GetSvgLink(IconNames.OrderBoolAscendingVariant)">@LanguageService["checklist_create_new"]</MudNavLink>
                 <MudNavLink OnClick="DoClick" Icon="@IconService[IconNames.DeleteEmpty]">@LanguageService["show_recyclebin"]</MudNavLink>
                 <MudNavLink OnClick="DoClick" Icon="@IconService[IconNames.Export]">@LanguageService["show_export"]</MudNavLink>
                 <MudDivider />
@@ -139,7 +139,15 @@
 </div>
 
 @* The FAB for adding a new note *@
-<MudFab Class="fab" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" />
+<MudMenu Class="fab-position" AnchorOrigin="Origin.TopRight" TransformOrigin="Origin.BottomRight">
+    <ActivatorContent>
+        <MudFab Class="mt-4" Color="Color.Primary" StartIcon="@IconService[IconNames.Plus]" />
+    </ActivatorContent>
+    <ChildContent>
+        <MudNavLink OnClick="DoClick" Icon="@IconService.GetSvgLink(IconNames.NoteTextOutline)">@LanguageService["note_create_new"]</MudNavLink>
+        <MudNavLink OnClick="DoClick" Icon="@IconService.GetSvgLink(IconNames.OrderBoolAscendingVariant)">@LanguageService["checklist_create_new"]</MudNavLink>
+    </ChildContent>
+</MudMenu>
 
 @* Declare icons which can be reused multiple times, to reduce page size *@
 <div hidden>
@@ -152,6 +160,8 @@
         IconNames.ArrowAll,
         IconNames.Delete,
         IconNames.Pin,
+        IconNames.NoteTextOutline,
+        IconNames.OrderBoolAscendingVariant,
     });
 </div>
 
@@ -195,8 +205,8 @@
         // Focus filter control for direct typing on Windows.
         // On Android a tap on the filter input will bring up the keyboard.
 #if WINDOWS
-        if (firstRender)
-            await _filterInput.FocusAsync();
+    if (firstRender)
+        await _filterInput.FocusAsync();
 #else
         await Task.CompletedTask;
 #endif
