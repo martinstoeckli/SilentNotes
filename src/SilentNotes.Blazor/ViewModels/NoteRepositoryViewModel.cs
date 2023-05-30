@@ -204,29 +204,6 @@ namespace SilentNotes.ViewModels
         //    handled = false;
         //}
 
-        /// <summary>
-        /// Gets the base font size [px] of the notes, from which the relative sizes are derrived.
-        /// </summary>
-        public string NoteBaseFontSize
-        {
-            get
-            {
-                double defaultBaseFontSize = SettingsViewModel.ReferenceFontSize;
-                switch (_environmentService.Os)
-                {
-                    case Services.OperatingSystem.Windows:
-                        defaultBaseFontSize = SettingsViewModel.ReferenceFontSize - 2;
-                        break;
-                }
-                SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
-                SliderStepConverter converter = new SliderStepConverter(defaultBaseFontSize, 1.0);
-                double fontSize = settings != null
-                    ? converter.ModelFactorToValue(settings.FontScale)
-                    : defaultBaseFontSize;
-                return FloatingPointUtils.FormatInvariant(fontSize);
-            }
-        }
-
         public int NoteMinHeight
         {
             get

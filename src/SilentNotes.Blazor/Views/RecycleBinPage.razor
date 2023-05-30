@@ -1,0 +1,114 @@
+﻿@page "/recyclebin"
+@using SilentNotes.Models
+@using SilentNotes.ViewModels
+@using SilentNotes.Services
+
+@inject INavigationService NavigationService
+@inject ISnackbar Snackbar
+@inject ILanguageService LanguageService
+@inject ISvgIconService IconService
+@inject IRepositoryStorageService RepositoryStorageService
+@inject ISettingsService SettingsService
+@inject IEnvironmentService EnvironmentService
+@inject IThemeService ThemeService
+
+@implements IDisposable
+
+<style type="text/css">
+    .note-item, .note-card, .note-locked {
+        min-height: @(SettingsViewModel.ReferenceNoteMinSize)px;
+        max-height: @(SettingsViewModel.ReferenceNoteMaxSize)px;
+    }
+    .note-viewer {
+        font-size: @(ViewModel.GetNoteBaseFontSize(SettingsService))px !important;
+    }
+
+    .restore {
+        position: absolute;
+        width: 64px;
+        height: 64px;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin: auto;
+        cursor: pointer;
+    }
+    .restore svg {
+        fill: var(--mud-palette-success);
+    }
+
+    .note-light .note-viewer.over-view.checklist p::before { content: @(IconService.LoadIconAsCssUrl(IconNames.CheckboxBlankOutline, new[] { new KeyValuePair<string, string>("fill", "#000000") })) }
+    .note-light .note-viewer.over-view.checklist p.done::before { content: @(IconService.LoadIconAsCssUrl(IconNames.CheckboxOutline, new[] { new KeyValuePair<string, string>("fill", "#000000") })) }
+    .note-light .note-viewer.over-view.checklist p.disabled::before { content: @(IconService.LoadIconAsCssUrl(IconNames.CheckboxBlankOutline, new[] { new KeyValuePair<string, string>("fill", "#000000") })) }
+    .note-dark .note-viewer.over-view.checklist p::before { content: @(IconService.LoadIconAsCssUrl(IconNames.CheckboxBlankOutline, new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") })) }
+    .note-dark .note-viewer.over-view.checklist p.done::before { content: @(IconService.LoadIconAsCssUrl(IconNames.CheckboxOutline, new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") })) }
+    .note-dark .note-viewer.over-view.checklist p.disabled::before { content: @(IconService.LoadIconAsCssUrl(IconNames.CheckboxBlankOutline, new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") })) }
+</style>
+
+@* Main menu *@
+<MudAppBar Fixed="true" Class="" Dense="true">
+    <MudTooltip Text="@LanguageService["back"]">
+        <MudIconButton OnClick="@(() => NavigationService.Back())" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" />
+    </MudTooltip>
+
+    <MudSpacer />
+
+    <MudTooltip Text="@LanguageService["empty_recyclebin"]">
+        <MudIconButton OnClick="@(() => NavigationService.Back())" Icon="@IconService[IconNames.DeleteForever]" Color="Color.Inherit" />
+    </MudTooltip>
+</MudAppBar>
+
+@* body *@
+<div id="content" class="px-1 pt-0 pb-2">
+    <ul id="note-repository" class="note-list flex-column flex-sm-row">
+        @foreach (var note in ViewModel.RecycledNotes)
+        {
+            <li @key="note.Id" class="note-item">
+                <div class="note-card mud-elevation-3 @note.LightOrDarkClass()">
+                    @if (@note.IsLocked)
+                    {
+                        <div class="note-locked">@IconService.EmbedSvgLink(IconNames.LockOutline)</div>
+                    }
+                    else
+                    {
+                        <div class="note-viewer over-view @note.CssClassNoteType">@((MarkupString)note.GetShortenedUnlockedHtmlContent())</div>
+                    }
+
+                    <div class="restore">
+                        <MudTooltip Text="@LanguageService["note_undelete"]">
+                            @IconService.EmbedSvgLink(IconNames.FileRestore, 64)
+                        </MudTooltip>
+                    </div>
+
+                    <div class="note-handle recycle-handle reddish" onclick="">
+                            @IconService.EmbedSvgLink(IconNames.DeleteForever, 19)
+                    </div>
+                </div>
+            </li>
+        }
+    </ul>
+</div>
+
+@* Declare icons which can be reused multiple times, to reduce page size *@
+<div hidden>
+    @IconService.EmbedLinkableSvgs( new [] {
+        IconNames.LockOutline,
+        IconNames.FileRestore,
+        IconNames.DeleteForever,
+    });
+</div>
+
+@code {
+    protected override void OnInitialized()
+    {
+        RepositoryStorageService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepositoryModel);
+        ViewModel = new RecycleBinViewModel(noteRepositoryModel, NavigationService, LanguageService, IconService, ThemeService, SettingsService, RepositoryStorageService);
+    }
+
+    public void Dispose()
+    {
+    }
+
+    private RecycleBinViewModel ViewModel { get; set; }
+}

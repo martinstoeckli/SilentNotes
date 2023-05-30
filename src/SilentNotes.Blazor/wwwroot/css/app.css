@@ -127,6 +127,8 @@ h3 { font-size: 1.1em; }
 }
 .note-light .note-handle { background-color: rgba(172, 172, 172, 0.5); fill: #707070 }
 .note-dark .note-handle { background-color: rgba(204, 204, 204, 0.7); fill: #606060; }
+.note-handle.greenish { background-color: rgba(145, 238, 145, 0.9); fill: #2aac2a; }
+.note-handle.reddish { background-color: rgba(238, 145, 145, 0.9); fill: #de2121; }
 
 .sortable-handle {
 }
