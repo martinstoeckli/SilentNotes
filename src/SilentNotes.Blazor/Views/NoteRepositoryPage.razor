@@ -90,11 +90,12 @@
 
 @* Sidebar with tags *@
 <MudDrawer @ref="_sideDrawer" @bind-Open="@ViewModel.IsDrawerOpen" Elevation="1" Variant="@DrawerVariant.Responsive" Breakpoint="Breakpoint.Md" ClipMode="DrawerClipMode.Docked">
-    <MudDrawerHeader>
+    <MudDrawerHeader Class="d-inline-flex justify-space-between align-start">
         <h2>Filter by tag</h2>
+        <MudIconButton OnClick="() => ViewModel.IsDrawerOpen = false" Icon="@IconService.GetSvgLink(IconNames.CloseCircleOutline)" Size="Size.Small" />
     </MudDrawerHeader>
     <MudDrawerContainer>
-        <MudList Clickable="true" @bind-SelectedValue="@ViewModel.SelectedTag">
+        <MudList Clickable="true" @bind-SelectedValue="@ViewModel.SelectedTag" Dense="false">
             @foreach (var tag in ViewModel.Tags)
             {
                 if (tag.IsDivider)
@@ -103,7 +104,7 @@
                 }
                 else
                 {
-                    <MudListItem Value="@tag" Text="@tag.Text" Icon="@(IconService.GetSvgLink(tag.IconName))" OnClick="() => CloseDrawerWhenItemSelected()" />
+                    <MudListItem Value="@tag" Text="@tag.Text" Icon="@IconService.GetSvgLink(tag.IconName)" OnClick="() => CloseDrawerWhenItemSelected()" />
                 }
             }
         </MudList>
