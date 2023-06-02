@@ -29,6 +29,7 @@ filter_only_without_tags = Bez štítků
 
 note_create_new = Vytvořit novou poznámku
 note_undelete = Obnovit poznámku
+note_delete_permanent = Delete note permanently
 note_title = Titulek
 note_content = Text
 note_colors = Vybrat barvu poznámky

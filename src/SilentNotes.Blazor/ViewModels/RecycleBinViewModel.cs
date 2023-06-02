@@ -57,6 +57,7 @@ namespace SilentNotes.ViewModels
             // Initialize commands
             //GoBackCommand = new RelayCommand(GoBack);
             RestoreNoteCommand = new RelayCommand<object>(RestoreNote);
+            DeleteNotePermanentlyCommand = new RelayCommand<object>(DeleteNotePermanently);
             EmptyRecycleBinCommand = new RelayCommand(EmptyRecycleBin);
         }
 
@@ -161,6 +162,27 @@ namespace SilentNotes.ViewModels
             {
                 Modified = true;
                 viewModel.InRecyclingBin = false;
+                RecycledNotes.Remove(viewModel);
+            }
+            OnPropertyChanged("Notes");
+        }
+
+        /// <summary>
+        /// Gets the command which undeletes a note from the recycle bin.
+        /// </summary>
+        public ICommand DeleteNotePermanentlyCommand { get; private set; }
+
+        private void DeleteNotePermanently(object value)
+        {
+            Guid noteId = (value is Guid) ? (Guid)value : new Guid(value.ToString());
+            NoteViewModel viewModel = RecycledNotes.Find(item => noteId == item.Id);
+            if (viewModel != null)
+            {
+                Modified = true;
+
+                // Register the note as deleted and remove the note from the list
+                Model.DeletedNotes.Add(noteId);
+                Model.Notes.Remove(viewModel.Model);
                 RecycledNotes.Remove(viewModel);
             }
             OnPropertyChanged("Notes");

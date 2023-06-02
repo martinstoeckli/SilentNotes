@@ -29,6 +29,7 @@ filter_only_without_tags = Without tags
 
 note_create_new = Создать новую заметку
 note_undelete = Восстановить заметку
+note_delete_permanent = Delete note permanently
 note_title = Название
 note_content = Текст
 note_colors = Выбрать цвет заметки

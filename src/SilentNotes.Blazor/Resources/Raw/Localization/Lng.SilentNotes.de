@@ -29,6 +29,7 @@ filter_only_without_tags = Ohne Schlagwörter
 
 note_create_new = Neue Notiz erstellen
 note_undelete = Notiz wiederherstellen
+note_delete_permanent = Notiz endgültig löschen
 note_title = Titel
 note_content = Text
 note_colors = Notizfarbe auswählen

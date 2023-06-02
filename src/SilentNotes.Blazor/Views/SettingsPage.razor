@@ -16,9 +16,7 @@
 
 @* Main menu *@
 <MudAppBar Fixed="true" Class="" Dense="true">
-    <MudTooltip Text="@LanguageService["back"]">
-        <MudIconButton OnClick="@(() => NavigationService.Back())" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" />
-    </MudTooltip>
+    <MudIconButton OnClick="@(() => NavigationService.Back())" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" />
 
     <MudSpacer />
 

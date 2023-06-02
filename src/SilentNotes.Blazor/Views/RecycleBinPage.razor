@@ -48,15 +48,11 @@
 
 @* Main menu *@
 <MudAppBar Fixed="true" Class="" Dense="true">
-    <MudTooltip Text="@LanguageService["back"]">
-        <MudIconButton OnClick="@(() => NavigationService.Back())" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" />
-    </MudTooltip>
+    <MudIconButton OnClick="@(() => NavigationService.Back())" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" />
 
     <MudSpacer />
 
-    <MudTooltip Text="@LanguageService["empty_recyclebin"]">
-        <MudIconButton OnClick="@(() => NavigationService.Back())" Icon="@IconService[IconNames.DeleteForever]" Color="Color.Inherit" />
-    </MudTooltip>
+    <MudIconButton OnClick="@(() => NavigationService.Back())" Icon="@IconService[IconNames.DeleteForever]" Color="Color.Inherit" Title="@LanguageService["empty_recyclebin"]" />
 </MudAppBar>
 
 @* body *@
@@ -75,14 +71,12 @@
                         <div class="note-viewer over-view @note.CssClassNoteType">@((MarkupString)note.GetShortenedUnlockedHtmlContent())</div>
                     }
 
-                    <div class="restore">
-                        <MudTooltip Text="@LanguageService["note_undelete"]">
-                            @IconService.EmbedSvgLink(IconNames.FileRestore, 64)
-                        </MudTooltip>
+                    <div class="restore" @onclick="@(() => ViewModel.RestoreNoteCommand.Execute(note.Id))" title="@LanguageService["note_undelete"]">
+                        @IconService.EmbedSvgLink(IconNames.FileRestore, 64)
                     </div>
 
-                    <div class="note-handle recycle-handle reddish" onclick="">
-                            @IconService.EmbedSvgLink(IconNames.DeleteForever, 19)
+                    <div class="note-handle recycle-handle reddish" @onclick="@(() => ViewModel.DeleteNotePermanentlyCommand.Execute(note.Id))" title="@LanguageService["note_delete_permanent"]">
+                        @IconService.EmbedSvgLink(IconNames.DeleteForever, 19)
                     </div>
                 </div>
             </li>

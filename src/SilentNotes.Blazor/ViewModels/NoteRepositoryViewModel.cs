@@ -70,7 +70,7 @@ namespace SilentNotes.ViewModels
             //    ShowNoteCommand = new RelayCommand<object>(ShowNote);
             //    NewNoteCommand = new RelayCommand(NewNote);
             //    NewChecklistCommand = new RelayCommand(NewChecklist);
-            //    DeleteNoteCommand = new RelayCommand<object>(DeleteNote);
+            DeleteNoteCommand = new RelayCommand<object>(DeleteNote);
             ClearFilterCommand = new RelayCommand(ClearFilter);
             //    SynchronizeCommand = new RelayCommand(Synchronize);
             //    ShowTransferCodeCommand = new RelayCommand(ShowTransferCode);
@@ -383,11 +383,10 @@ namespace SilentNotes.ViewModels
         //    NewNote(NoteType.Checklist);
         //}
 
-        ///// <summary>
-        ///// Gets the command which handles the moving of a note to the recyclebin.
-        ///// </summary>
-        //[VueDataBinding(VueBindingMode.Command)]
-        //public ICommand DeleteNoteCommand { get; private set; }
+        /// <summary>
+        /// Gets the command which handles the moving of a note to the recyclebin.
+        /// </summary>
+        public ICommand DeleteNoteCommand { get; private set; }
 
         ///// <summary>
         ///// Changes <see cref="NoteViewModel.IsPinned"/> based on position.
@@ -413,30 +412,30 @@ namespace SilentNotes.ViewModels
         //    }
         //}
 
-        //private void DeleteNote(object value)
-        //{
-        //    Guid noteId = (value is Guid) ? (Guid)value : new Guid(value.ToString());
-        //    NoteViewModel selectedNote = AllNotes.Find(item => item.Id == noteId);
-        //    if (selectedNote == null)
-        //        return;
-        //    Modified = true;
+        private void DeleteNote(object value)
+        {
+            Guid noteId = (value is Guid) ? (Guid)value : new Guid(value.ToString());
+            NoteViewModel selectedNote = AllNotes.Find(item => item.Id == noteId);
+            if (selectedNote == null)
+                return;
+            Modified = true;
 
-        //    // Mark note as deleted
-        //    selectedNote.InRecyclingBin = true;
+            // Mark note as deleted
+            selectedNote.InRecyclingBin = true;
 
-        //    // Remove note from filtered list
-        //    int selectedIndex = FilteredNotes.IndexOf(selectedNote);
-        //    FilteredNotes.RemoveAt(selectedIndex);
-        //    UpdateTags();
+            // Remove note from filtered list
+            int selectedIndex = FilteredNotes.IndexOf(selectedNote);
+            FilteredNotes.RemoveAt(selectedIndex);
+            UpdateTags();
 
-        //    // If the note was the last one containing the selected tag, the filter should be cleared
-        //    if (!SelectedTagExistsInTags())
-        //        SelectedTag = null;
-        //    else
-        //        OnPropertyChanged("Notes");
+            // If the note was the last one containing the selected tag, the filter should be cleared
+            if (!SelectedTagExistsInTags())
+                SelectedTag = null;
+            else
+                OnPropertyChanged("Notes");
 
-        //    _feedbackService.ShowToast(Language.LoadText("feedback_note_to_recycle"));
-        //}
+            //_feedbackService.ShowToast(Language.LoadText("feedback_note_to_recycle"));
+        }
 
         /// <summary>
         /// Gets a list of all tags which are used in the notes.

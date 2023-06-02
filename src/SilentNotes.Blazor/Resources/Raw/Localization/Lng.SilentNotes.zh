@@ -29,6 +29,7 @@ filter_only_without_tags = 无标签
 
 note_create_new = 创建笔记
 note_undelete = 恢复笔记
+note_delete_permanent = Delete note permanently
 note_title = 标题
 note_content = 文本
 note_colors = 选择笔记颜色

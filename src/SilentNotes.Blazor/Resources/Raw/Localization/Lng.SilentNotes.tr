@@ -29,6 +29,7 @@ filter_only_without_tags = Etiketsiz notlar
 
 note_create_new = Not oluştur
 note_undelete = Notu geri yükle
+note_delete_permanent = Delete note permanently
 note_title = Başlık
 note_content = Metin
 note_colors = Sayfa rengi seç
