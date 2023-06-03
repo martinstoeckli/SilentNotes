@@ -11,6 +11,7 @@
 @inject ISettingsService SettingsService
 @inject IEnvironmentService EnvironmentService
 @inject IThemeService ThemeService
+@inject IFeedbackService FeedbackService
 
 @implements IDisposable
 
@@ -52,7 +53,7 @@
 
     <MudSpacer />
 
-    <MudIconButton OnClick="@(() => NavigationService.Back())" Icon="@IconService[IconNames.DeleteForever]" Color="Color.Inherit" Title="@LanguageService["empty_recyclebin"]" />
+    <MudIconButton OnClick="@(() => ViewModel.EmptyRecycleBinCommand.Execute(null))" Icon="@IconService[IconNames.DeleteForever]" Color="Color.Inherit" Title="@LanguageService["empty_recyclebin"]" />
 </MudAppBar>
 
 @* body *@
@@ -97,7 +98,8 @@
     protected override void OnInitialized()
     {
         RepositoryStorageService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepositoryModel);
-        ViewModel = new RecycleBinViewModel(noteRepositoryModel, NavigationService, LanguageService, IconService, ThemeService, SettingsService, RepositoryStorageService);
+        ViewModel = new RecycleBinViewModel(
+            noteRepositoryModel, NavigationService, LanguageService, IconService, ThemeService, FeedbackService, SettingsService, RepositoryStorageService);
     }
 
     public void Dispose()

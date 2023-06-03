@@ -5,7 +5,7 @@
 @inject IThemeService ThemeService
 
 <MudThemeProvider @bind-IsDarkMode="ThemeService.IsDarkMode" Theme="@ThemeService.Theme" />
-<MudDialogProvider />
+<MudDialogProvider DisableBackdropClick="true" CloseOnEscapeKey="true"/>
 <MudSnackbarProvider />
 
 <MudLayout>

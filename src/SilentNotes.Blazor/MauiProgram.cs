@@ -6,6 +6,7 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
+using MudBlazor;
 using MudBlazor.Services;
 using SilentNotes.Platforms.Services;
 using SilentNotes.Services;
@@ -58,6 +59,9 @@ public static class MauiProgram
         services.AddScoped<INavigationService>((serviceProvider) => new NavigationService(
             serviceProvider.GetService<NavigationManager>(),
             serviceProvider.GetService<IJSRuntime>()));
+        services.AddScoped<IFeedbackService>((serviceProvider) => new FeedbackService(
+            serviceProvider.GetService<IDialogService>(),
+            serviceProvider.GetService<ILanguageService>()));
     }
 
 #if WINDOWS

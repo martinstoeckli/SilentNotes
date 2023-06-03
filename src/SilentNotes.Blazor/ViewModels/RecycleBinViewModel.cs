@@ -21,7 +21,7 @@ namespace SilentNotes.ViewModels
     public class RecycleBinViewModel : ViewModelBase
     {
         private readonly IRepositoryStorageService _repositoryService;
-        //private readonly IFeedbackService _feedbackService;
+        private readonly IFeedbackService _feedbackService;
         private readonly IThemeService _themeService;
         private readonly ISettingsService _settingsService;
         //private readonly ICryptor _noteCryptor;
@@ -37,13 +37,13 @@ namespace SilentNotes.ViewModels
             ISvgIconService svgIconService,
             IThemeService themeService,
             //IBaseUrlService webviewBaseUrl,
-            //IFeedbackService feedbackService,
+            IFeedbackService feedbackService,
             ISettingsService settingsService,
             //ICryptoRandomSource randomSource,
             IRepositoryStorageService repositoryService)
             //: base(navigationService, languageService, svgIconService, themeService, webviewBaseUrl)
         {
-            //_feedbackService = feedbackService;
+            _feedbackService = feedbackService;
             Language = languageService;
             _themeService = themeService;
             _settingsService = settingsService;
@@ -125,9 +125,9 @@ namespace SilentNotes.ViewModels
 
         private async void EmptyRecycleBin()
         {
-            //MessageBoxResult dialogResult = await _feedbackService.ShowMessageAsync(Language["empty_recyclebin_confirmation"], Language["empty_recyclebin"], MessageBoxButtons.ContinueCancel, false);
-            //if (dialogResult != MessageBoxResult.Continue)
-            //    return;
+            MessageBoxResult dialogResult = await _feedbackService.ShowMessageAsync(Language["empty_recyclebin_confirmation"], Language["empty_recyclebin"], MessageBoxButtons.ContinueCancel, false);
+            if (dialogResult != MessageBoxResult.Continue)
+                return;
 
             if (RecycledNotes.Count > 0)
                 Modified = true;
