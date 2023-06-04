@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using SilentNotes.Views;
 
@@ -55,6 +56,32 @@ namespace SilentNotes.Services
             return arrangement.ToMessageBoxResult(dialogResult);
         }
 
+        /// <summary>
+        /// Inherit from <see cref="MudMessageBox"/> to extend it.
+        /// </summary>
+        private class CustomMessageBox : MudMessageBox
+        {
+            /// <summary>
+            /// Gets or sets a parameter indicating whether the enter key is executing the primary
+            /// action or not. A value "false" (default) will execute the primary action, "true" will
+            /// set the focus on the cancel button.
+            /// </summary>
+            [Parameter]
+            public bool ConservativeDefault { get; set; }
+
+            protected override void OnInitialized()
+            {
+                base.OnInitialized();
+
+                // Take focus from the primary action (which is the last button)
+                if (ConservativeDefault)
+                    UserAttributes.Add("DefaultFocus", DefaultFocus.FirstChild);
+            }
+        }
+
+        /// <summary>
+        /// Map the buttons to the parameters of the mud blazor dialog.
+        /// </summary>
         private class ButtonArrangement
         {
             public ButtonArrangement(MessageBoxButtons buttons, ILanguageService languageService)
@@ -105,7 +132,7 @@ namespace SilentNotes.Services
             {
                 if (dialogResult.Canceled)
                 {
-                    return Back;
+                    return MessageBoxResult.Cancel;
                 }
                 else
                 {

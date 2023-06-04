@@ -3,6 +3,8 @@
 @using SilentNotes.Services
 
 @inject IThemeService ThemeService
+@inject NavigationManager Navigation
+@inject IJSRuntime JsRuntime
 
 <MudThemeProvider @bind-IsDarkMode="ThemeService.IsDarkMode" Theme="@ThemeService.Theme" />
 <MudDialogProvider DisableBackdropClick="true" CloseOnEscapeKey="true"/>
@@ -19,5 +21,20 @@
     {
         // Give the theme service a way to redraw the GUI
         ThemeService.RefreshGui = StateHasChanged;
+
+        // Register handler to detect "back" navigation route
+        Navigation.RegisterLocationChangingHandler(LocationChangingHandler);
+    }
+
+    private async ValueTask LocationChangingHandler(LocationChangingContext context)
+    {
+        const string RouteBack = "back";
+        bool isBackRoute = context.TargetLocation.EndsWith("/" + RouteBack, StringComparison.OrdinalIgnoreCase);
+
+        if (isBackRoute)
+        {
+            context.PreventNavigation();
+            await JsRuntime.InvokeVoidAsync("history.back"); // Call javascript to navigate back
+        }
     }
 }

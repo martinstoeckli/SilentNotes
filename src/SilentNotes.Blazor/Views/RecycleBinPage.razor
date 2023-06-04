@@ -1,15 +1,13 @@
 ﻿@page "/recyclebin"
+@using System.ComponentModel;
 @using SilentNotes.Models
 @using SilentNotes.ViewModels
 @using SilentNotes.Services
 
-@inject INavigationService NavigationService
-@inject ISnackbar Snackbar
 @inject ILanguageService LanguageService
 @inject ISvgIconService IconService
 @inject IRepositoryStorageService RepositoryStorageService
 @inject ISettingsService SettingsService
-@inject IEnvironmentService EnvironmentService
 @inject IThemeService ThemeService
 @inject IFeedbackService FeedbackService
 
@@ -49,7 +47,7 @@
 
 @* Main menu *@
 <MudAppBar Fixed="true" Class="" Dense="true">
-    <MudIconButton OnClick="@(() => NavigationService.Back())" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" />
+    <MudIconButton Href="back" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" />
 
     <MudSpacer />
 
@@ -99,12 +97,20 @@
     {
         RepositoryStorageService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepositoryModel);
         ViewModel = new RecycleBinViewModel(
-            noteRepositoryModel, NavigationService, LanguageService, IconService, ThemeService, FeedbackService, SettingsService, RepositoryStorageService);
+            noteRepositoryModel, LanguageService, IconService, ThemeService, FeedbackService, SettingsService, RepositoryStorageService);
+        ViewModel.PropertyChanged += PropertyChangedHandler;
     }
 
     public void Dispose()
     {
+        ViewModel.PropertyChanged -= PropertyChangedHandler;
     }
 
     private RecycleBinViewModel ViewModel { get; set; }
+
+    private void PropertyChangedHandler(object sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == "page")
+            StateHasChanged();
+    }
 }

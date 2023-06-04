@@ -7,9 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
-//using SilentNotes.Controllers;
 using SilentNotes.Crypto;
-//using SilentNotes.HtmlView;
 using SilentNotes.Models;
 using SilentNotes.Services;
 
@@ -24,7 +22,6 @@ namespace SilentNotes.ViewModels
         private readonly IFeedbackService _feedbackService;
         private readonly IThemeService _themeService;
         private readonly ISettingsService _settingsService;
-        //private readonly ICryptor _noteCryptor;
         private NoteRepositoryModel _model;
 
         /// <summary>
@@ -32,30 +29,23 @@ namespace SilentNotes.ViewModels
         /// </summary>
         public RecycleBinViewModel(
             NoteRepositoryModel model,
-            INavigationService navigationService,
             ILanguageService languageService,
             ISvgIconService svgIconService,
             IThemeService themeService,
-            //IBaseUrlService webviewBaseUrl,
             IFeedbackService feedbackService,
             ISettingsService settingsService,
-            //ICryptoRandomSource randomSource,
             IRepositoryStorageService repositoryService)
-            //: base(navigationService, languageService, svgIconService, themeService, webviewBaseUrl)
         {
             _feedbackService = feedbackService;
             Language = languageService;
             _themeService = themeService;
             _settingsService = settingsService;
             _repositoryService = repositoryService;
-            //_noteCryptor = new Cryptor(NoteModel.CryptorPackageName, randomSource);
             RecycledNotes = new List<NoteViewModel>();
 
-            //_repositoryService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepository);
             Model = model;
 
             // Initialize commands
-            //GoBackCommand = new RelayCommand(GoBack);
             RestoreNoteCommand = new RelayCommand<object>(RestoreNote);
             DeleteNotePermanentlyCommand = new RelayCommand<object>(DeleteNotePermanently);
             EmptyRecycleBinCommand = new RelayCommand(EmptyRecycleBin);
@@ -81,8 +71,6 @@ namespace SilentNotes.ViewModels
                 _model = value;
 
                 // Wrap models in view models
-                //IFeedbackService feedbackService = new DummyFeedbackService();
-                List<string> tags = _model.CollectActiveTags();
                 foreach (NoteModel note in _model.Notes)
                 {
                     if (note.InRecyclingBin)
@@ -100,23 +88,6 @@ namespace SilentNotes.ViewModels
                 Modified = false;
             }
         }
-
-        ///// <summary>
-        ///// Gets the command to go back to the note overview.
-        ///// </summary>
-        //public ICommand GoBackCommand { get; private set; }
-
-        //private void GoBack()
-        //{
-        //    _navigationService.Navigate(new Navigation(ControllerNames.NoteRepository));
-        //}
-
-        ///// <inheritdoc/>
-        //public override void OnGoBackPressed(out bool handled)
-        //{
-        //    handled = true;
-        //    GoBack();
-        //}
 
         /// <summary>
         /// Gets the command which handles the clearing of the recyclebin.
@@ -144,9 +115,7 @@ namespace SilentNotes.ViewModels
                     Model.Notes.Remove(note);
                 }
             }
-
-            // Reload empty page (but only if user confirmed command)
-            //_navigationService.Navigate(new Navigation(ControllerNames.RecycleBin));
+            OnPropertyChanged("page");
         }
 
         /// <summary>
