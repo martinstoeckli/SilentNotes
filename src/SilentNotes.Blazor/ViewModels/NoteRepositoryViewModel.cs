@@ -502,6 +502,7 @@ namespace SilentNotes.ViewModels
             {
                 Text = tag,
                 Value = tag,
+                IconName = IconNames.TagOutline,
             }));
             OnPropertyChanged(nameof(Tags));
         }

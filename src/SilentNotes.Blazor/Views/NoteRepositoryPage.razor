@@ -37,14 +37,14 @@
 
 @* Main menu *@
 <MudAppBar Fixed="true" Dense="true">
-    <MudSpacer />
-
     @* Tags *@
     <MudToggleIconButton @bind-Toggled="ViewModel.IsDrawerOpen"
         Class="@this.CssClassIf("toggled", ViewModel.IsFilteredByTag)"
         Icon="@(IconService.GetSvgLink(IconNames.TagMultiple))" Color="Color.Inherit"
         ToggledIcon="@(IconService.GetSvgLink(IconNames.TagMultiple))" ToggledColor="Color.Inherit"
         Title="@(((ListItemViewModel<string>)ViewModel.SelectedTag).Text)" />
+
+    <MudSpacer />
 
     @* Filter *@
     <MudPaper Class="d-inline-flex align-center rounded-pill pa-0" MaxHeight="36px" Elevation="0">
@@ -79,7 +79,7 @@
                 <MudDivider />
                 <MudNavLink OnClick="DoClick" Icon="@IconService[IconNames.Key]">@LanguageService["show_transfer_code"]</MudNavLink>
                 <MudNavLink Href="/settings" Icon="@IconService[IconNames.Settings]">@LanguageService["show_settings"]</MudNavLink>
-                <MudNavLink OnClick="DoClick" Icon="@IconService[IconNames.Information]">@LanguageService["show_info"]</MudNavLink>
+                <MudNavLink Href="/info" Icon="@IconService[IconNames.Information]">@LanguageService["show_info"]</MudNavLink>
             </MudNavMenu>
         </ChildContent>
     </MudMenu>
@@ -89,7 +89,7 @@
 <MudDrawer @ref="_sideDrawer" @bind-Open="@ViewModel.IsDrawerOpen" Elevation="1" Variant="@DrawerVariant.Responsive" Breakpoint="Breakpoint.Md" ClipMode="DrawerClipMode.Docked">
     <MudDrawerHeader Class="d-inline-flex justify-space-between align-start">
         <h2>Filter by tag</h2>
-        <MudIconButton OnClick="() => ViewModel.IsDrawerOpen = false" Icon="@IconService.GetSvgLink(IconNames.CloseCircleOutline)" Size="Size.Small" />
+        <MudIconButton OnClick="() => ViewModel.IsDrawerOpen = false" Icon="@IconService.GetSvgLink(IconNames.Close)" Size="Size.Small" />
     </MudDrawerHeader>
     <MudDrawerContainer>
         <MudList Clickable="true" @bind-SelectedValue="@ViewModel.SelectedTag" Dense="false">
@@ -150,16 +150,18 @@
 @* Declare icons which can be reused multiple times, to reduce page size *@
 <div hidden>
     @IconService.EmbedLinkableSvgs( new [] {
-        IconNames.TagMultiple,
-        IconNames.TagOff,
-        IconNames.Magnify,
-        IconNames.CloseCircleOutline,
-        IconNames.LockOutline,
         IconNames.ArrowAll,
+        IconNames.Close,
+        IconNames.CloseCircleOutline,
         IconNames.Delete,
-        IconNames.Pin,
+        IconNames.LockOutline,
+        IconNames.Magnify,
         IconNames.NoteTextOutline,
         IconNames.OrderBoolAscendingVariant,
+        IconNames.Pin,
+        IconNames.TagMultiple,
+        IconNames.TagOff,
+        IconNames.TagOutline,
     });
 </div>
 
@@ -185,6 +187,8 @@
             SettingsService,
             EnvironmentService,
             CryptoRandomSource);
+
+        // todo: read the SettingsViewMode.StartWithTagsOpen
     }
 
     /// <summary>

@@ -3,14 +3,11 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Logging;
-using Microsoft.JSInterop;
 using MudBlazor;
 using MudBlazor.Services;
 using SilentNotes.Platforms.Services;
 using SilentNotes.Services;
-using SilentNotes.Workers;
 
 namespace SilentNotes;
 
@@ -54,6 +51,7 @@ public static class MauiProgram
         //    serviceProvider.GetService<IFeedbackService>(),
         //    serviceProvider.GetService<ILanguageService>(),
         //    serviceProvider.GetService<ISettingsService>()));
+        services.AddSingleton<IVersionService>((serviceProvider) => new VersionService());
 
         // Scoped services (some Blazor services like IJSRuntime seem to be scoped)
         services.AddScoped<IFeedbackService>((serviceProvider) => new FeedbackService(
@@ -75,6 +73,7 @@ public static class MauiProgram
         services.AddSingleton<ISettingsService>((serviceProvider) => new SettingsService(
             serviceProvider.GetService<IXmlFileService>(),
             serviceProvider.GetService<IDataProtectionService>()));
+        services.AddSingleton<INativeBrowserService>((serviceProvider) => new NativeBrowserService());
     }
 
 #elif ANDROID
@@ -96,6 +95,8 @@ public static class MauiProgram
             serviceProvider.GetService<IAppContextService>(),
             serviceProvider.GetService<IXmlFileService>(),
             serviceProvider.GetService<IDataProtectionService>()));
+        services.AddSingleton<INativeBrowserService>((serviceProvider) => new NativeBrowserService(
+            serviceProvider.GetService<IAppContextService>()));
     }
 
 #endif

@@ -1,0 +1,58 @@
+﻿@page "/info"
+@using SilentNotes.Models
+@using SilentNotes.ViewModels
+@using SilentNotes.Services
+
+@inject ILanguageService LanguageService
+@inject ISvgIconService IconService
+@inject IVersionService VersionService
+@inject INativeBrowserService NativeBrowserService
+
+@* Main menu *@
+<MudAppBar Fixed="true" Dense="true">
+    <MudIconButton Href="back" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" />
+</MudAppBar>
+
+@* body *@
+<div id="content" class="pa-4">
+    <MudGrid>
+        <MudItem xs="12" sm="4">
+            <MudImage />
+        </MudItem>
+        <MudItem xs="12" sm="8">
+            <h1 class="h-colored mb-3">SilentNotes</h1>
+
+            <MudSimpleTable Elevation="1" Striped="true">
+                <tbody>
+                    <tr>
+                        <th>@LanguageService["version"]</th>
+                        <td>@ViewModel.VersionFmt</td>
+                    </tr>
+                    <tr>
+                        <th>@LanguageService["copyright"]</th>
+                        <td>Martin Stoeckli - 2017</td>
+                    </tr>
+                    <tr>
+                        <th>@LanguageService["website"]</th>
+                        <td><MudLink OnClick="@(() => ViewModel.OpenHomepageCommand.Execute(0))">www.martinstoeckli.ch/silentnotes</MudLink></td>
+                    </tr>
+                    <tr>
+                        <th>@LanguageService["opensource"]</th>
+                        <td>@LanguageService["opensource_desc"]</td>
+                    </tr>
+                </tbody>
+            </MudSimpleTable>
+
+            <MudAlert Class="mt-3" Severity="Severity.Success" Elevation="1">@LanguageService["license"]</MudAlert>
+        </MudItem>
+    </MudGrid>
+</div>
+
+@code {
+    protected override void OnInitialized()
+    {
+        ViewModel = new InfoViewModel(VersionService, NativeBrowserService);
+    }
+
+    private InfoViewModel ViewModel { get; set; }
+}
