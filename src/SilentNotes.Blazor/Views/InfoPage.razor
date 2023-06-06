@@ -10,18 +10,18 @@
 
 @* Main menu *@
 <MudAppBar Fixed="true" Dense="true">
-    <MudIconButton Href="back" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" />
+    <MudIconButton Href="/back" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" />
 </MudAppBar>
 
 @* body *@
-<div id="content" class="pa-4">
+<MudContainer id="content" Class="mud-container-left" MaxWidth="MaxWidth.Medium">
     <MudGrid>
-        <MudItem xs="12" sm="4">
+        <MudItem sm="4">
             <MudPaper Class="ml-2 mr-5 mb-1 pa-2 rounded-xl" Elevation="1" Style="max-width:220px">
                 <MudImage Src="appicon.svg" Fluid="true" />
             </MudPaper>
         </MudItem>
-        <MudItem xs="12" sm="8">
+        <MudItem sm="8">
             <h1 class="h-colored mb-3">SilentNotes</h1>
 
             <MudSimpleTable Elevation="1" Striped="true">
@@ -48,7 +48,7 @@
             <MudAlert Class="mt-3" Severity="Severity.Success" Elevation="1">@LanguageService["license"]</MudAlert>
         </MudItem>
     </MudGrid>
-</div>
+</MudContainer>
 
 @code {
     protected override void OnInitialized()

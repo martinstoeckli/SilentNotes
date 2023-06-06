@@ -7,6 +7,7 @@ continue = Продолжить
 search = Поиск
 undo = Undo
 redo = Redo
+copy = Copy
 
 today = сегодня
 yesterday = вчера

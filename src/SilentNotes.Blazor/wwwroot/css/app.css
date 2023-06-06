@@ -13,6 +13,10 @@ h3 { font-size: 1.1em; }
 	color: var(--mud-palette-primary-darken);
 }
 
+.mud-container-left {
+	margin-left: 0;
+}
+
 .toggled svg { fill: lightskyblue; }
 
 .form-row {

@@ -15,7 +15,7 @@
 
 @* Main menu *@
 <MudAppBar Fixed="true" Class="" Dense="true">
-    <MudIconButton Href="back" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" />
+    <MudIconButton Href="/back" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" />
 
     <MudSpacer />
 
@@ -35,60 +35,56 @@
 <MudIcon Class="background-icon" Icon="@IconService[IconNames.Settings]" Style="@($"right:-128px; top:-154px;")" />
 
 @* body *@
-<MudGrid Class="ma-0 px-4 mud-width-full">
-    <MudItem xs="12" sm="10" md="7">
-        <h1 class="h-colored">@LanguageService["gui_texture"]</h1>
+<MudContainer id="content" Class="mud-container-left" MaxWidth="MaxWidth.Medium">
+    <h1 class="h-colored">@LanguageService["gui_texture"]</h1>
 
-        <MudSelect @bind-Value="ViewModel.SelectedThemeMode"
-            Variant="Variant.Outlined">
-            <MudSelectItem Value="@("Auto")">@LanguageService["gui_theme_auto"]</MudSelectItem>
-            <MudSelectItem Value="@("Dark")">@LanguageService["gui_theme_dark"]</MudSelectItem>
-            <MudSelectItem Value="@("Light")">@LanguageService["gui_theme_light"]</MudSelectItem>
-        </MudSelect>
+    <MudSelect @bind-Value="ViewModel.SelectedThemeMode"
+        Variant="Variant.Outlined">
+        <MudSelectItem Value="@("Auto")">@LanguageService["gui_theme_auto"]</MudSelectItem>
+        <MudSelectItem Value="@("Dark")">@LanguageService["gui_theme_dark"]</MudSelectItem>
+        <MudSelectItem Value="@("Light")">@LanguageService["gui_theme_light"]</MudSelectItem>
+    </MudSelect>
 
-        <div class="form-row">
-            <div class="form-group">
-                <MudCheckBox @bind-Checked="@ViewModel.UseSolidColorTheme" id="UseSolidColorTheme" />
-                <label for="UseSolidColorTheme" class="mr-2">@LanguageService["gui_theme_solid_color"]</label>
-            </div>
-
-            <div class="form-group">
-                <MudElement Class="color-swatch ml-2 mr-0 align-self-end" Style="@ColorSwatchStyle"/>
-                <MudColorPicker @bind-Text="@ViewModel.ColorForSolidThemeHex"
-                    Class="ml-0 mr-4 pa-0"
-                    Style="width:1px"
-                    DisableToolbar="true" DisableAlpha="true"
-                    ColorPickerView="ColorPickerView.Grid" ColorPickerMode="ColorPickerMode.HEX"
-                    AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight" />
-            </div>
+    <div class="form-row">
+        <div class="form-group">
+            <MudCheckBox @bind-Checked="@ViewModel.UseSolidColorTheme" id="UseSolidColorTheme" />
+            <label for="UseSolidColorTheme" class="mr-2">@LanguageService["gui_theme_solid_color"]</label>
         </div>
-    </MudItem>
+
+        <div class="form-group">
+            <MudElement Class="color-swatch ml-2 mr-0 align-self-end" Style="@ColorSwatchStyle"/>
+            <MudColorPicker @bind-Text="@ViewModel.ColorForSolidThemeHex"
+                Class="ml-0 mr-4 pa-0"
+                Style="width:1px"
+                DisableToolbar="true" DisableAlpha="true"
+                ColorPickerView="ColorPickerView.Grid" ColorPickerMode="ColorPickerMode.HEX"
+                AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight" />
+        </div>
+    </div>
 
 
-    <MudItem Class="mt-4" xs="12" sm="10" md="7">
-        <h1 class="h-colored">@LanguageService["gui"]</h1>
+    <h1 class="h-colored">@LanguageService["gui"]</h1>
 
-        <MudSlider @bind-Value="ViewModel.FontSizeStep"
-                   Min="-3" Max="3" Step="1"
-                   TickMarks="true">@LanguageService["gui_font_size"]</MudSlider>
+    <MudSlider @bind-Value="ViewModel.FontSizeStep"
+                Min="-3" Max="3" Step="1"
+                TickMarks="true">@LanguageService["gui_font_size"]</MudSlider>
 
-        <MudSlider @bind-Value="ViewModel.NoteMaxHeightStep"
-                   Min="-4" Max="4" Step="1"
-                   TickMarks="true">@LanguageService["gui_note_max_size"]</MudSlider>
-    </MudItem>
-</MudGrid>
+    <MudSlider @bind-Value="ViewModel.NoteMaxHeightStep"
+                Min="-4" Max="4" Step="1"
+                TickMarks="true">@LanguageService["gui_note_max_size"]</MudSlider>
+</MudContainer>
 
 @code {
     protected override void OnInitialized()
     {
         SettingsModel settings = SettingsService.LoadSettingsOrDefault();
         ViewModel = new SettingsViewModel(settings, EnvironmentService, ThemeService);
-
-        //ViewModel.PropertyChanged += PropertyChanged;
+        ViewModel.PropertyChanged += PropertyChangedHandler;
     }
 
     public void Dispose()
     {
+        ViewModel.PropertyChanged -= PropertyChangedHandler;
     }
 
     private SettingsViewModel ViewModel { get; set; }
@@ -98,10 +94,9 @@
         get { return string.Format("background-color:{0}", ViewModel.ColorForSolidThemeHex); }
     }
 
-    //private void PropertyChanged(object sender, PropertyChangedEventArgs e)
-    //{
-    //    if (e.PropertyName == nameof(SettingsViewModel.ColorForSolidThemeHex))
-    //        StateHasChanged();
-    //    ColorExampleStyle = string.Format("background-color:{0}", ViewModel.ColorForSolidThemeHex);
-    //}
+    private void PropertyChangedHandler(object sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == "page")
+            StateHasChanged();
+    }
 }
