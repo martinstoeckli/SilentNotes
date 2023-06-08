@@ -28,8 +28,8 @@
 
     private async ValueTask LocationChangingHandler(LocationChangingContext context)
     {
-        const string RouteBack = "back";
-        bool isBackRoute = context.TargetLocation.EndsWith("/" + RouteBack, StringComparison.OrdinalIgnoreCase);
+        const string RouteBack = "/back";
+        bool isBackRoute = context.TargetLocation.EndsWith(RouteBack, StringComparison.OrdinalIgnoreCase);
 
         if (isBackRoute)
         {

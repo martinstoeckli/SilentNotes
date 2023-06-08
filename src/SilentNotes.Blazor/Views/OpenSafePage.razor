@@ -1,0 +1,90 @@
+﻿@page "/opensafe"
+@page "/opensafe/targetnote/{TargetNoteId}"
+@using System.Security
+@using SilentNotes.Models
+@using SilentNotes.ViewModels
+@using SilentNotes.Services
+@using VanillaCloudStorageClient
+
+@inject ILanguageService LanguageService
+@inject ISvgIconService IconService
+@inject ISettingsService SettingsService
+@inject IFeedbackService FeedbackService
+@inject ICryptoRandomService RandomService
+@inject IRepositoryStorageService RepositoryService
+
+<style type="text/css">
+</style>
+
+@* Main menu *@
+<MudAppBar Fixed="true" Dense="true">
+    <MudIconButton Href="/back" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" />
+</MudAppBar>
+
+@* watermark image *@
+<MudIcon Class="background-icon" Icon="@IconService[IconNames.SafeSquareOutline]" Style="@($"right:-110px; top:-160px;")" />
+
+@* body *@
+<MudContainer id="content" Class="mud-container-left" MaxWidth="MaxWidth.Medium">
+    @if (ViewModel.SafeExists)
+    {
+        <h1 class="h-colored">@LanguageService["safe_open"]</h1>
+        <div class="my-4">@LanguageService["safe_open_existing"]</div>
+    }
+    else
+    {
+        <h1 class="h-colored">@LanguageService["safe_new"]</h1>
+        <div class="my-4">@LanguageService["safe_open_new"]</div>
+    }
+
+    <MudTextField T="SecureString" @bind-Value="ViewModel.Password"
+        Label="@LanguageService["cloud_password"]"
+        Converter="@secureStringConverter"
+        Variant="Variant.Outlined" InputType="@PasswordInputType"
+        Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="@(() => IsPasswordVisible = !IsPasswordVisible)" />
+
+</MudContainer>
+
+@code {
+    [Parameter]
+    public string TargetNoteId { get; set; } = default!;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        IsPasswordVisible = false;
+        ViewModel = new OpenSafeViewModel(LanguageService, FeedbackService, RandomService, SettingsService, RepositoryService);
+    }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+    }
+
+    private OpenSafeViewModel ViewModel { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the plaintext of the password is shown.
+    /// </summary>
+    private bool IsPasswordVisible { get; set; }
+
+    private InputType PasswordInputType
+    {
+        get { return IsPasswordVisible ? InputType.Text : InputType.Password; }
+    }
+
+    private string PasswordInputIcon
+    {
+        get { return IsPasswordVisible ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff; }
+    }
+
+    private void PasswordKeyPressHandler(KeyboardEventArgs args)
+    {
+    }
+
+    Converter<SecureString> secureStringConverter = new Converter<SecureString>
+    {
+        SetFunc = value => SecureStringExtensions.SecureStringToString(value),
+        GetFunc = text => SecureStringExtensions.StringToSecureString(text),
+    };
+}
