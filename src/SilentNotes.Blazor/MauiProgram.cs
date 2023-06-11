@@ -3,7 +3,10 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.JSInterop;
 using MudBlazor;
 using MudBlazor.Services;
 using SilentNotes.Platforms.Services;
@@ -16,12 +19,7 @@ public static class MauiProgram
     public static MauiApp CreateMauiApp()
     {
         var builder = MauiApp.CreateBuilder();
-        builder
-            .UseMauiApp<App>()
-            .ConfigureFonts(fonts =>
-            {
-                fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
-            });
+        builder.UseMauiApp<App>();
 
         builder.Services.AddMauiBlazorWebView();
         builder.Services.AddMudServices(config =>
@@ -54,6 +52,9 @@ public static class MauiProgram
         services.AddSingleton<IVersionService>((serviceProvider) => new VersionService());
 
         // Scoped services (some Blazor services like IJSRuntime seem to be scoped)
+        services.AddScoped<INavigationService>((serviceProvider) => new NavigationService(
+            serviceProvider.GetService<NavigationManager>(),
+            serviceProvider.GetService<IJSRuntime>()));
         services.AddScoped<IFeedbackService>((serviceProvider) => new FeedbackService(
             serviceProvider.GetService<IDialogService>(),
             serviceProvider.GetService<ILanguageService>()));

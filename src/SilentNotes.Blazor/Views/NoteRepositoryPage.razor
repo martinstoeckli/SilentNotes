@@ -192,7 +192,7 @@
     }
 
     /// <summary>
-    /// Finalizes an ainstance of the <see cref="NoteRepositoryPage"/> class.
+    /// Finalizes an instance of the <see cref="NoteRepositoryPage"/> class.
     /// </summary>
     public void Dispose()
     {
@@ -207,11 +207,16 @@
         // Focus filter control for direct typing on Windows.
         // On Android a tap on the filter input will bring up the keyboard.
 #if WINDOWS
-    if (firstRender)
-        await _filterInput.FocusAsync();
+        if (firstRender)
+            await _filterInput.FocusAsync();
 #else
-        await Task.CompletedTask;
+        await DoNothing();
 #endif
+    }
+
+    private Task DoNothing()
+    {
+        return Task.CompletedTask;
     }
 
     /// <summary>

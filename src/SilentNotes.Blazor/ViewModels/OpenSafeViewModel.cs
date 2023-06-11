@@ -17,6 +17,7 @@ namespace SilentNotes.ViewModels
     /// </summary>
     public class OpenSafeViewModel : ViewModelBase
     {
+        private readonly INavigationService _navigationService;
         private readonly IFeedbackService _feedbackService;
         private readonly ICryptoRandomService _randomService;
         private readonly ISettingsService _settingsService;
@@ -31,13 +32,15 @@ namespace SilentNotes.ViewModels
         /// </summary>
         public OpenSafeViewModel(
             ILanguageService languageService,
+            INavigationService navigationService,
             IFeedbackService feedbackService,
             ICryptoRandomService randomService,
             ISettingsService settingsService,
-            IRepositoryStorageService repositoryService)//,
+            IRepositoryStorageService repositoryService)
             //Navigation navigationTarget)
         {
             Language = languageService;
+            _navigationService = navigationService;
             _feedbackService = feedbackService ?? throw new ArgumentNullException(nameof(feedbackService));
             _randomService = randomService;
             _settingsService = settingsService;
@@ -47,7 +50,6 @@ namespace SilentNotes.ViewModels
             _repositoryService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepository);
             Model = noteRepository;
 
-            CancelCommand = new RelayCommand(Cancel);
             OkCommand = new RelayCommand(Ok);
             ResetSafeCommand = new RelayCommand(ResetSafe);
         }
@@ -63,16 +65,6 @@ namespace SilentNotes.ViewModels
                 _repositoryService.TrySaveRepository(noteRepository);
                 Modified = false;
             }
-        }
-
-        /// <summary>
-        /// Gets the command to go back to the note overview.
-        /// </summary>
-        public ICommand CancelCommand { get; private set; }
-
-        private void Cancel()
-        {
-            //GoBack();
         }
 
         /// <summary>
@@ -159,7 +151,7 @@ namespace SilentNotes.ViewModels
                 Modified = true;
 
                 // Continue with the create safe dialog
-                OnPropertyChanged("page");
+                _navigationService.Reload();
             }
         }
 

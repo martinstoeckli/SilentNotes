@@ -13,8 +13,7 @@
 @inject IFeedbackService FeedbackService
 @inject ICryptoRandomService RandomService
 @inject IRepositoryStorageService RepositoryService
-
-@implements IDisposable
+@inject INavigationService NavigationService
 
 <style type="text/css">
 </style>
@@ -105,23 +104,11 @@
     {
         base.OnInitialized();
         IsPasswordVisible = false;
-        ViewModel = new OpenSafeViewModel(LanguageService, FeedbackService, RandomService, SettingsService, RepositoryService);
+        ViewModel = new OpenSafeViewModel(LanguageService, NavigationService, FeedbackService, RandomService, SettingsService, RepositoryService);
         _secureStringConverter = new SecureStringConverter();
-        ViewModel.PropertyChanged += PropertyChangedHandler;
-    }
-
-    public void Dispose()
-    {
-        ViewModel.PropertyChanged -= PropertyChangedHandler;
     }
 
     private OpenSafeViewModel ViewModel { get; set; }
-
-    private void PropertyChangedHandler(object sender, PropertyChangedEventArgs e)
-    {
-        if (e.PropertyName == "page")
-            StateHasChanged();
-    }
 
     [Parameter]
     public string TargetNoteId { get; set; } = default!;
@@ -131,11 +118,17 @@
     /// </summary>
     private bool IsPasswordVisible { get; set; }
 
+    /// <summary>
+    /// Gets the type for the password input field (dots/plaintext).
+    /// </summary>
     private InputType PasswordInputType
     {
         get { return IsPasswordVisible ? InputType.Text : InputType.Password; }
     }
 
+    /// <summary>
+    /// Gets the "password visible" icon for the password input field.
+    /// </summary>
     private string PasswordInputIcon
     {
         get { return IsPasswordVisible ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff; }

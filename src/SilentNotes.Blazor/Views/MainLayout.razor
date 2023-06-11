@@ -3,8 +3,7 @@
 @using SilentNotes.Services
 
 @inject IThemeService ThemeService
-@inject NavigationManager Navigation
-@inject IJSRuntime JsRuntime
+@inject INavigationService NavigationService
 
 <MudThemeProvider @bind-IsDarkMode="ThemeService.IsDarkMode" Theme="@ThemeService.Theme" />
 <MudDialogProvider DisableBackdropClick="true" CloseOnEscapeKey="true"/>
@@ -22,25 +21,7 @@
         // Give the theme service a way to redraw the GUI
         ThemeService.RefreshGui = StateHasChanged;
 
-        // Register handler to detect "back" navigation route
-        Navigation.RegisterLocationChangingHandler(LocationChangingHandler);
-    }
-
-    /// <summary>
-    /// Intercept navigation events, to implement routes with special meaning.
-    /// 1) "/back": This route uses JavaScript to navigate back to the last page, adjusting the browser history.
-    /// </summary>
-    /// <param name="context">The event arguments.</param>
-    /// <returns>A task for async calls.</returns>
-    private async ValueTask LocationChangingHandler(LocationChangingContext context)
-    {
-        const string RouteBack = "/back";
-        bool isBackRoute = context.TargetLocation.EndsWith(RouteBack, StringComparison.OrdinalIgnoreCase);
-
-        if (isBackRoute)
-        {
-            context.PreventNavigation();
-            await JsRuntime.InvokeVoidAsync("history.back"); // Call javascript to navigate back
-        }
+        // Initialize the virtual "back" route
+        NavigationService.InitializeVirtualRoutes();
     }
 }

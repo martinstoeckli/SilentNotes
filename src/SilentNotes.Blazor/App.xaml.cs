@@ -5,10 +5,8 @@ using Microsoft.AspNetCore.Components.WebView.Maui;
 
 namespace SilentNotes;
 
-public partial class App : Application, IDisposable
+public partial class App : Application
 {
-    private IDisposable _locationChangingHandler;
-
     /// <summary>
     /// Initializes a new instance of the <see cref="App"/> class.
     /// </summary>
@@ -20,11 +18,6 @@ public partial class App : Application, IDisposable
 
         MainPage = new MainPage();
         MainPage.Disappearing += DisappearingEventHandler;
-    }
-
-    public void Dispose()
-    {
-        _locationChangingHandler?.Dispose();
     }
 
     private void DisappearingEventHandler(object sender, EventArgs e)
@@ -39,8 +32,6 @@ public partial class App : Application, IDisposable
     protected override void OnStart()
     {
         base.OnStart();
-        //var navigation = Ioc.GetService<NavigationManager>();
-        //_locationChangingHandler = navigation.RegisterLocationChangingHandler(CheckFromState);
     }
 
     protected override void OnResume()
@@ -61,17 +52,6 @@ public partial class App : Application, IDisposable
     protected override Window CreateWindow(IActivationState activationState)
     {
         Window window = base.CreateWindow(activationState);
-
-        window.Resumed += (s, e) =>
-        {
-            // Custom logic
-        };
         return window;
     }
-
-    //private ValueTask CheckFromState(LocationChangingContext context)
-    //{
-
-    //    return ValueTask.CompletedTask;
-    //}
 }
