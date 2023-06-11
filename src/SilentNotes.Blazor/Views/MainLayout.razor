@@ -26,6 +26,12 @@
         Navigation.RegisterLocationChangingHandler(LocationChangingHandler);
     }
 
+    /// <summary>
+    /// Intercept navigation events, to implement routes with special meaning.
+    /// 1) "/back": This route uses JavaScript to navigate back to the last page, adjusting the browser history.
+    /// </summary>
+    /// <param name="context">The event arguments.</param>
+    /// <returns>A task for async calls.</returns>
     private async ValueTask LocationChangingHandler(LocationChangingContext context)
     {
         const string RouteBack = "/back";

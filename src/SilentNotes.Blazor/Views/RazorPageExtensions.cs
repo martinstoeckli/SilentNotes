@@ -3,7 +3,9 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using System.Windows.Input;
 using Microsoft.AspNetCore.Components;
+using MudBlazor;
 
 namespace SilentNotes.Views
 {
@@ -26,6 +28,34 @@ namespace SilentNotes.Views
         public static string CssClassIf(this ComponentBase page, string cssClassName, bool condition)
         {
             return condition ? cssClassName : null;
+        }
+
+        /// <summary>
+        /// Calls the execute method of a command and closes the overflowmenu beforehand.
+        /// This extension method can be used in an MudNavLink.OnClick handler, it makes sure that
+        /// the cklicked menu is closed.
+        /// </summary>
+        /// <param name="command">The command to extend.</param>
+        /// <param name="overflowMenu">Closes this overflow menu before executing the command.</param>
+        public static void ExecuteAndCloseMenu(this ICommand command, MudMenu overflowMenu)
+        {
+            overflowMenu?.CloseMenu();
+            command.Execute(null);
+        }
+    }
+
+    /// <summary>
+    /// Deactivate validation because it removes the error information.
+    /// See: https://github.com/MudBlazor/MudBlazor/issues/4593
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public class MudTextFieldEx<T> : MudTextField<T>
+    {
+        protected override Task ValidateValue()
+        {
+            if (Validation == null)
+                return Task.CompletedTask;
+            return base.ValidateValue();
         }
     }
 }

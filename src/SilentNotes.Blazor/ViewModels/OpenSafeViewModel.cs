@@ -23,8 +23,8 @@ namespace SilentNotes.ViewModels
         private readonly IRepositoryStorageService _repositoryService;
         private SecureString _password;
         private SecureString _passwordConfirmation;
-        private bool _invalidPasswordError;
-        private bool _invalidPasswordConfirmationError;
+        private bool _passwordError;
+        private bool _passwordConfirmationError;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OpenSafeViewModel"/> class.
@@ -82,9 +82,9 @@ namespace SilentNotes.ViewModels
 
         private void Ok()
         {
-            InvalidPasswordError = !ValidatePassword(Password);
-            InvalidPasswordConfirmationError = !SafeExists && !ValidatePasswordConfirmation(Password, PasswordConfirmation);
-            if (InvalidPasswordError || InvalidPasswordConfirmationError)
+            PasswordError = !ValidatePassword(Password);
+            PasswordConfirmationError = !SafeExists && !ValidatePasswordConfirmation(Password, PasswordConfirmation);
+            if (PasswordError || PasswordConfirmationError)
                 return;
 
             int openedSafes = 0;
@@ -159,7 +159,7 @@ namespace SilentNotes.ViewModels
                 Modified = true;
 
                 // Continue with the create safe dialog
-                //_navigationService.Navigate(new Navigation(ControllerNames.OpenSafe));
+                OnPropertyChanged("page");
             }
         }
 
@@ -169,18 +169,6 @@ namespace SilentNotes.ViewModels
         public bool SafeExists
         {
             get { return Model.Safes.Count >= 1; }
-        }
-
-        public bool InvalidPasswordError
-        {
-            get { return _invalidPasswordError; }
-            set { SetProperty(ref _invalidPasswordError, value); }
-        }
-
-        public bool InvalidPasswordConfirmationError
-        {
-            get { return _invalidPasswordConfirmationError; }
-            set { SetProperty(ref _invalidPasswordConfirmationError, value); }
         }
 
         /// <summary>
@@ -197,6 +185,12 @@ namespace SilentNotes.ViewModels
             }
         }
 
+        public bool PasswordError
+        {
+            get { return _passwordError; }
+            set { SetProperty(ref _passwordError, value); }
+        }
+
         /// <summary>
         /// Gets or sets the user entered password confirmation.
         /// </summary>
@@ -209,6 +203,12 @@ namespace SilentNotes.ViewModels
                 _passwordConfirmation?.Clear();
                 _passwordConfirmation = value;
             }
+        }
+
+        public bool PasswordConfirmationError
+        {
+            get { return _passwordConfirmationError; }
+            set { SetProperty(ref _passwordConfirmationError, value); }
         }
 
         private static bool ValidatePassword(SecureString password)
