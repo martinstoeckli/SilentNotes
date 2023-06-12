@@ -62,8 +62,8 @@
             Label="@LanguageService["cloud_password"]"
             Converter="@_secureStringConverter"
             Variant="Variant.Outlined" InputType="@PasswordInputType"
-            Error="@ViewModel.PasswordError"
-            ErrorText="@LanguageService["password_short_error"]"
+            Error="@ViewModel.HasPasswordError"
+            ErrorText="@ViewModel.PasswordErrorText"
             Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="@(() => IsPasswordVisible = !IsPasswordVisible)" />
 
         @if (!ViewModel.SafeExists)
@@ -72,7 +72,7 @@
                 Label="@LanguageService["safe_confirm_password"]"
                 Converter="@_secureStringConverter"
                 Variant="Variant.Outlined" InputType="@PasswordInputType"
-                Error="@ViewModel.PasswordConfirmationError"
+                Error="@ViewModel.HasPasswordConfirmationError"
                 ErrorText="@LanguageService["password_confirmation_error"]" />
         }
     </MudForm>
@@ -100,11 +100,11 @@
     private MudForm _form;
     private SecureStringConverter _secureStringConverter;
 
-    protected override void OnInitialized()
+    protected override void OnParametersSet()
     {
-        base.OnInitialized();
+        base.OnParametersSet();
         IsPasswordVisible = false;
-        ViewModel = new OpenSafeViewModel(LanguageService, NavigationService, FeedbackService, RandomService, SettingsService, RepositoryService);
+        ViewModel = new OpenSafeViewModel(LanguageService, NavigationService, FeedbackService, RandomService, SettingsService, RepositoryService, TargetNoteId);
         _secureStringConverter = new SecureStringConverter();
     }
 

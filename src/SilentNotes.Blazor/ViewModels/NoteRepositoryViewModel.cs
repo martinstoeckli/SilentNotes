@@ -22,6 +22,7 @@ namespace SilentNotes.ViewModels
     /// </summary>
     public class NoteRepositoryViewModel : ViewModelBase
     {
+        private readonly INavigationService _navigationService;
         //private readonly IStoryBoardService _storyBoardService;
         //private readonly IRepositoryStorageService _repositoryService;
         //private readonly IFeedbackService _feedbackService;
@@ -40,6 +41,7 @@ namespace SilentNotes.ViewModels
         public NoteRepositoryViewModel(
             NoteRepositoryModel model,
             ILanguageService languageService,
+            INavigationService navigationService,
             IThemeService themeService,
             ISettingsService settingsService,
             IEnvironmentService environmentService,
@@ -49,6 +51,7 @@ namespace SilentNotes.ViewModels
             //    _repositoryService = repositoryService;
             //    _feedbackService = feedbackService;
             Language = languageService;
+            _navigationService = navigationService;
             _themeService = themeService;
             _settingsService = settingsService;
             _environmentService = environmentService;
@@ -73,13 +76,8 @@ namespace SilentNotes.ViewModels
             DeleteNoteCommand = new RelayCommand<object>(DeleteNote);
             ClearFilterCommand = new RelayCommand(ClearFilter);
             //    SynchronizeCommand = new RelayCommand(Synchronize);
-            //    ShowTransferCodeCommand = new RelayCommand(ShowTransferCode);
-            //    ShowSettingsCommand = new RelayCommand(ShowSettings);
-            //    ShowRecycleBinCommand = new RelayCommand(ShowRecycleBin);
             //    ShowExportCommand = new RelayCommand(ShowExport);
-            //    ShowInfoCommand = new RelayCommand(ShowInfo);
-            //    OpenSafeCommand = new RelayCommand(OpenSafe);
-            //    CloseSafeCommand = new RelayCommand(CloseSafe);
+            CloseSafeCommand = new RelayCommand(CloseSafe);
             //    ChangeSafePasswordCommand = new RelayCommand(ChangeSafePassword);
 
             Modified = false;
@@ -554,17 +552,6 @@ namespace SilentNotes.ViewModels
         //}
 
         ///// <summary>
-        ///// Gets the command which opens the recycling bin dialog.
-        ///// </summary>
-        //[VueDataBinding(VueBindingMode.Command)]
-        //public ICommand ShowRecycleBinCommand { get; private set; }
-
-        //private void ShowRecycleBin()
-        //{
-        //    _navigationService.Navigate(new Navigation(ControllerNames.RecycleBin));
-        //}
-
-        ///// <summary>
         ///// Gets the command which opens export dialog.
         ///// </summary>
         //[VueDataBinding(VueBindingMode.Command)]
@@ -575,62 +562,17 @@ namespace SilentNotes.ViewModels
         //    _navigationService.Navigate(new Navigation(ControllerNames.Export));
         //}
 
-        ///// <summary>
-        ///// Gets the command which opens the settings dialog.
-        ///// </summary>
-        //[VueDataBinding(VueBindingMode.Command)]
-        //public ICommand ShowSettingsCommand { get; private set; }
+        /// <summary>
+        /// Gets the command which closes encrypted notes.
+        /// </summary>
+        public ICommand CloseSafeCommand { get; private set; }
 
-        //private void ShowSettings()
-        //{
-        //    _navigationService.Navigate(new Navigation(ControllerNames.Settings));
-        //}
-
-        ///// <summary>
-        ///// Gets the command which shows the current transfer code.
-        ///// </summary>
-        //[VueDataBinding(VueBindingMode.Command)]
-        //public ICommand ShowTransferCodeCommand { get; private set; }
-
-        //private void ShowTransferCode()
-        //{
-        //    _navigationService.Navigate(new Navigation(ControllerNames.TransferCodeHistory));
-        //}
-
-        ///// <summary>
-        ///// Gets the command which shows the info dialog.
-        ///// </summary>
-        //[VueDataBinding(VueBindingMode.Command)]
-        //public ICommand ShowInfoCommand { get; private set; }
-
-        //private void ShowInfo()
-        //{
-        //    _navigationService.Navigate(new Navigation(ControllerNames.Info));
-        //}
-
-        ///// <summary>
-        ///// Gets the command which opens encrypted notes.
-        ///// </summary>
-        //[VueDataBinding(VueBindingMode.Command)]
-        //public ICommand OpenSafeCommand { get; private set; }
-
-        //private void OpenSafe()
-        //{
-        //    _navigationService.Navigate(new Navigation(ControllerNames.OpenSafe));
-        //}
-
-        ///// <summary>
-        ///// Gets the command which closes encrypted notes.
-        ///// </summary>
-        //[VueDataBinding(VueBindingMode.Command)]
-        //public ICommand CloseSafeCommand { get; private set; }
-
-        //private void CloseSafe()
-        //{
-        //    foreach (SafeModel safe in Model.Safes)
-        //        safe.Close();
-        //    _navigationService.Navigate(new Navigation(ControllerNames.NoteRepository));
-        //}
+        private void CloseSafe()
+        {
+            foreach (SafeModel safe in Model.Safes)
+                safe.Close();
+            _navigationService.Reload();
+        }
 
         /// <summary>
         /// Gets a value indicating whether at least one safe is open.

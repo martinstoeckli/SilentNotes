@@ -7,6 +7,7 @@
 
 @inject ISnackbar Snackbar
 @inject ILanguageService LanguageService
+@inject INavigationService NavigationService
 @inject ISettingsService SettingsService
 @inject IThemeService ThemeService
 @inject ISvgIconService IconService
@@ -47,7 +48,7 @@
         Title="@(((ListItemViewModel<string>)ViewModel.SelectedTag).Text)" />
 
     @* Filter *@
-    <MudPaper Class="d-inline-flex align-center rounded-pill pa-0" MaxHeight="36px" Elevation="0">
+    <MudPaper Class="d-inline-flex align-center rounded-pill pa-0" MaxWidth="55%" MaxHeight="36px" Elevation="0">
         <MudInput @ref="_filterInput" @bind-Value="ViewModel.Filter"
             Class="filter-input ml-2 mr-1 my-0"
             Adornment="Adornment.End" AdornmentIcon="@FilterIcon" OnAdornmentClick="@(() => ViewModel.ClearFilterCommand.Execute(null))"
@@ -55,7 +56,7 @@
     </MudPaper>
 
     @* Synchronization *@
-    <MudIconButton Class="d-none d-sm-flex" Icon="@IconService[IconNames.CloudSync]" Color="Color.Inherit" Title="@LanguageService["sync_notes"]" />
+    <MudIconButton Icon="@IconService[IconNames.CloudSync]" Color="Color.Inherit" Title="@LanguageService["sync_notes"]" />
 
     @* Overflow menu *@
     <MudMenu @ref="_overflowMenu" Dense="true" AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight">
@@ -70,7 +71,7 @@
                 <MudNavLink OnClick="DoClick" Icon="@IconService[IconNames.Export]">@LanguageService["show_export"]</MudNavLink>
                 <MudDivider />
                 @if (ViewModel.IsAnySafeOpen) {
-                    <MudNavLink OnClick="DoClick" Icon="@IconService[IconNames.SafeSquareOutline]">@LanguageService["safe_close"]</MudNavLink>
+                    <MudNavLink OnClick="@(() => ViewModel.CloseSafeCommand.ExecuteAndCloseMenu(_overflowMenu))" Icon="@IconService[IconNames.SafeSquareOutline]">@LanguageService["safe_close"]</MudNavLink>
                 }
                 else {
                     <MudNavLink Href="/opensafe" Icon="@IconService[IconNames.SafeSquareOutline]">@LanguageService["safe_open"]</MudNavLink>
@@ -183,6 +184,7 @@
         ViewModel = new NoteRepositoryViewModel(
             noteRepositoryModel,
             LanguageService,
+            NavigationService,
             ThemeService,
             SettingsService,
             EnvironmentService,

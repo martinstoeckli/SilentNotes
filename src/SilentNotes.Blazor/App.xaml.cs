@@ -48,10 +48,4 @@ public partial class App : Application
     {
         base.CleanUp();
     }
-
-    protected override Window CreateWindow(IActivationState activationState)
-    {
-        Window window = base.CreateWindow(activationState);
-        return window;
-    }
 }

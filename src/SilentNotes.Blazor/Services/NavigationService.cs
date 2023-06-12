@@ -14,7 +14,7 @@ namespace SilentNotes.Services
     /// </summary>
     internal class NavigationService: INavigationService, IDisposable
     {
-        private const string BackRoute = "back";
+        public const string RouteBack = "back";
         private readonly NavigationManager _navigationManager;
         private readonly IJSRuntime _jsRuntime;
         private IDisposable _eventHandlerDisposable;
@@ -65,7 +65,7 @@ namespace SilentNotes.Services
         /// <returns>A task for async calls.</returns>
         private async ValueTask LocationChangingHandler(LocationChangingContext context)
         {
-            if (IsRoute(context, BackRoute))
+            if (IsRoute(context, RouteBack))
             {
                 context.PreventNavigation();
                 await _jsRuntime.InvokeVoidAsync("history.back"); // Call javascript to navigate back
@@ -74,8 +74,13 @@ namespace SilentNotes.Services
 
         private bool IsRoute(LocationChangingContext context, string route)
         {
-            string relativePath = _navigationManager.ToBaseRelativePath(context.TargetLocation);
-            return string.Equals(route, relativePath, StringComparison.InvariantCultureIgnoreCase);
+            string baseUri = _navigationManager.BaseUri;
+            string relativePath = context.TargetLocation;
+            if (relativePath.StartsWith(baseUri, StringComparison.OrdinalIgnoreCase))
+            {
+                relativePath = relativePath.Substring(baseUri.Length);
+            }
+            return string.Equals(route, relativePath, StringComparison.OrdinalIgnoreCase);
         }
     }
 }

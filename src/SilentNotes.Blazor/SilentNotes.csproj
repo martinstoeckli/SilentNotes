@@ -66,7 +66,7 @@
         <PackageReference Include="BouncyCastle.Cryptography" Version="2.2.1" />
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.0" />
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
-        <PackageReference Include="MudBlazor" Version="6.4.1" />
+        <PackageReference Include="MudBlazor" Version="6.2.5" />
     </ItemGroup>
 
     <ItemGroup>

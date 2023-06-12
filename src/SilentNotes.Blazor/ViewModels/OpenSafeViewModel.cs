@@ -22,10 +22,12 @@ namespace SilentNotes.ViewModels
         private readonly ICryptoRandomService _randomService;
         private readonly ISettingsService _settingsService;
         private readonly IRepositoryStorageService _repositoryService;
+        private readonly string _navigationTargetNoteId;
         private SecureString _password;
         private SecureString _passwordConfirmation;
-        private bool _passwordError;
-        private bool _passwordConfirmationError;
+        private bool _hasPasswordError;
+        private string _passwordErrorText;
+        private bool _hasPasswordConfirmationError;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OpenSafeViewModel"/> class.
@@ -36,8 +38,8 @@ namespace SilentNotes.ViewModels
             IFeedbackService feedbackService,
             ICryptoRandomService randomService,
             ISettingsService settingsService,
-            IRepositoryStorageService repositoryService)
-            //Navigation navigationTarget)
+            IRepositoryStorageService repositoryService,
+            string navigationTargetNoteId)
         {
             Language = languageService;
             _navigationService = navigationService;
@@ -45,7 +47,7 @@ namespace SilentNotes.ViewModels
             _randomService = randomService;
             _settingsService = settingsService;
             _repositoryService = repositoryService;
-            //_navigationTarget = navigationTarget;
+            _navigationTargetNoteId = navigationTargetNoteId;
 
             _repositoryService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepository);
             Model = noteRepository;
@@ -74,9 +76,9 @@ namespace SilentNotes.ViewModels
 
         private void Ok()
         {
-            PasswordError = !ValidatePassword(Password);
-            PasswordConfirmationError = !SafeExists && !ValidatePasswordConfirmation(Password, PasswordConfirmation);
-            if (PasswordError || PasswordConfirmationError)
+            ValidatePassword(Password);
+            ValidatePasswordConfirmation(Password, PasswordConfirmation);
+            if (HasPasswordError || HasPasswordConfirmationError)
                 return;
 
             int openedSafes = 0;
@@ -91,20 +93,19 @@ namespace SilentNotes.ViewModels
                 Modified = true;
             }
 
-            //if (openedSafes == 0)
-            //{
-            //    InvalidPasswordError = false;
-            //    InvalidPasswordConfirmationError = false;
-            //    _feedbackService.ShowToast(Language.LoadText("password_wrong_error"));
-            //}
-            //else if (_navigationTarget != null)
-            //{
-            //    _navigationService.Navigate(_navigationTarget);
-            //}
-            //else
-            //{
-            //    _navigationService.Navigate(new Navigation(ControllerNames.NoteRepository));
-            //}
+            if (openedSafes == 0)
+            {
+                HasPasswordError = true;
+                PasswordErrorText = Language.LoadText("password_wrong_error");
+            }
+            else if (_navigationTargetNoteId == null)
+            {
+                _navigationService.NavigateTo("back");
+            }
+            else
+            {
+                _navigationService.NavigateTo(string.Format("note/{0}", _navigationTargetNoteId), false, true);
+            }
         }
 
         private void CreateNewSafe(SecureString password)
@@ -177,10 +178,16 @@ namespace SilentNotes.ViewModels
             }
         }
 
-        public bool PasswordError
+        public bool HasPasswordError
         {
-            get { return _passwordError; }
-            set { SetProperty(ref _passwordError, value); }
+            get { return _hasPasswordError; }
+            set { SetProperty(ref _hasPasswordError, value); }
+        }
+
+        public string PasswordErrorText
+        {
+            get { return _passwordErrorText; }
+            set { SetProperty(ref _passwordErrorText, value); }
         }
 
         /// <summary>
@@ -197,20 +204,34 @@ namespace SilentNotes.ViewModels
             }
         }
 
-        public bool PasswordConfirmationError
+        public bool HasPasswordConfirmationError
         {
-            get { return _passwordConfirmationError; }
-            set { SetProperty(ref _passwordConfirmationError, value); }
+            get { return _hasPasswordConfirmationError; }
+            set { SetProperty(ref _hasPasswordConfirmationError, value); }
         }
 
-        private static bool ValidatePassword(SecureString password)
+        private void ValidatePassword(SecureString password)
         {
-            return (password != null) && (password.Length >= 5);
+            if ((password == null) || (password.Length < 5))
+            {
+                HasPasswordError = true;
+                PasswordErrorText = Language.LoadText("password_short_error");
+            }
+            else
+            {
+                HasPasswordError = false;
+                PasswordErrorText = null;
+            }
         }
 
-        private static bool ValidatePasswordConfirmation(SecureString password, SecureString passwordConfirmation)
+        private void ValidatePasswordConfirmation(SecureString password, SecureString passwordConfirmation)
         {
-            return SecureStringExtensions.AreEqual(password, passwordConfirmation);
+            if (SafeExists)
+                HasPasswordConfirmationError = false; // open dialog, not creation
+            else if (SecureStringExtensions.AreEqual(password, passwordConfirmation))
+                HasPasswordConfirmationError = false;
+            else
+                HasPasswordConfirmationError = true;
         }
 
         /// <summary>
