@@ -100,7 +100,7 @@ namespace SilentNotes.ViewModels
             }
             else if (_navigationTargetNoteId == null)
             {
-                _navigationService.NavigateTo("back");
+                _navigationService.NavigateBack();
             }
             else
             {

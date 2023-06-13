@@ -76,7 +76,7 @@
                 else {
                     <MudNavLink Href="/opensafe" Icon="@IconService[IconNames.SafeSquareOutline]">@LanguageService["safe_open"]</MudNavLink>
                 }
-                <MudNavLink OnClick="DoClick" Icon="@IconService[IconNames.LockReset]">@LanguageService["safe_change_password"]</MudNavLink>
+                <MudNavLink Href="/changepassword" Disabled="!ViewModel.SafeExists" Icon="@IconService[IconNames.LockReset]">@LanguageService["safe_change_password"]</MudNavLink>
                 <MudDivider />
                 <MudNavLink Href="/transfercodehistory" Icon="@IconService[IconNames.Key]">@LanguageService["show_transfer_code"]</MudNavLink>
                 <MudNavLink Href="/settings" Icon="@IconService[IconNames.Settings]">@LanguageService["show_settings"]</MudNavLink>

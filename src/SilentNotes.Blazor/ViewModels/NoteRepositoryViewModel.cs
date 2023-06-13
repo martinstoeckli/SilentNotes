@@ -78,7 +78,6 @@ namespace SilentNotes.ViewModels
             //    SynchronizeCommand = new RelayCommand(Synchronize);
             //    ShowExportCommand = new RelayCommand(ShowExport);
             CloseSafeCommand = new RelayCommand(CloseSafe);
-            //    ChangeSafePasswordCommand = new RelayCommand(ChangeSafePassword);
 
             Modified = false;
 
@@ -575,27 +574,20 @@ namespace SilentNotes.ViewModels
         }
 
         /// <summary>
+        /// Gets a value indicating whether as leat one safe exists.
+        /// </summary>
+        public bool SafeExists
+        {
+            get { return Model.Safes.Count > 0; }
+        }
+
+        /// <summary>
         /// Gets a value indicating whether at least one safe is open.
         /// </summary>
         public bool IsAnySafeOpen
         {
             get { return Model.Safes.Any(safe => safe.IsOpen); }
         }
-
-        ///// <summary>
-        ///// Gets the command which allows to change the password to encrypt the notes.
-        ///// </summary>
-        //[VueDataBinding(VueBindingMode.Command)]
-        //public ICommand ChangeSafePasswordCommand { get; private set; }
-
-        //private void ChangeSafePassword()
-        //{
-        //    if (Model.Safes.Count > 0)
-        //        _navigationService.Navigate(new Navigation(ControllerNames.ChangePassword));
-        //    else
-        //        // First create a safe before the password can be changed.
-        //        _navigationService.Navigate(new Navigation(ControllerNames.OpenSafe));
-        //}
 
         //public void AddNoteToSafe(Guid noteId)
         //{

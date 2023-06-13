@@ -14,7 +14,7 @@ namespace SilentNotes.Services
     /// </summary>
     internal class NavigationService: INavigationService, IDisposable
     {
-        public const string RouteBack = "back";
+        private const string RouteBack = "back";
         private readonly NavigationManager _navigationManager;
         private readonly IJSRuntime _jsRuntime;
         private IDisposable _eventHandlerDisposable;
@@ -49,6 +49,13 @@ namespace SilentNotes.Services
         public void NavigateTo(string uri, bool forceLoad = false, bool replace = false)
         {
             _navigationManager.NavigateTo(uri, forceLoad, replace);
+        }
+
+        /// <inheritdoc/>
+        public void NavigateBack()
+        {
+            // This navigation will be intercepted in the LocationChangingHandler.
+            NavigateTo(RouteBack, false, false);
         }
 
         /// <inheritdoc/>

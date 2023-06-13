@@ -18,8 +18,20 @@ namespace SilentNotes.Services
         /// </summary>
         void InitializeVirtualRoutes();
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Navigates to the specified URI.
+        /// </summary>
+        /// <param name="uri">The destination URI. This can be absolute, or relative to the base URI.</param>
+        /// <param name="forceLoad">This parameter is not used for the hybrid application, but we
+        /// keep the parameters the same as with the NavigationManager.</param>
+        /// <param name="replace">If true, replaces the current entry in the history stack. If false,
+        /// appends the new entry to the history stack.</param>
         void NavigateTo(string uri, bool forceLoad = false, bool replace = false);
+
+        /// <summary>
+        /// Navigates one step back in the history. The browser history is adjusted accordingly.
+        /// </summary>
+        void NavigateBack();
 
         /// <summary>
         /// Reloads the current page by keeping the browser history intact.
