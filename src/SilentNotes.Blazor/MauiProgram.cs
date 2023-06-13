@@ -24,6 +24,12 @@ public static class MauiProgram
         builder.Services.AddMauiBlazorWebView();
         builder.Services.AddMudServices(config =>
         {
+            // todo: config.SnackbarConfiguration.HideIcon = true;
+            config.SnackbarConfiguration.HideTransitionDuration = 500;
+            config.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.TopCenter;
+            config.SnackbarConfiguration.ShowCloseIcon = false;
+            config.SnackbarConfiguration.ShowTransitionDuration = 500;
+            config.SnackbarConfiguration.SnackbarVariant = Variant.Text;
             config.SnackbarConfiguration.VisibleStateDuration = 6000;
         });
 
@@ -57,6 +63,7 @@ public static class MauiProgram
             serviceProvider.GetService<IJSRuntime>()));
         services.AddScoped<IFeedbackService>((serviceProvider) => new FeedbackService(
             serviceProvider.GetService<IDialogService>(),
+            serviceProvider.GetService<ISnackbar>(),
             serviceProvider.GetService<ILanguageService>()));
     }
 

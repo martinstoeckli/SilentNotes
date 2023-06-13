@@ -3,30 +3,27 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
-using SilentNotes.Views;
 
 namespace SilentNotes.Services
 {
     internal class FeedbackService : IFeedbackService
     {
         private readonly IDialogService _dialogService;
+        private readonly ISnackbar _snackbar;
         private readonly ILanguageService _languageService;
 
-        public FeedbackService(IDialogService dialogService, ILanguageService languageService)
+        public FeedbackService(IDialogService dialogService, ISnackbar snackbar, ILanguageService languageService)
         {
             _dialogService = dialogService;
+            _snackbar = snackbar;
             _languageService = languageService;
         }
 
-        public void ShowToast(string message)
+        public void ShowToast(string message, Severity severity = Severity.Normal)
         {
+            _snackbar.Add(message, severity);
         }
 
         public void ShowBusyIndicator(bool visible)

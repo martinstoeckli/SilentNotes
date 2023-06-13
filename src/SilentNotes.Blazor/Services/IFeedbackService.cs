@@ -3,7 +3,9 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using System.ComponentModel;
 using System.Threading.Tasks;
+using MudBlazor;
 
 namespace SilentNotes.Services
 {
@@ -23,7 +25,8 @@ namespace SilentNotes.Services
         /// thread.
         /// </remarks>
         /// <param name="message">Message to display.</param>
-        void ShowToast(string message);
+        /// <param name="severity">The severity defines the color and the icon of the toast.</param>
+        void ShowToast(string message, Severity severity = Severity.Normal);
 
         /// <summary>
         /// Shows an indicator that the applcation is busy or hides it (e.g. hourglass).

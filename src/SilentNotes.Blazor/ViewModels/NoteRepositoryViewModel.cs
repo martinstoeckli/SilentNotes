@@ -6,6 +6,7 @@
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
+using MudBlazor;
 //using SilentNotes.Controllers;
 using SilentNotes.Crypto;
 //using SilentNotes.HtmlView;
@@ -25,7 +26,7 @@ namespace SilentNotes.ViewModels
         private readonly INavigationService _navigationService;
         //private readonly IStoryBoardService _storyBoardService;
         //private readonly IRepositoryStorageService _repositoryService;
-        //private readonly IFeedbackService _feedbackService;
+        private readonly IFeedbackService _feedbackService;
         private readonly IThemeService _themeService;
         private readonly ISettingsService _settingsService;
         private readonly IEnvironmentService _environmentService;
@@ -42,6 +43,7 @@ namespace SilentNotes.ViewModels
             NoteRepositoryModel model,
             ILanguageService languageService,
             INavigationService navigationService,
+            IFeedbackService feedbackService,
             IThemeService themeService,
             ISettingsService settingsService,
             IEnvironmentService environmentService,
@@ -52,6 +54,7 @@ namespace SilentNotes.ViewModels
             //    _feedbackService = feedbackService;
             Language = languageService;
             _navigationService = navigationService;
+            _feedbackService = feedbackService;
             _themeService = themeService;
             _settingsService = settingsService;
             _environmentService = environmentService;
@@ -431,7 +434,7 @@ namespace SilentNotes.ViewModels
             else
                 OnPropertyChanged("Notes");
 
-            //_feedbackService.ShowToast(Language.LoadText("feedback_note_to_recycle"));
+            _feedbackService.ShowToast(Language.LoadText("feedback_note_to_recycle"), Severity.Info);
         }
 
         /// <summary>
