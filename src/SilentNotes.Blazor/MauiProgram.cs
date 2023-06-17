@@ -82,6 +82,7 @@ public static class MauiProgram
             serviceProvider.GetService<IXmlFileService>(),
             serviceProvider.GetService<IDataProtectionService>()));
         services.AddSingleton<INativeBrowserService>((serviceProvider) => new NativeBrowserService());
+        services.AddSingleton<IFolderPickerService>((ServiceProvider) => new FolderPickerService());
     }
 
 #elif ANDROID

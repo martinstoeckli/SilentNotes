@@ -69,7 +69,7 @@
                 <MudNavLink Class="d-sm-none" OnClick="DoClick" Icon="@IconService.GetSvgLink(IconNames.NoteTextOutline)">@LanguageService["note_create_new"]</MudNavLink>
                 <MudNavLink OnClick="DoClick" Icon="@IconService.GetSvgLink(IconNames.OrderBoolAscendingVariant)">@LanguageService["checklist_create_new"]</MudNavLink>
                 <MudNavLink Href="/recyclebin" Icon="@IconService[IconNames.DeleteEmpty]">@LanguageService["show_recyclebin"]</MudNavLink>
-                <MudNavLink OnClick="DoClick" Icon="@IconService[IconNames.Export]">@LanguageService["show_export"]</MudNavLink>
+                <MudNavLink Href="/export" Icon="@IconService[IconNames.Export]">@LanguageService["show_export"]</MudNavLink>
                 <MudDivider />
                 @if (ViewModel.IsAnySafeOpen) {
                     <MudNavLink OnClick="@(() => ViewModel.CloseSafeCommand.ExecuteAndCloseMenu(_overflowMenu))" Icon="@IconService[IconNames.SafeSquareOutline]">@LanguageService["safe_close"]</MudNavLink>

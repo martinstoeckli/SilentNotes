@@ -1,0 +1,46 @@
+﻿@page "/export"
+@using SilentNotes.Models
+@using SilentNotes.ViewModels
+@using SilentNotes.Services
+
+@inject ILanguageService LanguageService
+@inject INavigationService NavigationService
+@inject IFeedbackService FeedbackService
+@inject ISvgIconService IconService
+@inject IRepositoryStorageService RepositoryStorageService
+@inject ICryptoRandomService CryptoRandomSource
+@inject IFolderPickerService FolderPickerService
+
+@* Main menu *@
+<MudAppBar Fixed="true" Dense="true">
+    <MudIconButton Href="/back" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" />
+</MudAppBar>
+
+@* watermark image *@
+<MudIcon Class="background-icon" Icon="@IconService[IconNames.Export]" Style="@($"right:-30px; top:-100px;")" />
+
+@* body *@
+<MudContainer id="content" Class="mud-container-left" MaxWidth="MaxWidth.Medium">
+    <h1 class="h-colored">@LanguageService["show_export"]</h1>
+
+    <p class="my-4">@LanguageService["export_desc"]</p>
+
+    <MudForm>
+        <MudCheckBox @bind-Checked="@ViewModel.ExportUnprotectedNotes" Dense="true" Label="@LanguageService["export_unencrypted"]"></MudCheckBox>
+        <MudCheckBox @bind-Checked="@ViewModel.ExportProtectedNotes" Disabled="!ViewModel.HasExportableProtectedNotes" Dense="true" Label="@LanguageService["export_encrypted"]"></MudCheckBox>
+    </MudForm>
+
+    <MudStack Class="my-4" Row="true" Justify="Justify.FlexEnd" Spacing="1">
+        <MudButton Href="/back" Color="Color.Default" Variant="Variant.Text">@LanguageService["cancel"]</MudButton>
+        <MudButton OnClick="@(() => ViewModel.OkCommand.Execute(null))" Color="Color.Primary" Variant="Variant.Filled">@LanguageService["ok"]</MudButton>
+    </MudStack>
+</MudContainer>
+
+@code {
+    protected override void OnInitialized()
+    {
+        ViewModel = new ExportViewModel(NavigationService, LanguageService, FeedbackService, CryptoRandomSource, RepositoryStorageService, FolderPickerService);
+    }
+
+    private ExportViewModel ViewModel { get; set; }
+}

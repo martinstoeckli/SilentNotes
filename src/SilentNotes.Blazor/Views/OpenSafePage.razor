@@ -49,12 +49,12 @@
     @if (ViewModel.SafeExists)
     {
         <h1 class="h-colored">@LanguageService["safe_open"]</h1>
-        <div class="my-4">@LanguageService["safe_open_existing"]</div>
+        <p class="my-4">@LanguageService["safe_open_existing"]</p>
     }
     else
     {
         <h1 class="h-colored">@LanguageService["safe_new"]</h1>
-        <div class="my-4">@LanguageService["safe_open_new"]</div>
+        <p class="my-4">@LanguageService["safe_open_new"]</p>
     }
 
     <MudForm>
@@ -77,10 +77,10 @@
         }
     </MudForm>
 
-    <MudPaper Class="d-flex justify-end gap-2 my-4" Elevation="0">
-        <MudButton Color="Color.Default" Variant="Variant.Text" Href="/back">@LanguageService["cancel"]</MudButton>
-        <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="@(()=>ViewModel.OkCommand.Execute(null))">@LanguageService["ok"]</MudButton>
-    </MudPaper>
+    <MudStack Class="my-4" Row="true" Justify="Justify.FlexEnd" Spacing="1">
+        <MudButton Href="/back" Color="Color.Default" Variant="Variant.Text">@LanguageService["cancel"]</MudButton>
+        <MudButton OnClick="@(() => ViewModel.OkCommand.Execute(null))" Color="Color.Primary" Variant="Variant.Filled">@LanguageService["ok"]</MudButton>
+    </MudStack>
 
     @if (!ViewModel.SafeExists)
     {

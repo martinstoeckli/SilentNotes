@@ -37,15 +37,15 @@
     }
     else
     {
-        <div class="my-1">@LanguageService["transfer_code_usage"]</div>
+        <p class="my-4">@LanguageService["transfer_code_usage"]</p>
 
-        <div Class="d-flex justify-center my-4">
+        <div Class="d-flex justify-center">
             <MudPaper Class="code px-4 py-2 rounded" Elevation="2">
                 <MudElement>@ViewModel.TransferCodeFmt</MudElement><MudIconButton Class="ml-3" OnClick="@(() => ViewModel.CopyTransferCodeCommand.Execute(null))" Icon="@Icons.Material.Filled.ContentCopy" Color="Color.Inherit" Title="@LanguageService["copy"]"/>
             </MudPaper>
         </div>
 
-        <div class="my-1">@LanguageService["transfer_code_writedown"]</div>
+        <p class="my-4">@LanguageService["transfer_code_writedown"]</p>
 
         @if (ViewModel.IsTransfercodeHistoryVisible)
         {
