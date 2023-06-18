@@ -1,6 +1,8 @@
 ﻿using Android.App;
+using Android.Content;
 using Android.Content.PM;
 using Android.OS;
+using SilentNotes.Platforms;
 using SilentNotes.Platforms.Services;
 
 namespace SilentNotes;
@@ -12,7 +14,21 @@ public class MainActivity : MauiAppCompatActivity
     {
         // Inform services about the new main activity.
         App.Ioc.GetService<IAppContextService>().Initialize(this);
-
         base.OnCreate(savedInstanceState);
+    }
+
+    /// <inheritdoc/>
+    protected override void OnDestroy()
+    {
+        App.Ioc.GetService<IActivityResultAwaiter>().RedirectedOnDestroy();
+        base.OnDestroy();
+    }
+
+    /// <inheritdoc/>
+    protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
+    {
+        App.Ioc.GetService<IActivityResultAwaiter>().RedirectedOnActivityResult(
+            requestCode, resultCode, data);
+        base.OnActivityResult(requestCode, resultCode, data);
     }
 }

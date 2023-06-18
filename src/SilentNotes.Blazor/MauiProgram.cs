@@ -3,12 +3,14 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using System;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
 using MudBlazor;
 using MudBlazor.Services;
+using SilentNotes.Platforms;
 using SilentNotes.Platforms.Services;
 using SilentNotes.Services;
 
@@ -106,6 +108,10 @@ public static class MauiProgram
             serviceProvider.GetService<IDataProtectionService>()));
         services.AddSingleton<INativeBrowserService>((serviceProvider) => new NativeBrowserService(
             serviceProvider.GetService<IAppContextService>()));
+        services.AddSingleton<IActivityResultAwaiter>((ServiceProvider) => new ActivityResultAwaiter());
+        services.AddSingleton<IFolderPickerService>((serviceProvider) => new FolderPickerService(
+            serviceProvider.GetService<IAppContextService>(),
+            serviceProvider.GetService<IActivityResultAwaiter>()));
     }
 
 #endif

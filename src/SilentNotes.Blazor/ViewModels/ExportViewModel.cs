@@ -25,7 +25,6 @@ namespace SilentNotes.ViewModels
         private readonly ICryptor _noteCryptor;
         private bool _exportUnprotectedNotes;
         private bool _exportProtectedNotes;
-        private bool _ignoreFutureNavigations; // Because Android restarts the main activity in the folder picker.
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InfoViewModel"/> class.
@@ -50,13 +49,6 @@ namespace SilentNotes.ViewModels
         }
 
         private ILanguageService Language { get; }
-
-        ///// <inheritdoc/>
-        //public override void OnClosing()
-        //{
-        //    _ignoreFutureNavigations = true;
-        //    base.OnClosing();
-        //}
 
         /// <summary>
         /// Gets the command to create the service.
@@ -83,8 +75,6 @@ namespace SilentNotes.ViewModels
                 {
                     _feedbackService.ShowToast(Language.LoadText("export_success"));
                     _navigationService.NavigateBack();
-                    //if (!_ignoreFutureNavigations)
-                    //    _navigationService.Navigate(new Navigation(ControllerNames.NoteRepository));
                 }
                 else
                 {
