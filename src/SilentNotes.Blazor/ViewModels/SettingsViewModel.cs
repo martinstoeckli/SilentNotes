@@ -26,23 +26,35 @@ namespace SilentNotes.ViewModels
         private readonly IThemeService _themeService;
         //private readonly IStoryBoardService _storyBoardService;
         //private readonly IFeedbackService _feedbackService;
-        //private readonly IFilePickerService _filePickerService;
+        private readonly IFilePickerService _filePickerService;
         //private readonly ICloudStorageClientFactory _cloudStorageClientFactory;
         private readonly SliderStepConverter _fontSizeConverter;
         private readonly SliderStepConverter _noteMaxHeightConverter;
 
         public SettingsViewModel(
             SettingsModel model,
+            ILanguageService languageService,
             IEnvironmentService environmentService,
-            IThemeService themeService)
+            IThemeService themeService,
+            IFilePickerService filePickerService)
         {
             Model = model;
+            Language = languageService;
             _environmentService = environmentService;
             _themeService = themeService;
+            _filePickerService = filePickerService;
 
             _fontSizeConverter = new SliderStepConverter(ReferenceFontSize, 1.0);
             _noteMaxHeightConverter = new SliderStepConverter(ReferenceNoteMaxSize, 20.0);
+
+            // Initialize commands
+            //        GoBackCommand = new RelayCommand(GoBack);
+            //        ChangeCloudSettingsCommand = new RelayCommand(ChangeCloudSettings);
+            //        ClearCloudSettingsCommand = new RelayCommand(ClearCloudSettings);
+            TestNewLocalizationCommand = new RelayCommand(TestNewLocalization);
         }
+
+        private ILanguageService Language { get; }
 
         //    /// <summary>
         //    /// Initializes a new instance of the <see cref="SettingsViewModel"/> class.
@@ -485,27 +497,26 @@ namespace SilentNotes.ViewModels
         //        }
         //    }
 
-        //    /// <summary>
-        //    /// Gets the command to reset the cloud settings.
-        //    /// </summary>
-        //    [VueDataBinding(VueBindingMode.Command)]
-        //    public ICommand TestNewLocalizationCommand { get; private set; }
+        /// <summary>
+        /// Gets the command to reset the cloud settings.
+        /// </summary>
+        public ICommand TestNewLocalizationCommand { get; private set; }
 
-        //    private async void TestNewLocalization()
-        //    {
-        //        try
-        //        {
-        //            if (await _filePickerService.PickFile())
-        //            {
-        //                byte[] languageFile = await _filePickerService.ReadPickedFile();
-        //                (Language as ILanguageTestService).OverrideWithTestResourceFile(languageFile);
-        //                _navigationService.Navigate(new Navigation(ControllerNames.Settings));
-        //            }
-        //        }
-        //        catch (Exception)
-        //        {
-        //        }
-        //    }
+        private async void TestNewLocalization()
+        {
+            try
+            {
+                if (await _filePickerService.PickFile())
+                {
+                    byte[] languageFile = await _filePickerService.ReadPickedFile();
+                    (Language as ILanguageTestService).OverrideWithTestResourceFile(languageFile);
+                    OnPropertyChanged("page");
+                }
+            }
+            catch (Exception)
+            {
+            }
+        }
 
         /// <summary>
         /// Gets the wrapped model.

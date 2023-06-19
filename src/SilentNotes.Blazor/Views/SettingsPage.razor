@@ -10,6 +10,7 @@
 @inject ISettingsService SettingsService
 @inject IEnvironmentService EnvironmentService
 @inject IThemeService ThemeService
+@inject IFilePickerService FilePickerService
 
 @implements IDisposable
 
@@ -19,13 +20,13 @@
 
     <MudSpacer />
 
-    <MudMenu Dense="true" AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight">
+    <MudMenu @ref="_overflowMenu" Dense="true" AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight">
         <ActivatorContent>
             <MudIconButton Icon="@IconService[IconNames.DotsVertical]" Color="Color.Inherit" />
         </ActivatorContent>
         <ChildContent>
             <MudNavMenu Rounded="true" Margin="Margin.Dense" Class="px-1">
-                <MudNavLink Icon="@IconService[IconNames.Earth]">@LanguageService["gui_localization_test"]</MudNavLink>
+                <MudNavLink OnClick="@(() => ViewModel.TestNewLocalizationCommand.ExecuteAndCloseMenu(_overflowMenu))" Icon="@IconService[IconNames.Earth]">@LanguageService["gui_localization_test"]</MudNavLink>
             </MudNavMenu>
         </ChildContent>
     </MudMenu>
@@ -75,10 +76,12 @@
 </MudContainer>
 
 @code {
+    private MudMenu _overflowMenu;
+
     protected override void OnInitialized()
     {
         SettingsModel settings = SettingsService.LoadSettingsOrDefault();
-        ViewModel = new SettingsViewModel(settings, EnvironmentService, ThemeService);
+        ViewModel = new SettingsViewModel(settings, LanguageService, EnvironmentService, ThemeService, FilePickerService);
         ViewModel.PropertyChanged += PropertyChangedHandler;
     }
 

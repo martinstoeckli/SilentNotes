@@ -18,7 +18,7 @@ h1:focus { outline: none; }
 	margin-left: 0;
 }
 
-.toggled svg { fill: lightskyblue; }
+.toggled svg { fill: var(--mud-palette-tertiary); }
 
 .form-row {
 	display: flex;
