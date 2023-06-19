@@ -13,6 +13,7 @@ using VanillaCloudStorageClient;
 //using Windows.Globalization;
 using SilentNotes.Services;
 using MudBlazor.Interfaces;
+using SilentNotes.Crypto.SymmetricEncryption;
 
 namespace SilentNotes.ViewModels
 {
@@ -46,6 +47,9 @@ namespace SilentNotes.ViewModels
 
             _fontSizeConverter = new SliderStepConverter(ReferenceFontSize, 1.0);
             _noteMaxHeightConverter = new SliderStepConverter(ReferenceNoteMaxSize, 20.0);
+
+            EncryptionAlgorithms = new List<DropdownItemViewModel>();
+            FillAlgorithmList(EncryptionAlgorithms);
 
             // Initialize commands
             //        GoBackCommand = new RelayCommand(GoBack);
@@ -93,16 +97,16 @@ namespace SilentNotes.ViewModels
         //        TestNewLocalizationCommand = new RelayCommand(TestNewLocalization);
         //    }
 
-        //    /// <summary>
-        //    /// Initializes the list of available cloud storage services.
-        //    /// </summary>
-        //    /// <param name="algorithms">List to fill.</param>
-        //    private void FillAlgorithmList(List<DropdownItemViewModel> algorithms)
-        //    {
-        //        algorithms.Add(new DropdownItemViewModel { Value = BouncyCastleXChaCha20.CryptoAlgorithmName, Description = Language["encryption_algo_xchacha20"] });
-        //        algorithms.Add(new DropdownItemViewModel { Value = BouncyCastleAesGcm.CryptoAlgorithmName, Description = Language["encryption_algo_aesgcm"] });
-        //        algorithms.Add(new DropdownItemViewModel { Value = BouncyCastleTwofishGcm.CryptoAlgorithmName, Description = Language["encryption_algo_twofishgcm"] });
-        //    }
+        /// <summary>
+        /// Initializes the list of available cloud storage services.
+        /// </summary>
+        /// <param name="algorithms">List to fill.</param>
+        private void FillAlgorithmList(List<DropdownItemViewModel> algorithms)
+        {
+            algorithms.Add(new DropdownItemViewModel { Value = BouncyCastleXChaCha20.CryptoAlgorithmName, Description = Language["encryption_algo_xchacha20"] });
+            algorithms.Add(new DropdownItemViewModel { Value = BouncyCastleAesGcm.CryptoAlgorithmName, Description = Language["encryption_algo_aesgcm"] });
+            algorithms.Add(new DropdownItemViewModel { Value = BouncyCastleTwofishGcm.CryptoAlgorithmName, Description = Language["encryption_algo_twofishgcm"] });
+        }
 
         /// <summary>
         /// Gets or sets the <see cref="FontScale"/> expressed for the -3...+3 slider.
@@ -138,33 +142,31 @@ namespace SilentNotes.ViewModels
             }
         }
 
-        //    /// <summary>
-        //    /// Gets or sets the <see cref="NoteMaxHeight"/> expressed for the -4...+4 slider.
-        //    /// </summary>
-        //    [VueDataBinding(VueBindingMode.TwoWay)]
-        //    public int KeepScreenOnDuration
-        //    {
-        //        get { return Model.KeepScreenUpDuration; }
+        /// <summary>
+        /// Gets or sets the <see cref="NoteMaxHeight"/> expressed for the -4...+4 slider.
+        /// </summary>
+        public int KeepScreenOnDuration
+        {
+            get { return Model.KeepScreenUpDuration; }
 
-        //        set
-        //        {
-        //            if (SetPropertyAndModified(Model.KeepScreenUpDuration, value, (v) => Model.KeepScreenUpDuration = v))
-        //            {
-        //                OnPropertyChanged(nameof(KeepScreenOnDurationTitle));
-        //            }
-        //        }
-        //    }
+            set
+            {
+                if (SetPropertyAndModified(Model.KeepScreenUpDuration, value, (v) => Model.KeepScreenUpDuration = v))
+                {
+                    OnPropertyChanged(nameof(KeepScreenOnDurationTitle));
+                }
+            }
+        }
 
-        //    public bool CanKeepScreenOn
-        //    {
-        //        get { return _environmentService?.KeepScreenOn != null; }
-        //    }
+        public bool CanKeepScreenOn
+        {
+            get { return _environmentService?.KeepScreenOn != null; }
+        }
 
-        //    [VueDataBinding(VueBindingMode.OneWayToView)]
-        //    public string KeepScreenOnDurationTitle
-        //    {
-        //        get { return Language.LoadTextFmt("keep_screen_on_duration", KeepScreenOnDuration); }
-        //    }
+        public string KeepScreenOnDurationTitle
+        {
+            get { return Language.LoadTextFmt("keep_screen_on_duration", KeepScreenOnDuration); }
+        }
 
         //    /// <summary>
         //    /// Gets or sets the theme selected by the user.
@@ -268,15 +270,14 @@ namespace SilentNotes.ViewModels
         //        set { SetPropertyAndModified(Model.DefaultNoteColorHex, value, (string v) => Model.DefaultNoteColorHex = v); }
         //    }
 
-        //    /// <summary>
-        //    /// Gets or sets the note insertion mode selected by the user.
-        //    /// </summary>
-        //    [VueDataBinding(VueBindingMode.TwoWay)]
-        //    public string SelectedNoteInsertionMode
-        //    {
-        //        get { return Model.DefaultNoteInsertion.ToString(); }
-        //        set { SetPropertyAndModified(Model.DefaultNoteInsertion.ToString(), value, (string v) => Model.DefaultNoteInsertion = (NoteInsertionMode)Enum.Parse(typeof(NoteInsertionMode), value)); }
-        //    }
+        /// <summary>
+        /// Gets or sets the note insertion mode selected by the user.
+        /// </summary>
+        public string SelectedNoteInsertionMode
+        {
+            get { return Model.DefaultNoteInsertion.ToString(); }
+            set { SetPropertyAndModified(Model.DefaultNoteInsertion.ToString(), value, (string v) => Model.DefaultNoteInsertion = (NoteInsertionMode)Enum.Parse(typeof(NoteInsertionMode), value)); }
+        }
 
         /// <summary>
         /// Gets or sets a value indicating whether the last selected tag to filter the notes
@@ -295,16 +296,15 @@ namespace SilentNotes.ViewModels
             set { SetPropertyAndModified(Model.StartWithTagsOpen, value, (bool v) => Model.StartWithTagsOpen = v); }
         }
 
-        //    /// <summary>
-        //    /// Gets or sets a value indicating whether notes should be hidden in the overview, if they
-        //    /// are part of a closed safe.
-        //    /// </summary>
-        //    [VueDataBinding(VueBindingMode.TwoWay)]
-        //    public bool HideClosedSafeNotes
-        //    {
-        //        get { return Model.HideClosedSafeNotes; }
-        //        set { SetPropertyAndModified(Model.HideClosedSafeNotes, value, (bool v) => Model.HideClosedSafeNotes = v); }
-        //    }
+        /// <summary>
+        /// Gets or sets a value indicating whether notes should be hidden in the overview, if they
+        /// are part of a closed safe.
+        /// </summary>
+        public bool HideClosedSafeNotes
+        {
+            get { return Model.HideClosedSafeNotes; }
+            set { SetPropertyAndModified(Model.HideClosedSafeNotes, value, (bool v) => Model.HideClosedSafeNotes = v); }
+        }
 
         //    /// <summary>
         //    /// Gets the dark class for a given background color, depending of whether the background
@@ -321,64 +321,61 @@ namespace SilentNotes.ViewModels
         //            return string.Empty;
         //    }
 
-        //    /// <summary>
-        //    /// Gets a list of all available encryption algorithms.
-        //    /// </summary>
-        //    public List<DropdownItemViewModel> EncryptionAlgorithms { get; private set; }
+        /// <summary>
+        /// Gets a list of all available encryption algorithms.
+        /// </summary>
+        public List<DropdownItemViewModel> EncryptionAlgorithms { get; private set; }
 
-        //    /// <summary>
-        //    /// Gets or sets the encryption algorithm selected by the user.
-        //    /// </summary>
-        //    [VueDataBinding(VueBindingMode.TwoWay)]
-        //    public string SelectedEncryptionAlgorithm
-        //    {
-        //        get
-        //        {
-        //            DropdownItemViewModel result = EncryptionAlgorithms.Find(item => item.Value == Model.SelectedEncryptionAlgorithm);
+        /// <summary>
+        /// Gets or sets the encryption algorithm selected by the user.
+        /// </summary>
+        public string SelectedEncryptionAlgorithm
+        {
+            get
+            {
+                DropdownItemViewModel result = EncryptionAlgorithms.Find(item => item.Value == Model.SelectedEncryptionAlgorithm);
 
-        //            // Search for the default algorithm, if no matching algorithm could be found.
-        //            if (result == null)
-        //                result = EncryptionAlgorithms.Find(item => item.Value == SettingsModel.GetDefaultEncryptionAlgorithmName());
-        //            return result.Value;
-        //        }
+                // Search for the default algorithm, if no matching algorithm could be found.
+                if (result == null)
+                    result = EncryptionAlgorithms.Find(item => item.Value == SettingsModel.GetDefaultEncryptionAlgorithmName());
+                return result.Value;
+            }
 
-        //        set { SetPropertyAndModified(Model.SelectedEncryptionAlgorithm, value, (string v) => Model.SelectedEncryptionAlgorithm = v); }
-        //    }
+            set { SetPropertyAndModified(Model.SelectedEncryptionAlgorithm, value, (string v) => Model.SelectedEncryptionAlgorithm = v); }
+        }
 
-        //    /// <summary>
-        //    /// Gets or sets a value indicating whether taking screenshots should be forbidden or allowed.
-        //    /// </summary>
-        //    [VueDataBinding(VueBindingMode.TwoWay)]
-        //    public bool PreventScreenshots
-        //    {
-        //        get { return Model.PreventScreenshots; }
-        //        set
-        //        {
-        //            if (SetPropertyAndModified(Model.PreventScreenshots, value, (bool v) => Model.PreventScreenshots = v))
-        //            {
-        //                if (_environmentService.Screenshots != null)
-        //                    _environmentService.Screenshots.PreventScreenshots = value;
-        //            }
-        //        }
-        //    }
+        /// <summary>
+        /// Gets or sets a value indicating whether taking screenshots should be forbidden or allowed.
+        /// </summary>
+        public bool PreventScreenshots
+        {
+            get { return Model.PreventScreenshots; }
+            set
+            {
+                if (SetPropertyAndModified(Model.PreventScreenshots, value, (bool v) => Model.PreventScreenshots = v))
+                {
+                    if (_environmentService.Screenshots != null)
+                        _environmentService.Screenshots.PreventScreenshots = value;
+                }
+            }
+        }
 
-        //    /// <summary>
-        //    /// Gets a value indicating whether the operating system is able to prevent screenshots.
-        //    /// </summary>
-        //    public bool CanPreventScreenshots
-        //    {
-        //        get { return _environmentService.Screenshots != null; }
-        //    }
+        /// <summary>
+        /// Gets a value indicating whether the operating system is able to prevent screenshots.
+        /// </summary>
+        public bool CanPreventScreenshots
+        {
+            get { return _environmentService.Screenshots != null; }
+        }
 
-        //    /// <summary>
-        //    /// Gets or sets the auto sync mode selected by the user.
-        //    /// </summary>
-        //    [VueDataBinding(VueBindingMode.TwoWay)]
-        //    public string SelectedAutoSyncMode
-        //    {
-        //        get { return Model.AutoSyncMode.ToString(); }
-        //        set { SetPropertyAndModified(Model.AutoSyncMode.ToString(), value, (string v) => Model.AutoSyncMode = (AutoSynchronizationMode)Enum.Parse(typeof(AutoSynchronizationMode), value)); }
-        //    }
+        /// <summary>
+        /// Gets or sets the auto sync mode selected by the user.
+        /// </summary>
+        public string SelectedAutoSyncMode
+        {
+            get { return Model.AutoSyncMode.ToString(); }
+            set { SetPropertyAndModified(Model.AutoSyncMode.ToString(), value, (string v) => Model.AutoSyncMode = (AutoSynchronizationMode)Enum.Parse(typeof(AutoSynchronizationMode), value)); }
+        }
 
         //    /// <inheritdoc/>
         //    public override void OnStoringUnsavedData()

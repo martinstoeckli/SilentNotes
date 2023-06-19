@@ -14,9 +14,8 @@ h1:focus { outline: none; }
 	color: var(--mud-palette-primary-darken);
 }
 
-.mud-container-left {
-	margin-left: 0;
-}
+.mud-container-left { margin-left: 0; }
+.mud-container-p { padding-bottom: 20px; }
 
 .toggled svg { fill: var(--mud-palette-tertiary); }
 

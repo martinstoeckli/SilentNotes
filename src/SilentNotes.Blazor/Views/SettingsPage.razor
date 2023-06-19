@@ -36,8 +36,8 @@
 <MudIcon Class="background-icon" Icon="@IconService[IconNames.Settings]" Style="@($"right:-128px; top:-154px;")" />
 
 @* body *@
-<MudContainer id="content" Class="mud-container-left" MaxWidth="MaxWidth.Medium">
-    <h1 class="h-colored">@LanguageService["gui_texture"]</h1>
+<MudContainer id="content" Class="mud-container-left mud-container-p" MaxWidth="MaxWidth.Small">
+    <h2 class="h-colored">@LanguageService["gui_texture"]</h2>
 
     <MudSelect @bind-Value="ViewModel.SelectedThemeMode"
         Variant="Variant.Outlined">
@@ -64,15 +64,68 @@
     </div>
 
 
-    <h1 class="h-colored">@LanguageService["gui"]</h1>
+    <MudDivider Class="my-4"/>
+    <h2 class="h-colored">@LanguageService["gui"]</h2>
 
-    <MudSlider @bind-Value="ViewModel.FontSizeStep"
-                Min="-3" Max="3" Step="1"
-                TickMarks="true">@LanguageService["gui_font_size"]</MudSlider>
+    <MudStack Row="true" AlignItems="AlignItems.Center">
+        <MudIcon Icon="@Icons.Material.Filled.FormatSize" Class="mr-2" Color="Color.Secondary" />
+        <MudSlider @bind-Value="ViewModel.FontSizeStep"
+            Min="-3" Max="3" Step="1" Color="Color.Tertiary">@LanguageService["gui_font_size"]</MudSlider>
+    </MudStack>
 
-    <MudSlider @bind-Value="ViewModel.NoteMaxHeightStep"
-                Min="-4" Max="4" Step="1"
-                TickMarks="true">@LanguageService["gui_note_max_size"]</MudSlider>
+    <MudStack Row="true" AlignItems="AlignItems.Center">
+        <MudIcon Icon="@Icons.Material.Filled.Height" Class="mr-2" Color="Color.Secondary" />
+        <MudSlider @bind-Value="ViewModel.NoteMaxHeightStep"
+                   Min="-4" Max="4" Step="1" Color="Color.Tertiary">@LanguageService["gui_note_max_size"]</MudSlider>
+    </MudStack>
+
+    <MudSelect @bind-Value="ViewModel.SelectedNoteInsertionMode"
+        Variant="Variant.Outlined" Label="@LanguageService["gui_note_insertion"]">
+        <MudSelectItem Value="@("AtTop")">@LanguageService["gui_note_insertion_top"]</MudSelectItem>
+        <MudSelectItem Value="@("AtBottom")">@LanguageService["gui_note_insertion_bottom"]</MudSelectItem>
+    </MudSelect>
+
+    <MudCheckBox @bind-Checked="@ViewModel.RememberLastTagFilter" Label="@LanguageService["gui_remember_last_tag_filter"]" />
+
+    <MudCheckBox @bind-Checked="@ViewModel.HideClosedSafeNotes" Label="@LanguageService["gui_hide_closed_safe_notes"]" />
+
+    @if (ViewModel.CanKeepScreenOn)
+    {
+        <MudStack Row="true" AlignItems="AlignItems.Center">
+            <MudIcon Icon="@Icons.Material.Outlined.Timer" Class="mr-2" Color="Color.Secondary" />
+            <MudSlider @bind-Value="ViewModel.KeepScreenOnDuration"
+                Min="1" Max="30" Step="1" Color="Color.Tertiary">@ViewModel.KeepScreenOnDurationTitle</MudSlider>
+        </MudStack>
+    }
+
+
+    <MudDivider Class="my-4" />
+    <h2 class="h-colored">@LanguageService["sync"]</h2>
+
+    <MudSelect @bind-Value="ViewModel.SelectedAutoSyncMode"
+        Variant="Variant.Outlined" Label="@LanguageService["sync_auto"]">
+        <MudSelectItem Value="@("Never")">@LanguageService["sync_auto_never"]</MudSelectItem>
+        <MudSelectItem Value="@("CostFreeInternetOnly")">@LanguageService["sync_auto_costfree"]</MudSelectItem>
+        <MudSelectItem Value="@("Always")">@LanguageService["sync_auto_always"]</MudSelectItem>
+    </MudSelect>
+
+
+    <MudDivider Class="my-4" />
+    <h2 class="h-colored">@LanguageService["security"]</h2>
+
+    <MudSelect @bind-Value="ViewModel.SelectedEncryptionAlgorithm"
+
+        Variant="Variant.Outlined" Label="@LanguageService["encryption_algorithm"]">
+        @foreach (var algorithm in ViewModel.EncryptionAlgorithms)
+        {
+            <MudSelectItem Value="@algorithm.Value">@algorithm.Description</MudSelectItem>
+        }
+    </MudSelect>
+
+    @if (ViewModel.CanPreventScreenshots)
+    {
+        <MudCheckBox @bind-Checked="@ViewModel.PreventScreenshots" Label="@LanguageService["security_prevent_screenshots"]" />
+    }
 </MudContainer>
 
 @code {

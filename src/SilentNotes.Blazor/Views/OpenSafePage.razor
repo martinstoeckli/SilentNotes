@@ -45,7 +45,7 @@
 <MudIcon Class="background-icon" Icon="@IconService[IconNames.SafeSquareOutline]" Style="@($"right:-110px; top:-160px;")" />
 
 @* body *@
-<MudContainer id="content" Class="mud-container-left" MaxWidth="MaxWidth.Medium">
+<MudContainer id="content" Class="mud-container-left mud-container-p" MaxWidth="MaxWidth.Medium">
     @if (ViewModel.SafeExists)
     {
         <h1 class="h-colored">@LanguageService["safe_open"]</h1>
