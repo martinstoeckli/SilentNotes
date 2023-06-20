@@ -52,10 +52,10 @@ namespace SilentNotes.Services
         ///// </summary>
         //string CssBackgroundImage { get; }
 
-        ///// <summary>
-        ///// Gets a list of all available themes.
-        ///// </summary>
-        //List<ThemeModel> Themes { get; }
+        /// <summary>
+        /// Gets a list of all available themes.
+        /// </summary>
+        List<ThemeModel> Themes { get; }
 
         ///// <summary>
         ///// Gets the active theme selected by the user, or the default theme.
@@ -63,12 +63,12 @@ namespace SilentNotes.Services
         ///// <returns>Active theme.</returns>
         //ThemeModel SelectedTheme { get; }
 
-        ///// <summary>
-        ///// Searches for the theme with a given <paramref name="themeId"/>. If no such theme can
-        ///// be found, the default theme is returned.
-        ///// </summary>
-        ///// <param name="themeId">Id of the theme to search for.</param>
-        ///// <returns>Found theme or default theme.</returns>
-        //ThemeModel FindThemeOrDefault(string themeId);
+        /// <summary>
+        /// Searches for the theme with a given <paramref name="themeId"/>. If no such theme can
+        /// be found, the default theme is returned.
+        /// </summary>
+        /// <param name="themeId">Id of the theme to search for.</param>
+        /// <returns>Found theme or default theme.</returns>
+        ThemeModel FindThemeOrDefault(string themeId);
     }
 }

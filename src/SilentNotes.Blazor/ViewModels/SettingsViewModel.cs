@@ -128,26 +128,26 @@ namespace SilentNotes.ViewModels
             get { return Language.LoadTextFmt("keep_screen_on_duration", KeepScreenOnDuration); }
         }
 
-        //    /// <summary>
-        //    /// Gets or sets the theme selected by the user.
-        //    /// </summary>
-        //    public string SelectedTheme
-        //    {
-        //        get { return Theme.FindThemeOrDefault(Model.SelectedTheme).Id; }
+        /// <summary>
+        /// Gets or sets the theme selected by the user.
+        /// </summary>
+        public string SelectedTheme
+        {
+            get { return _themeService.FindThemeOrDefault(Model.SelectedTheme).Id; }
 
-        //        set
-        //        {
-        //            if (SetPropertyAndModified(Model.SelectedTheme, value, (string v) => Model.SelectedTheme = v))
-        //            {
-        //                OnPropertyChanged(nameof(SelectedThemeImage));
-        //            }
-        //        }
-        //    }
+            set
+            {
+                if (SetPropertyAndModified(Model.SelectedTheme, value, (string v) => Model.SelectedTheme = v))
+                {
+                    OnPropertyChanged(nameof(SelectedThemeImage));
+                }
+            }
+        }
 
-        //    public string SelectedThemeImage
-        //    {
-        //        get { return Theme.FindThemeOrDefault(Model.SelectedTheme).Image; }
-        //    }
+        public string SelectedThemeImage
+        {
+            get { return _themeService.FindThemeOrDefault(Model.SelectedTheme).Image; }
+        }
 
         /// <summary>
         /// Gets or sets a value indicating whether the a solid color should be used instead of a
@@ -185,25 +185,25 @@ namespace SilentNotes.ViewModels
             }
         }
 
-        //    /// <summary>
-        //    /// Gets or sets a value indicating whether the note color should be the same for all notes
-        //    /// in dark mode.
-        //    /// </summary>
-        //    public bool UseColorForAllNotesInDarkMode
-        //    {
-        //        get { return Model.UseColorForAllNotesInDarkMode; }
-        //        set { SetPropertyAndModified(Model.UseColorForAllNotesInDarkMode, value, (bool v) => Model.UseColorForAllNotesInDarkMode = v); }
-        //    }
+        /// <summary>
+        /// Gets or sets a value indicating whether the note color should be the same for all notes
+        /// in dark mode.
+        /// </summary>
+        public bool UseColorForAllNotesInDarkMode
+        {
+            get { return Model.UseColorForAllNotesInDarkMode; }
+            set { SetPropertyAndModified(Model.UseColorForAllNotesInDarkMode, value, (bool v) => Model.UseColorForAllNotesInDarkMode = v); }
+        }
 
-        //    /// <summary>
-        //    /// Gets or sets the background color for new notes. It depends on <see cref="UseColorForAllNotesInDarkMode"/>
-        //    /// whether this value is respected.
-        //    /// </summary>
-        //    public string ColorForAllNotesInDarkModeHex
-        //    {
-        //        get { return Model.ColorForAllNotesInDarkModeHex; }
-        //        set { SetPropertyAndModified(Model.ColorForAllNotesInDarkModeHex, value, (string v) => Model.ColorForAllNotesInDarkModeHex = v); }
-        //    }
+        /// <summary>
+        /// Gets or sets the background color for new notes. It depends on <see cref="UseColorForAllNotesInDarkMode"/>
+        /// whether this value is respected.
+        /// </summary>
+        public string ColorForAllNotesInDarkModeHex
+        {
+            get { return Model.ColorForAllNotesInDarkModeHex; }
+            set { SetPropertyAndModified(Model.ColorForAllNotesInDarkModeHex, value, (string v) => Model.ColorForAllNotesInDarkModeHex = v); }
+        }
 
         /// <summary>
         /// Gets a list of available background colors.

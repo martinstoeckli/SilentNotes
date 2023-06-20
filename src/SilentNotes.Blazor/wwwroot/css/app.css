@@ -46,6 +46,7 @@ h1:focus { outline: none; }
 	border: 1px solid;
     border-color: var(--mud-palette-lines-default);
     border-radius: 5px;
+	overflow: hidden;
 }
 .color-swatch .note-light { color: var(--font-color-light-background); }
 .color-swatch .note-dark { color: var(--font-color-dark-background); }

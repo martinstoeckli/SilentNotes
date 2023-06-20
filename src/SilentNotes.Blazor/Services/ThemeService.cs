@@ -41,8 +41,8 @@ namespace SilentNotes.Services
                     //AppbarBackground = new MudColor("#323232"),
                 },
             };
-            //Themes = new List<ThemeModel>();
-            //FillThemes(Themes);
+            Themes = new List<ThemeModel>();
+            FillThemes(Themes);
         }
 
         /// <inheritdoc/>
@@ -76,21 +76,21 @@ namespace SilentNotes.Services
         /// <inheritdoc/>
         public Action RefreshGui { get; set; }
 
-        //private void FillThemes(List<ThemeModel> themes)
-        //{
-        //    themes.Add(new ThemeModel("cork", "cork.jpg"));
-        //    themes.Add(new ThemeModel("forest", "forest.jpg"));
-        //    themes.Add(new ThemeModel("stone", "stone.jpg"));
-        //    themes.Add(new ThemeModel("blackstone", "blackstone.jpg"));
-        //    themes.Add(new ThemeModel("smarties", "smarties.jpg"));
-        //    themes.Add(new ThemeModel("grass", "grass.jpg"));
-        //    themes.Add(new ThemeModel("paper", "paper.jpg"));
-        //    themes.Add(new ThemeModel("sky", "sky.jpg"));
-        //    themes.Add(new ThemeModel("water", "water.jpg"));
-        //    themes.Add(new ThemeModel("sand", "sand.jpg"));
-        //    themes.Add(new ThemeModel("stars", "stars.jpg"));
-        //    themes.Add(new ThemeModel("meadow", "meadow.jpg"));
-        //}
+        private void FillThemes(List<ThemeModel> themes)
+        {
+            themes.Add(new ThemeModel("cork", "cork.jpg"));
+            themes.Add(new ThemeModel("forest", "forest.jpg"));
+            themes.Add(new ThemeModel("stone", "stone.jpg"));
+            themes.Add(new ThemeModel("blackstone", "blackstone.jpg"));
+            themes.Add(new ThemeModel("smarties", "smarties.jpg"));
+            themes.Add(new ThemeModel("grass", "grass.jpg"));
+            themes.Add(new ThemeModel("paper", "paper.jpg"));
+            themes.Add(new ThemeModel("sky", "sky.jpg"));
+            themes.Add(new ThemeModel("water", "water.jpg"));
+            themes.Add(new ThemeModel("sand", "sand.jpg"));
+            themes.Add(new ThemeModel("stars", "stars.jpg"));
+            themes.Add(new ThemeModel("meadow", "meadow.jpg"));
+        }
 
         ///// <inheritdoc/>
         //public bool DarkMode
@@ -143,8 +143,8 @@ namespace SilentNotes.Services
         //    }
         //}
 
-        ///// <inheritdoc/>
-        //public List<ThemeModel> Themes { get; private set; }
+        /// <inheritdoc/>
+        public List<ThemeModel> Themes { get; private set; }
 
         ///// <inheritdoc/>
         //public ThemeModel SelectedTheme
@@ -152,11 +152,11 @@ namespace SilentNotes.Services
         //    get { return FindThemeOrDefault(_settingsService.LoadSettingsOrDefault().SelectedTheme); }
         //}
 
-        ///// <inheritdoc/>
-        //public ThemeModel FindThemeOrDefault(string themeId)
-        //{
-        //    ThemeModel result = Themes.Find(item => string.Equals(item.Id, themeId));
-        //    return result ?? (result = Themes[DefaultTheme]);
-        //}
+        /// <inheritdoc/>
+        public ThemeModel FindThemeOrDefault(string themeId)
+        {
+            ThemeModel result = Themes.Find(item => string.Equals(item.Id, themeId));
+            return result ?? (result = Themes[DefaultTheme]);
+        }
     }
 }
