@@ -14,6 +14,8 @@ h1:focus { outline: none; }
 	color: var(--mud-palette-primary-darken);
 }
 
+.mud-button { text-transform:none; }
+
 .mud-container-left { margin-left: 0; }
 .mud-container-p { padding-bottom: 20px; }
 
@@ -142,14 +144,6 @@ h1:focus { outline: none; }
 .recycle-handle {
 	top: auto;
 	bottom: var(--note-handle-my);
-}
-
-.color-swatch {
-/*	display: inline-block;*/
-	width: 42px;
-	height: 28px;
-	border-radius: 3px;
-	border: 1px solid var(--mud-palette-lines-default);
 }
 
 /* Text formatting */

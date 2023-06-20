@@ -32,8 +32,6 @@ namespace SilentNotes.Services
 
         public async Task<MessageBoxResult> ShowMessageAsync(string message, string title, MessageBoxButtons buttons, bool conservativeDefault)
         {
-            buttons = MessageBoxButtons.ContinueCancel;
-
             ButtonArrangement arrangement = new ButtonArrangement(buttons, _languageService);
 
             var parameters = new DialogParameters

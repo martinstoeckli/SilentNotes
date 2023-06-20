@@ -10,9 +10,27 @@
 @inject ISettingsService SettingsService
 @inject IEnvironmentService EnvironmentService
 @inject IThemeService ThemeService
+@inject IFeedbackService FeedbackService
 @inject IFilePickerService FilePickerService
+@inject ICloudStorageClientFactory CloudStorageClientFactory
 
 @implements IDisposable
+
+<style type="text/css">
+    .css-grid {
+        display: grid;
+        margin-top: 14px;
+        margin-bottom: 14px;
+        grid-template-columns: 40px auto;
+        align-items: center;
+        grid-row-gap: 20px;
+    }
+
+    .color-swatch {
+        height: 36px;
+        padding: 6px;
+    }
+</style>
 
 @* Main menu *@
 <MudAppBar Fixed="true" Class="" Dense="true">
@@ -39,12 +57,28 @@
 <MudContainer id="content" Class="mud-container-left mud-container-p" MaxWidth="MaxWidth.Small">
     <h2 class="h-colored">@LanguageService["gui_texture"]</h2>
 
-    <MudSelect @bind-Value="ViewModel.SelectedThemeMode"
-        Variant="Variant.Outlined">
-        <MudSelectItem Value="@("Auto")">@LanguageService["gui_theme_auto"]</MudSelectItem>
-        <MudSelectItem Value="@("Dark")">@LanguageService["gui_theme_dark"]</MudSelectItem>
-        <MudSelectItem Value="@("Light")">@LanguageService["gui_theme_light"]</MudSelectItem>
-    </MudSelect>
+    <div class="css-grid">
+        <div><MudIcon Icon="@Icons.Material.Filled.LightMode" Color="Color.Secondary" /></div>
+        <div>
+            <MudSelect @bind-Value="ViewModel.SelectedThemeMode">
+                <MudSelectItem Value="@("Auto")">@LanguageService["gui_theme_auto"]</MudSelectItem>
+                <MudSelectItem Value="@("Dark")">@LanguageService["gui_theme_dark"]</MudSelectItem>
+                <MudSelectItem Value="@("Light")">@LanguageService["gui_theme_light"]</MudSelectItem>
+            </MudSelect>
+        </div>
+
+        <div></div>
+        <div>
+            <MudStack Row="true" AlignItems="AlignItems.Baseline">
+                <MudColorPicker @bind-Text="ViewModel.DefaultNoteColorHex"
+                                Label="@LanguageService["gui_default_color"]" />
+
+                <MudPaper Class="color-swatch" Outlined="true" Style="@GetBackgroundColorStyle(ViewModel.DefaultNoteColorHex)">
+                    <MudText>Lorem</MudText>
+                </MudPaper>
+            </MudStack>
+        </div>
+    </div>
 
     <div class="form-row">
         <div class="form-group">
@@ -65,67 +99,110 @@
 
 
     <MudDivider Class="my-4"/>
-    <h2 class="h-colored">@LanguageService["gui"]</h2>
+    <h2 class="h-colored mb-2">@LanguageService["gui"]</h2>
 
-    <MudStack Row="true" AlignItems="AlignItems.Center">
-        <MudIcon Icon="@Icons.Material.Filled.FormatSize" Class="mr-2" Color="Color.Secondary" />
-        <MudSlider @bind-Value="ViewModel.FontSizeStep"
-            Min="-3" Max="3" Step="1" Color="Color.Tertiary">@LanguageService["gui_font_size"]</MudSlider>
-    </MudStack>
+    <div class="css-grid">
+        <div><MudIcon Icon="@Icons.Material.Filled.FormatSize" Color="Color.Secondary" /></div>
+        <div>
+            <MudSlider @bind-Value="ViewModel.FontSizeStep"
+                Min="-3" Max="3" Step="1" Color="Color.Tertiary">@LanguageService["gui_font_size"]</MudSlider>
+        </div>
 
-    <MudStack Row="true" AlignItems="AlignItems.Center">
-        <MudIcon Icon="@Icons.Material.Filled.Height" Class="mr-2" Color="Color.Secondary" />
-        <MudSlider @bind-Value="ViewModel.NoteMaxHeightStep"
-                   Min="-4" Max="4" Step="1" Color="Color.Tertiary">@LanguageService["gui_note_max_size"]</MudSlider>
-    </MudStack>
+        <div><MudIcon Icon="@Icons.Material.Filled.Expand" Color="Color.Secondary" /></div>
+        <div>
+            <MudSlider @bind-Value="ViewModel.NoteMaxHeightStep"
+                Min="-4" Max="4" Step="1" Color="Color.Tertiary">@LanguageService["gui_note_max_size"]</MudSlider>
+        </div>
 
-    <MudSelect @bind-Value="ViewModel.SelectedNoteInsertionMode"
-        Variant="Variant.Outlined" Label="@LanguageService["gui_note_insertion"]">
-        <MudSelectItem Value="@("AtTop")">@LanguageService["gui_note_insertion_top"]</MudSelectItem>
-        <MudSelectItem Value="@("AtBottom")">@LanguageService["gui_note_insertion_bottom"]</MudSelectItem>
-    </MudSelect>
+        <div><MudIcon Icon="@Icons.Material.Filled.SwapVert" Color="Color.Secondary" /></div>
+        <div>
+            <MudSelect @bind-Value="ViewModel.SelectedNoteInsertionMode"
+                Label="@LanguageService["gui_note_insertion"]">
+                <MudSelectItem Value="@("AtTop")">@LanguageService["gui_note_insertion_top"]</MudSelectItem>
+                <MudSelectItem Value="@("AtBottom")">@LanguageService["gui_note_insertion_bottom"]</MudSelectItem>
+            </MudSelect>
+        </div>
 
-    <MudCheckBox @bind-Checked="@ViewModel.RememberLastTagFilter" Label="@LanguageService["gui_remember_last_tag_filter"]" />
+        <div></div>
+        <div>
+            <MudSwitch @bind-Checked="@ViewModel.RememberLastTagFilter"
+                Label="@LanguageService["gui_remember_last_tag_filter"]" LabelPosition="LabelPosition.Start" Color="Color.Tertiary" UnCheckedColor="Color.Inherit"/>
+        </div>
 
-    <MudCheckBox @bind-Checked="@ViewModel.HideClosedSafeNotes" Label="@LanguageService["gui_hide_closed_safe_notes"]" />
+        <div></div>
+        <div>
+            <MudSwitch @bind-Checked="@ViewModel.HideClosedSafeNotes"
+                Label="@LanguageService["gui_hide_closed_safe_notes"]" LabelPosition="LabelPosition.Start" Color="Color.Tertiary" UnCheckedColor="Color.Inherit"/>
+        </div>
 
-    @if (ViewModel.CanKeepScreenOn)
-    {
-        <MudStack Row="true" AlignItems="AlignItems.Center">
-            <MudIcon Icon="@Icons.Material.Outlined.Timer" Class="mr-2" Color="Color.Secondary" />
-            <MudSlider @bind-Value="ViewModel.KeepScreenOnDuration"
-                Min="1" Max="30" Step="1" Color="Color.Tertiary">@ViewModel.KeepScreenOnDurationTitle</MudSlider>
-        </MudStack>
-    }
+        @if (ViewModel.CanKeepScreenOn)
+        {
+            <div><MudIcon Icon="@Icons.Material.Outlined.Timer" Color="Color.Secondary" /></div>
+            <div>
+                <MudSlider @bind-Value="ViewModel.KeepScreenOnDuration"
+                    Min="1" Max="30" Step="1" Color="Color.Tertiary">@ViewModel.KeepScreenOnDurationTitle</MudSlider>
+            </div>
+        }
+    </div>
 
 
     <MudDivider Class="my-4" />
     <h2 class="h-colored">@LanguageService["sync"]</h2>
 
-    <MudSelect @bind-Value="ViewModel.SelectedAutoSyncMode"
-        Variant="Variant.Outlined" Label="@LanguageService["sync_auto"]">
-        <MudSelectItem Value="@("Never")">@LanguageService["sync_auto_never"]</MudSelectItem>
-        <MudSelectItem Value="@("CostFreeInternetOnly")">@LanguageService["sync_auto_costfree"]</MudSelectItem>
-        <MudSelectItem Value="@("Always")">@LanguageService["sync_auto_always"]</MudSelectItem>
-    </MudSelect>
+    <div class="css-grid">
+        <div><MudIcon Icon="@Icons.Material.Filled.Sync" Color="Color.Secondary" /></div>
+        <div>
+            <MudSelect @bind-Value="ViewModel.SelectedAutoSyncMode"
+                Label="@LanguageService["sync_auto"]">
+                <MudSelectItem Value="@("Never")">@LanguageService["sync_auto_never"]</MudSelectItem>
+                <MudSelectItem Value="@("CostFreeInternetOnly")">@LanguageService["sync_auto_costfree"]</MudSelectItem>
+                <MudSelectItem Value="@("Always")">@LanguageService["sync_auto_always"]</MudSelectItem>
+            </MudSelect>
+        </div>
+
+        <div></div>
+        <div>
+            <MudPaper Class="pa-4">
+                <MudText Typo="Typo.caption">@LanguageService["cloud_service"]</MudText>
+                <MudText>@ViewModel.AccountSummary</MudText>
+
+                <MudStack Row="true" Justify="Justify.FlexEnd" Spacing="1" Class="mt-2">
+                    <MudButton OnClick="@(() => ViewModel.ChangeCloudSettingsCommand.Execute(null))" Color="Color.Primary" Variant="Variant.Filled" title="@LanguageService["cloud_change_settings_desc"]">
+                        @LanguageService["cloud_change_settings"]
+                    </MudButton>
+                    <MudButton OnClick="@(() => ViewModel.ClearCloudSettingsCommand.Execute(null))"
+                        Color="Color.Error" Variant="Variant.Filled" Disabled="ViewModel.ClearCloudSettingsDisabled" title="@LanguageService["cloud_clear_settings_desc"]">
+                        @LanguageService["cloud_clear_settings"]
+                    </MudButton>
+                </MudStack>
+            </MudPaper>
+        </div>
+    </div>
 
 
     <MudDivider Class="my-4" />
     <h2 class="h-colored">@LanguageService["security"]</h2>
 
-    <MudSelect @bind-Value="ViewModel.SelectedEncryptionAlgorithm"
+    <div class="css-grid">
+        <div><MudIcon Icon="@Icons.Material.Outlined.Lock" Color="Color.Secondary" /></div>
+        <div>
+            <MudSelect @bind-Value="ViewModel.SelectedEncryptionAlgorithm"
+                Label="@LanguageService["encryption_algorithm"]">
+                @foreach (var algorithm in ViewModel.EncryptionAlgorithms)
+                {
+                    <MudSelectItem Value="@algorithm.Value">@algorithm.Description</MudSelectItem>
+                }
+            </MudSelect>
+        </div>
 
-        Variant="Variant.Outlined" Label="@LanguageService["encryption_algorithm"]">
-        @foreach (var algorithm in ViewModel.EncryptionAlgorithms)
+        @if (ViewModel.CanPreventScreenshots)
         {
-            <MudSelectItem Value="@algorithm.Value">@algorithm.Description</MudSelectItem>
+            <div></div>
+            <div>
+                <MudCheckBox @bind-Checked="@ViewModel.PreventScreenshots" Label="@LanguageService["security_prevent_screenshots"]" />
+            </div>
         }
-    </MudSelect>
-
-    @if (ViewModel.CanPreventScreenshots)
-    {
-        <MudCheckBox @bind-Checked="@ViewModel.PreventScreenshots" Label="@LanguageService["security_prevent_screenshots"]" />
-    }
+    </div>
 </MudContainer>
 
 @code {
@@ -133,8 +210,7 @@
 
     protected override void OnInitialized()
     {
-        SettingsModel settings = SettingsService.LoadSettingsOrDefault();
-        ViewModel = new SettingsViewModel(settings, LanguageService, EnvironmentService, ThemeService, FilePickerService);
+        ViewModel = new SettingsViewModel(SettingsService, LanguageService, EnvironmentService, ThemeService, FeedbackService, CloudStorageClientFactory, FilePickerService);
         ViewModel.PropertyChanged += PropertyChangedHandler;
     }
 
@@ -148,6 +224,11 @@
     private string ColorSwatchStyle
     {
         get { return string.Format("background-color:{0}", ViewModel.ColorForSolidThemeHex); }
+    }
+
+    private string GetBackgroundColorStyle(string backgroundColor)
+    {
+        return string.Format("background-color:{0}", backgroundColor);
     }
 
     private void PropertyChangedHandler(object sender, PropertyChangedEventArgs e)

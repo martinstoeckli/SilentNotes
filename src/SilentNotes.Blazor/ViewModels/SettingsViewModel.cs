@@ -1,19 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.Input;
-using Microsoft.Maui.Controls;
-using Microsoft.Maui.Platform;
+﻿using System.Net;
 using System.Windows.Input;
-using MudBlazor;
-using SilentNotes.Models;
-using VanillaCloudStorageClient;
-//using Windows.Globalization;
-using SilentNotes.Services;
-using MudBlazor.Interfaces;
+using CommunityToolkit.Mvvm.Input;
+using Microsoft.AspNetCore.Components;
 using SilentNotes.Crypto.SymmetricEncryption;
+using SilentNotes.Models;
+using SilentNotes.Services;
+using VanillaCloudStorageClient;
 
 namespace SilentNotes.ViewModels
 {
@@ -22,28 +14,33 @@ namespace SilentNotes.ViewModels
         public const double ReferenceFontSize = 15.0; // Used as reference to calculate the font scale
         public const int ReferenceNoteMaxSize = 160;
         public const int ReferenceNoteMinSize = 72;
-        //private readonly ISettingsService _settingsService;
+        private readonly ISettingsService _settingsService;
         private readonly IEnvironmentService _environmentService;
         private readonly IThemeService _themeService;
         //private readonly IStoryBoardService _storyBoardService;
-        //private readonly IFeedbackService _feedbackService;
+        private readonly IFeedbackService _feedbackService;
         private readonly IFilePickerService _filePickerService;
-        //private readonly ICloudStorageClientFactory _cloudStorageClientFactory;
+        private readonly ICloudStorageClientFactory _cloudStorageClientFactory;
         private readonly SliderStepConverter _fontSizeConverter;
         private readonly SliderStepConverter _noteMaxHeightConverter;
 
         public SettingsViewModel(
-            SettingsModel model,
+            ISettingsService settingsService,
             ILanguageService languageService,
             IEnvironmentService environmentService,
             IThemeService themeService,
+            IFeedbackService feedbackService,
+            ICloudStorageClientFactory cloudStorageClientFactory,
             IFilePickerService filePickerService)
         {
-            Model = model;
             Language = languageService;
+            _settingsService = settingsService;
             _environmentService = environmentService;
             _themeService = themeService;
+            _feedbackService = feedbackService;
+            _cloudStorageClientFactory = cloudStorageClientFactory;
             _filePickerService = filePickerService;
+            Model = _settingsService.LoadSettingsOrDefault();
 
             _fontSizeConverter = new SliderStepConverter(ReferenceFontSize, 1.0);
             _noteMaxHeightConverter = new SliderStepConverter(ReferenceNoteMaxSize, 20.0);
@@ -52,50 +49,12 @@ namespace SilentNotes.ViewModels
             FillAlgorithmList(EncryptionAlgorithms);
 
             // Initialize commands
-            //        GoBackCommand = new RelayCommand(GoBack);
-            //        ChangeCloudSettingsCommand = new RelayCommand(ChangeCloudSettings);
-            //        ClearCloudSettingsCommand = new RelayCommand(ClearCloudSettings);
+            ChangeCloudSettingsCommand = new RelayCommand(ChangeCloudSettings);
+            ClearCloudSettingsCommand = new RelayCommand(ClearCloudSettings);
             TestNewLocalizationCommand = new RelayCommand(TestNewLocalization);
         }
 
         private ILanguageService Language { get; }
-
-        //    /// <summary>
-        //    /// Initializes a new instance of the <see cref="SettingsViewModel"/> class.
-        //    /// </summary>
-        //    public SettingsViewModel(
-        //        INavigationService navigationService,
-        //        ILanguageService languageService,
-        //        ISvgIconService svgIconService,
-        //        IThemeService themeService,
-        //        IBaseUrlService webviewBaseUrl,
-        //        ISettingsService settingsService,
-        //        IEnvironmentService environmentService,
-        //        IStoryBoardService storyBoardService,
-        //        IFeedbackService feedbackService,
-        //        ICloudStorageClientFactory cloudStorageClientFactory,
-        //        IFilePickerService filePickerService)
-        //        : base(navigationService, languageService, svgIconService, themeService, webviewBaseUrl)
-        //    {
-        //        _settingsService = settingsService;
-        //        _environmentService = environmentService;
-        //        _storyBoardService = storyBoardService;
-        //        _feedbackService = feedbackService;
-        //        _cloudStorageClientFactory = cloudStorageClientFactory;
-        //        _filePickerService = filePickerService;
-        //        _fontSizeConverter = new SliderStepConverter(ReferenceFontSize, 1.0);
-        //        _noteMaxHeightConverter = new SliderStepConverter(ReferenceNoteMaxSize, 20.0);
-        //        Model = _settingsService.LoadSettingsOrDefault();
-
-        //        EncryptionAlgorithms = new List<DropdownItemViewModel>();
-        //        FillAlgorithmList(EncryptionAlgorithms);
-
-        //        // Initialize commands
-        //        GoBackCommand = new RelayCommand(GoBack);
-        //        ChangeCloudSettingsCommand = new RelayCommand(ChangeCloudSettings);
-        //        ClearCloudSettingsCommand = new RelayCommand(ClearCloudSettings);
-        //        TestNewLocalizationCommand = new RelayCommand(TestNewLocalization);
-        //    }
 
         /// <summary>
         /// Initializes the list of available cloud storage services.
@@ -111,7 +70,6 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets or sets the <see cref="FontScale"/> expressed for the -3...+3 slider.
         /// </summary>
-        //[VueDataBinding(VueBindingMode.TwoWay)]
         public int FontSizeStep
         {
             get { return _fontSizeConverter.ModelFactorToSliderStep(Model.FontScale); }
@@ -128,7 +86,6 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets or sets the <see cref="NoteMaxHeight"/> expressed for the -4...+4 slider.
         /// </summary>
-        //[VueDataBinding(VueBindingMode.TwoWay)]
         public int NoteMaxHeightStep
         {
             get { return _noteMaxHeightConverter.ModelFactorToSliderStep(Model.NoteMaxHeightScale); }
@@ -171,7 +128,6 @@ namespace SilentNotes.ViewModels
         //    /// <summary>
         //    /// Gets or sets the theme selected by the user.
         //    /// </summary>
-        //    [VueDataBinding(VueBindingMode.TwoWay)]
         //    public string SelectedTheme
         //    {
         //        get { return Theme.FindThemeOrDefault(Model.SelectedTheme).Id; }
@@ -185,7 +141,6 @@ namespace SilentNotes.ViewModels
         //        }
         //    }
 
-        //    [VueDataBinding(VueBindingMode.OneWayToView)]
         //    public string SelectedThemeImage
         //    {
         //        get { return Theme.FindThemeOrDefault(Model.SelectedTheme).Image; }
@@ -195,7 +150,6 @@ namespace SilentNotes.ViewModels
         /// Gets or sets a value indicating whether the a solid color should be used instead of a
         /// background image.
         /// </summary>
-        //[VueDataBinding(VueBindingMode.TwoWay)]
         public bool UseSolidColorTheme
         {
             get { return Model.UseSolidColorTheme; }
@@ -206,7 +160,6 @@ namespace SilentNotes.ViewModels
         /// Gets or sets the solid background color for the theme background. It depends on
         /// <see cref="UseSolidColorTheme"/> whether this value is respected.
         /// </summary>
-        //[VueDataBinding(VueBindingMode.TwoWay)]
         public string ColorForSolidThemeHex
         {
             get { return Model.ColorForSolidTheme; }
@@ -216,7 +169,6 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets or sets the theme mode selected by the user.
         /// </summary>
-        //[VueDataBinding(VueBindingMode.TwoWay)]
         public string SelectedThemeMode
         {
             get { return Model.ThemeMode.ToString(); }
@@ -234,7 +186,6 @@ namespace SilentNotes.ViewModels
         //    /// Gets or sets a value indicating whether the note color should be the same for all notes
         //    /// in dark mode.
         //    /// </summary>
-        //    [VueDataBinding(VueBindingMode.TwoWay)]
         //    public bool UseColorForAllNotesInDarkMode
         //    {
         //        get { return Model.UseColorForAllNotesInDarkMode; }
@@ -245,30 +196,28 @@ namespace SilentNotes.ViewModels
         //    /// Gets or sets the background color for new notes. It depends on <see cref="UseColorForAllNotesInDarkMode"/>
         //    /// whether this value is respected.
         //    /// </summary>
-        //    [VueDataBinding(VueBindingMode.TwoWay)]
         //    public string ColorForAllNotesInDarkModeHex
         //    {
         //        get { return Model.ColorForAllNotesInDarkModeHex; }
         //        set { SetPropertyAndModified(Model.ColorForAllNotesInDarkModeHex, value, (string v) => Model.ColorForAllNotesInDarkModeHex = v); }
         //    }
 
-        //    /// <summary>
-        //    /// Gets a list of available background colors.
-        //    /// </summary>
-        //    public List<string> NoteColorsHex
-        //    {
-        //        get { return Model.NoteColorsHex; }
-        //    }
+        /// <summary>
+        /// Gets a list of available background colors.
+        /// </summary>
+        public List<string> NoteColorsHex
+        {
+            get { return Model.NoteColorsHex; }
+        }
 
-        //    /// <summary>
-        //    /// Gets or sets the default background color as hex string, e.g. #ff0000
-        //    /// </summary>
-        //    [VueDataBinding(VueBindingMode.TwoWay)]
-        //    public string DefaultNoteColorHex
-        //    {
-        //        get { return Model.DefaultNoteColorHex; }
-        //        set { SetPropertyAndModified(Model.DefaultNoteColorHex, value, (string v) => Model.DefaultNoteColorHex = v); }
-        //    }
+        /// <summary>
+        /// Gets or sets the default background color as hex string, e.g. #ff0000
+        /// </summary>
+        public string DefaultNoteColorHex
+        {
+            get { return Model.DefaultNoteColorHex; }
+            set { SetPropertyAndModified(Model.DefaultNoteColorHex, value, (string v) => Model.DefaultNoteColorHex = v); }
+        }
 
         /// <summary>
         /// Gets or sets the note insertion mode selected by the user.
@@ -387,112 +336,93 @@ namespace SilentNotes.ViewModels
         //        }
         //    }
 
-        //    /// <summary>
-        //    /// Gets the command to go back to the note overview.
-        //    /// </summary>
-        //    [VueDataBinding(VueBindingMode.Command)]
-        //    public ICommand GoBackCommand { get; private set; }
+        /// <summary>
+        /// Gets the command to reset the cloud settings.
+        /// </summary>
+        public ICommand ClearCloudSettingsCommand { get; private set; }
 
-        //    private void GoBack()
-        //    {
-        //        _navigationService.Navigate(new Navigation(ControllerNames.NoteRepository));
-        //    }
+        private async void ClearCloudSettings()
+        {
+            string title = Language.LoadText("cloud_clear_settings_desc");
+            string explanation = Language.LoadText("cloud_clear_settings_expl");
+            MessageBoxResult dialogResult = await _feedbackService.ShowMessageAsync(explanation, title, MessageBoxButtons.YesNoCancel, false);
 
-        //    /// <inheritdoc/>
-        //    public override void OnGoBackPressed(out bool handled)
-        //    {
-        //        handled = true;
-        //        GoBack();
-        //    }
+            // Remove repository from online storage
+            if (dialogResult == MessageBoxResult.No)
+            {
+                await TryDeleteCloudNoteRepository();
+            }
 
-        //    /// <summary>
-        //    /// Gets the command to reset the cloud settings.
-        //    /// </summary>
-        //    [VueDataBinding(VueBindingMode.Command)]
-        //    public ICommand ClearCloudSettingsCommand { get; private set; }
+            // Remove account from settings
+            if ((dialogResult == MessageBoxResult.Yes) || (dialogResult == MessageBoxResult.No))
+            {
+                SetPropertyAndModified(Model.Credentials, null, (v) => Model.Credentials = v, nameof(AccountSummary));
+                OnPropertyChanged(nameof(ClearCloudSettingsDisabled));
+                OnPropertyChanged("page");
+            }
+        }
 
-        //    private async void ClearCloudSettings()
-        //    {
-        //        string title = Language.LoadText("cloud_clear_settings_desc");
-        //        string explanation = Language.LoadText("cloud_clear_settings_expl");
-        //        MessageBoxResult dialogResult = await _feedbackService.ShowMessageAsync(explanation, title, MessageBoxButtons.YesNoCancel, false);
+        public bool ClearCloudSettingsDisabled
+        {
+            get { return Model.Credentials == null; }
+        }
 
-        //        // Remove repository from online storage
-        //        if (dialogResult == MessageBoxResult.No)
-        //        {
-        //            await TryDeleteCloudNoteRepository();
-        //        }
+        private async Task<bool> TryDeleteCloudNoteRepository()
+        {
+            var credentials = Model.Credentials;
+            ICloudStorageClient cloudStorageClient = _cloudStorageClientFactory.GetByKey(credentials.CloudStorageId);
+            try
+            {
+                await cloudStorageClient.DeleteFileAsync(Config.RepositoryFileName, credentials);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
 
-        //        // Remove account from settings
-        //        if ((dialogResult == MessageBoxResult.Yes) || (dialogResult == MessageBoxResult.No))
-        //        {
-        //            SetPropertyAndModified(Model.Credentials, null, (v) => Model.Credentials = v, nameof(AccountSummary));
-        //            OnPropertyChanged(nameof(ClearCloudSettingsDisabled));
-        //        }
-        //    }
+        /// <summary>
+        /// Gets the command to replace the cloud settings with new ones.
+        /// </summary>
+        public ICommand ChangeCloudSettingsCommand { get; private set; }
 
-        //    [VueDataBinding(VueBindingMode.OneWayToView)]
-        //    public bool ClearCloudSettingsDisabled
-        //    {
-        //        get { return Model.Credentials == null; }
-        //    }
+        private async void ChangeCloudSettings()
+        {
+            // todo: stom
+            await Task.CompletedTask;
+            //try
+            //{
+            //    _storyBoardService.ActiveStory = new SynchronizationStoryBoard(StoryBoardMode.Gui);
+            //    await _storyBoardService.ActiveStory.ContinueWith(SynchronizationStoryStepId.ShowCloudStorageChoice);
+            //}
+            //catch (Exception)
+            //{
+            //    _storyBoardService.ActiveStory = null;
+            //    throw;
+            //}
+        }
 
-        //    private async Task<bool> TryDeleteCloudNoteRepository()
-        //    {
-        //        var credentials = Model.Credentials;
-        //        ICloudStorageClient cloudStorageClient = _cloudStorageClientFactory.GetByKey(credentials.CloudStorageId);
-        //        try
-        //        {
-        //            await cloudStorageClient.DeleteFileAsync(Config.RepositoryFileName, credentials);
-        //            return true;
-        //        }
-        //        catch (Exception)
-        //        {
-        //            return false;
-        //        }
-        //    }
-
-        //    /// <summary>
-        //    /// Gets the command to replace the cloud settings with new ones.
-        //    /// </summary>
-        //    [VueDataBinding(VueBindingMode.Command)]
-        //    public ICommand ChangeCloudSettingsCommand { get; private set; }
-
-        //    private async void ChangeCloudSettings()
-        //    {
-        //        try
-        //        {
-        //            _storyBoardService.ActiveStory = new SynchronizationStoryBoard(StoryBoardMode.Gui);
-        //            await _storyBoardService.ActiveStory.ContinueWith(SynchronizationStoryStepId.ShowCloudStorageChoice);
-        //        }
-        //        catch (Exception)
-        //        {
-        //            _storyBoardService.ActiveStory = null;
-        //            throw;
-        //        }
-        //    }
-
-        //    /// <summary>
-        //    /// Gets a summary of the cloud storage account.
-        //    /// </summary>
-        //    [VueDataBinding(VueBindingMode.OneWayToView)]
-        //    public string AccountSummary
-        //    {
-        //        get
-        //        {
-        //            if (Model.Credentials == null)
-        //            {
-        //                return Language["cloud_service_undefined"];
-        //            }
-        //            else
-        //            {
-        //                StringBuilder sb = new StringBuilder();
-        //                sb.AppendLine(Model.Credentials.CloudStorageId);
-        //                sb.AppendLine(Model.Credentials.Url);
-        //                return sb.ToString();
-        //            }
-        //        }
-        //    }
+        /// <summary>
+        /// Gets a summary of the cloud storage account.
+        /// </summary>
+        public MarkupString AccountSummary
+        {
+            get
+            {
+                if (Model.Credentials == null)
+                {
+                    return (MarkupString)Language["cloud_service_undefined"];
+                }
+                else
+                {
+                    List<string> lines = new List<string>();
+                    lines.Add(Model.Credentials.CloudStorageId);
+                    lines.Add(WebUtility.HtmlEncode(Model.Credentials.Url));
+                    return (MarkupString)string.Join("<br>", lines);
+                }
+            }
+        }
 
         /// <summary>
         /// Gets the command to reset the cloud settings.
