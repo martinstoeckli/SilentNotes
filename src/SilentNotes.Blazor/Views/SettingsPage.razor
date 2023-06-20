@@ -25,11 +25,6 @@
         align-items: center;
         grid-row-gap: 20px;
     }
-
-    .color-swatch {
-        height: 36px;
-        padding: 6px;
-    }
 </style>
 
 @* Main menu *@
@@ -70,36 +65,38 @@
         <div></div>
         <div>
             <MudStack Row="true" AlignItems="AlignItems.Baseline">
-                <MudColorPicker @bind-Text="ViewModel.DefaultNoteColorHex"
-                                Label="@LanguageService["gui_default_color"]" />
+                <MudSwitch @bind-Checked="@ViewModel.UseSolidColorTheme" Color="Color.Tertiary" UnCheckedColor="Color.Tertiary" />
 
-                <MudPaper Class="color-swatch" Outlined="true" Style="@GetBackgroundColorStyle(ViewModel.DefaultNoteColorHex)">
-                    <MudText>Lorem</MudText>
-                </MudPaper>
+                <MudColorPicker @bind-Text="@ViewModel.ColorForSolidThemeHex"
+                    DisableToolbar="true" DisableAlpha="true"
+                    Label="@LanguageService["gui_theme_solid_color"]"
+                    ColorPickerMode="ColorPickerMode.HEX"
+                    AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight" />
+
+                <div class="color-swatch inline-flex" style="@GetBackgroundColorStyle(ViewModel.ColorForSolidThemeHex)">
+                    <span class="@ViewModel.GetDarkClass(ViewModel.ColorForSolidThemeHex)">Lorem ipsum</span>
+                </div>
+            </MudStack>
+        </div>
+
+        <div></div>
+        <div>
+            <MudStack Row="true" AlignItems="AlignItems.Baseline">
+                <MudColorPicker @bind-Text="ViewModel.DefaultNoteColorHex"
+                    DisableToolbar="true" DisableAlpha="true"
+                    ColorPickerView="ColorPickerView.Palette"
+                    Label="@LanguageService["gui_default_color"]"
+                    Palette="@ViewModel.NoteColorsHex.Select(color => new MudColor(color))"/>
+
+                <div class="color-swatch inline-flex" style="@GetBackgroundColorStyle(ViewModel.DefaultNoteColorHex)">
+                    <span class="@ViewModel.GetDarkClass(ViewModel.DefaultNoteColorHex)">Lorem ipsum</span>
+                </div>
             </MudStack>
         </div>
     </div>
 
-    <div class="form-row">
-        <div class="form-group">
-            <MudCheckBox @bind-Checked="@ViewModel.UseSolidColorTheme" id="UseSolidColorTheme" />
-            <label for="UseSolidColorTheme" class="mr-2">@LanguageService["gui_theme_solid_color"]</label>
-        </div>
 
-        <div class="form-group">
-            <MudElement Class="color-swatch ml-2 mr-0 align-self-end" Style="@ColorSwatchStyle"/>
-            <MudColorPicker @bind-Text="@ViewModel.ColorForSolidThemeHex"
-                Class="ml-0 mr-4 pa-0"
-                Style="width:1px"
-                DisableToolbar="true" DisableAlpha="true"
-                ColorPickerView="ColorPickerView.Grid" ColorPickerMode="ColorPickerMode.HEX"
-                AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight" />
-        </div>
-    </div>
-
-
-    <MudDivider Class="my-4"/>
-    <h2 class="h-colored mb-2">@LanguageService["gui"]</h2>
+    <h2 class="h-colored mt-10">@LanguageService["gui"]</h2>
 
     <div class="css-grid">
         <div><MudIcon Icon="@Icons.Material.Filled.FormatSize" Color="Color.Secondary" /></div>
@@ -126,13 +123,13 @@
         <div></div>
         <div>
             <MudSwitch @bind-Checked="@ViewModel.RememberLastTagFilter"
-                Label="@LanguageService["gui_remember_last_tag_filter"]" LabelPosition="LabelPosition.Start" Color="Color.Tertiary" UnCheckedColor="Color.Inherit"/>
+                Label="@LanguageService["gui_remember_last_tag_filter"]" Color="Color.Tertiary" UnCheckedColor="Color.Tertiary" />
         </div>
 
         <div></div>
         <div>
             <MudSwitch @bind-Checked="@ViewModel.HideClosedSafeNotes"
-                Label="@LanguageService["gui_hide_closed_safe_notes"]" LabelPosition="LabelPosition.Start" Color="Color.Tertiary" UnCheckedColor="Color.Inherit"/>
+                Label="@LanguageService["gui_hide_closed_safe_notes"]" Color="Color.Tertiary" UnCheckedColor="Color.Tertiary"/>
         </div>
 
         @if (ViewModel.CanKeepScreenOn)
@@ -146,8 +143,7 @@
     </div>
 
 
-    <MudDivider Class="my-4" />
-    <h2 class="h-colored">@LanguageService["sync"]</h2>
+    <h2 class="h-colored mt-10">@LanguageService["sync"]</h2>
 
     <div class="css-grid">
         <div><MudIcon Icon="@Icons.Material.Filled.Sync" Color="Color.Secondary" /></div>
@@ -180,8 +176,7 @@
     </div>
 
 
-    <MudDivider Class="my-4" />
-    <h2 class="h-colored">@LanguageService["security"]</h2>
+    <h2 class="h-colored mt-10">@LanguageService["security"]</h2>
 
     <div class="css-grid">
         <div><MudIcon Icon="@Icons.Material.Outlined.Lock" Color="Color.Secondary" /></div>
@@ -220,11 +215,6 @@
     }
 
     private SettingsViewModel ViewModel { get; set; }
-
-    private string ColorSwatchStyle
-    {
-        get { return string.Format("background-color:{0}", ViewModel.ColorForSolidThemeHex); }
-    }
 
     private string GetBackgroundColorStyle(string backgroundColor)
     {

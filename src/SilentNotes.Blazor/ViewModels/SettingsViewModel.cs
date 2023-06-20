@@ -5,7 +5,10 @@ using Microsoft.AspNetCore.Components;
 using SilentNotes.Crypto.SymmetricEncryption;
 using SilentNotes.Models;
 using SilentNotes.Services;
+using SilentNotes.Workers;
 using VanillaCloudStorageClient;
+
+using Color = System.Drawing.Color;
 
 namespace SilentNotes.ViewModels
 {
@@ -255,20 +258,20 @@ namespace SilentNotes.ViewModels
             set { SetPropertyAndModified(Model.HideClosedSafeNotes, value, (bool v) => Model.HideClosedSafeNotes = v); }
         }
 
-        //    /// <summary>
-        //    /// Gets the dark class for a given background color, depending of whether the background
-        //    /// color is a light or a dark color.
-        //    /// </summary>
-        //    /// <param name="backgroundColorHex">Background color of the note.</param>
-        //    /// <returns>Html class "dark" if the background color is dark, otherwise an empty string.</returns>
-        //    public string GetDarkClass(string backgroundColorHex)
-        //    {
-        //        Color backgroundColor = ColorExtensions.HexToColor(backgroundColorHex);
-        //        if (backgroundColor.IsDark())
-        //            return "dark";
-        //        else
-        //            return string.Empty;
-        //    }
+        /// <summary>
+        /// Gets a class attribute for a given background color, "note-light" for bright background
+        /// colors, "note-dark" for dark background colors.
+        /// </summary>
+        /// <param name="backgroundColorHex">Background color of the note.</param>
+        /// <returns>Html class "note-dark" if the background color is dark, otherwise "note-light".</returns>
+        public string GetDarkClass(string backgroundColorHex)
+        {
+            Color backgroundColor = ColorExtensions.HexToColor(backgroundColorHex);
+            if (backgroundColor.IsDark())
+                return "note-dark";
+            else
+                return "note-light";
+        }
 
         /// <summary>
         /// Gets a list of all available encryption algorithms.

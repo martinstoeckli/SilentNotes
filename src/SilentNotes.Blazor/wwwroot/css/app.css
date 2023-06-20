@@ -14,28 +14,13 @@ h1:focus { outline: none; }
 	color: var(--mud-palette-primary-darken);
 }
 
-.mud-button { text-transform:none; }
+.mud-button { text-transform: none; }
+.mud-switch { margin-right: 0; }
 
 .mud-container-left { margin-left: 0; }
 .mud-container-p { padding-bottom: 20px; }
 
 .toggled svg { fill: var(--mud-palette-tertiary); }
-
-.form-row {
-	display: flex;
-	align-items: baseline;
-	justify-content: space-between;
-	margin: 0;
-	padding: 0;
-}
-.form-group {
-	display: flex;
-	align-items: baseline;
-	margin: 0;
-	padding: 0;
-}
-.form-control {
-}
 
 .background-icon {
 	position: fixed;
@@ -53,6 +38,17 @@ h1:focus { outline: none; }
 	right: 2em;
 	bottom: 2em;
 }
+
+.color-swatch {
+    height: 36px;
+    padding: 6px;
+    font-size: 0.9em;
+	border: 1px solid;
+    border-color: var(--mud-palette-lines-default);
+    border-radius: 5px;
+}
+.color-swatch .note-light { color: var(--font-color-light-background); }
+.color-swatch .note-dark { color: var(--font-color-dark-background); }
 
 .filter-input, .filter-input:hover, .filter-input:before, .filter-input:after, .filter-input:focus, .filter-input:focus-within {
 	border-bottom-style: none !important;
