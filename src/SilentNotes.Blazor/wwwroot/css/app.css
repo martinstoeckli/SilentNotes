@@ -39,18 +39,6 @@ h1:focus { outline: none; }
 	bottom: 2em;
 }
 
-.color-swatch {
-    height: 36px;
-    padding: 6px;
-    font-size: 0.9em;
-	border: 1px solid;
-    border-color: var(--mud-palette-lines-default);
-    border-radius: 5px;
-	overflow: hidden;
-}
-.color-swatch .note-light { color: var(--font-color-light-background); }
-.color-swatch .note-dark { color: var(--font-color-dark-background); }
-
 .filter-input, .filter-input:hover, .filter-input:before, .filter-input:after, .filter-input:focus, .filter-input:focus-within {
 	border-bottom-style: none !important;
 }

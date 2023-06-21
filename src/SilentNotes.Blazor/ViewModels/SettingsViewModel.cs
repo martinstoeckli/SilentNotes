@@ -129,6 +129,11 @@ namespace SilentNotes.ViewModels
         }
 
         /// <summary>
+        /// Gets or sets the index of the theme selected by the user.
+        /// </summary>
+        public int SelectedThemeIndex { get; set; }
+
+        /// <summary>
         /// Gets or sets the theme selected by the user.
         /// </summary>
         public string SelectedTheme

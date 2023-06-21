@@ -89,7 +89,6 @@ namespace SilentNotes.Services
             themes.Add(new ThemeModel("water", "water.jpg"));
             themes.Add(new ThemeModel("sand", "sand.jpg"));
             themes.Add(new ThemeModel("stars", "stars.jpg"));
-            themes.Add(new ThemeModel("meadow", "meadow.jpg"));
         }
 
         ///// <inheritdoc/>

@@ -26,6 +26,26 @@
         align-items: center;
         grid-row-gap: 20px;
     }
+
+    .color-swatch {
+        height: 36px;
+        padding: 6px;
+        font-size: 0.9em;
+        border: 1px solid;
+        border-color: var(--mud-palette-lines-default);
+        border-radius: 5px;
+        overflow: hidden;
+    }
+    .color-swatch .note-light { color: var(--font-color-light-background); }
+    .color-swatch .note-dark { color: var(--font-color-dark-background); }
+
+    .design-swatch {
+        height: 100%;
+    }
+    .design-swatch-button {
+        border-radius: 50%;
+        background-color: var(--mud-palette-surface);
+    }
 </style>
 
 @* Main menu *@
@@ -56,14 +76,26 @@
     <div class="css-grid">
         <div></div>
         <div>
-            <MudSelect T="ThemeModel">
-                @foreach (var theme in ThemeService.Themes)
-                {
-                    <MudSelectItem Value="theme">
-                        <MudImage></MudImage>
-                    </MudSelectItem>
-                }
-            </MudSelect>
+            <MudCarousel @bind-SelectedIndex="ViewModel.SelectedThemeIndex" ItemsSource="@ThemeService.Themes"
+                Class="mud-width-full" Style="height:100px;" ShowArrows="true" ShowBullets="false" EnableSwipeGesture="true" AutoCycle="false" TData="ThemeModel">
+                <PreviousButtonTemplate>
+                    <div Class="mud-button-root mud-icon-button">
+                        <span class="design-swatch-button mud-icon-button-label">
+                            <MudIcon Icon="@Icons.Material.Filled.KeyboardArrowLeft" Color="@Color.Inherit" />
+                        </span>
+                    </div>
+                </PreviousButtonTemplate>
+                <NextButtonTemplate>
+                    <div Class="mud-button-root mud-icon-button">
+                        <span class="design-swatch-button mud-icon-button-label">
+                            <MudIcon Icon="@Icons.Material.Filled.KeyboardArrowRight" Color="@Color.Inherit" />
+                        </span>
+                    </div>
+                </NextButtonTemplate>
+                <ItemTemplate>
+                    <div class="design-swatch d-flex" style="@GetBackgroundUrlStyle("wallpapers/" + context.Image)"/>
+                </ItemTemplate>
+            </MudCarousel>
         </div>
 
         <div></div>
@@ -256,6 +288,11 @@
     private string GetBackgroundColorStyle(string backgroundColor)
     {
         return string.Format("background-color:{0}", backgroundColor);
+    }
+
+    private string GetBackgroundUrlStyle(string url)
+    {
+        return string.Format("background: url({0})", url);
     }
 
     /// <summary>
