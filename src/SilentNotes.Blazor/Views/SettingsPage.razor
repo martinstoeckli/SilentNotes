@@ -74,28 +74,32 @@
     <h2 class="h-colored">@LanguageService["gui_texture"]</h2>
 
     <div class="css-grid">
-        <div></div>
+        <div><MudIcon Icon="@Icons.Material.Filled.ImagesearchRoller" Color="Color.Secondary" /></div>
         <div>
-            <MudCarousel @bind-SelectedIndex="ViewModel.SelectedThemeIndex" ItemsSource="@ThemeService.Themes"
-                Class="mud-width-full" Style="height:100px;" ShowArrows="true" ShowBullets="false" EnableSwipeGesture="true" AutoCycle="false" TData="ThemeModel">
-                <PreviousButtonTemplate>
-                    <div Class="mud-button-root mud-icon-button">
-                        <span class="design-swatch-button mud-icon-button-label">
-                            <MudIcon Icon="@Icons.Material.Filled.KeyboardArrowLeft" Color="@Color.Inherit" />
-                        </span>
-                    </div>
-                </PreviousButtonTemplate>
-                <NextButtonTemplate>
-                    <div Class="mud-button-root mud-icon-button">
-                        <span class="design-swatch-button mud-icon-button-label">
-                            <MudIcon Icon="@Icons.Material.Filled.KeyboardArrowRight" Color="@Color.Inherit" />
-                        </span>
-                    </div>
-                </NextButtonTemplate>
-                <ItemTemplate>
-                    <div class="design-swatch d-flex" style="@GetBackgroundUrlStyle("wallpapers/" + context.Image)"/>
-                </ItemTemplate>
-            </MudCarousel>
+            <MudStack Row="true" AlignItems="AlignItems.Center">
+                <MudSwitch @bind-Checked="@ViewModel.UseWallpaper" Color="Color.Tertiary" UnCheckedColor="@GetSwitchUncheckedColor()" />
+
+                <MudCarousel @bind-SelectedIndex="ViewModel.SelectedWallpaperIndex" ItemsSource="@ThemeService.Wallpapers"
+                    Class="mud-width-full" Style="height:100px;" ShowArrows="true" ShowBullets="false" EnableSwipeGesture="true" AutoCycle="false" TData="WallpaperModel">
+                    <PreviousButtonTemplate>
+                        <div Class="mud-button-root mud-icon-button">
+                            <span class="design-swatch-button mud-icon-button-label">
+                                <MudIcon Icon="@Icons.Material.Filled.KeyboardArrowLeft" Color="@Color.Inherit" />
+                            </span>
+                        </div>
+                    </PreviousButtonTemplate>
+                    <NextButtonTemplate>
+                        <div Class="mud-button-root mud-icon-button">
+                            <span class="design-swatch-button mud-icon-button-label">
+                                <MudIcon Icon="@Icons.Material.Filled.KeyboardArrowRight" Color="@Color.Inherit" />
+                            </span>
+                        </div>
+                    </NextButtonTemplate>
+                    <ItemTemplate>
+                        <div class="design-swatch d-flex" style="@GetBackgroundUrlStyle("wallpapers/" + context.Image)"/>
+                    </ItemTemplate>
+                </MudCarousel>
+            </MudStack>
         </div>
 
         <div></div>

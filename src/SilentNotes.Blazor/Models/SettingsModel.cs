@@ -66,10 +66,16 @@ namespace SilentNotes.Models
         public double FontScale { get; set; }
 
         /// <summary>
-        /// Gets or sets the id of the theme selected by the user.
+        /// Gets or sets the id of the wallpaper selected by the user.
         /// </summary>
-        [XmlElement("selected_theme")]
-        public string SelectedTheme { get; set; }
+        [XmlElement("selected_wallpaper")]
+        public string SelectedWallpaper { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the wallpaper should be used as background image.
+        /// </summary>
+        [XmlElement("use_wallpaper")]
+        public bool UseWallpaper { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the a solid color should be used instead of a

@@ -41,34 +41,25 @@ namespace SilentNotes.Services
         //string CssClassDark { get; }
 
         /// <summary>
-        /// Gets a Css attribute string if a solid background is defined or an empty string otherwise.
-        /// Example: background-color: #121212;
+        /// Gets a Css for a solid background or an attribute string like:
+        /// <example>
+        /// background-color: #121212;
+        /// background-image: url(images/image.png);
+        /// </example>
         /// </summary>
-        string CssBackgroundColor { get; }
-
-        ///// <summary>
-        ///// Gets a Css attribute string like:
-        /////   background-image: url(images/image.png);
-        ///// </summary>
-        //string CssBackgroundImage { get; }
+        string CssBackground { get; }
 
         /// <summary>
-        /// Gets a list of all available themes.
+        /// Gets a list of all available wallpapers.
         /// </summary>
-        List<ThemeModel> Themes { get; }
-
-        ///// <summary>
-        ///// Gets the active theme selected by the user, or the default theme.
-        ///// </summary>
-        ///// <returns>Active theme.</returns>
-        //ThemeModel SelectedTheme { get; }
+        List<WallpaperModel> Wallpapers { get; }
 
         /// <summary>
-        /// Searches for the theme with a given <paramref name="themeId"/>. If no such theme can
-        /// be found, the default theme is returned.
+        /// Searches for the index of the wallpaper with a given <paramref name="wallpaperId"/>.
+        /// If no such wallpaper can be found, the index of the default wallpaper is returned.
         /// </summary>
-        /// <param name="themeId">Id of the theme to search for.</param>
-        /// <returns>Found theme or default theme.</returns>
-        ThemeModel FindThemeOrDefault(string themeId);
+        /// <param name="wallpaperId">Id of the wallpaper to search for.</param>
+        /// <returns>Found wallpaper index or index of default wallpaper.</returns>
+        int FindWallpaperIndexOrDefault(string wallpaperId);
     }
 }

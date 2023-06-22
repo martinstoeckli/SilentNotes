@@ -8,16 +8,16 @@ using System;
 namespace SilentNotes.Models
 {
     /// <summary>
-    /// Describes a theme which controls the apperance of the application.
+    /// Describes a wallpaper which is shown as background.
     /// </summary>
-    public class ThemeModel
+    public class WallpaperModel
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ThemeModel"/> class.
+        /// Initializes a new instance of the <see cref="WallpaperModel"/> class.
         /// </summary>
         /// <param name="id">See the <see cref="Id"/> property.</param>
         /// <param name="image">Sets the <see cref="Image"/> property.</param>
-        public ThemeModel(string id, string image)
+        public WallpaperModel(string id, string image)
         {
             Id = id;
             Image = image;

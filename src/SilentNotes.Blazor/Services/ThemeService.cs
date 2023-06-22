@@ -16,7 +16,7 @@ namespace SilentNotes.Services
     /// </summary>
     public class ThemeService : IThemeService
     {
-        private const int DefaultTheme = 2;
+        private const int DefaultWallpaper = 0;
         private readonly ISettingsService _settingsService;
         private readonly IEnvironmentService _environmentService;
 
@@ -41,8 +41,8 @@ namespace SilentNotes.Services
                     //AppbarBackground = new MudColor("#323232"),
                 },
             };
-            Themes = new List<ThemeModel>();
-            FillThemes(Themes);
+            Wallpapers = new List<WallpaperModel>();
+            FillWallpapers(Wallpapers);
         }
 
         /// <inheritdoc/>
@@ -76,19 +76,19 @@ namespace SilentNotes.Services
         /// <inheritdoc/>
         public Action RefreshGui { get; set; }
 
-        private void FillThemes(List<ThemeModel> themes)
+        private void FillWallpapers(List<WallpaperModel> themes)
         {
-            themes.Add(new ThemeModel("cork", "cork.jpg"));
-            themes.Add(new ThemeModel("forest", "forest.jpg"));
-            themes.Add(new ThemeModel("stone", "stone.jpg"));
-            themes.Add(new ThemeModel("blackstone", "blackstone.jpg"));
-            themes.Add(new ThemeModel("smarties", "smarties.jpg"));
-            themes.Add(new ThemeModel("grass", "grass.jpg"));
-            themes.Add(new ThemeModel("paper", "paper.jpg"));
-            themes.Add(new ThemeModel("sky", "sky.jpg"));
-            themes.Add(new ThemeModel("water", "water.jpg"));
-            themes.Add(new ThemeModel("sand", "sand.jpg"));
-            themes.Add(new ThemeModel("stars", "stars.jpg"));
+            themes.Add(new WallpaperModel("cork", "cork.jpg"));
+            themes.Add(new WallpaperModel("forest", "forest.jpg"));
+            themes.Add(new WallpaperModel("stone", "stone.jpg"));
+            themes.Add(new WallpaperModel("blackstone", "blackstone.jpg"));
+            themes.Add(new WallpaperModel("smarties", "smarties.jpg"));
+            themes.Add(new WallpaperModel("grass", "grass.jpg"));
+            themes.Add(new WallpaperModel("paper", "paper.jpg"));
+            themes.Add(new WallpaperModel("sky", "sky.jpg"));
+            themes.Add(new WallpaperModel("water", "water.jpg"));
+            themes.Add(new WallpaperModel("sand", "sand.jpg"));
+            themes.Add(new WallpaperModel("stars", "stars.jpg"));
         }
 
         ///// <inheritdoc/>
@@ -118,44 +118,33 @@ namespace SilentNotes.Services
         //}
 
         /// <inheritdoc/>
-        public string CssBackgroundColor
+        public string CssBackground
         {
             get
             {
                 SettingsModel settings = _settingsService.LoadSettingsOrDefault();
                 if (settings.UseSolidColorTheme)
+                {
                     return string.Format("background-color: {0};", settings.ColorForSolidTheme);
-                else
-                    return string.Empty;
+                }
+                else if (settings.UseWallpaper)
+                {
+                    int wallpaperIndex = FindWallpaperIndexOrDefault(settings.SelectedWallpaper);
+                    if (wallpaperIndex >= 0)
+                        return string.Format("background-image: url(wallpapers/{0});", Wallpapers[wallpaperIndex].Image);
+                }
+                return string.Empty;
             }
         }
 
-        ///// <inheritdoc/>
-        //public string CssBackgroundImage 
-        //{
-        //    get
-        //    {
-        //        SettingsModel settings = _settingsService.LoadSettingsOrDefault();
-        //        return settings.UseSolidColorTheme
-        //            ? string.Empty
-        //            : string.Format("background-image: url({0});", SelectedTheme.Image);
-        //    }
-        //}
+        /// <inheritdoc/>
+        public List<WallpaperModel> Wallpapers { get; private set; }
 
         /// <inheritdoc/>
-        public List<ThemeModel> Themes { get; private set; }
-
-        ///// <inheritdoc/>
-        //public ThemeModel SelectedTheme
-        //{
-        //    get { return FindThemeOrDefault(_settingsService.LoadSettingsOrDefault().SelectedTheme); }
-        //}
-
-        /// <inheritdoc/>
-        public ThemeModel FindThemeOrDefault(string themeId)
+        public int FindWallpaperIndexOrDefault(string themeId)
         {
-            ThemeModel result = Themes.Find(item => string.Equals(item.Id, themeId));
-            return result ?? (result = Themes[DefaultTheme]);
+            int result = Wallpapers.FindIndex(item => string.Equals(item.Id, themeId));
+            return result >= 0 ? result : DefaultWallpaper;
         }
     }
 }

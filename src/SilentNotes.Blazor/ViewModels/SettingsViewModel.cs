@@ -129,29 +129,25 @@ namespace SilentNotes.ViewModels
         }
 
         /// <summary>
-        /// Gets or sets the index of the theme selected by the user.
+        /// Gets or sets the index of the wallpaper selected by the user.
         /// </summary>
-        public int SelectedThemeIndex { get; set; }
-
-        /// <summary>
-        /// Gets or sets the theme selected by the user.
-        /// </summary>
-        public string SelectedTheme
+        public int SelectedWallpaperIndex 
         {
-            get { return _themeService.FindThemeOrDefault(Model.SelectedTheme).Id; }
-
+            get { return _themeService.FindWallpaperIndexOrDefault(Model.SelectedWallpaper); }
             set
             {
-                if (SetPropertyAndModified(Model.SelectedTheme, value, (string v) => Model.SelectedTheme = v))
-                {
-                    OnPropertyChanged(nameof(SelectedThemeImage));
-                }
+                string themeId = _themeService.Wallpapers[value].Id;
+                SetPropertyAndModified(Model.SelectedWallpaper, themeId, (string v) => Model.SelectedWallpaper = v);
             }
         }
 
-        public string SelectedThemeImage
+        /// <summary>
+        /// Gets or sets a value indicating whether the wallpaper should be used as background image.
+        /// </summary>
+        public bool UseWallpaper
         {
-            get { return _themeService.FindThemeOrDefault(Model.SelectedTheme).Image; }
+            get { return Model.UseWallpaper; }
+            set { SetPropertyAndModified(Model.UseWallpaper, value, (bool v) => Model.UseWallpaper = v); }
         }
 
         /// <summary>
