@@ -22,13 +22,15 @@
         display: grid;
         margin-top: 14px;
         margin-bottom: 14px;
-        grid-template-columns: 40px auto;
+        grid-template-columns: var(--css-grid-topic-icon-width) auto;
         align-items: center;
         grid-row-gap: 20px;
     }
 
     .color-swatch {
         height: 36px;
+        margin-top: 4px;
+        margin-left: 6px;
         padding: 6px;
         font-size: 0.9em;
         border: 1px solid;
@@ -39,13 +41,7 @@
     .color-swatch .note-light { color: var(--font-color-light-background); }
     .color-swatch .note-dark { color: var(--font-color-dark-background); }
 
-    .design-swatch {
-        height: 100%;
-    }
-    .design-swatch-button {
-        border-radius: 50%;
-        background-color: var(--mud-palette-surface);
-    }
+    .design-swatch { height: 100%; }
 </style>
 
 @* Main menu *@
@@ -74,6 +70,15 @@
     <h2 class="h-colored">@LanguageService["gui_texture"]</h2>
 
     <div class="css-grid">
+        <div><MudIcon Icon="@Icons.Material.Filled.LightMode" Color="Color.Secondary" /></div>
+        <div>
+            <MudSelect @bind-Value="ViewModel.SelectedThemeMode">
+                <MudSelectItem Value="@("Auto")">@LanguageService["gui_theme_auto"]</MudSelectItem>
+                <MudSelectItem Value="@("Dark")">@LanguageService["gui_theme_dark"]</MudSelectItem>
+                <MudSelectItem Value="@("Light")">@LanguageService["gui_theme_light"]</MudSelectItem>
+            </MudSelect>
+        </div>
+
         <div><MudIcon Icon="@Icons.Material.Filled.ImagesearchRoller" Color="Color.Secondary" /></div>
         <div>
             <MudStack Row="true" AlignItems="AlignItems.Center">
@@ -83,14 +88,14 @@
                     Class="mud-width-full" Style="height:100px;" ShowArrows="true" ShowBullets="false" EnableSwipeGesture="true" AutoCycle="false" TData="WallpaperModel">
                     <PreviousButtonTemplate>
                         <div Class="mud-button-root mud-icon-button">
-                            <span class="design-swatch-button mud-icon-button-label">
+                            <span class="rounded-circle mud-icon-button-label" style="background-color: var(--mud-palette-surface)">
                                 <MudIcon Icon="@Icons.Material.Filled.KeyboardArrowLeft" Color="@Color.Inherit" />
                             </span>
                         </div>
                     </PreviousButtonTemplate>
                     <NextButtonTemplate>
                         <div Class="mud-button-root mud-icon-button">
-                            <span class="design-swatch-button mud-icon-button-label">
+                            <span class="rounded-circle mud-icon-button-label" style="background-color: var(--mud-palette-surface)">
                                 <MudIcon Icon="@Icons.Material.Filled.KeyboardArrowRight" Color="@Color.Inherit" />
                             </span>
                         </div>
@@ -104,7 +109,7 @@
 
         <div></div>
         <div>
-            <MudStack Row="true" AlignItems="AlignItems.Baseline">
+            <MudStack Row="true" AlignItems="AlignItems.Center">
                 <MudSwitch @bind-Checked="@ViewModel.UseSolidColorTheme" Color="Color.Tertiary" UnCheckedColor="@GetSwitchUncheckedColor()" />
 
                 <MudColorPicker @bind-Text="@ViewModel.ColorForSolidThemeHex"
@@ -119,18 +124,9 @@
             </MudStack>
         </div>
 
-        <div><MudIcon Icon="@Icons.Material.Filled.LightMode" Color="Color.Secondary" /></div>
-        <div>
-            <MudSelect @bind-Value="ViewModel.SelectedThemeMode">
-                <MudSelectItem Value="@("Auto")">@LanguageService["gui_theme_auto"]</MudSelectItem>
-                <MudSelectItem Value="@("Dark")">@LanguageService["gui_theme_dark"]</MudSelectItem>
-                <MudSelectItem Value="@("Light")">@LanguageService["gui_theme_light"]</MudSelectItem>
-            </MudSelect>
-        </div>
-
         <div></div>
         <div>
-            <MudStack Row="true" AlignItems="AlignItems.Baseline">
+            <MudStack Row="true" AlignItems="AlignItems.Center">
                 <MudSwitch @bind-Checked="@ViewModel.UseColorForAllNotesInDarkMode" Color="Color.Tertiary" UnCheckedColor="@GetSwitchUncheckedColor()" />
 
                 <MudColorPicker @bind-Text="@ViewModel.ColorForAllNotesInDarkModeHex"
@@ -147,7 +143,7 @@
 
         <div></div>
         <div>
-            <MudStack Row="true" AlignItems="AlignItems.Baseline">
+            <MudStack Row="true" AlignItems="AlignItems.Center">
                 <MudColorPicker @bind-Text="ViewModel.DefaultNoteColorHex"
                     DisableToolbar="true" DisableAlpha="true"
                     ColorPickerView="ColorPickerView.Palette"
@@ -229,11 +225,12 @@
                 <MudText>@ViewModel.AccountSummary</MudText>
 
                 <MudStack Row="true" Justify="Justify.FlexEnd" Spacing="1" Class="mt-2">
-                    <MudButton OnClick="@(() => ViewModel.ChangeCloudSettingsCommand.Execute(null))" Color="Color.Primary" Variant="Variant.Filled" title="@LanguageService["cloud_change_settings_desc"]">
+                    <MudButton OnClick="@(() => ViewModel.ChangeCloudSettingsCommand.Execute(null))"
+                        Color="Color.Default" Variant="Variant.Filled" title="@LanguageService["cloud_change_settings_desc"]">
                         @LanguageService["cloud_change_settings"]
                     </MudButton>
                     <MudButton OnClick="@(() => ViewModel.ClearCloudSettingsCommand.Execute(null))"
-                        Color="Color.Error" Variant="Variant.Filled" Disabled="ViewModel.ClearCloudSettingsDisabled" title="@LanguageService["cloud_clear_settings_desc"]">
+                        Color="Color.Error" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Delete" Disabled="ViewModel.ClearCloudSettingsDisabled" title="@LanguageService["cloud_clear_settings_desc"]">
                         @LanguageService["cloud_clear_settings"]
                     </MudButton>
                 </MudStack>
