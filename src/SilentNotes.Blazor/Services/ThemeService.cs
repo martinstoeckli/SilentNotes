@@ -118,7 +118,7 @@ namespace SilentNotes.Services
         //}
 
         /// <inheritdoc/>
-        public string CssBackground
+        public string CssNoteRepositoryBackground
         {
             get
             {

@@ -47,7 +47,7 @@ namespace SilentNotes.Services
         /// background-image: url(images/image.png);
         /// </example>
         /// </summary>
-        string CssBackground { get; }
+        string CssNoteRepositoryBackground { get; }
 
         /// <summary>
         /// Gets a list of all available wallpapers.

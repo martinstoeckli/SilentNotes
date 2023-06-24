@@ -734,6 +734,21 @@ namespace SilentNotes.ViewModels
         //}
 
         /// <summary>
+        /// Gets the navigation route of the note. In case that the note is locked, the opensafe
+        /// route is returned with a target route.
+        /// </summary>
+        public string Route
+        {
+            get
+            {
+                if (IsLocked)
+                    return string.Format("opensafe/{0}/{1}", CssClassNoteType, Id);
+                else
+                    return string.Format("{0}/{1}", CssClassNoteType, Id);
+            }
+        }
+
+        /// <summary>
         /// Gets the wrapped model.
         /// </summary>
         internal NoteModel Model { get; private set; }

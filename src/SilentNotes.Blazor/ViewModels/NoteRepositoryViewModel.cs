@@ -73,13 +73,11 @@ namespace SilentNotes.ViewModels
             UpdateTags();
 
             //    // Initialize commands and events
-            //    ShowNoteCommand = new RelayCommand<object>(ShowNote);
             //    NewNoteCommand = new RelayCommand(NewNote);
             //    NewChecklistCommand = new RelayCommand(NewChecklist);
             DeleteNoteCommand = new RelayCommand<object>(DeleteNote);
             ClearFilterCommand = new RelayCommand(ClearFilter);
             //    SynchronizeCommand = new RelayCommand(Synchronize);
-            //    ShowExportCommand = new RelayCommand(ShowExport);
             CloseSafeCommand = new RelayCommand(CloseSafe);
 
             Modified = false;
@@ -292,40 +290,6 @@ namespace SilentNotes.ViewModels
             Filter = null;
             OnPropertyChanged("ClearFilter");
         }
-
-        ///// <summary>
-        ///// Gets the command which handles the click event on a note.
-        ///// </summary>
-        //[VueDataBinding(VueBindingMode.Command)]
-        //public ICommand ShowNoteCommand { get; private set; }
-
-        //private void ShowNote(object value)
-        //{
-        //    Guid noteId = (value is Guid) ? (Guid)value : new Guid(value.ToString());
-        //    NoteViewModel note = AllNotes.FirstOrDefault(item => item.Id == noteId);
-        //    if (note != null)
-        //    {
-        //        Navigation navigation = null;
-        //        switch (note.Model.NoteType)
-        //        {
-        //            case NoteType.Text:
-        //                navigation = new Navigation(ControllerNames.Note, ControllerParameters.NoteId, noteId.ToString());
-        //                break;
-
-        //            case NoteType.Checklist:
-        //                navigation = new Navigation(ControllerNames.Checklist, ControllerParameters.NoteId, noteId.ToString());
-        //                break;
-
-        //            default:
-        //                throw new ArgumentOutOfRangeException(nameof(NoteType));
-        //        }
-
-        //        SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
-        //        if (!string.IsNullOrEmpty(settings.Filter))
-        //            navigation.Variables.AddOrReplace(ControllerParameters.SearchFilter, settings.Filter);
-        //        _navigationService.Navigate(navigation);
-        //    }
-        //}
 
         ///// <summary>
         ///// Gets the command which handles the creation of a new note.
@@ -551,17 +515,6 @@ namespace SilentNotes.ViewModels
         //    {
         //        _feedbackService.ShowBusyIndicator(false);
         //    }
-        //}
-
-        ///// <summary>
-        ///// Gets the command which opens export dialog.
-        ///// </summary>
-        //[VueDataBinding(VueBindingMode.Command)]
-        //public ICommand ShowExportCommand { get; private set; }
-
-        //private void ShowExport()
-        //{
-        //    _navigationService.Navigate(new Navigation(ControllerNames.Export));
         //}
 
         /// <summary>

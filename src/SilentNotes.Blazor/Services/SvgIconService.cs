@@ -70,7 +70,6 @@ namespace SilentNotes.Services
                 { IconNames.FormatQuoteClode, "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M14,17H17L19,13V7H13V13H16M6,17H9L11,13V7H5V13H8L6,17Z' /></svg>" },
                 { IconNames.FormatStrikethrough, "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M3,14H21V12H3M5,4V7H10V10H14V7H19V4M10,19H14V16H10V19Z' /></svg>" },
                 { IconNames.FormatUnderline, "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M5,21H19V19H5V21M12,17A6,6 0 0,0 18,11V3H15.5V11A3.5,3.5 0 0,1 12,14.5A3.5,3.5 0 0,1 8.5,11V3H6V11A6,6 0 0,0 12,17Z' /></svg>" },
-                { IconNames.Information, "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M13,9H11V7H13M13,17H11V11H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z' /></svg>" },
                 { IconNames.Key, "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M7,14A2,2 0 0,1 5,12A2,2 0 0,1 7,10A2,2 0 0,1 9,12A2,2 0 0,1 7,14M12.65,10C11.83,7.67 9.61,6 7,6A6,6 0 0,0 1,12A6,6 0 0,0 7,18C9.61,18 11.83,16.33 12.65,14H17V18H21V14H23V10H12.65Z' /></svg>" },
                 { IconNames.KeyboardOffOutline, "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M1,4.27L2.47,5.74C2.18,6.08 2,6.5 2,7V17A2,2 0 0,0 4,19H15.73L18.73,22L20,20.72L2.28,3L1,4.27M4,17V7.27L5,8.27V10H6.73L8,11.27V13H9.73L10.73,14H8V16H12.73L13.73,17H4M5,11H7V13H5V11M17,11H19V13H17V11M19,10H17V8H19V10M14,11H16V13H14.83L14,12.17V11M13,10H11.83L11,9.17V8H13V10M22,7V17C22,17.86 21.45,18.58 20.7,18.87L18.83,17H20V7H8.83L6.83,5H20A2,2 0 0,1 22,7M16,10H14V8H16V10Z' /></svg>" },
                 { IconNames.LinkVariant, "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M10.59,13.41C11,13.8 11,14.44 10.59,14.83C10.2,15.22 9.56,15.22 9.17,14.83C7.22,12.88 7.22,9.71 9.17,7.76V7.76L12.71,4.22C14.66,2.27 17.83,2.27 19.78,4.22C21.73,6.17 21.73,9.34 19.78,11.29L18.29,12.78C18.3,11.96 18.17,11.14 17.89,10.36L18.36,9.88C19.54,8.71 19.54,6.81 18.36,5.64C17.19,4.46 15.29,4.46 14.12,5.64L10.59,9.17C9.41,10.34 9.41,12.24 10.59,13.41M13.41,9.17C13.8,8.78 14.44,8.78 14.83,9.17C16.78,11.12 16.78,14.29 14.83,16.24V16.24L11.29,19.78C9.34,21.73 6.17,21.73 4.22,19.78C2.27,17.83 2.27,14.66 4.22,12.71L5.71,11.22C5.7,12.04 5.83,12.86 6.11,13.65L5.64,14.12C4.46,15.29 4.46,17.19 5.64,18.36C6.81,19.54 8.71,19.54 9.88,18.36L13.41,14.83C14.59,13.66 14.59,11.76 13.41,10.59C13,10.2 13,9.56 13.41,9.17Z' /></svg>" },
@@ -232,7 +231,6 @@ namespace SilentNotes.Services
         public const string FormatQuoteClode = "format-quote-close";
         public const string FormatStrikethrough = "format-strikethrough";
         public const string FormatUnderline = "format-underline";
-        public const string Information = "information";
         public const string Key = "key";
         public const string KeyboardOffOutline = "keyboard_off_outline";
         public const string LinkVariant = "link-variant";

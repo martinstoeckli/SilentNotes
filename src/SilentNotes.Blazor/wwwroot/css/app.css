@@ -55,11 +55,12 @@ h1:focus { outline: none; }
 	flex-wrap: wrap;
 }
 .note-item {
-	display: block;
+	display: flex;
 	width: 100%;
 	padding: 0 6px; /* flex gap not working on Android 7, only padding and margin */
 	margin: 6px 0;
 }
+
 /* sm breakpoint */
 @media screen and (min-width: 600px) {
 	:root {

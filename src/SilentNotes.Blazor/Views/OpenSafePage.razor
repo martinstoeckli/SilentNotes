@@ -1,5 +1,5 @@
 ﻿@page "/opensafe"
-@page "/opensafe/targetnote/{TargetNoteId}"
+@page "/opensafe/{TargetNoteType}/{TargetNoteId}"
 @using System.ComponentModel;
 @using System.Security
 @using SilentNotes.Models
@@ -103,11 +103,15 @@
     {
         base.OnParametersSet();
         IsPasswordVisible = false;
-        ViewModel = new OpenSafeViewModel(LanguageService, NavigationService, FeedbackService, RandomService, SettingsService, RepositoryService, TargetNoteId);
+        string navigationTargetRoute = string.Format("{0}/{1}", TargetNoteType, TargetNoteId);
+        ViewModel = new OpenSafeViewModel(LanguageService, NavigationService, FeedbackService, RandomService, SettingsService, RepositoryService, navigationTargetRoute);
         _secureStringConverter = new SecureStringConverter();
     }
 
     private OpenSafeViewModel ViewModel { get; set; }
+
+    [Parameter]
+    public string TargetNoteType { get; set; } = default!;
 
     [Parameter]
     public string TargetNoteId { get; set; } = default!;

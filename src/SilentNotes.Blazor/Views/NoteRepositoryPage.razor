@@ -20,7 +20,7 @@
 
 <style type="text/css">
     body {
-        @(ThemeService.CssBackground)
+        @(ThemeService.CssNoteRepositoryBackground)
         background-attachment: fixed;
     }
     .note-item, .note-card, .note-locked {
@@ -82,7 +82,7 @@
                 <MudDivider />
                 <MudNavLink Href="/transfercodehistory" Icon="@IconService[IconNames.Key]">@LanguageService["show_transfer_code"]</MudNavLink>
                 <MudNavLink Href="/settings" Icon="@IconService[IconNames.Settings]">@LanguageService["show_settings"]</MudNavLink>
-                <MudNavLink Href="/info" Icon="@IconService[IconNames.Information]">@LanguageService["show_info"]</MudNavLink>
+                <MudNavLink Href="/info" Icon="@Icons.Material.Filled.Info">@LanguageService["show_info"]</MudNavLink>
             </MudNavMenu>
         </ChildContent>
     </MudMenu>
@@ -117,23 +117,25 @@
         @foreach (var note in ViewModel.FilteredNotes)
         {
             <li @key="note.Id" class="note-item">
-                <div class="note-card mud-elevation-3 @note.LightOrDarkClass()" style="background-color:@note.BackgroundColorHex">
-                    @if (@note.IsLocked)
-                    {
-                        <div class="note-locked">@IconService.EmbedSvgLink(IconNames.LockOutline)</div>
-                    }
-                    else
-                    {
-                        <div class="note-viewer over-view @note.CssClassNoteType">@((MarkupString)note.GetShortenedUnlockedHtmlContent())</div>
-                    }
+                <a href="@note.Route">
+                    <div class="note-card mud-elevation-3 @note.LightOrDarkClass()" style="background-color:@note.BackgroundColorHex">
+                        @if (@note.IsLocked)
+                        {
+                            <div class="note-locked">@IconService.EmbedSvgLink(IconNames.LockOutline)</div>
+                        }
+                        else
+                        {
+                            <div class="note-viewer over-view @note.CssClassNoteType">@((MarkupString)note.GetShortenedUnlockedHtmlContent())</div>
+                        }
 
-                    @if (@note.IsPinned)
-                    {
-                        <div class="pin">@IconService.EmbedSvgLink(IconNames.Pin, 22)</div>
-                    }
-                    <div class="note-handle sortable-handle">@IconService.EmbedSvgLink(IconNames.ArrowAll, 22)</div>
-                    <div class="note-handle recycle-handle" @onclick="@(() => ViewModel.DeleteNoteCommand.Execute(note.Id))">@IconService.EmbedSvgLink(IconNames.Delete, 19)</div>
-                </div>
+                        @if (@note.IsPinned)
+                        {
+                            <div class="pin">@IconService.EmbedSvgLink(IconNames.Pin, 22)</div>
+                        }
+                        <div class="note-handle sortable-handle">@IconService.EmbedSvgLink(IconNames.ArrowAll, 22)</div>
+                        <div class="note-handle recycle-handle" @onclick="@(() => ViewModel.DeleteNoteCommand.Execute(note.Id))" @onclick:preventDefault="true">@IconService.EmbedSvgLink(IconNames.Delete, 19)</div>
+                    </div>
+                </a>
             </li>
         }
     </ul>
@@ -212,8 +214,8 @@
         // Focus filter control for direct typing on Windows.
         // On Android a tap on the filter input will bring up the keyboard.
 #if WINDOWS
-        if (firstRender)
-            await _filterInput.FocusAsync();
+    if (firstRender)
+    await _filterInput.FocusAsync();
 #else
         await DoNothing();
 #endif

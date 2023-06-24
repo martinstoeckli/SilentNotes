@@ -1,0 +1,72 @@
+﻿@page "/note/{NoteId}"
+@page "/text/{NoteId}"
+@using System.ComponentModel
+@using MudBlazor.Utilities;
+@using SilentNotes.Models
+@using SilentNotes.ViewModels
+@using SilentNotes.Services
+
+@inject ISnackbar Snackbar
+@inject ILanguageService LanguageService
+@inject ISvgIconService IconService
+@inject ISettingsService SettingsService
+@inject IEnvironmentService EnvironmentService
+@inject IThemeService ThemeService
+@inject IFeedbackService FeedbackService
+@inject IFilePickerService FilePickerService
+@inject ICloudStorageClientFactory CloudStorageClientFactory
+
+@implements IDisposable
+
+<style type="text/css">
+</style>
+
+@* Main menu *@
+<MudAppBar Fixed="true" Class="" Dense="true">
+    <MudIconButton Href="/back" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" />
+
+    <MudSpacer />
+
+    <MudMenu @ref="_overflowMenu" Dense="true" AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight">
+        <ActivatorContent>
+            <MudIconButton Icon="@IconService[IconNames.DotsVertical]" Color="Color.Inherit" />
+        </ActivatorContent>
+        <ChildContent>
+            <MudNavMenu Rounded="true" Margin="Margin.Dense" Class="px-1">
+            </MudNavMenu>
+        </ChildContent>
+    </MudMenu>
+</MudAppBar>
+
+@* body *@
+<MudContainer id="content" Class="mud-container-left mud-container-p" MaxWidth="MaxWidth.Small">
+    <h2 class="h-colored">Note</h2>
+
+</MudContainer>
+
+@code {
+    private MudMenu _overflowMenu;
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        //ViewModel = new SettingsViewModel(SettingsService, LanguageService, EnvironmentService, ThemeService, FeedbackService, CloudStorageClientFactory, FilePickerService);
+        //ViewModel.PropertyChanged += PropertyChangedHandler;
+    }
+
+    public void Dispose()
+    {
+        //ViewModel.PropertyChanged -= PropertyChangedHandler;
+    }
+
+    private SettingsViewModel ViewModel { get; set; }
+
+    [Parameter]
+    public string NoteId { get; set; } = default!;
+
+    private void PropertyChangedHandler(object sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == "page")
+            StateHasChanged();
+    }
+}

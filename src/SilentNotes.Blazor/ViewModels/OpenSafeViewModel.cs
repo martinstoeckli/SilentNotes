@@ -22,7 +22,7 @@ namespace SilentNotes.ViewModels
         private readonly ICryptoRandomService _randomService;
         private readonly ISettingsService _settingsService;
         private readonly IRepositoryStorageService _repositoryService;
-        private readonly string _navigationTargetNoteId;
+        private readonly string _navigationTargetRoute;
         private SecureString _password;
         private SecureString _passwordConfirmation;
         private bool _hasPasswordError;
@@ -39,7 +39,7 @@ namespace SilentNotes.ViewModels
             ICryptoRandomService randomService,
             ISettingsService settingsService,
             IRepositoryStorageService repositoryService,
-            string navigationTargetNoteId)
+            string navigationTargetRoute)
         {
             Language = languageService;
             _navigationService = navigationService;
@@ -47,7 +47,7 @@ namespace SilentNotes.ViewModels
             _randomService = randomService;
             _settingsService = settingsService;
             _repositoryService = repositoryService;
-            _navigationTargetNoteId = navigationTargetNoteId;
+            _navigationTargetRoute = navigationTargetRoute;
 
             _repositoryService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepository);
             Model = noteRepository;
@@ -98,13 +98,13 @@ namespace SilentNotes.ViewModels
                 HasPasswordError = true;
                 PasswordErrorText = Language.LoadText("password_wrong_error");
             }
-            else if (_navigationTargetNoteId == null)
+            else if (string.IsNullOrEmpty(_navigationTargetRoute))
             {
                 _navigationService.NavigateBack();
             }
             else
             {
-                _navigationService.NavigateTo(string.Format("note/{0}", _navigationTargetNoteId), false, true);
+                _navigationService.NavigateTo(_navigationTargetRoute, false, true);
             }
         }
 
