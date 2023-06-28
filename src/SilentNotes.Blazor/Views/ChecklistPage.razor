@@ -5,9 +5,9 @@
 @using SilentNotes.ViewModels
 @using SilentNotes.Services
 
-@inject ISnackbar Snackbar
 @inject ILanguageService LanguageService
 @inject ISvgIconService IconService
+@inject IKeyboardShortcutService KeyboardShortcutService
 @inject ISettingsService SettingsService
 @inject IEnvironmentService EnvironmentService
 @inject IThemeService ThemeService
@@ -22,7 +22,7 @@
 
 @* Main menu *@
 <MudAppBar Fixed="true" Class="" Dense="true">
-    <MudIconButton Href="/back" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" />
+    <MudIconButton @ref="_backButton" Href="/back" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" />
 
     <MudSpacer />
 
@@ -44,17 +44,27 @@
 </MudContainer>
 
 @code {
+    private bool _isDisposed;
     private MudMenu _overflowMenu;
+    private MudBaseButton _backButton;
+    private IKeyboardShortcuts _keyboardShortcuts;
 
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
         //ViewModel = new SettingsViewModel(SettingsService, LanguageService, EnvironmentService, ThemeService, FeedbackService, CloudStorageClientFactory, FilePickerService);
         //ViewModel.PropertyChanged += PropertyChangedHandler;
+
+        _keyboardShortcuts = KeyboardShortcutService.CreateShortcuts()
+            .Add(ModCode.None, Code.Escape, () => _backButton);
     }
 
     public void Dispose()
     {
+        if (_isDisposed)
+            return;
+        _isDisposed = true;
+        _keyboardShortcuts.Dispose();
         //ViewModel.PropertyChanged -= PropertyChangedHandler;
     }
 

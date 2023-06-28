@@ -5,15 +5,18 @@
 
 @inject ILanguageService LanguageService
 @inject INavigationService NavigationService
+@inject IKeyboardShortcutService KeyboardShortcutService
 @inject IFeedbackService FeedbackService
 @inject ISvgIconService IconService
 @inject IRepositoryStorageService RepositoryStorageService
 @inject ICryptoRandomService CryptoRandomSource
 @inject IFolderPickerService FolderPickerService
 
+@implements IDisposable
+
 @* Main menu *@
 <MudAppBar Fixed="true" Dense="true">
-    <MudIconButton Href="/back" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" />
+    <MudIconButton @ref="_backButton" Href="/back" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" />
 </MudAppBar>
 
 @* watermark image *@
@@ -32,14 +35,31 @@
 
     <MudStack Class="my-4" Row="true" Justify="Justify.FlexEnd" Spacing="1">
         <MudButton Href="/back" Color="Color.Default" Variant="Variant.Filled">@LanguageService["cancel"]</MudButton>
-        <MudButton OnClick="@(() => ViewModel.OkCommand.Execute(null))" Disabled="ViewModel.OkCommandDisabled" Color="Color.Primary" Variant="Variant.Filled">@LanguageService["ok"]</MudButton>
+        <MudButton @ref="_okButton" OnClick="@(() => ViewModel.OkCommand.Execute(null))" Disabled="ViewModel.OkCommandDisabled" Color="Color.Primary" Variant="Variant.Filled">@LanguageService["ok"]</MudButton>
     </MudStack>
 </MudContainer>
 
 @code {
+    private bool _isDisposed;
+    private MudBaseButton _backButton;
+    private MudBaseButton _okButton;
+    private IKeyboardShortcuts _keyboardShortcuts;
+
     protected override void OnInitialized()
     {
         ViewModel = new ExportViewModel(NavigationService, LanguageService, FeedbackService, CryptoRandomSource, RepositoryStorageService, FolderPickerService);
+
+        _keyboardShortcuts = KeyboardShortcutService.CreateShortcuts()
+            .Add(ModCode.None, Code.Escape, () => _backButton)
+            .Add(ModCode.None, Code.Enter, () => _okButton);
+    }
+
+    public void Dispose()
+    {
+        if (_isDisposed)
+            return;
+        _isDisposed = true;
+        _keyboardShortcuts.Dispose();
     }
 
     private ExportViewModel ViewModel { get; set; }

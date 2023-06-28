@@ -9,18 +9,21 @@
 
 @inject ILanguageService LanguageService
 @inject ISvgIconService IconService
+@inject IKeyboardShortcutService KeyboardShortcutService
 @inject ISettingsService SettingsService
 @inject IFeedbackService FeedbackService
 @inject ICryptoRandomService RandomService
 @inject IRepositoryStorageService RepositoryService
 @inject INavigationService NavigationService
 
+@implements IDisposable
+
 <style type="text/css">
 </style>
 
 @* Main menu *@
 <MudAppBar Fixed="true" Dense="true">
-    <MudIconButton Href="/back" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" />
+    <MudIconButton @ref="_backButton" Href="/back" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" />
 
     <MudSpacer/>
 
@@ -79,7 +82,7 @@
 
     <MudStack Class="my-4" Row="true" Justify="Justify.FlexEnd" Spacing="1">
         <MudButton Href="/back" Color="Color.Default" Variant="Variant.Filled">@LanguageService["cancel"]</MudButton>
-        <MudButton OnClick="@(() => ViewModel.OkCommand.Execute(null))" Color="Color.Primary" Variant="Variant.Filled">@LanguageService["ok"]</MudButton>
+        <MudButton @ref="_okButton" OnClick="@(() => ViewModel.OkCommand.Execute(null))" Color="Color.Primary" Variant="Variant.Filled">@LanguageService["ok"]</MudButton>
     </MudStack>
 
     @if (!ViewModel.SafeExists)
@@ -96,16 +99,31 @@
 </div>
 
 @code {
+    private bool _isDisposed;
     private MudMenu _overflowMenu;
+    private MudBaseButton _backButton;
+    private MudBaseButton _okButton;
+    private IKeyboardShortcuts _keyboardShortcuts;
     private SecureStringConverter _secureStringConverter;
 
     protected override void OnParametersSet()
     {
-        base.OnParametersSet();
         IsPasswordVisible = false;
         string navigationTargetRoute = string.Format("{0}/{1}", TargetNoteType, TargetNoteId);
         ViewModel = new OpenSafeViewModel(LanguageService, NavigationService, FeedbackService, RandomService, SettingsService, RepositoryService, navigationTargetRoute);
         _secureStringConverter = new SecureStringConverter();
+
+        _keyboardShortcuts = KeyboardShortcutService.CreateShortcuts()
+            .Add(ModCode.None, Code.Enter, () => _okButton)
+            .Add(ModCode.None, Code.Escape, () => _backButton);
+    }
+
+    public void Dispose()
+    {
+        if (_isDisposed)
+            return;
+        _isDisposed = true;
+        _keyboardShortcuts.Dispose();
     }
 
     private OpenSafeViewModel ViewModel { get; set; }

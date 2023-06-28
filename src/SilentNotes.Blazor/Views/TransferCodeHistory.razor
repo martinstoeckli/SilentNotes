@@ -5,9 +5,12 @@
 
 @inject ILanguageService LanguageService
 @inject ISvgIconService IconService
+@inject IKeyboardShortcutService KeyboardShortcutService
 @inject IVersionService VersionService
 @inject INativeBrowserService NativeBrowserService
 @inject ISettingsService SettingsService
+
+@implements IDisposable
 
 <style type="text/css">
     .code {
@@ -21,7 +24,7 @@
 
 @* Main menu *@
 <MudAppBar Fixed="true" Dense="true">
-    <MudIconButton Href="/back" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" />
+    <MudIconButton @ref="_backButton" Href="/back" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" />
 </MudAppBar>
 
 @* watermark image *@
@@ -64,10 +67,25 @@
 </MudContainer>
 
 @code {
+    private bool _isDisposed;
+    private MudBaseButton _backButton;
+    private IKeyboardShortcuts _keyboardShortcuts;
+
     protected override void OnInitialized()
     {
         SettingsModel settings = SettingsService.LoadSettingsOrDefault();
         ViewModel = new TransferCodeHistoryViewModel(settings);
+
+        _keyboardShortcuts = KeyboardShortcutService.CreateShortcuts()
+            .Add(ModCode.None, Code.Escape, () => _backButton);
+    }
+
+    public void Dispose()
+    {
+        if (_isDisposed)
+            return;
+        _isDisposed = true;
+        _keyboardShortcuts.Dispose();
     }
 
     private TransferCodeHistoryViewModel ViewModel { get; set; }

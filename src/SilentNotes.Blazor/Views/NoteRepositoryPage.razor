@@ -5,13 +5,13 @@
 @using SilentNotes.ViewModels
 @using SilentNotes.Services
 
-@inject ISnackbar Snackbar
 @inject ILanguageService LanguageService
+@inject ISvgIconService IconService
+@inject IKeyboardShortcutService KeyboardShortcutService
 @inject INavigationService NavigationService
 @inject IFeedbackService FeedbackService
 @inject ISettingsService SettingsService
 @inject IThemeService ThemeService
-@inject ISvgIconService IconService
 @inject IRepositoryStorageService RepositoryStorageService
 @inject IEnvironmentService EnvironmentService
 @inject ICryptoRandomService CryptoRandomSource
@@ -58,7 +58,7 @@
     </MudPaper>
 
     @* Synchronization *@
-    <MudIconButton Icon="@IconService[IconNames.CloudSync]" Color="Color.Inherit" Title="@LanguageService["sync_notes"]" />
+    <MudIconButton @ref="_syncButton" Icon="@IconService[IconNames.CloudSync]" Color="Color.Inherit" Title="@LanguageService["sync_notes"]" />
 
     @* Overflow menu *@
     <MudMenu @ref="_overflowMenu" Dense="true" AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight">
@@ -175,6 +175,8 @@
     private MudInput<string> _filterInput;
     private MudMenu _overflowMenu;
     private MudDrawer _sideDrawer;
+    private MudBaseButton _syncButton;
+    private IKeyboardShortcuts _keyboardShortcuts;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="NoteRepositoryPage"/> class.
@@ -196,6 +198,10 @@
             CryptoRandomSource);
 
         // todo: read the SettingsViewMode.StartWithTagsOpen
+
+        // todo: add other shortcuts
+        _keyboardShortcuts = KeyboardShortcutService.CreateShortcuts()
+            .Add(ModCode.Ctrl, Code.S, () => _syncButton);
     }
 
     /// <summary>
@@ -206,6 +212,7 @@
         if (_isDisposed)
             return;
         _isDisposed = true;
+        _keyboardShortcuts.Dispose();
     }
 
     /// <inheritdoc/>
@@ -251,9 +258,9 @@
             ViewModel.IsDrawerOpen = false;
     }
 
+    // todo: remove
     private void DoClick(MouseEventArgs args)
     {
-        Snackbar.Add("OnClick Invoked");
         _overflowMenu.CloseMenu();
     }
 }

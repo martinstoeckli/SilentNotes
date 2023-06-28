@@ -37,7 +37,7 @@ namespace SilentNotes.Models
             AutoSyncMode = AutoSynchronizationMode.CostFreeInternetOnly;
             FontScale = 1.0;
             UseSolidColorTheme = false;
-            ColorForSolidTheme = "#121212";
+            ColorForSolidTheme = "#3e3e3e";
             DefaultNoteColorHex = StartDefaultNoteColorHex;
             NoteMaxHeightScale = 1.0;
             RememberLastTagFilter = false;

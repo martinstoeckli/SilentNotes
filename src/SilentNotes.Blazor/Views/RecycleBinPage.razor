@@ -6,6 +6,7 @@
 
 @inject ILanguageService LanguageService
 @inject ISvgIconService IconService
+@inject IKeyboardShortcutService KeyboardShortcutService
 @inject IRepositoryStorageService RepositoryStorageService
 @inject ISettingsService SettingsService
 @inject IThemeService ThemeService
@@ -47,7 +48,7 @@
 
 @* Main menu *@
 <MudAppBar Fixed="true" Dense="true">
-    <MudIconButton Href="/back" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" />
+    <MudIconButton @ref="_backButton" Href="/back" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" />
 
     <MudSpacer />
 
@@ -93,16 +94,27 @@
 </div>
 
 @code {
+    private bool _isDisposed;
+    private MudBaseButton _backButton;
+    private IKeyboardShortcuts _keyboardShortcuts;
+
     protected override void OnInitialized()
     {
         RepositoryStorageService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepositoryModel);
         ViewModel = new RecycleBinViewModel(
             noteRepositoryModel, LanguageService, IconService, ThemeService, FeedbackService, SettingsService, RepositoryStorageService);
         ViewModel.PropertyChanged += PropertyChangedHandler;
+
+        _keyboardShortcuts = KeyboardShortcutService.CreateShortcuts()
+            .Add(ModCode.None, Code.Escape, () => _backButton);
     }
 
     public void Dispose()
     {
+        if (_isDisposed)
+            return;
+        _isDisposed = true;
+        _keyboardShortcuts.Dispose();
         ViewModel.PropertyChanged -= PropertyChangedHandler;
     }
 
