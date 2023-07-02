@@ -15,6 +15,7 @@
 @inject IRepositoryStorageService RepositoryStorageService
 @inject IEnvironmentService EnvironmentService
 @inject ICryptoRandomService CryptoRandomSource
+@inject IScrollManager ScrollManager
 
 @implements IDisposable
 
@@ -43,7 +44,7 @@
     <MudSpacer />
 
     @* Tags *@
-    <MudToggleIconButton @bind-Toggled="ViewModel.IsDrawerOpen"
+    <MudToggleIconButton @ref="_tagsButton" @bind-Toggled="ViewModel.IsDrawerOpen"
         Class="@this.CssClassIf("toggled", ViewModel.IsFilteredByTag)"
         Icon="@(IconService.GetSvgLink(IconNames.TagMultiple))" Color="Color.Inherit"
         ToggledIcon="@(IconService.GetSvgLink(IconNames.TagMultiple))" ToggledColor="Color.Inherit"
@@ -175,6 +176,7 @@
     private MudInput<string> _filterInput;
     private MudMenu _overflowMenu;
     private MudDrawer _sideDrawer;
+    private MudToggleIconButton _tagsButton;
     private MudBaseButton _syncButton;
     private IKeyboardShortcuts _keyboardShortcuts;
 
@@ -201,7 +203,12 @@
 
         // todo: add other shortcuts
         _keyboardShortcuts = KeyboardShortcutService.CreateShortcuts()
-            .Add(ModCode.Ctrl, Code.S, () => _syncButton);
+            .Add(ModCode.Ctrl, Code.T, () => _tagsButton)
+            .Add(ModCode.Ctrl, Code.S, () => _syncButton)
+            .Add(ModCode.Ctrl, Code.R, "/recyclebin")
+            .Add(ModCode.Ctrl, Code.I, "/info")
+            .Add(ModCode.None, Code.Home, () => ScrollManager.ScrollToTopAsync(null, ScrollBehavior.Auto))
+            .Add(ModCode.None, Code.End, () => ScrollManager.ScrollToBottomAsync(null, ScrollBehavior.Auto));
     }
 
     /// <summary>

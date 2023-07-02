@@ -60,6 +60,26 @@ namespace SilentNotes.Services
                 return this;
             }
 
+            /// <inheritdoc/>
+            public IKeyboardShortcuts Add(ModCode modifiers, Code code, Func<MudToggleIconButton> button)
+            {
+                _context.Add(modifiers, code, () => SimulateButtonClick(button), string.Empty, Exclude.None);
+                return this;
+            }
+
+            /// <inheritdoc/>
+            public IKeyboardShortcuts Add(ModCode modifiers, Code code, string href)
+            {
+                _context.Add(modifiers, code, () => _navigationService.NavigateTo(href), string.Empty, Exclude.None);
+                return this;
+            }
+
+            public IKeyboardShortcuts Add(ModCode modifiers, Code code, Action action)
+            {
+                _context.Add(modifiers, code, action, string.Empty, Exclude.None);
+                return this;
+            }
+
             private async ValueTask SimulateButtonClick(Func<MudBaseButton> button)
             {
                 MudBaseButton btn = button();
@@ -77,6 +97,12 @@ namespace SilentNotes.Services
                 {
                     await btn.OnClick.InvokeAsync();
                 }
+            }
+
+            private async ValueTask SimulateButtonClick(Func<MudToggleIconButton> button)
+            {
+                MudToggleIconButton btn = button();
+                await btn.Toggle();
             }
 
             /// <inheritdoc/>

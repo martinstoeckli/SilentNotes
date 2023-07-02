@@ -41,5 +41,36 @@ namespace SilentNotes.Services
         /// is guaranteed that the @ref is assigned at the time of activating the shortcut.</param>
         /// <returns>Returns itself for a fluent declaration of shortcuts.</returns>
         IKeyboardShortcuts Add(ModCode modifiers, Code code, Func<MudBaseButton> button);
+
+        /// <summary>
+        /// Defines a new keyboard shortcut for the razor page.
+        /// </summary>
+        /// <param name="modifiers">The flags of modifier keys, or <see cref="ModCode.None"/> if no
+        /// modifier should be active.</param>
+        /// <param name="code">The keyboard code to react to.</param>
+        /// <param name="button">Simulates a click on this button. A Func is required, so that it
+        /// is guaranteed that the @ref is assigned at the time of activating the shortcut.</param>
+        /// <returns>Returns itself for a fluent declaration of shortcuts.</returns>
+        IKeyboardShortcuts Add(ModCode modifiers, Code code, Func<MudToggleIconButton> button);
+
+        /// <summary>
+        /// Defines a new keyboard shortcut for the razor page.
+        /// </summary>
+        /// <param name="modifiers">The flags of modifier keys, or <see cref="ModCode.None"/> if no
+        /// modifier should be active.</param>
+        /// <param name="code">The keyboard code to react to.</param>
+        /// <param name="href">Assigns this navigation route to the shortcut.</param>
+        /// <returns>Returns itself for a fluent declaration of shortcuts.</returns>
+        IKeyboardShortcuts Add(ModCode modifiers, Code code, string href);
+
+        /// <summary>
+        /// Defines a new keyboard shortcut for the razor page.
+        /// </summary>
+        /// <param name="modifiers">The flags of modifier keys, or <see cref="ModCode.None"/> if no
+        /// modifier should be active.</param>
+        /// <param name="code">The keyboard code to react to.</param>
+        /// <param name="action">Assigns this action to the shortcut.</param>
+        /// <returns>Returns itself for a fluent declaration of shortcuts.</returns>
+        IKeyboardShortcuts Add(ModCode modifiers, Code code, Action action);
     }
 }
