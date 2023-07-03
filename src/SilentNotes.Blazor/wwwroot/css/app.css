@@ -135,7 +135,7 @@ h1:focus { outline: none; }
 .sortable-handle {
 }
 .safe-handle {
-	right: 50px;
+	right: calc(var(--note-handle-mx) + 32px);
 }
 .recycle-handle {
 	top: auto;

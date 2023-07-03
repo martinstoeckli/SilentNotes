@@ -72,9 +72,9 @@ namespace SilentNotes.ViewModels
             Model = model;
             UpdateTags();
 
-            //    // Initialize commands and events
-            //    NewNoteCommand = new RelayCommand(NewNote);
-            //    NewChecklistCommand = new RelayCommand(NewChecklist);
+            // Initialize commands and events
+            NewNoteCommand = new RelayCommand(NewNote);
+            NewChecklistCommand = new RelayCommand(NewChecklist);
             DeleteNoteCommand = new RelayCommand<object>(DeleteNote);
             ClearFilterCommand = new RelayCommand(ClearFilter);
             //    SynchronizeCommand = new RelayCommand(Synchronize);
@@ -196,12 +196,6 @@ namespace SilentNotes.ViewModels
         //    }
         //}
 
-        ///// <inheritdoc/>
-        //public override void OnGoBackPressed(out bool handled)
-        //{
-        //    handled = false;
-        //}
-
         public int NoteMinHeight
         {
             get
@@ -282,7 +276,6 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets the command which clears the search filter.
         /// </summary>
-        //[VueDataBinding(VueBindingMode.Command)]
         public ICommand ClearFilterCommand { get; private set; }
 
         private void ClearFilter()
@@ -291,61 +284,71 @@ namespace SilentNotes.ViewModels
             OnPropertyChanged("ClearFilter");
         }
 
-        ///// <summary>
-        ///// Gets the command which handles the creation of a new note.
-        ///// </summary>
-        //[VueDataBinding(VueBindingMode.Command)]
-        //public ICommand NewNoteCommand { get; private set; }
+        /// <summary>
+        /// Gets the command which handles the creation of a new note.
+        /// </summary>
+        public ICommand NewNoteCommand { get; private set; }
 
-        //private void NewNote()
-        //{
-        //    NewNote(NoteType.Text);
-        //}
+        private void NewNote()
+        {
+            NewNote(NoteType.Text);
+        }
 
-        //private void NewNote(NoteType noteType)
-        //{
-        //    Modified = true;
-        //    ClearFilter();
+        private void NewNote(NoteType noteType)
+        {
+            Modified = true;
+            ClearFilter();
 
-        //    // Create new note and update model list
-        //    NoteModel noteModel = new NoteModel();
-        //    noteModel.NoteType = noteType;
-        //    noteModel.BackgroundColorHex = _settingsService.LoadSettingsOrDefault().DefaultNoteColorHex;
+            // Create new note and update model list
+            NoteModel noteModel = new NoteModel();
+            noteModel.NoteType = noteType;
+            noteModel.BackgroundColorHex = _settingsService.LoadSettingsOrDefault().DefaultNoteColorHex;
 
-        //    // Update view model list
-        //    NoteViewModel noteViewModel = new NoteViewModel(_navigationService, Language, Icon, Theme, _webviewBaseUrl, _searchableTextConverter, _repositoryService, _feedbackService, null, _environmentService, _noteCryptor, _model.Safes, _model.CollectActiveTags(), noteModel);
-        //    NoteInsertionMode insertionMode = _settingsService.LoadSettingsOrDefault().DefaultNoteInsertion;
-        //    switch (insertionMode)
-        //    {
-        //        case NoteInsertionMode.AtTop:
-        //            var lastPinned = AllNotes.LastOrDefault(x => x.IsPinned == true);
-        //            var index = lastPinned == null ? 0 : AllNotes.IndexOf(lastPinned) + 1;
-        //            _model.Notes.Insert(index, noteModel);
-        //            AllNotes.Insert(index, noteViewModel);
-        //            break;
+            // Update view model list
+            NoteViewModel noteViewModel = new NoteViewModel(noteModel, _searchableTextConverter, Language, _themeService, _settingsService, _noteCryptor, _model.Safes);
+            NoteInsertionMode insertionMode = _settingsService.LoadSettingsOrDefault().DefaultNoteInsertion;
+            switch (insertionMode)
+            {
+                case NoteInsertionMode.AtTop:
+                    var lastPinned = AllNotes.LastOrDefault(x => x.IsPinned == true);
+                    var index = lastPinned == null ? 0 : AllNotes.IndexOf(lastPinned) + 1;
+                    _model.Notes.Insert(index, noteModel);
+                    AllNotes.Insert(index, noteViewModel);
+                    break;
 
-        //        case NoteInsertionMode.AtBottom:
-        //            _model.Notes.Add(noteModel);
-        //            AllNotes.Add(noteViewModel);
-        //            break;
+                case NoteInsertionMode.AtBottom:
+                    _model.Notes.Add(noteModel);
+                    AllNotes.Add(noteViewModel);
+                    break;
 
-        //        default:
-        //            throw new ArgumentOutOfRangeException(nameof(insertionMode));
-        //    }
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(insertionMode));
+            }
 
-        //    ShowNoteCommand.Execute(noteViewModel.Id);
-        //}
+            string targetRoute;
+            switch (noteType)
+            {
+                case NoteType.Text:
+                    targetRoute = "/note/" + noteViewModel.Id;
+                    break;
+                case NoteType.Checklist:
+                    targetRoute = "/checklist/" + noteViewModel.Id;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(noteType));
+            }
+            _navigationService.NavigateTo(targetRoute);
+        }
 
-        ///// <summary>
-        ///// Gets the command which handles the creation of a new checklist note.
-        ///// </summary>
-        //[VueDataBinding(VueBindingMode.Command)]
-        //public ICommand NewChecklistCommand { get; private set; }
+        /// <summary>
+        /// Gets the command which handles the creation of a new checklist note.
+        /// </summary>
+        public ICommand NewChecklistCommand { get; private set; }
 
-        //private void NewChecklist()
-        //{
-        //    NewNote(NoteType.Checklist);
-        //}
+        private void NewChecklist()
+        {
+            NewNote(NoteType.Checklist);
+        }
 
         /// <summary>
         /// Gets the command which handles the moving of a note to the recyclebin.
@@ -545,30 +548,30 @@ namespace SilentNotes.ViewModels
             get { return Model.Safes.Any(safe => safe.IsOpen); }
         }
 
-        //public void AddNoteToSafe(Guid noteId)
-        //{
-        //    NoteViewModel note = AllNotes.Find(item => item.Id == noteId);
-        //    SafeModel oldestOpenSafe = Model.Safes.FindOldestOpenSafe();
-        //    if ((note != null) && (oldestOpenSafe != null))
-        //    {
-        //        note.Model.SafeId = oldestOpenSafe.Id;
-        //        note.Model.HtmlContent = note.Lock(note.UnlockedHtmlContent);
-        //        note.Model.RefreshModifiedAt();
-        //        Modified = true;
-        //    }
-        //}
+        public void AddNoteToSafe(Guid noteId)
+        {
+            NoteViewModel note = AllNotes.Find(item => item.Id == noteId);
+            SafeModel oldestOpenSafe = Model.Safes.FindOldestOpenSafe();
+            if ((note != null) && (oldestOpenSafe != null))
+            {
+                note.Model.SafeId = oldestOpenSafe.Id;
+                note.Model.HtmlContent = note.Lock(note.UnlockedHtmlContent);
+                note.Model.RefreshModifiedAt();
+                Modified = true;
+            }
+        }
 
-        //public void RemoveNoteFromSafe(Guid noteId)
-        //{
-        //    NoteViewModel note = AllNotes.Find(item => item.Id == noteId);
-        //    if (note != null)
-        //    {
-        //        note.Model.SafeId = null;
-        //        note.Model.HtmlContent = note.UnlockedHtmlContent;
-        //        note.Model.RefreshModifiedAt();
-        //        Modified = true;
-        //    }
-        //}
+        public void RemoveNoteFromSafe(Guid noteId)
+        {
+            NoteViewModel note = AllNotes.Find(item => item.Id == noteId);
+            if (note != null)
+            {
+                note.Model.SafeId = null;
+                note.Model.HtmlContent = note.UnlockedHtmlContent;
+                note.Model.RefreshModifiedAt();
+                Modified = true;
+            }
+        }
 
         ///// <summary>
         ///// Command to move a note to a new place in the list. This is usually

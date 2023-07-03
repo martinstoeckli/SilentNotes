@@ -20,254 +20,262 @@
 @implements IDisposable
 
 <style type="text/css">
-    body {
-        @(ThemeService.CssNoteRepositoryBackground)
-        background-attachment: fixed;
-    }
-    .note-item, .note-card, .note-locked {
-        min-height: @(ViewModel.NoteMinHeight)px;
-        max-height: @(ViewModel.NoteMaxHeight)px;
-    }
-    .note-viewer {
-        font-size: @(ViewModel.GetNoteBaseFontSize(SettingsService))px !important;
-    }
-    .note-light .note-viewer.over-view.checklist p::before { content: @(IconService.LoadIconAsCssUrl(IconNames.CheckboxBlankOutline, new[] { new KeyValuePair<string, string>("fill", "#000000") })) }
-    .note-light .note-viewer.over-view.checklist p.done::before { content: @(IconService.LoadIconAsCssUrl(IconNames.CheckboxOutline, new[] { new KeyValuePair<string, string>("fill", "#000000") })) }
-    .note-light .note-viewer.over-view.checklist p.disabled::before { content: @(IconService.LoadIconAsCssUrl(IconNames.CheckboxBlankOutline, new[] { new KeyValuePair<string, string>("fill", "#000000") })) }
-    .note-dark .note-viewer.over-view.checklist p::before { content: @(IconService.LoadIconAsCssUrl(IconNames.CheckboxBlankOutline, new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") })) }
-    .note-dark .note-viewer.over-view.checklist p.done::before { content: @(IconService.LoadIconAsCssUrl(IconNames.CheckboxOutline, new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") })) }
-    .note-dark .note-viewer.over-view.checklist p.disabled::before { content: @(IconService.LoadIconAsCssUrl(IconNames.CheckboxBlankOutline, new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") })) }
+	body {
+		@(ThemeService.CssNoteRepositoryBackground)
+		background-attachment: fixed;
+	}
+	.note-item, .note-card, .note-locked {
+		min-height: @(ViewModel.NoteMinHeight)px;
+		max-height: @(ViewModel.NoteMaxHeight)px;
+	}
+	.note-viewer {
+		font-size: @(ViewModel.GetNoteBaseFontSize(SettingsService))px !important;
+	}
+	.note-light .note-viewer.over-view.checklist p::before { content: @(IconService.LoadIconAsCssUrl(IconNames.CheckboxBlankOutline, new[] { new KeyValuePair<string, string>("fill", "#000000") })) }
+	.note-light .note-viewer.over-view.checklist p.done::before { content: @(IconService.LoadIconAsCssUrl(IconNames.CheckboxOutline, new[] { new KeyValuePair<string, string>("fill", "#000000") })) }
+	.note-light .note-viewer.over-view.checklist p.disabled::before { content: @(IconService.LoadIconAsCssUrl(IconNames.CheckboxBlankOutline, new[] { new KeyValuePair<string, string>("fill", "#000000") })) }
+	.note-dark .note-viewer.over-view.checklist p::before { content: @(IconService.LoadIconAsCssUrl(IconNames.CheckboxBlankOutline, new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") })) }
+	.note-dark .note-viewer.over-view.checklist p.done::before { content: @(IconService.LoadIconAsCssUrl(IconNames.CheckboxOutline, new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") })) }
+	.note-dark .note-viewer.over-view.checklist p.disabled::before { content: @(IconService.LoadIconAsCssUrl(IconNames.CheckboxBlankOutline, new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") })) }
 </style>
 
 @* Main menu *@
 <MudAppBar Fixed="true" Dense="true">
-    <MudSpacer />
+	<MudSpacer />
 
-    @* Tags *@
-    <MudToggleIconButton @ref="_tagsButton" @bind-Toggled="ViewModel.IsDrawerOpen"
-        Class="@this.CssClassIf("toggled", ViewModel.IsFilteredByTag)"
-        Icon="@(IconService.GetSvgLink(IconNames.TagMultiple))" Color="Color.Inherit"
-        ToggledIcon="@(IconService.GetSvgLink(IconNames.TagMultiple))" ToggledColor="Color.Inherit"
-        Title="@(((ListItemViewModel<string>)ViewModel.SelectedTag).Text)" />
+	@* Tags *@
+	<MudToggleIconButton @ref="_tagsButton" @bind-Toggled="ViewModel.IsDrawerOpen"
+		Class="@this.CssClassIf("toggled", ViewModel.IsFilteredByTag)"
+		Icon="@(IconService.GetSvgLink(IconNames.TagMultiple))" Color="Color.Inherit"
+		ToggledIcon="@(IconService.GetSvgLink(IconNames.TagMultiple))" ToggledColor="Color.Inherit"
+		Title="@(((ListItemViewModel<string>)ViewModel.SelectedTag).Text)" />
 
-    @* Filter *@
-    <MudPaper Class="d-inline-flex align-center rounded-pill pa-0" MaxWidth="55%" MaxHeight="36px" Elevation="0">
-        <MudInput @ref="_filterInput" @bind-Value="ViewModel.Filter"
-            Class="filter-input ml-2 mr-1 my-0"
-            Adornment="Adornment.End" AdornmentIcon="@FilterIcon" OnAdornmentClick="@(() => ViewModel.ClearFilterCommand.Execute(null))"
-            Immediate="true" />
-    </MudPaper>
+	@* Filter *@
+	<MudPaper Class="d-inline-flex align-center rounded-pill pa-0" MaxWidth="55%" MaxHeight="36px" Elevation="0">
+		<MudInput @ref="_filterInput" @bind-Value="ViewModel.Filter"
+			Class="filter-input ml-2 mr-1 my-0"
+			Adornment="Adornment.End" AdornmentIcon="@FilterIcon" OnAdornmentClick="@(() => ViewModel.ClearFilterCommand.Execute(null))"
+			Immediate="true" />
+	</MudPaper>
 
-    @* Synchronization *@
-    <MudIconButton @ref="_syncButton" Icon="@IconService[IconNames.CloudSync]" Color="Color.Inherit" Title="@LanguageService["sync_notes"]" />
+	@* Synchronization *@
+	<MudIconButton @ref="_syncButton" Icon="@IconService[IconNames.CloudSync]" Color="Color.Inherit" Title="@LanguageService["sync_notes"]" />
 
-    @* Overflow menu *@
-    <MudMenu @ref="_overflowMenu" Dense="true" AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight">
-        <ActivatorContent>
-            <MudIconButton Icon="@IconService[IconNames.DotsVertical]" Color="Color.Inherit" />
-        </ActivatorContent>
-        <ChildContent>
-            <MudNavMenu Rounded="true" Margin="Margin.Dense" Class="px-1">
-                <MudNavLink Class="d-sm-none" OnClick="DoClick" Icon="@IconService.GetSvgLink(IconNames.NoteTextOutline)">@LanguageService["note_create_new"]</MudNavLink>
-                <MudNavLink OnClick="DoClick" Icon="@IconService.GetSvgLink(IconNames.OrderBoolAscendingVariant)">@LanguageService["checklist_create_new"]</MudNavLink>
-                <MudNavLink Href="/recyclebin" Icon="@IconService[IconNames.DeleteEmpty]">@LanguageService["show_recyclebin"]</MudNavLink>
-                <MudNavLink Href="/export" Icon="@IconService[IconNames.Export]">@LanguageService["show_export"]</MudNavLink>
-                <MudDivider />
-                @if (ViewModel.IsAnySafeOpen) {
-                    <MudNavLink OnClick="@(() => ViewModel.CloseSafeCommand.ExecuteAndCloseMenu(_overflowMenu))" Icon="@IconService[IconNames.SafeSquareOutline]">@LanguageService["safe_close"]</MudNavLink>
-                }
-                else {
-                    <MudNavLink Href="/opensafe" Icon="@IconService[IconNames.SafeSquareOutline]">@LanguageService["safe_open"]</MudNavLink>
-                }
-                <MudNavLink Href="/changepassword" Disabled="!ViewModel.SafeExists" Icon="@IconService[IconNames.LockReset]">@LanguageService["safe_change_password"]</MudNavLink>
-                <MudDivider />
-                <MudNavLink Href="/transfercodehistory" Icon="@IconService[IconNames.Key]">@LanguageService["show_transfer_code"]</MudNavLink>
-                <MudNavLink Href="/settings" Icon="@IconService[IconNames.Settings]">@LanguageService["show_settings"]</MudNavLink>
-                <MudNavLink Href="/info" Icon="@Icons.Material.Filled.Info">@LanguageService["show_info"]</MudNavLink>
-            </MudNavMenu>
-        </ChildContent>
-    </MudMenu>
+	@* Overflow menu *@
+	<MudMenu @ref="_overflowMenu" Dense="true" AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight">
+		<ActivatorContent>
+			<MudIconButton Icon="@IconService[IconNames.DotsVertical]" Color="Color.Inherit" />
+		</ActivatorContent>
+		<ChildContent>
+			<MudNavMenu Rounded="true" Margin="Margin.Dense" Class="px-1">
+				<MudNavLink OnClick="@(() => ViewModel.NewNoteCommand.Execute(null))" Icon="@IconService.GetSvgLink(IconNames.NoteTextOutline)">@LanguageService["note_create_new"]</MudNavLink>
+				<MudNavLink OnClick="@(() => ViewModel.NewChecklistCommand.Execute(null))" Icon="@IconService.GetSvgLink(IconNames.OrderBoolAscendingVariant)">@LanguageService["checklist_create_new"]</MudNavLink>
+				<MudNavLink Href="/recyclebin" Icon="@IconService[IconNames.DeleteEmpty]">@LanguageService["show_recyclebin"]</MudNavLink>
+				<MudNavLink Href="/export" Icon="@IconService[IconNames.Export]">@LanguageService["show_export"]</MudNavLink>
+				<MudDivider />
+				@if (ViewModel.IsAnySafeOpen) {
+					<MudNavLink OnClick="@(() => ViewModel.CloseSafeCommand.ExecuteAndCloseMenu(_overflowMenu))" Icon="@IconService[IconNames.SafeSquareOutline]">@LanguageService["safe_close"]</MudNavLink>
+				}
+				else {
+					<MudNavLink Href="/opensafe" Icon="@IconService[IconNames.SafeSquareOutline]">@LanguageService["safe_open"]</MudNavLink>
+				}
+				<MudNavLink Href="/changepassword" Disabled="!ViewModel.SafeExists" Icon="@IconService[IconNames.LockReset]">@LanguageService["safe_change_password"]</MudNavLink>
+				<MudDivider />
+				<MudNavLink Href="/transfercodehistory" Icon="@IconService[IconNames.Key]">@LanguageService["show_transfer_code"]</MudNavLink>
+				<MudNavLink Href="/settings" Icon="@IconService[IconNames.Settings]">@LanguageService["show_settings"]</MudNavLink>
+				<MudNavLink Href="/info" Icon="@Icons.Material.Filled.Info">@LanguageService["show_info"]</MudNavLink>
+			</MudNavMenu>
+		</ChildContent>
+	</MudMenu>
 </MudAppBar>
 
 @* Sidebar with tags *@
 <MudDrawer @ref="_sideDrawer" @bind-Open="@ViewModel.IsDrawerOpen" Elevation="1" Variant="@DrawerVariant.Responsive" Breakpoint="Breakpoint.Md" ClipMode="DrawerClipMode.Docked">
-    <MudDrawerHeader Class="d-inline-flex justify-space-between align-start">
-        <h2>Filter by tag</h2>
-        <MudIconButton OnClick="() => ViewModel.IsDrawerOpen = false" Icon="@IconService.GetSvgLink(IconNames.Close)" Size="Size.Small" />
-    </MudDrawerHeader>
-    <MudDrawerContainer>
-        <MudList Clickable="true" @bind-SelectedValue="@ViewModel.SelectedTag" Dense="false">
-            @foreach (var tag in ViewModel.Tags)
-            {
-                if (tag.IsDivider)
-                {
-                    <MudDivider />
-                }
-                else
-                {
-                    <MudListItem Value="@tag" Text="@tag.Text" Icon="@IconService.GetSvgLink(tag.IconName)" OnClick="() => CloseDrawerWhenItemSelected()" />
-                }
-            }
-        </MudList>
-    </MudDrawerContainer>
+	<MudDrawerHeader Class="d-inline-flex justify-space-between align-start">
+		<h2>Filter by tag</h2>
+		<MudIconButton OnClick="() => ViewModel.IsDrawerOpen = false" Icon="@IconService.GetSvgLink(IconNames.Close)" Size="Size.Small" />
+	</MudDrawerHeader>
+	<MudDrawerContainer>
+		<MudList Clickable="true" @bind-SelectedValue="@ViewModel.SelectedTag" Dense="false">
+			@foreach (var tag in ViewModel.Tags)
+			{
+				if (tag.IsDivider)
+				{
+					<MudDivider />
+				}
+				else
+				{
+					<MudListItem Value="@tag" Text="@tag.Text" Icon="@IconService.GetSvgLink(tag.IconName)" OnClick="() => CloseDrawerWhenItemSelected()" />
+				}
+			}
+		</MudList>
+	</MudDrawerContainer>
 </MudDrawer>
 
 @* body *@
 <div id="content" class="px-1 pt-0 pb-2">
-    <ul id="note-repository" class="note-list flex-column flex-sm-row">
-        @foreach (var note in ViewModel.FilteredNotes)
-        {
-            <li @key="note.Id" class="note-item">
-                <a href="@note.Route">
-                    <div class="note-card mud-elevation-3 @note.LightOrDarkClass()" style="background-color:@note.BackgroundColorHex">
-                        @if (@note.IsLocked)
-                        {
-                            <div class="note-locked">@IconService.EmbedSvgLink(IconNames.LockOutline)</div>
-                        }
-                        else
-                        {
-                            <div class="note-viewer over-view @note.CssClassNoteType">@((MarkupString)note.GetShortenedUnlockedHtmlContent())</div>
-                        }
+	<ul id="note-repository" class="note-list flex-column flex-sm-row">
+		@foreach (var note in ViewModel.FilteredNotes)
+		{
+			<li @key="note.Id" class="note-item">
+				<a href="@note.Route">
+					<div class="note-card mud-elevation-3 @note.LightOrDarkClass()" style="background-color:@note.BackgroundColorHex">
+						@if (note.IsLocked)
+						{
+							<div class="note-locked">@IconService.EmbedSvgLink(IconNames.LockOutline)</div>
+						}
+						else
+						{
+							<div class="note-viewer over-view @note.CssClassNoteType">@((MarkupString)note.GetShortenedUnlockedHtmlContent())</div>
+						}
 
-                        @if (@note.IsPinned)
-                        {
-                            <div class="pin">@IconService.EmbedSvgLink(IconNames.Pin, 22)</div>
-                        }
-                        <div class="note-handle sortable-handle">@IconService.EmbedSvgLink(IconNames.ArrowAll, 22)</div>
-                        <div class="note-handle recycle-handle" @onclick="@(() => ViewModel.DeleteNoteCommand.Execute(note.Id))" @onclick:preventDefault="true">@IconService.EmbedSvgLink(IconNames.Delete, 19)</div>
-                    </div>
-                </a>
-            </li>
-        }
-    </ul>
+						@if (note.IsPinned)
+						{
+							<div class="pin">@IconService.EmbedSvgLink(IconNames.Pin, 22)</div>
+						}
+						<div class="note-handle sortable-handle">@IconService.EmbedSvgLink(IconNames.ArrowAll, 22)</div>
+						<div class="note-handle recycle-handle" @onclick="@(() => ViewModel.DeleteNoteCommand.Execute(note.Id))" @onclick:preventDefault="true">@IconService.EmbedSvgLink(IconNames.Delete, 19)</div>
+						@if (ViewModel.IsAnySafeOpen && !note.IsLocked)
+						{
+							@if (note.IsInSafe)
+							{
+								<div class="note-handle safe-handle reddish" @onclick="@(() => ViewModel.RemoveNoteFromSafe(note.Id))" @onclick:preventDefault="true">@IconService.EmbedSvgLink(IconNames.Lock, 18)</div>
+							}
+							else
+							{
+								<div class="note-handle safe-handle greenish" @onclick="@(() => ViewModel.AddNoteToSafe(note.Id))" @onclick:preventDefault="true">@IconService.EmbedSvgLink(IconNames.LockOpenVariant, 18)</div>
+							}
+						}
+					</div>
+				</a>
+			</li>
+		}
+	</ul>
 </div>
 
 @* The FAB for adding a new note *@
 <MudMenu Class="fab-position" AnchorOrigin="Origin.TopRight" TransformOrigin="Origin.BottomRight">
-    <ActivatorContent>
-        <MudFab Class="mt-4" Color="Color.Primary" StartIcon="@IconService[IconNames.Plus]" />
-    </ActivatorContent>
-    <ChildContent>
-        <MudNavLink OnClick="DoClick" Icon="@IconService.GetSvgLink(IconNames.NoteTextOutline)">@LanguageService["note_create_new"]</MudNavLink>
-        <MudNavLink OnClick="DoClick" Icon="@IconService.GetSvgLink(IconNames.OrderBoolAscendingVariant)">@LanguageService["checklist_create_new"]</MudNavLink>
-    </ChildContent>
+	<ActivatorContent>
+		<MudFab Class="mt-4" Color="Color.Primary" StartIcon="@IconService[IconNames.Plus]" />
+	</ActivatorContent>
+	<ChildContent>
+		<MudNavLink OnClick="@(() => ViewModel.NewNoteCommand.Execute(null))" Icon="@IconService.GetSvgLink(IconNames.NoteTextOutline)">@LanguageService["note_create_new"]</MudNavLink>
+		<MudNavLink OnClick="@(() => ViewModel.NewChecklistCommand.Execute(null))" Icon="@IconService.GetSvgLink(IconNames.OrderBoolAscendingVariant)">@LanguageService["checklist_create_new"]</MudNavLink>
+	</ChildContent>
 </MudMenu>
 
 @* Declare icons which can be reused multiple times, to reduce page size *@
 <div hidden>
-    @IconService.EmbedLinkableSvgs( new [] {
-        IconNames.ArrowAll,
-        IconNames.Close,
-        IconNames.CloseCircleOutline,
-        IconNames.Delete,
-        IconNames.LockOutline,
-        IconNames.Magnify,
-        IconNames.NoteTextOutline,
-        IconNames.OrderBoolAscendingVariant,
-        IconNames.Pin,
-        IconNames.TagMultiple,
-        IconNames.TagOff,
-        IconNames.TagOutline,
-    });
+	@IconService.EmbedLinkableSvgs( new [] {
+		IconNames.ArrowAll,
+		IconNames.Close,
+		IconNames.CloseCircleOutline,
+		IconNames.Delete,
+		IconNames.LockOutline,
+		IconNames.Lock,
+		IconNames.LockOpenVariant,
+		IconNames.Magnify,
+		IconNames.NoteTextOutline,
+		IconNames.OrderBoolAscendingVariant,
+		IconNames.Pin,
+		IconNames.TagMultiple,
+		IconNames.TagOff,
+		IconNames.TagOutline,
+	});
 </div>
 
 @code {
-    private bool _isDisposed;
-    private MudInput<string> _filterInput;
-    private MudMenu _overflowMenu;
-    private MudDrawer _sideDrawer;
-    private MudToggleIconButton _tagsButton;
-    private MudBaseButton _syncButton;
-    private IKeyboardShortcuts _keyboardShortcuts;
+	private bool _isDisposed;
+	private MudInput<string> _filterInput;
+	private MudMenu _overflowMenu;
+	private MudDrawer _sideDrawer;
+	private MudToggleIconButton _tagsButton;
+	private MudBaseButton _syncButton;
+	private IKeyboardShortcuts _keyboardShortcuts;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="NoteRepositoryPage"/> class.
-    /// </summary>
-    protected override void OnInitialized()
-    {
-        RepositoryStorageLoadResult loadResult = RepositoryStorageService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepositoryModel);
-        if (loadResult == RepositoryStorageLoadResult.InvalidRepository)
-            throw new Exception("Invalid repository");
+	/// <summary>
+	/// Initializes a new instance of the <see cref="NoteRepositoryPage"/> class.
+	/// </summary>
+	protected override void OnInitialized()
+	{
+		RepositoryStorageLoadResult loadResult = RepositoryStorageService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepositoryModel);
+		if (loadResult == RepositoryStorageLoadResult.InvalidRepository)
+			throw new Exception("Invalid repository");
 
-        ViewModel = new NoteRepositoryViewModel(
-            noteRepositoryModel,
-            LanguageService,
-            NavigationService,
-            FeedbackService,
-            ThemeService,
-            SettingsService,
-            EnvironmentService,
-            CryptoRandomSource);
+		ViewModel = new NoteRepositoryViewModel(
+			noteRepositoryModel,
+			LanguageService,
+			NavigationService,
+			FeedbackService,
+			ThemeService,
+			SettingsService,
+			EnvironmentService,
+			CryptoRandomSource);
 
-        // todo: read the SettingsViewMode.StartWithTagsOpen
+		// todo: read the SettingsViewMode.StartWithTagsOpen
 
-        // todo: add other shortcuts
-        _keyboardShortcuts = KeyboardShortcutService.CreateShortcuts()
-            .Add(ModCode.Ctrl, Code.T, () => _tagsButton)
-            .Add(ModCode.Ctrl, Code.S, () => _syncButton)
-            .Add(ModCode.Ctrl, Code.R, "/recyclebin")
-            .Add(ModCode.Ctrl, Code.I, "/info")
-            .Add(ModCode.None, Code.Home, () => ScrollManager.ScrollToTopAsync(null, ScrollBehavior.Auto))
-            .Add(ModCode.None, Code.End, () => ScrollManager.ScrollToBottomAsync(null, ScrollBehavior.Auto));
-    }
+		_keyboardShortcuts = KeyboardShortcutService.CreateShortcuts()
+			.Add(ModCode.Ctrl, Code.T, () => _tagsButton)
+			.Add(ModCode.Ctrl, Code.S, () => _syncButton)
+			.Add(ModCode.Ctrl, Code.N, () => ViewModel.NewNoteCommand.Execute(null))
+			.Add(ModCode.Ctrl, Code.L, () => ViewModel.NewChecklistCommand.Execute(null))
+			.Add(ModCode.Ctrl, Code.R, "/recyclebin")
+			.Add(ModCode.Ctrl, Code.I, "/info")
+			.Add(ModCode.None, Code.Home, () => ScrollManager.ScrollToTopAsync(null, ScrollBehavior.Auto))
+			.Add(ModCode.None, Code.End, () => ScrollManager.ScrollToBottomAsync(null, ScrollBehavior.Auto));
+	}
 
-    /// <summary>
-    /// Finalizes an instance of the <see cref="NoteRepositoryPage"/> class.
-    /// </summary>
-    public void Dispose()
-    {
-        if (_isDisposed)
-            return;
-        _isDisposed = true;
-        _keyboardShortcuts.Dispose();
-    }
+	/// <summary>
+	/// Finalizes an instance of the <see cref="NoteRepositoryPage"/> class.
+	/// </summary>
+	public void Dispose()
+	{
+		if (_isDisposed)
+			return;
+		_isDisposed = true;
+		_keyboardShortcuts.Dispose();
+	}
 
-    /// <inheritdoc/>
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        // Focus filter control for direct typing on Windows.
-        // On Android a tap on the filter input will bring up the keyboard.
+	/// <inheritdoc/>
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		// Focus filter control for direct typing on Windows.
+		// On Android a tap on the filter input will bring up the keyboard.
 #if WINDOWS
-    if (firstRender)
-    await _filterInput.FocusAsync();
+	if (firstRender)
+	await _filterInput.FocusAsync();
 #else
-        await DoNothing();
+		await DoNothing();
 #endif
-    }
+	}
 
-    private Task DoNothing()
-    {
-        return Task.CompletedTask;
-    }
+	private Task DoNothing()
+	{
+		return Task.CompletedTask;
+	}
 
-    /// <summary>
-    /// Gets or sets the datacontext of this view.
-    /// </summary>
-    private NoteRepositoryViewModel ViewModel { get; set; }
+	/// <summary>
+	/// Gets or sets the datacontext of this view.
+	/// </summary>
+	private NoteRepositoryViewModel ViewModel { get; set; }
 
-    /// <summary>
-    /// Gets the svg icon for filtering (magnifier or clear)
-    /// </summary>
-    private string FilterIcon
-    {
-        get { return IconService.GetSvgLink(ViewModel.IsFiltered ? IconNames.CloseCircleOutline : IconNames.Magnify); }
-    }
+	/// <summary>
+	/// Gets the svg icon for filtering (magnifier or clear)
+	/// </summary>
+	private string FilterIcon
+	{
+		get { return IconService.GetSvgLink(ViewModel.IsFiltered ? IconNames.CloseCircleOutline : IconNames.Magnify); }
+	}
 
-    /// <summary>
-    /// Workaround, because the drawer contains a MudList which consumes the click event and does
-    /// not automatically close the drawer for small screens.
-    /// </summary>
-    /// <returns>Task for async calls.</returns>
-    private async Task CloseDrawerWhenItemSelected()
-    {
-        bool isLargeScreen = await _sideDrawer.Breakpointistener.IsMediaSize(Breakpoint.MdAndUp);
-        if (!isLargeScreen)
-            ViewModel.IsDrawerOpen = false;
-    }
-
-    // todo: remove
-    private void DoClick(MouseEventArgs args)
-    {
-        _overflowMenu.CloseMenu();
-    }
+	/// <summary>
+	/// Workaround, because the drawer contains a MudList which consumes the click event and does
+	/// not automatically close the drawer for small screens.
+	/// </summary>
+	/// <returns>Task for async calls.</returns>
+	private async Task CloseDrawerWhenItemSelected()
+	{
+		bool isLargeScreen = await _sideDrawer.Breakpointistener.IsMediaSize(Breakpoint.MdAndUp);
+		if (!isLargeScreen)
+			ViewModel.IsDrawerOpen = false;
+	}
 }

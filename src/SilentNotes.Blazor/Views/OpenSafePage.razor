@@ -23,25 +23,25 @@
 
 @* Main menu *@
 <MudAppBar Fixed="true" Dense="true">
-    <MudIconButton @ref="_backButton" Href="/back" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" />
+	<MudIconButton @ref="_backButton" Href="/back" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" />
 
-    <MudSpacer/>
+	<MudSpacer/>
 
-    @* Overflow menu *@
-    <MudMenu @ref="_overflowMenu" Dense="true" AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight">
-        <ActivatorContent>
-            <MudIconButton Icon="@IconService[IconNames.DotsVertical]" Color="Color.Inherit" />
-        </ActivatorContent>
-        <ChildContent>
-            <MudNavMenu Rounded="true" Margin="Margin.Dense" Class="px-1">
-                <MudNavLink
-                    OnClick="@(() => ViewModel.ResetSafeCommand.ExecuteAndCloseMenu(_overflowMenu))"
-                    Disabled="!ViewModel.SafeExists"
-                    IconColor="Color.Error"
-                    Icon="@IconService.GetSvgLink(IconNames.SafeSquareOutline)">@LanguageService["safe_reset"]</MudNavLink>
-            </MudNavMenu>
-        </ChildContent>
-    </MudMenu>
+	@* Overflow menu *@
+	<MudMenu @ref="_overflowMenu" Dense="true" AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight">
+		<ActivatorContent>
+			<MudIconButton Icon="@IconService[IconNames.DotsVertical]" Color="Color.Inherit" />
+		</ActivatorContent>
+		<ChildContent>
+			<MudNavMenu Rounded="true" Margin="Margin.Dense" Class="px-1">
+				<MudNavLink
+					OnClick="@(() => ViewModel.ResetSafeCommand.ExecuteAndCloseMenu(_overflowMenu))"
+					Disabled="!ViewModel.SafeExists"
+					IconColor="Color.Error"
+					Icon="@IconService.GetSvgLink(IconNames.SafeSquareOutline)">@LanguageService["safe_reset"]</MudNavLink>
+			</MudNavMenu>
+		</ChildContent>
+	</MudMenu>
 </MudAppBar>
 
 @* watermark image *@
@@ -49,109 +49,110 @@
 
 @* body *@
 <MudContainer id="content" Class="mud-container-left mud-container-p" MaxWidth="MaxWidth.Medium">
-    @if (ViewModel.SafeExists)
-    {
-        <h1 class="h-colored">@LanguageService["safe_open"]</h1>
-        <p class="my-4">@LanguageService["safe_open_existing"]</p>
-    }
-    else
-    {
-        <h1 class="h-colored">@LanguageService["safe_new"]</h1>
-        <p class="my-4">@LanguageService["safe_open_new"]</p>
-    }
+	@if (ViewModel.SafeExists)
+	{
+		<h1 class="h-colored">@LanguageService["safe_open"]</h1>
+		<p class="my-4">@LanguageService["safe_open_existing"]</p>
+	}
+	else
+	{
+		<h1 class="h-colored">@LanguageService["safe_new"]</h1>
+		<p class="my-4">@LanguageService["safe_open_new"]</p>
+	}
 
-    <MudForm>
-        <MudTextFieldEx T="SecureString" @bind-Value="ViewModel.Password"
-            Label="@LanguageService["cloud_password"]"
-            Converter="@_secureStringConverter"
-            Variant="Variant.Outlined" InputType="@PasswordInputType"
-            Error="@ViewModel.HasPasswordError"
-            ErrorText="@ViewModel.PasswordErrorText"
-            Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="@(() => IsPasswordVisible = !IsPasswordVisible)" />
+	<MudForm>
+		<MudTextFieldEx T="SecureString" @bind-Value="ViewModel.Password"
+			AutoFocus="true"
+			Label="@LanguageService["cloud_password"]"
+			Converter="@_secureStringConverter"
+			Variant="Variant.Outlined" InputType="@PasswordInputType"
+			Error="@ViewModel.HasPasswordError"
+			ErrorText="@ViewModel.PasswordErrorText"
+			Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="@(() => IsPasswordVisible = !IsPasswordVisible)" />
 
-        @if (!ViewModel.SafeExists)
-        {
-            <MudTextFieldEx @bind-Value="ViewModel.PasswordConfirmation"
-                Label="@LanguageService["safe_confirm_password"]"
-                Converter="@_secureStringConverter"
-                Variant="Variant.Outlined" InputType="@PasswordInputType"
-                Error="@ViewModel.HasPasswordConfirmationError"
-                ErrorText="@LanguageService["password_confirmation_error"]" />
-        }
-    </MudForm>
+		@if (!ViewModel.SafeExists)
+		{
+			<MudTextFieldEx @bind-Value="ViewModel.PasswordConfirmation"
+				Label="@LanguageService["safe_confirm_password"]"
+				Converter="@_secureStringConverter"
+				Variant="Variant.Outlined" InputType="@PasswordInputType"
+				Error="@ViewModel.HasPasswordConfirmationError"
+				ErrorText="@LanguageService["password_confirmation_error"]" />
+		}
+	</MudForm>
 
-    <MudStack Class="my-4" Row="true" Justify="Justify.FlexEnd" Spacing="1">
-        <MudButton Href="/back" Color="Color.Default" Variant="Variant.Filled">@LanguageService["cancel"]</MudButton>
-        <MudButton @ref="_okButton" OnClick="@(() => ViewModel.OkCommand.Execute(null))" Color="Color.Primary" Variant="Variant.Filled">@LanguageService["ok"]</MudButton>
-    </MudStack>
+	<MudStack Class="my-4" Row="true" Justify="Justify.FlexEnd" Spacing="1">
+		<MudButton Href="/back" Color="Color.Default" Variant="Variant.Filled">@LanguageService["cancel"]</MudButton>
+		<MudButton @ref="_okButton" OnClick="@(() => ViewModel.OkCommand.Execute(null))" Color="Color.Primary" Variant="Variant.Filled">@LanguageService["ok"]</MudButton>
+	</MudStack>
 
-    @if (!ViewModel.SafeExists)
-    {
-        <MudAlert Class="d-inline-flex my-4" Severity="Severity.Info" Elevation="1">@LanguageService["safe_password_requirement"]</MudAlert>
-    }
+	@if (!ViewModel.SafeExists)
+	{
+		<MudAlert Class="d-inline-flex my-4" Severity="Severity.Info" Elevation="1">@LanguageService["safe_password_requirement"]</MudAlert>
+	}
 </MudContainer>
 
 @* Declare icons which can be reused multiple times, to reduce page size *@
 <div hidden>
-    @IconService.EmbedLinkableSvgs( new [] {
-        IconNames.SafeSquareOutline,
-    });
+	@IconService.EmbedLinkableSvgs( new [] {
+		IconNames.SafeSquareOutline,
+	});
 </div>
 
 @code {
-    private bool _isDisposed;
-    private MudMenu _overflowMenu;
-    private MudBaseButton _backButton;
-    private MudBaseButton _okButton;
-    private IKeyboardShortcuts _keyboardShortcuts;
-    private SecureStringConverter _secureStringConverter;
+	private bool _isDisposed;
+	private MudMenu _overflowMenu;
+	private MudBaseButton _backButton;
+	private MudBaseButton _okButton;
+	private IKeyboardShortcuts _keyboardShortcuts;
+	private SecureStringConverter _secureStringConverter;
 
-    protected override void OnParametersSet()
-    {
-        IsPasswordVisible = false;
-        string navigationTargetRoute = string.Format("{0}/{1}", TargetNoteType, TargetNoteId);
-        ViewModel = new OpenSafeViewModel(LanguageService, NavigationService, FeedbackService, RandomService, SettingsService, RepositoryService, navigationTargetRoute);
-        _secureStringConverter = new SecureStringConverter();
+	protected override void OnParametersSet()
+	{
+		IsPasswordVisible = false;
+		string navigationTargetRoute = string.Format("{0}/{1}", TargetNoteType, TargetNoteId);
+		ViewModel = new OpenSafeViewModel(LanguageService, NavigationService, FeedbackService, RandomService, SettingsService, RepositoryService, navigationTargetRoute);
+		_secureStringConverter = new SecureStringConverter();
 
-        _keyboardShortcuts = KeyboardShortcutService.CreateShortcuts()
-            .Add(ModCode.None, Code.Enter, () => _okButton)
-            .Add(ModCode.None, Code.Escape, () => _backButton);
-    }
+		_keyboardShortcuts = KeyboardShortcutService.CreateShortcuts()
+			.Add(ModCode.None, Code.Enter, () => _okButton)
+			.Add(ModCode.None, Code.Escape, () => _backButton);
+	}
 
-    public void Dispose()
-    {
-        if (_isDisposed)
-            return;
-        _isDisposed = true;
-        _keyboardShortcuts.Dispose();
-    }
+	public void Dispose()
+	{
+		if (_isDisposed)
+			return;
+		_isDisposed = true;
+		_keyboardShortcuts.Dispose();
+	}
 
-    private OpenSafeViewModel ViewModel { get; set; }
+	private OpenSafeViewModel ViewModel { get; set; }
 
-    [Parameter]
-    public string TargetNoteType { get; set; } = default!;
+	[Parameter]
+	public string TargetNoteType { get; set; } = default!;
 
-    [Parameter]
-    public string TargetNoteId { get; set; } = default!;
+	[Parameter]
+	public string TargetNoteId { get; set; } = default!;
 
-    /// <summary>
-    /// Gets or sets a value indicating whether the plaintext of the password is shown.
-    /// </summary>
-    private bool IsPasswordVisible { get; set; }
+	/// <summary>
+	/// Gets or sets a value indicating whether the plaintext of the password is shown.
+	/// </summary>
+	private bool IsPasswordVisible { get; set; }
 
-    /// <summary>
-    /// Gets the type for the password input field (dots/plaintext).
-    /// </summary>
-    private InputType PasswordInputType
-    {
-        get { return IsPasswordVisible ? InputType.Text : InputType.Password; }
-    }
+	/// <summary>
+	/// Gets the type for the password input field (dots/plaintext).
+	/// </summary>
+	private InputType PasswordInputType
+	{
+		get { return IsPasswordVisible ? InputType.Text : InputType.Password; }
+	}
 
-    /// <summary>
-    /// Gets the "password visible" icon for the password input field.
-    /// </summary>
-    private string PasswordInputIcon
-    {
-        get { return IsPasswordVisible ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff; }
-    }
+	/// <summary>
+	/// Gets the "password visible" icon for the password input field.
+	/// </summary>
+	private string PasswordInputIcon
+	{
+		get { return IsPasswordVisible ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff; }
+	}
 }

@@ -40,6 +40,7 @@ namespace SilentNotes.Models
             ColorForSolidTheme = "#3e3e3e";
             DefaultNoteColorHex = StartDefaultNoteColorHex;
             NoteMaxHeightScale = 1.0;
+            DefaultNoteInsertion = NoteInsertionMode.AtTop;
             RememberLastTagFilter = false;
             UseColorForAllNotesInDarkMode = false;
             ColorForAllNotesInDarkModeHex = "#323232";

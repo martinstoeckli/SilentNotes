@@ -16,7 +16,7 @@
 
 @* Main menu *@
 <MudAppBar Fixed="true" Dense="true">
-    <MudIconButton @ref="_backButton" Href="/back" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" />
+	<MudIconButton @ref="_backButton" Href="/back" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" />
 </MudAppBar>
 
 @* watermark image *@
@@ -24,43 +24,43 @@
 
 @* body *@
 <MudContainer id="content" Class="mud-container-left mud-container-p" MaxWidth="MaxWidth.Medium">
-    <h1 class="h-colored">@LanguageService["show_export"]</h1>
+	<h1 class="h-colored">@LanguageService["show_export"]</h1>
 
-    <p class="my-4">@LanguageService["export_desc"]</p>
+	<p class="my-4">@LanguageService["export_desc"]</p>
 
-    <MudForm>
-        <MudCheckBox @bind-Checked="@ViewModel.ExportUnprotectedNotes" Dense="true" Label="@LanguageService["export_unencrypted"]"></MudCheckBox>
-        <MudCheckBox @bind-Checked="@ViewModel.ExportProtectedNotes" Disabled="!ViewModel.HasExportableProtectedNotes" Dense="true" Label="@LanguageService["export_encrypted"]"></MudCheckBox>
-    </MudForm>
+	<MudForm>
+		<MudCheckBox @bind-Checked="@ViewModel.ExportUnprotectedNotes" Dense="true" Label="@LanguageService["export_unencrypted"]"></MudCheckBox>
+		<MudCheckBox @bind-Checked="@ViewModel.ExportProtectedNotes" Disabled="!ViewModel.HasExportableProtectedNotes" Dense="true" Label="@LanguageService["export_encrypted"]"></MudCheckBox>
+	</MudForm>
 
-    <MudStack Class="my-4" Row="true" Justify="Justify.FlexEnd" Spacing="1">
-        <MudButton Href="/back" Color="Color.Default" Variant="Variant.Filled">@LanguageService["cancel"]</MudButton>
-        <MudButton @ref="_okButton" OnClick="@(() => ViewModel.OkCommand.Execute(null))" Disabled="ViewModel.OkCommandDisabled" Color="Color.Primary" Variant="Variant.Filled">@LanguageService["ok"]</MudButton>
-    </MudStack>
+	<MudStack Class="my-4" Row="true" Justify="Justify.FlexEnd" Spacing="1">
+		<MudButton Href="/back" Color="Color.Default" Variant="Variant.Filled">@LanguageService["cancel"]</MudButton>
+		<MudButton @ref="_okButton" OnClick="@(() => ViewModel.OkCommand.Execute(null))" Disabled="ViewModel.OkCommandDisabled" Color="Color.Primary" Variant="Variant.Filled">@LanguageService["ok"]</MudButton>
+	</MudStack>
 </MudContainer>
 
 @code {
-    private bool _isDisposed;
-    private MudBaseButton _backButton;
-    private MudBaseButton _okButton;
-    private IKeyboardShortcuts _keyboardShortcuts;
+	private bool _isDisposed;
+	private MudBaseButton _backButton;
+	private MudBaseButton _okButton;
+	private IKeyboardShortcuts _keyboardShortcuts;
 
-    protected override void OnInitialized()
-    {
-        ViewModel = new ExportViewModel(NavigationService, LanguageService, FeedbackService, CryptoRandomSource, RepositoryStorageService, FolderPickerService);
+	protected override void OnInitialized()
+	{
+		ViewModel = new ExportViewModel(NavigationService, LanguageService, FeedbackService, CryptoRandomSource, RepositoryStorageService, FolderPickerService);
 
-        _keyboardShortcuts = KeyboardShortcutService.CreateShortcuts()
-            .Add(ModCode.None, Code.Escape, () => _backButton)
-            .Add(ModCode.None, Code.Enter, () => _okButton);
-    }
+		_keyboardShortcuts = KeyboardShortcutService.CreateShortcuts()
+			.Add(ModCode.None, Code.Escape, () => _backButton)
+			.Add(ModCode.None, Code.Enter, () => _okButton);
+	}
 
-    public void Dispose()
-    {
-        if (_isDisposed)
-            return;
-        _isDisposed = true;
-        _keyboardShortcuts.Dispose();
-    }
+	public void Dispose()
+	{
+		if (_isDisposed)
+			return;
+		_isDisposed = true;
+		_keyboardShortcuts.Dispose();
+	}
 
-    private ExportViewModel ViewModel { get; set; }
+	private ExportViewModel ViewModel { get; set; }
 }

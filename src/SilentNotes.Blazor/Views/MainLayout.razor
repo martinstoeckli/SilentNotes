@@ -10,18 +10,18 @@
 <MudSnackbarProvider />
 
 <MudLayout>
-    <MudMainContent>
-        @Body
-    </MudMainContent>
+	<MudMainContent>
+		@Body
+	</MudMainContent>
 </MudLayout>
 
 @code {
-    protected override void OnInitialized()
-    {
-        // Give the theme service a way to redraw the GUI
-        ThemeService.RefreshGui = StateHasChanged;
+	protected override void OnInitialized()
+	{
+		// Give the theme service a way to redraw the GUI
+		ThemeService.RefreshGui = StateHasChanged;
 
-        // Initialize the virtual "back" route
-        NavigationService.InitializeVirtualRoutes();
-    }
+		// Initialize the virtual "back" route
+		NavigationService.InitializeVirtualRoutes();
+	}
 }

@@ -23,60 +23,61 @@
 
 @* Main menu *@
 <MudAppBar Fixed="true" Class="" Dense="true">
-    <MudIconButton @ref="_backButton" Href="/back" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" />
+	<MudIconButton @ref="_backButton" Href="/back" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" />
 
-    <MudSpacer />
+	<MudSpacer />
 
-    <MudMenu @ref="_overflowMenu" Dense="true" AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight">
-        <ActivatorContent>
-            <MudIconButton Icon="@IconService[IconNames.DotsVertical]" Color="Color.Inherit" />
-        </ActivatorContent>
-        <ChildContent>
-            <MudNavMenu Rounded="true" Margin="Margin.Dense" Class="px-1">
-            </MudNavMenu>
-        </ChildContent>
-    </MudMenu>
+	<MudMenu @ref="_overflowMenu" Dense="true" AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight">
+		<ActivatorContent>
+			<MudIconButton Icon="@IconService[IconNames.DotsVertical]" Color="Color.Inherit" />
+		</ActivatorContent>
+		<ChildContent>
+			<MudNavMenu Rounded="true" Margin="Margin.Dense" Class="px-1">
+				<MudNavLink Class="d-sm-none" Icon="@IconService.GetSvgLink(IconNames.NoteTextOutline)">@LanguageService["note_create_new"]</MudNavLink>
+			</MudNavMenu>
+		</ChildContent>
+	</MudMenu>
 </MudAppBar>
 
 @* body *@
 <MudContainer id="content" Class="mud-container-left mud-container-p" MaxWidth="MaxWidth.Small">
-    <h2 class="h-colored">Note</h2>
+	<h2 class="h-colored">Note</h2>
 
 </MudContainer>
 
 @code {
-    private bool _isDisposed;
-    private MudMenu _overflowMenu;
-    private MudBaseButton _backButton;
-    private IKeyboardShortcuts _keyboardShortcuts;
+	private bool _isDisposed;
+	private MudMenu _overflowMenu;
+	private MudBaseButton _backButton;
+	private IKeyboardShortcuts _keyboardShortcuts;
 
-    protected override void OnParametersSet()
-    {
-        base.OnParametersSet();
-        //ViewModel = new SettingsViewModel(SettingsService, LanguageService, EnvironmentService, ThemeService, FeedbackService, CloudStorageClientFactory, FilePickerService);
-        //ViewModel.PropertyChanged += PropertyChangedHandler;
+	protected override void OnParametersSet()
+	{
+		base.OnParametersSet();
+		//ViewModel = new SettingsViewModel(SettingsService, LanguageService, EnvironmentService, ThemeService, FeedbackService, CloudStorageClientFactory, FilePickerService);
+		//ViewModel.PropertyChanged += PropertyChangedHandler;
 
-        _keyboardShortcuts = KeyboardShortcutService.CreateShortcuts()
-            .Add(ModCode.None, Code.Escape, () => _backButton);
-    }
+		_keyboardShortcuts = KeyboardShortcutService.CreateShortcuts()
+			.Add(ModCode.None, Code.Escape, () => _backButton);
+	}
 
-    public void Dispose()
-    {
-        if (_isDisposed)
-            return;
-        _isDisposed = true;
-        _keyboardShortcuts.Dispose();
-        //ViewModel.PropertyChanged -= PropertyChangedHandler;
-    }
+	public void Dispose()
+	{
+		if (_isDisposed)
+			return;
+		_isDisposed = true;
+		_keyboardShortcuts.Dispose();
+		//ViewModel.PropertyChanged -= PropertyChangedHandler;
+	}
 
-    private SettingsViewModel ViewModel { get; set; }
+	private SettingsViewModel ViewModel { get; set; }
 
-    [Parameter]
-    public string NoteId { get; set; } = default!;
+	[Parameter]
+	public string NoteId { get; set; } = default!;
 
-    private void PropertyChangedHandler(object sender, PropertyChangedEventArgs e)
-    {
-        if (e.PropertyName == "page")
-            StateHasChanged();
-    }
+	private void PropertyChangedHandler(object sender, PropertyChangedEventArgs e)
+	{
+		if (e.PropertyName == "page")
+			StateHasChanged();
+	}
 }
