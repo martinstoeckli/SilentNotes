@@ -67,7 +67,7 @@
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.0" />
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
         <PackageReference Include="MudBlazor" Version="6.2.5" />
-        <PackageReference Include="Toolbelt.Blazor.HotKeys2" Version="1.0.0" />
+        <PackageReference Include="Toolbelt.Blazor.HotKeys2" Version="2.0.0-preview.1" />
     </ItemGroup>
 
     <ItemGroup>

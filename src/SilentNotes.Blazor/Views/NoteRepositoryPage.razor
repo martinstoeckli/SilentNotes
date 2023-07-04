@@ -60,6 +60,8 @@
 
 	@* Synchronization *@
 	<MudIconButton @ref="_syncButton" Icon="@IconService[IconNames.CloudSync]" Color="Color.Inherit" Title="@LanguageService["sync_notes"]" />
+	@* todo remove *@
+	<MudIconButton OnClick="@(() => _isOrderingActive = !_isOrderingActive)" Icon="@Icons.Material.Filled.AllInclusive" Color="Color.Inherit" Title="order" />
 
 	@* Overflow menu *@
 	<MudMenu @ref="_overflowMenu" Dense="true" AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight">
@@ -68,13 +70,13 @@
 		</ActivatorContent>
 		<ChildContent>
 			<MudNavMenu Rounded="true" Margin="Margin.Dense" Class="px-1">
-				<MudNavLink OnClick="@(() => ViewModel.NewNoteCommand.Execute(null))" Icon="@IconService.GetSvgLink(IconNames.NoteTextOutline)">@LanguageService["note_create_new"]</MudNavLink>
-				<MudNavLink OnClick="@(() => ViewModel.NewChecklistCommand.Execute(null))" Icon="@IconService.GetSvgLink(IconNames.OrderBoolAscendingVariant)">@LanguageService["checklist_create_new"]</MudNavLink>
+				<MudNavLink OnClick="() => ViewModel.NewNoteCommand.Execute(null)" Icon="@IconService.GetSvgLink(IconNames.NoteTextOutline)">@LanguageService["note_create_new"]</MudNavLink>
+				<MudNavLink OnClick="() => ViewModel.NewChecklistCommand.Execute(null)" Icon="@IconService.GetSvgLink(IconNames.OrderBoolAscendingVariant)">@LanguageService["checklist_create_new"]</MudNavLink>
 				<MudNavLink Href="/recyclebin" Icon="@IconService[IconNames.DeleteEmpty]">@LanguageService["show_recyclebin"]</MudNavLink>
 				<MudNavLink Href="/export" Icon="@IconService[IconNames.Export]">@LanguageService["show_export"]</MudNavLink>
 				<MudDivider />
 				@if (ViewModel.IsAnySafeOpen) {
-					<MudNavLink OnClick="@(() => ViewModel.CloseSafeCommand.ExecuteAndCloseMenu(_overflowMenu))" Icon="@IconService[IconNames.SafeSquareOutline]">@LanguageService["safe_close"]</MudNavLink>
+					<MudNavLink OnClick="() => ViewModel.CloseSafeCommand.ExecuteAndCloseMenu(_overflowMenu)" Icon="@IconService[IconNames.SafeSquareOutline]">@LanguageService["safe_close"]</MudNavLink>
 				}
 				else {
 					<MudNavLink Href="/opensafe" Icon="@IconService[IconNames.SafeSquareOutline]">@LanguageService["safe_open"]</MudNavLink>
@@ -134,16 +136,16 @@
 							<div class="pin">@IconService.EmbedSvgLink(IconNames.Pin, 22)</div>
 						}
 						<div class="note-handle sortable-handle">@IconService.EmbedSvgLink(IconNames.ArrowAll, 22)</div>
-						<div class="note-handle recycle-handle" @onclick="@(() => ViewModel.DeleteNoteCommand.Execute(note.Id))" @onclick:preventDefault="true">@IconService.EmbedSvgLink(IconNames.Delete, 19)</div>
+						<div class="note-handle recycle-handle" @onclick="() => ViewModel.DeleteNoteCommand.Execute(note.Id)" @onclick:preventDefault="true">@IconService.EmbedSvgLink(IconNames.Delete, 19)</div>
 						@if (ViewModel.IsAnySafeOpen && !note.IsLocked)
 						{
 							@if (note.IsInSafe)
 							{
-								<div class="note-handle safe-handle reddish" @onclick="@(() => ViewModel.RemoveNoteFromSafe(note.Id))" @onclick:preventDefault="true">@IconService.EmbedSvgLink(IconNames.Lock, 18)</div>
+								<div class="note-handle safe-handle reddish" @onclick="() => ViewModel.RemoveNoteFromSafe(note.Id)" @onclick:preventDefault="true">@IconService.EmbedSvgLink(IconNames.Lock, 18)</div>
 							}
 							else
 							{
-								<div class="note-handle safe-handle greenish" @onclick="@(() => ViewModel.AddNoteToSafe(note.Id))" @onclick:preventDefault="true">@IconService.EmbedSvgLink(IconNames.LockOpenVariant, 18)</div>
+								<div class="note-handle safe-handle greenish" @onclick="() => ViewModel.AddNoteToSafe(note.Id)" @onclick:preventDefault="true">@IconService.EmbedSvgLink(IconNames.LockOpenVariant, 18)</div>
 							}
 						}
 					</div>
@@ -153,14 +155,27 @@
 	</ul>
 </div>
 
+<MudPopover
+	Open="@_isOrderingActive"
+	Class="secondary-app-bar"
+	AnchorOrigin="Origin.TopRight" TransformOrigin="Origin.TopRight">
+	<MudStack Row="true" Spacing="0">
+		<MudIconButton Icon="@IconService[IconNames.ArrowCollapseUp]" Color="Color.Inherit" Title="order" />
+		<MudIconButton Icon="@IconService[IconNames.ArrowUp]" Color="Color.Inherit" Title="order" />
+		<MudIconButton Icon="@IconService[IconNames.ArrowDown]" Color="Color.Inherit" Title="order" />
+		<MudIconButton Icon="@IconService[IconNames.ArrowCollapseDown]" Color="Color.Inherit" Title="order" />
+		<MudIconButton OnClick="() => _isOrderingActive = false" Icon="@IconService.GetSvgLink(IconNames.Close)" Color="Color.Inherit" />
+	</MudStack>
+</MudPopover>
+
 @* The FAB for adding a new note *@
 <MudMenu Class="fab-position" AnchorOrigin="Origin.TopRight" TransformOrigin="Origin.BottomRight">
 	<ActivatorContent>
 		<MudFab Class="mt-4" Color="Color.Primary" StartIcon="@IconService[IconNames.Plus]" />
 	</ActivatorContent>
 	<ChildContent>
-		<MudNavLink OnClick="@(() => ViewModel.NewNoteCommand.Execute(null))" Icon="@IconService.GetSvgLink(IconNames.NoteTextOutline)">@LanguageService["note_create_new"]</MudNavLink>
-		<MudNavLink OnClick="@(() => ViewModel.NewChecklistCommand.Execute(null))" Icon="@IconService.GetSvgLink(IconNames.OrderBoolAscendingVariant)">@LanguageService["checklist_create_new"]</MudNavLink>
+		<MudNavLink OnClick="() => ViewModel.NewNoteCommand.Execute(null)" Icon="@IconService.GetSvgLink(IconNames.NoteTextOutline)">@LanguageService["note_create_new"]</MudNavLink>
+		<MudNavLink OnClick="() => ViewModel.NewChecklistCommand.Execute(null)" Icon="@IconService.GetSvgLink(IconNames.OrderBoolAscendingVariant)">@LanguageService["checklist_create_new"]</MudNavLink>
 	</ChildContent>
 </MudMenu>
 
@@ -181,11 +196,16 @@
 		IconNames.TagMultiple,
 		IconNames.TagOff,
 		IconNames.TagOutline,
+		IconNames.ArrowCollapseUp,
+		IconNames.ArrowUp,
+		IconNames.ArrowDown,
+		IconNames.ArrowCollapseDown,
 	});
 </div>
 
 @code {
 	private bool _isDisposed;
+	private bool _isOrderingActive;
 	private MudInput<string> _filterInput;
 	private MudMenu _overflowMenu;
 	private MudDrawer _sideDrawer;

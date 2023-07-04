@@ -40,6 +40,14 @@ h1:focus { outline: none; }
 	color: var(--mud-palette-background-grey)
 }
 
+.secondary-app-bar {
+	position: fixed;
+	margin: 0;
+	padding: 48px 24px 0 4px;
+	background-color: var(--mud-palette-tertiary);
+	color: var(--mud-palette-tertiary-text);
+}
+
 .fab-position {
 	position: fixed;
 	right: 2em;
@@ -59,6 +67,9 @@ h1:focus { outline: none; }
 	width: 100%;
 	padding: 0 6px; /* flex gap not working on Android 7, only padding and margin */
 	margin: 6px 0;
+}
+.note-item a {
+	width: 100%;
 }
 
 /* sm breakpoint */
