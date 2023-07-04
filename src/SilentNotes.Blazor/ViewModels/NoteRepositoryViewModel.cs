@@ -35,6 +35,7 @@ namespace SilentNotes.ViewModels
         private readonly ICryptor _noteCryptor;
         private readonly KeyValueList<string, string> _specialTagLocalizations;
         private NoteRepositoryModel _model;
+        private NoteViewModel _selectedOrderNote;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NoteRepositoryViewModel"/> class.
@@ -247,7 +248,6 @@ namespace SilentNotes.ViewModels
             }
         }
 
-        //[VueDataBinding(VueBindingMode.OneWayToView)]
         public bool IsFiltered
         {
             get { return !string.IsNullOrEmpty(Filter); }
@@ -354,30 +354,6 @@ namespace SilentNotes.ViewModels
         /// Gets the command which handles the moving of a note to the recyclebin.
         /// </summary>
         public ICommand DeleteNoteCommand { get; private set; }
-
-        ///// <summary>
-        ///// Changes <see cref="NoteViewModel.IsPinned"/> based on position.
-        ///// This is usually called after a drag and drop action.
-        ///// </summary>
-        ///// <remarks>Changes to true if placed in front of a
-        ///// pinned note. False if placed behind unpinned one.</remarks>
-        //internal void CheckPinStatusAtPosition(int currentIndex)
-        //{
-        //    var movedNote = FilteredNotes[currentIndex];
-        //    var noteBehind = FilteredNotes.ElementAtOrDefault(currentIndex + 1);
-        //    var noteInfront = FilteredNotes.ElementAtOrDefault(currentIndex - 1);
-
-        //    if (movedNote.IsPinned == false && noteBehind != null && noteBehind.IsPinned)
-        //    {
-        //        movedNote.IsPinned = true;
-        //        OnPropertyChanged("Notes"); // refreshes the notes
-        //    }
-        //    else if (movedNote.IsPinned && noteInfront != null && noteInfront.IsPinned == false)
-        //    {
-        //        movedNote.IsPinned = false;
-        //        OnPropertyChanged("Notes");
-        //    }
-        //}
 
         private void DeleteNote(object value)
         {
@@ -573,29 +549,6 @@ namespace SilentNotes.ViewModels
             }
         }
 
-        ///// <summary>
-        ///// Command to move a note to a new place in the list. This is usually
-        ///// called after a drag and drop action.
-        ///// </summary>
-        ///// <param name="oldIndex">Index of the note to move.</param>
-        ///// <param name="newIndex">New index to place the note in.</param>
-        //public void MoveNote(int oldIndex, int newIndex)
-        //{
-        //    if ((oldIndex == newIndex)
-        //        || !IsInRange(oldIndex, 0, FilteredNotes.Count - 1)
-        //        || !IsInRange(newIndex, 0, FilteredNotes.Count - 1))
-        //        return;
-        //    Modified = true;
-
-        //    int oldIndexInUnfilteredList = AllNotes.IndexOf(FilteredNotes[oldIndex]);
-        //    int newIndexInUnfilteredList = AllNotes.IndexOf(FilteredNotes[newIndex]);
-
-        //    ListMove(_model.Notes, oldIndexInUnfilteredList, newIndexInUnfilteredList);
-        //    ListMove(AllNotes, oldIndexInUnfilteredList, newIndexInUnfilteredList);
-        //    FilteredNotes.Move(oldIndex, newIndex);
-        //    _model.RefreshOrderModifiedAt();
-        //}
-
         /// <summary>
         /// Gets or sets the wrapped model.
         /// </summary>
@@ -634,16 +587,117 @@ namespace SilentNotes.ViewModels
             }
         }
 
-        //private bool IsInRange(int candidate, int min, int max)
-        //{
-        //    return (candidate >= min) && (candidate <= max);
-        //}
+        /// <summary>
+        /// Handles the user selection of the ordering note.
+        /// </summary>
+        /// <param name="note">The note which was selected ba the user.</param>
+        public void SelectOrderNote(NoteViewModel note)
+        {
+            if (note == SelectedOrderNote)
+                SelectedOrderNote = null; // clicking twice removes selection
+            else
+                SelectedOrderNote = note;
+        }
 
-        //private void ListMove<T>(List<T> list, int oldIndex, int newIndex)
-        //{
-        //    T item = list[oldIndex];
-        //    list.RemoveAt(oldIndex);
-        //    list.Insert(newIndex, item);
-        //}
+        /// <summary>
+        /// Gets the user selected note for ordering, or null when no note is selected.
+        /// </summary>
+        public NoteViewModel SelectedOrderNote 
+        {
+            get { return _selectedOrderNote; }
+            
+            private set
+            {
+                if (SetProperty(ref _selectedOrderNote, value))
+                    OnPropertyChanging(nameof(OrderToolbarVisible));
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the ordering toolbar shoulc be visible or not.
+        /// </summary>
+        public bool OrderToolbarVisible
+        {
+            get { return SelectedOrderNote != null; }
+        }
+
+        public void MoveSelectedOrderNote(bool upwards, bool singleStep)
+        {
+            if (SelectedOrderNote == null)
+                return;
+
+            int oldIndex = FilteredNotes.IndexOf(SelectedOrderNote);
+            if (oldIndex < 0)
+                return;
+
+            int newIndex;
+            if (upwards)
+                newIndex = oldIndex - 1;
+            else
+                newIndex = oldIndex + 1;
+
+            if ((oldIndex == newIndex)
+                || !IsInRange(oldIndex, 0, FilteredNotes.Count - 1)
+                || !IsInRange(newIndex, 0, FilteredNotes.Count - 1))
+                return;
+
+            MoveNote(oldIndex, newIndex);
+            AdjustPinStatusAtPosition(newIndex);
+            OnPropertyChanged("SelectedOrderNotePosition");
+        }
+
+        /// <summary>
+        /// Command to move a note to a new place in the list. This is usually
+        /// called after a drag and drop action.
+        /// </summary>
+        /// <param name="oldIndex">Index of the note to move.</param>
+        /// <param name="newIndex">New index to place the note in.</param>
+        private void MoveNote(int oldIndex, int newIndex)
+        {
+            Modified = true;
+            int oldIndexInUnfilteredList = AllNotes.IndexOf(FilteredNotes[oldIndex]);
+            int newIndexInUnfilteredList = AllNotes.IndexOf(FilteredNotes[newIndex]);
+
+            ListMove(_model.Notes, oldIndexInUnfilteredList, newIndexInUnfilteredList);
+            ListMove(AllNotes, oldIndexInUnfilteredList, newIndexInUnfilteredList);
+            FilteredNotes.Move(oldIndex, newIndex);
+            _model.RefreshOrderModifiedAt();
+        }
+
+        /// <summary>
+        /// Changes <see cref="NoteViewModel.IsPinned"/> based on position.
+        /// This is usually called after a ordering action.
+        /// </summary>
+        /// <remarks>Changes to true if placed in front of a
+        /// pinned note. False if placed behind unpinned one.</remarks>
+        internal void AdjustPinStatusAtPosition(int currentIndex)
+        {
+            var movedNote = FilteredNotes[currentIndex];
+            var noteBehind = FilteredNotes.ElementAtOrDefault(currentIndex + 1);
+            var noteInfront = FilteredNotes.ElementAtOrDefault(currentIndex - 1);
+
+            if (movedNote.IsPinned == false && noteBehind != null && noteBehind.IsPinned)
+            {
+                movedNote.IsPinned = true;
+                OnPropertyChanged("Notes"); // refreshes the notes
+            }
+            else if (movedNote.IsPinned && noteInfront != null && noteInfront.IsPinned == false)
+            {
+                movedNote.IsPinned = false;
+                OnPropertyChanged("Notes");
+            }
+        }
+
+        private bool IsInRange(int candidate, int min, int max)
+        {
+            return (candidate >= min) && (candidate <= max);
+        }
+
+        private void ListMove<T>(List<T> list, int oldIndex, int newIndex)
+        {
+            T item = list[oldIndex];
+            list.RemoveAt(oldIndex);
+            list.Insert(newIndex, item);
+        }
     }
 }

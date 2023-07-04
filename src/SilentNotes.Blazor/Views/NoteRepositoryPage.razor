@@ -60,8 +60,6 @@
 
 	@* Synchronization *@
 	<MudIconButton @ref="_syncButton" Icon="@IconService[IconNames.CloudSync]" Color="Color.Inherit" Title="@LanguageService["sync_notes"]" />
-	@* todo remove *@
-	<MudIconButton OnClick="@(() => _isOrderingActive = !_isOrderingActive)" Icon="@Icons.Material.Filled.AllInclusive" Color="Color.Inherit" Title="order" />
 
 	@* Overflow menu *@
 	<MudMenu @ref="_overflowMenu" Dense="true" AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight">
@@ -119,7 +117,7 @@
 	<ul id="note-repository" class="note-list flex-column flex-sm-row">
 		@foreach (var note in ViewModel.FilteredNotes)
 		{
-			<li @key="note.Id" class="note-item">
+			<li @key="note.Id" class="note-item" data-note="@note.Id">
 				<a href="@note.Route">
 					<div class="note-card mud-elevation-3 @note.LightOrDarkClass()" style="background-color:@note.BackgroundColorHex">
 						@if (note.IsLocked)
@@ -135,7 +133,7 @@
 						{
 							<div class="pin">@IconService.EmbedSvgLink(IconNames.Pin, 22)</div>
 						}
-						<div class="note-handle sortable-handle">@IconService.EmbedSvgLink(IconNames.ArrowAll, 22)</div>
+						<div class="note-handle sortable-handle @this.CssClassIf("bluish-highlighted", note == ViewModel.SelectedOrderNote)" @onclick="() => ViewModel.SelectOrderNote(note)" @onclick:preventDefault="true">@IconService.EmbedSvgLink(IconNames.ArrowAll, 22)</div>
 						<div class="note-handle recycle-handle" @onclick="() => ViewModel.DeleteNoteCommand.Execute(note.Id)" @onclick:preventDefault="true">@IconService.EmbedSvgLink(IconNames.Delete, 19)</div>
 						@if (ViewModel.IsAnySafeOpen && !note.IsLocked)
 						{
@@ -156,15 +154,15 @@
 </div>
 
 <MudPopover
-	Open="@_isOrderingActive"
+	Open="@ViewModel.OrderToolbarVisible"
 	Class="secondary-app-bar"
 	AnchorOrigin="Origin.TopRight" TransformOrigin="Origin.TopRight">
 	<MudStack Row="true" Spacing="0">
 		<MudIconButton Icon="@IconService[IconNames.ArrowCollapseUp]" Color="Color.Inherit" Title="order" />
-		<MudIconButton Icon="@IconService[IconNames.ArrowUp]" Color="Color.Inherit" Title="order" />
-		<MudIconButton Icon="@IconService[IconNames.ArrowDown]" Color="Color.Inherit" Title="order" />
+		<MudIconButton OnClick="() => ViewModel.MoveSelectedOrderNote(true, false)" Icon="@IconService[IconNames.ArrowUp]" Color="Color.Inherit" Title="order" />
+		<MudIconButton OnClick="() => ViewModel.MoveSelectedOrderNote(false, false)" Icon="@IconService[IconNames.ArrowDown]" Color="Color.Inherit" Title="order" />
 		<MudIconButton Icon="@IconService[IconNames.ArrowCollapseDown]" Color="Color.Inherit" Title="order" />
-		<MudIconButton OnClick="() => _isOrderingActive = false" Icon="@IconService.GetSvgLink(IconNames.Close)" Color="Color.Inherit" />
+		<MudIconButton OnClick="() => ViewModel.SelectOrderNote(null)" Icon="@IconService.GetSvgLink(IconNames.Close)" Color="Color.Inherit" />
 	</MudStack>
 </MudPopover>
 
@@ -205,7 +203,6 @@
 
 @code {
 	private bool _isDisposed;
-	private bool _isOrderingActive;
 	private MudInput<string> _filterInput;
 	private MudMenu _overflowMenu;
 	private MudDrawer _sideDrawer;
@@ -231,6 +228,7 @@
 			SettingsService,
 			EnvironmentService,
 			CryptoRandomSource);
+		ViewModel.PropertyChanged += PropertyChangedHandler;
 
 		// todo: read the SettingsViewMode.StartWithTagsOpen
 
@@ -254,6 +252,7 @@
 			return;
 		_isDisposed = true;
 		_keyboardShortcuts.Dispose();
+		ViewModel.PropertyChanged -= PropertyChangedHandler;
 	}
 
 	/// <inheritdoc/>
@@ -278,6 +277,15 @@
 	/// Gets or sets the datacontext of this view.
 	/// </summary>
 	private NoteRepositoryViewModel ViewModel { get; set; }
+
+	private void PropertyChangedHandler(object sender, PropertyChangedEventArgs e)
+	{
+		if (e.PropertyName == "SelectedOrderNotePosition")
+		{
+			string selector = string.Format("[data-note='{0}']", ViewModel.SelectedOrderNote.Id);
+			ScrollManager.ScrollIntoViewAsync(selector, ScrollBehavior.Smooth);
+		}
+	}
 
 	/// <summary>
 	/// Gets the svg icon for filtering (magnifier or clear)

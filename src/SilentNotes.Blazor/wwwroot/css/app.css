@@ -142,6 +142,12 @@ h1:focus { outline: none; }
 .note-dark .note-handle { background-color: rgba(204, 204, 204, 0.7); fill: #606060; }
 .note-handle.greenish { background-color: rgba(145, 238, 145, 0.9); fill: #2aac2a; }
 .note-handle.reddish { background-color: rgba(238, 145, 145, 0.9); fill: #de2121; }
+.note-handle.bluish-highlighted
+{
+	background-color: rgba(145, 207, 238, 0.9);
+	fill: #2a81ac; 
+	box-shadow: 0 0 6px 6px rgba(145, 207, 238, 0.4);
+}
 
 .sortable-handle {
 }
