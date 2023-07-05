@@ -3,9 +3,12 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
 using SilentNotes.Models;
+using SilentNotes.Services;
 using SilentNotes.Workers;
 
 namespace SilentNotes.ViewModels
@@ -16,14 +19,17 @@ namespace SilentNotes.ViewModels
     public class TransferCodeHistoryViewModel : ViewModelBase
     {
         private List<string> _transferCodeHistory;
+        private IClipboardService _clipboardService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TransferCodeHistoryViewModel"/> class.
         /// </summary>
         public TransferCodeHistoryViewModel(
-            SettingsModel model)
+            SettingsModel model,
+            IClipboardService clipboardService)
         {
             Model = model;
+            _clipboardService = clipboardService;
             IsTransfercodeHistoryVisible = TransferCodeHistory.Count > 0;
 
             // Initialize commands
@@ -70,7 +76,7 @@ namespace SilentNotes.ViewModels
 
         private async Task CopyTransferCode()
         {
-            await Clipboard.SetTextAsync(TransferCodeFmt);
+            await _clipboardService.SetTextAsync(TransferCodeFmt);
         }
 
         /// <summary>

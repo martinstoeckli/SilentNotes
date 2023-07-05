@@ -75,7 +75,7 @@ namespace SilentNotesTest.ViewModels
         }
 
         [Test]
-        public void CheckPinStatusAtPosition_PinsNoteIfDraggedAboveLastPinnedNote()
+        public void AdjustPinStatusAtPosition_PinsNoteIfDraggedAboveLastPinnedNote()
         {
             NoteRepositoryModel model = CreateTestRepository();
 
@@ -85,12 +85,12 @@ namespace SilentNotesTest.ViewModels
             model.Notes[2].IsPinned = false;
 
             NoteRepositoryViewModel viewModel = CreateMockedNoteRepositoryViewModel(model);
-            viewModel.CheckPinStatusAtPosition(0);
+            viewModel.AdjustPinStatusAtPosition(0);
             Assert.IsTrue(model.Notes[0].IsPinned);
         }
 
         [Test]
-        public void CheckPinStatusAtPosition_UnpinsNoteIfDraggedBelowFirstUnpinnedNote()
+        public void AdjustPinStatusAtPosition_UnpinsNoteIfDraggedBelowFirstUnpinnedNote()
         {
             NoteRepositoryModel model = CreateTestRepository();
 
@@ -100,12 +100,12 @@ namespace SilentNotesTest.ViewModels
             model.Notes[2].IsPinned = true;
 
             NoteRepositoryViewModel viewModel = CreateMockedNoteRepositoryViewModel(model);
-            viewModel.CheckPinStatusAtPosition(2);
+            viewModel.AdjustPinStatusAtPosition(2);
             Assert.IsFalse(model.Notes[2].IsPinned);
         }
 
         [Test]
-        public void CheckPinStatusAtPosition_DoesNotChangePinStateIfNotNecessary()
+        public void AdjustPinStatusAtPosition_DoesNotChangePinStateIfNotNecessary()
         {
             NoteRepositoryModel model = CreateTestRepository();
 
@@ -114,13 +114,13 @@ namespace SilentNotesTest.ViewModels
             model.Notes[2].IsPinned = false;
 
             NoteRepositoryViewModel viewModel = CreateMockedNoteRepositoryViewModel(model);
-            viewModel.CheckPinStatusAtPosition(0);
+            viewModel.AdjustPinStatusAtPosition(0);
             Assert.IsFalse(model.Notes[0].IsPinned);
 
             model.Notes[0].IsPinned = true;
             model.Notes[1].IsPinned = true;
             model.Notes[2].IsPinned = true;
-            viewModel.CheckPinStatusAtPosition(0);
+            viewModel.AdjustPinStatusAtPosition(0);
             Assert.IsTrue(model.Notes[0].IsPinned);
         }
 
@@ -131,23 +131,16 @@ namespace SilentNotesTest.ViewModels
             settingsService.
                 Setup(m => m.LoadSettingsOrDefault()).Returns(settingsModel);
 
-            Mock<IRepositoryStorageService> repositoryStorageService = new Mock<IRepositoryStorageService>();
-            repositoryStorageService.
-                Setup(m => m.LoadRepositoryOrDefault(out repository));
-
             return new NoteRepositoryViewModel(
-                new Mock<INavigationService>().Object,
+                repository,
                 new Mock<ILanguageService>().Object,
-                new Mock<ISvgIconService>().Object,
-                new Mock<IThemeService>().Object,
-                new Mock<IBaseUrlService>().Object,
-                new Mock<IStoryBoardService>().Object,
+                new Mock<INavigationService>().Object,
                 new Mock<IFeedbackService>().Object,
+                new Mock<IThemeService>().Object,
                 settingsService.Object,
                 CommonMocksAndStubs.EnvironmentService(),
-                new Mock<IAutoSynchronizationService>().Object,
-                CommonMocksAndStubs.CryptoRandomService(),
-                repositoryStorageService.Object);
+                CommonMocksAndStubs.CryptoRandomService()
+                );
         }
 
         private static NoteRepositoryModel CreateTestRepository()

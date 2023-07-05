@@ -62,6 +62,7 @@ public static class MauiProgram
         //    serviceProvider.GetService<ISettingsService>()));
         services.AddSingleton<IVersionService>((serviceProvider) => new VersionService());
         services.AddSingleton<ICloudStorageClientFactory>((serviceProvider) => new CloudStorageClientFactory());
+        services.AddSingleton<IClipboardService>((serviceProvider) => new ClipboardService());
 
         // Scoped services (some Blazor services like IJSRuntime seem to be scoped)
         services.AddScoped<INavigationService>((serviceProvider) => new NavigationService(

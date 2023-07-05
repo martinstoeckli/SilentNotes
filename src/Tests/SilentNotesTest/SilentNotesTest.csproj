@@ -15,14 +15,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="BouncyCastle.Cryptography" Version="2.2.1" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.0" />
     <PackageReference Include="Moq" Version="4.18.1" />
+    <PackageReference Include="MudBlazor" Version="6.2.5" />
     <PackageReference Include="NUnit" Version="3.13.3" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.2.0" />
+    <PackageReference Include="Toolbelt.Blazor.HotKeys2" Version="2.0.0-preview.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\SilentNotes.Shared\SilentNotes.Shared.csproj" />
+    <ProjectReference Include="..\..\VanillaCloudStorageClient\VanillaCloudStorageClient.csproj" />
   </ItemGroup>
+
+  <Import Project="..\..\SilentNotes.AllPlatforms\SilentNotes.AllPlatforms.projitems" Label="Shared" />
 
 </Project>

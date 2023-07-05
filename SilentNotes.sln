@@ -7,6 +7,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SilentNotes", "src\SilentNo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VanillaCloudStorageClient", "src\VanillaCloudStorageClient\VanillaCloudStorageClient.csproj", "{5A23DDF4-0101-4612-B250-2A939BE0E024}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{1F3F34B1-524B-4855-8336-D9397E00F423}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VanillaCloudStorageClientTest", "src\Tests\VanillaCloudStorageClientTest\VanillaCloudStorageClientTest.csproj", "{60C23796-058A-4C76-8D59-B023A47630FD}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "SilentNotes.AllPlatforms", "src\SilentNotes.AllPlatforms\SilentNotes.AllPlatforms.shproj", "{BBFA534E-69FD-4B31-B596-01D7317460D5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SilentNotesTest", "src\Tests\SilentNotesTest\SilentNotesTest.csproj", "{7F3ACBD0-D2E8-494E-8597-540EE89B78ED}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,11 +31,28 @@ Global
 		{5A23DDF4-0101-4612-B250-2A939BE0E024}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5A23DDF4-0101-4612-B250-2A939BE0E024}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5A23DDF4-0101-4612-B250-2A939BE0E024}.Release|Any CPU.Build.0 = Release|Any CPU
+		{60C23796-058A-4C76-8D59-B023A47630FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60C23796-058A-4C76-8D59-B023A47630FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60C23796-058A-4C76-8D59-B023A47630FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60C23796-058A-4C76-8D59-B023A47630FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F3ACBD0-D2E8-494E-8597-540EE89B78ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F3ACBD0-D2E8-494E-8597-540EE89B78ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F3ACBD0-D2E8-494E-8597-540EE89B78ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F3ACBD0-D2E8-494E-8597-540EE89B78ED}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{60C23796-058A-4C76-8D59-B023A47630FD} = {1F3F34B1-524B-4855-8336-D9397E00F423}
+		{7F3ACBD0-D2E8-494E-8597-540EE89B78ED} = {1F3F34B1-524B-4855-8336-D9397E00F423}
+	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {80AD4A6C-D265-4488-BC79-AA6B05EF090E}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		src\SilentNotes.AllPlatforms\SilentNotes.AllPlatforms.projitems*{05ddc644-6399-456a-b255-d1d82353f794}*SharedItemsImports = 5
+		src\SilentNotes.AllPlatforms\SilentNotes.AllPlatforms.projitems*{7f3acbd0-d2e8-494e-8597-540ee89b78ed}*SharedItemsImports = 5
+		src\SilentNotes.AllPlatforms\SilentNotes.AllPlatforms.projitems*{bbfa534e-69fd-4b31-b596-01d7317460d5}*SharedItemsImports = 13
 	EndGlobalSection
 EndGlobal

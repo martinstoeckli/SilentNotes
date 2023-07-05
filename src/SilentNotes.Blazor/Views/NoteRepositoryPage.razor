@@ -153,15 +153,16 @@
 	</ul>
 </div>
 
+@* Note ordering toolbar *@
 <MudPopover
 	Open="@ViewModel.OrderToolbarVisible"
 	Class="secondary-app-bar"
 	AnchorOrigin="Origin.TopRight" TransformOrigin="Origin.TopRight">
 	<MudStack Row="true" Spacing="0">
-		<MudIconButton Icon="@IconService[IconNames.ArrowCollapseUp]" Color="Color.Inherit" Title="order" />
-		<MudIconButton OnClick="() => ViewModel.MoveSelectedOrderNote(true, false)" Icon="@IconService[IconNames.ArrowUp]" Color="Color.Inherit" Title="order" />
-		<MudIconButton OnClick="() => ViewModel.MoveSelectedOrderNote(false, false)" Icon="@IconService[IconNames.ArrowDown]" Color="Color.Inherit" Title="order" />
-		<MudIconButton Icon="@IconService[IconNames.ArrowCollapseDown]" Color="Color.Inherit" Title="order" />
+		<MudIconButton OnClick="() => ViewModel.MoveSelectedOrderNote(true, false)" Icon="@IconService[IconNames.ArrowCollapseUp]" Color="Color.Inherit" Title="order" />
+		<MudIconButton OnClick="() => ViewModel.MoveSelectedOrderNote(true, true)" Icon="@IconService[IconNames.ArrowUp]" Color="Color.Inherit" Title="order" />
+		<MudIconButton OnClick="() => ViewModel.MoveSelectedOrderNote(false, true)" Icon="@IconService[IconNames.ArrowDown]" Color="Color.Inherit" Title="order" />
+		<MudIconButton OnClick="() => ViewModel.MoveSelectedOrderNote(false, false)" Icon="@IconService[IconNames.ArrowCollapseDown]" Color="Color.Inherit" Title="order" />
 		<MudIconButton OnClick="() => ViewModel.SelectOrderNote(null)" Icon="@IconService.GetSvgLink(IconNames.Close)" Color="Color.Inherit" />
 	</MudStack>
 </MudPopover>

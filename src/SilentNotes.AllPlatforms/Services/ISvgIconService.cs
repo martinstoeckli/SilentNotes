@@ -38,7 +38,7 @@ namespace SilentNotes.Services
         /// </summary>
         /// <param name="id">Id of the vector graphic.</param>
         /// <returns>A string containing the SVG vector graphic.</returns>
-        String this[string id] { get; }
+        string this[string id] { get; }
 
         /// <summary>
         /// Like <see cref="EmbedLinkableSvg(string)"/> it loads a given vector graphic icons, which

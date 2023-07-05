@@ -9,6 +9,7 @@
 @inject IVersionService VersionService
 @inject INativeBrowserService NativeBrowserService
 @inject ISettingsService SettingsService
+@inject IClipboardService ClipboardService
 
 @implements IDisposable
 
@@ -74,7 +75,7 @@
 	protected override void OnInitialized()
 	{
 		SettingsModel settings = SettingsService.LoadSettingsOrDefault();
-		ViewModel = new TransferCodeHistoryViewModel(settings);
+		ViewModel = new TransferCodeHistoryViewModel(settings, ClipboardService);
 
 		_keyboardShortcuts = KeyboardShortcutService.CreateShortcuts()
 			.Add(ModCode.None, Code.Escape, () => _backButton);

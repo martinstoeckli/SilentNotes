@@ -3,7 +3,10 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
 using MudBlazor;
@@ -631,10 +634,20 @@ namespace SilentNotes.ViewModels
                 return;
 
             int newIndex;
-            if (upwards)
-                newIndex = oldIndex - 1;
-            else
-                newIndex = oldIndex + 1;
+            //if (singleStep)
+            //{
+                if (upwards)
+                    newIndex = oldIndex - 1;
+                else
+                    newIndex = oldIndex + 1;
+            //}
+            //else
+            //{
+            //    if (upwards)
+            //        newIndex = SelectedOrderNote.IsPinned ? 0 : FilteredNotes.FindIndex(item => item.IsPinned);
+            //    else
+            //        newIndex = FilteredNotes.Count - 1;
+            //}
 
             if ((oldIndex == newIndex)
                 || !IsInRange(oldIndex, 0, FilteredNotes.Count - 1)
