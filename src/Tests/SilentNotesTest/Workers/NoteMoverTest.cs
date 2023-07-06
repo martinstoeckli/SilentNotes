@@ -43,24 +43,24 @@ namespace SilentNotesTest.Workers
         }
 
         [Test]
-        public void GetNotePositions_MoveStepsUpwards_MovesToBeginOfList()
+        public void GetNotePositions_MoveStepsUpwards_MovesToBeginOfVisibleList()
         {
             var allNotes = PrepareTestNotes();
             allNotes[0].IsPinned = true;
             allNotes[1].IsPinned = true;
             allNotes[2].IsPinned = true;
             var filteredNotes = new ObservableCollection<NoteViewModel> { allNotes[1], allNotes[3] };
-            NoteViewModel selectedNote = allNotes[1];
+            NoteViewModel selectedNote = allNotes[3];
 
             var positions = NoteMover.GetNotePositions(allNotes, filteredNotes, selectedNote, true, false);
-            Assert.AreEqual(1, positions.OldAllNotesPos);
-            Assert.AreEqual(0, positions.OldFilteredNotesPos);
-            Assert.AreEqual(0, positions.NewAllNotesPos);
+            Assert.AreEqual(3, positions.OldAllNotesPos);
+            Assert.AreEqual(1, positions.OldFilteredNotesPos);
+            Assert.AreEqual(1, positions.NewAllNotesPos);
             Assert.AreEqual(0, positions.NewFilteredNotesPos);
         }
 
         [Test]
-        public void GetNotePositions_MoveStepsDownwards_MovesToEndOfList()
+        public void GetNotePositions_MoveStepsDownwards_MovesToEndOfVisibleList()
         {
             var allNotes = PrepareTestNotes();
             var filteredNotes = new ObservableCollection<NoteViewModel> { allNotes[1], allNotes[3] };
@@ -69,7 +69,7 @@ namespace SilentNotesTest.Workers
             var positions = NoteMover.GetNotePositions(allNotes, filteredNotes, selectedNote, false, false);
             Assert.AreEqual(1, positions.OldAllNotesPos);
             Assert.AreEqual(0, positions.OldFilteredNotesPos);
-            Assert.AreEqual(allNotes.Count-1, positions.NewAllNotesPos);
+            Assert.AreEqual(3, positions.NewAllNotesPos);
             Assert.AreEqual(filteredNotes.Count-1, positions.NewFilteredNotesPos);
         }
 

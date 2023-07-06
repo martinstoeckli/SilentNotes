@@ -286,7 +286,7 @@
 	{
 		if (e.PropertyName == "SelectedOrderNotePosition")
 		{
-			// Mark note to be scrolled to, after the next rendering.
+			// Remember to scroll to the moved note, as soon as the rendering has finished.
 			_pendingScrollIntoViewSelector = string.Format("[data-note='{0}']", ViewModel.SelectedOrderNote.Id);
 		}
 	}

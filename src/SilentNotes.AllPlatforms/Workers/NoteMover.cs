@@ -29,7 +29,7 @@ namespace SilentNotes.Workers
             bool upwards,
             bool singleStep)
         {
-            if (selectedNote == null)
+            if ((selectedNote == null) || (filteredNotes.Count < 2))
                 return null;
 
             int oldIndexInUnfilteredList = allNotes.IndexOf(selectedNote);
@@ -51,14 +51,14 @@ namespace SilentNotes.Workers
             {
                 if (upwards)
                 {
-                    // upwards, go to the top of the list.
-                    newIndexInUnfilteredList = 0;
+                    // upwards, go to the top of the visible list.
+                    newIndexInUnfilteredList = allNotes.IndexOf(filteredNotes.First());
                     newIndexInFilteredList = 0;
                 }
                 else
                 {
-                    // downwards, go to the end of the list.
-                    newIndexInUnfilteredList = allNotes.Count - 1;
+                    // downwards, go to the end of the visible list.
+                    newIndexInUnfilteredList = allNotes.IndexOf(filteredNotes.Last());
                     newIndexInFilteredList = filteredNotes.Count - 1;
                 }
             }
