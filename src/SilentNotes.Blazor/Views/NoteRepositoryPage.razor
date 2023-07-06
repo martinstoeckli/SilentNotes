@@ -54,6 +54,7 @@
 	<MudPaper Class="d-inline-flex align-center rounded-pill pa-0" MaxWidth="55%" MaxHeight="36px" Elevation="0">
 		<MudInput @ref="_filterInput" @bind-Value="ViewModel.Filter"
 			Class="filter-input ml-2 mr-1 my-0"
+			AutoFocus="@AutofocusToFilter"
 			Adornment="Adornment.End" AdornmentIcon="@FilterIcon" OnAdornmentClick="@(() => ViewModel.ClearFilterCommand.Execute(null))"
 			Immediate="true" />
 	</MudPaper>
@@ -210,6 +211,7 @@
 	private MudToggleIconButton _tagsButton;
 	private MudBaseButton _syncButton;
 	private IKeyboardShortcuts _keyboardShortcuts;
+	private string _pendingScrollIntoViewSelector;
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="NoteRepositoryPage"/> class.
@@ -259,19 +261,11 @@
 	/// <inheritdoc/>
 	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
-		// Focus filter control for direct typing on Windows.
-		// On Android a tap on the filter input will bring up the keyboard.
-#if WINDOWS
-	if (firstRender)
-	await _filterInput.FocusAsync();
-#else
-		await DoNothing();
-#endif
-	}
-
-	private Task DoNothing()
-	{
-		return Task.CompletedTask;
+		if (!string.IsNullOrEmpty(_pendingScrollIntoViewSelector))
+		{
+			await ScrollManager.ScrollIntoViewAsync(_pendingScrollIntoViewSelector, ScrollBehavior.Smooth);
+			_pendingScrollIntoViewSelector = null;
+		}
 	}
 
 	/// <summary>
@@ -279,12 +273,21 @@
 	/// </summary>
 	private NoteRepositoryViewModel ViewModel { get; set; }
 
+	/// <summary>
+	/// Focus filter control for direct typing on Windows.
+	/// On Android the focus will bring up the keyboard, which we want to avoid.
+	/// </summary>
+	private bool AutofocusToFilter
+	{
+		get { return EnvironmentService.Os == Services.OperatingSystem.Windows; }
+	}
+
 	private void PropertyChangedHandler(object sender, PropertyChangedEventArgs e)
 	{
 		if (e.PropertyName == "SelectedOrderNotePosition")
 		{
-			string selector = string.Format("[data-note='{0}']", ViewModel.SelectedOrderNote.Id);
-			ScrollManager.ScrollIntoViewAsync(selector, ScrollBehavior.Smooth);
+			// Mark note to be scrolled to, after the next rendering.
+			_pendingScrollIntoViewSelector = string.Format("[data-note='{0}']", ViewModel.SelectedOrderNote.Id);
 		}
 	}
 

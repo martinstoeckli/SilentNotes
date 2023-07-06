@@ -74,56 +74,6 @@ namespace SilentNotesTest.ViewModels
             Assert.IsFalse(oldNotes.Contains(newNote));
         }
 
-        [Test]
-        public void AdjustPinStatusAtPosition_PinsNoteIfDraggedAboveLastPinnedNote()
-        {
-            NoteRepositoryModel model = CreateTestRepository();
-
-            // Note0 was dragged above Note1
-            model.Notes[0].IsPinned = false;
-            model.Notes[1].IsPinned = true;
-            model.Notes[2].IsPinned = false;
-
-            NoteRepositoryViewModel viewModel = CreateMockedNoteRepositoryViewModel(model);
-            viewModel.AdjustPinStatusAtPosition(0);
-            Assert.IsTrue(model.Notes[0].IsPinned);
-        }
-
-        [Test]
-        public void AdjustPinStatusAtPosition_UnpinsNoteIfDraggedBelowFirstUnpinnedNote()
-        {
-            NoteRepositoryModel model = CreateTestRepository();
-
-            // Note2 was dragged below Note1
-            model.Notes[0].IsPinned = true;
-            model.Notes[1].IsPinned = false;
-            model.Notes[2].IsPinned = true;
-
-            NoteRepositoryViewModel viewModel = CreateMockedNoteRepositoryViewModel(model);
-            viewModel.AdjustPinStatusAtPosition(2);
-            Assert.IsFalse(model.Notes[2].IsPinned);
-        }
-
-        [Test]
-        public void AdjustPinStatusAtPosition_DoesNotChangePinStateIfNotNecessary()
-        {
-            NoteRepositoryModel model = CreateTestRepository();
-
-            model.Notes[0].IsPinned = false;
-            model.Notes[1].IsPinned = false;
-            model.Notes[2].IsPinned = false;
-
-            NoteRepositoryViewModel viewModel = CreateMockedNoteRepositoryViewModel(model);
-            viewModel.AdjustPinStatusAtPosition(0);
-            Assert.IsFalse(model.Notes[0].IsPinned);
-
-            model.Notes[0].IsPinned = true;
-            model.Notes[1].IsPinned = true;
-            model.Notes[2].IsPinned = true;
-            viewModel.AdjustPinStatusAtPosition(0);
-            Assert.IsTrue(model.Notes[0].IsPinned);
-        }
-
         private static NoteRepositoryViewModel CreateMockedNoteRepositoryViewModel(NoteRepositoryModel repository)
         {
             SettingsModel settingsModel = new SettingsModel { DefaultNoteInsertion = NoteInsertionMode.AtTop };

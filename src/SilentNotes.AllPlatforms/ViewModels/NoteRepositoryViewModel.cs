@@ -629,88 +629,18 @@ namespace SilentNotes.ViewModels
             if (SelectedOrderNote == null)
                 return;
 
-            int oldIndex = FilteredNotes.IndexOf(SelectedOrderNote);
-            if (oldIndex < 0)
+            var notePositions = NoteMover.GetNotePositions(AllNotes, FilteredNotes, SelectedOrderNote, upwards, singleStep);
+            if (notePositions == null)
                 return;
 
-            int newIndex;
-            //if (singleStep)
-            //{
-                if (upwards)
-                    newIndex = oldIndex - 1;
-                else
-                    newIndex = oldIndex + 1;
-            //}
-            //else
-            //{
-            //    if (upwards)
-            //        newIndex = SelectedOrderNote.IsPinned ? 0 : FilteredNotes.FindIndex(item => item.IsPinned);
-            //    else
-            //        newIndex = FilteredNotes.Count - 1;
-            //}
+            // Move the notes in all lists of model and viewmodel
+            NoteMover.ListMove(_model.Notes, notePositions.OldAllNotesPos, notePositions.NewAllNotesPos);
+            NoteMover.ListMove(AllNotes, notePositions.OldAllNotesPos, notePositions.NewAllNotesPos);
+            FilteredNotes.Move(notePositions.OldFilteredNotesPos, notePositions.NewFilteredNotesPos);
 
-            if ((oldIndex == newIndex)
-                || !IsInRange(oldIndex, 0, FilteredNotes.Count - 1)
-                || !IsInRange(newIndex, 0, FilteredNotes.Count - 1))
-                return;
-
-            MoveNote(oldIndex, newIndex);
-            AdjustPinStatusAtPosition(newIndex);
-            OnPropertyChanged("SelectedOrderNotePosition");
-        }
-
-        /// <summary>
-        /// Command to move a note to a new place in the list. This is usually
-        /// called after a drag and drop action.
-        /// </summary>
-        /// <param name="oldIndex">Index of the note to move.</param>
-        /// <param name="newIndex">New index to place the note in.</param>
-        private void MoveNote(int oldIndex, int newIndex)
-        {
-            Modified = true;
-            int oldIndexInUnfilteredList = AllNotes.IndexOf(FilteredNotes[oldIndex]);
-            int newIndexInUnfilteredList = AllNotes.IndexOf(FilteredNotes[newIndex]);
-
-            ListMove(_model.Notes, oldIndexInUnfilteredList, newIndexInUnfilteredList);
-            ListMove(AllNotes, oldIndexInUnfilteredList, newIndexInUnfilteredList);
-            FilteredNotes.Move(oldIndex, newIndex);
+            NoteMover.AdjustPinStatusAfterMoving(AllNotes, notePositions.NewAllNotesPos);
             _model.RefreshOrderModifiedAt();
-        }
-
-        /// <summary>
-        /// Changes <see cref="NoteViewModel.IsPinned"/> based on position.
-        /// This is usually called after a ordering action.
-        /// </summary>
-        /// <remarks>Changes to true if placed in front of a
-        /// pinned note. False if placed behind unpinned one.</remarks>
-        internal void AdjustPinStatusAtPosition(int currentIndex)
-        {
-            var movedNote = FilteredNotes[currentIndex];
-            var noteBehind = FilteredNotes.ElementAtOrDefault(currentIndex + 1);
-            var noteInfront = FilteredNotes.ElementAtOrDefault(currentIndex - 1);
-
-            if (movedNote.IsPinned == false && noteBehind != null && noteBehind.IsPinned)
-            {
-                movedNote.IsPinned = true;
-                OnPropertyChanged("Notes"); // refreshes the notes
-            }
-            else if (movedNote.IsPinned && noteInfront != null && noteInfront.IsPinned == false)
-            {
-                movedNote.IsPinned = false;
-                OnPropertyChanged("Notes");
-            }
-        }
-
-        private bool IsInRange(int candidate, int min, int max)
-        {
-            return (candidate >= min) && (candidate <= max);
-        }
-
-        private void ListMove<T>(List<T> list, int oldIndex, int newIndex)
-        {
-            T item = list[oldIndex];
-            list.RemoveAt(oldIndex);
-            list.Insert(newIndex, item);
+            OnPropertyChanged("SelectedOrderNotePosition");
         }
     }
 }
