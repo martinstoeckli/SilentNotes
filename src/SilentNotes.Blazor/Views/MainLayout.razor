@@ -9,8 +9,8 @@
 <MudDialogProvider DisableBackdropClick="true" CloseOnEscapeKey="true"/>
 <MudSnackbarProvider />
 
-<MudLayout>
-	<MudMainContent>
+<MudLayout Class="@ThemeService.LightOrDarkClass">
+	<MudMainContent Style="height:100%">
 		@Body
 	</MudMainContent>
 </MudLayout>
@@ -18,8 +18,8 @@
 @code {
 	protected override void OnInitialized()
 	{
-		// Give the theme service a way to redraw the GUI
-		ThemeService.RefreshGui = StateHasChanged;
+		// Give the theme service a way to redraw the GUI of the whole app.
+		ThemeService.Initialize(StateHasChanged);
 
 		// Initialize the virtual "back" route
 		NavigationService.InitializeVirtualRoutes();

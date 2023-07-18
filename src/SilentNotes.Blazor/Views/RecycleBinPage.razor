@@ -15,6 +15,18 @@
 @implements IDisposable
 
 <style type="text/css">
+	body::after {
+		position: absolute;
+		content: "";
+		@(ThemeService.CssNoteRepositoryBackground)
+		top: 0;
+		left: 0;
+		bottom: 0;
+		right: 0;
+		z-index: -1;
+		-webkit-filter: grayscale(0.8);
+		filter: grayscale(0.8);
+	}
 	.note-item, .note-card, .note-locked {
 		min-height: @(SettingsViewModel.ReferenceNoteMinSize)px;
 		max-height: @(SettingsViewModel.ReferenceNoteMaxSize)px;
@@ -57,7 +69,7 @@
 
 @* body *@
 <div id="content" class="px-1 pt-0 pb-2">
-	<ul id="note-repository" class="note-list flex-column flex-sm-row">
+	<ul id="recycled-notes" class="note-list flex-column flex-sm-row">
 		@foreach (var note in ViewModel.RecycledNotes)
 		{
 			<li @key="note.Id" class="note-item">

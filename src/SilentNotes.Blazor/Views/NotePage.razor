@@ -2,10 +2,13 @@
 @page "/text/{NoteId}"
 @using System.ComponentModel
 @using MudBlazor.Utilities;
+@using SilentNotes.Crypto;
 @using SilentNotes.Models
 @using SilentNotes.ViewModels
 @using SilentNotes.Services
+@using System.Runtime.InteropServices.JavaScript;
 
+@inject IJSRuntime JSRuntime
 @inject ILanguageService LanguageService
 @inject ISvgIconService IconService
 @inject IKeyboardShortcutService KeyboardShortcutService
@@ -14,11 +17,20 @@
 @inject IThemeService ThemeService
 @inject IFeedbackService FeedbackService
 @inject IFilePickerService FilePickerService
+@inject IRepositoryStorageService RepositoryStorageService
 @inject ICloudStorageClientFactory CloudStorageClientFactory
+@inject ICryptoRandomService CryptoRandomSource
 
 @implements IDisposable
+@implements IAsyncDisposable
 
 <style type="text/css">
+body {
+	background-color: @ViewModel.BackgroundColorHex;
+}
+.note-viewer {
+	font-size: @(ViewModel.GetNoteBaseFontSize(SettingsService))px !important;
+}
 </style>
 
 @* Main menu *@
@@ -40,25 +52,70 @@
 </MudAppBar>
 
 @* body *@
-<MudContainer id="content" Class="mud-container-left mud-container-p" MaxWidth="MaxWidth.Small">
-	<h2 class="h-colored">Note</h2>
+<div id="content" class="@ViewModel.LightOrDarkClass()">
+	@if (ViewModel.IsLocked)
+	{
+		<span class="note-locked"><svg width='128' height='128' viewBox='0 0 24 24'><use xlink:href="#svg-lock-outline" /></svg></span>
+	}
+	else
+	{
+		<div @ref="_editorContainer" id="myeditor" v-pre class="note-viewer detail-view @ViewModel.CssClassNoteType"></div>
+	}
+</div>
 
-</MudContainer>
+@* Declare icons which can be reused multiple times, to reduce page size *@
+<div hidden>
+	@IconService.EmbedLinkableSvgs( new [] {
+		IconNames.LockOutline,
+	});
+</div>
 
 @code {
 	private bool _isDisposed;
 	private MudMenu _overflowMenu;
 	private MudBaseButton _backButton;
+	private ElementReference _editorContainer;
 	private IKeyboardShortcuts _keyboardShortcuts;
+	private IJSObjectReference _proseMirrorJs;
+	private IJSObjectReference _jsModule;
+	private IJSObjectReference _jsEditor;
 
 	protected override void OnParametersSet()
 	{
-		base.OnParametersSet();
-		//ViewModel = new SettingsViewModel(SettingsService, LanguageService, EnvironmentService, ThemeService, FeedbackService, CloudStorageClientFactory, FilePickerService);
-		//ViewModel.PropertyChanged += PropertyChangedHandler;
+		RepositoryStorageLoadResult loadResult = RepositoryStorageService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepository);
+		if (loadResult == RepositoryStorageLoadResult.InvalidRepository)
+			throw new Exception("Invalid repository");
+
+		// Get the note from the repository
+		Guid noteId = new Guid(NoteId);
+		NoteModel note = noteRepository.Notes.FindById(noteId);
+
+		ICryptor cryptor = new Cryptor(NoteModel.CryptorPackageName, CryptoRandomSource);
+
+		ViewModel = new NoteViewModel(note, null, LanguageService, ThemeService, SettingsService, cryptor, noteRepository.Safes);
+		ViewModel.PropertyChanged += PropertyChangedHandler;
 
 		_keyboardShortcuts = KeyboardShortcutService.CreateShortcuts()
 			.Add(ModCode.None, Code.Escape, () => _backButton);
+	}
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			try
+			{
+				// Prepare prose mirror editor
+				_jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./Views/NotePage.razor.js");
+				_jsEditor = await _jsModule.InvokeAsync<IJSObjectReference>("initialize", _editorContainer);
+				string content = ViewModel.UnlockedHtmlContent;
+				await _jsModule.InvokeVoidAsync("setNoteContent", _jsEditor, content);
+			}
+			catch (Exception ex)
+			{
+				string msg = ex.Message;
+			}
+		}
 	}
 
 	public void Dispose()
@@ -67,10 +124,18 @@
 			return;
 		_isDisposed = true;
 		_keyboardShortcuts.Dispose();
-		//ViewModel.PropertyChanged -= PropertyChangedHandler;
+		if (_jsModule != null)
+			_jsModule.DisposeAsync();
+		ViewModel.PropertyChanged -= PropertyChangedHandler;
 	}
 
-	private SettingsViewModel ViewModel { get; set; }
+	async ValueTask IAsyncDisposable.DisposeAsync()
+	{
+		if (_proseMirrorJs != null)
+			await _proseMirrorJs.DisposeAsync();
+	}
+
+	private NoteViewModel ViewModel { get; set; }
 
 	[Parameter]
 	public string NoteId { get; set; } = default!;

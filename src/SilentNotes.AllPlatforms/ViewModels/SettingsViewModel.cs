@@ -183,9 +183,7 @@ namespace SilentNotes.ViewModels
             set
             {
                 if (SetPropertyAndModified(Model.ThemeMode.ToString(), value, (string v) => Model.ThemeMode = (ThemeMode)Enum.Parse(typeof(ThemeMode), value)))
-                {
-                    _themeService.RefreshGui();
-                }
+                    _themeService.RedrawTheme();
             }
         }
 

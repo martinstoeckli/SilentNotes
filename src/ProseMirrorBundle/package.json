@@ -7,6 +7,7 @@
     "url": "https://github.com/martinstoeckli/SilentNotes"
   },
   "scripts": {
+    "esbuild": "esbuild src/prose-mirror-bundle.ts --bundle --minify --tsconfig-raw=true --format=esm --keep-names --tree-shaking=true --outfile=prose-mirror-bundle.js",
     "build": "webpack --mode=production --config webpack.config.js",
     "postbuild": "babel --presets=@babel/env dist/prose-mirror-bundle.js --out-dir ../SilentNotes.Shared/Assets/Html"
   },
@@ -46,6 +47,7 @@
     "@tiptap/extension-text": "^2.0.0-beta.209",
     "@tiptap/extension-text-style": "^2.0.0-beta.209",
     "@tiptap/extension-underline": "^2.0.0-beta.209",
+    "esbuild": "0.18.13",
     "prosemirror-commands": "^1.3.1",
     "prosemirror-keymap": "^1.2.0",
     "prosemirror-model": "^1.18.1",

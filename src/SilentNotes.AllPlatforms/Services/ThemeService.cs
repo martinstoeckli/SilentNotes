@@ -19,6 +19,7 @@ namespace SilentNotes.Services
         private const int DefaultWallpaper = 0;
         private readonly ISettingsService _settingsService;
         private readonly IEnvironmentService _environmentService;
+        private Action _globalStateHasChanged;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ThemeService"/> class.
@@ -43,6 +44,18 @@ namespace SilentNotes.Services
             };
             Wallpapers = new List<WallpaperModel>();
             FillWallpapers(Wallpapers);
+        }
+
+        /// <inheritdoc/>
+        public void Initialize(Action stateHasChanged)
+        {
+            _globalStateHasChanged = stateHasChanged;
+        }
+
+        /// <inheritdoc/>
+        public void RedrawTheme()
+        {
+            _globalStateHasChanged?.Invoke();
         }
 
         /// <inheritdoc/>
@@ -74,7 +87,11 @@ namespace SilentNotes.Services
         public MudTheme Theme { get; set; }
 
         /// <inheritdoc/>
-        public Action RefreshGui { get; set; }
+        public string LightOrDarkClass 
+        {
+            get { return IsDarkMode ? "theme-dark" : "theme-light"; }
+        }
+
 
         private void FillWallpapers(List<WallpaperModel> themes)
         {

@@ -16,6 +16,19 @@ namespace SilentNotes.Services
     public interface IThemeService
     {
         /// <summary>
+        /// Initializes the theme service.
+        /// </summary>
+        /// <param name="globalStateHasChanged">The StateHasChanged method of the MainLayout, for
+        /// more infos read: <see cref="RedrawTheme"/>.</param>
+        void Initialize(Action globalStateHasChanged);
+
+        /// <summary>
+        /// Can be called when the theme has changed, to refresh the GUI of the whole app (instead
+        /// of just the active component).
+        /// </summary>
+        void RedrawTheme();
+
+        /// <summary>
         /// Gets or sets a value indicating whether the app should show its dark theme.
         /// </summary>
         bool IsDarkMode { get; set; }
@@ -24,11 +37,6 @@ namespace SilentNotes.Services
         /// Gets or sets the current theme.
         /// </summary>
         MudTheme Theme { get; set; }
-
-        /// <summary>
-        /// Gets or sets an action which can redraw the GUI to react to changes of the theme.
-        /// </summary>
-        Action RefreshGui { get; set; }
 
         ///// <summary>
         ///// Gets a value indicating whether the app should show its dark theme.
@@ -40,6 +48,13 @@ namespace SilentNotes.Services
         ///// inside the Html class attributes, to refer to the Css dark class.
         ///// </summary>
         //string CssClassDark { get; }
+
+        /// <summary>
+        /// Gets the keyword "theme-light" or "theme-dark" depending on <see cref="IsDarkMode"/>,
+        /// which is applied as css class to the MainLayout. Css definitions in app-colors.css can
+        /// refer to this class.
+        /// </summary>
+        string LightOrDarkClass { get; }
 
         /// <summary>
         /// Gets a Css for a solid background or an attribute string like:

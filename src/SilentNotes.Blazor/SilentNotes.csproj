@@ -60,6 +60,11 @@
       <None Remove="Resources\Raw\Lng.SilentNotes.ru" />
       <None Remove="Resources\Raw\Lng.SilentNotes.tr" />
       <None Remove="Resources\Raw\Lng.SilentNotes.zh" />
+      <None Remove="Views\NotePage.razor.js" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="Views\NotePage.razor.js" />
     </ItemGroup>
 
     <ItemGroup>

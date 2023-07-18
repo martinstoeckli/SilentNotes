@@ -106,6 +106,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Workers\TimeAgo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Workers\TransferCode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Workers\UnmixableAlphabet.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Workers\WebviewUtils.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Workers\XmlUtils.cs" />
   </ItemGroup>
 </Project>

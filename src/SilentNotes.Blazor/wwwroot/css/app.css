@@ -6,7 +6,8 @@
 	--css-grid-topic-icon-width: 30px;
 }
 
-body { font-size: 14px; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji" }
+/*html { font-size: 14px; }*/
+body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji" }
 h1 { font-size: 1.7em; }
 h2 { font-size: 1.3em; }
 h3 { font-size: 1.1em; }
@@ -14,18 +15,6 @@ h1:focus { outline: none; }
 .h-colored {
 	color: var(--mud-palette-primary-darken);
 }
-
-.mud-button { text-transform: none; }
-.mud-switch { margin-right: 0; }
-.mud-button-filled-default { /* shadow appeared too strong */
-	box-shadow:
-		0 3px 1px -2px rgba(0,0,0,.01),
-		0 2px 2px 0 rgba(0,0,0,.08),
-		0 1px 5px 0 rgba(0,0,0,.06);
-}
-
-.mud-container-left { margin-left: 0; }
-.mud-container-p { padding-bottom: 20px; }
 
 .toggled svg { fill: var(--mud-palette-tertiary); }
 
@@ -72,6 +61,9 @@ h1:focus { outline: none; }
 	width: 100%;
 }
 
+/* narrow browser */
+@media screen and (max-width: 600px) {
+}
 /* sm breakpoint */
 @media screen and (min-width: 600px) {
 	:root {
@@ -81,6 +73,13 @@ h1:focus { outline: none; }
 		display: inline-block;
 		width: 240px;
 	}
+}
+/* narrow device - phone */
+@media screen and (max-device-width: 540px) {
+/*	html { font-size: 17px; }*/
+}
+/* wide device - desktop */
+@media screen and (min-device-width: 540px) {
 }
 
 /* The note light/dark is independend of the theme */
@@ -303,6 +302,34 @@ h1:focus { outline: none; }
 
 .note-dark .note-viewer.over-view.checklist p.disabled,
 .note-dark .detail-view.checklist .ProseMirror p.disabled { color: rgba(255, 255, 255, 0.5); text-decoration-color: rgba(255, 255, 255, 0.25); }
+
+/* Tweaking 3rd party elements */
+
+div.ProseMirror {
+	border: none 0;
+	padding: 0.8em 1em;
+}
+div.ProseMirror:focus {
+	outline: none;
+}
+div.ProseMirror .search-result {
+	background: rgba(32, 144, 234, 0.5);
+}
+div.ProseMirror .search-result-selected {
+	background: rgba(32, 144, 234, 0.9);
+}
+
+.mud-button { text-transform: none; }
+.mud-switch { margin-right: 0; }
+.mud-button-filled-default { /* shadow appeared too strong */
+	box-shadow:
+		0 3px 1px -2px rgba(0,0,0,.01),
+		0 2px 2px 0 rgba(0,0,0,.08),
+		0 1px 5px 0 rgba(0,0,0,.06);
+}
+
+.mud-container-left { margin-left: 0; }
+.mud-container-p { padding-bottom: 20px; }
 
 #blazor-error-ui {
 	background: lightyellow;
