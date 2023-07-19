@@ -15,17 +15,17 @@ namespace SilentNotes.ViewModels
         /// </summary>
         /// <param name="viewModel">The viewmodel to extend.</param>
         /// <param name="settingsService">A service which can read the settings.</param>
-        public static string GetNoteBaseFontSize(this ViewModelBase viewModel, ISettingsService settingsService)
+        /// <param name="overview">Value indicating whether the text is shown in the overview note list.</param>
+        public static string GetNoteBaseFontSize(this ViewModelBase viewModel, ISettingsService settingsService, bool overview)
         {
             double defaultBaseFontSize = SettingsViewModel.ReferenceFontSize;
 #if WINDOWS
-            defaultBaseFontSize = SettingsViewModel.ReferenceFontSize - 2;
+            if (overview)
+                defaultBaseFontSize = SettingsViewModel.ReferenceFontSize - 2;
 #endif
             var settings = settingsService?.LoadSettingsOrDefault();
-            SliderStepConverter converter = new SliderStepConverter(defaultBaseFontSize, 1.0);
-            double fontSize = settings != null
-                ? converter.ModelFactorToValue(settings.FontScale)
-                : defaultBaseFontSize;
+            double scale = settings != null ? settings.FontScale : 1.0;
+            double fontSize = defaultBaseFontSize * scale;
             return FloatingPointUtils.FormatInvariant(fontSize);
         }
     }

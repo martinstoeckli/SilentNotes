@@ -92,6 +92,7 @@ h1:focus { outline: none; }
 
 .note-card {
 	position: relative;
+	width: 100%;
 	padding: 12px;
 	overflow: hidden;
 	font-size: 0.9em;
@@ -162,26 +163,26 @@ h1:focus { outline: none; }
 
 .note-viewer h1 {
 	margin: 0.7em 0 0.3em 0 !important;
-	font: normal bold 1.35em/1.1 "Segoe UI",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol" !important;
+	font: normal bold 1.35em "Segoe UI",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol" !important;
 }
 .note-viewer h2 {
 	margin: 0.8em 0 0.2em 0 !important;
-	font: normal bold 1.2em/1.1 "Segoe UI",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol" !important;
+	font: normal bold 1.2em "Segoe UI",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol" !important;
 }
 .note-viewer h3 {
 	margin: 0.8em 0 0.2em 0 !important;
-	font: normal bold 1.1em/1.1 "Segoe UI",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol" !important;
+	font: normal bold 1.1em "Segoe UI",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol" !important;
 }
 
 .note-viewer p {
 	margin: 0 0 0.2em 0 !important;
-	font: normal normal 1em/1.4 "Segoe UI",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol" !important;
+	font: normal normal 1em "Segoe UI",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol" !important;
 }
 
 .note-viewer ol {
 	margin: 0.5em 0 0.5em 0 !important;
 	padding: 0 !important;
-	font: normal normal 1em/1.4 "Segoe UI",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol" !important;
+	font: normal normal 1em "Segoe UI",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol" !important;
 	list-style: none;
 	counter-reset: sn-counter;
 }
@@ -203,7 +204,7 @@ h1:focus { outline: none; }
 .note-viewer ul {
 	margin: 0.5em 0 0.5em 0 !important;
 	padding: 0 !important;
-	font: normal normal 1em/1.4 "Segoe UI",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol" !important;
+	font: normal normal 1em "Segoe UI",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol" !important;
 	/* list-style-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='-32 -32 64 64' fill='blue' ><circle r='16' /></svg>"); */
 }
 .note-viewer ul > li {
@@ -227,7 +228,7 @@ h1:focus { outline: none; }
 .note-viewer pre {
 	margin: 0.5em 0 0.5em 0 !important;
 	padding: 1em !important;
-	font: normal normal 0.9em/1.2 Consolas,monospace,"Courier New" !important;
+	font: normal normal 0.9em Consolas,monospace,"Courier New" !important;
 	overflow: auto !important;
 	white-space: pre !important;
 	text-wrap: none !important;
@@ -236,7 +237,7 @@ h1:focus { outline: none; }
 .note-viewer blockquote {
 	margin: 0.5em 0 0.5em 0 !important;
 	padding: 0 0 0 1em !important;
-	font: normal normal 1em/1.5 "Segoe UI",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol" !important;
+	font: normal normal 1em "Segoe UI",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol" !important;
 	border-left: 3px solid rgba(128, 128, 128, 0.4) !important;
 }
 .note-viewer.dark blockquote {

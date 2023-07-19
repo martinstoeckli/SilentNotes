@@ -29,7 +29,7 @@ body {
 	background-color: @ViewModel.BackgroundColorHex;
 }
 .note-viewer {
-	font-size: @(ViewModel.GetNoteBaseFontSize(SettingsService))px !important;
+	font-size: @(ViewModel.GetNoteBaseFontSize(SettingsService, false))px !important;
 }
 </style>
 

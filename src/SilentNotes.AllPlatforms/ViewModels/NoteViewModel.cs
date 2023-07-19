@@ -719,20 +719,6 @@ namespace SilentNotes.ViewModels
         //    return _timeAgo;
         //}
 
-        ///// <summary>
-        ///// Gets the base font size [px] of the notes, from which the relative sizes are derrived.
-        ///// </summary>
-        //public string NoteBaseFontSize
-        //{
-        //    get
-        //    {
-        //        double defaultBaseFontSize = 15.0; // Default size for scale 1.0
-        //        SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
-        //        double fontSize = settings != null ? defaultBaseFontSize * settings.FontScale : defaultBaseFontSize;
-        //        return FloatingPointUtils.FormatInvariant(fontSize);
-        //    }
-        //}
-
         /// <summary>
         /// Gets the navigation route of the note. In case that the note is locked, the opensafe
         /// route is returned with a target route.
