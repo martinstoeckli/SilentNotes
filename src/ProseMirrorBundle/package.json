@@ -7,9 +7,7 @@
     "url": "https://github.com/martinstoeckli/SilentNotes"
   },
   "scripts": {
-    "esbuild": "esbuild src/prose-mirror-bundle.ts --bundle --minify --tsconfig-raw=true --format=esm --keep-names --tree-shaking=true --outfile=prose-mirror-bundle.js",
-    "build": "webpack --mode=production --config webpack.config.js",
-    "postbuild": "babel --presets=@babel/env dist/prose-mirror-bundle.js --out-dir ../SilentNotes.Shared/Assets/Html"
+    "build": "esbuild src/prose-mirror-bundle.ts --bundle --minify --tsconfig-raw=true --format=esm --keep-names --tree-shaking=true --target=es2020,chrome67,edge18,firefox60,node12,safari11 --outfile=../SilentNotes.Blazor/wwwroot/prose-mirror-bundle.js"
   },
   "keywords": [],
   "author": "Martin Stoeckli",
