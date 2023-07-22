@@ -46,13 +46,13 @@
 
 @* Main menu *@
 <MudAppBar Fixed="true" Class="" Dense="true">
-	<MudIconButton @ref="_backButton"  Href="/back" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" />
+	<MudIconButton @ref="_backButton" Href="/back" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" Edge="Edge.Start" />
 
 	<MudSpacer />
 
 	<MudMenu @ref="_overflowMenu" Dense="true" AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight">
 		<ActivatorContent>
-			<MudIconButton Icon="@IconService[IconNames.DotsVertical]" Color="Color.Inherit" />
+			<MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" />
 		</ActivatorContent>
 		<ChildContent>
 			<MudNavMenu Rounded="true" Margin="Margin.Dense" Class="px-1">

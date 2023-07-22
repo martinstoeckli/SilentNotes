@@ -1,5 +1,4 @@
 ﻿@page "/note/{NoteId}"
-@page "/text/{NoteId}"
 @using System.ComponentModel
 @using MudBlazor.Utilities;
 @using SilentNotes.Crypto;
@@ -11,6 +10,7 @@
 @inject IJSRuntime JSRuntime
 @inject ILanguageService LanguageService
 @inject ISvgIconService IconService
+@inject INavigationService NavigationService
 @inject IKeyboardShortcutService KeyboardShortcutService
 @inject ISettingsService SettingsService
 @inject IEnvironmentService EnvironmentService
@@ -21,7 +21,6 @@
 @inject ICloudStorageClientFactory CloudStorageClientFactory
 @inject ICryptoRandomService CryptoRandomSource
 
-@implements IDisposable
 @implements IAsyncDisposable
 
 <style type="text/css">
@@ -35,17 +34,36 @@ body {
 
 @* Main menu *@
 <MudAppBar Fixed="true" Class="" Dense="true">
-	<MudIconButton @ref="_backButton" Href="/back" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" />
+	<MudIconButton @ref="_backButton" Href="/back" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" Edge="Edge.Start" />
 
 	<MudSpacer />
 
+	<MudToggleIconButton id="btnBold" @bind-Toggled="_formatStates.Bold"
+		Icon="@IconService.GetSvgLink(IconNames.FormatBold)" Color="Color.Inherit"
+		ToggledIcon="@IconService.GetSvgLink(IconNames.FormatBold)" ToggledColor="Color.Tertiary"
+		Title="@LanguageService["note_bold"]" Disabled="ViewModel.ShoppingModeActive" Edge="Edge.End"/>
+
+	<MudToggleIconButton id="btnItalic" @bind-Toggled="_formatStates.Italic"
+		Icon="@IconService.GetSvgLink(IconNames.FormatItalic)" Color="Color.Inherit"
+		ToggledIcon="@IconService.GetSvgLink(IconNames.FormatItalic)" ToggledColor="Color.Tertiary"
+		Title="@LanguageService["note_italic"]" Disabled="ViewModel.ShoppingModeActive" Edge="Edge.End"/>
+
+	<MudToggleIconButton id="btnUnderline" @bind-Toggled="_formatStates.Underline"
+		Icon="@IconService.GetSvgLink(IconNames.FormatUnderline)" Color="Color.Inherit"
+		ToggledIcon="@IconService.GetSvgLink(IconNames.FormatUnderline)" ToggledColor="Color.Tertiary"
+		Title="@LanguageService["note_underline"]" Class="d-none d-sm-flex" Disabled="ViewModel.ShoppingModeActive" Edge="Edge.End"/>
+
+	@* Overflow menu *@
 	<MudMenu @ref="_overflowMenu" Dense="true" AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight">
 		<ActivatorContent>
-			<MudIconButton Icon="@IconService[IconNames.DotsVertical]" Color="Color.Inherit" />
+			<MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" />
 		</ActivatorContent>
 		<ChildContent>
 			<MudNavMenu Rounded="true" Margin="Margin.Dense" Class="px-1">
-				<MudNavLink Class="d-sm-none" Icon="@IconService.GetSvgLink(IconNames.NoteTextOutline)">@LanguageService["note_create_new"]</MudNavLink>
+				<MudNavLink Icon="@IconService.GetSvgLink(IconNames.FormatHeader1)" Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_header1"]</MudNavLink>
+				<MudNavLink Icon="@IconService.GetSvgLink(IconNames.FormatHeader2)" Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_header2"]</MudNavLink>
+				<MudNavLink Icon="@IconService.GetSvgLink(IconNames.FormatHeader3)" Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_header3"]</MudNavLink>
+				<MudNavLink Class="d-sm-none" Icon="@IconService.GetSvgLink(IconNames.FormatUnderline)" Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_underline"]</MudNavLink>
 			</MudNavMenu>
 		</ChildContent>
 	</MudMenu>
@@ -66,7 +84,12 @@ body {
 @* Declare icons which can be reused multiple times, to reduce page size *@
 <div hidden>
 	@IconService.EmbedLinkableSvgs( new [] {
-		IconNames.LockOutline,
+		IconNames.FormatBold,
+		IconNames.FormatItalic,
+		IconNames.FormatHeader1,
+		IconNames.FormatHeader2,
+		IconNames.FormatHeader3,
+		IconNames.FormatUnderline,
 	});
 </div>
 
@@ -76,9 +99,17 @@ body {
 	private MudBaseButton _backButton;
 	private ElementReference _editorContainer;
 	private IKeyboardShortcuts _keyboardShortcuts;
-	private IJSObjectReference _proseMirrorJs;
 	private IJSObjectReference _jsModule;
-	private IJSObjectReference _jsEditor;
+	private DotNetObjectReference<NotePage> _dotnetModule;
+	private FormatToggleStates _formatStates;
+
+	/// <summary>
+	/// Initializes a new instance of the <see cref="NotePage"/> class.
+	/// </summary>
+	public NotePage()
+	{
+		_formatStates = new FormatToggleStates();
+	}
 
 	protected override void OnParametersSet()
 	{
@@ -89,10 +120,16 @@ body {
 		// Get the note from the repository
 		Guid noteId = new Guid(NoteId);
 		NoteModel note = noteRepository.Notes.FindById(noteId);
-
 		ICryptor cryptor = new Cryptor(NoteModel.CryptorPackageName, CryptoRandomSource);
-
 		ViewModel = new NoteViewModel(note, null, LanguageService, ThemeService, SettingsService, cryptor, noteRepository.Safes);
+
+		// Redirect to open safe if locked
+		if (ViewModel.IsLocked)
+		{
+			NavigationService.NavigateTo(ViewModel.Route, false, true);
+			return;
+		}
+
 		ViewModel.PropertyChanged += PropertyChangedHandler;
 
 		_keyboardShortcuts = KeyboardShortcutService.CreateShortcuts()
@@ -105,11 +142,13 @@ body {
 		{
 			try
 			{
+				_dotnetModule = DotNetObjectReference.Create(this);
+
 				// Prepare prose mirror editor
 				_jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./Views/NotePage.razor.js");
-				_jsEditor = await _jsModule.InvokeAsync<IJSObjectReference>("initialize", _editorContainer);
+				await _jsModule.InvokeVoidAsync("initialize", _dotnetModule, _editorContainer);
 				string content = ViewModel.UnlockedHtmlContent;
-				await _jsModule.InvokeVoidAsync("setNoteContent", _jsEditor, content);
+				await _jsModule.InvokeVoidAsync("setNoteContent", content);
 			}
 			catch (Exception ex)
 			{
@@ -118,27 +157,31 @@ body {
 		}
 	}
 
-	public void Dispose()
+	async ValueTask IAsyncDisposable.DisposeAsync()
 	{
 		if (_isDisposed)
 			return;
 		_isDisposed = true;
-		_keyboardShortcuts.Dispose();
-		if (_jsModule != null)
-			_jsModule.DisposeAsync();
-		ViewModel.PropertyChanged -= PropertyChangedHandler;
-	}
 
-	async ValueTask IAsyncDisposable.DisposeAsync()
-	{
-		if (_proseMirrorJs != null)
-			await _proseMirrorJs.DisposeAsync();
+		if (ViewModel != null)
+			ViewModel.PropertyChanged -= PropertyChangedHandler;
+		_dotnetModule?.Dispose();
+		_keyboardShortcuts?.Dispose();
+		if (_jsModule != null)
+			await _jsModule.DisposeAsync();
 	}
 
 	private NoteViewModel ViewModel { get; set; }
 
 	[Parameter]
 	public string NoteId { get; set; } = default!;
+
+	[JSInvokable("RefreshActiveFormatState")]
+	public void RefreshActiveFormatState(bool[] states)
+	{
+		_formatStates.LoadFromJsArray(states);
+		StateHasChanged();
+	}
 
 	private void PropertyChangedHandler(object sender, PropertyChangedEventArgs e)
 	{

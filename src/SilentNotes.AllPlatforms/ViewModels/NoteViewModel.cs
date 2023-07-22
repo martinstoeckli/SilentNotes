@@ -575,18 +575,17 @@ namespace SilentNotes.ViewModels
         //    }
         //}
 
-        ///// <summary>
-        ///// Gets or sets a value indicating whether the shopping mode is active or inactive
-        ///// <see cref="NoteModel.ShoppingModeActive"/>
-        ///// This property does not call <see cref="NoteModel.RefreshModifiedAt"/>, because it is
-        ///// not seen as changed content, so switching should not overwrite other recent changes.
-        ///// </summary>
-        //[VueDataBinding(VueBindingMode.TwoWay)]
-        //public bool ShoppingModeActive
-        //{
-        //    get { return Model.ShoppingModeActive; }
-        //    set { SetPropertyAndModified(Model.ShoppingModeActive, value, (v) => Model.ShoppingModeActive = v); }
-        //}
+        /// <summary>
+        /// Gets or sets a value indicating whether the shopping mode is active or inactive
+        /// <see cref="NoteModel.ShoppingModeActive"/>
+        /// This property does not call <see cref="NoteModel.RefreshModifiedAt"/>, because it is
+        /// not seen as changed content, so switching should not overwrite other recent changes.
+        /// </summary>
+        public bool ShoppingModeActive
+        {
+            get { return Model.ShoppingModeActive; }
+            set { SetPropertyAndModified(Model.ShoppingModeActive, value, (v) => Model.ShoppingModeActive = v); }
+        }
 
         ///// <summary>
         ///// Command which toggles the <see cref="ShoppingModeActive"/> property.
@@ -727,10 +726,11 @@ namespace SilentNotes.ViewModels
         {
             get
             {
+                string noteRouteType = CssClassNoteType == "text" ? "note" : CssClassNoteType;
                 if (IsLocked)
-                    return string.Format("opensafe/{0}/{1}", CssClassNoteType, Id);
+                    return string.Format("opensafe/{0}/{1}", noteRouteType, Id);
                 else
-                    return string.Format("{0}/{1}", CssClassNoteType, Id);
+                    return string.Format("{0}/{1}", noteRouteType, Id);
             }
         }
 

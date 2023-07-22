@@ -329,11 +329,14 @@ div.ProseMirror .search-result-selected {
 		0 1px 5px 0 rgba(0,0,0,.06);
 }
 
+.mud-appbar .mud-icon-size-medium { font-size: 1.75rem; } /* bigger toolbar icons */
+
 .mud-container-left { margin-left: 0; }
 .mud-container-p { padding-bottom: 20px; }
 
 #blazor-error-ui {
-	background: lightyellow;
+	background: red;
+	color: white;
 	bottom: 0;
 	box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
 	display: none;
