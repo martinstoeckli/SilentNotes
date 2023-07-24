@@ -12,10 +12,6 @@ export function initialize(dotnetPage, editorContainer) {
         refreshActiveFormatState();
     });
 
-    document.getElementById('btnBold').addEventListener('click', function (e) { toggleFormatState(e, 'bold'); });
-    document.getElementById('btnItalic').addEventListener('click', function (e) { toggleFormatState(e, 'italic'); });
-    document.getElementById('btnUnderline').addEventListener('click', function (e) { toggleFormatState(e, 'underline'); });
-
     return editor;
 }
 
@@ -30,8 +26,7 @@ export function setNoteContent(text) {
     }
 }
 
-function toggleFormatState(event, formatName, formatParameter) {
-    event.stopPropagation();
+export function toggleFormatAndRefresh(formatName, formatParameter) {
     toggleFormat(editor, formatName, formatParameter);
     refreshActiveFormatState();
 }

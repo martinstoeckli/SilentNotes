@@ -33,13 +33,9 @@
 			<MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" />
 		</ActivatorContent>
 		<ChildContent>
-			<MudNavMenu Rounded="true" Margin="Margin.Dense" Class="px-1">
-				<MudNavLink
-					OnClick="@(() => ViewModel.ResetSafeCommand.ExecuteAndCloseMenu(_overflowMenu))"
-					Disabled="!ViewModel.SafeExists"
-					IconColor="Color.Error"
-					Icon="@IconService.GetSvgLink(IconNames.SafeSquareOutline)">@LanguageService["safe_reset"]</MudNavLink>
-			</MudNavMenu>
+			<MudMenuItem OnClick="@(() => ViewModel.ResetSafeCommand.Execute(_overflowMenu))"
+				Icon="@IconService.GetSvgLink(IconNames.SafeSquareOutline)" IconColor="Color.Error"
+				Disabled="!ViewModel.SafeExists">@LanguageService["safe_reset"]</MudMenuItem>
 		</ChildContent>
 	</MudMenu>
 </MudAppBar>

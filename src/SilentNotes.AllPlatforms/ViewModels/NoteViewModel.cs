@@ -62,6 +62,8 @@ namespace SilentNotes.ViewModels
             _cryptor = cryptor;
             _safes = safes;
 
+            TogglePinnedCommand = new RelayCommand(TogglePinned);
+
             MarkSearchableContentAsDirty();
             _unlockedContent = IsInSafe ? UnlockIfSafeOpen(Model.HtmlContent) : Model.HtmlContent;
         }
@@ -611,16 +613,15 @@ namespace SilentNotes.ViewModels
             set { SetProperty(Model.IsPinned, value, (v) => Model.IsPinned = v); }
         }
 
-        ///// <summary>
-        ///// Command which toggles the <see cref="IsPinned"/> property.
-        ///// </summary>
-        //[VueDataBinding(VueBindingMode.Command)]
-        //public ICommand TogglePinnedCommand { get; private set; }
+        /// <summary>
+        /// Command which toggles the <see cref="IsPinned"/> property.
+        /// </summary>
+        public ICommand TogglePinnedCommand { get; private set; }
 
-        //private void TogglePinned()
-        //{
-        //    IsPinned = !IsPinned;
-        //}
+        private void TogglePinned()
+        {
+            IsPinned = !IsPinned;
+        }
 
         ///// <summary>
         ///// Gets the command which shows the info dialog.

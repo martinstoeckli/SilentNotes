@@ -5,3 +5,16 @@
 /* dark theme */
 
 .theme-dark  #recycled-notes .note-card { background-color: #696969; }
+
+/* independend of theme */
+
+.btn-toggled svg {
+	color: var(--mud-palette-tertiary);
+}
+.mnu-toggled {
+    color: var(--mud-palette-primary);
+    background-color: var(--mud-palette-primary-hover);
+}
+.mnu-toggled svg {
+    color: var(--mud-palette-primary);
+}

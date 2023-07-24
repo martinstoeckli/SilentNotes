@@ -3,8 +3,6 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-using System.Windows.Input;
-using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
 namespace SilentNotes.Views
@@ -14,34 +12,74 @@ namespace SilentNotes.Views
     /// </summary>
     internal static class RazorPageExtensions
     {
+    }
+
+    /// <summary>
+    /// Helper class for razor pages, which can build css class attributes with conditions.
+    /// </summary>
+    public static class Css
+    {
         /// <summary>
-        /// Inserts the <paramref name="cssClassName"/> only if a given <paramref name="condition"/>
-        /// is met.
+        /// Inserts the css class only if the condition is met.
         /// <example><code>
-        /// class="@this.CssClassIf("toggled", ViewModel.CheckIfToggled())"
+        /// class="@Css.BuildClass(new CssClassIf("toggled", IsToggled))"
         /// </code></example>
         /// </summary>
-        /// <param name="page">The Razor page component to extend.</param>
-        /// <param name="cssClassName">The class name to return if the condition is met.</param>
-        /// <param name="condition">Only if this condition is met, the class is returned.</param>
-        /// <returns>The CSS class name, or null if the condition is not met.</returns>
-        public static string CssClassIf(this ComponentBase page, string cssClassName, bool condition)
+        /// <param name="classNameAndCondition">Class will be applied only if their condition is true.</param>
+        /// <param name="constant">Rest of classes which should be applied in any case.</param>
+        /// <returns>Space delimited list of class names.</returns>
+        public static string BuildClass(CssClassIf classNameAndCondition, string constant = null)
         {
-            return condition ? cssClassName : null;
+            return BuildClass(new[] { classNameAndCondition }, constant);
         }
 
         /// <summary>
-        /// Calls the execute method of a command and closes the overflowmenu beforehand.
-        /// This extension method can be used in an MudNavLink.OnClick handler, it makes sure that
-        /// the cklicked menu is closed.
+        /// Inserts the css classes only if their condition is met.
+        /// <example><code>
+        /// class="@Css.BuildClass(new [] { new CssClassIf("toggled", IsToggled) })"
+        /// </code></example>
         /// </summary>
-        /// <param name="command">The command to extend.</param>
-        /// <param name="overflowMenu">Closes this overflow menu before executing the command.</param>
-        public static void ExecuteAndCloseMenu(this ICommand command, MudMenu overflowMenu)
+        /// <param name="classNamesAndConditions">List of classes will be applied only if their
+        /// conditions are true.</param>
+        /// <param name="constant">Rest of css classes which should be applied in any case.</param>
+        /// <returns>Space delimited list of class names.</returns>
+        public static string BuildClass(IEnumerable<CssClassIf> classNamesAndConditions, string constant = null)
         {
-            overflowMenu?.CloseMenu();
-            command.Execute(null);
+            var classNamesWithTrueCondition = classNamesAndConditions.Where(item => item.Condition).Select(item => item.ClassName).Append(constant);
+            return string.Join(" ", classNamesWithTrueCondition);
         }
+    }
+
+    /// <summary>
+    /// Known css classes.
+    /// </summary>
+    public class CssClasses
+    {
+        public const string MenuToggled = "mnu-toggled";
+        public const string ButtonToggled = "btn-toggled";
+    }
+
+    /// <summary>
+    /// Helper class for <see cref="Css.BuildClass(CssClassIf, string)"/>.
+    /// </summary>
+    public class CssClassIf
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CssClassIf"/> class.
+        /// </summary>
+        /// <param name="className">Sets the <see cref="ClassName"/> property.</param>
+        /// <param name="condition">Sets the <see cref="Condition"/> property.</param>
+        public CssClassIf(string className, bool condition)
+        {
+            ClassName = className;
+            Condition = condition;
+        }
+
+        /// <summary>The css class name to apply.</summary>
+        public string ClassName { get; }
+
+        /// <summary>The condition determining whether the css class name shoudl be applied.</summary>
+        public bool Condition { get; }
     }
 
     /// <summary>

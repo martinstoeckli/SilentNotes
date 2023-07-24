@@ -16,8 +16,6 @@ h1:focus { outline: none; }
 	color: var(--mud-palette-primary-darken);
 }
 
-.toggled svg { fill: var(--mud-palette-tertiary); }
-
 .background-icon {
 	position: fixed;
 	display: inline-block;

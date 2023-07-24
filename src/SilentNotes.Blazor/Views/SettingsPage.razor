@@ -55,9 +55,8 @@
 			<MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" />
 		</ActivatorContent>
 		<ChildContent>
-			<MudNavMenu Rounded="true" Margin="Margin.Dense" Class="px-1">
-				<MudNavLink OnClick="@(() => ViewModel.TestNewLocalizationCommand.ExecuteAndCloseMenu(_overflowMenu))" Icon="@IconService[IconNames.Earth]">@LanguageService["gui_localization_test"]</MudNavLink>
-			</MudNavMenu>
+			<MudMenuItem OnClick="@(() => ViewModel.TestNewLocalizationCommand.Execute(null))"
+				Icon="@IconService[IconNames.Earth]">@LanguageService["gui_localization_test"]</MudMenuItem>
 		</ChildContent>
 	</MudMenu>
 </MudAppBar>

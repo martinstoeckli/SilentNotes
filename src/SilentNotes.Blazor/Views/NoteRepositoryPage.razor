@@ -44,10 +44,9 @@
 	<MudSpacer />
 
 	@* Tags *@
-	<MudToggleIconButton @ref="_tagsButton" @bind-Toggled="ViewModel.IsDrawerOpen"
-		Class="@this.CssClassIf("toggled", ViewModel.IsFilteredByTag)"
+	<MudIconButton @ref="_tagsButton" OnClick="@(() => ViewModel.IsDrawerOpen = !ViewModel.IsDrawerOpen)"
+		Class="@Css.BuildClass(new CssClassIf(CssClasses.ButtonToggled, ViewModel.IsFilteredByTag))"
 		Icon="@(IconService.GetSvgLink(IconNames.TagMultiple))" Color="Color.Inherit"
-		ToggledIcon="@(IconService.GetSvgLink(IconNames.TagMultiple))" ToggledColor="Color.Inherit"
 		Title="@(((ListItemViewModel<string>)ViewModel.SelectedTag).Text)" />
 
 	@* Filter *@
@@ -68,24 +67,28 @@
 			<MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" />
 		</ActivatorContent>
 		<ChildContent>
-			<MudNavMenu Rounded="true" Margin="Margin.Dense" Class="px-1">
-				<MudNavLink OnClick="() => ViewModel.NewNoteCommand.Execute(null)" Icon="@IconService.GetSvgLink(IconNames.NoteTextOutline)">@LanguageService["note_create_new"]</MudNavLink>
-				<MudNavLink OnClick="() => ViewModel.NewChecklistCommand.Execute(null)" Icon="@IconService.GetSvgLink(IconNames.OrderBoolAscendingVariant)">@LanguageService["checklist_create_new"]</MudNavLink>
-				<MudNavLink Href="/recyclebin" Icon="@IconService[IconNames.DeleteEmpty]">@LanguageService["show_recyclebin"]</MudNavLink>
-				<MudNavLink Href="/export" Icon="@IconService[IconNames.Export]">@LanguageService["show_export"]</MudNavLink>
-				<MudDivider />
-				@if (ViewModel.IsAnySafeOpen) {
-					<MudNavLink OnClick="() => ViewModel.CloseSafeCommand.ExecuteAndCloseMenu(_overflowMenu)" Icon="@IconService[IconNames.SafeSquareOutline]">@LanguageService["safe_close"]</MudNavLink>
-				}
-				else {
-					<MudNavLink Href="/opensafe" Icon="@IconService[IconNames.SafeSquareOutline]">@LanguageService["safe_open"]</MudNavLink>
-				}
-				<MudNavLink Href="/changepassword" Disabled="!ViewModel.SafeExists" Icon="@IconService[IconNames.LockReset]">@LanguageService["safe_change_password"]</MudNavLink>
-				<MudDivider />
-				<MudNavLink Href="/transfercodehistory" Icon="@IconService[IconNames.Key]">@LanguageService["show_transfer_code"]</MudNavLink>
-				<MudNavLink Href="/settings" Icon="@IconService[IconNames.Settings]">@LanguageService["show_settings"]</MudNavLink>
-				<MudNavLink Href="/info" Icon="@Icons.Material.Filled.Info">@LanguageService["show_info"]</MudNavLink>
-			</MudNavMenu>
+			<MudMenuItem OnClick="@(() => ViewModel.NewNoteCommand.Execute(null))" Icon="@IconService.GetSvgLink(IconNames.NoteTextOutline)">@LanguageService["note_create_new"]</MudMenuItem>
+			<MudMenuItem OnClick="@(() => ViewModel.NewChecklistCommand.Execute(null))" Icon="@IconService.GetSvgLink(IconNames.OrderBoolAscendingVariant)">@LanguageService["checklist_create_new"]</MudMenuItem>
+			<MudMenuItem Href="/recyclebin" Icon="@IconService[IconNames.DeleteEmpty]">@LanguageService["show_recyclebin"]</MudMenuItem>
+			<MudMenuItem Href="/export" Icon="@IconService[IconNames.Export]">@LanguageService["show_export"]</MudMenuItem>
+
+			<MudDivider />
+
+			@if (ViewModel.IsAnySafeOpen)
+			{
+				<MudMenuItem OnClick="@(() => ViewModel.CloseSafeCommand.Execute(null))" Icon="@IconService.GetSvgLink(IconNames.SafeSquareOutline)">@LanguageService["safe_close"]</MudMenuItem>
+			}
+			else
+			{
+				<MudMenuItem Href="/opensafe" Icon="@IconService.GetSvgLink(IconNames.SafeSquareOutline)">@LanguageService["safe_open"]</MudMenuItem>
+			}
+			<MudMenuItem Href="/changepassword" Icon="@IconService[IconNames.LockReset]" Disabled="!ViewModel.SafeExists">@LanguageService["safe_change_password"]</MudMenuItem>
+
+			<MudDivider />
+
+			<MudMenuItem Href="/transfercodehistory" Icon="@IconService[IconNames.Key]">@LanguageService["show_transfer_code"]</MudMenuItem>
+			<MudMenuItem Href="/settings" Icon="@IconService[IconNames.Settings]">@LanguageService["show_settings"]</MudMenuItem>
+			<MudMenuItem Href="/info" Icon="@Icons.Material.Filled.Info">@LanguageService["show_info"]</MudMenuItem>
 		</ChildContent>
 	</MudMenu>
 </MudAppBar>
@@ -135,7 +138,7 @@
 						{
 							<div class="pin">@IconService.EmbedSvgLink(IconNames.Pin, 22)</div>
 						}
-						<div class="note-handle sortable-handle @this.CssClassIf("bluish-highlighted", note == ViewModel.SelectedOrderNote)" @onmousedown="() => ViewModel.SelectOrderNote(note)" @onmousedown:preventDefault="true" @onclick:preventDefault="true">@IconService.EmbedSvgLink(IconNames.ArrowAll, 22)</div>
+						<div class="note-handle sortable-handle @Css.BuildClass(new CssClassIf("bluish-highlighted", note == ViewModel.SelectedOrderNote))" @onmousedown="() => ViewModel.SelectOrderNote(note)" @onmousedown:preventDefault="true" @onclick:preventDefault="true">@IconService.EmbedSvgLink(IconNames.ArrowAll, 22)</div>
 						<div class="note-handle recycle-handle" @onclick="() => ViewModel.DeleteNoteCommand.Execute(note.Id)" @onclick:preventDefault="true">@IconService.EmbedSvgLink(IconNames.Delete, 19)</div>
 						@if (ViewModel.IsAnySafeOpen && !note.IsLocked)
 						{
@@ -197,6 +200,7 @@
 		IconNames.TagMultiple,
 		IconNames.TagOff,
 		IconNames.TagOutline,
+		IconNames.SafeSquareOutline,
 		IconNames.ArrowCollapseUp,
 		IconNames.ArrowUp,
 		IconNames.ArrowDown,
@@ -209,7 +213,7 @@
 	private MudInput<string> _filterInput;
 	private MudMenu _overflowMenu;
 	private MudDrawer _sideDrawer;
-	private MudToggleIconButton _tagsButton;
+	private MudIconButton _tagsButton;
 	private MudBaseButton _syncButton;
 	private IKeyboardShortcuts _keyboardShortcuts;
 	private string _pendingScrollIntoViewSelector;
