@@ -40,7 +40,7 @@
 </style>
 
 @* Main menu *@
-<MudAppBar Fixed="true" Dense="true">
+<MudAppBar Fixed="true" Dense="true" WrapContent="false">
 	<MudSpacer />
 
 	@* Tags *@
@@ -164,11 +164,11 @@
 	Class="secondary-app-bar"
 	AnchorOrigin="Origin.TopRight" TransformOrigin="Origin.TopRight">
 	<MudStack Row="true" Spacing="0">
-		<MudIconButton OnClick="() => ViewModel.MoveSelectedOrderNote(true, false)" Icon="@IconService[IconNames.ArrowCollapseUp]" Color="Color.Inherit" Title="order" />
-		<MudIconButton OnClick="() => ViewModel.MoveSelectedOrderNote(true, true)" Icon="@IconService[IconNames.ArrowUp]" Color="Color.Inherit" Title="order" />
-		<MudIconButton OnClick="() => ViewModel.MoveSelectedOrderNote(false, true)" Icon="@IconService[IconNames.ArrowDown]" Color="Color.Inherit" Title="order" />
+		<MudIconButton OnClick="() => ViewModel.MoveSelectedOrderNote(true, false)" Icon="@IconService[IconNames.ArrowCollapseUp]" Color="Color.Inherit" Title="order" Edge="Edge.End" />
+		<MudIconButton OnClick="() => ViewModel.MoveSelectedOrderNote(true, true)" Icon="@IconService[IconNames.ArrowUp]" Color="Color.Inherit" Title="order" Edge="Edge.End" />
+		<MudIconButton OnClick="() => ViewModel.MoveSelectedOrderNote(false, true)" Icon="@IconService[IconNames.ArrowDown]" Color="Color.Inherit" Title="order" Edge="Edge.End" />
 		<MudIconButton OnClick="() => ViewModel.MoveSelectedOrderNote(false, false)" Icon="@IconService[IconNames.ArrowCollapseDown]" Color="Color.Inherit" Title="order" />
-		<MudIconButton OnClick="() => ViewModel.SelectOrderNote(null)" Icon="@IconService.GetSvgLink(IconNames.Close)" Color="Color.Inherit" />
+		<MudIconButton OnClick="() => ViewModel.SelectOrderNote(null)" Icon="@IconService.GetSvgLink(IconNames.Close)" Color="Color.Inherit" Edge="Edge.End" />
 	</MudStack>
 </MudPopover>
 

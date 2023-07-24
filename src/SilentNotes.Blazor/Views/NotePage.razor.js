@@ -26,6 +26,10 @@ export function setNoteContent(text) {
     }
 }
 
+export function setEditable(editable) {
+    editor.setEditable(editable);
+}
+
 export function toggleFormatAndRefresh(formatName, formatParameter) {
     toggleFormat(editor, formatName, formatParameter);
     refreshActiveFormatState();

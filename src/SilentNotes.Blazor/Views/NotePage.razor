@@ -33,7 +33,7 @@ body {
 </style>
 
 @* Main menu *@
-<MudAppBar Fixed="true" Class="" Dense="true">
+<MudAppBar Fixed="true" Class="" Dense="true" WrapContent="false">
 	<MudIconButton @ref="_backButton" Href="/back" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" Edge="Edge.Start" />
 
 	<MudSpacer />
@@ -76,10 +76,15 @@ body {
 		Icon="@Icons.Material.Filled.Redo" Color="Color.Inherit"
 		Title="@LanguageService["redo"]" Disabled="ViewModel.ShoppingModeActive" Edge="Edge.End"/>
 
-	<MudIconButton OnClick="@(() => ViewModel.ShoppingModeActive = !ViewModel.ShoppingModeActive)"
+	<MudIconButton OnClick="@(() => ToggleShoppingMode())"
 		Icon="@IconService.GetSvgLink(IconNames.KeyboardOffOutline)" Color="Color.Inherit"
 		Class="@Css.BuildClass(new CssClassIf(CssClasses.ButtonToggled, ViewModel.ShoppingModeActive))"
 		Title="@LanguageService["note_shopping_mode"]" Edge="Edge.End" />
+
+	<MudIconButton OnClick="@(() => SearchToolbarOpen = !SearchToolbarOpen)"
+		Icon="@IconService.GetSvgLink(IconNames.Magnify)" Color="Color.Inherit"
+		Class="@Css.BuildClass(new CssClassIf(CssClasses.ButtonToggled, _searchToolbarOpen))"
+		Title="@LanguageService["search"]" Edge="Edge.End" />
 
 	@* Overflow menu *@
 	<MudMenu @ref="_overflowMenu" Dense="true" AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight">
@@ -122,6 +127,16 @@ body {
 				Class="@Css.BuildClass(new CssClassIf(CssClasses.MenuToggled, _formatStates.Bulletlist), "d-sm-none")"
 				Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_list_unordered"]</MudMenuItem>
 
+			<MudMenuItem OnClick="@(() => ToggleFormatState("codeblock"))"
+				Icon="@IconService.GetSvgLink(IconNames.CodeBraces)"
+				Class="@Css.BuildClass(new CssClassIf(CssClasses.MenuToggled, _formatStates.Codeblock))"
+				Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_code"]</MudMenuItem>
+
+			<MudMenuItem OnClick="@(() => ToggleFormatState("blockquote"))"
+				Icon="@IconService.GetSvgLink(IconNames.FormatQuoteClose)"
+				Class="@Css.BuildClass(new CssClassIf(CssClasses.MenuToggled, _formatStates.Blockquote))"
+				Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_quotation"]</MudMenuItem>
+
 			<MudDivider/>
 
 			<MudMenuItem OnClick="@(() => ViewModel.TogglePinnedCommand.Execute(null))"
@@ -144,6 +159,18 @@ body {
 	}
 </div>
 
+@* Search toolbar *@
+<MudPopover Open="@SearchToolbarOpen"
+	Class="secondary-app-bar"
+	AnchorOrigin="Origin.TopRight" TransformOrigin="Origin.TopRight">
+	<MudStack Row="true" Spacing="0">
+		<MudPaper Class="d-inline-flex align-self-center ml-1 px-2 py-0" Elevation="0">
+			<MudInput @ref="_searchInput" @bind-Value="_searchText" Class="filter-input" />
+		</MudPaper>
+		<MudIconButton OnClick="() => SearchToolbarOpen = false" Icon="@IconService.GetSvgLink(IconNames.Close)" Color="Color.Inherit" Edge="Edge.End" />
+	</MudStack>
+</MudPopover>
+
 @* Declare icons which can be reused multiple times, to reduce page size *@
 <div hidden>
 	@IconService.EmbedLinkableSvgs( new [] {
@@ -156,8 +183,12 @@ body {
 		IconNames.FormatStrikethrough,
 		IconNames.FormatListNumbers,
 		IconNames.FormatListBulleted,
+		IconNames.CodeBraces,
+		IconNames.FormatQuoteClose,
 		IconNames.KeyboardOffOutline,
 		IconNames.Pin,
+		IconNames.Magnify,
+		IconNames.Close,
 	});
 </div>
 
@@ -170,6 +201,10 @@ body {
 	private IJSObjectReference _jsModule;
 	private DotNetObjectReference<NotePage> _dotnetModule;
 	private FormatToggleStates _formatStates;
+	private bool _searchToolbarOpen;
+	private MudInput<string> _searchInput;
+	private bool _pendingFocusToSearchInput;
+	private string _searchText;
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="NotePage"/> class.
@@ -201,7 +236,13 @@ body {
 		ViewModel.PropertyChanged += PropertyChangedHandler;
 
 		_keyboardShortcuts = KeyboardShortcutService.CreateShortcuts()
-			.Add(ModCode.None, Code.Escape, () => _backButton);
+			.Add(ModCode.None, Code.Escape, () => 
+				{
+					if (_searchToolbarOpen)
+						SearchToolbarOpen = false;
+					else
+						_backButton.OnClick.InvokeAsync();
+				});
 	}
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -223,6 +264,12 @@ body {
 				string msg = ex.Message;
 			}
 		}
+
+		if (_pendingFocusToSearchInput)
+		{
+			_pendingFocusToSearchInput = false;
+			await _searchInput.FocusAsync();
+		}
 	}
 
 	async ValueTask IAsyncDisposable.DisposeAsync()
@@ -241,14 +288,54 @@ body {
 
 	private NoteViewModel ViewModel { get; set; }
 
+	/// <summary>
+	/// Gets or sets the note id which was passed in the routing.
+	/// </summary>
 	[Parameter]
 	public string NoteId { get; set; } = default!;
 
+	/// <summary>
+	/// Gets or sets a value indicating whether the search toolbar is visible or not.
+	/// </summary>
+	private bool SearchToolbarOpen
+	{
+		get { return _searchToolbarOpen; }
+
+		set
+		{
+			_searchToolbarOpen = value;
+			if (value)
+				_pendingFocusToSearchInput = true;
+			StateHasChanged();
+		}
+	}
+
+	/// <summary>
+	/// Toggles the shopping mode and enables/disables the editor.
+	/// </summary>
+	/// <returns>Task for async call.</returns>
+	private async Task ToggleShoppingMode()
+	{
+		ViewModel.ShoppingModeActive = !ViewModel.ShoppingModeActive;
+		await _jsModule.InvokeVoidAsync("setEditable", !ViewModel.ShoppingModeActive);
+	}
+
+	/// <summary>
+	/// Sets one of the text format states.
+	/// </summary>
+	/// <param name="formatName">Name of the format, e.g. "bold".</param>
+	/// <param name="formatParameter">Optional parameter, e.g. "header" 2.</param>
+	/// <returns>Task for async call.</returns>
 	private async Task ToggleFormatState(string formatName, int formatParameter = 0)
 	{
 		await _jsModule.InvokeVoidAsync("toggleFormatAndRefresh", formatName, formatParameter);
 	}
 
+	/// <summary>
+	/// Called from the javascript to update all format states in the GUI.
+	/// This method is e.g. called when the text cursor has moved to a new position.
+	/// </summary>
+	/// <param name="states">Array containing the state of all formats.</param>
 	[JSInvokable("RefreshActiveFormatState")]
 	public void RefreshActiveFormatState(bool[] states)
 	{

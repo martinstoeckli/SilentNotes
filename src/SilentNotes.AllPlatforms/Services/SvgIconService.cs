@@ -67,7 +67,7 @@ namespace SilentNotes.Services
                 { IconNames.FormatItalic, "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M10,4V7H12.21L8.79,15H6V18H14V15H11.79L15.21,7H18V4H10Z' /></svg>" },
                 { IconNames.FormatListBulleted, "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M7,5H21V7H7V5M7,13V11H21V13H7M4,4.5A1.5,1.5 0 0,1 5.5,6A1.5,1.5 0 0,1 4,7.5A1.5,1.5 0 0,1 2.5,6A1.5,1.5 0 0,1 4,4.5M4,10.5A1.5,1.5 0 0,1 5.5,12A1.5,1.5 0 0,1 4,13.5A1.5,1.5 0 0,1 2.5,12A1.5,1.5 0 0,1 4,10.5M7,19V17H21V19H7M4,16.5A1.5,1.5 0 0,1 5.5,18A1.5,1.5 0 0,1 4,19.5A1.5,1.5 0 0,1 2.5,18A1.5,1.5 0 0,1 4,16.5Z' /></svg>" },
                 { IconNames.FormatListNumbers, "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M7,13H21V11H7M7,19H21V17H7M7,7H21V5H7M2,11H3.8L2,13.1V14H5V13H3.2L5,10.9V10H2M3,8H4V4H2V5H3M2,17H4V17.5H3V18.5H4V19H2V20H5V16H2V17Z' /></svg>" },
-                { IconNames.FormatQuoteClode, "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M14,17H17L19,13V7H13V13H16M6,17H9L11,13V7H5V13H8L6,17Z' /></svg>" },
+                { IconNames.FormatQuoteClose, "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M14,17H17L19,13V7H13V13H16M6,17H9L11,13V7H5V13H8L6,17Z' /></svg>" },
                 { IconNames.FormatStrikethrough, "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M3,14H21V12H3M5,4V7H10V10H14V7H19V4M10,19H14V16H10V19Z' /></svg>" },
                 { IconNames.FormatUnderline, "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M5,21H19V19H5V21M12,17A6,6 0 0,0 18,11V3H15.5V11A3.5,3.5 0 0,1 12,14.5A3.5,3.5 0 0,1 8.5,11V3H6V11A6,6 0 0,0 12,17Z' /></svg>" },
                 { IconNames.Key, "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M7,14A2,2 0 0,1 5,12A2,2 0 0,1 7,10A2,2 0 0,1 9,12A2,2 0 0,1 7,14M12.65,10C11.83,7.67 9.61,6 7,6A6,6 0 0,0 1,12A6,6 0 0,0 7,18C9.61,18 11.83,16.33 12.65,14H17V18H21V14H23V10H12.65Z' /></svg>" },
@@ -228,7 +228,7 @@ namespace SilentNotes.Services
         public const string FormatItalic = "format-italic";
         public const string FormatListBulleted = "format-list-bulleted";
         public const string FormatListNumbers = "format-list-numbers";
-        public const string FormatQuoteClode = "format-quote-close";
+        public const string FormatQuoteClose = "format-quote-close";
         public const string FormatStrikethrough = "format-strikethrough";
         public const string FormatUnderline = "format-underline";
         public const string Key = "key";
