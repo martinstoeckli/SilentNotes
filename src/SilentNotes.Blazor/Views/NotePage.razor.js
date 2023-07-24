@@ -47,3 +47,11 @@ function refreshActiveFormatState() {
     ];
     page.invokeMethodAsync('RefreshActiveFormatState', states);
 }
+
+export function undo() {
+    editor.commands.undo();
+}
+
+export function redo() {
+    editor.commands.redo();
+}

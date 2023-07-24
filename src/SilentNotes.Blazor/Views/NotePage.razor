@@ -68,6 +68,19 @@ body {
 		Class="@Css.BuildClass(new CssClassIf(CssClasses.ButtonToggled, _formatStates.Bulletlist), "d-none d-sm-flex")"
 		Title="@LanguageService["note_list_unordered"]" Disabled="ViewModel.ShoppingModeActive" Edge="Edge.End" />
 
+	<MudIconButton OnClick="@(() => _jsModule.InvokeVoidAsync("undo"))"
+		Icon="@Icons.Material.Filled.Undo" Color="Color.Inherit"
+		Title="@LanguageService["undo"]" Disabled="ViewModel.ShoppingModeActive" Edge="Edge.End"/>
+
+	<MudIconButton OnClick="@(() => _jsModule.InvokeVoidAsync("redo"))"
+		Icon="@Icons.Material.Filled.Redo" Color="Color.Inherit"
+		Title="@LanguageService["redo"]" Disabled="ViewModel.ShoppingModeActive" Edge="Edge.End"/>
+
+	<MudIconButton OnClick="@(() => ViewModel.ShoppingModeActive = !ViewModel.ShoppingModeActive)"
+		Icon="@IconService.GetSvgLink(IconNames.KeyboardOffOutline)" Color="Color.Inherit"
+		Class="@Css.BuildClass(new CssClassIf(CssClasses.ButtonToggled, ViewModel.ShoppingModeActive))"
+		Title="@LanguageService["note_shopping_mode"]" Edge="Edge.End" />
+
 	@* Overflow menu *@
 	<MudMenu @ref="_overflowMenu" Dense="true" AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight">
 		<ActivatorContent>
@@ -143,6 +156,7 @@ body {
 		IconNames.FormatStrikethrough,
 		IconNames.FormatListNumbers,
 		IconNames.FormatListBulleted,
+		IconNames.KeyboardOffOutline,
 		IconNames.Pin,
 	});
 </div>
