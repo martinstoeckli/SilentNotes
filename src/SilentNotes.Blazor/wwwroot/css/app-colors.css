@@ -8,13 +8,17 @@
 
 /* independend of theme */
 
-.btn-toggled svg {
+.btn-toggled:not([disabled]) svg {
 	color: var(--mud-palette-tertiary);
 }
 .mnu-toggled {
     color: var(--mud-palette-primary);
     background-color: var(--mud-palette-primary-hover);
 }
-.mnu-toggled svg {
+.mnu-toggled:not(.mud-list-item-disabled) svg {
     color: var(--mud-palette-primary);
+}
+
+.mud-picker-color-view {
+	background-color: var(--mud-palette-dark);
 }

@@ -35,12 +35,13 @@ namespace SilentNotes.Services
         public async Task<MessageBoxResult> ShowMessageAsync(string message, string title, MessageBoxButtons buttons, bool conservativeDefault)
         {
             ButtonArrangement arrangement = new ButtonArrangement(buttons, _languageService);
+            message = message.Replace("\r\n", "<br />");
 
             var parameters = new DialogParameters
             {
                 ["Title"] = title,
-                ["Message"] = message,
-                ["MarkupMessage"] = null,
+                ["Message"] = null,
+                ["MarkupMessage"] = (MarkupString)message,
                 ["CancelText"] = arrangement.CloseButtonText,
                 ["NoText"] = arrangement.SecondaryButtonText,
                 ["YesText"] = arrangement.PrimaryButtonText,

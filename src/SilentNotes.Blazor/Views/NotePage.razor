@@ -139,10 +139,18 @@ body {
 
 			<MudDivider/>
 
+			<MudMenuItem OnClick="@(() => _colorPaletteOpen = true)"
+				Icon="@Icons.Material.Filled.ColorLens"
+				Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_colors"]</MudMenuItem>
+
 			<MudMenuItem OnClick="@(() => ViewModel.TogglePinnedCommand.Execute(null))"
 				Icon="@IconService.GetSvgLink(IconNames.Pin)"
 				Class="@Css.BuildClass(new CssClassIf(CssClasses.MenuToggled, ViewModel.IsPinned))"
 				Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_pin"]</MudMenuItem>
+
+			<MudMenuItem OnClick="@(() => ViewModel.ShowInfoCommand.Execute(null))"
+				Icon="@Icons.Material.Filled.Info"
+				Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_show_info"]</MudMenuItem>
 		</ChildContent>
 	</MudMenu>
 </MudAppBar>
@@ -170,6 +178,19 @@ body {
 		<MudIconButton OnClick="() => SearchToolbarOpen = false" Icon="@IconService.GetSvgLink(IconNames.Close)" Color="Color.Inherit" Edge="Edge.End" Size="Size.Small" />
 	</MudStack>
 </MudPopover>
+
+@* Color palette *@
+<MudOverlay @bind-Visible="_colorPaletteOpen" AutoClose="true">
+	<MudPaper Class="d-flex flex-column">
+		<MudColorPicker @bind-Text="ViewModel.BackgroundColorHex"
+			Class="rounded-t"
+			PickerVariant="PickerVariant.Static"
+			DisableToolbar="true" DisableAlpha="true"
+			ColorPickerView="ColorPickerView.Palette"
+			Palette="@ViewModel.BackgroundColorsHex.Select(color => new MudColor(color))" />
+		<MudButton OnClick="@(() => _colorPaletteOpen = false)" Color="Color.Primary" Variant="Variant.Text" Class="align-self-end">@LanguageService["close"]</MudButton>
+	</MudPaper>
+</MudOverlay>
 
 @* Declare icons which can be reused multiple times, to reduce page size *@
 <div hidden>
@@ -205,6 +226,7 @@ body {
 	private MudInput<string> _searchInput;
 	private bool _pendingFocusToSearchInput;
 	private string _searchPattern;
+	private bool _colorPaletteOpen;
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="NotePage"/> class.
@@ -224,7 +246,7 @@ body {
 		Guid noteId = new Guid(NoteId);
 		NoteModel note = noteRepository.Notes.FindById(noteId);
 		ICryptor cryptor = new Cryptor(NoteModel.CryptorPackageName, CryptoRandomSource);
-		ViewModel = new NoteViewModel(note, null, LanguageService, ThemeService, SettingsService, cryptor, noteRepository.Safes);
+		ViewModel = new NoteViewModel(note, null, LanguageService, ThemeService, SettingsService, FeedbackService, cryptor, noteRepository.Safes);
 
 		// Redirect to open safe if locked
 		if (ViewModel.IsLocked)

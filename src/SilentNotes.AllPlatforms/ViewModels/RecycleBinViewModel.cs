@@ -74,7 +74,10 @@ namespace SilentNotes.ViewModels
                 foreach (NoteModel note in _model.Notes)
                 {
                     if (note.InRecyclingBin)
-                        RecycledNotes.Add(new NoteViewModel(note, null, Language, _themeService, _settingsService, null, _model.Safes));
+                    {
+                        RecycledNotes.Add(new NoteViewModel(
+                            note, null, Language, _themeService, _settingsService, _feedbackService, null, _model.Safes));
+                    }
                 }
             }
         }

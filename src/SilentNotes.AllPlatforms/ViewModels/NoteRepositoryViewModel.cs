@@ -308,7 +308,8 @@ namespace SilentNotes.ViewModels
             noteModel.BackgroundColorHex = _settingsService.LoadSettingsOrDefault().DefaultNoteColorHex;
 
             // Update view model list
-            NoteViewModel noteViewModel = new NoteViewModel(noteModel, _searchableTextConverter, Language, _themeService, _settingsService, _noteCryptor, _model.Safes);
+            NoteViewModel noteViewModel = new NoteViewModel(
+                noteModel, _searchableTextConverter, Language, _themeService, _settingsService, _feedbackService, _noteCryptor, _model.Safes);
             NoteInsertionMode insertionMode = _settingsService.LoadSettingsOrDefault().DefaultNoteInsertion;
             switch (insertionMode)
             {
@@ -576,6 +577,7 @@ namespace SilentNotes.ViewModels
                         Language,
                         _themeService,
                         _settingsService,
+                        _feedbackService,
                         _noteCryptor,
                         _model.Safes);
                     AllNotes.Add(noteViewModel);

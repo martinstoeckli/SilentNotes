@@ -1,5 +1,6 @@
 ok = OK
 cancel = Отмена
+close = Close
 yes = Да
 no = Нет
 back = Назад

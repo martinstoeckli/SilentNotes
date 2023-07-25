@@ -26,10 +26,9 @@ namespace SilentNotes.ViewModels
     /// </summary>
     public class NoteViewModel : ViewModelBase
     {
-        //private static TimeAgo _timeAgo;
+        private static TimeAgo _timeAgo;
         //private readonly IRepositoryStorageService _repositoryService;
-        //private readonly IFeedbackService _feedbackService;
-        private readonly ILanguageService _languageService;
+        private readonly IFeedbackService _feedbackService;
         private readonly IThemeService _themeService;
         private readonly ISettingsService _settingsService;
         //private readonly IEnvironmentService _environmentService;
@@ -51,22 +50,27 @@ namespace SilentNotes.ViewModels
             ILanguageService languageService,
             IThemeService themeService,
             ISettingsService settingsService,
+            IFeedbackService feedbackService,
             ICryptor cryptor,
             SafeListModel safes)
         {
             Model = model;
-            _languageService = languageService;
+            Language = languageService;
             _themeService = themeService;
             _settingsService = settingsService;
+            _feedbackService = feedbackService;
             _searchableTextConverter = searchableTextConverter;
             _cryptor = cryptor;
             _safes = safes;
 
             TogglePinnedCommand = new RelayCommand(TogglePinned);
+            ShowInfoCommand = new RelayCommand(ShowInfo);
 
             MarkSearchableContentAsDirty();
             _unlockedContent = IsInSafe ? UnlockIfSafeOpen(Model.HtmlContent) : Model.HtmlContent;
         }
+
+        private ILanguageService Language { get; }
 
         ///// <summary>
         ///// Initializes a new instance of the <see cref="NoteViewModel"/> class.
@@ -302,8 +306,7 @@ namespace SilentNotes.ViewModels
                     if (settings.UseColorForAllNotesInDarkMode)
                     {
                         OnPropertyChanged(nameof(BackgroundColorHex)); // Redraw unchanged color (Vue binding)
-                        // todo: stom
-                        //_feedbackService.ShowToast(Language.LoadText("gui_theme_color_cannot_change"));
+                        _feedbackService.ShowToast(Language.LoadText("gui_theme_color_cannot_change"));
                         return;
                     }
                 }
@@ -317,13 +320,13 @@ namespace SilentNotes.ViewModels
             }
         }
 
-        ///// <summary>
-        ///// Gets a list of available background colors.
-        ///// </summary>
-        //public List<string> BackgroundColorsHex
-        //{
-        //    get { return _settingsService.LoadSettingsOrDefault().NoteColorsHex; }
-        //}
+        /// <summary>
+        /// Gets a list of available background colors.
+        /// </summary>
+        public List<string> BackgroundColorsHex
+        {
+            get { return _settingsService.LoadSettingsOrDefault().NoteColorsHex; }
+        }
 
         /// <summary>
         /// Gets a value indicating whether the background color of the note is a dark color or not.
@@ -589,17 +592,6 @@ namespace SilentNotes.ViewModels
             set { SetPropertyAndModified(Model.ShoppingModeActive, value, (v) => Model.ShoppingModeActive = v); }
         }
 
-        ///// <summary>
-        ///// Command which toggles the <see cref="ShoppingModeActive"/> property.
-        ///// </summary>
-        //[VueDataBinding(VueBindingMode.Command)]
-        //public ICommand ToggleShoppingModeCommand { get; private set; }
-
-        //private void ToggleShoppingMode()
-        //{
-        //    ShoppingModeActive = !ShoppingModeActive;
-        //}
-
         /// <summary>
         /// Gets or sets a value indicating whether the the note is pinned.
         /// <see cref="NoteModel.IsPinned"/>
@@ -623,28 +615,27 @@ namespace SilentNotes.ViewModels
             IsPinned = !IsPinned;
         }
 
-        ///// <summary>
-        ///// Gets the command which shows the info dialog.
-        ///// </summary>
-        //[VueDataBinding(VueBindingMode.Command)]
-        //public ICommand ShowInfoCommand { get; private set; }
+        /// <summary>
+        /// Gets the command which shows the info dialog.
+        /// </summary>
+        public ICommand ShowInfoCommand { get; private set; }
 
-        //private void ShowInfo()
-        //{
-        //    StringBuilder sb = new StringBuilder();
+        private void ShowInfo()
+        {
+            StringBuilder sb = new StringBuilder();
 
-        //    string creationDate = Language.FormatDateTime(Model.CreatedAt.ToLocalTime(), "d");
-        //    sb.AppendLine(Language.LoadTextFmt("created_at", creationDate));
-        //    sb.AppendLine();
+            string creationDate = Language.FormatDateTime(Model.CreatedAt.ToLocalTime(), "d");
+            sb.AppendLine(Language.LoadTextFmt("created_at", creationDate));
+            sb.AppendLine();
 
-        //    string modificationDate = Language.FormatDateTime(Model.ModifiedAt.ToLocalTime(), "g");
-        //    sb.Append(Language.LoadTextFmt("modified_at", modificationDate));
+            string modificationDate = Language.FormatDateTime(Model.ModifiedAt.ToLocalTime(), "g");
+            sb.Append(Language.LoadTextFmt("modified_at", modificationDate));
 
-        //    string prettyTime = GetOrCreateTimeAgo().PrettyPrint(Model.ModifiedAt, DateTime.UtcNow);
-        //    sb.Append(" (").Append(prettyTime).Append(")");
+            string prettyTime = GetOrCreateTimeAgo().PrettyPrint(Model.ModifiedAt, DateTime.UtcNow);
+            sb.Append(" (").Append(prettyTime).Append(")");
 
-        //    _feedbackService.ShowMessageAsync(sb.ToString(), Language.LoadText("note_show_info"), MessageBoxButtons.Ok, true);
-        //}
+            _feedbackService.ShowMessageAsync(sb.ToString(), Language.LoadText("note_show_info"), MessageBoxButtons.Ok, true);
+        }
 
         ///// <summary>
         ///// Gets the command which can keep the screen open, or prevents the app from going to sleep.
@@ -701,23 +692,23 @@ namespace SilentNotes.ViewModels
         //    KeepScreenOnActive = e;
         //}
 
-        //private TimeAgo GetOrCreateTimeAgo()
-        //{
-        //    if (_timeAgo == null)
-        //    {
-        //        var localization = new TimeAgo.Localization
-        //        {
-        //            Today = Language.LoadText("today"),
-        //            Yesterday = Language.LoadText("yesterday"),
-        //            NumberOfDaysAgo = Language.LoadText("days_ago"),
-        //            NumberOfWeeksAgo = Language.LoadText("weeks_ago"),
-        //            NumberOfMonthsAgo = Language.LoadText("months_ago"),
-        //            NumberOfYearsAgo = Language.LoadText("years_ago"),
-        //        };
-        //        _timeAgo = new TimeAgo(localization);
-        //    }
-        //    return _timeAgo;
-        //}
+        private TimeAgo GetOrCreateTimeAgo()
+        {
+            if (_timeAgo == null)
+            {
+                var localization = new TimeAgo.Localization
+                {
+                    Today = Language.LoadText("today"),
+                    Yesterday = Language.LoadText("yesterday"),
+                    NumberOfDaysAgo = Language.LoadText("days_ago"),
+                    NumberOfWeeksAgo = Language.LoadText("weeks_ago"),
+                    NumberOfMonthsAgo = Language.LoadText("months_ago"),
+                    NumberOfYearsAgo = Language.LoadText("years_ago"),
+                };
+                _timeAgo = new TimeAgo(localization);
+            }
+            return _timeAgo;
+        }
 
         /// <summary>
         /// Gets the navigation route of the note. In case that the note is locked, the opensafe
