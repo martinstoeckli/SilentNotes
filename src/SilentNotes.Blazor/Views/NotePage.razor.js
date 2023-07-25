@@ -1,4 +1,4 @@
-import { initializeEditor, toggleFormat, isFormatActive } from '../prose-mirror-bundle.js';
+import { initializeEditor, toggleFormat, isFormatActive, searchAndHighlight, selectNext, selectPrevious } from '../prose-mirror-bundle.js';
 
 var page;
 var editor;
@@ -58,4 +58,16 @@ export function undo() {
 
 export function redo() {
     editor.commands.redo();
+}
+
+export function search(searchPattern) {
+    searchAndHighlight(editor, searchPattern);
+}
+
+export function findNext() {
+    selectNext(editor);
+}
+
+export function findPrevious() {
+    selectPrevious(editor);
 }

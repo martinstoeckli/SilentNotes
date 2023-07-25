@@ -160,14 +160,14 @@ body {
 </div>
 
 @* Search toolbar *@
-<MudPopover Open="@SearchToolbarOpen"
-	Class="secondary-app-bar"
-	AnchorOrigin="Origin.TopRight" TransformOrigin="Origin.TopRight">
-	<MudStack Row="true" Spacing="0">
-		<MudPaper Class="d-inline-flex align-self-center ml-1 px-2 py-0" Elevation="0">
-			<MudInput @ref="_searchInput" @bind-Value="_searchText" Class="filter-input" />
+<MudPopover Open="@SearchToolbarOpen" Class="secondary-app-bar" AnchorOrigin="Origin.TopRight" TransformOrigin="Origin.TopRight">
+	<MudStack Row="true" Class="align-center pl-1" Spacing="0">
+		<MudPaper Class="pl-2 pr-0 py-0" Elevation="0">
+			<MudInput @ref="_searchInput" @bind-Value="SearchPattern" Class="filter-input" Immediate="true" Clearable="true" />
 		</MudPaper>
-		<MudIconButton OnClick="() => SearchToolbarOpen = false" Icon="@IconService.GetSvgLink(IconNames.Close)" Color="Color.Inherit" Edge="Edge.End" />
+		<MudIconButton OnClick="@(async () => await FindNext())" Icon="@Icons.Material.Filled.KeyboardArrowDown" Color="Color.Inherit" Edge="Edge.End" />
+		<MudIconButton OnClick="@(async () => await FindPrevious())" Icon="@Icons.Material.Filled.KeyboardArrowUp" Color="Color.Inherit" Edge="Edge.False" />
+		<MudIconButton OnClick="() => SearchToolbarOpen = false" Icon="@IconService.GetSvgLink(IconNames.Close)" Color="Color.Inherit" Edge="Edge.End" Size="Size.Small" />
 	</MudStack>
 </MudPopover>
 
@@ -204,7 +204,7 @@ body {
 	private bool _searchToolbarOpen;
 	private MudInput<string> _searchInput;
 	private bool _pendingFocusToSearchInput;
-	private string _searchText;
+	private string _searchPattern;
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="NotePage"/> class.
@@ -236,12 +236,15 @@ body {
 		ViewModel.PropertyChanged += PropertyChangedHandler;
 
 		_keyboardShortcuts = KeyboardShortcutService.CreateShortcuts()
-			.Add(ModCode.None, Code.Escape, () => 
+			.Add(ModCode.Ctrl, Code.F, () => SearchToolbarOpen = true)
+			.Add(ModCode.None, Code.F3, FindNext)
+			.Add(ModCode.Shift, Code.F3, FindPrevious)
+			.Add(ModCode.None, Code.Escape, () =>
 				{
-					if (_searchToolbarOpen)
+					if (SearchToolbarOpen)
 						SearchToolbarOpen = false;
 					else
-						_backButton.OnClick.InvokeAsync();
+						NavigationService.NavigateBack();
 				});
 	}
 
@@ -310,11 +313,31 @@ body {
 		}
 	}
 
+	private string SearchPattern
+	{
+		get { return _searchPattern; }
+		set
+		{
+			_searchPattern = value;
+			_jsModule.InvokeVoidAsync("search", _searchPattern);
+		}
+	}
+
+	private async ValueTask FindNext()
+	{
+		await _jsModule.InvokeVoidAsync("findNext");
+	}
+
+	private async ValueTask FindPrevious()
+	{
+		await _jsModule.InvokeVoidAsync("findPrevious");
+	}
+
 	/// <summary>
 	/// Toggles the shopping mode and enables/disables the editor.
 	/// </summary>
 	/// <returns>Task for async call.</returns>
-	private async Task ToggleShoppingMode()
+	private async ValueTask ToggleShoppingMode()
 	{
 		ViewModel.ShoppingModeActive = !ViewModel.ShoppingModeActive;
 		await _jsModule.InvokeVoidAsync("setEditable", !ViewModel.ShoppingModeActive);

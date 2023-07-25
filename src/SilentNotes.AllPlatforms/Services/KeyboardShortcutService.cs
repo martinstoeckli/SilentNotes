@@ -76,7 +76,15 @@ namespace SilentNotes.Services
                 return this;
             }
 
+            /// <inheritdoc/>
             public IKeyboardShortcuts Add(ModCode modifiers, Code code, Action action)
+            {
+                _context.Add(modifiers, code, action, string.Empty, Exclude.None);
+                return this;
+            }
+
+            /// <inheritdoc/>
+            public IKeyboardShortcuts Add(ModCode modifiers, Code code, Func<ValueTask> action)
             {
                 _context.Add(modifiers, code, action, string.Empty, Exclude.None);
                 return this;

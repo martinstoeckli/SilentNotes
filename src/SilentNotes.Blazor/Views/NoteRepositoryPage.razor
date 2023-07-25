@@ -1,6 +1,7 @@
 ﻿@page "/"
 @using System.ComponentModel
 @using System.Windows.Input;
+@using MudBlazor.Services;
 @using SilentNotes.Models
 @using SilentNotes.ViewModels
 @using SilentNotes.Services
@@ -16,6 +17,7 @@
 @inject IEnvironmentService EnvironmentService
 @inject ICryptoRandomService CryptoRandomSource
 @inject IScrollManager ScrollManager
+@inject IBrowserViewportService ViewportService
 
 @implements IDisposable
 
@@ -54,8 +56,8 @@
 		<MudInput @ref="_filterInput" @bind-Value="ViewModel.Filter"
 			Class="filter-input ml-2 mr-1 my-0"
 			AutoFocus="@ShouldAutofocusToFilter"
-			Adornment="Adornment.End" AdornmentIcon="@FilterIcon" OnAdornmentClick="@(() => ViewModel.ClearFilterCommand.Execute(null))"
-			Immediate="true" />
+			Adornment="@(ViewModel.IsFiltered ? Adornment.None : Adornment.End)" AdornmentIcon="@IconService.GetSvgLink(IconNames.Magnify)"
+			Immediate="true" Clearable="true" />
 	</MudPaper>
 
 	@* Synchronization *@
@@ -159,17 +161,12 @@
 </div>
 
 @* Note ordering toolbar *@
-<MudPopover
-	Open="@ViewModel.OrderToolbarVisible"
-	Class="secondary-app-bar"
-	AnchorOrigin="Origin.TopRight" TransformOrigin="Origin.TopRight">
-	<MudStack Row="true" Spacing="0">
-		<MudIconButton OnClick="() => ViewModel.MoveSelectedOrderNote(true, false)" Icon="@IconService[IconNames.ArrowCollapseUp]" Color="Color.Inherit" Title="order" Edge="Edge.End" />
-		<MudIconButton OnClick="() => ViewModel.MoveSelectedOrderNote(true, true)" Icon="@IconService[IconNames.ArrowUp]" Color="Color.Inherit" Title="order" Edge="Edge.End" />
-		<MudIconButton OnClick="() => ViewModel.MoveSelectedOrderNote(false, true)" Icon="@IconService[IconNames.ArrowDown]" Color="Color.Inherit" Title="order" Edge="Edge.End" />
-		<MudIconButton OnClick="() => ViewModel.MoveSelectedOrderNote(false, false)" Icon="@IconService[IconNames.ArrowCollapseDown]" Color="Color.Inherit" Title="order" />
-		<MudIconButton OnClick="() => ViewModel.SelectOrderNote(null)" Icon="@IconService.GetSvgLink(IconNames.Close)" Color="Color.Inherit" Edge="Edge.End" />
-	</MudStack>
+<MudPopover Open="@ViewModel.OrderToolbarVisible" Class="secondary-app-bar" AnchorOrigin="Origin.TopRight" TransformOrigin="Origin.TopRight">
+	<MudIconButton OnClick="() => ViewModel.MoveSelectedOrderNote(true, false)" Icon="@IconService[IconNames.ArrowCollapseUp]" Color="Color.Inherit" Title="order" Edge="Edge.End" />
+	<MudIconButton OnClick="() => ViewModel.MoveSelectedOrderNote(true, true)" Icon="@IconService[IconNames.ArrowUp]" Color="Color.Inherit" Title="order" Edge="Edge.End" />
+	<MudIconButton OnClick="() => ViewModel.MoveSelectedOrderNote(false, true)" Icon="@IconService[IconNames.ArrowDown]" Color="Color.Inherit" Title="order" Edge="Edge.End" />
+	<MudIconButton OnClick="() => ViewModel.MoveSelectedOrderNote(false, false)" Icon="@IconService[IconNames.ArrowCollapseDown]" Color="Color.Inherit" Title="order" Edge="Edge.False" />
+	<MudIconButton OnClick="() => ViewModel.SelectOrderNote(null)" Icon="@IconService.GetSvgLink(IconNames.Close)" Color="Color.Inherit" Size="Size.Small" Edge="Edge.End" />
 </MudPopover>
 
 @* The FAB for adding a new note *@
@@ -188,7 +185,6 @@
 	@IconService.EmbedLinkableSvgs( new [] {
 		IconNames.ArrowAll,
 		IconNames.Close,
-		IconNames.CloseCircleOutline,
 		IconNames.Delete,
 		IconNames.LockOutline,
 		IconNames.Lock,
@@ -298,21 +294,13 @@
 	}
 
 	/// <summary>
-	/// Gets the svg icon for filtering (magnifier or clear)
-	/// </summary>
-	private string FilterIcon
-	{
-		get { return IconService.GetSvgLink(ViewModel.IsFiltered ? IconNames.CloseCircleOutline : IconNames.Magnify); }
-	}
-
-	/// <summary>
 	/// Workaround, because the drawer contains a MudList which consumes the click event and does
 	/// not automatically close the drawer for small screens.
 	/// </summary>
 	/// <returns>Task for async calls.</returns>
 	private async Task CloseDrawerWhenItemSelected()
 	{
-		bool isLargeScreen = await _sideDrawer.Breakpointistener.IsMediaSize(Breakpoint.MdAndUp);
+		bool isLargeScreen = await ViewportService.IsBreakpointWithinWindowSizeAsync(Breakpoint.MdAndUp);
 		if (!isLargeScreen)
 			ViewModel.IsDrawerOpen = false;
 	}

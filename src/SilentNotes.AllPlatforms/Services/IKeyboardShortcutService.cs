@@ -73,5 +73,15 @@ namespace SilentNotes.Services
         /// <param name="action">Assigns this action to the shortcut.</param>
         /// <returns>Returns itself for a fluent declaration of shortcuts.</returns>
         IKeyboardShortcuts Add(ModCode modifiers, Code code, Action action);
+
+        /// <summary>
+        /// Defines a new keyboard shortcut for the razor page.
+        /// </summary>
+        /// <param name="modifiers">The flags of modifier keys, or <see cref="ModCode.None"/> if no
+        /// modifier should be active.</param>
+        /// <param name="code">The keyboard code to react to.</param>
+        /// <param name="action">Assigns this action to the shortcut.</param>
+        /// <returns>Returns itself for a fluent declaration of shortcuts.</returns>
+        IKeyboardShortcuts Add(ModCode modifiers, Code code, Func<ValueTask> action);
     }
 }
