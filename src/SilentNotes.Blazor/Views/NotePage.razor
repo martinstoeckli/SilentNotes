@@ -143,6 +143,13 @@ body {
 				Icon="@Icons.Material.Filled.ColorLens"
 				Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_colors"]</MudMenuItem>
 
+			@if (ViewModel.CanKeepScreenOn)
+			{
+				<MudMenuItem OnClick="@(() => ViewModel.KeepScreenOnCommand.Execute(null))"
+					Icon="@Icons.Material.Outlined.Timer"
+					Class="@Css.BuildClass(new CssClassIf(CssClasses.MenuToggled, ViewModel.KeepScreenOnActive))">@ViewModel.KeepScreenOnTitle</MudMenuItem>
+			}
+
 			<MudMenuItem OnClick="@(() => ViewModel.TogglePinnedCommand.Execute(null))"
 				Icon="@IconService.GetSvgLink(IconNames.Pin)"
 				Class="@Css.BuildClass(new CssClassIf(CssClasses.MenuToggled, ViewModel.IsPinned))"
@@ -246,7 +253,7 @@ body {
 		Guid noteId = new Guid(NoteId);
 		NoteModel note = noteRepository.Notes.FindById(noteId);
 		ICryptor cryptor = new Cryptor(NoteModel.CryptorPackageName, CryptoRandomSource);
-		ViewModel = new NoteViewModel(note, null, LanguageService, ThemeService, SettingsService, FeedbackService, cryptor, noteRepository.Safes);
+		ViewModel = new NoteViewModel(note, null, LanguageService, ThemeService, SettingsService, FeedbackService, EnvironmentService, cryptor, noteRepository.Safes);
 
 		// Redirect to open safe if locked
 		if (ViewModel.IsLocked)

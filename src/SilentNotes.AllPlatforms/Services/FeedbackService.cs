@@ -36,6 +36,7 @@ namespace SilentNotes.Services
         {
             ButtonArrangement arrangement = new ButtonArrangement(buttons, _languageService);
             message = message.Replace("\r\n", "<br />");
+            message = message.Replace("\n", "<br />");
 
             var parameters = new DialogParameters
             {

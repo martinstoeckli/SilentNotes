@@ -328,6 +328,7 @@ div.ProseMirror .search-result-selected {
 }
 
 .mud-appbar .mud-icon-size-medium { font-size: 1.75rem; } /* bigger toolbar icons */
+.mud-list-item-icon { min-width: 38px; } /* smaller gap between icon and menuitem */
 
 .mud-container-left { margin-left: 0; }
 .mud-container-p { padding-bottom: 20px; }

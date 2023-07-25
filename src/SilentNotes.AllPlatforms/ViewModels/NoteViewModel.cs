@@ -31,7 +31,7 @@ namespace SilentNotes.ViewModels
         private readonly IFeedbackService _feedbackService;
         private readonly IThemeService _themeService;
         private readonly ISettingsService _settingsService;
-        //private readonly IEnvironmentService _environmentService;
+        private readonly IEnvironmentService _environmentService;
         private readonly ICryptor _cryptor;
         private readonly SafeListModel _safes;
         //private readonly IList<string> _allDistinctAndSortedTags;
@@ -39,7 +39,7 @@ namespace SilentNotes.ViewModels
         private SearchableHtmlConverter _searchableTextConverter;
         protected string _unlockedContent;
         private string _searchableContent;
-        //private bool _isKeepScreenOnActive;
+        private bool _isKeepScreenOnActive;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NoteViewModel"/> class.
@@ -51,6 +51,7 @@ namespace SilentNotes.ViewModels
             IThemeService themeService,
             ISettingsService settingsService,
             IFeedbackService feedbackService,
+            IEnvironmentService environmentService,
             ICryptor cryptor,
             SafeListModel safes)
         {
@@ -59,12 +60,18 @@ namespace SilentNotes.ViewModels
             _themeService = themeService;
             _settingsService = settingsService;
             _feedbackService = feedbackService;
+            _environmentService = environmentService;
             _searchableTextConverter = searchableTextConverter;
             _cryptor = cryptor;
             _safes = safes;
 
             TogglePinnedCommand = new RelayCommand(TogglePinned);
             ShowInfoCommand = new RelayCommand(ShowInfo);
+            KeepScreenOnCommand = new RelayCommand(KeepScreenOn);
+
+            // todo:
+            //if (CanKeepScreenOn)
+            //    _environmentService.KeepScreenOn.StateChanged += KeepScreenOnChanged;
 
             MarkSearchableContentAsDirty();
             _unlockedContent = IsInSafe ? UnlockIfSafeOpen(Model.HtmlContent) : Model.HtmlContent;
@@ -637,60 +644,58 @@ namespace SilentNotes.ViewModels
             _feedbackService.ShowMessageAsync(sb.ToString(), Language.LoadText("note_show_info"), MessageBoxButtons.Ok, true);
         }
 
-        ///// <summary>
-        ///// Gets the command which can keep the screen open, or prevents the app from going to sleep.
-        ///// </summary>
-        //[VueDataBinding(VueBindingMode.Command)]
-        //public ICommand KeepScreenOnCommand { get; private set; }
+        /// <summary>
+        /// Gets the command which can keep the screen open, or prevents the app from going to sleep.
+        /// </summary>
+        public ICommand KeepScreenOnCommand { get; private set; }
 
-        //private void KeepScreenOn()
-        //{
-        //    SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
-        //    _environmentService?.KeepScreenOn?.Start();
-        //    _environmentService?.KeepScreenOn?.StopAfter(new TimeSpan(0, settings.KeepScreenUpDuration, 0));
-        //}
+        private void KeepScreenOn()
+        {
+            SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
+            _environmentService?.KeepScreenOn?.Start();
+            _environmentService?.KeepScreenOn?.StopAfter(new TimeSpan(0, settings.KeepScreenUpDuration, 0));
+        }
 
-        ///// <summary>
-        ///// Gets a value indicating whether the OS supports/needs the <see cref="IKeepScreenOn"/>
-        ///// functionallity.
-        ///// </summary>
-        //public bool CanKeepScreenOn
-        //{
-        //    get { return _environmentService?.KeepScreenOn != null; }
-        //}
+        /// <summary>
+        /// Gets a value indicating whether the OS supports/needs the <see cref="IKeepScreenOn"/>
+        /// functionallity.
+        /// </summary>
+        public bool CanKeepScreenOn
+        {
+            get { return _environmentService?.KeepScreenOn != null; }
+        }
 
-        ///// <summary>
-        ///// Gets the title for the menu item of the <see cref="IKeepScreenOn"/> function, which
-        ///// shows the current duration from the settings.
-        ///// </summary>
-        //public string KeepScreenOnTitle
-        //{
-        //    get 
-        //    {
-        //        SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
-        //        return Language.LoadTextFmt("keep_screen_on", settings.KeepScreenUpDuration);
-        //    }
-        //}
+        /// <summary>
+        /// Gets the title for the menu item of the <see cref="IKeepScreenOn"/> function, which
+        /// shows the current duration from the settings.
+        /// </summary>
+        public string KeepScreenOnTitle
+        {
+            get
+            {
+                SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
+                return Language.LoadTextFmt("keep_screen_on", settings.KeepScreenUpDuration);
+            }
+        }
 
-        ///// <summary>
-        ///// Gets or sets a bindable value indicating whether the <see cref="IKeepScreenOn"/>
-        ///// function is currently active (waiting on the timer to stop).
-        ///// </summary>
-        //[VueDataBinding(VueBindingMode.OneWayToView)]
-        //public bool KeepScreenOnActive
-        //{
-        //    get { return _isKeepScreenOnActive; }
-        //    set { SetProperty(ref _isKeepScreenOnActive, value); }
-        //}
+        /// <summary>
+        /// Gets or sets a bindable value indicating whether the <see cref="IKeepScreenOn"/>
+        /// function is currently active (waiting on the timer to stop).
+        /// </summary>
+        public bool KeepScreenOnActive
+        {
+            get { return _isKeepScreenOnActive; }
+            set { SetProperty(ref _isKeepScreenOnActive, value); }
+        }
 
-        ///// <summary>
-        ///// Event handler for the <see cref="IKeepScreenOn.StateChanged"/> event, which is used
-        ///// to update the active state of the menu item.
-        ///// </summary>
-        //private void KeepScreenOnChanged(object sender, bool e)
-        //{
-        //    KeepScreenOnActive = e;
-        //}
+        /// <summary>
+        /// Event handler for the <see cref="IKeepScreenOn.StateChanged"/> event, which is used
+        /// to update the active state of the menu item.
+        /// </summary>
+        private void KeepScreenOnChanged(object sender, bool e)
+        {
+            KeepScreenOnActive = e;
+        }
 
         private TimeAgo GetOrCreateTimeAgo()
         {
