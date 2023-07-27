@@ -32,6 +32,7 @@ namespace SilentNotes.ViewModels
         private readonly IThemeService _themeService;
         private readonly ISettingsService _settingsService;
         private readonly IEnvironmentService _environmentService;
+        private readonly INativeBrowserService _nativeBrowserService;
         private readonly ICryptor _cryptor;
         private readonly SafeListModel _safes;
         //private readonly IList<string> _allDistinctAndSortedTags;
@@ -52,6 +53,7 @@ namespace SilentNotes.ViewModels
             ISettingsService settingsService,
             IFeedbackService feedbackService,
             IEnvironmentService environmentService,
+            INativeBrowserService nativeBrowserService,
             ICryptor cryptor,
             SafeListModel safes)
         {
@@ -61,6 +63,7 @@ namespace SilentNotes.ViewModels
             _settingsService = settingsService;
             _feedbackService = feedbackService;
             _environmentService = environmentService;
+            _nativeBrowserService = nativeBrowserService;
             _searchableTextConverter = searchableTextConverter;
             _cryptor = cryptor;
             _safes = safes;
@@ -68,6 +71,7 @@ namespace SilentNotes.ViewModels
             TogglePinnedCommand = new RelayCommand(TogglePinned);
             ShowInfoCommand = new RelayCommand(ShowInfo);
             KeepScreenOnCommand = new RelayCommand(KeepScreenOn);
+            OpenLinkCommand = new RelayCommand<string>(OpenLink);
 
             // todo:
             //if (CanKeepScreenOn)
@@ -642,6 +646,17 @@ namespace SilentNotes.ViewModels
             sb.Append(" (").Append(prettyTime).Append(")");
 
             _feedbackService.ShowMessageAsync(sb.ToString(), Language.LoadText("note_show_info"), MessageBoxButtons.Ok, true);
+        }
+
+        /// <summary>
+        /// Gets the command to open the selected link.
+        /// </summary>
+        public ICommand OpenLinkCommand { get; private set; }
+
+        private void OpenLink(string link)
+        {
+            // todo: safe check url
+            _nativeBrowserService.OpenWebsite(link);
         }
 
         /// <summary>

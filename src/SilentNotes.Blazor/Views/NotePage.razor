@@ -16,6 +16,7 @@
 @inject IEnvironmentService EnvironmentService
 @inject IThemeService ThemeService
 @inject IFeedbackService FeedbackService
+@inject INativeBrowserService NativeBrowserService
 @inject IFilePickerService FilePickerService
 @inject IRepositoryStorageService RepositoryStorageService
 @inject ICloudStorageClientFactory CloudStorageClientFactory
@@ -137,6 +138,10 @@ body {
 				Class="@Css.BuildClass(new CssClassIf(CssClasses.MenuToggled, _formatStates.Blockquote))"
 				Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_quotation"]</MudMenuItem>
 
+			<MudMenuItem OnClick="@(() => _linkDialogOpen = true)"
+				Icon="@IconService.GetSvgLink(IconNames.LinkVariant)"
+				Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_link"]</MudMenuItem>
+
 			<MudDivider/>
 
 			<MudMenuItem OnClick="@(() => _colorPaletteOpen = true)"
@@ -188,15 +193,33 @@ body {
 
 @* Color palette *@
 <MudOverlay @bind-Visible="_colorPaletteOpen" AutoClose="true">
-	<MudPaper Class="d-flex flex-column">
-		<MudColorPicker @bind-Text="ViewModel.BackgroundColorHex"
-			Class="rounded-t"
-			PickerVariant="PickerVariant.Static"
-			DisableToolbar="true" DisableAlpha="true"
-			ColorPickerView="ColorPickerView.Palette"
-			Palette="@ViewModel.BackgroundColorsHex.Select(color => new MudColor(color))" />
-		<MudButton OnClick="@(() => _colorPaletteOpen = false)" Color="Color.Primary" Variant="Variant.Text" Class="align-self-end">@LanguageService["close"]</MudButton>
-	</MudPaper>
+	<MudCard>
+		<MudCardContent Class="pa-0">
+			<MudColorPicker @bind-Text="ViewModel.BackgroundColorHex"
+				Class="rounded-t" PickerVariant="PickerVariant.Static" ColorPickerView="ColorPickerView.Palette"
+				DisableToolbar="true" DisableAlpha="true"
+				Palette="@ViewModel.BackgroundColorsHex.Select(color => new MudColor(color))" />
+		</MudCardContent>
+		<MudCardActions Class="justify-end">
+			<MudButton OnClick="@(() => _colorPaletteOpen = false)" Color="Color.Primary" Variant="Variant.Text">@LanguageService["close"]</MudButton>
+		</MudCardActions>
+	</MudCard>
+</MudOverlay>
+
+@* Link dialog *@
+<MudOverlay @bind-Visible="_linkDialogOpen" AutoClose="false">
+	<MudCard>
+		<MudCardContent>
+			<MudTextField @bind-Value="_linkUrl"
+				AdornmentIcon="@IconService.GetSvgLink(IconNames.Delete)" AdornmentColor="Color.Secondary" OnAdornmentClick="@(() => _linkUrl = string.Empty)" Adornment="Adornment.End"
+				Immediate="true" Style="width:400px"></MudTextField>
+		</MudCardContent>
+		<MudCardActions Class="justify-end gap-x-2">
+			<MudButton Variant="Variant.Filled" Color="Color.Primary">@LanguageService["ok"]</MudButton>
+			<MudButton OnClick="@(() => ViewModel.OpenLinkCommand.Execute(_linkUrl))" Variant="Variant.Filled" Color="Color.Default" EndIcon="@Icons.Material.Filled.OpenInNew">@LanguageService["note_open_link"]</MudButton>
+			<MudButton OnClick="@(() => _linkDialogOpen = false)" Variant="Variant.Filled" Color="Color.Default">@LanguageService["cancel"]</MudButton>
+		</MudCardActions>
+	</MudCard>
 </MudOverlay>
 
 @* Declare icons which can be reused multiple times, to reduce page size *@
@@ -213,10 +236,12 @@ body {
 		IconNames.FormatListBulleted,
 		IconNames.CodeBraces,
 		IconNames.FormatQuoteClose,
+		IconNames.LinkVariant,
 		IconNames.KeyboardOffOutline,
 		IconNames.Pin,
 		IconNames.Magnify,
 		IconNames.Close,
+		IconNames.Delete,
 	});
 </div>
 
@@ -234,6 +259,8 @@ body {
 	private bool _pendingFocusToSearchInput;
 	private string _searchPattern;
 	private bool _colorPaletteOpen;
+	private bool _linkDialogOpen;
+	private string _linkUrl;
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="NotePage"/> class.
@@ -253,7 +280,7 @@ body {
 		Guid noteId = new Guid(NoteId);
 		NoteModel note = noteRepository.Notes.FindById(noteId);
 		ICryptor cryptor = new Cryptor(NoteModel.CryptorPackageName, CryptoRandomSource);
-		ViewModel = new NoteViewModel(note, null, LanguageService, ThemeService, SettingsService, FeedbackService, EnvironmentService, cryptor, noteRepository.Safes);
+		ViewModel = new NoteViewModel(note, null, LanguageService, ThemeService, SettingsService, FeedbackService, EnvironmentService, NativeBrowserService, cryptor, noteRepository.Safes);
 
 		// Redirect to open safe if locked
 		if (ViewModel.IsLocked)
@@ -268,13 +295,7 @@ body {
 			.Add(ModCode.Ctrl, Code.F, () => SearchToolbarOpen = true)
 			.Add(ModCode.None, Code.F3, FindNext)
 			.Add(ModCode.Shift, Code.F3, FindPrevious)
-			.Add(ModCode.None, Code.Escape, () =>
-				{
-					if (SearchToolbarOpen)
-						SearchToolbarOpen = false;
-					else
-						NavigationService.NavigateBack();
-				});
+			.Add(ModCode.None, Code.Escape, () => { if (!CloseOpenMenuOrDialog()) NavigationService.NavigateBack(); });
 	}
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -326,6 +347,32 @@ body {
 	[Parameter]
 	public string NoteId { get; set; } = default!;
 
+	private bool CloseOpenMenuOrDialog()
+	{
+		bool result = false;
+
+		// todo: _overflowMenu.CloseMenu();
+		if (SearchToolbarOpen)
+		{
+			SearchToolbarOpen = false;
+			result = true;
+		}
+		if (_colorPaletteOpen)
+		{
+			_colorPaletteOpen = false;
+			result = true;
+		}
+		if (_linkDialogOpen)
+		{
+			_linkDialogOpen = false;
+			result = true;
+		}
+
+		if (result)
+			StateHasChanged();
+		return result;
+	}
+
 	/// <summary>
 	/// Gets or sets a value indicating whether the search toolbar is visible or not.
 	/// </summary>
@@ -335,10 +382,13 @@ body {
 
 		set
 		{
-			_searchToolbarOpen = value;
-			if (value)
-				_pendingFocusToSearchInput = true;
-			StateHasChanged();
+			if (_searchToolbarOpen != value)
+			{
+				_searchToolbarOpen = value;
+				if (value)
+					_pendingFocusToSearchInput = true;
+				StateHasChanged();
+			}
 		}
 	}
 
