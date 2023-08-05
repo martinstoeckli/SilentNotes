@@ -4,6 +4,7 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
+using System.Threading.Tasks;
 using MudBlazor;
 using Toolbelt.Blazor.HotKeys2;
 

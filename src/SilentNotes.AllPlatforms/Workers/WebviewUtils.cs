@@ -4,6 +4,7 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
+using System.Linq;
 using System.Web;
 
 namespace SilentNotes.Workers
@@ -37,18 +38,15 @@ namespace SilentNotes.Workers
         /// <returns>Returns true if the url is an external link, otherwise false.</returns>
         public static bool IsExternalUri(string uri)
         {
-            if (string.IsNullOrEmpty(uri))
+            if (string.IsNullOrWhiteSpace(uri))
                 return false;
 
-            // The URI class fails with some protocols like "tel://" which are not valid urls, but
-            // can be used in an html page nevertheless, thus we do the parsing on our own.
-            string[] acceptedSchemes = new string[] { "http:", "https:", "ftp:", "ftps:", "mailto:", "news:", "tel:" };
-            foreach (string acceptedProtocol in acceptedSchemes)
-            {
-                if (uri.StartsWith(acceptedProtocol, StringComparison.InvariantCultureIgnoreCase))
-                    return true;
-            }
-            return false;
+            string lowerUri = uri.ToLower();
+            if (!Uri.TryCreate(lowerUri, UriKind.Absolute, out Uri uriResult)) // Needs lower case schemes
+                return false;
+
+            string[] acceptedSchemes = new string[] { "http", "https", "ftp", "ftps", "mailto", "news", "tel" };
+            return acceptedSchemes.Contains(uriResult.Scheme);
         }
     }
 }

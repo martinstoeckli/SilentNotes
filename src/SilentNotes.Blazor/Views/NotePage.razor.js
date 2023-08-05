@@ -1,4 +1,4 @@
-import { initializeEditor, toggleFormat, isFormatActive, searchAndHighlight, selectNext, selectPrevious } from '../prose-mirror-bundle.js';
+import { initializeEditor, toggleFormat, isFormatActive, searchAndHighlight, selectNext, selectPrevious, selectWordAtCurrentPosition, makeLinkSuggestion } from '../prose-mirror-bundle.js';
 
 var page;
 var editor;
@@ -10,6 +10,10 @@ export function initialize(dotnetPage, editorContainer) {
 
     editor.on('selectionUpdate', function (editor) {
         refreshActiveFormatState();
+    });
+
+    document.addEventListener('custom-link-clicked', function () {
+        page.invokeMethodAsync('OpenLinkDialog');
     });
 
     return editor;
@@ -70,4 +74,51 @@ export function findNext() {
 
 export function findPrevious() {
     selectPrevious(editor);
+}
+
+export function prepareLinkDialog() {
+    editor.chain().focus().run();
+    var selectedUrl = editor.getAttributes('link').href;
+    if (selectedUrl) {
+        editor.commands.extendMarkRange('link');
+        var text = selectWordAtCurrentPosition(editor);
+        return [
+            selectedUrl,
+            text,
+        ];
+    }
+    else {
+        var text = selectWordAtCurrentPosition(editor);
+        return [
+            '',
+            text,
+        ];
+    }
+}
+
+export function linkDialogOkPressed(oldLinkUrl, newLinkUrl, oldLinkTitle, newLinkTitle) {
+    var newLinkIsEmpty = !newLinkUrl;
+    var urlChanged = newLinkUrl != oldLinkUrl;
+    var titleChanged = newLinkTitle != oldLinkTitle;
+    if (!urlChanged && !titleChanged)
+        return;
+
+    var commandChain = editor.chain().focus().extendMarkRange('link');
+
+    if (newLinkIsEmpty) {
+        commandChain = commandChain.unsetLink();
+    }
+    else if (titleChanged) {
+        var selection = editor.view.state.selection;
+        commandChain = commandChain.command(({ tr }) => {
+            tr.insertText(newLinkTitle);
+            return true;
+        });
+        commandChain = commandChain.setTextSelection({ from: selection.$from.pos, to: selection.$from.pos + newLinkTitle.length });
+        commandChain = commandChain.setLink({ href: newLinkUrl });
+    }
+    else if (urlChanged) {
+        commandChain = commandChain.setLink({ href: newLinkUrl });
+    }
+    commandChain.run();
 }

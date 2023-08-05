@@ -655,8 +655,8 @@ namespace SilentNotes.ViewModels
 
         private void OpenLink(string link)
         {
-            // todo: safe check url
-            _nativeBrowserService.OpenWebsite(link);
+            if (WebviewUtils.IsExternalUri(link))
+                _nativeBrowserService.OpenWebsite(link);
         }
 
         /// <summary>

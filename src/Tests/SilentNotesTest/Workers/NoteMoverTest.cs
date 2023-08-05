@@ -134,7 +134,7 @@ namespace SilentNotesTest.Workers
 
         private static NoteViewModel CreateNoteViewModel(NoteModel model)
         {
-            return new NoteViewModel(model, null, null, null, null, null, null);
+            return new NoteViewModel(model, null, null, null, null, null, null, null, null, null);
         }
     }
 }

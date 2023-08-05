@@ -5,6 +5,7 @@
 @using SilentNotes.Models
 @using SilentNotes.ViewModels
 @using SilentNotes.Services
+@using SilentNotes.Workers
 @using System.Runtime.InteropServices.JavaScript;
 
 @inject IJSRuntime JSRuntime
@@ -138,7 +139,7 @@ body {
 				Class="@Css.BuildClass(new CssClassIf(CssClasses.MenuToggled, _formatStates.Blockquote))"
 				Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_quotation"]</MudMenuItem>
 
-			<MudMenuItem OnClick="@(() => _linkDialogOpen = true)"
+			<MudMenuItem OnClick="@(() => OpenLinkDialog())"
 				Icon="@IconService.GetSvgLink(IconNames.LinkVariant)"
 				Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_link"]</MudMenuItem>
 
@@ -207,17 +208,20 @@ body {
 </MudOverlay>
 
 @* Link dialog *@
-<MudOverlay @bind-Visible="_linkDialogOpen" AutoClose="false">
+<MudOverlay @bind-Visible="_linkState.IsDialogOpen" AutoClose="false">
 	<MudCard>
 		<MudCardContent>
-			<MudTextField @bind-Value="_linkUrl"
-				AdornmentIcon="@IconService.GetSvgLink(IconNames.Delete)" AdornmentColor="Color.Secondary" OnAdornmentClick="@(() => _linkUrl = string.Empty)" Adornment="Adornment.End"
+			<MudTextField @bind-Value="_linkState.LinkTitle"
+				Label="Title" Immediate="true" Style="width:400px"></MudTextField>
+			<MudTextField @bind-Value="_linkState.LinkUrl"
+				Label="Url" spellcheck="false"
+				AdornmentIcon="@IconService.GetSvgLink(IconNames.Delete)" AdornmentColor="Color.Secondary" OnAdornmentClick="@(() => _linkState.LinkUrl = null)" Adornment="Adornment.End"
 				Immediate="true" Style="width:400px"></MudTextField>
 		</MudCardContent>
 		<MudCardActions Class="justify-end gap-x-2">
-			<MudButton Variant="Variant.Filled" Color="Color.Primary">@LanguageService["ok"]</MudButton>
-			<MudButton OnClick="@(() => ViewModel.OpenLinkCommand.Execute(_linkUrl))" Variant="Variant.Filled" Color="Color.Default" EndIcon="@Icons.Material.Filled.OpenInNew">@LanguageService["note_open_link"]</MudButton>
-			<MudButton OnClick="@(() => _linkDialogOpen = false)" Variant="Variant.Filled" Color="Color.Default">@LanguageService["cancel"]</MudButton>
+			<MudButton OnClick="@(() => LinkDialogOkPressed())" Variant="Variant.Filled" Color="Color.Primary">@LanguageService["ok"]</MudButton>
+			<MudButton OnClick="@(() => ViewModel.OpenLinkCommand.Execute(_linkState.LinkUrl))" Variant="Variant.Filled" Color="Color.Default" EndIcon="@Icons.Material.Filled.OpenInNew">@LanguageService["note_open_link"]</MudButton>
+			<MudButton OnClick="@(() => _linkState.IsDialogOpen = false)" Variant="Variant.Filled" Color="Color.Default">@LanguageService["cancel"]</MudButton>
 		</MudCardActions>
 	</MudCard>
 </MudOverlay>
@@ -259,8 +263,7 @@ body {
 	private bool _pendingFocusToSearchInput;
 	private string _searchPattern;
 	private bool _colorPaletteOpen;
-	private bool _linkDialogOpen;
-	private string _linkUrl;
+	private LinkState _linkState;
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="NotePage"/> class.
@@ -268,6 +271,7 @@ body {
 	public NotePage()
 	{
 		_formatStates = new FormatToggleStates();
+		_linkState = new LinkState();
 	}
 
 	protected override void OnParametersSet()
@@ -362,9 +366,9 @@ body {
 			_colorPaletteOpen = false;
 			result = true;
 		}
-		if (_linkDialogOpen)
+		if (_linkState.IsDialogOpen)
 		{
-			_linkDialogOpen = false;
+			_linkState.IsDialogOpen = false;
 			result = true;
 		}
 
@@ -431,6 +435,48 @@ body {
 	private async Task ToggleFormatState(string formatName, int formatParameter = 0)
 	{
 		await _jsModule.InvokeVoidAsync("toggleFormatAndRefresh", formatName, formatParameter);
+	}
+
+	[JSInvokable("OpenLinkDialog")]
+	public async Task OpenLinkDialog()
+	{
+		if (ViewModel.ShoppingModeActive)
+			return;
+
+		string[] urls = await _jsModule.InvokeAsync<string[]>("prepareLinkDialog");
+		_linkState.LinkUrl = urls[0];
+		_linkState.OldLinkUrl = _linkState.LinkUrl;
+		_linkState.LinkTitle = urls[1];
+		_linkState.OldLinkTitle = _linkState.LinkTitle;
+
+		if (string.IsNullOrEmpty(_linkState.LinkUrl))
+			_linkState.LinkUrl = MakeLinkSuggestion(_linkState.LinkTitle);
+
+		_linkState.IsDialogOpen = true;
+		StateHasChanged();
+	}
+
+	public async Task LinkDialogOkPressed()
+	{
+		bool isValidLinkTitle = !string.IsNullOrWhiteSpace(_linkState.LinkTitle);
+		bool isValidLinkUrl = string.IsNullOrEmpty(_linkState.LinkUrl) || WebviewUtils.IsExternalUri(_linkState.LinkUrl);
+		if (isValidLinkTitle && isValidLinkUrl)
+		{
+			await _jsModule.InvokeVoidAsync("linkDialogOkPressed",
+				_linkState.OldLinkUrl, _linkState.LinkUrl, _linkState.OldLinkTitle, _linkState.LinkTitle);
+			_linkState.IsDialogOpen = false;
+		}
+	}
+
+	private static string MakeLinkSuggestion(string linkTitle)
+	{
+		linkTitle = linkTitle.Trim();
+		if (WebviewUtils.IsExternalUri(linkTitle))
+			return linkTitle;
+		else if (WebviewUtils.IsExternalUri("https://" + linkTitle))
+			return "https://" + linkTitle;
+		else
+			return "https://";
 	}
 
 	/// <summary>

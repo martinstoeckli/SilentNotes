@@ -30,7 +30,13 @@ namespace SilentNotesTest.Workers
             Assert.IsTrue(WebviewUtils.IsExternalUri("ftps://example.com/text.txt"));
             Assert.IsTrue(WebviewUtils.IsExternalUri("mailto://name@example.com"));
             Assert.IsTrue(WebviewUtils.IsExternalUri("news://example.com"));
-            Assert.IsTrue(WebviewUtils.IsExternalUri("tel://+41 00 000 000"));
+            Assert.IsTrue(WebviewUtils.IsExternalUri("tel:+41 00 000 000"));
+        }
+
+        [Test]
+        public void IsExternalUrlRejectsInvalidFormat()
+        {
+            Assert.IsFalse(WebviewUtils.IsExternalUri("https://"));
         }
 
         [Test]
