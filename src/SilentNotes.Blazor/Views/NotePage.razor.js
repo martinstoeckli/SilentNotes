@@ -9,7 +9,10 @@ export function initialize(dotnetPage, editorContainer) {
     editor = initializeEditor(editorContainer);
 
     editor.on('selectionUpdate', function (editor) {
-        refreshActiveFormatState();
+        onActiveFormatStateChanged();
+    });
+    editor.on('update', function (editor) {
+        onNoteContentChanged();
     });
 
     document.addEventListener('custom-link-clicked', function () {
@@ -36,10 +39,10 @@ export function setEditable(editable) {
 
 export function toggleFormatAndRefresh(formatName, formatParameter) {
     toggleFormat(editor, formatName, formatParameter);
-    refreshActiveFormatState();
+    onActiveFormatStateChanged();
 }
 
-function refreshActiveFormatState() {
+function onActiveFormatStateChanged() {
     var states = [
         isFormatActive(editor, 'heading', { level: 1 }),
         isFormatActive(editor, 'heading', { level: 2 }),
@@ -54,6 +57,11 @@ function refreshActiveFormatState() {
         isFormatActive(editor, 'orderedlist')
     ];
     page.invokeMethodAsync('RefreshActiveFormatState', states);
+}
+
+function onNoteContentChanged() {
+    var noteContent = editor.getHTML();
+    page.invokeMethodAsync('SetNoteContent', noteContent);
 }
 
 export function undo() {

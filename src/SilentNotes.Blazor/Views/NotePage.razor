@@ -264,6 +264,7 @@ body {
 	private string _searchPattern;
 	private bool _colorPaletteOpen;
 	private LinkState _linkState;
+	private bool _allowNoteContentChanges;
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="NotePage"/> class.
@@ -272,6 +273,7 @@ body {
 	{
 		_formatStates = new FormatToggleStates();
 		_linkState = new LinkState();
+		_allowNoteContentChanges = false;
 	}
 
 	protected override void OnParametersSet()
@@ -315,6 +317,7 @@ body {
 				await _jsModule.InvokeVoidAsync("initialize", _dotnetModule, _editorContainer);
 				string content = ViewModel.UnlockedHtmlContent;
 				await _jsModule.InvokeVoidAsync("setNoteContent", content);
+				_allowNoteContentChanges = true;
 			}
 			catch (Exception ex)
 			{
@@ -489,6 +492,19 @@ body {
 	{
 		_formatStates.LoadFromJsArray(states);
 		StateHasChanged();
+	}
+
+	/// <summary>
+	/// Called from the javascript to update the content of the note.
+	/// </summary>
+	/// <param name="content">String containing the html note content.</param>
+	[JSInvokable("SetNoteContent")]
+	public void SetNoteContent(string content)
+	{
+		// The _allowNoteContentChanges guarantees, that changes are only processed after all the
+		// initialization steps are completed, so that they can never damage the note content.
+		if (_allowNoteContentChanges)
+			ViewModel.UnlockedHtmlContent = content;
 	}
 
 	private void PropertyChangedHandler(object sender, PropertyChangedEventArgs e)
