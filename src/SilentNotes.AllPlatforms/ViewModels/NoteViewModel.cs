@@ -341,6 +341,18 @@ namespace SilentNotes.ViewModels
         }
 
         /// <summary>
+        /// Gets or sets the transparent background color as hex string, e.g. #ff000022
+        /// </summary>
+        public string BackgroundColorVeilHex
+        {
+            get 
+            {
+                // Add a transparency of 22 (00-ff)
+                return BackgroundColorHex + "22"; 
+            }
+        }
+
+        /// <summary>
         /// Gets a list of available background colors.
         /// </summary>
         public List<string> BackgroundColorsHex

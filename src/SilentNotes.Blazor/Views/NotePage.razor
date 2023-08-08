@@ -26,12 +26,10 @@
 @implements IAsyncDisposable
 
 <style type="text/css">
-#content {
-	background-color: @ViewModel.BackgroundColorHex;
-}
-.note-viewer {
-	font-size: @(ViewModel.GetNoteBaseFontSize(SettingsService, false))px !important;
-}
+	#content { background-color: @ViewModel.BackgroundColorHex; }
+	.note-viewer {
+		font-size: @(ViewModel.GetNoteBaseFontSize(SettingsService, false))px !important;
+	}
 </style>
 
 @* Main menu *@
@@ -180,13 +178,12 @@
 	}
 </div>
 
-<div id="tag-container" class="flex-none pa-2 @ViewModel.LightOrDarkClass()" style="max-height:130px; overflow-y:visible; overflow-x:hidden">
-	<MudAutocomplete T="string" @ref="_tagAutocomplete" ValueChanged="NewTagChanged" SearchFunc="@GetNewTagSuggestions"
+<div id="tag-container" class="flex-none pa-2" style="max-height:130px; overflow-y:visible; overflow-x:hidden; background-color: @ViewModel.BackgroundColorVeilHex;">
+	<MudAutocomplete T="string" @ref="_tagAutocomplete" ValueChanged="NewTagChanged" SearchFunc="GetNewTagSuggestions"
 		Class="ml-1" Style="float:right; width:50%; max-width:240px"
 		Margin="Margin.Dense" Dense="true" Variant="Variant.Outlined"
 		AdornmentIcon="@IconService.GetSvgLink(IconNames.TagOutline)"
 		AnchorOrigin="Origin.TopCenter" TransformOrigin="Origin.BottomCenter"
-		ResetValueOnEmptyText="true"
 		Label="@LanguageService["tag_add"]" />
 
 	@foreach (var tag in ViewModel.Tags)
