@@ -5,7 +5,10 @@
              x:Class="SilentNotes.MainPage"
              BackgroundColor="{StaticResource SplashBackgroundColor}">
 
-    <BlazorWebView x:Name="blazorWebView" HostPage="wwwroot/index.html" BackgroundColor="{StaticResource SplashBackgroundColor}">
+    <BlazorWebView
+        x:Name="blazorWebView"
+        HostPage="wwwroot/index.html"
+        BackgroundColor="{StaticResource SplashBackgroundColor}">
         <BlazorWebView.RootComponents>
             <RootComponent Selector="#app" ComponentType="{x:Type local:Main}" />
         </BlazorWebView.RootComponents>

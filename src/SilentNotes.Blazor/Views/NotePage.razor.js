@@ -23,7 +23,7 @@ export function initialize(dotnetPage, editorContainer) {
 }
 
 // By setting the content after loading the page, we can avoid that the content has to be
-// declared statically as javascript and therefore would occupy memory twice.
+// declared pre rendered as javascript and therefore would occupy memory twice.
 export function setNoteContent(text) {
     try {
         editor.chain().setMeta('addToHistory', false).setContent(text).scrollToTop().run();

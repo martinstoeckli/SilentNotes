@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components.WebView.Maui;
 
 namespace SilentNotes;
 
-public partial class App : Application
+public partial class App : Microsoft.Maui.Controls.Application
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="App"/> class.
@@ -18,6 +18,13 @@ public partial class App : Application
 
         MainPage = new MainPage();
         MainPage.Disappearing += DisappearingEventHandler;
+
+#if ANDROID
+        // Workaround: Android soft keyboard hides the lower part of the content
+        Microsoft.Maui.Controls.PlatformConfiguration.AndroidSpecific.Application.UseWindowSoftInputModeAdjust(
+            Current.On<Microsoft.Maui.Controls.PlatformConfiguration.Android>(),
+            Microsoft.Maui.Controls.PlatformConfiguration.AndroidSpecific.WindowSoftInputModeAdjust.Resize);
+#endif
     }
 
     private void DisappearingEventHandler(object sender, EventArgs e)

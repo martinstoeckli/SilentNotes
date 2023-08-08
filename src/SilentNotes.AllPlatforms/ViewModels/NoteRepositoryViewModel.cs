@@ -309,7 +309,17 @@ namespace SilentNotes.ViewModels
 
             // Update view model list
             NoteViewModel noteViewModel = new NoteViewModel(
-                noteModel, _searchableTextConverter, Language, _themeService, _settingsService, _feedbackService, _environmentService, null, _noteCryptor, _model.Safes);
+                noteModel,
+                _searchableTextConverter,
+                Language,
+                _themeService,
+                _settingsService,
+                _feedbackService,
+                _environmentService,
+                null,
+                _noteCryptor,
+                _model.Safes,
+                _model.CollectActiveTags());
             NoteInsertionMode insertionMode = _settingsService.LoadSettingsOrDefault().DefaultNoteInsertion;
             switch (insertionMode)
             {
@@ -581,7 +591,8 @@ namespace SilentNotes.ViewModels
                         _environmentService,
                         null,
                         _noteCryptor,
-                        _model.Safes);
+                        _model.Safes,
+                        null);
                     AllNotes.Add(noteViewModel);
 
                     bool hideNote =

@@ -35,7 +35,7 @@ namespace SilentNotes.ViewModels
         private readonly INativeBrowserService _nativeBrowserService;
         private readonly ICryptor _cryptor;
         private readonly SafeListModel _safes;
-        //private readonly IList<string> _allDistinctAndSortedTags;
+        private readonly IList<string> _allDistinctAndSortedTags;
         //private readonly bool _originalWasPinned;
         private SearchableHtmlConverter _searchableTextConverter;
         protected string _unlockedContent;
@@ -55,7 +55,8 @@ namespace SilentNotes.ViewModels
             IEnvironmentService environmentService,
             INativeBrowserService nativeBrowserService,
             ICryptor cryptor,
-            SafeListModel safes)
+            SafeListModel safes,
+            IList<string> allDistinctAndSortedTags)
         {
             Model = model;
             Language = languageService;
@@ -67,11 +68,14 @@ namespace SilentNotes.ViewModels
             _searchableTextConverter = searchableTextConverter;
             _cryptor = cryptor;
             _safes = safes;
+            _allDistinctAndSortedTags = allDistinctAndSortedTags;
 
             TogglePinnedCommand = new RelayCommand(TogglePinned);
             ShowInfoCommand = new RelayCommand(ShowInfo);
             KeepScreenOnCommand = new RelayCommand(KeepScreenOn);
             OpenLinkCommand = new RelayCommand<string>(OpenLink);
+            AddTagCommand = new RelayCommand<string>(AddTag);
+            DeleteTagCommand = new RelayCommand<string>(DeleteTag);
 
             // todo:
             //if (CanKeepScreenOn)
@@ -242,55 +246,60 @@ namespace SilentNotes.ViewModels
             get { return Model.Tags; }
         }
 
-        ///// <summary>
-        ///// Gets the command to go back to the note overview.
-        ///// </summary>
-        //[VueDataBinding(VueBindingMode.Command)]
-        //public ICommand AddTagCommand { get; private set; }
+        /// <summary>
+        /// Gets the command to go back to the note overview.
+        /// </summary>
+        public ICommand AddTagCommand { get; private set; }
 
-        ///// <inheritdoc/>
-        //private void AddTag(string value)
-        //{
-        //    if (Model.Tags.Contains(value, StringComparer.InvariantCultureIgnoreCase))
-        //        return;
+        /// <inheritdoc/>
+        private void AddTag(string value)
+        {
+            if (Model.Tags.Contains(value, StringComparer.InvariantCultureIgnoreCase))
+                return;
 
-        //    Model.Tags.Add(value);
-        //    Model.Tags.Sort(StringComparer.InvariantCultureIgnoreCase);
-        //    Model.RefreshModifiedAt();
-        //    Modified = true;
-        //    OnPropertyChanged(nameof(Tags));
-        //    OnPropertyChanged(nameof(TagSuggestions));
-        //}
+            // Use case sensitive tag from suggestions if available
+            string existingTag = TagSuggestions.FirstOrDefault(item => item.Equals(value, StringComparison.InvariantCultureIgnoreCase));
+            if (existingTag != null)
+                value = existingTag;
 
-        ///// <summary>
-        ///// Gets the command to go back to the note overview.
-        ///// </summary>
-        //[VueDataBinding(VueBindingMode.Command)]
-        //public ICommand DeleteTagCommand { get; private set; }
+            Model.Tags.Add(value);
+            Model.Tags.Sort(StringComparer.InvariantCultureIgnoreCase);
+            Model.RefreshModifiedAt();
+            Modified = true;
+            OnPropertyChanged(nameof(Tags));
+            OnPropertyChanged(nameof(TagSuggestions));
+        }
 
-        ///// <inheritdoc/>
-        //private void DeleteTag(string value)
-        //{
-        //    int tagIndex = Model.Tags.FindIndex(tag => string.Equals(value, tag, StringComparison.InvariantCultureIgnoreCase));
-        //    if (tagIndex == -1)
-        //        return;
+        /// <summary>
+        /// Gets the command to go back to the note overview.
+        /// </summary>
+        public ICommand DeleteTagCommand { get; private set; }
 
-        //    Model.Tags.RemoveAt(tagIndex);
-        //    Model.RefreshModifiedAt();
-        //    Modified = true;
-        //    OnPropertyChanged(nameof(Tags));
-        //    OnPropertyChanged(nameof(TagSuggestions));
-        //}
+        /// <inheritdoc/>
+        private void DeleteTag(string value)
+        {
+            if (ShoppingModeActive)
+                return;
 
-        ///// <summary>
-        ///// Gets a list of tags, which are used in other notes, but not in this note. They can be
-        ///// used to make suggestions about already used tags.
-        ///// </summary>
-        //[VueDataBinding(VueBindingMode.OneWayToView)]
-        //public IEnumerable<string> TagSuggestions
-        //{
-        //    get { return _allDistinctAndSortedTags.Where(tag => !Tags.Contains(tag, StringComparer.InvariantCultureIgnoreCase)); }
-        //}
+            int tagIndex = Model.Tags.FindIndex(tag => string.Equals(value, tag, StringComparison.InvariantCultureIgnoreCase));
+            if (tagIndex == -1)
+                return;
+
+            Model.Tags.RemoveAt(tagIndex);
+            Model.RefreshModifiedAt();
+            Modified = true;
+            OnPropertyChanged(nameof(Tags));
+            OnPropertyChanged(nameof(TagSuggestions));
+        }
+
+        /// <summary>
+        /// Gets a list of tags, which are used in other notes, but not in this note. They can be
+        /// used to make suggestions about already used tags.
+        /// </summary>
+        public IEnumerable<string> TagSuggestions
+        {
+            get { return _allDistinctAndSortedTags.Where(tag => !Tags.Contains(tag, StringComparer.InvariantCultureIgnoreCase)); }
+        }
 
         /// <summary>
         /// Gets or sets the background color as hex string, e.g. #ff0000

@@ -8,6 +8,8 @@
 
 /* independend of theme */
 
+.h-colored { color: var(--mud-palette-primary-darken); }
+
 .btn-toggled:not([disabled]) svg {
 	color: var(--mud-palette-tertiary);
 }

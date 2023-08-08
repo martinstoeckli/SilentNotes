@@ -12,9 +12,7 @@ h1 { font-size: 1.7em; }
 h2 { font-size: 1.3em; }
 h3 { font-size: 1.1em; }
 h1:focus { outline: none; }
-.h-colored {
-	color: var(--mud-palette-primary-darken);
-}
+#content { overflow-y: auto; }
 
 .background-icon {
 	position: fixed;
@@ -28,7 +26,8 @@ h1:focus { outline: none; }
 }
 
 .secondary-app-bar {
-	position: fixed;
+	right: 0;
+	left: auto !important; /* overwrite calculated left, not adapting to browser width */
 	margin: 0;
 	padding: 48px 24px 0 4px;
 	background-color: var(--mud-palette-tertiary);

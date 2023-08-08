@@ -26,7 +26,7 @@
 @implements IAsyncDisposable
 
 <style type="text/css">
-body {
+#content {
 	background-color: @ViewModel.BackgroundColorHex;
 }
 .note-viewer {
@@ -35,7 +35,7 @@ body {
 </style>
 
 @* Main menu *@
-<MudAppBar Fixed="true" Class="" Dense="true" WrapContent="false">
+<MudAppBar Class="flex-none" Fixed="false" Dense="true" WrapContent="false">
 	<MudIconButton @ref="_backButton" Href="/back" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" Edge="Edge.Start" />
 
 	<MudSpacer />
@@ -169,14 +169,30 @@ body {
 </MudAppBar>
 
 @* body *@
-<div id="content" class="@ViewModel.LightOrDarkClass()">
+<div id="content" class="@ViewModel.LightOrDarkClass() flex-1 px-1 py-2">
 	@if (ViewModel.IsLocked)
 	{
 		<span class="note-locked"><svg width='128' height='128' viewBox='0 0 24 24'><use xlink:href="#svg-lock-outline" /></svg></span>
 	}
 	else
 	{
-		<div @ref="_editorContainer" id="myeditor" v-pre class="note-viewer detail-view @ViewModel.CssClassNoteType"></div>
+		<div @ref="_editorContainer" id="myeditor" class="note-viewer detail-view @ViewModel.CssClassNoteType"></div>
+	}
+</div>
+
+<div id="tag-container" class="flex-none pa-2 @ViewModel.LightOrDarkClass()" style="max-height:130px; overflow-y:visible; overflow-x:hidden">
+	<MudAutocomplete T="string" @ref="_tagAutocomplete" ValueChanged="NewTagChanged" SearchFunc="@GetNewTagSuggestions"
+		Class="ml-1" Style="float:right; width:50%; max-width:240px"
+		Margin="Margin.Dense" Dense="true" Variant="Variant.Outlined"
+		AdornmentIcon="@IconService.GetSvgLink(IconNames.TagOutline)"
+		AnchorOrigin="Origin.TopCenter" TransformOrigin="Origin.BottomCenter"
+		ResetValueOnEmptyText="true"
+		Label="@LanguageService["tag_add"]" />
+
+	@foreach (var tag in ViewModel.Tags)
+	{
+		<MudChip Text="@tag" OnClose="@((chip) => ViewModel.DeleteTagCommand.Execute(chip.Text))"
+			Variant="Variant.Filled" Size="Size.Small" Color="Color.Primary" Label="true" />
 	}
 </div>
 
@@ -246,6 +262,7 @@ body {
 		IconNames.Magnify,
 		IconNames.Close,
 		IconNames.Delete,
+		IconNames.TagOutline,
 	});
 </div>
 
@@ -253,6 +270,7 @@ body {
 	private bool _isDisposed;
 	private MudMenu _overflowMenu;
 	private MudBaseButton _backButton;
+	private MudAutocomplete<string> _tagAutocomplete;
 	private ElementReference _editorContainer;
 	private IKeyboardShortcuts _keyboardShortcuts;
 	private IJSObjectReference _jsModule;
@@ -286,7 +304,18 @@ body {
 		Guid noteId = new Guid(NoteId);
 		NoteModel note = noteRepository.Notes.FindById(noteId);
 		ICryptor cryptor = new Cryptor(NoteModel.CryptorPackageName, CryptoRandomSource);
-		ViewModel = new NoteViewModel(note, null, LanguageService, ThemeService, SettingsService, FeedbackService, EnvironmentService, NativeBrowserService, cryptor, noteRepository.Safes);
+		ViewModel = new NoteViewModel(
+			note,
+			null,
+			LanguageService,
+			ThemeService,
+			SettingsService,
+			FeedbackService,
+			EnvironmentService,
+			NativeBrowserService,
+			cryptor,
+			noteRepository.Safes,
+			noteRepository.CollectActiveTags());
 
 		// Redirect to open safe if locked
 		if (ViewModel.IsLocked)
@@ -480,6 +509,31 @@ body {
 			return "https://" + linkTitle;
 		else
 			return "https://";
+	}
+
+	private async Task NewTagChanged(string value)
+	{
+		if (!string.IsNullOrWhiteSpace(value))
+		{
+			ViewModel.AddTagCommand.Execute(value);
+			await _tagAutocomplete.ResetAsync();
+		}
+	}
+
+	private Task<IEnumerable<string>> GetNewTagSuggestions(string value)
+	{
+		// If text is null or empty, show complete list
+		if (string.IsNullOrWhiteSpace(value))
+			return Task.FromResult(ViewModel.TagSuggestions);
+
+		// Search suggestions for matches
+		var result = ViewModel.TagSuggestions.Where(t => t.Contains(value, StringComparison.InvariantCultureIgnoreCase)).ToList();
+
+		// Add current user input as tag, so it can be selected as well
+		if (!result.Contains(value, StringComparer.InvariantCultureIgnoreCase))
+			result.Insert(0, value);
+
+		return Task.FromResult(result.AsEnumerable());
 	}
 
 	/// <summary>

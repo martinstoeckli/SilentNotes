@@ -22,7 +22,7 @@
 @implements IDisposable
 
 <style type="text/css">
-	body {
+	#content {
 		@(ThemeService.CssNoteRepositoryBackground)
 		background-attachment: fixed;
 	}
@@ -42,7 +42,7 @@
 </style>
 
 @* Main menu *@
-<MudAppBar Fixed="true" Dense="true" WrapContent="false">
+<MudAppBar Class="flex-none" Fixed="false" Dense="true" WrapContent="false">
 	<MudSpacer />
 
 	@* Tags *@
@@ -96,7 +96,7 @@
 </MudAppBar>
 
 @* Sidebar with tags *@
-<MudDrawer @ref="_sideDrawer" @bind-Open="@ViewModel.IsDrawerOpen" Elevation="1" Variant="@DrawerVariant.Responsive" Breakpoint="Breakpoint.Md" ClipMode="DrawerClipMode.Docked">
+<MudDrawer @ref="_sideDrawer" @bind-Open="@ViewModel.IsDrawerOpen" Elevation="1" Variant="@DrawerVariant.Responsive" Breakpoint="Breakpoint.Md" ClipMode="DrawerClipMode.Docked" Style="top:0; height:100%">
 	<MudDrawerHeader Class="d-inline-flex justify-space-between align-start">
 		<h2>Filter by tag</h2>
 		<MudIconButton OnClick="() => ViewModel.IsDrawerOpen = false" Icon="@IconService.GetSvgLink(IconNames.Close)" Size="Size.Small" />
@@ -119,7 +119,7 @@
 </MudDrawer>
 
 @* body *@
-<div id="content" class="px-1 pt-0 pb-2">
+<div id="content" class="flex-1 px-1 py-2">
 	<ul id="note-repository" class="note-list flex-column flex-sm-row">
 		@foreach (var note in ViewModel.FilteredNotes)
 		{
