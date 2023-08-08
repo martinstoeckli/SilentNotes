@@ -22,7 +22,7 @@
 </style>
 
 @* Main menu *@
-<MudAppBar Fixed="true" Dense="true" WrapContent="false">
+<MudAppBar Class="flex-none" Fixed="false" Dense="true" WrapContent="false">
 	<MudIconButton @ref="_backButton" Href="/back" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" Edge="Edge.Start" />
 
 	<MudSpacer/>
@@ -44,49 +44,51 @@
 <MudIcon Class="background-icon" Icon="@IconService[IconNames.SafeSquareOutline]" Style="@($"right:-110px; top:-160px;")" />
 
 @* body *@
-<MudContainer id="content" Class="mud-container-left mud-container-p" MaxWidth="MaxWidth.Medium">
-	@if (ViewModel.SafeExists)
-	{
-		<h1 class="h-colored">@LanguageService["safe_open"]</h1>
-		<p class="my-4">@LanguageService["safe_open_existing"]</p>
-	}
-	else
-	{
-		<h1 class="h-colored">@LanguageService["safe_new"]</h1>
-		<p class="my-4">@LanguageService["safe_open_new"]</p>
-	}
+<div id="content" class="flex-1 px-1 py-3">
+	<MudContainer Class="ms-0" MaxWidth="MaxWidth.Medium">
+		@if (ViewModel.SafeExists)
+		{
+			<h1 class="h-colored">@LanguageService["safe_open"]</h1>
+			<p class="my-4">@LanguageService["safe_open_existing"]</p>
+		}
+		else
+		{
+			<h1 class="h-colored">@LanguageService["safe_new"]</h1>
+			<p class="my-4">@LanguageService["safe_open_new"]</p>
+		}
 
-	<MudForm>
-		<MudTextFieldEx T="SecureString" @bind-Value="ViewModel.Password"
-			AutoFocus="true"
-			Label="@LanguageService["cloud_password"]"
-			Converter="@_secureStringConverter"
-			Variant="Variant.Outlined" InputType="@PasswordInputType"
-			Error="@ViewModel.HasPasswordError"
-			ErrorText="@ViewModel.PasswordErrorText"
-			Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="@(() => IsPasswordVisible = !IsPasswordVisible)" />
+		<MudForm>
+			<MudTextFieldEx T="SecureString" @bind-Value="ViewModel.Password"
+				AutoFocus="true"
+				Label="@LanguageService["cloud_password"]"
+				Converter="@_secureStringConverter"
+				Variant="Variant.Outlined" InputType="@PasswordInputType"
+				Error="@ViewModel.HasPasswordError"
+				ErrorText="@ViewModel.PasswordErrorText"
+				Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="@(() => IsPasswordVisible = !IsPasswordVisible)" />
+
+			@if (!ViewModel.SafeExists)
+			{
+				<MudTextFieldEx @bind-Value="ViewModel.PasswordConfirmation"
+					Label="@LanguageService["safe_confirm_password"]"
+					Converter="@_secureStringConverter"
+					Variant="Variant.Outlined" InputType="@PasswordInputType"
+					Error="@ViewModel.HasPasswordConfirmationError"
+					ErrorText="@LanguageService["password_confirmation_error"]" />
+			}
+		</MudForm>
+
+		<MudStack Class="my-4" Row="true" Justify="Justify.FlexEnd" Spacing="1">
+			<MudButton Href="/back" Color="Color.Default" Variant="Variant.Filled">@LanguageService["cancel"]</MudButton>
+			<MudButton @ref="_okButton" OnClick="@(() => ViewModel.OkCommand.Execute(null))" Color="Color.Primary" Variant="Variant.Filled">@LanguageService["ok"]</MudButton>
+		</MudStack>
 
 		@if (!ViewModel.SafeExists)
 		{
-			<MudTextFieldEx @bind-Value="ViewModel.PasswordConfirmation"
-				Label="@LanguageService["safe_confirm_password"]"
-				Converter="@_secureStringConverter"
-				Variant="Variant.Outlined" InputType="@PasswordInputType"
-				Error="@ViewModel.HasPasswordConfirmationError"
-				ErrorText="@LanguageService["password_confirmation_error"]" />
+			<MudAlert Class="d-inline-flex my-4" Severity="Severity.Info" Elevation="1">@LanguageService["safe_password_requirement"]</MudAlert>
 		}
-	</MudForm>
-
-	<MudStack Class="my-4" Row="true" Justify="Justify.FlexEnd" Spacing="1">
-		<MudButton Href="/back" Color="Color.Default" Variant="Variant.Filled">@LanguageService["cancel"]</MudButton>
-		<MudButton @ref="_okButton" OnClick="@(() => ViewModel.OkCommand.Execute(null))" Color="Color.Primary" Variant="Variant.Filled">@LanguageService["ok"]</MudButton>
-	</MudStack>
-
-	@if (!ViewModel.SafeExists)
-	{
-		<MudAlert Class="d-inline-flex my-4" Severity="Severity.Info" Elevation="1">@LanguageService["safe_password_requirement"]</MudAlert>
-	}
-</MudContainer>
+	</MudContainer>
+</div>
 
 @* Declare icons which can be reused multiple times, to reduce page size *@
 <div hidden>

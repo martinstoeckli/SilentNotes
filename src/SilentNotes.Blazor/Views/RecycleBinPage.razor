@@ -59,7 +59,7 @@
 </style>
 
 @* Main menu *@
-<MudAppBar Fixed="true" Dense="true" WrapContent="false">
+<MudAppBar Class="flex-none" Fixed="false" Dense="true" WrapContent="false">
 	<MudIconButton @ref="_backButton" Href="/back" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" Edge="Edge.Start" />
 
 	<MudSpacer />
@@ -68,7 +68,7 @@
 </MudAppBar>
 
 @* body *@
-<div id="content" class="px-1 pt-0 pb-2">
+<div id="content" class="flex-1 px-1 py-2">
 	<ul id="recycled-notes" class="note-list flex-column flex-sm-row">
 		@foreach (var note in ViewModel.RecycledNotes)
 		{

@@ -21,7 +21,7 @@
 </style>
 
 @* Main menu *@
-<MudAppBar Fixed="true" Class="" Dense="true" WrapContent="false">
+<MudAppBar Class="flex-none" Fixed="false" Dense="true" WrapContent="false">
 	<MudIconButton @ref="_backButton" Href="/back" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" Edge="Edge.Start" />
 
 	<MudSpacer />
@@ -36,10 +36,9 @@
 </MudAppBar>
 
 @* body *@
-<MudContainer id="content" Class="mud-container-left mud-container-p" MaxWidth="MaxWidth.Small">
+<div id="content" class=" flex-1 px-1 py-2">
 	<h2 class="h-colored">Checklist</h2>
-
-</MudContainer>
+</div>
 
 @code {
 	private bool _isDisposed;

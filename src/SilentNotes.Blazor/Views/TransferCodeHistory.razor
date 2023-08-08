@@ -24,7 +24,7 @@
 </style>
 
 @* Main menu *@
-<MudAppBar Fixed="true" Dense="true" WrapContent="false">
+<MudAppBar Class="flex-none" Fixed="false" Dense="true" WrapContent="false">
 	<MudIconButton @ref="_backButton" Href="/back" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" Edge="Edge.Start" />
 </MudAppBar>
 
@@ -32,40 +32,42 @@
 <MudIcon Class="background-icon" Icon="@IconService[IconNames.Key]" Style="@($"right:0; top:-50px;")" />
 
 @* body *@
-<MudContainer id="content" Class="mud-container-left mud-container-p" MaxWidth="MaxWidth.Medium">
-	<h1 class="h-colored">@LanguageService["transfer_code"]</h1>
+<div id="content" class="flex-1 px-1 py-3">
+	<MudContainer Class="ms-0" MaxWidth="MaxWidth.Medium">
+		<h1 class="h-colored">@LanguageService["transfer_code"]</h1>
 
-	@if (ViewModel.TransferCodeFmt == "")
-	{
-		<MudAlert Class="d-inline-flex my-4" Severity="Severity.Info" Elevation="1">@LanguageService["transfer_not_existing"]</MudAlert>
-	}
-	else
-	{
-		<p class="my-4">@LanguageService["transfer_code_usage"]</p>
-
-		<div Class="d-flex justify-center">
-			<MudPaper Class="code px-4 py-2 rounded" Elevation="2">
-				<MudElement>@ViewModel.TransferCodeFmt</MudElement><MudIconButton Class="ml-3" OnClick="@(() => ViewModel.CopyTransferCodeCommand.Execute(null))" Icon="@Icons.Material.Filled.ContentCopy" Color="Color.Inherit" Title="@LanguageService["copy"]"/>
-			</MudPaper>
-		</div>
-
-		<p class="my-4">@LanguageService["transfer_code_writedown"]</p>
-
-		@if (ViewModel.IsTransfercodeHistoryVisible)
+		@if (ViewModel.TransferCodeFmt == "")
 		{
-			<MudExpansionPanels Class="mt-6">
-				<MudExpansionPanel Text="@LanguageService["transfer_code_show_history"]">
-					<MudList >
-						@foreach (var historicalTransferCode in ViewModel.TransferCodeHistory)
-						{
-							<MudListItem Text="@historicalTransferCode" />
-						}
-					</MudList>
-				</MudExpansionPanel>
-			</MudExpansionPanels>
+			<MudAlert Class="d-inline-flex my-4" Severity="Severity.Info" Elevation="1">@LanguageService["transfer_not_existing"]</MudAlert>
 		}
-	}
-</MudContainer>
+		else
+		{
+			<p class="my-4">@LanguageService["transfer_code_usage"]</p>
+
+			<div Class="d-flex justify-center">
+				<MudPaper Class="code px-4 py-2 rounded" Elevation="2">
+					<MudElement>@ViewModel.TransferCodeFmt</MudElement><MudIconButton Class="ml-3" OnClick="@(() => ViewModel.CopyTransferCodeCommand.Execute(null))" Icon="@Icons.Material.Filled.ContentCopy" Color="Color.Inherit" Title="@LanguageService["copy"]"/>
+				</MudPaper>
+			</div>
+
+			<p class="my-4">@LanguageService["transfer_code_writedown"]</p>
+
+			@if (ViewModel.IsTransfercodeHistoryVisible)
+			{
+				<MudExpansionPanels Class="mt-6">
+					<MudExpansionPanel Text="@LanguageService["transfer_code_show_history"]">
+						<MudList >
+							@foreach (var historicalTransferCode in ViewModel.TransferCodeHistory)
+							{
+								<MudListItem Text="@historicalTransferCode" />
+							}
+						</MudList>
+					</MudExpansionPanel>
+				</MudExpansionPanels>
+			}
+		}
+	</MudContainer>
+</div>
 
 @code {
 	private bool _isDisposed;
