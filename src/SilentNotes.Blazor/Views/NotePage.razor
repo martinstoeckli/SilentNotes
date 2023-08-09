@@ -27,6 +27,13 @@
 
 <style type="text/css">
 	#content { background-color: @ViewModel.BackgroundColorHex; }
+	#tag-container {
+		max-height:130px;
+		min-height:60px;
+		overflow-y:visible;
+		overflow-x:hidden;
+		background-color: @ViewModel.BackgroundColorHex;
+	}
 	.note-viewer {
 		font-size: @(ViewModel.GetNoteBaseFontSize(SettingsService, false))px !important;
 	}
@@ -178,18 +185,20 @@
 	}
 </div>
 
-<div id="tag-container" class="flex-none pa-2" style="max-height:130px; overflow-y:visible; overflow-x:hidden; background-color: @ViewModel.BackgroundColorVeilHex;">
-	<MudAutocomplete T="string" @ref="_tagAutocomplete" ValueChanged="NewTagChanged" SearchFunc="GetNewTagSuggestions"
-		Class="ml-1" Style="float:right; width:50%; max-width:240px"
-		Margin="Margin.Dense" Dense="true" Variant="Variant.Outlined"
-		AdornmentIcon="@IconService.GetSvgLink(IconNames.TagOutline)"
-		AnchorOrigin="Origin.TopCenter" TransformOrigin="Origin.BottomCenter"
-		Label="@LanguageService["tag_add"]" />
+<div id="tag-container" class="flex-none pa-2 mud-elevation-5">
+	<MudPaper Class="ml-1 pa-0" Style="float:right; width:50%; max-width:240px" Elevation="0">
+		<MudAutocomplete T="string" @ref="_tagAutocomplete" ValueChanged="NewTagChanged" SearchFunc="GetNewTagSuggestions"
+			Class="ma-0" Margin="Margin.Dense" Dense="true" Variant="Variant.Outlined"
+			ResetValueOnEmptyText="true"
+			AdornmentIcon="@IconService.GetSvgLink(IconNames.TagOutline)"
+			AnchorOrigin="Origin.TopCenter" TransformOrigin="Origin.BottomCenter"
+			Label="@LanguageService["tag_add"]" />
+	</MudPaper>
 
 	@foreach (var tag in ViewModel.Tags)
 	{
 		<MudChip Text="@tag" OnClose="@((chip) => ViewModel.DeleteTagCommand.Execute(chip.Text))"
-			Variant="Variant.Filled" Size="Size.Small" Color="Color.Primary" Label="true" />
+			Variant="Variant.Filled" Size="Size.Medium" Color="Color.Primary" Label="true" />
 	}
 </div>
 

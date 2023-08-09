@@ -1,12 +1,14 @@
-﻿/* light theme */
+﻿:root {
+}
+
+/* light and dark note */
+
+/* light and dark theme */
 
 .theme-light #recycled-notes .note-card { background-color: #f5f5f5; }
-
-/* dark theme */
-
 .theme-dark  #recycled-notes .note-card { background-color: #696969; }
 
-/* independend of theme */
+/* independend of light and dark */
 
 .h-colored { color: var(--mud-palette-primary-darken); }
 
