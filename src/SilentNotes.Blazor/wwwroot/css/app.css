@@ -1,6 +1,4 @@
 ﻿:root {
-	--font-color-light-background: black;
-	--font-color-dark-background: white;
 	--note-handle-mx: 10px;
 	--note-handle-my: 8px;
 	--css-grid-topic-icon-width: 30px;
@@ -22,7 +20,6 @@ h1:focus { outline: none; }
 	width: 360px;
 	height: 360px;
 	z-index: -1;
-	color: var(--mud-palette-background-grey)
 }
 
 .secondary-app-bar {
@@ -30,8 +27,6 @@ h1:focus { outline: none; }
 	left: auto !important; /* overwrite calculated left, not adapting to browser width */
 	margin: 0;
 	padding: 48px 24px 0 4px;
-	background-color: var(--mud-palette-tertiary);
-	color: var(--mud-palette-tertiary-text);
 }
 
 .fab-position {
@@ -79,14 +74,6 @@ h1:focus { outline: none; }
 @media screen and (min-device-width: 540px) {
 }
 
-/* The note light/dark is independend of the theme */
-.note-light {
-	color: var(--font-color-light-background);
-}
-.note-dark {
-	color: var(--font-color-dark-background);
-}
-
 .note-card {
 	position: relative;
 	width: 100%;
@@ -111,8 +98,6 @@ h1:focus { outline: none; }
 	height: 36px;
 	fill: rgba(160, 160, 160, 0.4);
 }
-.note-light .note-locked svg { fill: rgba(172, 172, 172, 0.5); }
-.note-dark .note-locked svg { fill: rgba(204, 204, 204, 0.4); }
 
 .pin {
 	display: inline-flex;
@@ -134,16 +119,6 @@ h1:focus { outline: none; }
 	height: 26px;
 	border-radius: 13px;
 	cursor: pointer;
-}
-.note-light .note-handle { background-color: rgba(172, 172, 172, 0.5); fill: #707070 }
-.note-dark .note-handle { background-color: rgba(204, 204, 204, 0.7); fill: #606060; }
-.note-handle.greenish { background-color: rgba(145, 238, 145, 0.9); fill: #2aac2a; }
-.note-handle.reddish { background-color: rgba(238, 145, 145, 0.9); fill: #de2121; }
-.note-handle.bluish-highlighted
-{
-	background-color: rgba(145, 207, 238, 0.9);
-	fill: #2a81ac; 
-	box-shadow: 0 0 6px 6px rgba(145, 207, 238, 0.4);
 }
 
 .sortable-handle {
@@ -243,23 +218,6 @@ h1:focus { outline: none; }
 .note-viewer a { text-decoration: none !important; }
 .note-viewer a:hover { text-decoration: underline !important; }
 
-.note-light .note-viewer h1 { color: rgba(70, 130, 180, 1) !important; }
-.note-light .note-viewer h2 { color: rgba(70, 130, 180, 0.85) !important; }
-.note-light .note-viewer h3 { color: rgba(70, 130, 180, 0.7) !important; }
-.note-light .note-viewer ol > li::before { color: steelblue; }
-.note-light .note-viewer ul > li::before { color: steelblue !important; }
-.note-light .note-viewer pre { background-color: rgba(128, 128, 128, 0.2) !important; color: black !important; }
-.note-light .note-viewer a { color: rgba(70, 130, 180, 0.80) !important; }
-.note-light .note-viewer a:hover { color: rgba(70, 130, 180, 0.80) !important; }
-.note-dark .note-viewer h1 { color: rgba(173, 216, 230, 1) !important; }
-.note-dark .note-viewer h2 { color: rgba(173, 216, 230, 0.94) !important; }
-.note-dark .note-viewer h3 { color: rgba(173, 216, 230, 0.88) !important; }
-.note-dark .note-viewer ol > li::before { color: lightblue; }
-.note-dark .note-viewer ul > li::before { color: lightblue !important; }
-.note-dark .note-viewer pre { background-color: rgba(211, 211, 211, 0.3) !important; color: white !important; }
-.note-dark .note-viewer a { color: rgba(173, 216, 230, 0.90) !important; }
-.note-dark .note-viewer a:hover { color: rgba(173, 216, 230, 0.90) !important; }
-
 /* Checklist in overview. The svg content: url() is set in view with the IconService. */
 
 .note-viewer.over-view.checklist p {
@@ -283,23 +241,42 @@ h1:focus { outline: none; }
 	opacity: .2;
 }
 
-.note-light .note-viewer.over-view.checklist p,
-.note-light .detail-view.checklist .ProseMirror p { background-color: rgba(128, 128, 128, 0.2); }
+/* Checklist in editor. The content: url() is set in view to avoid external resource and to configure the color. */
 
-.note-light .note-viewer.over-view.checklist p.done,
-.note-light .detail-view.checklist .ProseMirror p.done { background: #ccf0a8; }
-
-.note-light .note-viewer.over-view.checklist p.disabled,
-.note-light .detail-view.checklist .ProseMirror p.disabled { color: rgba(0, 0, 0, 0.5); text-decoration-color: rgba(0, 0, 0, 0.25); }
-
-.note-dark .note-viewer.over-view.checklist p,
-.note-dark .detail-view.checklist .ProseMirror p { background-color: rgba(211, 211, 211, 0.3); }
-
-.note-dark .note-viewer.over-view.checklist p.done,
-.note-dark .detail-view.checklist .ProseMirror p.done { background: #467c46; }
-
-.note-dark .note-viewer.over-view.checklist p.disabled,
-.note-dark .detail-view.checklist .ProseMirror p.disabled { color: rgba(255, 255, 255, 0.5); text-decoration-color: rgba(255, 255, 255, 0.25); }
+.note-viewer.detail-view.checklist .ProseMirror p {
+	position: relative;
+	padding: 0.5em 3em 0.5em 3em;
+	border-radius: 4px;
+	pointer-events: none;
+}
+.note-viewer.detail-view.checklist .ProseMirror p::before {
+	display: inline-block;
+	position: absolute;
+	left: 0.8em;
+	padding-right: 0.25em;
+	vertical-align: middle;
+	pointer-events: all;
+	cursor: pointer;
+}
+.note-viewer.detail-view.checklist .ProseMirror p::after {
+	display: inline-block;
+	position: absolute;
+	bottom: 0;
+	right: 0.8em;
+	vertical-align: middle;
+	pointer-events: all;
+	cursor: pointer;
+	opacity: .65;
+}
+.note-viewer.detail-view.dark.checklist .ProseMirror p::after {
+	opacity: .7;
+}
+.note-viewer.detail-view.checklist .ProseMirror p.disabled {
+	text-decoration: line-through;
+}
+.note-viewer.detail-view.checklist .ProseMirror p.disabled::before {
+	opacity: .2;
+}
 
 /* Tweaking 3rd party elements */
 
@@ -309,12 +286,6 @@ div.ProseMirror {
 }
 div.ProseMirror:focus {
 	outline: none;
-}
-div.ProseMirror .search-result {
-	background: rgba(32, 144, 234, 0.5);
-}
-div.ProseMirror .search-result-selected {
-	background: rgba(32, 144, 234, 0.9);
 }
 
 .mud-button { text-transform: none; }

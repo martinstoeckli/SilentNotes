@@ -11,9 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
-//using SilentNotes.Controllers;
 using SilentNotes.Crypto;
-//using SilentNotes.HtmlView;
 using SilentNotes.Models;
 using SilentNotes.Services;
 //using SilentNotes.StoryBoards.PullPushStory;
@@ -36,7 +34,7 @@ namespace SilentNotes.ViewModels
         private readonly ICryptor _cryptor;
         private readonly SafeListModel _safes;
         private readonly IList<string> _allDistinctAndSortedTags;
-        //private readonly bool _originalWasPinned;
+        private readonly bool _originalWasPinned;
         private SearchableHtmlConverter _searchableTextConverter;
         protected string _unlockedContent;
         private string _searchableContent;
@@ -82,6 +80,7 @@ namespace SilentNotes.ViewModels
             //    _environmentService.KeepScreenOn.StateChanged += KeepScreenOnChanged;
 
             MarkSearchableContentAsDirty();
+            _originalWasPinned = IsPinned;
             _unlockedContent = IsInSafe ? UnlockIfSafeOpen(Model.HtmlContent) : Model.HtmlContent;
         }
 

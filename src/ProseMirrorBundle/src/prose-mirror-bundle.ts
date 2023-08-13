@@ -265,6 +265,8 @@ export function selectWordAtCurrentPosition(editor: Editor): string {
 
   let textToPos = selection.$to.parentOffset;
   let toRight = 0;
+  if (textFromPos != textToPos)
+    toRight--; // for the case that the selection includes a trailing whitespace (after a double click)
   while ((textToPos + toRight < text.length) && !isWhitespace(text[textToPos + toRight])) {
       toRight++;
   }

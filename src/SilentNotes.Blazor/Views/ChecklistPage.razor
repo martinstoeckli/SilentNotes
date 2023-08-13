@@ -1,23 +1,56 @@
 ﻿@page "/checklist/{NoteId}"
 @using System.ComponentModel
 @using MudBlazor.Utilities;
+@using SilentNotes.Crypto;
 @using SilentNotes.Models
 @using SilentNotes.ViewModels
 @using SilentNotes.Services
+@using SilentNotes.Workers
+@using System.Runtime.InteropServices.JavaScript;
 
+@inject IJSRuntime JSRuntime
 @inject ILanguageService LanguageService
 @inject ISvgIconService IconService
+@inject INavigationService NavigationService
 @inject IKeyboardShortcutService KeyboardShortcutService
 @inject ISettingsService SettingsService
 @inject IEnvironmentService EnvironmentService
 @inject IThemeService ThemeService
 @inject IFeedbackService FeedbackService
+@inject INativeBrowserService NativeBrowserService
 @inject IFilePickerService FilePickerService
+@inject IRepositoryStorageService RepositoryStorageService
 @inject ICloudStorageClientFactory CloudStorageClientFactory
+@inject ICryptoRandomService CryptoRandomSource
 
-@implements IDisposable
+@implements IAsyncDisposable
 
 <style type="text/css">
+	#content {
+		background-color: @ViewModel.BackgroundColorHex;
+	}
+
+	#tag-container {
+		max-height: 130px;
+		min-height: 60px;
+		overflow-y: visible;
+		overflow-x: hidden;
+		background-color: @ViewModel.BackgroundColorHex;
+	}
+
+	.note-viewer {
+		font-size: @(ViewModel.GetNoteBaseFontSize(SettingsService, false))px !important;
+	}
+
+div .detail-view.checklist .ProseMirror p::before { content: @(IconService.LoadIconAsCssUrl(IconNames.CheckboxBlankOutline, new[] { new KeyValuePair<string, string>("fill", "#000000") })) }
+div .detail-view.checklist .ProseMirror p.done::before { content: @(IconService.LoadIconAsCssUrl(IconNames.CheckboxOutline, new[] { new KeyValuePair<string, string>("fill", "#000000") })) }
+div .detail-view.checklist .ProseMirror p.disabled::before { content: @(IconService.LoadIconAsCssUrl(IconNames.CheckboxBlankOutline, new[] { new KeyValuePair<string, string>("fill", "#000000") })) }
+div .detail-view.checklist .ProseMirror p::after { content: @(IconService.LoadIconAsCssUrl(IconNames.Delete, new[] { new KeyValuePair<string, string>("fill", "#000000") })) }
+div.dark .detail-view.checklist .ProseMirror p::before { content: @(IconService.LoadIconAsCssUrl(IconNames.CheckboxBlankOutline, new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") })) }
+div.dark .detail-view.checklist .ProseMirror p.done::before { content: @(IconService.LoadIconAsCssUrl(IconNames.CheckboxOutline, new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") })) }
+div.dark .detail-view.checklist .ProseMirror p.disabled::before { content: @(IconService.LoadIconAsCssUrl(IconNames.CheckboxBlankOutline, new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") })) }
+div.dark .detail-view.checklist .ProseMirror p::after { content: @(IconService.LoadIconAsCssUrl(IconNames.Delete, new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") })) }
+
 </style>
 
 @* Main menu *@
@@ -26,49 +59,446 @@
 
 	<MudSpacer />
 
+	<MudIconButton OnClick="@(() => MoveChecklistItem(true, false))"
+		Icon="@IconService.GetSvgLink(IconNames.ArrowCollapseUp)" Color="Color.Inherit"
+		Title="@LanguageService["checklist_move_to_top"]" Disabled="ViewModel.ShoppingModeActive" Edge="Edge.End"/>
+
+	<MudIconButton OnClick="@(() => MoveChecklistItem(true, true))"
+		Icon="@IconService.GetSvgLink(IconNames.ArrowUp)" Color="Color.Inherit"
+		Title="@LanguageService["checklist_move_up"]" Disabled="ViewModel.ShoppingModeActive" Edge="Edge.End"/>
+
+	<MudIconButton OnClick="@(() => MoveChecklistItem(false, true))"
+		Icon="@IconService.GetSvgLink(IconNames.ArrowDown)" Color="Color.Inherit"
+		Title="@LanguageService["checklist_move_down"]" Disabled="ViewModel.ShoppingModeActive" Edge="Edge.End" />
+
+	<MudIconButton OnClick="@(() => MoveChecklistItem(false, false))"
+		Icon="@IconService.GetSvgLink(IconNames.ArrowCollapseDown)" Color="Color.Inherit"
+		Title="@LanguageService["checklist_move_to_bottom"]" Disabled="ViewModel.ShoppingModeActive" Edge="Edge.End" />
+
+	<MudIconButton OnClick="@(() => ToggleShoppingMode())"
+		Icon="@IconService.GetSvgLink(IconNames.KeyboardOffOutline)" Color="Color.Inherit"
+		Class="@Css.BuildClass(new CssClassIf(CssClasses.ButtonToggled, ViewModel.ShoppingModeActive))"
+		Title="@LanguageService["note_shopping_mode"]" Edge="Edge.End" />
+
+	<MudIconButton OnClick="@(() => SearchToolbarOpen = !SearchToolbarOpen)"
+		Icon="@IconService.GetSvgLink(IconNames.Magnify)" Color="Color.Inherit"
+		Class="@Css.BuildClass(new CssClassIf(CssClasses.ButtonToggled, _searchToolbarOpen))"
+		Title="@LanguageService["search"]" Edge="Edge.End" />
+
+	@* Overflow menu *@
 	<MudMenu @ref="_overflowMenu" Dense="true" AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight">
 		<ActivatorContent>
 			<MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" />
 		</ActivatorContent>
 		<ChildContent>
+			<MudMenuItem OnClick="@(() => _jsModule.InvokeVoidAsync("sortPendingToTop"))"
+				Icon="@IconService.GetSvgLink(IconNames.SortBoolDescendingVariant)"
+				Disabled="ViewModel.ShoppingModeActive">@LanguageService["checklist_move_pending_to_top"]</MudMenuItem>
+
+			<MudMenuItem OnClick="@(() => _jsModule.InvokeVoidAsync("sortAlphabetical"))"
+				Icon="@IconService.GetSvgLink(IconNames.SortAlphabeticalAscending)"
+				Disabled="ViewModel.ShoppingModeActive">@LanguageService["checklist_sort_alphabetical"]</MudMenuItem>
+
+			<MudDivider />
+
+			<MudMenuItem OnClick="@(() => _jsModule.InvokeVoidAsync("setForAllToTodo"))"
+				Icon="@IconService.GetSvgLink(IconNames.CheckboxMultipleBlankOutline)"
+				Disabled="ViewModel.ShoppingModeActive">@LanguageService["checklist_uncheck_all"]</MudMenuItem>
+
+			<MudMenuItem OnClick="@(() => _jsModule.InvokeVoidAsync("setForAllToDone"))"
+				Icon="@IconService.GetSvgLink(IconNames.CheckboxMultipleOutline)"
+				Disabled="ViewModel.ShoppingModeActive">@LanguageService["checklist_check_all"]</MudMenuItem>
+
+			<MudMenuItem OnClick="@(() => _jsModule.InvokeVoidAsync("setForAllToDisabled"))"
+				Icon="@IconService.GetSvgLink(IconNames.CheckboxBlankOffOutline)"
+				Disabled="ViewModel.ShoppingModeActive">@LanguageService["checklist_disable_all"]</MudMenuItem>
+
+			<MudDivider />
+
+			<MudMenuItem OnClick="@(() => ToggleFormatState("heading", 1))"
+				Icon="@IconService.GetSvgLink(IconNames.FormatHeader1)"
+				Class="@Css.BuildClass(new CssClassIf(CssClasses.MenuToggled, _formatStates.Heading1))"
+				Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_header1"]</MudMenuItem>
+
+			<MudMenuItem OnClick="@(() => ToggleFormatState("heading", 2))"
+				Icon="@IconService.GetSvgLink(IconNames.FormatHeader2)"
+				Class="@Css.BuildClass(new CssClassIf(CssClasses.MenuToggled, _formatStates.Heading2))"
+				Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_header2"]</MudMenuItem>
+
+			<MudDivider />
+
+			<MudMenuItem OnClick="@(() => _jsModule.InvokeVoidAsync("undo"))"
+				Icon="@IconService.GetSvgLink(IconNames.Undo)"
+				Disabled="ViewModel.ShoppingModeActive">@LanguageService["undo"]</MudMenuItem>
+
+			<MudMenuItem OnClick="@(() => _jsModule.InvokeVoidAsync("redo"))"
+				Icon="@IconService.GetSvgLink(IconNames.Redo)"
+				Disabled="ViewModel.ShoppingModeActive">@LanguageService["redo"]</MudMenuItem>
+
+			<MudMenuItem OnClick="@(() => _colorPaletteOpen = true)"
+				Icon="@Icons.Material.Filled.ColorLens"
+				Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_colors"]</MudMenuItem>
+
+			@if (ViewModel.CanKeepScreenOn)
+			{
+				<MudMenuItem OnClick="@(() => ViewModel.KeepScreenOnCommand.Execute(null))"
+					Icon="@Icons.Material.Outlined.Timer"
+					Class="@Css.BuildClass(new CssClassIf(CssClasses.MenuToggled, ViewModel.KeepScreenOnActive))">@ViewModel.KeepScreenOnTitle</MudMenuItem>
+			}
+
+			<MudMenuItem OnClick="@(() => ViewModel.TogglePinnedCommand.Execute(null))"
+				Icon="@IconService.GetSvgLink(IconNames.Pin)"
+				Class="@Css.BuildClass(new CssClassIf(CssClasses.MenuToggled, ViewModel.IsPinned))"
+				Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_pin"]</MudMenuItem>
+
+			<MudMenuItem OnClick="@(() => ViewModel.ShowInfoCommand.Execute(null))"
+				Icon="@Icons.Material.Filled.Info"
+				Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_show_info"]</MudMenuItem>
 		</ChildContent>
 	</MudMenu>
 </MudAppBar>
 
 @* body *@
-<div id="content" class=" flex-1 px-1 py-2">
-	<h2 class="h-colored">Checklist</h2>
+<div id="content" class="@ViewModel.LightOrDarkClass() flex-1 px-1 py-2">
+	@if (ViewModel.IsLocked)
+	{
+		<span class="note-locked"><svg width='128' height='128' viewBox='0 0 24 24'><use xlink:href="#svg-lock-outline" /></svg></span>
+	}
+	else
+	{
+		<div @ref="_editorContainer" id="myeditor" class="note-viewer detail-view @ViewModel.CssClassNoteType"></div>
+	}
 </div>
 
+<div id="tag-container" class="flex-none pa-2 mud-elevation-5">
+	<MudPaper Class="ml-1 pa-0" Style="float:right; width:50%; max-width:240px" Elevation="0">
+		<MudAutocomplete T="string" @ref="_tagAutocomplete" ValueChanged="NewTagChanged" SearchFunc="GetNewTagSuggestions"
+						 Class="ma-0" Margin="Margin.Dense" Dense="true" Variant="Variant.Outlined"
+						 ResetValueOnEmptyText="true" Disabled="@ViewModel.ShoppingModeActive"
+						 AdornmentIcon="@IconService.GetSvgLink(IconNames.TagOutline)"
+						 AnchorOrigin="Origin.TopCenter" TransformOrigin="Origin.BottomCenter"
+						 Label="@LanguageService["tag_add"]" />
+	</MudPaper>
+
+	@foreach (var tag in ViewModel.Tags)
+	{
+		<MudChip Text="@tag" OnClose="@((chip) => ViewModel.DeleteTagCommand.Execute(chip.Text))"
+				 Variant="Variant.Filled" Size="Size.Medium" Color="Color.Primary" Label="true" />
+	}
+</div>
+
+@* Search toolbar *@
+<MudPopover Open="@SearchToolbarOpen" Class="secondary-app-bar" AnchorOrigin="Origin.TopRight" TransformOrigin="Origin.TopRight">
+	<MudStack Row="true" Class="align-center pl-1" Spacing="0">
+		<MudPaper Class="pl-2 pr-0 py-0" Elevation="0">
+			<MudInput @ref="_searchInput" @bind-Value="SearchPattern" Class="filter-input" Immediate="true" Clearable="true" />
+		</MudPaper>
+		<MudIconButton OnClick="@(async () => await FindNext())" Icon="@Icons.Material.Filled.KeyboardArrowDown" Color="Color.Inherit" Edge="Edge.End" />
+		<MudIconButton OnClick="@(async () => await FindPrevious())" Icon="@Icons.Material.Filled.KeyboardArrowUp" Color="Color.Inherit" Edge="Edge.False" />
+		<MudIconButton OnClick="() => SearchToolbarOpen = false" Icon="@IconService.GetSvgLink(IconNames.Close)" Color="Color.Inherit" Edge="Edge.End" Size="Size.Small" />
+	</MudStack>
+</MudPopover>
+
+@* Color palette *@
+<MudOverlay @bind-Visible="_colorPaletteOpen" AutoClose="true">
+	<MudCard>
+		<MudCardContent Class="pa-0">
+			<MudColorPicker @bind-Text="ViewModel.BackgroundColorHex"
+							Class="rounded-t" PickerVariant="PickerVariant.Static" ColorPickerView="ColorPickerView.Palette"
+							DisableToolbar="true" DisableAlpha="true"
+							Palette="@ViewModel.BackgroundColorsHex.Select(color => new MudColor(color))" />
+		</MudCardContent>
+		<MudCardActions Class="justify-end">
+			<MudButton OnClick="@(() => _colorPaletteOpen = false)" Color="Color.Primary" Variant="Variant.Text">@LanguageService["close"]</MudButton>
+		</MudCardActions>
+	</MudCard>
+</MudOverlay>
+
+@* Declare icons which can be reused multiple times, to reduce page size *@
+<div hidden>
+	@IconService.EmbedLinkableSvgs( new [] {
+		IconNames.ArrowCollapseDown,
+		IconNames.ArrowCollapseUp,
+		IconNames.ArrowDown,
+		IconNames.ArrowUp,
+		IconNames.CheckboxBlankOffOutline,
+		IconNames.CheckboxMultipleOutline,
+		IconNames.CheckboxMultipleBlankOutline,
+		IconNames.Close,
+		IconNames.Delete,
+		IconNames.FormatHeader1,
+		IconNames.FormatHeader2,
+		IconNames.KeyboardOffOutline,
+		IconNames.Magnify,
+		IconNames.Pin,
+		IconNames.Redo,
+		IconNames.TagOutline,
+		IconNames.SortAlphabeticalAscending,
+		IconNames.SortBoolDescendingVariant,
+		IconNames.Undo,
+	});
+</div>
+
+
 @code {
+	///////////////////////////////////////////////////////////////////////////////////////////////
 	private bool _isDisposed;
 	private MudMenu _overflowMenu;
 	private MudBaseButton _backButton;
+	private MudAutocomplete<string> _tagAutocomplete;
+	private ElementReference _editorContainer;
 	private IKeyboardShortcuts _keyboardShortcuts;
+	private IJSObjectReference _jsModule;
+	private DotNetObjectReference<ChecklistPage> _dotnetModule;
+	private FormatToggleStates _formatStates;
+	private bool _searchToolbarOpen;
+	private MudInput<string> _searchInput;
+	private bool _pendingFocusToSearchInput;
+	private string _searchPattern;
+	private bool _colorPaletteOpen;
+	private LinkState _linkState;
+	private bool _allowNoteContentChanges;
+
+	/// <summary>
+	/// Initializes a new instance of the <see cref="NotePage"/> class.
+	/// </summary>
+	public ChecklistPage()
+	{
+		_formatStates = new FormatToggleStates();
+		_allowNoteContentChanges = false;
+	}
 
 	protected override void OnParametersSet()
 	{
-		base.OnParametersSet();
-		//ViewModel = new SettingsViewModel(SettingsService, LanguageService, EnvironmentService, ThemeService, FeedbackService, CloudStorageClientFactory, FilePickerService);
-		//ViewModel.PropertyChanged += PropertyChangedHandler;
+		RepositoryStorageLoadResult loadResult = RepositoryStorageService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepository);
+		if (loadResult == RepositoryStorageLoadResult.InvalidRepository)
+			throw new Exception("Invalid repository");
+
+		// Get the note from the repository
+		Guid noteId = new Guid(NoteId);
+		NoteModel note = noteRepository.Notes.FindById(noteId);
+		ICryptor cryptor = new Cryptor(NoteModel.CryptorPackageName, CryptoRandomSource);
+		ViewModel = new NoteViewModel(
+			note,
+			null,
+			LanguageService,
+			ThemeService,
+			SettingsService,
+			FeedbackService,
+			EnvironmentService,
+			NativeBrowserService,
+			cryptor,
+			noteRepository.Safes,
+			noteRepository.CollectActiveTags());
+
+		// Redirect to open safe if locked
+		if (ViewModel.IsLocked)
+		{
+			NavigationService.NavigateTo(ViewModel.Route, false, true);
+			return;
+		}
+
+		ViewModel.PropertyChanged += PropertyChangedHandler;
 
 		_keyboardShortcuts = KeyboardShortcutService.CreateShortcuts()
-			.Add(ModCode.None, Code.Escape, () => _backButton);
+			.Add(ModCode.Ctrl, Code.F, () => SearchToolbarOpen = true)
+			.Add(ModCode.None, Code.F3, FindNext)
+			.Add(ModCode.Shift, Code.F3, FindPrevious)
+			.Add(ModCode.None, Code.Escape, () => { if (!CloseOpenMenuOrDialog()) NavigationService.NavigateBack(); });
 	}
 
-	public void Dispose()
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			try
+			{
+				_dotnetModule = DotNetObjectReference.Create(this);
+
+				// Prepare prose mirror editor
+				_jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./Views/ChecklistPage.razor.js");
+				await _jsModule.InvokeVoidAsync("initialize", _dotnetModule, _editorContainer, ViewModel.ShoppingModeActive);
+				string content = ViewModel.UnlockedHtmlContent;
+				await _jsModule.InvokeVoidAsync("setNoteContent", content);
+				_allowNoteContentChanges = true;
+			}
+			catch (Exception ex)
+			{
+				string msg = ex.Message;
+			}
+		}
+
+		if (_pendingFocusToSearchInput)
+		{
+			_pendingFocusToSearchInput = false;
+			await _searchInput.FocusAsync();
+		}
+	}
+
+	async ValueTask IAsyncDisposable.DisposeAsync()
 	{
 		if (_isDisposed)
 			return;
 		_isDisposed = true;
-		_keyboardShortcuts.Dispose();
-		//ViewModel.PropertyChanged -= PropertyChangedHandler;
+
+		if (ViewModel != null)
+			ViewModel.PropertyChanged -= PropertyChangedHandler;
+		_dotnetModule?.Dispose();
+		_keyboardShortcuts?.Dispose();
+		if (_jsModule != null)
+			await _jsModule.DisposeAsync();
 	}
 
-	private SettingsViewModel ViewModel { get; set; }
+	private NoteViewModel ViewModel { get; set; }
 
+	/// <summary>
+	/// Gets or sets the note id which was passed in the routing.
+	/// </summary>
 	[Parameter]
 	public string NoteId { get; set; } = default!;
+
+	private bool CloseOpenMenuOrDialog()
+	{
+		bool result = false;
+
+		// todo: _overflowMenu.CloseMenu();
+		if (SearchToolbarOpen)
+		{
+			SearchToolbarOpen = false;
+			result = true;
+		}
+		if (_colorPaletteOpen)
+		{
+			_colorPaletteOpen = false;
+			result = true;
+		}
+
+		if (result)
+			StateHasChanged();
+		return result;
+	}
+
+	/// <summary>
+	/// Gets or sets a value indicating whether the search toolbar is visible or not.
+	/// </summary>
+	private bool SearchToolbarOpen
+	{
+		get { return _searchToolbarOpen; }
+
+		set
+		{
+			if (_searchToolbarOpen != value)
+			{
+				_searchToolbarOpen = value;
+				if (value)
+					_pendingFocusToSearchInput = true;
+				StateHasChanged();
+			}
+		}
+	}
+
+	private string SearchPattern
+	{
+		get { return _searchPattern; }
+		set
+		{
+			_searchPattern = value;
+			_jsModule.InvokeVoidAsync("search", _searchPattern);
+		}
+	}
+
+	private async ValueTask FindNext()
+	{
+		await _jsModule.InvokeVoidAsync("findNext");
+	}
+
+	private async ValueTask FindPrevious()
+	{
+		await _jsModule.InvokeVoidAsync("findPrevious");
+	}
+
+	/// <summary>
+	/// Toggles the shopping mode and enables/disables the editor.
+	/// </summary>
+	/// <returns>Task for async call.</returns>
+	private async ValueTask ToggleShoppingMode()
+	{
+		ViewModel.ShoppingModeActive = !ViewModel.ShoppingModeActive;
+		await _jsModule.InvokeVoidAsync("setEditable", !ViewModel.ShoppingModeActive);
+		await _jsModule.InvokeVoidAsync("setShoppingModeActive", ViewModel.ShoppingModeActive);
+	}
+
+	/// <summary>
+	/// Sets one of the text format states.
+	/// </summary>
+	/// <param name="formatName">Name of the format, e.g. "bold".</param>
+	/// <param name="formatParameter">Optional parameter, e.g. "header" 2.</param>
+	/// <returns>Task for async call.</returns>
+	private async Task ToggleFormatState(string formatName, int formatParameter = 0)
+	{
+		await _jsModule.InvokeVoidAsync("toggleFormatAndRefresh", formatName, formatParameter);
+	}
+
+	/// <summary>
+	/// Moves the selected line of the checklist up or down.
+	/// </summary>
+	/// <param name="upwards">Move it upwards or downwards.</param>
+	/// <param name="singleStep">Move it one step or to the top/bottom.</param>
+	/// <returns>Task for async call.</returns>
+	private async Task MoveChecklistItem(bool upwards, bool singleStep)
+	{
+		await _jsModule.InvokeVoidAsync("moveChecklistItem", upwards, singleStep);
+	}
+
+	private async Task NewTagChanged(string value)
+	{
+		if (!string.IsNullOrWhiteSpace(value))
+		{
+			ViewModel.AddTagCommand.Execute(value);
+			await _tagAutocomplete.ResetAsync();
+		}
+	}
+
+	private Task<IEnumerable<string>> GetNewTagSuggestions(string value)
+	{
+		// If text is null or empty, show complete list
+		if (string.IsNullOrWhiteSpace(value))
+			return Task.FromResult(ViewModel.TagSuggestions);
+
+		// Search suggestions for matches
+		var result = ViewModel.TagSuggestions.Where(t => t.Contains(value, StringComparison.InvariantCultureIgnoreCase)).ToList();
+
+		// Add current user input as tag, so it can be selected as well
+		if (!result.Contains(value, StringComparer.InvariantCultureIgnoreCase))
+			result.Insert(0, value);
+
+		return Task.FromResult(result.AsEnumerable());
+	}
+
+	/// <summary>
+	/// Called from the javascript to update all format states in the GUI.
+	/// This method is e.g. called when the text cursor has moved to a new position.
+	/// </summary>
+	/// <param name="states">Array containing the state of all formats.</param>
+	[JSInvokable("RefreshActiveFormatState")]
+	public void RefreshActiveFormatState(bool[] states)
+	{
+		_formatStates.LoadFromJsArray(states);
+		StateHasChanged();
+	}
+
+	/// <summary>
+	/// Called from the javascript to update the content of the note.
+	/// </summary>
+	/// <param name="content">String containing the html note content.</param>
+	[JSInvokable("SetNoteContent")]
+	public void SetNoteContent(string content)
+	{
+		// The _allowNoteContentChanges guarantees, that changes are only processed after all the
+		// initialization steps are completed, so that they can never damage the note content.
+		if (_allowNoteContentChanges)
+			ViewModel.UnlockedHtmlContent = content;
+	}
 
 	private void PropertyChangedHandler(object sender, PropertyChangedEventArgs e)
 	{

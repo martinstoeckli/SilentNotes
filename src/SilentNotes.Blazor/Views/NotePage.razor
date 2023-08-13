@@ -189,7 +189,7 @@
 	<MudPaper Class="ml-1 pa-0" Style="float:right; width:50%; max-width:240px" Elevation="0">
 		<MudAutocomplete T="string" @ref="_tagAutocomplete" ValueChanged="NewTagChanged" SearchFunc="GetNewTagSuggestions"
 			Class="ma-0" Margin="Margin.Dense" Dense="true" Variant="Variant.Outlined"
-			ResetValueOnEmptyText="true"
+			ResetValueOnEmptyText="true" Disabled="@ViewModel.ShoppingModeActive"
 			AdornmentIcon="@IconService.GetSvgLink(IconNames.TagOutline)"
 			AnchorOrigin="Origin.TopCenter" TransformOrigin="Origin.BottomCenter"
 			Label="@LanguageService["tag_add"]" />

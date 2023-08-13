@@ -1,102 +1,102 @@
 import { initializeEditor, toggleFormat, isFormatActive, searchAndHighlight, selectNext, selectPrevious, selectWordAtCurrentPosition, makeLinkSuggestion } from '../prose-mirror-bundle.js';
 
-var page;
-var editor;
+var _page;
+var _editor;
 
 // Initializes the prosemirror editor
 export function initialize(dotnetPage, editorContainer) {
-    page = dotnetPage;
-    editor = initializeEditor(editorContainer);
+    _page = dotnetPage;
+    _editor = initializeEditor(editorContainer);
 
-    editor.on('selectionUpdate', function (editor) {
+    _editor.on('selectionUpdate', function (editor) {
         onActiveFormatStateChanged();
     });
-    editor.on('update', function (editor) {
+    _editor.on('update', function (editor) {
         onNoteContentChanged();
     });
 
     document.addEventListener('custom-link-clicked', function () {
-        page.invokeMethodAsync('OpenLinkDialog');
+        _page.invokeMethodAsync('OpenLinkDialog');
     });
 
-    return editor;
+    return _editor;
 }
 
 // By setting the content after loading the page, we can avoid that the content has to be
 // declared pre rendered as javascript and therefore would occupy memory twice.
 export function setNoteContent(text) {
     try {
-        editor.chain().setMeta('addToHistory', false).setContent(text).scrollToTop().run();
+        _editor.chain().setMeta('addToHistory', false).setContent(text).scrollToTop().run();
     }
     catch (ex) {
-        editor.setEditable(false);
+        _editor.setEditable(false);
     }
 }
 
 export function setEditable(editable) {
-    editor.setEditable(editable);
+    _editor.setEditable(editable);
 }
 
 export function toggleFormatAndRefresh(formatName, formatParameter) {
-    toggleFormat(editor, formatName, formatParameter);
+    toggleFormat(_editor, formatName, formatParameter);
     onActiveFormatStateChanged();
 }
 
 function onActiveFormatStateChanged() {
     var states = [
-        isFormatActive(editor, 'heading', { level: 1 }),
-        isFormatActive(editor, 'heading', { level: 2 }),
-        isFormatActive(editor, 'heading', { level: 3 }),
-        isFormatActive(editor, 'bold'),
-        isFormatActive(editor, 'italic'),
-        isFormatActive(editor, 'underline'),
-        isFormatActive(editor, 'strike'),
-        isFormatActive(editor, 'codeblock'),
-        isFormatActive(editor, 'blockquote'),
-        isFormatActive(editor, 'bulletlist'),
-        isFormatActive(editor, 'orderedlist')
+        isFormatActive(_editor, 'heading', { level: 1 }),
+        isFormatActive(_editor, 'heading', { level: 2 }),
+        isFormatActive(_editor, 'heading', { level: 3 }),
+        isFormatActive(_editor, 'bold'),
+        isFormatActive(_editor, 'italic'),
+        isFormatActive(_editor, 'underline'),
+        isFormatActive(_editor, 'strike'),
+        isFormatActive(_editor, 'codeblock'),
+        isFormatActive(_editor, 'blockquote'),
+        isFormatActive(_editor, 'bulletlist'),
+        isFormatActive(_editor, 'orderedlist')
     ];
-    page.invokeMethodAsync('RefreshActiveFormatState', states);
+    _page.invokeMethodAsync('RefreshActiveFormatState', states);
 }
 
 function onNoteContentChanged() {
-    var noteContent = editor.getHTML();
-    page.invokeMethodAsync('SetNoteContent', noteContent);
+    var noteContent = _editor.getHTML();
+    _page.invokeMethodAsync('SetNoteContent', noteContent);
 }
 
 export function undo() {
-    editor.commands.undo();
+    _editor.commands.undo();
 }
 
 export function redo() {
-    editor.commands.redo();
+    _editor.commands.redo();
 }
 
 export function search(searchPattern) {
-    searchAndHighlight(editor, searchPattern);
+    searchAndHighlight(_editor, searchPattern);
 }
 
 export function findNext() {
-    selectNext(editor);
+    selectNext(_editor);
 }
 
 export function findPrevious() {
-    selectPrevious(editor);
+    selectPrevious(_editor);
 }
 
 export function prepareLinkDialog() {
-    editor.chain().focus().run();
-    var selectedUrl = editor.getAttributes('link').href;
+    _editor.chain().focus().run();
+    var selectedUrl = _editor.getAttributes('link').href;
     if (selectedUrl) {
-        editor.commands.extendMarkRange('link');
-        var text = selectWordAtCurrentPosition(editor);
+        _editor.commands.extendMarkRange('link');
+        var text = selectWordAtCurrentPosition(_editor);
         return [
             selectedUrl,
             text,
         ];
     }
     else {
-        var text = selectWordAtCurrentPosition(editor);
+        var text = selectWordAtCurrentPosition(_editor);
         return [
             '',
             text,
@@ -111,13 +111,13 @@ export function linkDialogOkPressed(oldLinkUrl, newLinkUrl, oldLinkTitle, newLin
     if (!urlChanged && !titleChanged)
         return;
 
-    var commandChain = editor.chain().focus().extendMarkRange('link');
+    var commandChain = _editor.chain().focus().extendMarkRange('link');
 
     if (newLinkIsEmpty) {
         commandChain = commandChain.unsetLink();
     }
     else if (titleChanged) {
-        var selection = editor.view.state.selection;
+        var selection = _editor.view.state.selection;
         commandChain = commandChain.command(({ tr }) => {
             tr.insertText(newLinkTitle);
             return true;

@@ -1,7 +1,62 @@
 ﻿:root {
+	--font-color-light-background: black;
+	--font-color-dark-background: white;
 }
 
 /* light and dark note */
+
+.note-light { color: var(--font-color-light-background); }
+.note-dark { color: var(--font-color-dark-background); }
+
+.note-light .note-handle { background-color: rgba(172, 172, 172, 0.5); fill: #707070 }
+.note-dark .note-handle { background-color: rgba(204, 204, 204, 0.7); fill: #606060; }
+
+.note-light .note-locked svg { fill: rgba(172, 172, 172, 0.5); }
+.note-dark .note-locked svg { fill: rgba(204, 204, 204, 0.4); }
+
+.note-light .note-viewer h1 { color: rgba(70, 130, 180, 1) !important; }
+.note-light .note-viewer h2 { color: rgba(70, 130, 180, 0.85) !important; }
+.note-light .note-viewer h3 { color: rgba(70, 130, 180, 0.7) !important; }
+.note-light .note-viewer ol > li::before { color: steelblue; }
+.note-light .note-viewer ul > li::before { color: steelblue !important; }
+.note-light .note-viewer pre { background-color: rgba(128, 128, 128, 0.2) !important; color: black !important; }
+.note-light .note-viewer a { color: rgba(70, 130, 180, 0.80) !important; }
+.note-light .note-viewer a:hover { color: rgba(70, 130, 180, 0.80) !important; }
+.note-dark .note-viewer h1 { color: rgba(173, 216, 230, 1) !important; }
+.note-dark .note-viewer h2 { color: rgba(173, 216, 230, 0.94) !important; }
+.note-dark .note-viewer h3 { color: rgba(173, 216, 230, 0.88) !important; }
+.note-dark .note-viewer ol > li::before { color: lightblue; }
+.note-dark .note-viewer ul > li::before { color: lightblue !important; }
+.note-dark .note-viewer pre { background-color: rgba(211, 211, 211, 0.3) !important; color: white !important; }
+.note-dark .note-viewer a { color: rgba(173, 216, 230, 0.90) !important; }
+.note-dark .note-viewer a:hover { color: rgba(173, 216, 230, 0.90) !important; }
+
+.note-handle.greenish { background-color: rgba(145, 238, 145, 0.9); fill: #2aac2a; }
+.note-handle.reddish { background-color: rgba(238, 145, 145, 0.9); fill: #de2121; }
+.note-handle.bluish-highlighted
+{
+	background-color: rgba(145, 207, 238, 0.9);
+	fill: #2a81ac; 
+	box-shadow: 0 0 6px 6px rgba(145, 207, 238, 0.4);
+}
+
+.note-light .note-viewer.over-view.checklist p,
+.note-light .detail-view.checklist .ProseMirror p { background-color: rgba(128, 128, 128, 0.2); }
+
+.note-light .note-viewer.over-view.checklist p.done,
+.note-light .detail-view.checklist .ProseMirror p.done { background: #ccf0a8; }
+
+.note-light .note-viewer.over-view.checklist p.disabled,
+.note-light .detail-view.checklist .ProseMirror p.disabled { color: rgba(0, 0, 0, 0.5); text-decoration-color: rgba(0, 0, 0, 0.25); }
+
+.note-dark .note-viewer.over-view.checklist p,
+.note-dark .detail-view.checklist .ProseMirror p { background-color: rgba(211, 211, 211, 0.3); }
+
+.note-dark .note-viewer.over-view.checklist p.done,
+.note-dark .detail-view.checklist .ProseMirror p.done { background: #467c46; }
+
+.note-dark .note-viewer.over-view.checklist p.disabled,
+.note-dark .detail-view.checklist .ProseMirror p.disabled { color: rgba(255, 255, 255, 0.5); text-decoration-color: rgba(255, 255, 255, 0.25); }
 
 /* light and dark theme */
 
@@ -10,19 +65,33 @@
 
 /* independend of light and dark */
 
+.background-icon { color: var(--mud-palette-background-grey) }
+
+.secondary-app-bar { 
+	background-color: var(--mud-palette-tertiary);
+	color: var(--mud-palette-tertiary-text);
+}
+
 .h-colored { color: var(--mud-palette-primary-darken); }
 
 .btn-toggled:not([disabled]) svg {
 	color: var(--mud-palette-tertiary);
 }
 .mnu-toggled {
-    color: var(--mud-palette-primary);
-    background-color: var(--mud-palette-primary-hover);
+	color: var(--mud-palette-primary);
+	background-color: var(--mud-palette-primary-hover);
 }
 .mnu-toggled:not(.mud-list-item-disabled) svg {
-    color: var(--mud-palette-primary);
+	color: var(--mud-palette-primary);
 }
 
 .mud-picker-color-view {
 	background-color: var(--mud-palette-dark);
+}
+
+div.ProseMirror .search-result {
+	background: rgba(32, 144, 234, 0.5);
+}
+div.ProseMirror .search-result-selected {
+	background: rgba(32, 144, 234, 0.9);
 }
