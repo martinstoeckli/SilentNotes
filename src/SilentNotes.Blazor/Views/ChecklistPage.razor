@@ -319,7 +319,6 @@ div.dark .detail-view.checklist .ProseMirror p::after { content: @(IconService.L
 				await _jsModule.InvokeVoidAsync("initialize", _dotnetModule, _editorContainer, ViewModel.ShoppingModeActive);
 				string content = ViewModel.UnlockedHtmlContent;
 				await _jsModule.InvokeVoidAsync("setNoteContent", content);
-				await _jsModule.InvokeVoidAsync("setEditable", !ViewModel.ShoppingModeActive);
 
 				_allowNoteContentChanges = true;
 			}

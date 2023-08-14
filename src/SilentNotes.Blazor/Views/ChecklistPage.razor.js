@@ -9,6 +9,7 @@ var _ignoreNoteContentChanged;
 export function initialize(dotnetPage, editorContainer, shoppingModeActive) {
     _page = dotnetPage;
     _editor = initializeChecklist(editorContainer);
+    _editor.setEditable(!shoppingModeActive);
     _ignoreNoteContentChanged = false;
 
     _editor.on('selectionUpdate', function (editor) {

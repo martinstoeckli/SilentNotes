@@ -4,9 +4,10 @@ var _page;
 var _editor;
 
 // Initializes the prosemirror editor
-export function initialize(dotnetPage, editorContainer) {
+export function initialize(dotnetPage, editorContainer, shoppingModeActive) {
     _page = dotnetPage;
     _editor = initializeEditor(editorContainer);
+    _editor.setEditable(!shoppingModeActive);
 
     _editor.on('selectionUpdate', function (editor) {
         onActiveFormatStateChanged();
