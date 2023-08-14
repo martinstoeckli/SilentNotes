@@ -209,7 +209,7 @@ namespace SilentNotes.Workers
         /// <summary>
         /// Searches for the first key-value pair in the list, with a given value.
         /// </summary>
-        /// <param name="key">Key to search for.</param>
+        /// <param name="value">Value to search for.</param>
         /// <returns>Found key-value pair or null if no such key was found.</returns>
         protected Pair FindByValue(TValue value)
         {

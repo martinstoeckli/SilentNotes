@@ -58,7 +58,7 @@ namespace SilentNotes.ViewModels
 
         /// <summary>
         /// Gets or sets a value indicating whether modifications where done to the
-        /// view model. This property is automatically updated when calling <see cref="ChangeProperty{T}(ref T, T, bool, string)"/>.
+        /// view model. This property is automatically updated when calling <see cref="SetPropertyAndModified{T}(T, T, Action{T}, string)"/>.
         /// </summary>
         public bool Modified { get; set; }
 

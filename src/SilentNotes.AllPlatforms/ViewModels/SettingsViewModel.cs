@@ -74,7 +74,7 @@ namespace SilentNotes.ViewModels
         }
 
         /// <summary>
-        /// Gets or sets the <see cref="FontScale"/> expressed for the -3...+3 slider.
+        /// Gets or sets the <see cref="SettingsModel.FontScale"/> expressed for the -3...+3 slider.
         /// </summary>
         public int FontSizeStep
         {
@@ -106,7 +106,7 @@ namespace SilentNotes.ViewModels
         }
 
         /// <summary>
-        /// Gets or sets the <see cref="NoteMaxHeight"/> expressed for the -4...+4 slider.
+        /// Gets or sets the <see cref="SettingsModel.KeepScreenUpDuration"/> property.
         /// </summary>
         public int KeepScreenOnDuration
         {

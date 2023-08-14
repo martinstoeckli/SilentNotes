@@ -256,7 +256,6 @@ div.dark .detail-view.checklist .ProseMirror p::after { content: @(IconService.L
 	private bool _pendingFocusToSearchInput;
 	private string _searchPattern;
 	private bool _colorPaletteOpen;
-	private LinkState _linkState;
 	private bool _allowNoteContentChanges;
 
 	/// <summary>
@@ -320,6 +319,8 @@ div.dark .detail-view.checklist .ProseMirror p::after { content: @(IconService.L
 				await _jsModule.InvokeVoidAsync("initialize", _dotnetModule, _editorContainer, ViewModel.ShoppingModeActive);
 				string content = ViewModel.UnlockedHtmlContent;
 				await _jsModule.InvokeVoidAsync("setNoteContent", content);
+				await _jsModule.InvokeVoidAsync("setEditable", !ViewModel.ShoppingModeActive);
+
 				_allowNoteContentChanges = true;
 			}
 			catch (Exception ex)

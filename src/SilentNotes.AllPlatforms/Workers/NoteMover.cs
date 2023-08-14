@@ -23,9 +23,9 @@ namespace SilentNotes.Workers
         /// otherwise it determines the position at the begin/end of the collection.</param>
         /// <returns>An object holding the determined positions.</returns>
         public static NotePositions GetNotePositions(
-            IList<NoteViewModel> allNotes,
-            IList<NoteViewModel> filteredNotes,
-            NoteViewModel selectedNote,
+            IList<NoteViewModelReadOnly> allNotes,
+            IList<NoteViewModelReadOnly> filteredNotes,
+            NoteViewModelReadOnly selectedNote,
             bool upwards,
             bool singleStep)
         {
@@ -90,20 +90,20 @@ namespace SilentNotes.Workers
             list.Insert(newIndex, item);
         }
 
-        public static void AdjustPinStatusAfterMoving(IList<NoteViewModel> allNotes, int newIndex)
+        public static void AdjustPinStatusAfterMoving(IList<NoteViewModelReadOnly> allNotes, int newIndex)
         {
-            NoteViewModel note = allNotes[newIndex];
+            NoteViewModelReadOnly note = allNotes[newIndex];
             if (note.IsPinned)
             {
                 // Check if previous item is not pinned and if so adjust note to close the gap
-                NoteViewModel previousNote = allNotes.ElementAtOrDefault(newIndex - 1);
+                NoteViewModelReadOnly previousNote = allNotes.ElementAtOrDefault(newIndex - 1);
                 if ((previousNote != null) && (!previousNote.IsPinned))
                     note.IsPinned = false;
             }
             else
             {
                 // Check if next item is pinned and if so adjust note to close the gap
-                NoteViewModel nextNote = allNotes.ElementAtOrDefault(newIndex + 1);
+                NoteViewModelReadOnly nextNote = allNotes.ElementAtOrDefault(newIndex + 1);
                 if ((nextNote != null) && (nextNote.IsPinned))
                     note.IsPinned = true;
             }

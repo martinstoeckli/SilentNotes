@@ -273,6 +273,7 @@
 </div>
 
 @code {
+	///////////////////////////////////////////////////////////////////////////////////////////////
 	private bool _isDisposed;
 	private MudMenu _overflowMenu;
 	private MudBaseButton _backButton;
@@ -352,6 +353,7 @@
 				await _jsModule.InvokeVoidAsync("initialize", _dotnetModule, _editorContainer);
 				string content = ViewModel.UnlockedHtmlContent;
 				await _jsModule.InvokeVoidAsync("setNoteContent", content);
+				await _jsModule.InvokeVoidAsync("setEditable", !ViewModel.ShoppingModeActive);
 				_allowNoteContentChanges = true;
 			}
 			catch (Exception ex)

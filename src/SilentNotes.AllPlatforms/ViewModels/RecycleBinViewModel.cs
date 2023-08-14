@@ -41,7 +41,7 @@ namespace SilentNotes.ViewModels
             _themeService = themeService;
             _settingsService = settingsService;
             _repositoryService = repositoryService;
-            RecycledNotes = new List<NoteViewModel>();
+            RecycledNotes = new List<NoteViewModelReadOnly>();
 
             Model = model;
 
@@ -56,7 +56,7 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets a bindable list of the recycled notes.
         /// </summary>
-        public List<NoteViewModel> RecycledNotes { get; private set; }
+        public List<NoteViewModelReadOnly> RecycledNotes { get; private set; }
 
         /// <summary>
         /// Gets or sets the wrapped model.
@@ -75,8 +75,8 @@ namespace SilentNotes.ViewModels
                 {
                     if (note.InRecyclingBin)
                     {
-                        RecycledNotes.Add(new NoteViewModel(
-                            note, null, Language, _themeService, _settingsService, _feedbackService, null, null, null, _model.Safes, null));
+                        RecycledNotes.Add(new NoteViewModelReadOnly(
+                            note, null, _themeService, _settingsService, null, _model.Safes));
                     }
                 }
             }
@@ -129,7 +129,7 @@ namespace SilentNotes.ViewModels
         private void RestoreNote(object value)
         {
             Guid noteId = (value is Guid) ? (Guid)value : new Guid(value.ToString());
-            NoteViewModel viewModel = RecycledNotes.Find(item => noteId == item.Id);
+            NoteViewModelReadOnly viewModel = RecycledNotes.Find(item => noteId == item.Id);
             if (viewModel != null)
             {
                 Modified = true;
@@ -147,7 +147,7 @@ namespace SilentNotes.ViewModels
         private void DeleteNotePermanently(object value)
         {
             Guid noteId = (value is Guid) ? (Guid)value : new Guid(value.ToString());
-            NoteViewModel viewModel = RecycledNotes.Find(item => noteId == item.Id);
+            NoteViewModelReadOnly viewModel = RecycledNotes.Find(item => noteId == item.Id);
             if (viewModel != null)
             {
                 Modified = true;

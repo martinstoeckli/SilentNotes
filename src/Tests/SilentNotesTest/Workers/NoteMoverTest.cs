@@ -18,8 +18,8 @@ namespace SilentNotesTest.Workers
         public void GetNotePositions_MoveStepDownwards_RespectsGapsInFilter()
         {
             var allNotes = PrepareTestNotes();
-            var filteredNotes = new ObservableCollection<NoteViewModel> { allNotes[1], allNotes[3] };
-            NoteViewModel selectedNote = allNotes[1];
+            var filteredNotes = new ObservableCollection<NoteViewModelReadOnly> { allNotes[1], allNotes[3] };
+            NoteViewModelReadOnly selectedNote = allNotes[1];
 
             var positions = NoteMover.GetNotePositions(allNotes, filteredNotes, selectedNote, false, true);
             Assert.AreEqual(1, positions.OldAllNotesPos);
@@ -32,8 +32,8 @@ namespace SilentNotesTest.Workers
         public void GetNotePositions_MoveStepUpwards_RespectsGapsInFilter()
         {
             var allNotes = PrepareTestNotes();
-            var filteredNotes = new ObservableCollection<NoteViewModel> { allNotes[1], allNotes[3] };
-            NoteViewModel selectedNote = allNotes[3];
+            var filteredNotes = new ObservableCollection<NoteViewModelReadOnly> { allNotes[1], allNotes[3] };
+            NoteViewModelReadOnly selectedNote = allNotes[3];
 
             var positions = NoteMover.GetNotePositions(allNotes, filteredNotes, selectedNote, true, true);
             Assert.AreEqual(3, positions.OldAllNotesPos);
@@ -49,8 +49,8 @@ namespace SilentNotesTest.Workers
             allNotes[0].IsPinned = true;
             allNotes[1].IsPinned = true;
             allNotes[2].IsPinned = true;
-            var filteredNotes = new ObservableCollection<NoteViewModel> { allNotes[1], allNotes[3] };
-            NoteViewModel selectedNote = allNotes[3];
+            var filteredNotes = new ObservableCollection<NoteViewModelReadOnly> { allNotes[1], allNotes[3] };
+            NoteViewModelReadOnly selectedNote = allNotes[3];
 
             var positions = NoteMover.GetNotePositions(allNotes, filteredNotes, selectedNote, true, false);
             Assert.AreEqual(3, positions.OldAllNotesPos);
@@ -63,8 +63,8 @@ namespace SilentNotesTest.Workers
         public void GetNotePositions_MoveStepsDownwards_MovesToEndOfVisibleList()
         {
             var allNotes = PrepareTestNotes();
-            var filteredNotes = new ObservableCollection<NoteViewModel> { allNotes[1], allNotes[3] };
-            NoteViewModel selectedNote = allNotes[1];
+            var filteredNotes = new ObservableCollection<NoteViewModelReadOnly> { allNotes[1], allNotes[3] };
+            NoteViewModelReadOnly selectedNote = allNotes[1];
 
             var positions = NoteMover.GetNotePositions(allNotes, filteredNotes, selectedNote, false, false);
             Assert.AreEqual(1, positions.OldAllNotesPos);
@@ -120,9 +120,9 @@ namespace SilentNotesTest.Workers
             Assert.IsTrue(allNotes[0].IsPinned);
         }
 
-        private static List<NoteViewModel> PrepareTestNotes()
+        private static List<NoteViewModelReadOnly> PrepareTestNotes()
         {
-            var result = new List<NoteViewModel>();
+            var result = new List<NoteViewModelReadOnly>();
             result.Add(CreateNoteViewModel(new NoteModel { Id = new Guid("00000000-0000-0000-0000-000000000000"), HtmlContent = "0" }));
             result.Add(CreateNoteViewModel(new NoteModel { Id = new Guid("11111111-1111-1111-1111-111111111111"), HtmlContent = "1" }));
             result.Add(CreateNoteViewModel(new NoteModel { Id = new Guid("22222222-2222-2222-2222-222222222222"), HtmlContent = "2" }));
@@ -132,9 +132,9 @@ namespace SilentNotesTest.Workers
             return result;
         }
 
-        private static NoteViewModel CreateNoteViewModel(NoteModel model)
+        private static NoteViewModelReadOnly CreateNoteViewModel(NoteModel model)
         {
-            return new NoteViewModel(model, null, null, null, null, null, null, null, null, null);
+            return new NoteViewModelReadOnly(model, null, null, null, null, null);
         }
     }
 }

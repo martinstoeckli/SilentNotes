@@ -10,9 +10,7 @@ using System.Linq;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
 using MudBlazor;
-//using SilentNotes.Controllers;
 using SilentNotes.Crypto;
-//using SilentNotes.HtmlView;
 using SilentNotes.Models;
 using SilentNotes.Services;
 //using SilentNotes.StoryBoards;
@@ -38,7 +36,7 @@ namespace SilentNotes.ViewModels
         private readonly ICryptor _noteCryptor;
         private readonly KeyValueList<string, string> _specialTagLocalizations;
         private NoteRepositoryModel _model;
-        private NoteViewModel _selectedOrderNote;
+        private NoteViewModelReadOnly _selectedOrderNote;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NoteRepositoryViewModel"/> class.
@@ -65,8 +63,8 @@ namespace SilentNotes.ViewModels
             //    _autoSynchronizationService = autoSynchronizationService;
             _noteCryptor = new Cryptor(NoteModel.CryptorPackageName, randomSource);
             _searchableTextConverter = new SearchableHtmlConverter();
-            AllNotes = new List<NoteViewModel>();
-            FilteredNotes = new ObservableCollection<NoteViewModel>();
+            AllNotes = new List<NoteViewModelReadOnly>();
+            FilteredNotes = new ObservableCollection<NoteViewModelReadOnly>();
 
             _specialTagLocalizations = new KeyValueList<string, string>();
             _specialTagLocalizations[NoteFilter.SpecialTags.AllNotes] = string.Format("«{0}»", Language.LoadText("filter_show_all_notes"));
@@ -222,12 +220,12 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets or sets a list of viewmodels for all notes of the repository.
         /// </summary>
-        private List<NoteViewModel> AllNotes { get; set; }
+        private List<NoteViewModelReadOnly> AllNotes { get; set; }
 
         /// <summary>
         /// Gets a bindable list of the visible notes, which are not filtered out.
         /// </summary>
-        public ObservableCollection<NoteViewModel> FilteredNotes { get; private set; }
+        public ObservableCollection<NoteViewModelReadOnly> FilteredNotes { get; private set; }
 
         /// <summary>
         /// Gets or sets the search filter.
@@ -263,7 +261,7 @@ namespace SilentNotes.ViewModels
             NoteFilter noteFilter = new NoteFilter(normalizedFilter, settings.SelectedTag);
 
             FilteredNotes.Clear();
-            foreach (NoteViewModel noteViewModel in AllNotes)
+            foreach (NoteViewModelReadOnly noteViewModel in AllNotes)
             {
                 bool hideNote =
                     noteViewModel.InRecyclingBin ||
@@ -308,18 +306,13 @@ namespace SilentNotes.ViewModels
             noteModel.BackgroundColorHex = _settingsService.LoadSettingsOrDefault().DefaultNoteColorHex;
 
             // Update view model list
-            NoteViewModel noteViewModel = new NoteViewModel(
+            var noteViewModel = new NoteViewModelReadOnly(
                 noteModel,
                 _searchableTextConverter,
-                Language,
                 _themeService,
                 _settingsService,
-                _feedbackService,
-                _environmentService,
-                null,
                 _noteCryptor,
-                _model.Safes,
-                _model.CollectActiveTags());
+                _model.Safes);
             NoteInsertionMode insertionMode = _settingsService.LoadSettingsOrDefault().DefaultNoteInsertion;
             switch (insertionMode)
             {
@@ -372,7 +365,7 @@ namespace SilentNotes.ViewModels
         private void DeleteNote(object value)
         {
             Guid noteId = (value is Guid) ? (Guid)value : new Guid(value.ToString());
-            NoteViewModel selectedNote = AllNotes.Find(item => item.Id == noteId);
+            NoteViewModelReadOnly selectedNote = AllNotes.Find(item => item.Id == noteId);
             if (selectedNote == null)
                 return;
             Modified = true;
@@ -540,7 +533,7 @@ namespace SilentNotes.ViewModels
 
         public void AddNoteToSafe(Guid noteId)
         {
-            NoteViewModel note = AllNotes.Find(item => item.Id == noteId);
+            NoteViewModelReadOnly note = AllNotes.Find(item => item.Id == noteId);
             SafeModel oldestOpenSafe = Model.Safes.FindOldestOpenSafe();
             if ((note != null) && (oldestOpenSafe != null))
             {
@@ -553,7 +546,7 @@ namespace SilentNotes.ViewModels
 
         public void RemoveNoteFromSafe(Guid noteId)
         {
-            NoteViewModel note = AllNotes.Find(item => item.Id == noteId);
+            NoteViewModelReadOnly note = AllNotes.Find(item => item.Id == noteId);
             if (note != null)
             {
                 note.Model.SafeId = null;
@@ -581,18 +574,13 @@ namespace SilentNotes.ViewModels
                 List<string> allTags = _model.CollectActiveTags();
                 foreach (NoteModel note in _model.Notes)
                 {
-                    NoteViewModel noteViewModel = new NoteViewModel(
+                    var noteViewModel = new NoteViewModelReadOnly(
                         note,
                         _searchableTextConverter,
-                        Language,
                         _themeService,
                         _settingsService,
-                        _feedbackService,
-                        _environmentService,
-                        null,
                         _noteCryptor,
-                        _model.Safes,
-                        null);
+                        _model.Safes);
                     AllNotes.Add(noteViewModel);
 
                     bool hideNote =
@@ -609,7 +597,7 @@ namespace SilentNotes.ViewModels
         /// Handles the user selection of the ordering note.
         /// </summary>
         /// <param name="note">The note which was selected ba the user.</param>
-        public void SelectOrderNote(NoteViewModel note)
+        public void SelectOrderNote(NoteViewModelReadOnly note)
         {
             if (note == SelectedOrderNote)
                 SelectedOrderNote = null; // clicking twice removes selection
@@ -620,7 +608,7 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets the user selected note for ordering, or null when no note is selected.
         /// </summary>
-        public NoteViewModel SelectedOrderNote 
+        public NoteViewModelReadOnly SelectedOrderNote 
         {
             get { return _selectedOrderNote; }
             

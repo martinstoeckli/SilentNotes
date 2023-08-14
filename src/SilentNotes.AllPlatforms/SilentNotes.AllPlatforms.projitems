@@ -82,6 +82,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ListItemViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\NoteRepositoryViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\NoteViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\NoteViewModelReadOnly.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\OpenSafeViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\RecycleBinViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\SettingsViewModel.cs" />
