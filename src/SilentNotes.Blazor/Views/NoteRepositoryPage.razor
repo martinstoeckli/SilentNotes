@@ -9,7 +9,7 @@
 @inject ILanguageService LanguageService
 @inject ISvgIconService IconService
 @inject IKeyboardShortcutService KeyboardShortcutService
-@inject INavigationService NavigationService
+@inject INavigationService Navigation
 @inject IFeedbackService FeedbackService
 @inject ISettingsService SettingsService
 @inject IThemeService ThemeService
@@ -71,8 +71,8 @@
 		<ChildContent>
 			<MudMenuItem OnClick="@(() => ViewModel.NewNoteCommand.Execute(null))" Icon="@IconService.GetSvgLink(IconNames.NoteTextOutline)">@LanguageService["note_create_new"]</MudMenuItem>
 			<MudMenuItem OnClick="@(() => ViewModel.NewChecklistCommand.Execute(null))" Icon="@IconService.GetSvgLink(IconNames.OrderBoolAscendingVariant)">@LanguageService["checklist_create_new"]</MudMenuItem>
-			<MudMenuItem Href="/recyclebin" Icon="@IconService[IconNames.DeleteEmpty]">@LanguageService["show_recyclebin"]</MudMenuItem>
-			<MudMenuItem Href="/export" Icon="@IconService[IconNames.Export]">@LanguageService["show_export"]</MudMenuItem>
+			<MudMenuItem OnClick="@(() => Navigation.NavigateTo("/recyclebin"))" Icon="@IconService[IconNames.DeleteEmpty]">@LanguageService["show_recyclebin"]</MudMenuItem>
+			<MudMenuItem OnClick="@(() => Navigation.NavigateTo("/export"))" Icon="@IconService[IconNames.Export]">@LanguageService["show_export"]</MudMenuItem>
 
 			<MudDivider />
 
@@ -82,15 +82,15 @@
 			}
 			else
 			{
-				<MudMenuItem Href="/opensafe" Icon="@IconService.GetSvgLink(IconNames.SafeSquareOutline)">@LanguageService["safe_open"]</MudMenuItem>
+				<MudMenuItem OnClick="@(() => Navigation.NavigateTo("/opensafe"))" Icon="@IconService.GetSvgLink(IconNames.SafeSquareOutline)">@LanguageService["safe_open"]</MudMenuItem>
 			}
-			<MudMenuItem Href="/changepassword" Icon="@IconService[IconNames.LockReset]" Disabled="!ViewModel.SafeExists">@LanguageService["safe_change_password"]</MudMenuItem>
+			<MudMenuItem OnClick="@(() => Navigation.NavigateTo("/changepassword"))" Icon="@IconService[IconNames.LockReset]" Disabled="!ViewModel.SafeExists">@LanguageService["safe_change_password"]</MudMenuItem>
 
 			<MudDivider />
 
-			<MudMenuItem Href="/transfercodehistory" Icon="@IconService[IconNames.Key]">@LanguageService["show_transfer_code"]</MudMenuItem>
-			<MudMenuItem Href="/settings" Icon="@IconService[IconNames.Settings]">@LanguageService["show_settings"]</MudMenuItem>
-			<MudMenuItem Href="/info" Icon="@Icons.Material.Filled.Info">@LanguageService["show_info"]</MudMenuItem>
+			<MudMenuItem OnClick="@(() => Navigation.NavigateTo("/transfercodehistory"))" Icon="@IconService[IconNames.Key]">@LanguageService["show_transfer_code"]</MudMenuItem>
+			<MudMenuItem OnClick="@(() => Navigation.NavigateTo("/settings"))" Icon="@IconService[IconNames.Settings]">@LanguageService["show_settings"]</MudMenuItem>
+			<MudMenuItem OnClick="@(() => Navigation.NavigateTo("/info"))" ForceLoad="false" Icon="@Icons.Material.Filled.Info">@LanguageService["show_info"]</MudMenuItem>
 		</ChildContent>
 	</MudMenu>
 </MudAppBar>
@@ -228,7 +228,7 @@
 		ViewModel = new NoteRepositoryViewModel(
 			noteRepositoryModel,
 			LanguageService,
-			NavigationService,
+			Navigation,
 			FeedbackService,
 			ThemeService,
 			SettingsService,

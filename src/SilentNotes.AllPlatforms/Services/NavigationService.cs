@@ -74,6 +74,7 @@ namespace SilentNotes.Services
         /// <returns>A task for async calls.</returns>
         private async ValueTask LocationChangingHandler(LocationChangingContext context)
         {
+            System.Diagnostics.Debug.WriteLine(string.Format("*** LocationChangedEvent: '{0}'", context.TargetLocation));
             if (IsRoute(context, RouteBack))
             {
                 context.PreventNavigation();
