@@ -1,4 +1,6 @@
 ﻿@page "/"
+@inherits PageBase
+
 @using System.ComponentModel
 @using System.Windows.Input;
 @using MudBlazor.Services;
@@ -18,8 +20,6 @@
 @inject ICryptoRandomService CryptoRandomSource
 @inject IScrollManager ScrollManager
 @inject IBrowserViewportService ViewportService
-
-@implements IDisposable
 
 <style type="text/css">
 	#content {
@@ -207,7 +207,6 @@
 
 @code {
 	///////////////////////////////////////////////////////////////////////////////////////////////
-	private bool _isDisposed;
 	private MudInput<string> _filterInput;
 	private MudMenu _overflowMenu;
 	private MudDrawer _sideDrawer;
@@ -238,28 +237,17 @@
 
 		// todo: read the SettingsViewMode.StartWithTagsOpen
 
-		_keyboardShortcuts = KeyboardShortcutService.CreateShortcuts()
-			.Add(ModCode.Ctrl, Code.T, () => _tagsButton)
-			.Add(ModCode.Ctrl, Code.S, () => _syncButton)
-			.Add(ModCode.Ctrl, Code.N, () => ViewModel.NewNoteCommand.Execute(null))
-			.Add(ModCode.Ctrl, Code.L, () => ViewModel.NewChecklistCommand.Execute(null))
-			.Add(ModCode.Ctrl, Code.R, "/recyclebin")
-			.Add(ModCode.Ctrl, Code.I, "/info")
-			.Add(ModCode.None, Code.Home, () => ScrollManager.ScrollToTopAsync(null, ScrollBehavior.Auto))
-			.Add(ModCode.None, Code.End, () => ScrollManager.ScrollToBottomAsync(null, ScrollBehavior.Auto));
-	}
+		// _keyboardShortcuts = KeyboardShortcutService.CreateShortcuts()
+		// 	.Add(ModCode.Ctrl, Code.T, () => _tagsButton)
+		// 	.Add(ModCode.Ctrl, Code.S, () => _syncButton)
+		// 	.Add(ModCode.Ctrl, Code.N, () => ViewModel.NewNoteCommand.Execute(null))
+		// 	.Add(ModCode.Ctrl, Code.L, () => ViewModel.NewChecklistCommand.Execute(null))
+		// 	.Add(ModCode.Ctrl, Code.R, "/recyclebin")
+		// 	.Add(ModCode.Ctrl, Code.I, "/info")
+		// 	.Add(ModCode.None, Code.Home, () => ScrollManager.ScrollToTopAsync(null, ScrollBehavior.Auto))
+		// 	.Add(ModCode.None, Code.End, () => ScrollManager.ScrollToBottomAsync(null, ScrollBehavior.Auto));
 
-	/// <summary>
-	/// Finalizes an instance of the <see cref="NoteRepositoryPage"/> class.
-	/// </summary>
-	public void Dispose()
-	{
-		if (_isDisposed)
-			return;
-		_isDisposed = true;
-		_keyboardShortcuts?.Dispose();
-		if (ViewModel != null)
-			ViewModel.PropertyChanged -= PropertyChangedHandler;
+		base.OnInitialized();
 	}
 
 	/// <inheritdoc/>
@@ -270,6 +258,19 @@
 			await ScrollManager.ScrollIntoViewAsync(_pendingScrollIntoViewSelector, ScrollBehavior.Smooth);
 			_pendingScrollIntoViewSelector = null;
 		}
+	}
+
+	/// <inheritdoc/>
+	protected override void StoreUnsavedData()
+	{
+	}
+
+	/// <inheritdoc/>
+	protected override void Disposing()
+	{
+		// 	_keyboardShortcuts?.Dispose();
+		if (ViewModel != null)
+			ViewModel.PropertyChanged -= PropertyChangedHandler;
 	}
 
 	/// <summary>

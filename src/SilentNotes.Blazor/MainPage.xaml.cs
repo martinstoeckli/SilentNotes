@@ -23,6 +23,8 @@ public partial class MainPage : ContentPage
 
     protected override bool OnBackButtonPressed()
     {
-        return base.OnBackButtonPressed();
+        bool isHandled = true;
+        return isHandled;
+        //return base.OnBackButtonPressed();
     }
 }

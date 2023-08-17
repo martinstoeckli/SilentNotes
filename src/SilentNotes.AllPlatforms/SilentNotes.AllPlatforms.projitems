@@ -90,6 +90,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\TransferCodeHistoryViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ViewModelBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ViewModelBaseExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\PageBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Workers\AtomicFileWriter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Workers\ByteArrayExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Workers\ColorExtensions.cs" />

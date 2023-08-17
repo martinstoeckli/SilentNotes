@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.JSInterop;
+using SilentNotes.Views;
 
 namespace SilentNotes.Services
 {
@@ -79,6 +80,10 @@ namespace SilentNotes.Services
             {
                 context.PreventNavigation();
                 await _jsRuntime.InvokeVoidAsync("history.back"); // Call javascript to navigate back
+            }
+            else
+            {
+                PageBase.InvokeStoreUnsavedData();
             }
         }
 

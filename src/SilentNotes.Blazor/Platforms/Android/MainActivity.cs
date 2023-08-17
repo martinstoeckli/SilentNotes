@@ -4,6 +4,7 @@ using Android.Content.PM;
 using Android.OS;
 using SilentNotes.Platforms;
 using SilentNotes.Platforms.Services;
+using SilentNotes.Views;
 
 namespace SilentNotes;
 
@@ -26,6 +27,12 @@ public class MainActivity : MauiAppCompatActivity
     {
         App.Ioc.GetService<IActivityResultAwaiter>().RedirectedOnDestroy();
         base.OnDestroy();
+    }
+
+    protected override void OnPause()
+    {
+        base.OnPause();
+        PageBase.InvokeStoreUnsavedData();
     }
 
     /// <inheritdoc/>
