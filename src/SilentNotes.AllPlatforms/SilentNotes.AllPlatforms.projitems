@@ -27,6 +27,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Crypto\SymmetricEncryption\BouncyCastleXChaCha20.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Crypto\SymmetricEncryption\ISymmetricEncryptionAlgorithm.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Crypto\SymmetricEncryption\SymmetricEncryptionAlgorithmFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Messages.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\AutoSynchronizationMode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\NoteInsertionMode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\NoteListModel.cs" />
@@ -39,9 +40,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)Models\SettingsModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\ThemeMode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\WallpaperModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\AutoSynchronizationServiceBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\CloudStorageClientFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DummyFeedbackService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\FeedbackService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\IAutoSynchronizationService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\IClipboardService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ICloudStorageClientFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ICryptoRandomService.cs" />

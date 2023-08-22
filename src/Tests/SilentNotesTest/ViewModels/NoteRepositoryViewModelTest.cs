@@ -89,8 +89,8 @@ namespace SilentNotesTest.ViewModels
                 new Mock<IThemeService>().Object,
                 settingsService.Object,
                 CommonMocksAndStubs.EnvironmentService(),
-                CommonMocksAndStubs.CryptoRandomService()
-                );
+                CommonMocksAndStubs.CryptoRandomService(),
+                null);
         }
 
         private static NoteRepositoryModel CreateTestRepository()

@@ -26,7 +26,7 @@ namespace SilentNotes.ViewModels
     {
         private readonly INavigationService _navigationService;
         //private readonly IStoryBoardService _storyBoardService;
-        //private readonly IRepositoryStorageService _repositoryService;
+        private readonly IRepositoryStorageService _repositoryService;
         private readonly IFeedbackService _feedbackService;
         private readonly IThemeService _themeService;
         private readonly ISettingsService _settingsService;
@@ -36,6 +36,7 @@ namespace SilentNotes.ViewModels
         private readonly ICryptor _noteCryptor;
         private readonly KeyValueList<string, string> _specialTagLocalizations;
         private NoteRepositoryModel _model;
+        private long? _originalFingerPrint;
         private NoteViewModelReadOnly _selectedOrderNote;
 
         /// <summary>
@@ -49,7 +50,8 @@ namespace SilentNotes.ViewModels
             IThemeService themeService,
             ISettingsService settingsService,
             IEnvironmentService environmentService,
-            ICryptoRandomSource randomSource)
+            ICryptoRandomSource randomSource,
+            IRepositoryStorageService repositoryService)
         {
             //    _storyBoardService = storyBoardService;
             //    _repositoryService = repositoryService;
@@ -60,6 +62,7 @@ namespace SilentNotes.ViewModels
             _themeService = themeService;
             _settingsService = settingsService;
             _environmentService = environmentService;
+            _repositoryService = repositoryService;
             //    _autoSynchronizationService = autoSynchronizationService;
             _noteCryptor = new Cryptor(NoteModel.CryptorPackageName, randomSource);
             _searchableTextConverter = new SearchableHtmlConverter();
@@ -72,6 +75,7 @@ namespace SilentNotes.ViewModels
 
             //    _repositoryService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepository);
             Model = model;
+            _originalFingerPrint = Model?.GetModificationFingerprint();
             UpdateTags();
 
             // Initialize commands and events
@@ -81,8 +85,6 @@ namespace SilentNotes.ViewModels
             ClearFilterCommand = new RelayCommand(ClearFilter);
             //    SynchronizeCommand = new RelayCommand(Synchronize);
             CloseSafeCommand = new RelayCommand(CloseSafe);
-
-            Modified = false;
 
             // If a filter was set before e.g. opening a note, set the same filter again.
             SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
@@ -183,20 +185,21 @@ namespace SilentNotes.ViewModels
             return noteFilter.ContainsTag(Tags.Select(tag => tag.Value));
         }
 
-        ///// <inheritdoc/>
-        //public override void OnStoringUnsavedData()
-        //{
-        //    // If there was an error reading the existing repository, we do not overwrite it, to
-        //    // prevent further damage.
-        //    if (Model == null)
-        //        return;
+        /// <inheritdoc/>
+        public override void OnStoringUnsavedData()
+        {
+            // If there was an error reading the existing repository, we do not overwrite it, to
+            // prevent further damage.
+            if (Model == null)
+                return;
 
-        //    if (Modified)
-        //    {
-        //        _repositoryService.TrySaveRepository(Model);
-        //        Modified = false;
-        //    }
-        //}
+            long? fingerPrint = Model?.GetModificationFingerprint();
+            if (fingerPrint != _originalFingerPrint)
+            {
+                _repositoryService.TrySaveRepository(Model);
+                _originalFingerPrint = fingerPrint;
+            }
+        }
 
         public int NoteMinHeight
         {
@@ -405,14 +408,13 @@ namespace SilentNotes.ViewModels
             {
                 string newValue = ((ListItemViewModel<string>)value).Value;
                 SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
-                if (SetPropertyAndModified(settings.SelectedTag, newValue, (string v) => settings.SelectedTag = v))
+                if (SetProperty(settings.SelectedTag, newValue, (string v) => settings.SelectedTag = v))
                 {
                     OnPropertyChanged(nameof(SelectedTag));
                     ApplyFilter();
                     OnPropertyChanged("Notes");
                     _settingsService.TrySaveSettingsToLocalDevice(settings);
                 }
-
             }
         }
 

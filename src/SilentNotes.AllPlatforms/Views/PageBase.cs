@@ -4,8 +4,10 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
+using System.Diagnostics;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.AspNetCore.Components;
+//using Microsoft.Extensions.Logging;
 
 namespace SilentNotes.Views
 {
@@ -16,11 +18,14 @@ namespace SilentNotes.Views
     {
         private bool _disposed = false;
 
-        /// <inheritdoc/>
-        protected override void OnInitialized()
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PageBase"/> class.
+        /// </summary>
+        public PageBase()
+            :base()
         {
             WeakReferenceMessenger.Default.Register<StoreUnsavedDataMessage>(
-                this, (recipient, message) => StoreUnsavedData());
+                this, (recipient, message) => OnStoringUnsavedData());
         }
 
         /// <summary>
@@ -30,6 +35,12 @@ namespace SilentNotes.Views
         {
             Dispose(false);
         }
+
+        ///// <summary>
+        ///// Gets a logger for the page.
+        ///// </summary>
+        //[Inject]
+        //protected ILogger<PageBase> Logger { get; private set; }
 
         /// <inheritdoc/>
         public void Dispose()
@@ -47,10 +58,9 @@ namespace SilentNotes.Views
         {
             if (!_disposed)
             {
-                WeakReferenceMessenger.Default.Unregister<StoreUnsavedDataMessage>(this);
-                StoreUnsavedData();
-                Disposing();
                 _disposed = true;
+                WeakReferenceMessenger.Default.Unregister<StoreUnsavedDataMessage>(this);
+                OnDisposing();
             }
         }
 
@@ -58,7 +68,7 @@ namespace SilentNotes.Views
         /// Method invoked when either <see cref="Dispose()"/> or the finalizer is called.
         /// This method is called only once.
         /// </summary>
-        protected virtual void Disposing()
+        protected virtual void OnDisposing()
         {
         }
 
@@ -67,20 +77,9 @@ namespace SilentNotes.Views
         /// be able to work with consecutive calls and thus be able to check whether its data is
         /// modified.
         /// </summary>
-        protected virtual void StoreUnsavedData()
+        protected virtual void OnStoringUnsavedData()
         {
-        }
-
-        /// <summary>
-        /// Invokes the <see cref="StoreUnsavedData"/> method of the currently active page.
-        /// </summary>
-        public static void InvokeStoreUnsavedData()
-        {
-            WeakReferenceMessenger.Default.Send<StoreUnsavedDataMessage>(new StoreUnsavedDataMessage());
-        }
-
-        private class StoreUnsavedDataMessage
-        {
+            Debug.WriteLine("*** PageBase.OnStoringUnsavedData()");
         }
     }
 }

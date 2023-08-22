@@ -232,7 +232,9 @@
 			ThemeService,
 			SettingsService,
 			EnvironmentService,
-			CryptoRandomSource);
+			CryptoRandomSource,
+			RepositoryStorageService
+		);
 		ViewModel.PropertyChanged += PropertyChangedHandler;
 
 		// todo: read the SettingsViewMode.StartWithTagsOpen
@@ -261,12 +263,14 @@
 	}
 
 	/// <inheritdoc/>
-	protected override void StoreUnsavedData()
+	protected override void OnStoringUnsavedData()
 	{
+		base.OnStoringUnsavedData();
+		ViewModel?.OnStoringUnsavedData();
 	}
 
 	/// <inheritdoc/>
-	protected override void Disposing()
+	protected override void OnDisposing()
 	{
 		// 	_keyboardShortcuts?.Dispose();
 		if (ViewModel != null)

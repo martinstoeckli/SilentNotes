@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Diagnostics;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.AspNetCore.Components.WebView.Maui;
+using SilentNotes.Services;
 
 namespace SilentNotes;
 
@@ -17,7 +20,6 @@ public partial class App : Microsoft.Maui.Controls.Application
         App.Ioc = serviceProvider;
 
         MainPage = new MainPage();
-        MainPage.Disappearing += DisappearingEventHandler;
 
 #if ANDROID
         // Workaround: Android soft keyboard hides the lower part of the content
@@ -27,32 +29,27 @@ public partial class App : Microsoft.Maui.Controls.Application
 #endif
     }
 
-    private void DisappearingEventHandler(object sender, EventArgs e)
+    protected override Window CreateWindow(IActivationState activationState)
     {
+        var window = base.CreateWindow(activationState);
+#if WINDOWS
+        window.Destroying += OnDestroying;
+#endif
+        return window;
     }
+
+#if WINDOWS
+    private void OnDestroying(object sender, EventArgs e)
+    {
+        WeakReferenceMessenger.Default.Send<StoreUnsavedDataMessage>(new StoreUnsavedDataMessage());
+
+        IAutoSynchronizationService syncService = App.Ioc.GetService<IAutoSynchronizationService>();
+        syncService.SynchronizeAtShutdown().GetAwaiter().GetResult();
+    }
+#endif
 
     /// <summary>
     /// Gets the service provider for IOC.
     /// </summary>
     public static IServiceProvider Ioc { get; private set; }
-
-    protected override void OnStart()
-    {
-        base.OnStart();
-    }
-
-    protected override void OnResume()
-    {
-        base.OnResume();
-    }
-
-    protected override void OnSleep()
-    {
-        base.OnSleep();
-    }
-
-    protected override void CleanUp()
-    {
-        base.CleanUp();
-    }
 }

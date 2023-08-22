@@ -5,10 +5,10 @@
 
 using System;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.JSInterop;
-using SilentNotes.Views;
 
 namespace SilentNotes.Services
 {
@@ -75,7 +75,6 @@ namespace SilentNotes.Services
         /// <returns>A task for async calls.</returns>
         private async ValueTask LocationChangingHandler(LocationChangingContext context)
         {
-            System.Diagnostics.Debug.WriteLine(string.Format("*** LocationChangedEvent: '{0}'", context.TargetLocation));
             if (IsRoute(context, RouteBack))
             {
                 context.PreventNavigation();
@@ -83,7 +82,7 @@ namespace SilentNotes.Services
             }
             else
             {
-                PageBase.InvokeStoreUnsavedData();
+                WeakReferenceMessenger.Default.Send<StoreUnsavedDataMessage>(new StoreUnsavedDataMessage());
             }
         }
 

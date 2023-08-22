@@ -2,8 +2,11 @@
 using Android.Content;
 using Android.Content.PM;
 using Android.OS;
+using CommunityToolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Mvvm.Messaging;
 using SilentNotes.Platforms;
 using SilentNotes.Platforms.Services;
+using SilentNotes.Services;
 using SilentNotes.Views;
 
 namespace SilentNotes;
@@ -32,7 +35,17 @@ public class MainActivity : MauiAppCompatActivity
     protected override void OnPause()
     {
         base.OnPause();
-        PageBase.InvokeStoreUnsavedData();
+        WeakReferenceMessenger.Default.Send<StoreUnsavedDataMessage>(new StoreUnsavedDataMessage());
+    }
+
+    protected override void OnStop()
+    {
+        // We do not await the synchronization, it runs in a background service which can stay
+        // alive a bit longer than the app itself.
+        // todo:
+        IAutoSynchronizationService syncService = App.Ioc.GetService<IAutoSynchronizationService>();
+        syncService.SynchronizeAtShutdown();
+        base.OnStop();
     }
 
     /// <inheritdoc/>

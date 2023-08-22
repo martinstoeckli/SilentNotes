@@ -361,7 +361,11 @@ div.dark .detail-view.checklist .ProseMirror p::after { content: @(IconService.L
 	{
 		bool result = false;
 
-		// todo: _overflowMenu.CloseMenu();
+		if (_overflowMenu.IsOpen)
+		{
+			_overflowMenu.CloseMenu();
+			result = true;
+		}
 		if (SearchToolbarOpen)
 		{
 			SearchToolbarOpen = false;

@@ -43,7 +43,7 @@ public static class MauiProgram
 
 #if DEBUG
         builder.Services.AddBlazorWebViewDeveloperTools();
-		builder.Logging.AddDebug();
+		builder.Logging.AddDebug().SetMinimumLevel(LogLevel.Information);
 #endif
 		return builder.Build();
 	}
@@ -94,6 +94,7 @@ public static class MauiProgram
         services.AddSingleton<INativeBrowserService>((serviceProvider) => new NativeBrowserService());
         services.AddSingleton<IFolderPickerService>((serviceProvider) => new FolderPickerService());
         services.AddSingleton<IFilePickerService>((serviceProvider) => new FilePickerService());
+        services.AddSingleton<IAutoSynchronizationService>((serviceProvider) => new AutoSynchronizationService());
     }
 
 #elif ANDROID
@@ -124,6 +125,7 @@ public static class MauiProgram
         services.AddSingleton<IFilePickerService>((serviceProvider) => new FilePickerService(
             serviceProvider.GetService<IAppContextService>(),
             serviceProvider.GetService<IActivityResultAwaiter>()));
+        services.AddSingleton<IAutoSynchronizationService>((serviceProvider) => new AutoSynchronizationService());
     }
 
 #endif
