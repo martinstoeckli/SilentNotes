@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
+using MudBlazor;
 
 namespace SilentNotes
 {
@@ -165,6 +166,21 @@ namespace SilentNotes
 
             _closeMenuShortcut = new KeyValuePair<SnKeyboardShortcut, Func<bool>>(shortcut, handler);
         }
+
+        /// <summary>
+        /// Simulates a click on the <paramref name="button"/>. As with the user doing the click,
+        /// the button first gets the focus and then invokes the OnClick. By moving the focus,
+        /// other input elements like textboxes can update their ViewModels, before the click.
+        /// </summary>
+        /// <param name="button">The button to click.</param>
+        /// <returns>Awaitable task.</returns>
+        public static async Task SimulateClickAsync(MudBaseButton button)
+        {
+            // Before the button is clicked it gets the focus, so that other controls will
+            // update their ViewModels with the current input.
+            await button.FocusAsync();
+            await button.OnClick.InvokeAsync();
+        }
     }
 
     public class SnKeyboardShortcut : IEquatable<SnKeyboardShortcut>
@@ -190,8 +206,8 @@ namespace SilentNotes
 
         /// <summary>
         /// Gets the name of the key to which the app should listen. This key must match
-        /// one of the JavaScript key codes, see: https://developer.mozilla.org/de/docs/Web/API/KeyboardEvent/key/Key_Values
-        /// some often used key codes are listed in the <see cref="SnKey"/> class.
+        /// one of the JavaScript key codes. Some often used key codes are listed in the
+        /// <see cref="SnKey"/> class.
         /// </summary>
         public string Key { get; }
 
@@ -252,6 +268,9 @@ namespace SilentNotes
         }
     }
 
+    /// <summary>
+    /// see: https://developer.mozilla.org/de/docs/Web/API/KeyboardEvent/key/Key_Values
+    /// </summary>
     public static class SnKey
     {
         public const string Enter = "Enter";
@@ -269,5 +288,17 @@ namespace SilentNotes
         public const string Delete = "Delete";
         public const string Escape = "Escape";
         public const string Help = "Help";
+        public const string F1 = "F1";
+        public const string F2 = "F2";
+        public const string F3 = "F3";
+        public const string F4 = "F4";
+        public const string F5 = "F5";
+        public const string F6 = "F6";
+        public const string F7 = "F7";
+        public const string F8 = "F8";
+        public const string F9 = "F9";
+        public const string F10 = "F10";
+        public const string F11 = "F11";
+        public const string F12 = "F12";
     }
 }

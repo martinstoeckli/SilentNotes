@@ -247,14 +247,14 @@
 		{
 			await KeyboardShortcuts.InitializeAsync(JSRuntime);
 			KeyboardShortcuts
-				.AddShortcut(new SnKeyboardShortcut("t", true), () => _tagsButton.OnClick.InvokeAsync())
-				.AddShortcut(new SnKeyboardShortcut("s", true), () => _syncButton.OnClick.InvokeAsync())
+				.AddShortcut(new SnKeyboardShortcut("t", true), async () => await SnKeyboardShortcuts.SimulateClickAsync(_tagsButton))
+				.AddShortcut(new SnKeyboardShortcut("s", true), async () => await SnKeyboardShortcuts.SimulateClickAsync(_syncButton))
 				.AddShortcut(new SnKeyboardShortcut("n", true), () => ViewModel.NewNoteCommand.Execute(null))
 				.AddShortcut(new SnKeyboardShortcut("l", true), () => ViewModel.NewChecklistCommand.Execute(null))
 				.AddShortcut(new SnKeyboardShortcut("r", true), () => Navigation.NavigateTo("/recyclebin"))
 				.AddShortcut(new SnKeyboardShortcut("i", true), () => Navigation.NavigateTo("/info"))
-				.AddShortcut(new SnKeyboardShortcut(SnKey.Home), () => ScrollManager.ScrollToTopAsync(null, ScrollBehavior.Auto))
-				.AddShortcut(new SnKeyboardShortcut(SnKey.End), () => ScrollManager.ScrollToBottomAsync(null, ScrollBehavior.Auto));
+				.AddShortcut(new SnKeyboardShortcut(SnKey.Home), async () => await ScrollManager.ScrollToTopAsync("#content", ScrollBehavior.Auto))
+				.AddShortcut(new SnKeyboardShortcut(SnKey.End), async () => await ScrollManager.ScrollToBottomAsync("#content", ScrollBehavior.Auto));
 		}
 
 		if (!string.IsNullOrEmpty(_pendingScrollIntoViewSelector))

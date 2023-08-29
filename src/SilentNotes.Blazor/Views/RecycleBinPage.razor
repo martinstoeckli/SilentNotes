@@ -121,8 +121,7 @@
 		if (firstRender)
 		{
 			await KeyboardShortcuts.InitializeAsync(JSRuntime);
-			KeyboardShortcuts
-				.AddShortcut(new SnKeyboardShortcut(SnKey.Escape), () => Navigation.NavigateBack());
+			KeyboardShortcuts.AddShortcut(new SnKeyboardShortcut(SnKey.Escape), () => Navigation.NavigateBack());
 		}
 	}
 

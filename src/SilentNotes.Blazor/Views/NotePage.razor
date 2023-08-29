@@ -1,4 +1,6 @@
 ﻿@page "/note/{NoteId}"
+@inherits PageBase
+
 @using System.ComponentModel
 @using MudBlazor.Utilities;
 @using SilentNotes.Crypto;
@@ -22,8 +24,6 @@
 @inject ICloudStorageClientFactory CloudStorageClientFactory
 @inject ICryptoRandomService CryptoRandomSource
 @inject INavigationService Navigation
-
-@implements IAsyncDisposable
 
 <style type="text/css">
 	#content { background-color: @ViewModel.BackgroundColorHex; }
@@ -274,12 +274,10 @@
 
 @code {
 	///////////////////////////////////////////////////////////////////////////////////////////////
-	private bool _isDisposed;
 	private MudMenu _overflowMenu;
 	private MudAutocomplete<string> _tagAutocomplete;
 	private ElementReference _editorContainer;
 	private IJSObjectReference _jsModule;
-	private DotNetObjectReference<NotePage> _dotnetModule;
 	private FormatToggleStates _formatStates;
 	private bool _searchToolbarOpen;
 	private MudInput<string> _searchInput;
@@ -330,12 +328,6 @@
 		}
 
 		ViewModel.PropertyChanged += PropertyChangedHandler;
-
-		// _keyboardShortcuts = KeyboardShortcutService.CreateShortcuts()
-		// 	.Add(ModCode.Ctrl, Code.F, () => SearchToolbarOpen = true)
-		// 	.Add(ModCode.None, Code.F3, FindNext)
-		// 	.Add(ModCode.Shift, Code.F3, FindPrevious)
-		// 	.Add(ModCode.None, Code.Escape, () => { if (!CloseOpenMenuOrDialog()) NavigationService.NavigateBack(); });
 	}
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -344,14 +336,19 @@
 		{
 			try
 			{
-				_dotnetModule = DotNetObjectReference.Create(this);
-
 				// Prepare prose mirror editor
 				_jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./Views/NotePage.razor.js");
-				await _jsModule.InvokeVoidAsync("initialize", _dotnetModule, _editorContainer, ViewModel.ShoppingModeActive);
+				await _jsModule.InvokeVoidAsync("initialize", DotNetModule, _editorContainer, ViewModel.ShoppingModeActive);
 				string content = ViewModel.UnlockedHtmlContent;
 				await _jsModule.InvokeVoidAsync("setNoteContent", content);
 				_allowNoteContentChanges = true;
+
+				await KeyboardShortcuts.InitializeAsync(JSRuntime);
+				KeyboardShortcuts
+					.AddShortcut(new SnKeyboardShortcut(SnKey.Escape), () => Navigation.NavigateBack())
+					.AddShortcut(new SnKeyboardShortcut("f", true), () => SearchToolbarOpen = true)
+					.AddShortcut(new SnKeyboardShortcut(SnKey.F3), async () => await FindNext())
+					.AddShortcut(new SnKeyboardShortcut(SnKey.F3, false, true), async () => await FindPrevious());
 			}
 			catch (Exception ex)
 			{
@@ -366,16 +363,11 @@
 		}
 	}
 
-	async ValueTask IAsyncDisposable.DisposeAsync()
+	protected override async ValueTask OnClosingPageAsync()
 	{
-		if (_isDisposed)
-			return;
-		_isDisposed = true;
-
+		await base.OnClosingPageAsync();
 		if (ViewModel != null)
 			ViewModel.PropertyChanged -= PropertyChangedHandler;
-		_dotnetModule?.Dispose();
-		// _keyboardShortcuts?.Dispose();
 		if (_jsModule != null)
 			await _jsModule.DisposeAsync();
 	}

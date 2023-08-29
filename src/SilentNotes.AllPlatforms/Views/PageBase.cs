@@ -5,6 +5,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
@@ -14,11 +15,11 @@ namespace SilentNotes.Views
     /// <summary>
     /// Base class for all razor pages.
     /// </summary>
-    public abstract class PageBase: ComponentBase, IDisposable
+    public abstract class PageBase: ComponentBase, IAsyncDisposable
     {
         private bool _disposed = false;
         private bool _closed = false;
-        private DotNetObjectReference<PageBase> _dotnetModule = null;
+        private DotNetObjectReference<PageBase> _dotNetModule = null;
         private SnKeyboardShortcuts _keyboardShortcuts = null;
 
         /// <summary>
@@ -32,15 +33,7 @@ namespace SilentNotes.Views
             WeakReferenceMessenger.Default.Register<StoreUnsavedDataMessage>(
                 this, (recipient, message) => OnStoringUnsavedData());
             WeakReferenceMessenger.Default.Register<ClosePageMessage>(
-                this, (recipient, message) => TriggerOnClosingPage());
-        }
-
-        /// <summary>
-        /// Finalizes an instance of the <see cref="PageBase"/> class.
-        /// </summary>
-        ~PageBase()
-        {
-            Dispose(false);
+                this, async (recipient, message) => await TriggerOnClosingPageAsync());
         }
 
         /// <summary>
@@ -49,37 +42,15 @@ namespace SilentNotes.Views
         public Guid Id { get; } = Guid.NewGuid();
 
         /// <inheritdoc/>
-        public void Dispose()
+        public async ValueTask DisposeAsync()
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        /// <summary>
-        /// Method invoked when either <see cref="Dispose()"/> or the finalizer is called.
-        /// </summary>
-        /// <param name="disposing">Is true if called by <see cref="Dispose()"/>, false if called
-        /// by the finalizer.</param>
-        private void Dispose(bool disposing)
-        {
-            Debug.WriteLine(string.Format("*** {0}.Dispose {1}", GetType().Name, Id));
-
+            Debug.WriteLine(string.Format("*** {0}.DisposeAsync {1}", GetType().Name, Id));
             if (!_disposed)
             {
                 _disposed = true;
-                TriggerOnClosingPage();
-                //_dotnetModule?.Dispose();
-                OnDisposing();
+                await TriggerOnClosingPageAsync();
+                _dotNetModule?.Dispose();
             }
-        }
-
-        /// <summary>
-        /// Method invoked when either <see cref="Dispose()"/> or the finalizer is called.
-        /// This method is called only once. Consider using <see cref="OnClosingPage"/> instead.
-        /// </summary>
-        protected virtual void OnDisposing()
-        {
-            Debug.WriteLine(string.Format("*** {0}.OnDisposing {1}", GetType().Name, Id));
         }
 
         /// <summary>
@@ -92,7 +63,7 @@ namespace SilentNotes.Views
             Debug.WriteLine(string.Format("*** {0}.OnStoringUnsavedData {1}", GetType().Name, Id));
         }
 
-        private void TriggerOnClosingPage()
+        private async ValueTask TriggerOnClosingPageAsync()
         {
             if (_closed)
                 return;
@@ -104,6 +75,7 @@ namespace SilentNotes.Views
 
             _keyboardShortcuts?.Dispose();
             OnClosingPage();
+            await OnClosingPageAsync();
         }
 
         /// <summary>
@@ -116,6 +88,16 @@ namespace SilentNotes.Views
         }
 
         /// <summary>
+        /// Method invoked when the page is to be closed. This method is guaranteed to be called
+        /// only once per page. It can e.g. be used to disconnect events.
+        /// </summary>
+        protected virtual ValueTask OnClosingPageAsync()
+        {
+            Debug.WriteLine(string.Format("*** {0}.OnClosingPageAsync {1}", GetType().Name, Id));
+            return ValueTask.CompletedTask;
+        }
+
+        /// <summary>
         /// Gets or creates a keyboard-shortcut handler. This reference is lazy created and will be
         /// cleaned up automatically.
         /// </summary>
@@ -124,13 +106,13 @@ namespace SilentNotes.Views
             get { return _keyboardShortcuts ?? (_keyboardShortcuts = new SnKeyboardShortcuts()); }
         }
 
-        ///// <summary>
-        ///// Gets a reference to the dotnet module of the page, which can be used by JS functions to
-        ///// call C# methods. This reference is lazy created and will be cleaned up automatically.
-        ///// </summary>
-        //protected DotNetObjectReference<PageBase> DotNetModule
-        //{
-        //    get { return _dotnetModule ?? (_dotnetModule = DotNetObjectReference.Create(this)); }
-        //}
+        /// <summary>
+        /// Gets a reference to the dotnet module of the page, which can be used by JS functions to
+        /// call C# methods. This reference is lazy created and will be cleaned up automatically.
+        /// </summary>
+        protected DotNetObjectReference<PageBase> DotNetModule
+        {
+            get { return _dotNetModule ?? (_dotNetModule = DotNetObjectReference.Create(this)); }
+        }
     }
 }
