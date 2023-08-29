@@ -28,15 +28,23 @@ namespace SilentNotes.Services
         /// <param name="navigationManager">The navigation manager to wrap.</param>
         public NavigationService(NavigationManager navigationManager, IJSRuntime jsRuntime)
         {
+#if DEBUG
+            System.Diagnostics.Debug.WriteLine("*** Scoped service create " + Id);
+#endif
             _navigationManager = navigationManager;
             _jsRuntime = jsRuntime;
         }
 
-        /// <summary>
-        /// Finalizes an instance of the <see cref="NavigationService"/> class.
-        /// </summary>
+#if DEBUG
+        public Guid Id { get; } = Guid.NewGuid();
+#endif
+
+        /// <inheritdoc/>
         public void Dispose()
         {
+#if DEBUG
+            System.Diagnostics.Debug.WriteLine("*** Scoped service dispose " + Id);
+#endif
             _eventHandlerDisposable?.Dispose();
             _eventHandlerDisposable = null;
         }
@@ -82,7 +90,9 @@ namespace SilentNotes.Services
             }
             else
             {
+                // Inform current page before navigating to the next page
                 WeakReferenceMessenger.Default.Send<StoreUnsavedDataMessage>(new StoreUnsavedDataMessage());
+                WeakReferenceMessenger.Default.Send<ClosePageMessage>(new ClosePageMessage());
             }
         }
 

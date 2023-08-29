@@ -13,8 +13,6 @@ using MudBlazor.Services;
 using SilentNotes.Platforms;
 using SilentNotes.Platforms.Services;
 using SilentNotes.Services;
-using Toolbelt.Blazor.Extensions.DependencyInjection;
-using Toolbelt.Blazor.HotKeys2;
 
 namespace SilentNotes;
 
@@ -36,7 +34,6 @@ public static class MauiProgram
             config.SnackbarConfiguration.SnackbarVariant = Variant.Text;
             config.SnackbarConfiguration.VisibleStateDuration = 6000;
         });
-        builder.Services.AddHotKeys2();
 
         RegisterSharedServices(builder.Services);
         RegisterPlatformServices(builder.Services);
@@ -72,9 +69,6 @@ public static class MauiProgram
             serviceProvider.GetService<IDialogService>(),
             serviceProvider.GetService<ISnackbar>(),
             serviceProvider.GetService<ILanguageService>()));
-        services.AddScoped<IKeyboardShortcutService>((serviceProvider) => new KeyboardShortcutService(
-            serviceProvider.GetService<HotKeys>(),
-            serviceProvider.GetService<INavigationService>()));
     }
 
 #if WINDOWS

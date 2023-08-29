@@ -54,7 +54,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\IFilePickerService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\IFolderPickerService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\IKeepScreenOn.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\IKeyboardShortcutService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ILanguageCodeProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ILanguageService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ILanguageServiceResourceReader.cs" />
@@ -69,7 +68,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\IThemeService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\IVersionService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\IXmlFileService.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\KeyboardShortcutService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\LanguageService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\NavigationService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\RepositoryStorageServiceBase.cs" />
@@ -78,6 +76,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\SvgIconService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ThemeService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\XmlFileService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SnKeyboardShortcuts.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ChangePasswordViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\DropdownItemViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ExportViewModel.cs" />

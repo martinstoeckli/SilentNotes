@@ -1,17 +1,18 @@
 ﻿@page "/transfercodehistory"
+@inherits PageBase
+
 @using SilentNotes.Models
 @using SilentNotes.ViewModels
 @using SilentNotes.Services
 
 @inject ILanguageService LanguageService
 @inject ISvgIconService IconService
-@inject IKeyboardShortcutService KeyboardShortcutService
 @inject IVersionService VersionService
 @inject INativeBrowserService NativeBrowserService
 @inject ISettingsService SettingsService
 @inject IClipboardService ClipboardService
-
-@implements IDisposable
+@inject IJSRuntime JSRuntime
+@inject INavigationService Navigation
 
 <style type="text/css">
 	.code {
@@ -25,7 +26,7 @@
 
 @* Main menu *@
 <MudAppBar Class="flex-none" Fixed="false" Dense="true" WrapContent="false">
-	<MudIconButton @ref="_backButton" Href="/back" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" Edge="Edge.Start" />
+	<MudIconButton OnClick="@(() => Navigation.NavigateBack())" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" Edge="Edge.Start" />
 </MudAppBar>
 
 @* watermark image *@
@@ -70,25 +71,20 @@
 </div>
 
 @code {
-	private bool _isDisposed;
-	private MudBaseButton _backButton;
-	private IKeyboardShortcuts _keyboardShortcuts;
-
 	protected override void OnInitialized()
 	{
 		SettingsModel settings = SettingsService.LoadSettingsOrDefault();
 		ViewModel = new TransferCodeHistoryViewModel(settings, ClipboardService);
-
-		_keyboardShortcuts = KeyboardShortcutService.CreateShortcuts()
-			.Add(ModCode.None, Code.Escape, () => _backButton);
 	}
 
-	public void Dispose()
+	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
-		if (_isDisposed)
-			return;
-		_isDisposed = true;
-		_keyboardShortcuts.Dispose();
+		if (firstRender)
+		{
+			await KeyboardShortcuts.InitializeAsync(JSRuntime);
+			KeyboardShortcuts
+				.AddShortcut(new SnKeyboardShortcut(SnKey.Escape), () => Navigation.NavigateBack());
+		}
 	}
 
 	private TransferCodeHistoryViewModel ViewModel { get; set; }

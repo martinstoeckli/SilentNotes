@@ -10,7 +10,7 @@
 
 @inject ILanguageService LanguageService
 @inject ISvgIconService IconService
-@inject IKeyboardShortcutService KeyboardShortcutService
+@inject IJSRuntime JSRuntime
 @inject INavigationService Navigation
 @inject IFeedbackService FeedbackService
 @inject ISettingsService SettingsService
@@ -212,7 +212,6 @@
 	private MudDrawer _sideDrawer;
 	private MudIconButton _tagsButton;
 	private MudBaseButton _syncButton;
-	private IKeyboardShortcuts _keyboardShortcuts;
 	private string _pendingScrollIntoViewSelector;
 
 	/// <summary>
@@ -238,23 +237,26 @@
 		ViewModel.PropertyChanged += PropertyChangedHandler;
 
 		// todo: read the SettingsViewMode.StartWithTagsOpen
-
-		// _keyboardShortcuts = KeyboardShortcutService.CreateShortcuts()
-		// 	.Add(ModCode.Ctrl, Code.T, () => _tagsButton)
-		// 	.Add(ModCode.Ctrl, Code.S, () => _syncButton)
-		// 	.Add(ModCode.Ctrl, Code.N, () => ViewModel.NewNoteCommand.Execute(null))
-		// 	.Add(ModCode.Ctrl, Code.L, () => ViewModel.NewChecklistCommand.Execute(null))
-		// 	.Add(ModCode.Ctrl, Code.R, "/recyclebin")
-		// 	.Add(ModCode.Ctrl, Code.I, "/info")
-		// 	.Add(ModCode.None, Code.Home, () => ScrollManager.ScrollToTopAsync(null, ScrollBehavior.Auto))
-		// 	.Add(ModCode.None, Code.End, () => ScrollManager.ScrollToBottomAsync(null, ScrollBehavior.Auto));
-
 		base.OnInitialized();
 	}
 
 	/// <inheritdoc/>
 	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
+		if (firstRender)
+		{
+			await KeyboardShortcuts.InitializeAsync(JSRuntime);
+			KeyboardShortcuts
+				.AddShortcut(new SnKeyboardShortcut("t", true), () => _tagsButton.OnClick.InvokeAsync())
+				.AddShortcut(new SnKeyboardShortcut("s", true), () => _syncButton.OnClick.InvokeAsync())
+				.AddShortcut(new SnKeyboardShortcut("n", true), () => ViewModel.NewNoteCommand.Execute(null))
+				.AddShortcut(new SnKeyboardShortcut("l", true), () => ViewModel.NewChecklistCommand.Execute(null))
+				.AddShortcut(new SnKeyboardShortcut("r", true), () => Navigation.NavigateTo("/recyclebin"))
+				.AddShortcut(new SnKeyboardShortcut("i", true), () => Navigation.NavigateTo("/info"))
+				.AddShortcut(new SnKeyboardShortcut(SnKey.Home), () => ScrollManager.ScrollToTopAsync(null, ScrollBehavior.Auto))
+				.AddShortcut(new SnKeyboardShortcut(SnKey.End), () => ScrollManager.ScrollToBottomAsync(null, ScrollBehavior.Auto));
+		}
+
 		if (!string.IsNullOrEmpty(_pendingScrollIntoViewSelector))
 		{
 			await ScrollManager.ScrollIntoViewAsync(_pendingScrollIntoViewSelector, ScrollBehavior.Smooth);
@@ -270,9 +272,9 @@
 	}
 
 	/// <inheritdoc/>
-	protected override void OnDisposing()
+	protected override void OnClosingPage()
 	{
-		// 	_keyboardShortcuts?.Dispose();
+		base.OnClosingPage();
 		if (ViewModel != null)
 			ViewModel.PropertyChanged -= PropertyChangedHandler;
 	}

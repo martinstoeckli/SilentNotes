@@ -4,7 +4,6 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.DependencyInjection;
 //using SilentNotes.Controllers;
@@ -19,8 +18,15 @@ namespace SilentNotes.Services
     /// <summary>
     /// base class for implementations of the <see cref="IAutoSynchronizationService"/> interface.
     /// </summary>
-    public abstract class AutoSynchronizationServiceBase : IAutoSynchronizationService
+    public abstract class AutoSynchronizationServiceBase : IAutoSynchronizationService, IDisposable
     {
+        public AutoSynchronizationServiceBase()
+        {
+#if DEBUG
+            System.Diagnostics.Debug.WriteLine("*** Singleton service create " + Id);
+#endif
+        }
+
         /// <inheritdoc/>
         public virtual async Task SynchronizeAtStartup()
         {
@@ -76,12 +82,24 @@ namespace SilentNotes.Services
             //}
         }
 
+#if DEBUG
+        public Guid Id { get; } = Guid.NewGuid();
+#endif
+
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+#if DEBUG
+            System.Diagnostics.Debug.WriteLine("*** Scoped service dispose " + Id);
+#endif
+        }
+
         /// <inheritdoc/>
         public virtual async Task SynchronizeAtShutdown()
         {
-            var ii = SynchronizationContext.Current;
-
-            Debug.WriteLine("*** AutoSynchronizationService.SynchronizeAtShutdown()");
+#if DEBUG
+            System.Diagnostics.Debug.WriteLine("*** AutoSynchronizationService.SynchronizeAtShutdown() " + Id);
+#endif
             await Task.CompletedTask;
             //// Still running from startup?
             //if (IsRunning)
@@ -119,6 +137,9 @@ namespace SilentNotes.Services
             //{
             //    IsRunning = false;
             //}
+#if DEBUG
+            System.Diagnostics.Debug.WriteLine("*** AutoSynchronizationService.SynchronizeAtShutdown() finished");
+#endif
         }
 
         /// <inheritdoc/>

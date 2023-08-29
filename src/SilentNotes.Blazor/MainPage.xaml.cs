@@ -17,7 +17,7 @@ public partial class MainPage : ContentPage
         var webView2 = (blazorWebView.Handler.PlatformView as Microsoft.UI.Xaml.Controls.WebView2);
         await webView2.EnsureCoreWebView2Async();
         var settings = webView2.CoreWebView2.Settings;
-        settings.AreBrowserAcceleratorKeysEnabled = false;
+        settings.AreBrowserAcceleratorKeysEnabled = false; // In debug mode we need ctrl-shift-i to open the developer view
         settings.IsPasswordAutosaveEnabled = false;
 #else
         await Task.CompletedTask;
