@@ -15,4 +15,11 @@ namespace SilentNotes
     public class ClosePageMessage
     {
     }
+
+    /// <summary>
+    /// Message to inform the current page that a call to StateHasChanged is necessary.
+    /// </summary>
+    public class StateHasChangedMessage
+    {
+    }
 }

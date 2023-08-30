@@ -1,9 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using CommunityToolkit.Mvvm.Messaging;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Routing;
-using Microsoft.AspNetCore.Components.WebView.Maui;
+﻿using CommunityToolkit.Mvvm.Messaging;
 using SilentNotes.Services;
 
 namespace SilentNotes;

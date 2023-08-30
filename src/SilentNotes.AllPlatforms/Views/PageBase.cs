@@ -34,6 +34,8 @@ namespace SilentNotes.Views
                 this, (recipient, message) => OnStoringUnsavedData());
             WeakReferenceMessenger.Default.Register<ClosePageMessage>(
                 this, async (recipient, message) => await TriggerOnClosingPageAsync());
+            WeakReferenceMessenger.Default.Register<StateHasChangedMessage>(
+                this, (recipient, message) => StateHasChanged());
         }
 
         /// <summary>
@@ -72,6 +74,7 @@ namespace SilentNotes.Views
             // Deconnect message listening
             WeakReferenceMessenger.Default.Unregister<StoreUnsavedDataMessage>(this);
             WeakReferenceMessenger.Default.Unregister<ClosePageMessage>(this);
+            WeakReferenceMessenger.Default.Unregister<StateHasChangedMessage>(this);
 
             _keyboardShortcuts?.Dispose();
             OnClosingPage();

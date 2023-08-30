@@ -157,7 +157,8 @@ namespace SilentNotes
         /// <param name="shortcut">Describes the state of the keys to trigger the shortcut (Escape).</param>
         /// <param name="handler">The handler assigned to this shortcut, it should return "true"
         /// if something has been closed to prevent further actions, otherwise false.</param>
-        public void SetCloseMenuShortcut(SnKeyboardShortcut shortcut, Func<bool> handler)
+        /// <returns>Returns itself for a fluent declaration of shortcuts.</returns>
+        public SnKeyboardShortcuts SetCloseMenuShortcut(SnKeyboardShortcut shortcut, Func<bool> handler)
         {
             if (shortcut == null)
                 throw new ArgumentNullException(nameof(shortcut));
@@ -165,6 +166,7 @@ namespace SilentNotes
                 throw new ArgumentNullException(nameof(handler));
 
             _closeMenuShortcut = new KeyValuePair<SnKeyboardShortcut, Func<bool>>(shortcut, handler);
+            return this;
         }
 
         /// <summary>

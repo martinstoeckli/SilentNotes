@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using SilentNotes.Crypto;
 using SilentNotes.Models;
 using SilentNotes.Services;
@@ -118,7 +119,7 @@ namespace SilentNotes.ViewModels
                     Model.Notes.Remove(note);
                 }
             }
-            OnPropertyChanged("page");
+            WeakReferenceMessenger.Default.Send<StateHasChangedMessage>();
         }
 
         /// <summary>

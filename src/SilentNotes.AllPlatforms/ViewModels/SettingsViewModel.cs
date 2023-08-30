@@ -4,6 +4,7 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.AspNetCore.Components;
 using SilentNotes.Crypto.SymmetricEncryption;
 using SilentNotes.Models;
@@ -363,7 +364,7 @@ namespace SilentNotes.ViewModels
             {
                 SetPropertyAndModified(Model.Credentials, null, (v) => Model.Credentials = v, nameof(AccountSummary));
                 OnPropertyChanged(nameof(ClearCloudSettingsDisabled));
-                OnPropertyChanged("page");
+                WeakReferenceMessenger.Default.Send<StateHasChangedMessage>();
             }
         }
 
@@ -442,7 +443,7 @@ namespace SilentNotes.ViewModels
                 {
                     byte[] languageFile = await _filePickerService.ReadPickedFile();
                     (Language as ILanguageTestService).OverrideWithTestResourceFile(languageFile);
-                    OnPropertyChanged("page");
+                    WeakReferenceMessenger.Default.Send<StateHasChangedMessage>();
                 }
             }
             catch (Exception)

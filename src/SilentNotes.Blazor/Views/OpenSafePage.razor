@@ -108,6 +108,7 @@
 		{
 			await KeyboardShortcuts.InitializeAsync(JSRuntime);
 			KeyboardShortcuts
+				.SetCloseMenuShortcut(new SnKeyboardShortcut(SnKey.Escape), CloseOpenMenuOrDialog)
 				.AddShortcut(new SnKeyboardShortcut(SnKey.Escape), () => Navigation.NavigateBack())
 				.AddShortcut(new SnKeyboardShortcut(SnKey.Enter), async () => await SnKeyboardShortcuts.SimulateClickAsync(_okButton));
 		}
@@ -122,6 +123,21 @@
 	}
 
 	private OpenSafeViewModel ViewModel { get; set; }
+
+	private bool CloseOpenMenuOrDialog()
+	{
+		bool result = false;
+
+		if (_overflowMenu.IsOpen)
+		{
+			_overflowMenu.CloseMenu();
+			result = true;
+		}
+
+		if (result)
+			StateHasChanged();
+		return result;
+	}
 
 	[Parameter]
 	public string TargetNoteType { get; set; } = default!;

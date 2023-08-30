@@ -345,6 +345,7 @@
 
 				await KeyboardShortcuts.InitializeAsync(JSRuntime);
 				KeyboardShortcuts
+					.SetCloseMenuShortcut(new SnKeyboardShortcut(SnKey.Escape), CloseOpenMenuOrDialog)
 					.AddShortcut(new SnKeyboardShortcut(SnKey.Escape), () => Navigation.NavigateBack())
 					.AddShortcut(new SnKeyboardShortcut("f", true), () => SearchToolbarOpen = true)
 					.AddShortcut(new SnKeyboardShortcut(SnKey.F3), async () => await FindNext())

@@ -272,7 +272,6 @@
 	protected override void OnInitialized()
 	{
 		ViewModel = new SettingsViewModel(SettingsService, LanguageService, EnvironmentService, ThemeService, FeedbackService, CloudStorageClientFactory, FilePickerService);
-		ViewModel.PropertyChanged += PropertyChangedHandler;
 	}
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -280,22 +279,27 @@
 		if (firstRender)
 		{
 			await KeyboardShortcuts.InitializeAsync(JSRuntime);
-			KeyboardShortcuts.AddShortcut(new SnKeyboardShortcut(SnKey.Escape), () => Navigation.NavigateBack());
+			KeyboardShortcuts
+				.SetCloseMenuShortcut(new SnKeyboardShortcut(SnKey.Escape), CloseOpenMenuOrDialog)
+				.AddShortcut(new SnKeyboardShortcut(SnKey.Escape), () => Navigation.NavigateBack());
 		}
-	}
-
-	protected override void OnClosingPage()
-	{
-		base.OnClosingPage();
-		ViewModel.PropertyChanged -= PropertyChangedHandler;
 	}
 
 	private SettingsViewModel ViewModel { get; set; }
 
-	private void PropertyChangedHandler(object sender, PropertyChangedEventArgs e)
+	private bool CloseOpenMenuOrDialog()
 	{
-		if (e.PropertyName == "page")
+		bool result = false;
+
+		if (_overflowMenu.IsOpen)
+		{
+			_overflowMenu.CloseMenu();
+			result = true;
+		}
+
+		if (result)
 			StateHasChanged();
+		return result;
 	}
 
 	private string GetBackgroundColorStyle(string backgroundColor)
