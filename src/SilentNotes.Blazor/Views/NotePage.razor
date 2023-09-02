@@ -231,7 +231,7 @@
 
 @* Link dialog *@
 <MudOverlay @bind-Visible="_linkState.IsDialogOpen" AutoClose="false">
-	<MudCard>
+	<MudCard Class="dialog">
 		<MudCardContent>
 			<MudTextField @bind-Value="_linkState.LinkTitle"
 				Label="Title" Immediate="true" Style="width:400px"></MudTextField>
@@ -241,9 +241,9 @@
 				Immediate="true" Style="width:400px"></MudTextField>
 		</MudCardContent>
 		<MudCardActions Class="justify-end gap-x-2">
-			<MudButton OnClick="@(() => LinkDialogOkPressed())" Variant="Variant.Filled" Color="Color.Primary">@LanguageService["ok"]</MudButton>
-			<MudButton OnClick="@(() => ViewModel.OpenLinkCommand.Execute(_linkState.LinkUrl))" Variant="Variant.Filled" Color="Color.Default" EndIcon="@Icons.Material.Filled.OpenInNew">@LanguageService["note_open_link"]</MudButton>
-			<MudButton OnClick="@(() => _linkState.IsDialogOpen = false)" Variant="Variant.Filled" Color="Color.Default">@LanguageService["cancel"]</MudButton>
+			<MudButton OnClick="@(() => _linkState.IsDialogOpen = false)" Variant="Variant.Text" Color="Color.Default">@LanguageService["cancel"]</MudButton>
+			<MudButton OnClick="@(() => ViewModel.OpenLinkCommand.Execute(_linkState.LinkUrl))" Variant="Variant.Text" Color="Color.Default" EndIcon="@Icons.Material.Filled.OpenInNew">@LanguageService["note_open_link"]</MudButton>
+			<MudButton OnClick="@(() => LinkDialogOkPressed())" Variant="Variant.Text" Color="Color.Primary">@LanguageService["ok"]</MudButton>
 		</MudCardActions>
 	</MudCard>
 </MudOverlay>
@@ -345,7 +345,7 @@
 
 				await KeyboardShortcuts.InitializeAsync(JSRuntime);
 				KeyboardShortcuts
-					.SetCloseMenuShortcut(new SnKeyboardShortcut(SnKey.Escape), CloseOpenMenuOrDialog)
+					.SetCloseMenuShortcut(new SnKeyboardShortcut(SnKey.Escape), OnCloseMenuOrDialog)
 					.AddShortcut(new SnKeyboardShortcut(SnKey.Escape), () => Navigation.NavigateBack())
 					.AddShortcut(new SnKeyboardShortcut("f", true), () => SearchToolbarOpen = true)
 					.AddShortcut(new SnKeyboardShortcut(SnKey.F3), async () => await FindNext())
@@ -381,8 +381,10 @@
 	[Parameter]
 	public string NoteId { get; set; } = default!;
 
-	private bool CloseOpenMenuOrDialog()
+	/// <inheritdoc/>
+	protected override bool OnCloseMenuOrDialog()
 	{
+		base.OnCloseMenuOrDialog();
 		bool result = false;
 
 		if (_overflowMenu.IsOpen)

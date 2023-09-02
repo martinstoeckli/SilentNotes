@@ -23,11 +23,4 @@ public partial class MainPage : ContentPage
         await Task.CompletedTask;
 #endif
     }
-
-    protected override bool OnBackButtonPressed()
-    {
-        bool isHandled = false;
-        return isHandled;
-        //return base.OnBackButtonPressed();
-    }
 }

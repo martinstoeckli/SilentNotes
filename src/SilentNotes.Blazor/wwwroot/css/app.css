@@ -299,6 +299,9 @@ div.ProseMirror:focus {
 .mud-appbar .mud-icon-size-medium { font-size: 1.75rem; } /* bigger toolbar icons */
 .mud-list-item-icon { min-width: 38px; } /* smaller gap between icon and menuitem */
 
+.dialog { max-width: 92vw; }
+.dialog .mud-input { max-width: 100%; }
+
 #blazor-error-ui {
 	background: red;
 	color: white;

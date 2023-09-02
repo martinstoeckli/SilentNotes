@@ -311,7 +311,7 @@ div.dark .detail-view.checklist .ProseMirror p::after { content: @(IconService.L
 
 				await KeyboardShortcuts.InitializeAsync(JSRuntime);
 				KeyboardShortcuts
-					.SetCloseMenuShortcut(new SnKeyboardShortcut(SnKey.Escape), CloseOpenMenuOrDialog)
+					.SetCloseMenuShortcut(new SnKeyboardShortcut(SnKey.Escape), OnCloseMenuOrDialog)
 					.AddShortcut(new SnKeyboardShortcut(SnKey.Escape), () => Navigation.NavigateBack())
 					.AddShortcut(new SnKeyboardShortcut("f", true), () => SearchToolbarOpen = true)
 					.AddShortcut(new SnKeyboardShortcut(SnKey.F3), async () => await FindNext())
@@ -347,8 +347,10 @@ div.dark .detail-view.checklist .ProseMirror p::after { content: @(IconService.L
 	[Parameter]
 	public string NoteId { get; set; } = default!;
 
-	private bool CloseOpenMenuOrDialog()
+	/// <inheritdoc/>
+	protected override bool OnCloseMenuOrDialog()
 	{
+		base.OnCloseMenuOrDialog();
 		bool result = false;
 
 		if (_overflowMenu.IsOpen)

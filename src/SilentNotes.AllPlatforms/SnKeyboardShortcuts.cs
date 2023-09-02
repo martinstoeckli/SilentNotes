@@ -43,6 +43,7 @@ namespace SilentNotes
     /// </summary>
     public class SnKeyboardShortcuts : IDisposable
     {
+        private readonly bool _platformSupportsShortcuts = false;
         private bool _disposed = false;
         private IJSRuntime _jsRuntime;
         private DotNetObjectReference<SnKeyboardShortcuts> _dotnetModule;
@@ -54,6 +55,9 @@ namespace SilentNotes
         /// </summary>
         public SnKeyboardShortcuts()
         {
+#if WINDOWS
+            _platformSupportsShortcuts = true;
+#endif
             _shortcuts = new Dictionary<SnKeyboardShortcut, Action>();
             _closeMenuShortcut = new KeyValuePair<SnKeyboardShortcut, Func<bool>>(null, null);
         }
@@ -68,6 +72,8 @@ namespace SilentNotes
 
         public ValueTask InitializeAsync(IJSRuntime jsRuntime)
         {
+            if (!_platformSupportsShortcuts)
+                return ValueTask.CompletedTask;
             if (jsRuntime == null)
                 throw new ArgumentNullException(nameof(jsRuntime));
             if (_jsRuntime != null)
@@ -91,6 +97,9 @@ namespace SilentNotes
         /// by the finalizer.</param>
         private void Dispose(bool disposing)
         {
+            if (!_platformSupportsShortcuts)
+                return;
+
             if (!_disposed)
             {
                 _disposed = true;

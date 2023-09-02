@@ -248,7 +248,7 @@
 		{
 			await KeyboardShortcuts.InitializeAsync(JSRuntime);
 			KeyboardShortcuts
-				.SetCloseMenuShortcut(new SnKeyboardShortcut(SnKey.Escape), CloseOpenMenuOrDialog)
+				.SetCloseMenuShortcut(new SnKeyboardShortcut(SnKey.Escape), OnCloseMenuOrDialog)
 				.AddShortcut(new SnKeyboardShortcut("t", true), async () => await SnKeyboardShortcuts.SimulateClickAsync(_tagsButton))
 				.AddShortcut(new SnKeyboardShortcut("s", true), async () => await SnKeyboardShortcuts.SimulateClickAsync(_syncButton))
 				.AddShortcut(new SnKeyboardShortcut("n", true), () => ViewModel.NewNoteCommand.Execute(null))
@@ -286,8 +286,10 @@
 	/// </summary>
 	private NoteRepositoryViewModel ViewModel { get; set; }
 
-	private bool CloseOpenMenuOrDialog()
+	/// <inheritdoc/>
+	protected override bool OnCloseMenuOrDialog()
 	{
+		base.OnCloseMenuOrDialog();
 		bool result = false;
 
 		if (_overflowMenu.IsOpen)

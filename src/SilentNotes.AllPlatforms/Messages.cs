@@ -22,4 +22,15 @@ namespace SilentNotes
     public class StateHasChangedMessage
     {
     }
+
+    /// <summary>
+    /// Message to inform the current page that the system back button was pressed.
+    /// </summary>
+    public class BackButtonPressedMessage
+    {
+        /// <summary>
+        /// Gets or sets a value indicating whether the listener handled the press event.
+        /// </summary>
+        public bool Handled { get; set; }
+    }
 }

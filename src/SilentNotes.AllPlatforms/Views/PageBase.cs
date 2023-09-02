@@ -36,6 +36,8 @@ namespace SilentNotes.Views
                 this, async (recipient, message) => await TriggerOnClosingPageAsync());
             WeakReferenceMessenger.Default.Register<StateHasChangedMessage>(
                 this, (recipient, message) => StateHasChanged());
+            WeakReferenceMessenger.Default.Register<BackButtonPressedMessage>(
+                this, (recipient, message) => TriggerCloseMenuOrDialog(message));
         }
 
         /// <summary>
@@ -75,6 +77,7 @@ namespace SilentNotes.Views
             WeakReferenceMessenger.Default.Unregister<StoreUnsavedDataMessage>(this);
             WeakReferenceMessenger.Default.Unregister<ClosePageMessage>(this);
             WeakReferenceMessenger.Default.Unregister<StateHasChangedMessage>(this);
+            WeakReferenceMessenger.Default.Unregister<BackButtonPressedMessage>(this);
 
             _keyboardShortcuts?.Dispose();
             OnClosingPage();
@@ -98,6 +101,28 @@ namespace SilentNotes.Views
         {
             Debug.WriteLine(string.Format("*** {0}.OnClosingPageAsync {1}", GetType().Name, Id));
             return ValueTask.CompletedTask;
+        }
+
+        private void TriggerCloseMenuOrDialog(BackButtonPressedMessage message)
+        {
+            bool handled = OnCloseMenuOrDialog();
+
+            // If just one of the called event handlers returns true, it should remain true.
+            if (handled)
+                message.Handled = true;
+        }
+
+        /// <summary>
+        /// Method invoked when the page should close currently open menus or dialogs. This can
+        /// either be triggered by pressing the "ESC" key or by pressing the "Back" button on Android.
+        /// If a menu or dialog was closed, the function should return true to indicate that the
+        /// event was handled, this will prevent the default action like closing the app.
+        /// </summary>
+        /// <returns>A value indicating whether the event was handled or not.</returns>
+        protected virtual bool OnCloseMenuOrDialog()
+        {
+            Debug.WriteLine(string.Format("*** {0}.OnCloseMenuOrDialog {1}", GetType().Name, Id));
+            return false;
         }
 
         /// <summary>
