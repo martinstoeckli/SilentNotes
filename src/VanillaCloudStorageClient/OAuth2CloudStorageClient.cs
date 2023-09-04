@@ -6,9 +6,10 @@
 using System;
 using System.Linq;
 using System.Net;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Flurl.Http;
-using Newtonsoft.Json;
 using VanillaCloudStorageClient.OAuth2;
 
 namespace VanillaCloudStorageClient
@@ -110,7 +111,7 @@ namespace VanillaCloudStorageClient
                     })
                     .ReceiveString();
 
-                JsonTokenExchangeResponse response = JsonConvert.DeserializeObject<JsonTokenExchangeResponse>(jsonResponse);
+                JsonTokenExchangeResponse response = JsonSerializer.Deserialize<JsonTokenExchangeResponse>(jsonResponse);
                 CloudStorageToken result = new CloudStorageToken
                 {
                     AccessToken = response.AccessToken,
@@ -165,7 +166,7 @@ namespace VanillaCloudStorageClient
                     })
                     .ReceiveString();
 
-                JsonTokenExchangeResponse response = JsonConvert.DeserializeObject<JsonTokenExchangeResponse>(jsonResponse);
+                JsonTokenExchangeResponse response = JsonSerializer.Deserialize<JsonTokenExchangeResponse>(jsonResponse);
                 CloudStorageToken result = new CloudStorageToken
                 {
                     AccessToken = response.AccessToken,
@@ -199,13 +200,13 @@ namespace VanillaCloudStorageClient
         /// </summary>
         private class JsonTokenExchangeResponse
         {
-            [JsonProperty(PropertyName = "access_token")]
+            [JsonPropertyName("access_token")]
             public string AccessToken { get; set; }
 
-            [JsonProperty(PropertyName = "refresh_token")]
+            [JsonPropertyName("refresh_token")]
             public string RefreshToken { get; set; }
 
-            [JsonProperty(PropertyName = "expires_in")]
+            [JsonPropertyName("expires_in")]
             public int? ExpiresIn { get; set; }
         }
     }

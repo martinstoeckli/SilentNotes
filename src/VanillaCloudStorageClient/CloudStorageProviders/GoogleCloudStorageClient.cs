@@ -7,9 +7,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Flurl.Http;
-using Newtonsoft.Json;
 using VanillaCloudStorageClient.OAuth2;
 
 namespace VanillaCloudStorageClient.CloudStorageProviders
@@ -185,7 +186,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
                         .GetAsync()
                         .ReceiveString();
 
-                    entries = JsonConvert.DeserializeObject<JsonFolderEntries>(jsonResponse);
+                    entries = JsonSerializer.Deserialize<JsonFolderEntries>(jsonResponse);
                     result.AddRange(entries.Entries
                         .Where(item => item.Kind == "drive#file")
                         .Select(item => item.Name));
@@ -227,7 +228,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
                     .GetAsync()
                     .ReceiveString();
 
-                JsonFolderEntries entries = JsonConvert.DeserializeObject<JsonFolderEntries>(jsonResponse);
+                JsonFolderEntries entries = JsonSerializer.Deserialize<JsonFolderEntries>(jsonResponse);
                 return entries.Entries
                     .Where(item => item.Kind == "drive#file")
                     .Select(item => item.Id)
@@ -244,13 +245,13 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
         /// </summary>
         private class JsonFolderEntries
         {
-            [JsonProperty(PropertyName = "files")]
+            [JsonPropertyName("files")]
             public List<JsonFolderEntry> Entries { get; set; }
 
-            [JsonProperty(PropertyName = "nextPageToken")]
+            [JsonPropertyName("nextPageToken")]
             public string Cursor { get; set; }
 
-            [JsonProperty(PropertyName = "incompleteSearch")]
+            [JsonPropertyName("incompleteSearch")]
             public bool IncompleteSearch { get; set; }
         }
 
@@ -259,13 +260,13 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
         /// </summary>
         private class JsonFolderEntry
         {
-            [JsonProperty(PropertyName = "kind")]
+            [JsonPropertyName("kind")]
             public string Kind { get; set; }
 
-            [JsonProperty(PropertyName = "id")]
+            [JsonPropertyName("id")]
             public string Id { get; set; }
 
-            [JsonProperty(PropertyName = "name")]
+            [JsonPropertyName("name")]
             public string Name { get; set; }
         }
     }

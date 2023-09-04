@@ -7,9 +7,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Flurl.Http;
-using Newtonsoft.Json;
 using VanillaCloudStorageClient.OAuth2;
 
 namespace VanillaCloudStorageClient.CloudStorageProviders
@@ -71,7 +72,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
 
             try
             {
-                string jsonPathParameter = JsonConvert.SerializeObject(new
+                string jsonPathParameter = JsonSerializer.Serialize(new
                 {
                     path = EnsureLeadingSlash(filename),
                     mode = "overwrite",
@@ -98,7 +99,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
 
             try
             {
-                string jsonPathParameter = JsonConvert.SerializeObject(new
+                string jsonPathParameter = JsonSerializer.Serialize(new
                 {
                     path = EnsureLeadingSlash(filename)
                 });
@@ -157,7 +158,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
                     })
                     .ReceiveString();
 
-                JsonFolderEntries entries = JsonConvert.DeserializeObject<JsonFolderEntries>(jsonResponse);
+                JsonFolderEntries entries = JsonSerializer.Deserialize<JsonFolderEntries>(jsonResponse);
                 List<string> result = new List<string>();
                 result.AddRange(entries.Entries
                     .Where(item => item.Tag == "file")
@@ -171,7 +172,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
                         .PostJsonAsync(new { cursor = entries.Cursor })
                         .ReceiveString();
 
-                    entries = JsonConvert.DeserializeObject<JsonFolderEntries>(jsonResponse);
+                    entries = JsonSerializer.Deserialize<JsonFolderEntries>(jsonResponse);
                     result.AddRange(entries.Entries
                         .Where(item => item.Tag == "file")
                         .Select(item => item.Name));
@@ -204,13 +205,13 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
         /// </summary>
         private class JsonFolderEntries
         {
-            [JsonProperty(PropertyName = "entries")]
+            [JsonPropertyName("entries")]
             public List<JsonFolderEntry> Entries { get; set; }
 
-            [JsonProperty(PropertyName = "cursor")]
+            [JsonPropertyName("cursor")]
             public string Cursor { get; set; }
 
-            [JsonProperty(PropertyName = "has_more")]
+            [JsonPropertyName("has_more")]
             public bool HasMore { get; set; }
         }
 
@@ -219,19 +220,19 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
         /// </summary>
         private class JsonFolderEntry
         {
-            [JsonProperty(PropertyName = ".tag")]
+            [JsonPropertyName(".tag")]
             public string Tag { get; set; }
 
-            [JsonProperty(PropertyName = "name")]
+            [JsonPropertyName("name")]
             public string Name { get; set; }
 
-            [JsonProperty(PropertyName = "id")]
+            [JsonPropertyName("id")]
             public string Id { get; set; }
 
-            [JsonProperty(PropertyName = "cursor")]
+            [JsonPropertyName("cursor")]
             public string Cursor { get; set; }
 
-            [JsonProperty(PropertyName = "has_more")]
+            [JsonPropertyName("has_more")]
             public bool HasMore { get; set; }
         }
     }

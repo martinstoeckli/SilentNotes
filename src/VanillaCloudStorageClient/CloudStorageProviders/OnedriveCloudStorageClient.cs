@@ -9,10 +9,11 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Flurl;
 using Flurl.Http;
-using Newtonsoft.Json;
 using VanillaCloudStorageClient.OAuth2;
 
 namespace VanillaCloudStorageClient.CloudStorageProviders
@@ -81,7 +82,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
                     .PostAsync(sessionContent)
                     .ReceiveString();
 
-                JsonUploadSession session = JsonConvert.DeserializeObject<JsonUploadSession>(jsonResponse);
+                JsonUploadSession session = JsonSerializer.Deserialize<JsonUploadSession>(jsonResponse);
 
                 // Now that we have got the session, the file can be uploaded
                 HttpContent content = new ByteArrayContent(fileContent);
@@ -153,7 +154,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
                         .GetAsync()
                         .ReceiveString();
 
-                    JsonFolderEntries entries = JsonConvert.DeserializeObject<JsonFolderEntries>(jsonResponse);
+                    JsonFolderEntries entries = JsonSerializer.Deserialize<JsonFolderEntries>(jsonResponse);
                     result.AddRange(entries.Entries
                         .Where(item => item.File != null)
                         .Select(item => item.Name));
@@ -211,7 +212,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
                     .SetQueryParam("$select", "id")
                     .GetAsync()
                     .ReceiveString();
-                JsonFolderEntry entry = JsonConvert.DeserializeObject<JsonFolderEntry>(jsonResponse);
+                JsonFolderEntry entry = JsonSerializer.Deserialize<JsonFolderEntry>(jsonResponse);
                 return entry.Id;
             }
             catch (Exception ex)
@@ -237,7 +238,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
         /// </summary>
         private class JsonUploadSession
         {
-            [JsonProperty(PropertyName = "uploadUrl")]
+            [JsonPropertyName("uploadUrl")]
             public string UploadUrl { get; set; }
         }
 
@@ -246,10 +247,10 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
         /// </summary>
         private class JsonFolderEntries
         {
-            [JsonProperty(PropertyName = "value")]
+            [JsonPropertyName("value")]
             public List<JsonFolderEntry> Entries { get; set; }
 
-            [JsonProperty(PropertyName = "@odata.nextLink")]
+            [JsonPropertyName("@odata.nextLink")]
             public string NextLink { get; set; }
         }
 
@@ -258,13 +259,13 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
         /// </summary>
         private class JsonFolderEntry
         {
-            [JsonProperty(PropertyName = "file")]
+            [JsonPropertyName("file")]
             public JsonFolderEntryFile File { get; set; }
 
-            [JsonProperty(PropertyName = "id")]
+            [JsonPropertyName("id")]
             public string Id { get; set; }
 
-            [JsonProperty(PropertyName = "name")]
+            [JsonPropertyName("name")]
             public string Name { get; set; }
         }
 
