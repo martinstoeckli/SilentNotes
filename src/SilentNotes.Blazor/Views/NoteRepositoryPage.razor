@@ -20,6 +20,8 @@
 @inject ICryptoRandomService CryptoRandomSource
 @inject IScrollManager ScrollManager
 @inject IBrowserViewportService ViewportService
+@inject IStoryBoardService StoryBoardService
+@inject IAutoSynchronizationService AutoSynchronizationService
 
 <style type="text/css">
 	#content {
@@ -61,7 +63,7 @@
 	</MudPaper>
 
 	@* Synchronization *@
-	<MudIconButton @ref="_syncButton" Icon="@IconService[IconNames.CloudSync]" Color="Color.Inherit" Title="@LanguageService["sync_notes"]" Edge="Edge.End" />
+	<MudIconButton @ref="_syncButton" OnClick="@(() => ViewModel.SynchronizeCommand.Execute(null))" Icon="@IconService[IconNames.CloudSync]" Color="Color.Inherit" Title="@LanguageService["sync_notes"]" Edge="Edge.End" />
 
 	@* Overflow menu *@
 	<MudMenu @ref="_overflowMenu" Dense="true" AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight">
@@ -71,8 +73,8 @@
 		<ChildContent>
 			<MudMenuItem OnClick="@(() => ViewModel.NewNoteCommand.Execute(null))" Icon="@IconService.GetSvgLink(IconNames.NoteTextOutline)">@LanguageService["note_create_new"]</MudMenuItem>
 			<MudMenuItem OnClick="@(() => ViewModel.NewChecklistCommand.Execute(null))" Icon="@IconService.GetSvgLink(IconNames.OrderBoolAscendingVariant)">@LanguageService["checklist_create_new"]</MudMenuItem>
-			<MudMenuItem OnClick="@(() => Navigation.NavigateTo("/recyclebin"))" Icon="@IconService[IconNames.DeleteEmpty]">@LanguageService["show_recyclebin"]</MudMenuItem>
-			<MudMenuItem OnClick="@(() => Navigation.NavigateTo("/export"))" Icon="@IconService[IconNames.Export]">@LanguageService["show_export"]</MudMenuItem>
+			<MudMenuItem OnClick="@(() => Navigation.NavigateTo(Routes.RecycleBin))" Icon="@IconService[IconNames.DeleteEmpty]">@LanguageService["show_recyclebin"]</MudMenuItem>
+			<MudMenuItem OnClick="@(() => Navigation.NavigateTo(Routes.Export))" Icon="@IconService[IconNames.Export]">@LanguageService["show_export"]</MudMenuItem>
 
 			<MudDivider />
 
@@ -82,15 +84,15 @@
 			}
 			else
 			{
-				<MudMenuItem OnClick="@(() => Navigation.NavigateTo("/opensafe"))" Icon="@IconService.GetSvgLink(IconNames.SafeSquareOutline)">@LanguageService["safe_open"]</MudMenuItem>
+				<MudMenuItem OnClick="@(() => Navigation.NavigateTo(Routes.OpenSafe))" Icon="@IconService.GetSvgLink(IconNames.SafeSquareOutline)">@LanguageService["safe_open"]</MudMenuItem>
 			}
-			<MudMenuItem OnClick="@(() => Navigation.NavigateTo("/changepassword"))" Icon="@IconService[IconNames.LockReset]" Disabled="!ViewModel.SafeExists">@LanguageService["safe_change_password"]</MudMenuItem>
+			<MudMenuItem OnClick="@(() => Navigation.NavigateTo(Routes.ChangePassword))" Icon="@IconService[IconNames.LockReset]" Disabled="!ViewModel.SafeExists">@LanguageService["safe_change_password"]</MudMenuItem>
 
 			<MudDivider />
 
-			<MudMenuItem OnClick="@(() => Navigation.NavigateTo("/transfercodehistory"))" Icon="@IconService[IconNames.Key]">@LanguageService["show_transfer_code"]</MudMenuItem>
-			<MudMenuItem OnClick="@(() => Navigation.NavigateTo("/settings"))" Icon="@IconService[IconNames.Settings]">@LanguageService["show_settings"]</MudMenuItem>
-			<MudMenuItem OnClick="@(() => Navigation.NavigateTo("/info"))" ForceLoad="false" Icon="@Icons.Material.Filled.Info">@LanguageService["show_info"]</MudMenuItem>
+			<MudMenuItem OnClick="@(() => Navigation.NavigateTo(Routes.TransferCodeHistory))" Icon="@IconService[IconNames.Key]">@LanguageService["show_transfer_code"]</MudMenuItem>
+			<MudMenuItem OnClick="@(() => Navigation.NavigateTo(Routes.Settings))" Icon="@IconService[IconNames.Settings]">@LanguageService["show_settings"]</MudMenuItem>
+			<MudMenuItem OnClick="@(() => Navigation.NavigateTo(Routes.Info))" ForceLoad="false" Icon="@Icons.Material.Filled.Info">@LanguageService["show_info"]</MudMenuItem>
 		</ChildContent>
 	</MudMenu>
 </MudAppBar>
@@ -232,6 +234,8 @@
 			ThemeService,
 			SettingsService,
 			EnvironmentService,
+			StoryBoardService,
+			AutoSynchronizationService,
 			CryptoRandomSource,
 			RepositoryStorageService
 		);
@@ -253,8 +257,8 @@
 				.AddShortcut(new SnKeyboardShortcut("s", true), async () => await SnKeyboardShortcuts.SimulateClickAsync(_syncButton))
 				.AddShortcut(new SnKeyboardShortcut("n", true), () => ViewModel.NewNoteCommand.Execute(null))
 				.AddShortcut(new SnKeyboardShortcut("l", true), () => ViewModel.NewChecklistCommand.Execute(null))
-				.AddShortcut(new SnKeyboardShortcut("r", true), () => Navigation.NavigateTo("/recyclebin"))
-				.AddShortcut(new SnKeyboardShortcut("i", true), () => Navigation.NavigateTo("/info"))
+				.AddShortcut(new SnKeyboardShortcut("r", true), () => Navigation.NavigateTo(Routes.RecycleBin))
+				.AddShortcut(new SnKeyboardShortcut("i", true), () => Navigation.NavigateTo(Routes.Info))
 				.AddShortcut(new SnKeyboardShortcut(SnKey.Home), async () => await ScrollManager.ScrollToTopAsync("#content", ScrollBehavior.Auto))
 				.AddShortcut(new SnKeyboardShortcut(SnKey.End), async () => await ScrollManager.ScrollToBottomAsync("#content", ScrollBehavior.Auto));
 		}

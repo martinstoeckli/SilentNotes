@@ -89,6 +89,8 @@ namespace SilentNotesTest.ViewModels
                 new Mock<IThemeService>().Object,
                 settingsService.Object,
                 CommonMocksAndStubs.EnvironmentService(),
+                new Mock<IStoryBoardService>().Object,
+                new Mock<IAutoSynchronizationService>().Object,
                 CommonMocksAndStubs.CryptoRandomService(),
                 null);
         }

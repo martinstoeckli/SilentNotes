@@ -10,7 +10,6 @@ using Android.Content;
 using Android.Runtime;
 using AndroidX.Concurrent.Futures;
 //using AndroidX.Work;
-using CommunityToolkit.Mvvm.DependencyInjection;
 using Google.Common.Util.Concurrent;
 using Microsoft.Extensions.DependencyInjection;
 using SilentNotes.Models;

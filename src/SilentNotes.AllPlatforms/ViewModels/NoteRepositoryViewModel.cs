@@ -13,8 +13,8 @@ using MudBlazor;
 using SilentNotes.Crypto;
 using SilentNotes.Models;
 using SilentNotes.Services;
-//using SilentNotes.StoryBoards;
-//using SilentNotes.StoryBoards.SynchronizationStory;
+using SilentNotes.Stories;
+using SilentNotes.Stories.SynchronizationStory;
 using SilentNotes.Workers;
 
 namespace SilentNotes.ViewModels
@@ -25,13 +25,13 @@ namespace SilentNotes.ViewModels
     public class NoteRepositoryViewModel : ViewModelBase
     {
         private readonly INavigationService _navigationService;
-        //private readonly IStoryBoardService _storyBoardService;
+        private readonly IStoryBoardService _storyBoardService;
         private readonly IRepositoryStorageService _repositoryService;
         private readonly IFeedbackService _feedbackService;
         private readonly IThemeService _themeService;
         private readonly ISettingsService _settingsService;
         private readonly IEnvironmentService _environmentService;
-        //private readonly IAutoSynchronizationService _autoSynchronizationService;
+        private readonly IAutoSynchronizationService _autoSynchronizationService;
         private readonly SearchableHtmlConverter _searchableTextConverter;
         private readonly ICryptor _noteCryptor;
         private readonly KeyValueList<string, string> _specialTagLocalizations;
@@ -50,12 +50,11 @@ namespace SilentNotes.ViewModels
             IThemeService themeService,
             ISettingsService settingsService,
             IEnvironmentService environmentService,
+            IStoryBoardService storyBoardService,
+            IAutoSynchronizationService autoSynchronizationService,
             ICryptoRandomSource randomSource,
             IRepositoryStorageService repositoryService)
         {
-            //    _storyBoardService = storyBoardService;
-            //    _repositoryService = repositoryService;
-            //    _feedbackService = feedbackService;
             Language = languageService;
             _navigationService = navigationService;
             _feedbackService = feedbackService;
@@ -63,7 +62,8 @@ namespace SilentNotes.ViewModels
             _settingsService = settingsService;
             _environmentService = environmentService;
             _repositoryService = repositoryService;
-            //    _autoSynchronizationService = autoSynchronizationService;
+            _storyBoardService = storyBoardService;
+            _autoSynchronizationService = autoSynchronizationService;
             _noteCryptor = new Cryptor(NoteModel.CryptorPackageName, randomSource);
             _searchableTextConverter = new SearchableHtmlConverter();
             AllNotes = new List<NoteViewModelReadOnly>();
@@ -73,7 +73,6 @@ namespace SilentNotes.ViewModels
             _specialTagLocalizations[NoteFilter.SpecialTags.AllNotes] = string.Format("«{0}»", Language.LoadText("filter_show_all_notes"));
             _specialTagLocalizations[NoteFilter.SpecialTags.NotesWithoutTags] = string.Format("«{0}»", Language.LoadText("filter_only_without_tags"));
 
-            //    _repositoryService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepository);
             Model = model;
             _originalFingerPrint = Model?.GetModificationFingerprint();
             UpdateTags();
@@ -83,7 +82,7 @@ namespace SilentNotes.ViewModels
             NewChecklistCommand = new RelayCommand(NewChecklist);
             DeleteNoteCommand = new RelayCommand<object>(DeleteNote);
             ClearFilterCommand = new RelayCommand(ClearFilter);
-            //    SynchronizeCommand = new RelayCommand(Synchronize);
+            SynchronizeCommand = new RelayCommand(Synchronize);
             CloseSafeCommand = new RelayCommand(CloseSafe);
 
             // If a filter was set before e.g. opening a note, set the same filter again.
@@ -234,7 +233,6 @@ namespace SilentNotes.ViewModels
         /// Gets or sets the search filter.
         /// A two-way-binding can end up in an endless loop, when typing very fast.
         /// </summary>
-        //[VueDataBinding(VueBindingMode.OneWayToViewmodel)]
         public string Filter
         {
             get { return _settingsService?.LoadSettingsOrDefault().Filter; }
@@ -475,35 +473,40 @@ namespace SilentNotes.ViewModels
             get { return _specialTagLocalizations[NoteFilter.SpecialTags.NotesWithoutTags]; }
         }
 
-        ///// <summary>
-        ///// Gets the command which handles the synchronization with the web server.
-        ///// </summary>
-        //[VueDataBinding(VueBindingMode.Command)]
-        //public ICommand SynchronizeCommand { get; private set; }
+        /// <summary>
+        /// Gets the command which handles the synchronization with the web server.
+        /// </summary>
+        public ICommand SynchronizeCommand { get; private set; }
 
-        //private async void Synchronize()
-        //{
-        //    if (_autoSynchronizationService.IsRunning)
-        //        return;
+        private async void Synchronize()
+        {
+            if (_autoSynchronizationService.IsRunning)
+                return;
 
-        //    _feedbackService.ShowBusyIndicator(true);
-        //    try
-        //    {
-        //        OnStoringUnsavedData();
-        //        _storyBoardService.ActiveStory = new SynchronizationStoryBoard(StoryBoardMode.Gui);
-        //        await _storyBoardService.ActiveStory.Start();
-        //        _autoSynchronizationService.LastSynchronizationFingerprint = Model.GetModificationFingerprint();
-        //    }
-        //    catch (Exception)
-        //    {
-        //        _storyBoardService.ActiveStory = null;
-        //        throw;
-        //    }
-        //    finally
-        //    {
-        //        _feedbackService.ShowBusyIndicator(false);
-        //    }
-        //}
+            //_feedbackService.ShowBusyIndicator(true);
+            try
+            {
+                OnStoringUnsavedData();
+
+                _storyBoardService.SynchronizationStory = new SynchronizationStoryModel();
+                var synchronizationStory = new IsCloudServiceSetStep();
+                await synchronizationStory.RunStory(_storyBoardService.SynchronizationStory, Ioc.Instance, StoryMode.Gui);
+
+                //_storyBoardService.ActiveStory = new SynchronizationStoryBoard(StoryBoardMode.Gui);
+                //await _storyBoardService.ActiveStory.Start();
+                // todo:
+                //_autoSynchronizationService.LastSynchronizationFingerprint = Model.GetModificationFingerprint();
+            }
+            catch (Exception)
+            {
+                //_storyBoardService.ActiveStory = null;
+                throw;
+            }
+            finally
+            {
+                //_feedbackService.ShowBusyIndicator(false);
+            }
+        }
 
         /// <summary>
         /// Gets the command which closes encrypted notes.

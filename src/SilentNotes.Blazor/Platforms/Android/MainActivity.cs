@@ -3,7 +3,6 @@ using Android.Content;
 using Android.Content.PM;
 using Android.OS;
 using Android.Views;
-using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Messaging;
 using SilentNotes.Platforms;
 using SilentNotes.Platforms.Services;
@@ -24,7 +23,7 @@ public class MainActivity : MauiAppCompatActivity
         System.Diagnostics.Debug.WriteLine("*** MainActivity.OnCreate() " + Id);
 
         // Inform services about the new main activity.
-        App.Ioc.GetService<IAppContextService>().Initialize(this);
+        Ioc.Instance.GetService<IAppContextService>().Initialize(this);
         base.OnCreate(savedInstanceState);
     }
 
@@ -33,7 +32,7 @@ public class MainActivity : MauiAppCompatActivity
     {
         System.Diagnostics.Debug.WriteLine("*** MainActivity.OnDestroy() " + Id);
         WeakReferenceMessenger.Default.Send<ClosePageMessage>(new ClosePageMessage());
-        App.Ioc.GetService<IActivityResultAwaiter>().RedirectedOnDestroy();
+        Ioc.Instance.GetService<IActivityResultAwaiter>().RedirectedOnDestroy();
         base.OnDestroy();
     }
 
@@ -54,7 +53,7 @@ public class MainActivity : MauiAppCompatActivity
 
         // We do not await the synchronization, it runs in a background service which can stay
         // alive a bit longer than the app itself.
-        IAutoSynchronizationService syncService = App.Ioc.GetService<IAutoSynchronizationService>();
+        IAutoSynchronizationService syncService = Ioc.Instance.GetService<IAutoSynchronizationService>();
         syncService.SynchronizeAtShutdown();
         base.OnStop();
     }
@@ -77,7 +76,7 @@ public class MainActivity : MauiAppCompatActivity
     /// <inheritdoc/>
     protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
     {
-        App.Ioc.GetService<IActivityResultAwaiter>().RedirectedOnActivityResult(
+        Ioc.Instance.GetService<IActivityResultAwaiter>().RedirectedOnActivityResult(
             requestCode, resultCode, data);
         base.OnActivityResult(requestCode, resultCode, data);
     }

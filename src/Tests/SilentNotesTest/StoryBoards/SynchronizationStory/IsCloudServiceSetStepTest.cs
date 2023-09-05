@@ -1,9 +1,10 @@
-﻿using Moq;
+﻿using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using SilentNotes.Models;
 using SilentNotes.Services;
-//using SilentNotes.StoryBoards;
-//using SilentNotes.StoryBoards.SynchronizationStory;
+using SilentNotes.Stories;
+using SilentNotes.Stories.SynchronizationStory;
 using VanillaCloudStorageClient;
 
 namespace SilentNotesTest.StoryBoards.SynchronizationStory
@@ -11,40 +12,39 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
     [TestFixture]
     public class IsCloudServiceSetStepTest
     {
-        // todo: reactivate tests
-        //[Test]
-        //public void RunSilent_GoesToShowFirstTimeDialog_WithoutCloudStorageClientSet()
-        //{
-        //    IStoryBoardSession session = new StoryBoardSession();
+        [Test]
+        public async ValueTask RunStep_GoesToShowFirstTimeDialog_WithoutCloudStorageClientSet()
+        {
+            var settingsModel = new SettingsModel();
 
-        //    var settingsModel = new SettingsModel();
-        //    Mock<ISettingsService> settingsService = new Mock<ISettingsService>();
-        //    settingsService.
-        //        Setup(m => m.LoadSettingsOrDefault()).Returns(settingsModel);
+            var serviceCollection = new ServiceCollection();
+            var settingsService = CommonMocksAndStubs.SettingsService(settingsModel);
+            serviceCollection.AddSingleton<ISettingsService>(settingsService);
 
-        //    var res = IsCloudServiceSetStep.RunSilent(session, settingsService.Object);
+            var model = new SynchronizationStoryModel();
+            var res = await new IsCloudServiceSetStep().RunStep(model, serviceCollection.BuildServiceProvider(), StoryMode.Silent);
 
-        //    // Continue with correct next step to ask for missing credentials
-        //    Assert.IsTrue(res.NextStepIs(SynchronizationStoryStepId.ShowFirstTimeDialog));
-        //    Assert.IsFalse(session.TryLoad(SynchronizationStorySessionKey.CloudStorageCredentials, out SerializeableCloudStorageCredentials _));
-        //}
+            // Continue with correct next step to ask for missing credentials
+            Assert.IsTrue(res.NextStepIs(typeof(ShowFirstTimeDialogStep)));
+            Assert.IsNull(model.Credentials);
+        }
 
-        //[Test]
-        //public void RunSilent_GoesToExistsCloudRepository_WithCloudStorageClientSet()
-        //{
-        //    IStoryBoardSession session = new StoryBoardSession();
+        [Test]
+        public async ValueTask RunStep_GoesToExistsCloudRepository_WithCloudStorageClientSet()
+        {
+            var credentials = new SerializeableCloudStorageCredentials { CloudStorageId = CloudStorageClientFactory.CloudStorageIdWebdav };
+            var settingsModel = new SettingsModel { Credentials = credentials };
 
-        //    var credentials = new SerializeableCloudStorageCredentials { CloudStorageId = CloudStorageClientFactory.CloudStorageIdWebdav };
-        //    var settingsModel = new SettingsModel { Credentials = credentials };
-        //    Mock<ISettingsService> settingsService = new Mock<ISettingsService>();
-        //    settingsService.
-        //        Setup(m => m.LoadSettingsOrDefault()).Returns(settingsModel);
+            var serviceCollection = new ServiceCollection();
+            var settingsService = CommonMocksAndStubs.SettingsService(settingsModel);
+            serviceCollection.AddSingleton<ISettingsService>(settingsService);
 
-        //    StoryBoardStepResult res = IsCloudServiceSetStep.RunSilent(session, settingsService.Object);
+            var model = new SynchronizationStoryModel();
+            var res = await new IsCloudServiceSetStep().RunStep(model, serviceCollection.BuildServiceProvider(), StoryMode.Silent);
 
-        //    // Continue with correct next step with credentials set
-        //    Assert.IsTrue(res.NextStepIs(SynchronizationStoryStepId.ExistsCloudRepository));
-        //    Assert.AreEqual(credentials, session.Load<SerializeableCloudStorageCredentials>(SynchronizationStorySessionKey.CloudStorageCredentials));
-        //}
+            // Continue with correct next step with credentials set
+            Assert.IsTrue(res.NextStepIs(typeof(ExistsCloudRepositoryStep)));
+            Assert.AreEqual(credentials, model.Credentials);
+        }
     }
 }

@@ -12,8 +12,7 @@ public partial class App : Microsoft.Maui.Controls.Application
 	public App(IServiceProvider serviceProvider)
 	{
 		InitializeComponent();
-        App.Ioc = serviceProvider;
-
+        Ioc.Instance.Initialize(serviceProvider);
         MainPage = new MainPage();
 
 #if ANDROID
@@ -24,27 +23,21 @@ public partial class App : Microsoft.Maui.Controls.Application
 #endif
     }
 
+#if WINDOWS
     protected override Window CreateWindow(IActivationState activationState)
     {
         var window = base.CreateWindow(activationState);
-#if WINDOWS
         window.Destroying += OnDestroying;
-#endif
         return window;
     }
 
-#if WINDOWS
     private void OnDestroying(object sender, EventArgs e)
     {
         WeakReferenceMessenger.Default.Send<StoreUnsavedDataMessage>(new StoreUnsavedDataMessage());
 
-        IAutoSynchronizationService syncService = App.Ioc.GetService<IAutoSynchronizationService>();
+        // Start auto synchronization
+        IAutoSynchronizationService syncService = Ioc.Instance.GetService<IAutoSynchronizationService>();
         syncService.SynchronizeAtShutdown().GetAwaiter().GetResult();
     }
 #endif
-
-    /// <summary>
-    /// Gets the service provider for IOC.
-    /// </summary>
-    public static IServiceProvider Ioc { get; private set; }
 }

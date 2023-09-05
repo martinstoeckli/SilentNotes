@@ -4,6 +4,7 @@
 
 @inject IThemeService ThemeService
 @inject INavigationService NavigationService
+@inject IFeedbackService FeedbackService
 
 <MudThemeProvider @bind-IsDarkMode="ThemeService.IsDarkMode" Theme="@ThemeService.Theme" />
 <MudDialogProvider DisableBackdropClick="true" CloseOnEscapeKey="true"/>
@@ -23,5 +24,13 @@
 
 		// Initialize the virtual "back" route
 		NavigationService.InitializeVirtualRoutes();
+
+		// Workaround: Scoped services are always correct when injected, but when adding them to
+		// Ioc as scoped services, it seems they get lost, and when demanded the next time the Ioc
+		// creates a new different service. Therefore we register them as we got them from injection.
+		Ioc.Instance
+			.ClearInjected()
+			.AddInjected<INavigationService>(NavigationService)
+			.AddInjected<IFeedbackService>(FeedbackService);
 	}
 }

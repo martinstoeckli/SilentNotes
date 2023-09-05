@@ -24,7 +24,7 @@ namespace SilentNotes.ViewModels
         private readonly ISettingsService _settingsService;
         private readonly IEnvironmentService _environmentService;
         private readonly IThemeService _themeService;
-        //private readonly IStoryBoardService _storyBoardService;
+        private readonly IStoryBoardService _storyBoardService;
         private readonly IFeedbackService _feedbackService;
         private readonly IFilePickerService _filePickerService;
         private readonly ICloudStorageClientFactory _cloudStorageClientFactory;
@@ -35,6 +35,7 @@ namespace SilentNotes.ViewModels
             ISettingsService settingsService,
             ILanguageService languageService,
             IEnvironmentService environmentService,
+            IStoryBoardService storyBoardService,
             IThemeService themeService,
             IFeedbackService feedbackService,
             ICloudStorageClientFactory cloudStorageClientFactory,
@@ -43,6 +44,7 @@ namespace SilentNotes.ViewModels
             Language = languageService;
             _settingsService = settingsService;
             _environmentService = environmentService;
+            _storyBoardService = storyBoardService;
             _themeService = themeService;
             _feedbackService = feedbackService;
             _cloudStorageClientFactory = cloudStorageClientFactory;
@@ -59,6 +61,16 @@ namespace SilentNotes.ViewModels
             ChangeCloudSettingsCommand = new RelayCommand(ChangeCloudSettings);
             ClearCloudSettingsCommand = new RelayCommand(ClearCloudSettings);
             TestNewLocalizationCommand = new RelayCommand(TestNewLocalization);
+        }
+
+        /// <inheritdoc/>
+        public override void OnStoringUnsavedData()
+        {
+            if (Modified)
+            {
+                _settingsService.TrySaveSettingsToLocalDevice(Model);
+                Modified = false;
+            }
         }
 
         private ILanguageService Language { get; }
@@ -332,16 +344,6 @@ namespace SilentNotes.ViewModels
             set { SetPropertyAndModified(Model.AutoSyncMode.ToString(), value, (string v) => Model.AutoSyncMode = (AutoSynchronizationMode)Enum.Parse(typeof(AutoSynchronizationMode), value)); }
         }
 
-        //    /// <inheritdoc/>
-        //    public override void OnStoringUnsavedData()
-        //    {
-        //        if (Modified)
-        //        {
-        //            _settingsService.TrySaveSettingsToLocalDevice(Model);
-        //            Modified = false;
-        //        }
-        //    }
-
         /// <summary>
         /// Gets the command to reset the cloud settings.
         /// </summary>
@@ -395,18 +397,18 @@ namespace SilentNotes.ViewModels
 
         private async void ChangeCloudSettings()
         {
-            // todo: stom
             await Task.CompletedTask;
-            //try
-            //{
-            //    _storyBoardService.ActiveStory = new SynchronizationStoryBoard(StoryBoardMode.Gui);
-            //    await _storyBoardService.ActiveStory.ContinueWith(SynchronizationStoryStepId.ShowCloudStorageChoice);
-            //}
-            //catch (Exception)
-            //{
-            //    _storyBoardService.ActiveStory = null;
-            //    throw;
-            //}
+            try
+            {
+                // todo:
+                //_storyBoardService.ActiveStory = new SynchronizationStoryBoard(StoryBoardMode.Gui);
+                //await _storyBoardService.ActiveStory.ContinueWith(SynchronizationStoryStepId.ShowCloudStorageChoice);
+            }
+            catch (Exception)
+            {
+                //_storyBoardService.ActiveStory = null;
+                throw;
+            }
         }
 
         /// <summary>
