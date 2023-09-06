@@ -323,7 +323,7 @@
 		// Redirect to open safe if locked
 		if (ViewModel.IsLocked)
 		{
-			NavigationService.NavigateTo(ViewModel.Route, false, true);
+			NavigationService.NavigateTo(ViewModel.Route, HistoryModification.ReplaceLast);
 			return;
 		}
 

@@ -107,7 +107,7 @@ namespace SilentNotes.ViewModels
             }
             else
             {
-                _navigationService.NavigateTo(_navigationTargetRoute, false, true);
+                _navigationService.NavigateTo(_navigationTargetRoute, HistoryModification.ReplaceLast);
             }
         }
 

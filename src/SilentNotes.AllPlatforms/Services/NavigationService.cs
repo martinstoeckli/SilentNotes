@@ -28,23 +28,17 @@ namespace SilentNotes.Services
         /// <param name="navigationManager">The navigation manager to wrap.</param>
         public NavigationService(NavigationManager navigationManager, IJSRuntime jsRuntime)
         {
-#if DEBUG
-            System.Diagnostics.Debug.WriteLine("*** Scoped service create " + Id);
-#endif
+            System.Diagnostics.Debug.WriteLine("*** Scoped NavigationService create " + Id);
             _navigationManager = navigationManager;
             _jsRuntime = jsRuntime;
         }
 
-#if DEBUG
         public Guid Id { get; } = Guid.NewGuid();
-#endif
 
         /// <inheritdoc/>
         public void Dispose()
         {
-#if DEBUG
-            System.Diagnostics.Debug.WriteLine("*** Scoped service dispose " + Id);
-#endif
+            System.Diagnostics.Debug.WriteLine("*** Scoped NavigationService dispose " + Id);
             _eventHandlerDisposable?.Dispose();
             _eventHandlerDisposable = null;
         }
@@ -57,22 +51,36 @@ namespace SilentNotes.Services
         }
 
         /// <inheritdoc/>
-        public void NavigateTo(string uri, bool forceLoad = false, bool replace = false)
+        public void NavigateTo(string uri, HistoryModification historyModification = HistoryModification.Add)
         {
-            _navigationManager.NavigateTo(uri, forceLoad, replace);
+            switch (historyModification) 
+            {
+                case HistoryModification.Add:
+                    _navigationManager.NavigateTo(uri, false, false);
+                    break;
+                case HistoryModification.ReplaceLast:
+                    _navigationManager.NavigateTo(uri, false, true);
+                    break;
+            }
         }
 
         /// <inheritdoc/>
-        public void NavigateBack()
+        public async ValueTask NavigateBack()
         {
-            // This navigation will be intercepted in the LocationChangingHandler.
-            NavigateTo(RouteBack, false, false);
+            await _jsRuntime.InvokeVoidAsync("history.back");
         }
 
         /// <inheritdoc/>
-        public void Reload()
+        public async ValueTask NavigateHome()
         {
-            _navigationManager.NavigateTo(_navigationManager.Uri, true, true);
+            await _jsRuntime.InvokeVoidAsync("navigateHome");
+        }
+
+        /// <inheritdoc/>
+        public async ValueTask Reload()
+        {
+            await _jsRuntime.InvokeVoidAsync("history.go");
+            //_navigationManager.NavigateTo(_navigationManager.Uri, false, true);
         }
 
         /// <summary>

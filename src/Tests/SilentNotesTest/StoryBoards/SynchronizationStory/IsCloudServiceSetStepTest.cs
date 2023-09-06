@@ -7,7 +7,7 @@ using SilentNotes.Stories;
 using SilentNotes.Stories.SynchronizationStory;
 using VanillaCloudStorageClient;
 
-namespace SilentNotesTest.StoryBoards.SynchronizationStory
+namespace SilentNotesTest.Stories.SynchronizationStory
 {
     [TestFixture]
     public class IsCloudServiceSetStepTest

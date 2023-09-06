@@ -117,7 +117,9 @@
 	protected override void OnParametersSet()
 	{
 		IsPasswordVisible = false;
-		string navigationTargetRoute = string.Format("{0}/{1}", TargetNoteType, TargetNoteId);
+		string navigationTargetRoute = null;
+		if (TargetNoteId != null)
+			navigationTargetRoute = string.Format("{0}/{1}", TargetNoteType, TargetNoteId);
 		ViewModel = new OpenSafeViewModel(LanguageService, Navigation, FeedbackService, RandomService, SettingsService, RepositoryService, navigationTargetRoute);
 		_secureStringConverter = new SecureStringConverter();
 	}

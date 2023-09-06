@@ -4,6 +4,7 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace SilentNotes.Services
 {
@@ -19,18 +20,26 @@ namespace SilentNotes.Services
         }
 
         /// <inheritdoc/>
-        public void NavigateTo(string uri, bool forceLoad = false, bool replace = false)
+        public void NavigateTo(string uri, HistoryModification historyModification)
         {
         }
 
         /// <inheritdoc/>
-        public void NavigateBack()
+        public ValueTask NavigateBack()
         {
+            return ValueTask.CompletedTask;
         }
 
         /// <inheritdoc/>
-        public void Reload()
+        public ValueTask NavigateHome()
         {
+            return ValueTask.CompletedTask;
+        }
+
+        /// <inheritdoc/>
+        public ValueTask Reload()
+        {
+            return ValueTask.CompletedTask;
         }
     }
 }

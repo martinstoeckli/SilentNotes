@@ -102,7 +102,10 @@ namespace SilentNotes.Stories
         /// <returns>Returns true if the next step is of the same type.</returns>
         internal bool NextStepIs(Type typeOfNextStep)
         {
-            return (NextStep != null) && (NextStep.GetType() == typeOfNextStep);
+            if (NextStep == null)
+                return typeOfNextStep == null;
+            else
+                return NextStep.GetType() == typeOfNextStep;
         }
     }
 }
