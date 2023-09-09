@@ -34,7 +34,7 @@
 
 	protected override void OnInitialized()
 	{
-		ViewModel = new FirstTimeSyncViewModel();
+		ViewModel = new FirstTimeSyncViewModel(Ioc.Instance);
 	}
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)

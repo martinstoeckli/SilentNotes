@@ -14,11 +14,6 @@ namespace SilentNotes.Services
     public interface INavigationService
     {
         /// <summary>
-        /// Initializes app specific virtual routes, e.g. the "back" route.
-        /// </summary>
-        void InitializeVirtualRoutes();
-
-        /// <summary>
         /// Navigates to the specified URI.
         /// </summary>
         /// <param name="uri">The destination URI. This can be absolute, or relative to the base URI.</param>
@@ -27,21 +22,26 @@ namespace SilentNotes.Services
         void NavigateTo(string uri, HistoryModification historyModification = HistoryModification.Add);
 
         /// <summary>
+        /// Gets a value indicating whether there exists a previous location in the browser history.
+        /// </summary>
+        bool CanNavigateBack {  get; }
+
+        /// <summary>
         /// Navigates one step back in the history. The browser history is adjusted accordingly.
         /// </summary>
         /// <returns>Task for async calling.</returns>
-        ValueTask NavigateBack();
+        void NavigateBack();
 
         /// <summary>
         /// Navigates back in the history to the first step. The browser history is cleared.
         /// </summary>
         /// <returns>Task for async calling.</returns>
-        ValueTask NavigateHome();
+        void NavigateHome();
 
         /// <summary>
         /// Reloads the current page by keeping the browser history intact.
         /// </summary>
-        ValueTask Reload();
+        void Reload();
     }
 
     /// <summary>
@@ -52,7 +52,8 @@ namespace SilentNotes.Services
         /// <summary>The new page is added to the browser history.</summary>
         Add,
 
-        /// <summary>The last entry of the browser history is removed and replaced with the new page..</summary>
-        ReplaceLast,
+        /// <summary>The last entry of the browser history is removed and replaced with the new page,
+        /// so that a following backwards navigation won't show the current page again.</summary>
+        ReplaceCurrent,
     }
 }

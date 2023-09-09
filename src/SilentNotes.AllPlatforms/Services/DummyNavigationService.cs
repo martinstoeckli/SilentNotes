@@ -20,26 +20,26 @@ namespace SilentNotes.Services
         }
 
         /// <inheritdoc/>
-        public void NavigateTo(string uri, HistoryModification historyModification)
+        public void NavigateTo(string uri, HistoryModification historyModification = HistoryModification.Add)
         {
         }
 
         /// <inheritdoc/>
-        public ValueTask NavigateBack()
+        public bool CanNavigateBack { get; }
+
+        /// <inheritdoc/>
+        public void NavigateBack()
         {
-            return ValueTask.CompletedTask;
         }
 
         /// <inheritdoc/>
-        public ValueTask NavigateHome()
+        public void NavigateHome()
         {
-            return ValueTask.CompletedTask;
         }
 
         /// <inheritdoc/>
-        public ValueTask Reload()
+        public void Reload()
         {
-            return ValueTask.CompletedTask;
         }
     }
 }

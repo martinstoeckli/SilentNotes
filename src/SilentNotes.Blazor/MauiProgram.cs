@@ -61,13 +61,14 @@ public static class MauiProgram
         services.AddSingleton<ICloudStorageClientFactory>((serviceProvider) => new CloudStorageClientFactory());
         services.AddSingleton<IClipboardService>((serviceProvider) => new ClipboardService());
         services.AddSingleton<IStoryBoardService>((serviceProvider) => new StoryBoardService());
+        services.AddSingleton<IBrowserHistoryService>((serviceProvider) => new BrowserHistoryService());
 
-        // Scoped services (some Blazor services like IJSRuntime seem to be scoped)
+        // Scoped services (some Blazor services like NavigationManager or IJSRuntime seem to be scoped)
         // Workaround: It seems that scoped services are recreated when gotten from Ioc, therefore
-        // we have to cache them in MainLayout.razor.
+        // we have to add them dynamically in MainLayout.razor.
         services.AddScoped<INavigationService>((serviceProvider) => new NavigationService(
             serviceProvider.GetService<NavigationManager>(),
-            serviceProvider.GetService<IJSRuntime>()));
+            serviceProvider.GetService<IBrowserHistoryService>()));
         services.AddScoped<IFeedbackService>((serviceProvider) => new FeedbackService(
             serviceProvider.GetService<IDialogService>(),
             serviceProvider.GetService<ISnackbar>(),

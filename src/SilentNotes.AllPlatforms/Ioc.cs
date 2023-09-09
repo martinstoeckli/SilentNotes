@@ -61,7 +61,7 @@ namespace SilentNotes
         /// This guarantees that the correct instances are available in the service provider.
         /// </summary>
         /// <remarks>
-        /// This is a workaround for scoped services, which are otherwise recreated and are not
+        /// This is a workaround for scoped services, which are otherwise recreated and are
         /// different from the injected ones.
         /// </remarks>
         /// <typeparam name="T">The type of the service to register.</typeparam>

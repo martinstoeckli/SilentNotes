@@ -1,0 +1,43 @@
+﻿@page "/cloudstoragechoice"
+@inherits PageBase
+
+@using SilentNotes.Models
+@using SilentNotes.ViewModels
+@using SilentNotes.Services
+
+@inject ILanguageService LanguageService
+@inject ISvgIconService IconService
+@inject IJSRuntime JSRuntime
+@inject INavigationService Navigation
+
+@* Main menu *@
+<MudAppBar Class="flex-none" Fixed="false" Dense="true" WrapContent="false">
+	<MudIconButton OnClick="@(() => Navigation.NavigateBack())" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" Edge="Edge.Start" />
+</MudAppBar>
+
+@* body *@
+<div id="content" class="flex-1 px-1 py-3">
+	<MudContainer Class="ms-0" MaxWidth="MaxWidth.Medium">
+		<h1 class="h-colored">@LanguageService["cloud_service_choice"]</h1>
+
+	</MudContainer>
+</div>
+
+@code {
+	protected override void OnInitialized()
+	{
+		ViewModel = new CloudStorageChoiceViewModel(Ioc.Instance);
+	}
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			await KeyboardShortcuts.InitializeAsync(JSRuntime);
+			KeyboardShortcuts
+				.AddShortcut(new SnKeyboardShortcut(SnKey.Escape), () => Navigation.NavigateBack());
+		}
+	}
+
+	private CloudStorageChoiceViewModel ViewModel { get; set; }
+}

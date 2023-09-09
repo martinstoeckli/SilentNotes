@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
-using Microsoft.JSInterop;
 
 namespace SilentNotes.Services
 {
@@ -17,20 +16,23 @@ namespace SilentNotes.Services
     /// </summary>
     internal class NavigationService: INavigationService, IDisposable
     {
-        private const string RouteBack = "back";
         private readonly NavigationManager _navigationManager;
-        private readonly IJSRuntime _jsRuntime;
+        private readonly IBrowserHistoryService _browserHistoryService;
         private IDisposable _eventHandlerDisposable;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NavigationService"/> class.
         /// </summary>
         /// <param name="navigationManager">The navigation manager to wrap.</param>
-        public NavigationService(NavigationManager navigationManager, IJSRuntime jsRuntime)
+        /// <param name="browserHistoryService">The browser history service, which is not scoped
+        /// like the <paramref name="navigationManager"/> and therefore can keep the browser history
+        /// across Android app restarts.</param>
+        public NavigationService(NavigationManager navigationManager, IBrowserHistoryService browserHistoryService)
         {
             System.Diagnostics.Debug.WriteLine("*** Scoped NavigationService create " + Id);
             _navigationManager = navigationManager;
-            _jsRuntime = jsRuntime;
+            _browserHistoryService = browserHistoryService;
+            _eventHandlerDisposable = _navigationManager.RegisterLocationChangingHandler(LocationChangingHandler);
         }
 
         public Guid Id { get; } = Guid.NewGuid();
@@ -44,75 +46,57 @@ namespace SilentNotes.Services
         }
 
         /// <inheritdoc/>
-        public void InitializeVirtualRoutes()
-        {
-            if (_eventHandlerDisposable == null)
-                _eventHandlerDisposable = _navigationManager.RegisterLocationChangingHandler(LocationChangingHandler);
-        }
-
-        /// <inheritdoc/>
         public void NavigateTo(string uri, HistoryModification historyModification = HistoryModification.Add)
         {
-            switch (historyModification) 
-            {
-                case HistoryModification.Add:
-                    _navigationManager.NavigateTo(uri, false, false);
-                    break;
-                case HistoryModification.ReplaceLast:
-                    _navigationManager.NavigateTo(uri, false, true);
-                    break;
-            }
+            if (historyModification == HistoryModification.ReplaceCurrent)
+                _browserHistoryService.RemoveCurrent();
+
+            // Always replace the last entry of the WebView history, so that the browser doesn't
+            // maintains a history on its own. Instead we will update our own controllable history.
+            // This allows to navigate to arbitrary history entries and prevents the Windows back
+            // key to interfere with the navigation.
+            bool replaceWebviewHistory = true;
+            _navigationManager.NavigateTo(uri, false, replaceWebviewHistory);
         }
 
         /// <inheritdoc/>
-        public async ValueTask NavigateBack()
+        public bool CanNavigateBack
         {
-            await _jsRuntime.InvokeVoidAsync("history.back");
+            get { return !string.IsNullOrEmpty(_browserHistoryService.LastLocation); }
         }
 
         /// <inheritdoc/>
-        public async ValueTask NavigateHome()
+        public void NavigateBack()
         {
-            await _jsRuntime.InvokeVoidAsync("navigateHome");
+            string lastLocation = _browserHistoryService.LastLocation;
+            if (lastLocation != null)
+                NavigateTo(lastLocation);
         }
 
         /// <inheritdoc/>
-        public async ValueTask Reload()
+        public void NavigateHome()
         {
-            await _jsRuntime.InvokeVoidAsync("history.go");
-            //_navigationManager.NavigateTo(_navigationManager.Uri, false, true);
+            _browserHistoryService.Clear();
+            NavigateTo(Routes.NoteRepository);
         }
 
-        /// <summary>
-        /// Intercept navigation events, to implement routes with special meaning.
-        /// 1) "/back": This route uses JavaScript to navigate back to the last page, adjusting the browser history.
-        /// </summary>
-        /// <param name="context">The event arguments.</param>
-        /// <returns>A task for async calls.</returns>
-        private async ValueTask LocationChangingHandler(LocationChangingContext context)
+        /// <inheritdoc/>
+        public void Reload()
         {
-            if (IsRoute(context, RouteBack))
-            {
-                context.PreventNavigation();
-                await _jsRuntime.InvokeVoidAsync("history.back"); // Call javascript to navigate back
-            }
-            else
-            {
-                // Inform current page before navigating to the next page
-                WeakReferenceMessenger.Default.Send<StoreUnsavedDataMessage>(new StoreUnsavedDataMessage());
-                WeakReferenceMessenger.Default.Send<ClosePageMessage>(new ClosePageMessage());
-            }
+            bool forceLoad = true;
+            _navigationManager.NavigateTo(_browserHistoryService.CurrentLocation, forceLoad, true);
         }
 
-        private bool IsRoute(LocationChangingContext context, string route)
+        /// <inheritdoc/>
+        private ValueTask LocationChangingHandler(LocationChangingContext context)
         {
-            string baseUri = _navigationManager.BaseUri;
-            string relativePath = context.TargetLocation;
-            if (relativePath.StartsWith(baseUri, StringComparison.OrdinalIgnoreCase))
-            {
-                relativePath = relativePath.Substring(baseUri.Length);
-            }
-            return string.Equals(route, relativePath, StringComparison.OrdinalIgnoreCase);
+            // Inform current page before navigating to the next page
+            WeakReferenceMessenger.Default.Send<StoreUnsavedDataMessage>(new StoreUnsavedDataMessage());
+            WeakReferenceMessenger.Default.Send<ClosePageMessage>(new ClosePageMessage());
+
+            // Update our own browser history
+            _browserHistoryService.UpdateHistoryOnNavigation(context.TargetLocation, _navigationManager.BaseUri);
+            return ValueTask.CompletedTask;
         }
     }
 }

@@ -289,8 +289,9 @@ div.dark .detail-view.checklist .ProseMirror p::after { content: @(IconService.L
 		// Redirect to open safe if locked
 		if (ViewModel.IsLocked)
 		{
-			NavigationService.NavigateTo(ViewModel.Route, HistoryModification.ReplaceLast);
-			return;
+			// todo:
+			// NavigationService.NavigateTo( ViewModel.Route, HistoryModification.ReplaceLast);
+			// return;
 		}
 
 		ViewModel.PropertyChanged += PropertyChangedHandler;

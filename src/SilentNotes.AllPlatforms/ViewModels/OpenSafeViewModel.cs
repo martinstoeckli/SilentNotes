@@ -103,11 +103,11 @@ namespace SilentNotes.ViewModels
             }
             else if (string.IsNullOrEmpty(_navigationTargetRoute))
             {
-                _navigationService.NavigateBack();
+                _navigationService.NavigateHome();
             }
             else
             {
-                _navigationService.NavigateTo(_navigationTargetRoute, HistoryModification.ReplaceLast);
+                _navigationService.NavigateTo(_navigationTargetRoute, HistoryModification.ReplaceCurrent);
             }
         }
 
