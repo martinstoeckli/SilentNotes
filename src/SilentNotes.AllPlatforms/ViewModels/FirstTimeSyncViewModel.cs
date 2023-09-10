@@ -3,8 +3,6 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-using System;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,6 +17,7 @@ namespace SilentNotes.ViewModels
     public class FirstTimeSyncViewModel : ViewModelBase
     {
         private readonly IServiceProvider _serviceProvider;
+        private readonly IStoryBoardService _storyBoardService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FirstTimeSyncViewModel"/> class.
@@ -26,6 +25,7 @@ namespace SilentNotes.ViewModels
         public FirstTimeSyncViewModel(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
+            _storyBoardService = _serviceProvider.GetService<IStoryBoardService>();
             ContinueCommand = new RelayCommand(Continue);
         }
 
@@ -36,9 +36,9 @@ namespace SilentNotes.ViewModels
 
         private async void Continue()
         {
-            var storyBoardService = _serviceProvider.GetService<IStoryBoardService>();
+            SynchronizationStoryModel storyModel = _storyBoardService.SynchronizationStory;
             ShowCloudStorageChoiceStep nextStep = new ShowCloudStorageChoiceStep();
-            await nextStep.RunStep(storyBoardService.SynchronizationStory, _serviceProvider, Stories.StoryMode.Gui);
+            await nextStep.RunStep(storyModel, _serviceProvider, Stories.StoryMode.Gui);
         }
     }
 }

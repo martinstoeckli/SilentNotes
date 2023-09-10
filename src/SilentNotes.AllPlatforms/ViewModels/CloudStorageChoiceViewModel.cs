@@ -3,15 +3,11 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.DependencyInjection;
 using SilentNotes.Services;
 using SilentNotes.Stories.SynchronizationStory;
-using VanillaCloudStorageClient;
 
 namespace SilentNotes.ViewModels
 {
@@ -21,23 +17,16 @@ namespace SilentNotes.ViewModels
     public class CloudStorageChoiceViewModel : ViewModelBase
     {
         private readonly IServiceProvider _serviceProvider;
-        //private readonly IStoryBoardService _storyBoardService;
+        private readonly IStoryBoardService _storyBoardService;
         private readonly ICloudStorageClientFactory _cloudStorageClientFactory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CloudStorageChoiceViewModel"/> class.
         /// </summary>
-        public CloudStorageChoiceViewModel(IServiceProvider serviceProvider
-            //INavigationService navigationService,
-            //ILanguageService languageService,
-            //ISvgIconService svgIconService,
-            //IThemeService themeService,
-            //IStoryBoardService storyBoardService,
-            //ICloudStorageClientFactory cloudStorageClientFactory)
-            )
+        public CloudStorageChoiceViewModel(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
-            //_storyBoardService = storyBoardService;
+            _storyBoardService = _serviceProvider.GetService<IStoryBoardService>();
             _cloudStorageClientFactory = _serviceProvider.GetService<ICloudStorageClientFactory>();
 
             ServiceChoices = new List<CloudStorageChoiceItemViewModel>();
@@ -57,7 +46,6 @@ namespace SilentNotes.ViewModels
                 CloudStorageMetadata metadata = _cloudStorageClientFactory.GetCloudStorageMetadata(cloudStorageId);
                 choices.Add(new CloudStorageChoiceItemViewModel
                 {
-                    Command = ChooseCommand,
                     CloudStorageId = cloudStorageId,
                     Title = metadata.Title,
                     Icon = metadata.AssetImageName,
@@ -77,12 +65,11 @@ namespace SilentNotes.ViewModels
 
         private async void Choose(object value)
         {
-            await ValueTask.CompletedTask;
-            //string cloudStorageId = value.ToString();
-            //SerializeableCloudStorageCredentials credentials = new SerializeableCloudStorageCredentials { CloudStorageId = cloudStorageId };
-            //_storyBoardService.ActiveStory?.Session.Store(SynchronizationStorySessionKey.CloudStorageCredentials, credentials);
-            //await (_storyBoardService.ActiveStory?.ContinueWith(SynchronizationStoryStepId.ShowCloudStorageAccount)
-            //    ?? Task.CompletedTask);
+            SynchronizationStoryModel storyModel = _storyBoardService.SynchronizationStory;
+            storyModel.ChoosenCloudStorageId = value.ToString();
+
+            var nextStep = new ShowCloudStorageAccount();
+            await nextStep.RunStep(storyModel, _serviceProvider, Stories.StoryMode.Gui);
         }
 
         /// <summary>
@@ -90,11 +77,6 @@ namespace SilentNotes.ViewModels
         /// </summary>
         public class CloudStorageChoiceItemViewModel
         {
-            /// <summary>
-            /// Gets or sets the command which is executed when selecting this item.
-            /// </summary>
-            public ICommand Command { get; set; }
-
             /// <summary>
             /// Gets or sets the id of the cloud storage client.
             /// </summary>

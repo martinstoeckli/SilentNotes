@@ -22,13 +22,11 @@ namespace SilentNotes.Stories.SynchronizationStory
             if (settings.HasCloudStorageClient)
             {
                 model.Credentials = settings.Credentials;
-                return ValueTask.FromResult(new StoryStepResult<SynchronizationStoryModel>(
-                    new ExistsCloudRepositoryStep()));
+                return FromResult(new ExistsCloudRepositoryStep());
             }
             else
             {
-                return ValueTask.FromResult(new StoryStepResult<SynchronizationStoryModel>(
-                    new ShowFirstTimeDialogStep()));
+                return FromResult(new ShowFirstTimeDialogStep());
             }
         }
     }

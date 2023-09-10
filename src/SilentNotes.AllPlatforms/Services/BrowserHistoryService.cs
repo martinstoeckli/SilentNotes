@@ -31,7 +31,7 @@ namespace SilentNotes.Services
         }
 
         /// <inheritdoc/>
-        public string LastLocation
+        public string PreviousLocation
         { 
             get
             {
@@ -40,6 +40,16 @@ namespace SilentNotes.Services
                     return _history[secondToLastIndex];
                 return null;
             }
+        }
+
+        /// <summary>
+        /// Gets the number of items in the history. In contrast to the a real browser history,
+        /// this is the number of steps from the first to the current one, it doesn't count later
+        /// items which would exist to navigate forward.
+        /// </summary>
+        internal int Count
+        {
+            get { return _history.Count; }
         }
 
         /// <inheritdoc/>
@@ -85,7 +95,7 @@ namespace SilentNotes.Services
                 _history.RemoveAt(lastIndex);
         }
 
-        private string GetRelativeUri(string targetUri, string trimmedBaseUri)
+        internal string GetRelativeUri(string targetUri, string trimmedBaseUri)
         {
             string result = targetUri;
             trimmedBaseUri = trimmedBaseUri.TrimEnd('/');

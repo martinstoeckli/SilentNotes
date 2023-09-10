@@ -79,5 +79,15 @@ namespace SilentNotes.Stories
                     feedbackService.ShowToast(stepResult.Toast);
             }
         }
+
+        /// <summary>
+        /// Helper function to create the return value of a running step/story.
+        /// </summary>
+        /// <param name="nextStep">Next step, or null if the story ends.</param>
+        /// <returns>Task with the story result.</returns>
+        protected ValueTask<StoryStepResult<TModel>> FromResult(StoryStepBase<TModel> nextStep)
+        {
+            return ValueTask.FromResult<StoryStepResult<TModel>>(new StoryStepResult<TModel>(nextStep));
+        }
     }
 }

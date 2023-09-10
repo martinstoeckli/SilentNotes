@@ -9,7 +9,8 @@ namespace SilentNotes.Services
 {
     /// <summary>
     /// The browser history service can be used to controllable browser history list for the whole
-    /// lifetime of the app.
+    /// lifetime of the app. It can be seen as the non scoped part of the <see cref="INavigationService"/>
+    /// to keep track of the visited pages.
     /// </summary>
     public interface IBrowserHistoryService
     {
@@ -19,9 +20,9 @@ namespace SilentNotes.Services
         string CurrentLocation { get; }
 
         /// <summary>
-        /// Gets the Uri of the last route.
+        /// Gets the Uri of the last route before the current route.
         /// </summary>
-        string LastLocation { get; }
+        string PreviousLocation { get; }
 
         /// <summary>
         /// Should be called whenever the navigation service gets a navigation event.

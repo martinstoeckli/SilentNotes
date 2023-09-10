@@ -18,8 +18,20 @@
 @* body *@
 <div id="content" class="flex-1 px-1 py-3">
 	<MudContainer Class="ms-0" MaxWidth="MaxWidth.Medium">
-		<h1 class="h-colored">@LanguageService["cloud_service_choice"]</h1>
+		<h1 class="h-colored mb-3">@LanguageService["cloud_service_choice"]</h1>
 
+		<MudStack Row="false" Style="max-width: 360px;">
+			@foreach (var serviceChoice in ViewModel.ServiceChoices)
+			{
+				<MudButton OnClick="@(() => ViewModel.ChooseCommand.Execute(serviceChoice.CloudStorageId))"
+					Class="justify-start py-2" Variant="Variant.Filled" FullWidth="true">
+					<MudStack Row="true" Class="d-flex align-center">
+						<MudImage Src="@serviceChoice.Icon" Width="64" Height="32" />
+						<MudText>@serviceChoice.Title</MudText>
+					</MudStack>
+				</MudButton>
+			}
+		</MudStack>
 	</MudContainer>
 </div>
 

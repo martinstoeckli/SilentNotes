@@ -62,13 +62,13 @@ namespace SilentNotes.Services
         /// <inheritdoc/>
         public bool CanNavigateBack
         {
-            get { return !string.IsNullOrEmpty(_browserHistoryService.LastLocation); }
+            get { return !string.IsNullOrEmpty(_browserHistoryService.PreviousLocation); }
         }
 
         /// <inheritdoc/>
         public void NavigateBack()
         {
-            string lastLocation = _browserHistoryService.LastLocation;
+            string lastLocation = _browserHistoryService.PreviousLocation;
             if (lastLocation != null)
                 NavigateTo(lastLocation);
         }
@@ -83,6 +83,7 @@ namespace SilentNotes.Services
         /// <inheritdoc/>
         public void Reload()
         {
+            // Requires a force load, otherwise only the page is only partially rerendered.
             bool forceLoad = true;
             _navigationManager.NavigateTo(_browserHistoryService.CurrentLocation, forceLoad, true);
         }

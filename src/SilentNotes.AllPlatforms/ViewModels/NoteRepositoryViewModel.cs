@@ -491,16 +491,8 @@ namespace SilentNotes.ViewModels
                 _storyBoardService.SynchronizationStory = new SynchronizationStoryModel();
                 var synchronizationStory = new IsCloudServiceSetStep();
                 await synchronizationStory.RunStory(_storyBoardService.SynchronizationStory, Ioc.Instance, StoryMode.Gui);
-
-                //_storyBoardService.ActiveStory = new SynchronizationStoryBoard(StoryBoardMode.Gui);
-                //await _storyBoardService.ActiveStory.Start();
                 // todo:
                 //_autoSynchronizationService.LastSynchronizationFingerprint = Model.GetModificationFingerprint();
-            }
-            catch (Exception)
-            {
-                //_storyBoardService.ActiveStory = null;
-                throw;
             }
             finally
             {

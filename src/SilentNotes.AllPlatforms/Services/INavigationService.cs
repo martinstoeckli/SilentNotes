@@ -9,7 +9,8 @@ using Microsoft.AspNetCore.Components;
 namespace SilentNotes.Services
 {
     /// <summary>
-    /// Abstraction interface for the <see cref="NavigationManager"/>.
+    /// Abstraction interface for the <see cref="NavigationManager"/>. It adds tighter control
+    /// about the browser history which is required for native apps.
     /// </summary>
     public interface INavigationService
     {

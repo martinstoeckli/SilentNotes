@@ -13,5 +13,7 @@ namespace SilentNotes.Stories.SynchronizationStory
     public class SynchronizationStoryModel
     {
         public SerializeableCloudStorageCredentials Credentials { get; set; }
+
+        public string ChoosenCloudStorageId { get; set; }
     }
 }

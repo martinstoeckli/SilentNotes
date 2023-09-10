@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Components;
 using SilentNotes.Crypto.SymmetricEncryption;
 using SilentNotes.Models;
 using SilentNotes.Services;
+using SilentNotes.Stories;
+using SilentNotes.Stories.SynchronizationStory;
 using SilentNotes.Workers;
 using VanillaCloudStorageClient;
 
@@ -397,18 +399,9 @@ namespace SilentNotes.ViewModels
 
         private async void ChangeCloudSettings()
         {
-            await Task.CompletedTask;
-            try
-            {
-                // todo:
-                //_storyBoardService.ActiveStory = new SynchronizationStoryBoard(StoryBoardMode.Gui);
-                //await _storyBoardService.ActiveStory.ContinueWith(SynchronizationStoryStepId.ShowCloudStorageChoice);
-            }
-            catch (Exception)
-            {
-                //_storyBoardService.ActiveStory = null;
-                throw;
-            }
+            _storyBoardService.SynchronizationStory = new SynchronizationStoryModel();
+            var synchronizationStory = new ShowCloudStorageChoiceStep();
+            await synchronizationStory.RunStory(_storyBoardService.SynchronizationStory, Ioc.Instance, StoryMode.Gui);
         }
 
         /// <summary>
