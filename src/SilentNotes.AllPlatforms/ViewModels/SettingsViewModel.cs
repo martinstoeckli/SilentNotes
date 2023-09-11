@@ -368,7 +368,7 @@ namespace SilentNotes.ViewModels
             {
                 SetPropertyAndModified(Model.Credentials, null, (v) => Model.Credentials = v, nameof(AccountSummary));
                 OnPropertyChanged(nameof(ClearCloudSettingsDisabled));
-                WeakReferenceMessenger.Default.Send<StateHasChangedMessage>();
+                WeakReferenceMessenger.Default.Send<RedrawCurrentPageMessage>();
             }
         }
 
@@ -438,7 +438,7 @@ namespace SilentNotes.ViewModels
                 {
                     byte[] languageFile = await _filePickerService.ReadPickedFile();
                     (Language as ILanguageTestService).OverrideWithTestResourceFile(languageFile);
-                    WeakReferenceMessenger.Default.Send<StateHasChangedMessage>();
+                    WeakReferenceMessenger.Default.Send<RedrawCurrentPageMessage>();
                 }
             }
             catch (Exception)

@@ -31,13 +31,13 @@
 			await KeyboardShortcuts.InitializeAsync(JSRuntime);
 			KeyboardShortcuts
 				.AddShortcut(new SnKeyboardShortcut(SnKey.Escape), () => Navigation.NavigateBack());
-			FeedbackService.IsBusyIndicatorVisible = true;
+			FeedbackService.SetBusyIndicatorVisible(true, true);
 		}
 	}
 
 	protected override void OnClosingPage()
 	{
 		base.OnClosingPage();
-		FeedbackService.IsBusyIndicatorVisible = false;
+		FeedbackService.SetBusyIndicatorVisible(false, false);
 	}
 }

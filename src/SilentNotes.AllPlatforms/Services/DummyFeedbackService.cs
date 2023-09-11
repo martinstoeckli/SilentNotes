@@ -18,6 +18,11 @@ namespace SilentNotes.Services
         public bool IsBusyIndicatorVisible { get; set; }
 
         /// <inheritdoc/>
+        public void SetBusyIndicatorVisible(bool value, bool refreshGui)
+        {
+        }
+
+        /// <inheritdoc/>
         public Task<MessageBoxResult> ShowMessageAsync(string message, string title, MessageBoxButtons buttons, bool conservativeDefault)
         {
             MessageBoxResult result;

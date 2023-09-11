@@ -29,10 +29,10 @@
 	protected override void OnInitialized()
 	{
 		// Give other services a way to redraw the GUI of the whole app.
-		WeakReferenceMessenger.Default.Register<GlobalStateHasChangedMessage>(
+		WeakReferenceMessenger.Default.Register<RedrawMainPageMessage>(
 			this, (recipient, message) => StateHasChanged());
 
-		// initialize the browser history
+		// initialize the start page in the browser history, because there are no navigation events yet
 		BrowserHistoryService.UpdateHistoryOnNavigation(Routes.NoteRepository, string.Empty);
 
 		// Workaround: Scoped services are always correct when injected, but when adding them to
@@ -47,6 +47,6 @@
 	/// <inheritdoc/>
 	public void Dispose()
 	{
-		WeakReferenceMessenger.Default.Unregister<GlobalStateHasChangedMessage>(this);
+		WeakReferenceMessenger.Default.Unregister<RedrawMainPageMessage>(this);
 	}
 }

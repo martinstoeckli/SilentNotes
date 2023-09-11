@@ -119,7 +119,7 @@ namespace SilentNotes.ViewModels
                     Model.Notes.Remove(note);
                 }
             }
-            WeakReferenceMessenger.Default.Send<StateHasChangedMessage>();
+            WeakReferenceMessenger.Default.Send<RedrawCurrentPageMessage>();
         }
 
         /// <summary>

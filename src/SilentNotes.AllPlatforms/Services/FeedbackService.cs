@@ -45,13 +45,16 @@ namespace SilentNotes.Services
         public bool IsBusyIndicatorVisible
         {
             get { return _isBusyIndicatorVisible; }
-            set
+        }
+
+        /// <inheritdoc/>
+        public void SetBusyIndicatorVisible(bool value, bool refreshGui)
+        {
+            if (value != _isBusyIndicatorVisible)
             {
-                if (value != _isBusyIndicatorVisible)
-                {
-                    _isBusyIndicatorVisible = value;
-                    WeakReferenceMessenger.Default.Send<GlobalStateHasChangedMessage>();
-                }
+                _isBusyIndicatorVisible = value;
+                if (refreshGui)
+                    WeakReferenceMessenger.Default.Send<RedrawMainPageMessage>();
             }
         }
 

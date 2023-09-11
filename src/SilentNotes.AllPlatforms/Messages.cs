@@ -19,14 +19,15 @@ namespace SilentNotes
     /// <summary>
     /// Message to inform the current page that a call to StateHasChanged is necessary.
     /// </summary>
-    public class StateHasChangedMessage
+    public class RedrawCurrentPageMessage
+
     {
     }
 
     /// <summary>
     /// Message to inform the application MainLayout page that a call to StateHasChanged is necessary.
     /// </summary>
-    public class GlobalStateHasChangedMessage
+    public class RedrawMainPageMessage
     {
     }
 

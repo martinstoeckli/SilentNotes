@@ -49,7 +49,7 @@ namespace SilentNotes.Services
         /// <inheritdoc/>
         public void RedrawTheme()
         {
-            WeakReferenceMessenger.Default.Send<GlobalStateHasChangedMessage>();
+            WeakReferenceMessenger.Default.Send<RedrawMainPageMessage>();
         }
 
         /// <inheritdoc/>
