@@ -6,7 +6,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using SilentNotes.Crypto;
 using SilentNotes.Services;
+using VanillaCloudStorageClient;
 
 namespace SilentNotes.Stories.SynchronizationStory
 {
@@ -15,17 +17,40 @@ namespace SilentNotes.Stories.SynchronizationStory
     /// enter credentials for the cloud storage. In case of an OAuth2 login, it opens the external
     /// browser and waits for the confirmation of the open auth login.
     /// </summary>
-    internal class ShowCloudStorageAccount : SynchronizationStoryStepBase
+    internal class ShowCloudStorageAccountStep : SynchronizationStoryStepBase
     {
         /// <inheritdoc/>
         public override ValueTask<StoryStepResult<SynchronizationStoryModel>> RunStep(SynchronizationStoryModel model, IServiceProvider serviceProvider, StoryMode uiMode)
         {
             if (uiMode == StoryMode.Gui)
             {
-                //var navigation = serviceProvider.GetService<INavigationService>();
-                //navigation.NavigateTo(Routes.CloudStorageChoice);
+                var cloudStorageClientFactory = serviceProvider.GetService<ICloudStorageClientFactory>();
+                var navigation = serviceProvider.GetService<INavigationService>();
+                var randomSource = serviceProvider.GetService<ICryptoRandomService>();
+                var nativeBrowserService = serviceProvider.GetService<INativeBrowserService>();
+
+                SerializeableCloudStorageCredentials credentials = model.Credentials;
+                ICloudStorageClient cloudStorageClient = cloudStorageClientFactory.GetByKey(credentials.CloudStorageId);
+                if (cloudStorageClient is IOAuth2CloudStorageClient oauthStorageClient)
+                {
+                    // Show waiting page
+                    navigation.NavigateTo(Routes.CloudStorageOauthWaiting);
+
+                    // Open OAuth2 login page in external browser
+                    model.OauthState = CryptoUtils.GenerateRandomBase62String(16, randomSource);
+                    model.OauthCodeVerifier = CryptoUtils.GenerateRandomBase62String(64, randomSource);
+
+                    string url = oauthStorageClient.BuildAuthorizationRequestUrl(
+                        model.OauthState, model.OauthCodeVerifier);
+                    // todo:
+                    //nativeBrowserService.OpenWebsiteInApp(url);
+                }
+                else
+                {
+                    navigation.NavigateTo(Routes.CloudStorageAccount);
+                }
             }
-            return FromResult(null);
+            return FromResultEndOfStory();
         }
     }
 }

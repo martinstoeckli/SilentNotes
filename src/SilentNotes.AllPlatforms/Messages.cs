@@ -24,6 +24,13 @@ namespace SilentNotes
     }
 
     /// <summary>
+    /// Message to inform the application MainLayout page that a call to StateHasChanged is necessary.
+    /// </summary>
+    public class GlobalStateHasChangedMessage
+    {
+    }
+
+    /// <summary>
     /// Message to inform the current page that the system back button was pressed.
     /// </summary>
     public class BackButtonPressedMessage

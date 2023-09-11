@@ -15,9 +15,7 @@ namespace SilentNotes.Services
     public class DummyFeedbackService : IFeedbackService
     {
         /// <inheritdoc/>
-        public void ShowBusyIndicator(bool visible)
-        {
-        }
+        public bool IsBusyIndicatorVisible { get; set; }
 
         /// <inheritdoc/>
         public Task<MessageBoxResult> ShowMessageAsync(string message, string title, MessageBoxButtons buttons, bool conservativeDefault)

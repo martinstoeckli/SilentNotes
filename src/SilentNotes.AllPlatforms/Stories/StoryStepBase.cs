@@ -89,5 +89,14 @@ namespace SilentNotes.Stories
         {
             return ValueTask.FromResult<StoryStepResult<TModel>>(new StoryStepResult<TModel>(nextStep));
         }
+
+        /// <summary>
+        /// Helper function to create the return value of a finished story.
+        /// </summary>
+        /// <returns>Task with the story result.</returns>
+        protected ValueTask<StoryStepResult<TModel>> FromResultEndOfStory()
+        {
+            return FromResult(null);
+        }
     }
 }

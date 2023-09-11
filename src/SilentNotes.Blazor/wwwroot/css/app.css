@@ -10,6 +10,12 @@ h1 { font-size: 1.7em; }
 h2 { font-size: 1.3em; }
 h3 { font-size: 1.1em; }
 #content { overflow-y: auto; }
+#progress {
+	position: fixed;
+	top: 50%;
+	left: calc(50% - 28px);
+	pointer-events: none;
+}
 
 .background-icon {
 	position: fixed;

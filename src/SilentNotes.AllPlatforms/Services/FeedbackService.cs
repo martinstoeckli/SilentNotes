@@ -5,33 +5,57 @@
 
 using System;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
 namespace SilentNotes.Services
 {
+    /// <summary>
+    /// Implementation of the <see cref="IFeedbackService"/> interface.
+    /// </summary>
     internal class FeedbackService : IFeedbackService
     {
         private readonly IDialogService _dialogService;
         private readonly ISnackbar _snackbar;
         private readonly ILanguageService _languageService;
+        private bool _isBusyIndicatorVisible;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FeedbackService"/>.
+        /// </summary>
+        /// <param name="dialogService">Service to display message boxes.</param>
+        /// <param name="snackbar">The Mudblazor snackbar, to show toasts.</param>
+        /// <param name="languageService">Language service to get localized textes.</param>
         public FeedbackService(IDialogService dialogService, ISnackbar snackbar, ILanguageService languageService)
         {
             _dialogService = dialogService;
             _snackbar = snackbar;
             _languageService = languageService;
+            _isBusyIndicatorVisible = false;
         }
 
+        /// <inheritdoc/>
         public void ShowToast(string message, Severity severity = Severity.Normal)
         {
             _snackbar.Add(message, severity);
         }
 
-        public void ShowBusyIndicator(bool visible)
+        /// <inheritdoc/>
+        public bool IsBusyIndicatorVisible
         {
+            get { return _isBusyIndicatorVisible; }
+            set
+            {
+                if (value != _isBusyIndicatorVisible)
+                {
+                    _isBusyIndicatorVisible = value;
+                    WeakReferenceMessenger.Default.Send<GlobalStateHasChangedMessage>();
+                }
+            }
         }
 
+        /// <inheritdoc/>
         public async Task<MessageBoxResult> ShowMessageAsync(string message, string title, MessageBoxButtons buttons, bool conservativeDefault)
         {
             ButtonArrangement arrangement = new ButtonArrangement(buttons, _languageService);

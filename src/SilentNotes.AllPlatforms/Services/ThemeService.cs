@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using CommunityToolkit.Mvvm.Messaging;
 using MudBlazor;
 using MudBlazor.Utilities;
 using SilentNotes.Models;
@@ -19,7 +20,6 @@ namespace SilentNotes.Services
         private const int DefaultWallpaper = 0;
         private readonly ISettingsService _settingsService;
         private readonly IEnvironmentService _environmentService;
-        private Action _globalStateHasChanged;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ThemeService"/> class.
@@ -47,15 +47,9 @@ namespace SilentNotes.Services
         }
 
         /// <inheritdoc/>
-        public void Initialize(Action stateHasChanged)
-        {
-            _globalStateHasChanged = stateHasChanged;
-        }
-
-        /// <inheritdoc/>
         public void RedrawTheme()
         {
-            _globalStateHasChanged?.Invoke();
+            WeakReferenceMessenger.Default.Send<GlobalStateHasChangedMessage>();
         }
 
         /// <inheritdoc/>

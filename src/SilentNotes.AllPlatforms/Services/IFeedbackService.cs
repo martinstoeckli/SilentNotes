@@ -29,15 +29,9 @@ namespace SilentNotes.Services
         void ShowToast(string message, Severity severity = Severity.Normal);
 
         /// <summary>
-        /// Shows an indicator that the applcation is busy or hides it (e.g. hourglass).
+        /// Gets or sets a value indicating whether the applications progress spinner is visible or not.
         /// </summary>
-        /// <remarks>
-        /// The idea to use IDisposable to automatically hide the busy indicator didn't work out,
-        /// because it cannot be guaranteed that the same activity is active when the indicator
-        /// should be removed.
-        /// </remarks>
-        /// <param name="visible">Indicates whether the busy indicator should be shown or hidden.</param>
-        void ShowBusyIndicator(bool visible);
+        bool IsBusyIndicatorVisible { get; set; }
 
         /// <summary>
         /// Displays information to the user.

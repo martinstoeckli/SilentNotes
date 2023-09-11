@@ -16,13 +16,6 @@ namespace SilentNotes.Services
     public interface IThemeService
     {
         /// <summary>
-        /// Initializes the theme service.
-        /// </summary>
-        /// <param name="globalStateHasChanged">The StateHasChanged method of the MainLayout, for
-        /// more infos read: <see cref="RedrawTheme"/>.</param>
-        void Initialize(Action globalStateHasChanged);
-
-        /// <summary>
         /// Can be called when the theme has changed, to refresh the GUI of the whole app (instead
         /// of just the active component).
         /// </summary>

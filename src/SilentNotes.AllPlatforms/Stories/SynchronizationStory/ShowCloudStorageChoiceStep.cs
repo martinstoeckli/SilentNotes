@@ -24,7 +24,7 @@ namespace SilentNotes.Stories.SynchronizationStory
                 var navigation = serviceProvider.GetService<INavigationService>();
                 navigation.NavigateTo(Routes.CloudStorageChoice);
             }
-            return FromResult(null);
+            return FromResultEndOfStory();
         }
     }
 }

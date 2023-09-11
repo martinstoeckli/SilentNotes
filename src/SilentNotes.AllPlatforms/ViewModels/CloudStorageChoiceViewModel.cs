@@ -8,6 +8,7 @@ using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.DependencyInjection;
 using SilentNotes.Services;
 using SilentNotes.Stories.SynchronizationStory;
+using VanillaCloudStorageClient;
 
 namespace SilentNotes.ViewModels
 {
@@ -66,9 +67,12 @@ namespace SilentNotes.ViewModels
         private async void Choose(object value)
         {
             SynchronizationStoryModel storyModel = _storyBoardService.SynchronizationStory;
-            storyModel.ChoosenCloudStorageId = value.ToString();
+            storyModel.Credentials = new SerializeableCloudStorageCredentials
+            {
+                CloudStorageId = value.ToString()
+            };
 
-            var nextStep = new ShowCloudStorageAccount();
+            var nextStep = new ShowCloudStorageAccountStep();
             await nextStep.RunStep(storyModel, _serviceProvider, Stories.StoryMode.Gui);
         }
 
