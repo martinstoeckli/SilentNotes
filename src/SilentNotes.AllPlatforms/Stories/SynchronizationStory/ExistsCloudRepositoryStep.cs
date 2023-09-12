@@ -6,15 +6,93 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using SilentNotes.Models;
+using SilentNotes.Services;
+using VanillaCloudStorageClient;
 
 namespace SilentNotes.Stories.SynchronizationStory
 {
+    /// <summary>
+    /// This step belongs to the <see cref="SynchronizationStory"/>. It checks whether a
+    /// repository exists in the cloud storage.
+    /// </summary>
     internal class ExistsCloudRepositoryStep : SynchronizationStoryStepBase
     {
         /// <inheritdoc/>
-        public override ValueTask<StoryStepResult<SynchronizationStoryModel>> RunStep(SynchronizationStoryModel model, IServiceProvider serviceProvider, StoryMode uiMode)
+        public override async ValueTask<StoryStepResult<SynchronizationStoryModel>> RunStep(SynchronizationStoryModel model, IServiceProvider serviceProvider, StoryMode uiMode)
         {
-            throw new NotImplementedException();
+            var cloudStorageClientFactory = serviceProvider.GetService<ICloudStorageClientFactory>();
+            var settingsService = serviceProvider.GetService<ISettingsService>();
+            var languageService = serviceProvider.GetService<ILanguageService>();
+            var feedbackService = serviceProvider.GetService<IFeedbackService>();
+            try
+            {
+                SerializeableCloudStorageCredentials credentials = model.Credentials;
+                ICloudStorageClient cloudStorageClient = cloudStorageClientFactory.GetByKey(credentials.CloudStorageId);
+
+                bool stopBecauseManualOAuthLoginIsRequired = false;
+                if ((cloudStorageClient is OAuth2CloudStorageClient oauthStorageClient) &&
+                    credentials.Token.NeedsRefresh())
+                {
+                    try
+                    {
+                        // Get a new access token by using the refresh token
+                        credentials.Token = await oauthStorageClient.RefreshTokenAsync(credentials.Token);
+                        SaveCredentialsToSettings(settingsService, credentials);
+                    }
+                    catch (RefreshTokenExpiredException)
+                    {
+                        // Refresh-token cannot be used to get new access-tokens anymore, a new
+                        // authorization by the user is required.
+                        stopBecauseManualOAuthLoginIsRequired = true;
+                    }
+                }
+
+                if (stopBecauseManualOAuthLoginIsRequired)
+                {
+                    switch (uiMode)
+                    {
+                        case StoryMode.Gui:
+                            // If GUI is allowed, ask for new login
+                            return CreateResult(new ShowCloudStorageAccountStep());
+                        default:
+                            return CreateResultEndOfStory(languageService["sync_error_oauth_refresh"]);
+                    }
+                }
+                else
+                {
+                    if (uiMode != StoryMode.Silent)
+                        feedbackService.SetBusyIndicatorVisible(true, true);
+                    bool repositoryExists = await cloudStorageClient.ExistsFileAsync(Config.RepositoryFileName, credentials);
+
+                    // If no error occured the credentials are ok and we can safe them
+                    SaveCredentialsToSettings(settingsService, credentials);
+
+                    if (repositoryExists)
+                        return CreateResult(new DownloadCloudRepositoryStep());
+                    else
+                        return CreateResult(new StoreLocalRepositoryToCloudAndQuitStep());
+                }
+            }
+            catch (Exception ex)
+            {
+                if (uiMode != StoryMode.Silent)
+                    feedbackService.SetBusyIndicatorVisible(false, true);
+
+                // Keep the current page open and show the error message
+                return CreateResultEndOfStory(ex);
+            }
+        }
+
+        protected static void SaveCredentialsToSettings(ISettingsService settingsService, SerializeableCloudStorageCredentials credentials)
+        {
+            // todo:
+            //SettingsModel settings = settingsService.LoadSettingsOrDefault();
+            //if (!credentials.AreEqualOrNull(settings.Credentials))
+            //{
+            //    settings.Credentials = credentials;
+            //    settingsService.TrySaveSettingsToLocalDevice(settings);
+            //}
         }
     }
 }

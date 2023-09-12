@@ -20,6 +20,7 @@ namespace SilentNotes.ViewModels
     /// </summary>
     public class CloudStorageAccountViewModel : ViewModelBase
     {
+        private readonly IServiceProvider _serviceProvider;
         private readonly IStoryBoardService _storyBoardService;
         private readonly INavigationService _navigation;
         private readonly CloudStorageCredentialsRequirements _credentialsRequirements;
@@ -32,6 +33,7 @@ namespace SilentNotes.ViewModels
             IServiceProvider serviceProvider,
             SerializeableCloudStorageCredentials model)
         {
+            _serviceProvider = serviceProvider;
             _storyBoardService = serviceProvider.GetService<IStoryBoardService>();
             _navigation = serviceProvider.GetRequiredService<INavigationService>();
 
@@ -64,10 +66,9 @@ namespace SilentNotes.ViewModels
 
         private async void Ok()
         {
-            //_feedbackService.ShowBusyIndicator(true);
-            //_storyBoardService.ActiveStory?.Session.Store(SynchronizationStorySessionKey.CloudStorageCredentials, Model);
-            //await (_storyBoardService.ActiveStory?.ContinueWith(SynchronizationStoryStepId.ExistsCloudRepository)
-            //       ?? Task.CompletedTask);
+            SynchronizationStoryModel storyModel = _storyBoardService.SynchronizationStory;
+            var nextStep = new ExistsCloudRepositoryStep();
+            await nextStep.RunStory(storyModel, _serviceProvider, Stories.StoryMode.Gui);
         }
 
         /// <inheritdoc />

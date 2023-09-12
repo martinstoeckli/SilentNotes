@@ -50,7 +50,7 @@ namespace SilentNotes.Stories.SynchronizationStory
                     navigation.NavigateTo(Routes.CloudStorageAccount);
                 }
             }
-            return FromResultEndOfStory();
+            return CreateResultTaskEndOfStory();
         }
     }
 }

@@ -86,11 +86,13 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\XmlFileService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SnKeyboardShortcuts.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Stories\StoryMode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Stories\SynchronizationStory\DownloadCloudRepositoryStep.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Stories\SynchronizationStory\ExistsCloudRepositoryStep.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Stories\SynchronizationStory\IsCloudServiceSetStep.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Stories\SynchronizationStory\ShowCloudStorageAccountStep.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Stories\SynchronizationStory\ShowCloudStorageChoiceStep.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Stories\SynchronizationStory\ShowFirstTimeDialogStep.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Stories\SynchronizationStory\StoreLocalRepositoryToCloudAndQuitStep.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Stories\SynchronizationStory\SynchronizationStoryExceptions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Stories\SynchronizationStory\SynchronizationStoryModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Stories\SynchronizationStory\SynchronizationStoryStepBase.cs" />

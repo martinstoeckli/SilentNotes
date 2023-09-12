@@ -84,19 +84,52 @@ namespace SilentNotes.Stories
         /// Helper function to create the return value of a running step/story.
         /// </summary>
         /// <param name="nextStep">Next step, or null if the story ends.</param>
-        /// <returns>Task with the story result.</returns>
-        protected ValueTask<StoryStepResult<TModel>> FromResult(StoryStepBase<TModel> nextStep)
+        /// <param name="toast">Sets the <see cref="StoryStepResult{TModel}.Toast"/> property.</param>
+        /// <param name="message">Sets the <see cref="StoryStepResult{TModel}.Message"/> property.</param>
+        /// <returns>The story result.</returns>
+        protected static StoryStepResult<TModel> CreateResult(StoryStepBase<TModel> nextStep, string toast = null, string message = null)
         {
-            return ValueTask.FromResult<StoryStepResult<TModel>>(new StoryStepResult<TModel>(nextStep));
+            return new StoryStepResult<TModel>(nextStep, toast, message);
+        }
+
+        /// <summary>
+        /// Helper function to create the return value of a finished story.
+        /// </summary>
+        /// <param name="toast">Sets the <see cref="StoryStepResult{TModel}.Toast"/> property.</param>
+        /// <param name="message">Sets the <see cref="StoryStepResult{TModel}.Message"/> property.</param>
+        /// <returns>Task with the story result.</returns>
+        protected static StoryStepResult<TModel> CreateResultEndOfStory(string toast = null, string message = null)
+        {
+            return CreateResult(null, toast, message);
+        }
+
+        /// <summary>
+        /// Helper function to create the return value of a finished story.
+        /// </summary>
+        /// <param name="error">Sets the <see cref="StoryStepResult{TModel}.Error"/> property.</param>
+        /// <returns>Task with the story result.</returns>
+        protected static StoryStepResult<TModel> CreateResultEndOfStory(Exception error)
+        {
+            return new StoryStepResult<TModel>(error);
+        }
+
+        /// <summary>
+        /// Helper function to create the return value of a running step/story.
+        /// </summary>
+        /// <param name="nextStep">Next step, or null if the story ends.</param>
+        /// <returns>Task with the story result.</returns>
+        protected static ValueTask<StoryStepResult<TModel>> CreateResultTask(StoryStepBase<TModel> nextStep)
+        {
+            return ValueTask.FromResult<StoryStepResult<TModel>>(CreateResult(nextStep));
         }
 
         /// <summary>
         /// Helper function to create the return value of a finished story.
         /// </summary>
         /// <returns>Task with the story result.</returns>
-        protected ValueTask<StoryStepResult<TModel>> FromResultEndOfStory()
+        protected static ValueTask<StoryStepResult<TModel>> CreateResultTaskEndOfStory()
         {
-            return FromResult(null);
+            return CreateResultTask(null);
         }
     }
 }

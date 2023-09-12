@@ -20,7 +20,7 @@ namespace SilentNotes.Stories.SynchronizationStory
                 var navigation = serviceProvider.GetService<INavigationService>();
                 navigation.NavigateTo(Routes.FirstTimeSync);
             }
-            return FromResultEndOfStory();
+            return CreateResultTaskEndOfStory();
         }
     }
 }
