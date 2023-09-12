@@ -98,6 +98,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Stories\StoryStepBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Stories\StoryStepResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ChangePasswordViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\CloudStorageAccountViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\CloudStorageChoiceViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\DropdownItemViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ExportViewModel.cs" />

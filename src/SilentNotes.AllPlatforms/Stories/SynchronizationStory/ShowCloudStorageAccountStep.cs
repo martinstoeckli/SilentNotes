@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.Extensions.DependencyInjection;
 using SilentNotes.Crypto;
 using SilentNotes.Services;
 using VanillaCloudStorageClient;
@@ -42,8 +43,7 @@ namespace SilentNotes.Stories.SynchronizationStory
 
                     string url = oauthStorageClient.BuildAuthorizationRequestUrl(
                         model.OauthState, model.OauthCodeVerifier);
-                    // todo:
-                    //nativeBrowserService.OpenWebsiteInApp(url);
+                    nativeBrowserService.OpenWebsiteInApp(url);
                 }
                 else
                 {
