@@ -104,11 +104,11 @@ namespace SilentNotes.Stories
         }
 
         /// <summary>
-        /// Helper function to create the return value of a finished story.
+        /// Helper function to create the return value of a running step/story.
         /// </summary>
         /// <param name="error">Sets the <see cref="StoryStepResult{TModel}.Error"/> property.</param>
         /// <returns>Task with the story result.</returns>
-        protected static StoryStepResult<TModel> CreateResultEndOfStory(Exception error)
+        protected static StoryStepResult<TModel> CreateResult(Exception error)
         {
             return new StoryStepResult<TModel>(error);
         }

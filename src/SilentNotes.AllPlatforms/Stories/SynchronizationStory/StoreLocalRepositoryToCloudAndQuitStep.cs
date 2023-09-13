@@ -5,7 +5,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
+using SilentNotes.Models;
+using SilentNotes.Services;
+using SilentNotes.Workers;
+using VanillaCloudStorageClient;
 
 namespace SilentNotes.Stories.SynchronizationStory
 {
@@ -16,10 +19,58 @@ namespace SilentNotes.Stories.SynchronizationStory
     internal class StoreLocalRepositoryToCloudAndQuitStep : SynchronizationStoryStepBase
     {
         /// <inheritdoc/>
-        public override ValueTask<StoryStepResult<SynchronizationStoryModel>> RunStep(SynchronizationStoryModel model, IServiceProvider serviceProvider, StoryMode uiMode)
+        public override async ValueTask<StoryStepResult<SynchronizationStoryModel>> RunStep(SynchronizationStoryModel model, IServiceProvider serviceProvider, StoryMode uiMode)
         {
-            // todo:
-            return CreateResultTaskEndOfStory();
+            try
+            {
+                var cloudStorageClientFactory = serviceProvider.GetService<ICloudStorageClientFactory>();
+                var repositoryStorageService = serviceProvider.GetService<IRepositoryStorageService>();
+                var settingsService = serviceProvider.GetService<ISettingsService>();
+                var cryptoRandomService = serviceProvider.GetService<ICryptoRandomService>();
+                var languageService = serviceProvider.GetService<ILanguageService>();
+
+                SerializeableCloudStorageCredentials credentials = model.Credentials;
+                repositoryStorageService.LoadRepositoryOrDefault(out NoteRepositoryModel localRepository);
+                SettingsModel settings = settingsService.LoadSettingsOrDefault();
+                string transferCode = settings.TransferCode;
+
+                bool needsNewTransferCode = !TransferCode.IsCodeSet(transferCode);
+                if (needsNewTransferCode)
+                    transferCode = TransferCode.GenerateCode(cryptoRandomService);
+
+                byte[] encryptedRepository = EncryptRepository(
+                    localRepository, transferCode, cryptoRandomService, settings.SelectedEncryptionAlgorithm);
+
+                ICloudStorageClient cloudStorageClient = cloudStorageClientFactory.GetByKey(credentials.CloudStorageId);
+                await cloudStorageClient.UploadFileAsync(Config.RepositoryFileName, encryptedRepository, credentials);
+
+                // All went well, time to save the transfer code, if a new one was created
+                string message = null;
+                if (needsNewTransferCode)
+                {
+                    settings.TransferCode = transferCode;
+                    settings.NotificationTriggers.Add(new NotificationTriggerModel { Id = NotificationService.TransferCodeNotificationId });
+                    settingsService.TrySaveSettingsToLocalDevice(settings);
+
+                    string formattedTransferCode = TransferCode.FormatTransferCodeForDisplay(transferCode);
+                    string messageNewCreated = languageService.LoadTextFmt("transfer_code_created", formattedTransferCode, languageService.LoadText("show_transfer_code"));
+                    string messageWriteDown = languageService.LoadText("transfer_code_writedown");
+                    message = messageNewCreated + Environment.NewLine + messageWriteDown;
+                }
+
+                return CreateResult(new StopAndShowRepositoryStep(), languageService["sync_success"], message);
+            }
+            catch (Exception ex)
+            {
+                if (uiMode == StoryMode.Gui)
+                {
+                    var feedbackService = serviceProvider.GetService<IFeedbackService>();
+                    feedbackService.SetBusyIndicatorVisible(false, true);
+                }
+
+                // Keep the current page open and show the error message
+                return CreateResult(ex);
+            }
         }
     }
 }

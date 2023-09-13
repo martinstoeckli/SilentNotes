@@ -36,6 +36,7 @@ namespace SilentNotes.ViewModels
             _serviceProvider = serviceProvider;
             _storyBoardService = serviceProvider.GetService<IStoryBoardService>();
             _navigation = serviceProvider.GetRequiredService<INavigationService>();
+            _feedbackService = serviceProvider.GetRequiredService<IFeedbackService>();
 
             Model = model;
 
@@ -66,6 +67,7 @@ namespace SilentNotes.ViewModels
 
         private async void Ok()
         {
+            _feedbackService.SetBusyIndicatorVisible(true, true);
             SynchronizationStoryModel storyModel = _storyBoardService.SynchronizationStory;
             var nextStep = new ExistsCloudRepositoryStep();
             await nextStep.RunStory(storyModel, _serviceProvider, Stories.StoryMode.Gui);

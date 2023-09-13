@@ -92,6 +92,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Stories\SynchronizationStory\ShowCloudStorageAccountStep.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Stories\SynchronizationStory\ShowCloudStorageChoiceStep.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Stories\SynchronizationStory\ShowFirstTimeDialogStep.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Stories\SynchronizationStory\StopAndShowRepositoryStep.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Stories\SynchronizationStory\StoreLocalRepositoryToCloudAndQuitStep.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Stories\SynchronizationStory\SynchronizationStoryExceptions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Stories\SynchronizationStory\SynchronizationStoryModel.cs" />

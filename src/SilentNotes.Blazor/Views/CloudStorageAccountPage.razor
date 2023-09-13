@@ -98,6 +98,12 @@
 		}
 	}
 
+	protected override void OnClosingPage()
+	{
+		base.OnClosingPage();
+		FeedbackService.SetBusyIndicatorVisible(false, false);
+	}
+
 	private string CloudServiceName
 	{
 		get { return string.Format("{0}: {1}", @LanguageService["cloud_service"], ViewModel.CloudServiceName); }

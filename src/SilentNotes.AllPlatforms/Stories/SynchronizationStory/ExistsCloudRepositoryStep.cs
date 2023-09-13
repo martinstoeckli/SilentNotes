@@ -24,7 +24,6 @@ namespace SilentNotes.Stories.SynchronizationStory
             var cloudStorageClientFactory = serviceProvider.GetService<ICloudStorageClientFactory>();
             var settingsService = serviceProvider.GetService<ISettingsService>();
             var languageService = serviceProvider.GetService<ILanguageService>();
-            var feedbackService = serviceProvider.GetService<IFeedbackService>();
             try
             {
                 SerializeableCloudStorageCredentials credentials = model.Credentials;
@@ -61,8 +60,6 @@ namespace SilentNotes.Stories.SynchronizationStory
                 }
                 else
                 {
-                    if (uiMode != StoryMode.Silent)
-                        feedbackService.SetBusyIndicatorVisible(true, true);
                     bool repositoryExists = await cloudStorageClient.ExistsFileAsync(Config.RepositoryFileName, credentials);
 
                     // If no error occured the credentials are ok and we can safe them
@@ -76,11 +73,14 @@ namespace SilentNotes.Stories.SynchronizationStory
             }
             catch (Exception ex)
             {
-                if (uiMode != StoryMode.Silent)
+                if (uiMode == StoryMode.Gui)
+                {
+                    var feedbackService = serviceProvider.GetService<IFeedbackService>();
                     feedbackService.SetBusyIndicatorVisible(false, true);
+                }
 
                 // Keep the current page open and show the error message
-                return CreateResultEndOfStory(ex);
+                return CreateResult(ex);
             }
         }
 
