@@ -86,12 +86,16 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\XmlFileService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SnKeyboardShortcuts.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Stories\StoryMode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Stories\SynchronizationStory\DecryptCloudRepositoryStep.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Stories\SynchronizationStory\DownloadCloudRepositoryStep.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Stories\SynchronizationStory\ExistsCloudRepositoryStep.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Stories\SynchronizationStory\ExistsTransferCodeStep.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Stories\SynchronizationStory\IsCloudServiceSetStep.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Stories\SynchronizationStory\IsSameRepositoryStep.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Stories\SynchronizationStory\ShowCloudStorageAccountStep.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Stories\SynchronizationStory\ShowCloudStorageChoiceStep.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Stories\SynchronizationStory\ShowFirstTimeDialogStep.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Stories\SynchronizationStory\ShowTransferCodeStep.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Stories\SynchronizationStory\StopAndShowRepositoryStep.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Stories\SynchronizationStory\StoreLocalRepositoryToCloudAndQuitStep.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Stories\SynchronizationStory\SynchronizationStoryExceptions.cs" />

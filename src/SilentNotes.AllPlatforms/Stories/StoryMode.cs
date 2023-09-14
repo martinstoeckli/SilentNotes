@@ -17,9 +17,26 @@ namespace SilentNotes.Stories
         Silent,
 
         /// <summary>Shows messages and toasts, but doesn't ask for user input by opening dialogs.</summary>
-        OnlyMessages,
+        MessagesToasts,
 
         /// <summary>Shows the complete user interface, inclusive user dialogs and messages.</summary>
         Gui,
     }
+
+    /// <summary>
+    /// Extension methods for the <see cref="StoryMode"/> enumeration.
+    /// </summary>
+    public static class StoryModeExtensions
+    {
+        /// <summary>
+        /// Checks whether this mode should show dialogs for user input.
+        /// </summary>
+        /// <param name="mode">Mode to check.</param>
+        /// <returns>Returns true if if requires the gui, otherwise false.</returns>
+        public static bool GuiOrMessagesOrToasts(this StoryMode mode)
+        {
+            return mode == StoryMode.Gui || mode == StoryMode.MessagesToasts;
+        }
+    }
+
 }

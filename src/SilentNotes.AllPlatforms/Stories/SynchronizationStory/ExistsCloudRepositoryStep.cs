@@ -53,9 +53,9 @@ namespace SilentNotes.Stories.SynchronizationStory
                     {
                         case StoryMode.Gui:
                             // If GUI is allowed, ask for new login
-                            return CreateResult(new ShowCloudStorageAccountStep());
+                            return ToResult(new ShowCloudStorageAccountStep());
                         default:
-                            return CreateResultEndOfStory(languageService["sync_error_oauth_refresh"]);
+                            return ToResultEndOfStory(languageService["sync_error_oauth_refresh"]);
                     }
                 }
                 else
@@ -66,21 +66,18 @@ namespace SilentNotes.Stories.SynchronizationStory
                     SaveCredentialsToSettings(settingsService, credentials);
 
                     if (repositoryExists)
-                        return CreateResult(new DownloadCloudRepositoryStep());
+                        return ToResult(new DownloadCloudRepositoryStep());
                     else
-                        return CreateResult(new StoreLocalRepositoryToCloudAndQuitStep());
+                        return ToResult(new StoreLocalRepositoryToCloudAndQuitStep());
                 }
             }
             catch (Exception ex)
             {
                 if (uiMode == StoryMode.Gui)
-                {
-                    var feedbackService = serviceProvider.GetService<IFeedbackService>();
-                    feedbackService.SetBusyIndicatorVisible(false, true);
-                }
+                    serviceProvider.GetService<IFeedbackService>().SetBusyIndicatorVisible(false, true);
 
                 // Keep the current page open and show the error message
-                return CreateResult(ex);
+                return ToResult(ex);
             }
         }
 

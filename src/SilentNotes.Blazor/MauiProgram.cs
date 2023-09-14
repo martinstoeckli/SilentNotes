@@ -13,6 +13,7 @@ using MudBlazor.Services;
 using SilentNotes.Platforms;
 using SilentNotes.Platforms.Services;
 using SilentNotes.Services;
+using SilentNotes.Workers;
 
 namespace SilentNotes;
 
@@ -49,7 +50,7 @@ public static class MauiProgram
     {
         services.AddSingleton<ISvgIconService>((serviceProvider) => new SvgIconService());
         services.AddSingleton<ILanguageService>((serviceProvider) => new LanguageService(new LanguageServiceResourceReader(), "SilentNotes", new LanguageCodeService().GetSystemLanguageCode()));
-        //services.AddSingleton<INoteRepositoryUpdater>((serviceProvider) => new NoteRepositoryUpdater());
+        services.AddSingleton<INoteRepositoryUpdater>((serviceProvider) => new NoteRepositoryUpdater());
         services.AddSingleton<IThemeService>((serviceProvider) => new ThemeService(
             serviceProvider.GetService<ISettingsService>(),
             serviceProvider.GetService<IEnvironmentService>()));

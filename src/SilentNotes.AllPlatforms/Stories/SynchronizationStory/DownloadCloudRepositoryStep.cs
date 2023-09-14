@@ -6,6 +6,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.Extensions.DependencyInjection;
+using SilentNotes.Services;
+using VanillaCloudStorageClient;
 
 namespace SilentNotes.Stories.SynchronizationStory
 {
@@ -16,10 +19,30 @@ namespace SilentNotes.Stories.SynchronizationStory
     internal class DownloadCloudRepositoryStep : SynchronizationStoryStepBase
     {
         /// <inheritdoc/>
-        public override ValueTask<StoryStepResult<SynchronizationStoryModel>> RunStep(SynchronizationStoryModel model, IServiceProvider serviceProvider, StoryMode uiMode)
+        public override async ValueTask<StoryStepResult<SynchronizationStoryModel>> RunStep(SynchronizationStoryModel model, IServiceProvider serviceProvider, StoryMode uiMode)
         {
-            // todo:
-            return CreateResultTaskEndOfStory();
+            try
+            {
+                var cloudStorageClientFactory = serviceProvider.GetService<ICloudStorageClientFactory>();
+
+                SerializeableCloudStorageCredentials credentials = model.Credentials;
+                ICloudStorageClient cloudStorageClient = cloudStorageClientFactory.GetByKey(credentials.CloudStorageId);
+
+                // The repository can be cached for this story, download the repository only once.
+                if (model.BinaryCloudRepository == null)
+                {
+                    model.BinaryCloudRepository = await cloudStorageClient.DownloadFileAsync(Config.RepositoryFileName, credentials);
+                }
+                return ToResult(new ExistsTransferCodeStep());
+            }
+            catch (Exception ex)
+            {
+                if (uiMode == StoryMode.Gui)
+                    serviceProvider.GetService<IFeedbackService>().SetBusyIndicatorVisible(false, true);
+
+                // Keep the current page open and show the error message
+                return ToResult(ex);
+            }
         }
     }
 }

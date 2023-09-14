@@ -3,6 +3,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using SilentNotes.Models;
 using VanillaCloudStorageClient;
 
 namespace SilentNotes.Stories.SynchronizationStory
@@ -17,5 +18,11 @@ namespace SilentNotes.Stories.SynchronizationStory
         public string OauthState { get; set; }
 
         public string OauthCodeVerifier { get; set; }
+
+        public byte[] BinaryCloudRepository { get; set; }
+
+        public string UserEnteredTransferCode { get; set; }
+
+        public NoteRepositoryModel CloudRepository { get; set; }
     }
 }

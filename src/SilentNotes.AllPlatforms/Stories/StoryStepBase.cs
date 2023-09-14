@@ -25,7 +25,7 @@ namespace SilentNotes.Stories
                 return;
 
             // Show feedback of this step if not in silent mode
-            if (uiMode != StoryMode.Silent)
+            if (uiMode.GuiOrMessagesOrToasts())
                 await ShowFeedback(stepResult, serviceProvider);
 
             // Continue with next step if available
@@ -81,55 +81,46 @@ namespace SilentNotes.Stories
         }
 
         /// <summary>
-        /// Helper function to create the return value of a running step/story.
+        /// Simplifies creation of a story step result.
         /// </summary>
-        /// <param name="nextStep">Next step, or null if the story ends.</param>
+        /// <param name="nextStep">Sets the <see cref="StoryStepResult{TModel}.NextStep"/> property.</param>
         /// <param name="toast">Sets the <see cref="StoryStepResult{TModel}.Toast"/> property.</param>
         /// <param name="message">Sets the <see cref="StoryStepResult{TModel}.Message"/> property.</param>
-        /// <returns>The story result.</returns>
-        protected static StoryStepResult<TModel> CreateResult(StoryStepBase<TModel> nextStep, string toast = null, string message = null)
+        /// <returns>New instance of a story step result.</returns>
+        protected static StoryStepResult<TModel> ToResult(StoryStepBase<TModel> nextStep, string toast = null, string message = null)
         {
             return new StoryStepResult<TModel>(nextStep, toast, message);
         }
 
         /// <summary>
-        /// Helper function to create the return value of a finished story.
+        /// Simplifies creation of a story step result with no next step.
         /// </summary>
         /// <param name="toast">Sets the <see cref="StoryStepResult{TModel}.Toast"/> property.</param>
         /// <param name="message">Sets the <see cref="StoryStepResult{TModel}.Message"/> property.</param>
-        /// <returns>Task with the story result.</returns>
-        protected static StoryStepResult<TModel> CreateResultEndOfStory(string toast = null, string message = null)
+        /// <returns>New instance of a story step result.</returns>
+        protected static StoryStepResult<TModel> ToResultEndOfStory(string toast = null, string message = null)
         {
-            return CreateResult(null, toast, message);
+            return new StoryStepResult<TModel>(null, toast, message);
         }
 
         /// <summary>
-        /// Helper function to create the return value of a running step/story.
+        /// Simplifies creation of a story step result with an exception.
         /// </summary>
         /// <param name="error">Sets the <see cref="StoryStepResult{TModel}.Error"/> property.</param>
-        /// <returns>Task with the story result.</returns>
-        protected static StoryStepResult<TModel> CreateResult(Exception error)
+        /// <returns>New instance of a story step result.</returns>
+        protected static StoryStepResult<TModel> ToResult(Exception error)
         {
             return new StoryStepResult<TModel>(error);
         }
 
         /// <summary>
-        /// Helper function to create the return value of a running step/story.
+        /// Encloses a story step result in a ValueTask so functions without async can return a task.
         /// </summary>
-        /// <param name="nextStep">Next step, or null if the story ends.</param>
-        /// <returns>Task with the story result.</returns>
-        protected static ValueTask<StoryStepResult<TModel>> CreateResultTask(StoryStepBase<TModel> nextStep)
+        /// <param name="storyStepResult">The story step to enclose.</param>
+        /// <returns>ValueTask containing the story step result.</returns>
+        protected static ValueTask<StoryStepResult<TModel>> ToTask(StoryStepResult<TModel> storyStepResult)
         {
-            return ValueTask.FromResult<StoryStepResult<TModel>>(CreateResult(nextStep));
-        }
-
-        /// <summary>
-        /// Helper function to create the return value of a finished story.
-        /// </summary>
-        /// <returns>Task with the story result.</returns>
-        protected static ValueTask<StoryStepResult<TModel>> CreateResultTaskEndOfStory()
-        {
-            return CreateResultTask(null);
+            return ValueTask.FromResult<StoryStepResult<TModel>>(storyStepResult);
         }
     }
 }

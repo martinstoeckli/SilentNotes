@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.Extensions.DependencyInjection;
 using SilentNotes.Services;
 
 namespace SilentNotes.Stories.SynchronizationStory
@@ -22,12 +23,12 @@ namespace SilentNotes.Stories.SynchronizationStory
             var storyBoardService = serviceProvider.GetService<IStoryBoardService>();
             storyBoardService.SynchronizationStory = null;
 
-            if (uiMode != StoryMode.Silent)
+            if (uiMode.GuiOrMessagesOrToasts())
             {
                 var navigation = serviceProvider.GetService<INavigationService>();
                 navigation.NavigateHome();
             }
-            return CreateResultTaskEndOfStory();
+            return ToTask(ToResultEndOfStory());
         }
     }
 }

@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using Microsoft.Extensions.DependencyInjection;
 using SilentNotes.Models;
 using SilentNotes.Services;
 using SilentNotes.Workers;
@@ -58,18 +59,15 @@ namespace SilentNotes.Stories.SynchronizationStory
                     message = messageNewCreated + Environment.NewLine + messageWriteDown;
                 }
 
-                return CreateResult(new StopAndShowRepositoryStep(), languageService["sync_success"], message);
+                return ToResult(new StopAndShowRepositoryStep(), languageService["sync_success"], message);
             }
             catch (Exception ex)
             {
                 if (uiMode == StoryMode.Gui)
-                {
-                    var feedbackService = serviceProvider.GetService<IFeedbackService>();
-                    feedbackService.SetBusyIndicatorVisible(false, true);
-                }
+                    serviceProvider.GetService<IFeedbackService>().SetBusyIndicatorVisible(false, true);
 
                 // Keep the current page open and show the error message
-                return CreateResult(ex);
+                return ToResult(ex);
             }
         }
     }
