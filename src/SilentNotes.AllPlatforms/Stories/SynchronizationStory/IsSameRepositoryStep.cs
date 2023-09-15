@@ -5,7 +5,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
+using SilentNotes.Models;
+using SilentNotes.Services;
 
 namespace SilentNotes.Stories.SynchronizationStory
 {
@@ -18,8 +19,17 @@ namespace SilentNotes.Stories.SynchronizationStory
         /// <inheritdoc/>
         public override ValueTask<StoryStepResult<SynchronizationStoryModel>> RunStep(SynchronizationStoryModel model, IServiceProvider serviceProvider, StoryMode uiMode)
         {
-            // todo:
-            return ToTask(ToResultEndOfStory());
+            var repositoryStorageService = serviceProvider.GetService<IRepositoryStorageService>();
+            repositoryStorageService.LoadRepositoryOrDefault(out NoteRepositoryModel localRepository);
+
+            if (localRepository.Id == model.CloudRepository.Id)
+            {
+                return ToTask(ToResult(new StoreMergedRepositoryAndQuitStep()));
+            }
+            else
+            {
+                return ToTask(ToResult(new ShowMergeChoiceStep()));
+            }
         }
     }
 }
