@@ -27,6 +27,7 @@ namespace SilentNotes.ViewModels
             _serviceProvider = serviceProvider;
             _storyBoardService = _serviceProvider.GetService<IStoryBoardService>();
             ContinueCommand = new RelayCommand(Continue);
+            CancelCommand = new RelayCommand(Cancel);
         }
 
         /// <summary>
@@ -39,6 +40,17 @@ namespace SilentNotes.ViewModels
             SynchronizationStoryModel storyModel = _storyBoardService.SynchronizationStory;
             var nextStep = new ShowCloudStorageChoiceStep();
             await nextStep.RunStory(storyModel, _serviceProvider, Stories.StoryMode.Gui);
+        }
+
+        /// <summary>
+        /// Gets the command to cancel the synchronization.
+        /// </summary>
+        public ICommand CancelCommand { get; private set; }
+
+        private async void Cancel()
+        {
+            var nextStep = new StopAndShowRepositoryStep();
+            await nextStep.RunStory(_storyBoardService.SynchronizationStory, _serviceProvider, Stories.StoryMode.Gui);
         }
     }
 }

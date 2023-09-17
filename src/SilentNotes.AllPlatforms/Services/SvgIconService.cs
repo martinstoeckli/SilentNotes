@@ -35,7 +35,9 @@ namespace SilentNotes.Services
                 { IconNames.ArrowDown, "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M11,4H13V16L18.5,10.5L19.92,11.92L12,19.84L4.08,11.92L5.5,10.5L11,16V4Z' /></svg>" },
                 { IconNames.ArrowLeft, "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z' /></svg>" },
                 { IconNames.ArrowLeftBoldBoxOutline, "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M7,12L12,7V10H16V14H12V17L7,12M21,5V19A2,2 0 0,1 19,21H5A2,2 0 0,1 3,19V5A2,2 0 0,1 5,3H19A2,2 0 0,1 21,5M19,5H5V19H19V5Z' /></svg>" },
+                { IconNames.ArrowRightBold, "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M4,15V9H12V4.16L19.84,12L12,19.84V15H4Z' /></svg>" },
                 { IconNames.ArrowRightBoldBoxOutline, "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M17,12L12,17V14H8V10H12V7L17,12M3,19V5A2,2 0 0,1 5,3H19A2,2 0 0,1 21,5V19A2,2 0 0,1 19,21H5A2,2 0 0,1 3,19M5,19H19V5H5V19Z' /></svg>" },
+                //{ IconNames.ArrowRightThinCircleOutline, "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M20.03 12C20.03 7.59 16.41 3.97 12 3.97C7.59 3.97 3.97 7.59 3.97 12C3.97 16.41 7.59 20.03 12 20.03C16.41 20.03 20.03 16.41 20.03 12M22 12C22 17.54 17.54 22 12 22C6.46 22 2 17.54 2 12C2 6.46 6.46 2 12 2C17.54 2 22 6.46 22 12M13.54 13V16L17.5 12L13.54 8V11H6.5V13' /></svg>" },
                 { IconNames.ArrowUp, "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M13,20H11V8L5.5,13.5L4.08,12.08L12,4.16L19.92,12.08L18.5,13.5L13,8V20Z' /></svg>" },
                 { IconNames.CheckboxBlankOffOutline, "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M22.11 21.46L2.39 1.73L1.11 3L3 4.9V19C3 20.11 3.9 21 5 21H19.1L20.84 22.73L22.11 21.46M5 19V6.89L17.11 19H5M8.2 5L6.2 3H19C20.1 3 21 3.89 21 5V17.8L19 15.8V5H8.2Z' /></svg>" },
                 { IconNames.CheckboxBlankOutline, "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M19,3H5C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z' /></svg>" },
@@ -196,7 +198,9 @@ namespace SilentNotes.Services
         public const string ArrowDown = "arrow-down";
         public const string ArrowLeft = "arrow-left";
         public const string ArrowLeftBoldBoxOutline = "arrow-left-bold-box-outline";
+        public const string ArrowRightBold = "arrow-right-bold";
         public const string ArrowRightBoldBoxOutline = "arrow-right-bold-box-outline";
+        //public const string ArrowRightThinCircleOutline = "arrow-right-thin-circle-outline";
         public const string ArrowUp = "arrow-up";
         public const string CheckboxBlankOffOutline = "checkbox-blank-off-outline";
         public const string CheckboxBlankOutline = "checkbox-blank-outline";

@@ -23,7 +23,7 @@
 		<p class="my-4">@LanguageService["cloud_first_synchronization_text"]</p>
 
 		<MudStack Class="my-4" Row="true" Justify="Justify.FlexEnd" Spacing="1">
-			<MudButton OnClick="@(() => Navigation.NavigateHome())" Color="Color.Default" Variant="Variant.Filled">@LanguageService["cancel"]</MudButton>
+			<MudButton OnClick="@(() => ViewModel.CancelCommand.Execute(null))" Color="Color.Default" Variant="Variant.Filled">@LanguageService["cancel"]</MudButton>
 			<MudButton @ref="_continueButton" OnClick="@(() => ViewModel.ContinueCommand.Execute(null))" Color="Color.Primary" Variant="Variant.Filled">@LanguageService["continue"]</MudButton>
 		</MudStack>
 	</MudContainer>

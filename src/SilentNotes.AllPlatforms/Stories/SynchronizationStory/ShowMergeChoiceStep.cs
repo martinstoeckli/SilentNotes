@@ -6,6 +6,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.Extensions.DependencyInjection;
+using SilentNotes.Services;
 
 namespace SilentNotes.Stories.SynchronizationStory
 {
@@ -18,7 +20,12 @@ namespace SilentNotes.Stories.SynchronizationStory
         /// <inheritdoc/>
         public override ValueTask<StoryStepResult<SynchronizationStoryModel>> RunStep(SynchronizationStoryModel model, IServiceProvider serviceProvider, StoryMode uiMode)
         {
-            throw new NotImplementedException();
+            if (uiMode == StoryMode.Gui)
+            {
+                var navigation = serviceProvider.GetService<INavigationService>();
+                navigation.NavigateTo(Routes.MergeChoice);
+            }
+            return ToTask(ToResultEndOfStory());
         }
     }
 }

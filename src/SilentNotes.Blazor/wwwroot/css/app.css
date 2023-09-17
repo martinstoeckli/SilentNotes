@@ -301,6 +301,9 @@ div.ProseMirror:focus {
 		0 2px 2px 0 rgba(0,0,0,.08),
 		0 1px 5px 0 rgba(0,0,0,.06);
 }
+.mud-button-outlined-default {
+	background-color: rgba(127, 127, 127, 0.04);
+}
 
 .mud-appbar .mud-icon-size-medium { font-size: 1.75rem; } /* bigger toolbar icons */
 .mud-list-item-icon { min-width: 38px; } /* smaller gap between icon and menuitem */

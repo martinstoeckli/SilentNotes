@@ -44,20 +44,8 @@ namespace SilentNotes.ViewModels
             _credentialsRequirements = cloudStorageClientFactory.GetByKey(Model.CloudStorageId).CredentialsRequirements;
             CloudServiceName = cloudStorageClientFactory.GetCloudStorageMetadata(Model.CloudStorageId).Title;
 
-            CancelCommand = new RelayCommand(Cancel);
             OkCommand = new RelayCommand(Ok);
-        }
-
-        /// <summary>
-        /// Gets the command to go back to the note overview.
-        /// </summary>
-        public ICommand CancelCommand { get; private set; }
-
-        private void Cancel()
-        {
-            // Let the garbage collector cleanup the story, possibly containing a password.
-            _storyBoardService.SynchronizationStory = null;
-            _navigation.NavigateHome();
+            CancelCommand = new RelayCommand(Cancel);
         }
 
         /// <summary>
@@ -71,6 +59,17 @@ namespace SilentNotes.ViewModels
             SynchronizationStoryModel storyModel = _storyBoardService.SynchronizationStory;
             var nextStep = new ExistsCloudRepositoryStep();
             await nextStep.RunStory(storyModel, _serviceProvider, Stories.StoryMode.Gui);
+        }
+
+        /// <summary>
+        /// Gets the command to go back to the note overview.
+        /// </summary>
+        public ICommand CancelCommand { get; private set; }
+
+        private async void Cancel()
+        {
+            var nextStep = new StopAndShowRepositoryStep();
+            await nextStep.RunStory(_storyBoardService.SynchronizationStory, _serviceProvider, Stories.StoryMode.Gui);
         }
 
         /// <inheritdoc />

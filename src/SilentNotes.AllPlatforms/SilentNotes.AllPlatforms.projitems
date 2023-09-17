@@ -107,13 +107,14 @@
     <Compile Include="$(MSBuildThisFileDirectory)Stories\StoryStepBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Stories\StoryStepResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ChangePasswordViewModel.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\CloudStorageAccountViewModel.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\CloudStorageChoiceViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\SynchronizationStory\CloudStorageAccountViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\SynchronizationStory\CloudStorageChoiceViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\DropdownItemViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ExportViewModel.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\FirstTimeSyncViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\SynchronizationStory\FirstTimeSyncViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\InfoViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ListItemViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\SynchronizationStory\MergeChoiceViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\NoteRepositoryViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\NoteViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\NoteViewModelReadOnly.cs" />
@@ -144,5 +145,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Workers\UnmixableAlphabet.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Workers\WebviewUtils.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Workers\XmlUtils.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)ViewModels\SynchronizationStory\" />
   </ItemGroup>
 </Project>

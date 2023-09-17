@@ -19,10 +19,10 @@ namespace SilentNotes
         /// </summary>
         static Config()
         {
+#if (RELEASE)
             RepositoryFileName = "silentnotes_repository.silentnotes";
             UserSettingsFileName = "silentnotes_user_settings.config";
-
-#if (ENV_DEVELOPMENT && DEBUG)
+#else
             RepositoryFileName = "silentnotes_repository_dev.silentnotes";
             UserSettingsFileName = "silentnotes_user_settings_dev.config";
 #endif

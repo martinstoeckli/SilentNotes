@@ -6,6 +6,7 @@
 using SilentNotes.Models;
 using SilentNotes.Services;
 using SilentNotes.Workers;
+using Microsoft.Extensions.DependencyInjection;
 using VanillaCloudStorageClient;
 
 namespace SilentNotes.Stories.SynchronizationStory
