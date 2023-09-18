@@ -49,14 +49,7 @@ namespace SilentNotes.Stories.SynchronizationStory
 
                 if (stopBecauseManualOAuthLoginIsRequired)
                 {
-                    switch (uiMode)
-                    {
-                        case StoryMode.Gui:
-                            // If GUI is allowed, ask for new login
-                            return ToResult(new ShowCloudStorageAccountStep());
-                        default:
-                            return ToResultEndOfStory(languageService["sync_error_oauth_refresh"]);
-                    }
+                    return ToResult(new ShowCloudStorageAccountStep());
                 }
                 else
                 {
@@ -83,13 +76,12 @@ namespace SilentNotes.Stories.SynchronizationStory
 
         protected static void SaveCredentialsToSettings(ISettingsService settingsService, SerializeableCloudStorageCredentials credentials)
         {
-            // todo:
-            //SettingsModel settings = settingsService.LoadSettingsOrDefault();
-            //if (!credentials.AreEqualOrNull(settings.Credentials))
-            //{
-            //    settings.Credentials = credentials;
-            //    settingsService.TrySaveSettingsToLocalDevice(settings);
-            //}
+            SettingsModel settings = settingsService.LoadSettingsOrDefault();
+            if (!credentials.AreEqualOrNull(settings.Credentials))
+            {
+                settings.Credentials = credentials;
+                settingsService.TrySaveSettingsToLocalDevice(settings);
+            }
         }
     }
 }

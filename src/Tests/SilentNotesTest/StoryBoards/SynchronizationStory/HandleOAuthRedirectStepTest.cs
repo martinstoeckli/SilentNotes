@@ -1,55 +1,93 @@
-﻿using Moq;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Moq;
 using NUnit.Framework;
 using SilentNotes.Models;
 using SilentNotes.Services;
-//using SilentNotes.StoryBoards;
-//using SilentNotes.StoryBoards.SynchronizationStory;
+using SilentNotes.Stories;
+using SilentNotes.Stories.SynchronizationStory;
 using VanillaCloudStorageClient;
 
-namespace SilentNotesTest.StoryBoards.SynchronizationStory
+namespace SilentNotesTest.Stories.SynchronizationStory
 {
     [TestFixture]
     public class HandleOAuthRedirectStepTest
     {
-        // todo: reactivate tests
-        //[Test]
-        //public void AccountIsStoredAfterGettingNewRefreshToken()
-        //{
-        //    SerializeableCloudStorageCredentials credentialsFromSession = new SerializeableCloudStorageCredentials { CloudStorageId = CloudStorageClientFactory.CloudStorageIdOneDrive };
-        //    string dummy = "dummy";
-        //    SettingsModel settingsModel = new SettingsModel { Credentials = new SerializeableCloudStorageCredentials { CloudStorageId = CloudStorageClientFactory.CloudStorageIdOneDrive } };
+        [Test]
+        public async Task AccountIsStoredAfterGettingNewRefreshToken()
+        {
+            SerializeableCloudStorageCredentials credentialsFromSession = new SerializeableCloudStorageCredentials { CloudStorageId = CloudStorageClientFactory.CloudStorageIdOneDrive };
+            SettingsModel settingsModel = new SettingsModel { Credentials = new SerializeableCloudStorageCredentials { CloudStorageId = CloudStorageClientFactory.CloudStorageIdOneDrive } };
+            var model = new SynchronizationStoryModel
+            {
+                Credentials = credentialsFromSession,
+                OauthState = "dummy",
+                OauthCodeVerifier = "dummy",
+                OauthRedirectUrl = "dummy",
+            };
 
-        //    Mock<IStoryBoard> storyBoard = new Mock<IStoryBoard>();
-        //    storyBoard.
-        //        Setup(m => m.Session.TryLoad(It.Is<SynchronizationStorySessionKey>(p => p == SynchronizationStorySessionKey.CloudStorageCredentials), out credentialsFromSession)).
-        //        Returns(true);
-        //    storyBoard.
-        //        Setup(m => m.Session.TryLoad(It.IsAny<SynchronizationStorySessionKey>(), out dummy)).
-        //        Returns(true);
+            Mock<ISettingsService> settingsService = new Mock<ISettingsService>();
+            settingsService.
+                Setup(m => m.LoadSettingsOrDefault()).Returns(settingsModel);
 
-        //    Mock<ISettingsService> settingsService = new Mock<ISettingsService>();
-        //    settingsService.
-        //        Setup(m => m.LoadSettingsOrDefault()).Returns(settingsModel);
+            CloudStorageToken newToken = new CloudStorageToken { AccessToken = "at", RefreshToken = "rt" };
+            Mock<ICloudStorageClient> cloudStorageClient = new Mock<ICloudStorageClient>();
+            Mock<IOAuth2CloudStorageClient> oauthCloudStorageClient = cloudStorageClient.As<IOAuth2CloudStorageClient>();
+            oauthCloudStorageClient.
+                Setup(m => m.FetchTokenAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).
+                ReturnsAsync(newToken);
 
-        //    CloudStorageToken newToken = new CloudStorageToken { AccessToken = "at", RefreshToken = "rt" };
-        //    Mock<ICloudStorageClient> cloudStorageClient = new Mock<ICloudStorageClient>();
-        //    Mock<IOAuth2CloudStorageClient> oauthCloudStorageClient = cloudStorageClient.As<IOAuth2CloudStorageClient>();
-        //    oauthCloudStorageClient.
-        //        Setup(m => m.FetchTokenAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).
-        //        ReturnsAsync(newToken);
+            var serviceCollection = new ServiceCollection();
+            serviceCollection
+                .AddSingleton<ISettingsService>(settingsService.Object)
+                .AddSingleton<ILanguageService>(CommonMocksAndStubs.LanguageService())
+                .AddSingleton<ICloudStorageClientFactory>(CommonMocksAndStubs.CloudStorageClientFactory(cloudStorageClient.Object));
 
-        //    // Run step
-        //    var step = new HandleOAuthRedirectStep(
-        //        SynchronizationStoryStepId.HandleOAuthRedirect,
-        //        storyBoard.Object,
-        //        CommonMocksAndStubs.LanguageService(),
-        //        CommonMocksAndStubs.FeedbackService(),
-        //        settingsService.Object,
-        //        CommonMocksAndStubs.CloudStorageClientFactory(cloudStorageClient.Object));
-        //    Assert.DoesNotThrowAsync(step.Run);
+            // Run step
+            var step = new HandleOAuthRedirectStep();
+            var result = await step.RunStep(model, serviceCollection.BuildServiceProvider(), StoryMode.Silent);
 
-        //    // New token is stored
-        //    settingsService.Verify(m => m.TrySaveSettingsToLocalDevice(It.Is<SettingsModel>(s => s.Credentials.Token.RefreshToken == "rt")), Times.Once);
-        //}
+            // New token is stored
+            settingsService.Verify(m => m.TrySaveSettingsToLocalDevice(It.Is<SettingsModel>(s => s.Credentials.Token.RefreshToken == "rt")), Times.Once);
+
+            // Next step is called
+            Assert.IsInstanceOf<ExistsCloudRepositoryStep>(result.NextStep);
+        }
+
+        [Test]
+        public async Task AbortStoryWithoutNewRefreshToken()
+        {
+            SerializeableCloudStorageCredentials credentialsFromSession = new SerializeableCloudStorageCredentials { CloudStorageId = CloudStorageClientFactory.CloudStorageIdOneDrive };
+            SettingsModel settingsModel = new SettingsModel { Credentials = new SerializeableCloudStorageCredentials { CloudStorageId = CloudStorageClientFactory.CloudStorageIdOneDrive } };
+            var model = new SynchronizationStoryModel
+            {
+                Credentials = credentialsFromSession,
+                OauthState = "dummy",
+                OauthCodeVerifier = "dummy",
+                OauthRedirectUrl = "dummy",
+            };
+
+            Mock<ISettingsService> settingsService = new Mock<ISettingsService>();
+            settingsService.
+                Setup(m => m.LoadSettingsOrDefault()).Returns(settingsModel);
+
+            Mock<ICloudStorageClient> cloudStorageClient = new Mock<ICloudStorageClient>();
+            Mock<IOAuth2CloudStorageClient> oauthCloudStorageClient = cloudStorageClient.As<IOAuth2CloudStorageClient>();
+
+            var serviceCollection = new ServiceCollection();
+            serviceCollection
+                .AddSingleton<ISettingsService>(settingsService.Object)
+                .AddSingleton<ILanguageService>(CommonMocksAndStubs.LanguageService())
+                .AddSingleton<ICloudStorageClientFactory>(CommonMocksAndStubs.CloudStorageClientFactory(cloudStorageClient.Object));
+
+            // Run step
+            var step = new HandleOAuthRedirectStep();
+            var result = await step.RunStep(model, serviceCollection.BuildServiceProvider(), StoryMode.Silent);
+
+            // No token is stored
+            settingsService.Verify(m => m.TrySaveSettingsToLocalDevice(It.IsAny<SettingsModel>()), Times.Never);
+
+            // Next step is end of story
+            Assert.IsInstanceOf<StopAndShowRepositoryStep>(result.NextStep);
+        }
     }
 }

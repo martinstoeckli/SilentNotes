@@ -90,6 +90,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Stories\SynchronizationStory\DownloadCloudRepositoryStep.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Stories\SynchronizationStory\ExistsCloudRepositoryStep.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Stories\SynchronizationStory\ExistsTransferCodeStep.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Stories\SynchronizationStory\HandleOAuthRedirectStep.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Stories\SynchronizationStory\IsCloudServiceSetStep.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Stories\SynchronizationStory\IsSameRepositoryStep.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Stories\SynchronizationStory\ShowCloudStorageAccountStep.cs" />
@@ -98,6 +99,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Stories\SynchronizationStory\ShowMergeChoiceStep.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Stories\SynchronizationStory\ShowTransferCodeStep.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Stories\SynchronizationStory\StopAndShowRepositoryStep.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Stories\SynchronizationStory\StoreCloudRepositoryToDeviceAndQuitStep.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Stories\SynchronizationStory\StoreLocalRepositoryToCloudAndQuitStep.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Stories\SynchronizationStory\StoreMergedRepositoryAndQuitStep.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Stories\SynchronizationStory\SynchronizationStoryExceptions.cs" />

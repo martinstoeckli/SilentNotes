@@ -19,6 +19,8 @@ namespace SilentNotes.Stories.SynchronizationStory
 
         public string OauthCodeVerifier { get; set; }
 
+        public string OauthRedirectUrl { get; set; }
+
         public byte[] BinaryCloudRepository { get; set; }
 
         public string UserEnteredTransferCode { get; set; }

@@ -39,10 +39,10 @@ namespace SilentNotes.ViewModels
         /// </summary>
         public ICommand UseMergedRepositoryCommand { get; private set; }
 
-        private void UseMergedRepository()
+        private async void UseMergedRepository()
         {
-
-            //_storyBoardService.ActiveStory?.ContinueWith(SynchronizationStoryStepId.StoreMergedRepositoryAndQuit);
+            var nextStep = new StoreMergedRepositoryAndQuitStep();
+            await nextStep.RunStory(_storyBoardService.SynchronizationStory, _serviceProvider, Stories.StoryMode.Gui);
         }
 
         /// <summary>
@@ -50,9 +50,10 @@ namespace SilentNotes.ViewModels
         /// </summary>
         public ICommand UseCloudRepositoryCommand { get; private set; }
 
-        private void UseCloudRepository()
+        private async void UseCloudRepository()
         {
-            //_storyBoardService.ActiveStory?.ContinueWith(SynchronizationStoryStepId.StoreCloudRepositoryToDeviceAndQuit);
+            var nextStep = new StoreCloudRepositoryToDeviceAndQuitStep();
+            await nextStep.RunStory(_storyBoardService.SynchronizationStory, _serviceProvider, Stories.StoryMode.Gui);
         }
 
         /// <summary>
@@ -60,9 +61,10 @@ namespace SilentNotes.ViewModels
         /// </summary>
         public ICommand UseLocalRepositoryCommand { get; private set; }
 
-        private void UseLocalRepository()
+        private async void UseLocalRepository()
         {
-            //_storyBoardService.ActiveStory?.ContinueWith(SynchronizationStoryStepId.StoreLocalRepositoryToCloudAndQuit);
+            var nextStep = new StoreLocalRepositoryToCloudAndQuitStep();
+            await nextStep.RunStory(_storyBoardService.SynchronizationStory, _serviceProvider, Stories.StoryMode.Gui);
         }
 
         /// <summary>

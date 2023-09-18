@@ -94,18 +94,5 @@ namespace SilentNotes.Stories
         {
             get { return Error != null; }
         }
-
-        /// <summary>
-        /// Checks whether the <see cref="NextStep"/> is of a given type.
-        /// </summary>
-        /// <param name="typeOfNextStep">Compare with this type.</param>
-        /// <returns>Returns true if the next step is of the same type.</returns>
-        internal bool NextStepIs(Type typeOfNextStep)
-        {
-            if (NextStep == null)
-                return typeOfNextStep == null;
-            else
-                return NextStep.GetType() == typeOfNextStep;
-        }
     }
 }
