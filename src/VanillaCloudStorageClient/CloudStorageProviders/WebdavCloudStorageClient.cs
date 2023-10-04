@@ -117,35 +117,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
                 XDocument responseXml;
                 Url url = new Url(IncludeTrailingSlash(credentials.Url));
 
-                if (_useSocketsForPropFind)
-                {
-                    // On Android the underlying Java HttpURLConnection cannot handle the http method
-                    // "PROPFIND", therefore we use an alternative way which doesn't use this Java class:
-                    // see: https://github.com/martinstoeckli/SilentNotes/issues/111
-                    using (HttpMessageHandler httpHandler = new SocketsHttpHandler
-                    {
-                        AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate,
-                        Credentials = new NetworkCredential(credentials.Username, credentials.Password),
-                    })
-                    {
-                        using (HttpClient httpClient = new HttpClient(httpHandler, false) // Manually disposed
-                            { Timeout = TimeSpan.FromSeconds(20) })
-                        using (HttpRequestMessage msg = new HttpRequestMessage(new HttpMethod("PROPFIND"), url))
-                        {
-                            msg.Content = content;
-                            msg.SetHeader("Depth", "1");
-                            using (HttpResponseMessage response = await httpClient.SendAsync(msg, new HttpCompletionOption()))
-                            {
-                                response.EnsureSuccessStatusCode();
-                                using (Stream responseStream = await response.Content.ReadAsStreamAsync())
-                                {
-                                    responseXml = XDocument.Load(responseStream);
-                                }
-                            }
-                        }
-                    }
-                }
-                else
+                if (!_useSocketsForPropFind)
                 {
                     using (Stream responseStream = await GetFlurl(credentials.AcceptInvalidCertificate)
                         .Request(url)
@@ -156,6 +128,43 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
                         .ReceiveStream())
                     {
                         responseXml = XDocument.Load(responseStream);
+                    }
+                }
+                else
+                {
+                    // Workaround: On Android the default HttpClientHandler uses the underlying Java
+                    // class "HttpURLConnection", which unfortunately cannot handle the http method
+                    // "PROPFIND".
+                    // So we make an expection for this request and use the "SocketsHttpHandler"
+                    // which has its own implementation, though it cannot validate SSL certificates
+                    // from LetsEncrypt. We can safely ignore the validation, because consecutive
+                    // calls will do the validation with the Android implementation.
+                    // see: https://github.com/martinstoeckli/SilentNotes/issues/111
+                    using (HttpMessageHandler httpMessageHandler = new SocketsHttpHandler
+                    {
+                        AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate,
+                        Credentials = new NetworkCredential(credentials.Username, credentials.Password),
+                        SslOptions = new System.Net.Security.SslClientAuthenticationOptions
+                        {
+                            RemoteCertificateValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; },
+                        },
+                    })
+                    {
+                        using (HttpClient httpClient = new HttpClient(httpMessageHandler, false) // Disposed by its own "using"
+                            { Timeout = TimeSpan.FromSeconds(20) })
+                        using (HttpRequestMessage msg = new HttpRequestMessage(new HttpMethod("PROPFIND"), url))
+                        {
+                            msg.Content = content;
+                            msg.Content.Headers.TryAddWithoutValidation("Depth", "1");
+                            using (HttpResponseMessage response = await httpClient.SendAsync(msg, new HttpCompletionOption()))
+                            {
+                                response.EnsureSuccessStatusCode();
+                                using (Stream responseStream = await response.Content.ReadAsStreamAsync())
+                                {
+                                    responseXml = XDocument.Load(responseStream);
+                                }
+                            }
+                        }
                     }
                 }
 
