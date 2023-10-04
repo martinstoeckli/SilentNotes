@@ -26,6 +26,7 @@ namespace SilentNotes.Services
         public const string CloudStorageIdGmx = "gmx";
 
         private const string _obfuscationKey = "4ed05d88-0193-4b14-9b0b-6977825de265";
+        private readonly bool _useSocketsForPropFind;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CloudStorageClientFactory"/> class.
@@ -33,8 +34,14 @@ namespace SilentNotes.Services
         public CloudStorageClientFactory()
             : base(true)
         {
+            _useSocketsForPropFind = false;
+#if ANDROID
+            // Workaround: The HttpClient on Android will use the Java HttpURLConnection class,
+            // which cannot handle the http method "PROPFIND"
+            _useSocketsForPropFind = true;
+#endif
             Add(CloudStorageIdFtp, () => new FtpCloudStorageClient());
-            Add(CloudStorageIdWebdav, () => new WebdavCloudStorageClient());
+            Add(CloudStorageIdWebdav, () => new WebdavCloudStorageClient(_useSocketsForPropFind));
             Add(CloudStorageIdDropbox, () => new DropboxCloudStorageClient(
                 DeobfuscateClientId("b2JmdXNjYXRpb24kdHdvZmlzaF9nY20kaUNDQnhZRDFqTG4veUJQNSRwYmtkZjIkNEVrVTFOVVdZSkJpTWtQR2VNU0lhdz09JDEwMDAkqkhIg8kDs04BHHfD2Dldq7jC8LUT3AqPnyY6THmJJw=="),
                 "ch.martinstoeckli.silentnotes://oauth2redirect/"));
@@ -44,8 +51,8 @@ namespace SilentNotes.Services
             Add(CloudStorageIdOneDrive, () => new OnedriveCloudStorageClient(
                 DeobfuscateClientId("b2JmdXNjYXRpb24kdHdvZmlzaF9nY20kMm91Sjk4dVloa3FzVTJMbFV3YzlYZz09JHBia2RmMiRIWDNzazgzdExLUExDRldjeis0RUtnPT0kMTAwMCQhu6dFgd6/j2A9388wATVBekdrXdLcCUHg1gMjKNJlrmAeWWKhJ+Wewi4eALJkqHyF1Np3"),
                 "ch.martinstoeckli.silentnotes://oauth2redirect/"));
-            Add(CloudStorageIdNextcloudWebdav, () => new WebdavCloudStorageClient());
-            Add(CloudStorageIdGmx, () => new GmxCloudStorageClient());
+            Add(CloudStorageIdNextcloudWebdav, () => new WebdavCloudStorageClient(_useSocketsForPropFind));
+            Add(CloudStorageIdGmx, () => new GmxCloudStorageClient(_useSocketsForPropFind));
         }
 
         /// <inheritdoc/>

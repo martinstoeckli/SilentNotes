@@ -55,7 +55,7 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
 
         private async Task<byte[]> DownloadFileWorksAsync(string fileName, CloudStorageCredentials credentials)
         {
-            ICloudStorageClient client = new GmxCloudStorageClient();
+            ICloudStorageClient client = new GmxCloudStorageClient(false);
             byte[] result = await client.DownloadFileAsync(fileName, credentials);
             return result;
         }

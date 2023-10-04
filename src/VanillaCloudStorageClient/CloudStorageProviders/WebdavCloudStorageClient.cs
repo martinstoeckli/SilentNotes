@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,6 +23,19 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
     /// </summary>
     public class WebdavCloudStorageClient : CloudStorageClientBase, ICloudStorageClient
     {
+        private readonly bool _useSocketsForPropFind;
+
+        /// <summary>
+        /// Initializes a new intance of the <see cref="WebdavCloudStorageClient"/> class.
+        /// </summary>
+        /// <param name="useSocketsForPropFind">Use sockets for the http method "PROPFIND", when
+        /// running on Android, because the default HttpClient will internally use the Java class
+        /// HttpURLConnection, which doesn't allow custom http methods like "PROPFIND".</param>
+        public WebdavCloudStorageClient(bool useSocketsForPropFind)
+        {
+            _useSocketsForPropFind = useSocketsForPropFind;
+        }
+
         /// <inheritdoc/>
         public override CloudStorageCredentialsRequirements CredentialsRequirements
         {
@@ -102,15 +116,47 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
                 HttpContent content = new ByteArrayContent(requestBytes);
                 XDocument responseXml;
                 Url url = new Url(IncludeTrailingSlash(credentials.Url));
-                using (Stream responseStream = await GetFlurl(credentials.AcceptInvalidCertificate)
-                    .Request(url)
-                    .WithBasicAuthOrAnonymous(credentials.Username, credentials.UnprotectedPassword)
-                    .WithHeader("Depth", "1")
-                    .WithTimeout(20)
-                    .SendAsync(new HttpMethod("PROPFIND"), content)
-                    .ReceiveStream())
+
+                if (_useSocketsForPropFind)
                 {
-                    responseXml = XDocument.Load(responseStream);
+                    // On Android the underlying Java HttpURLConnection cannot handle the http method
+                    // "PROPFIND", therefore we use an alternative way which doesn't use this Java class:
+                    // see: https://github.com/martinstoeckli/SilentNotes/issues/111
+                    using (HttpMessageHandler httpHandler = new SocketsHttpHandler
+                    {
+                        AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate,
+                        Credentials = new NetworkCredential(credentials.Username, credentials.Password),
+                    })
+                    {
+                        using (HttpClient httpClient = new HttpClient(httpHandler, false) // Manually disposed
+                            { Timeout = TimeSpan.FromSeconds(20) })
+                        using (HttpRequestMessage msg = new HttpRequestMessage(new HttpMethod("PROPFIND"), url))
+                        {
+                            msg.Content = content;
+                            msg.SetHeader("Depth", "1");
+                            using (HttpResponseMessage response = await httpClient.SendAsync(msg, new HttpCompletionOption()))
+                            {
+                                response.EnsureSuccessStatusCode();
+                                using (Stream responseStream = await response.Content.ReadAsStreamAsync())
+                                {
+                                    responseXml = XDocument.Load(responseStream);
+                                }
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    using (Stream responseStream = await GetFlurl(credentials.AcceptInvalidCertificate)
+                        .Request(url)
+                        .WithBasicAuthOrAnonymous(credentials.Username, credentials.UnprotectedPassword)
+                        .WithHeader("Depth", "1")
+                        .WithTimeout(20)
+                        .SendAsync(new HttpMethod("PROPFIND"), content)
+                        .ReceiveStream())
+                    {
+                        responseXml = XDocument.Load(responseStream);
+                    }
                 }
 
                 // Files have an empty resourcetype element, folders a child element "collection"

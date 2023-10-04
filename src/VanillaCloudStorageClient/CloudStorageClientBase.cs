@@ -168,9 +168,25 @@ namespace VanillaCloudStorageClient
                     return new ConnectionFailedException(catchedException);
                 }
             }
+            else if (catchedException is HttpRequestException httpRequestException)
+            {
+                switch (httpRequestException.StatusCode)
+                {
+                    case HttpStatusCode.Unauthorized:
+                    case HttpStatusCode.Forbidden:
+                        return new AccessDeniedException(catchedException);
+                    case HttpStatusCode.BadRequest:
+                    case HttpStatusCode.NotFound:
+                        return new ConnectionFailedException(catchedException);
+                }
+            }
             else if (catchedException is UriFormatException)
             {
                 return new CloudStorageException("The Url has an invalid format.", catchedException);
+            }
+            else if (catchedException is TaskCanceledException)
+            {
+                return new ConnectionFailedException("Timeout was reached", catchedException);
             }
 
             // Fallback to unexpected exception
