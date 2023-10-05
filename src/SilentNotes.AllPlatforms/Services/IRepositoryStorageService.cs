@@ -41,6 +41,12 @@ namespace SilentNotes.Services
         /// </summary>
         /// <returns>Content of repository, or null if no such file exists.</returns>
         byte[] LoadRepositoryFile();
+
+        /// <summary>
+        /// Gets the location (directory) where the repository is stored.
+        /// </summary>
+        /// <returns>Location of the repository.</returns>
+        string GetLocation();
     }
 
     /// <summary>

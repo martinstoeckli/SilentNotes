@@ -19,6 +19,7 @@ namespace SilentNotesTest.Stories.SynchronizationStory
             SettingsModel settingsModel = new SettingsModel { Credentials = new SerializeableCloudStorageCredentials { CloudStorageId = CloudStorageClientFactory.CloudStorageIdOneDrive } };
             var model = new SynchronizationStoryModel
             {
+                StoryMode = StoryMode.Silent,
                 Credentials = credentialsFromSession,
                 OauthState = "dummy",
                 OauthCodeVerifier = "dummy",
@@ -44,7 +45,7 @@ namespace SilentNotesTest.Stories.SynchronizationStory
 
             // Run step
             var step = new HandleOAuthRedirectStep();
-            var result = await step.RunStep(model, serviceCollection.BuildServiceProvider(), StoryMode.Silent);
+            var result = await step.RunStep(model, serviceCollection.BuildServiceProvider(), model.StoryMode);
 
             // New token is stored
             settingsService.Verify(m => m.TrySaveSettingsToLocalDevice(It.Is<SettingsModel>(s => s.Credentials.Token.RefreshToken == "rt")), Times.Once);
@@ -60,6 +61,7 @@ namespace SilentNotesTest.Stories.SynchronizationStory
             SettingsModel settingsModel = new SettingsModel { Credentials = new SerializeableCloudStorageCredentials { CloudStorageId = CloudStorageClientFactory.CloudStorageIdOneDrive } };
             var model = new SynchronizationStoryModel
             {
+                StoryMode = StoryMode.Silent,
                 Credentials = credentialsFromSession,
                 OauthState = "dummy",
                 OauthCodeVerifier = "dummy",
@@ -81,7 +83,7 @@ namespace SilentNotesTest.Stories.SynchronizationStory
 
             // Run step
             var step = new HandleOAuthRedirectStep();
-            var result = await step.RunStep(model, serviceCollection.BuildServiceProvider(), StoryMode.Silent);
+            var result = await step.RunStep(model, serviceCollection.BuildServiceProvider(), model.StoryMode);
 
             // No token is stored
             settingsService.Verify(m => m.TrySaveSettingsToLocalDevice(It.IsAny<SettingsModel>()), Times.Never);

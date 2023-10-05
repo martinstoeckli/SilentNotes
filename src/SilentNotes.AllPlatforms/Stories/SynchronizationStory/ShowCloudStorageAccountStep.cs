@@ -21,9 +21,9 @@ namespace SilentNotes.Stories.SynchronizationStory
     internal class ShowCloudStorageAccountStep : SynchronizationStoryStepBase
     {
         /// <inheritdoc/>
-        public override ValueTask<StoryStepResult<SynchronizationStoryModel>> RunStep(SynchronizationStoryModel model, IServiceProvider serviceProvider, StoryMode uiMode)
+        public override Task<StoryStepResult<SynchronizationStoryModel>> RunStep(SynchronizationStoryModel model, IServiceProvider serviceProvider, StoryMode uiMode)
         {
-            if (uiMode == StoryMode.Gui)
+            if (uiMode.HasFlag(StoryMode.Dialogs))
             {
                 var cloudStorageClientFactory = serviceProvider.GetService<ICloudStorageClientFactory>();
                 var navigation = serviceProvider.GetService<INavigationService>();

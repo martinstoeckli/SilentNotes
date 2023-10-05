@@ -12,10 +12,5 @@ namespace SilentNotes.Services
     /// </summary>
     public class AutoSynchronizationService : AutoSynchronizationServiceBase, IAutoSynchronizationService
     {
-        /// <inheritdoc/>
-        public override void Stop()
-        {
-            IsRunning = false;
-        }
     }
 }

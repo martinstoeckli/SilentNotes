@@ -3,8 +3,10 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using System.Text;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.AspNetCore.Components;
 using SilentNotes.Services;
 
 namespace SilentNotes.ViewModels
@@ -16,16 +18,19 @@ namespace SilentNotes.ViewModels
     {
         private readonly IVersionService _versionService;
         private readonly INativeBrowserService _nativeBrowserService;
+        private readonly IRepositoryStorageService _repositoryStorageService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InfoViewModel"/> class.
         /// </summary>
         public InfoViewModel(
             IVersionService versionService,
-            INativeBrowserService nativeBrowserService)
+            INativeBrowserService nativeBrowserService,
+            IRepositoryStorageService repositoryStorageService)
         {
             _versionService = versionService;
             _nativeBrowserService = nativeBrowserService;
+            _repositoryStorageService = repositoryStorageService;
             OpenHomepageCommand = new RelayCommand(OpenHomepage);
         }
 
@@ -35,6 +40,19 @@ namespace SilentNotes.ViewModels
         public string VersionFmt
         {
             get { return _versionService.GetApplicationVersion(); }
+        }
+
+        /// <summary>
+        /// Gets additonal support informations.
+        /// </summary>
+        public MarkupString SupportInfos
+        {
+            get
+            {
+                string result = string.Format("Repository location: {0}<br>",
+                    (_repositoryStorageService as RepositoryStorageServiceBase).GetLocation());
+                return (MarkupString)result;
+            }
         }
 
         /// <summary>

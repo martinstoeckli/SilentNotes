@@ -21,6 +21,7 @@ namespace SilentNotesTest.Stories.SynchronizationStory
             byte[] repository = new byte[8];
             var model = new SynchronizationStoryModel
             {
+                StoryMode = StoryMode.Silent,
                 Credentials = credentialsFromSession,
                 BinaryCloudRepository = repositoryFromSession,
             };
@@ -37,7 +38,7 @@ namespace SilentNotesTest.Stories.SynchronizationStory
 
             // Run step
             var step = new DownloadCloudRepositoryStep();
-            var result = await step.RunStep(model, serviceCollection.BuildServiceProvider(), StoryMode.Silent);
+            var result = await step.RunStep(model, serviceCollection.BuildServiceProvider(), model.StoryMode);
 
             // Repository was stored in session
             Assert.AreEqual(repository, model.BinaryCloudRepository);
@@ -53,6 +54,7 @@ namespace SilentNotesTest.Stories.SynchronizationStory
             byte[] repositoryFromSession = null;
             var model = new SynchronizationStoryModel
             {
+                StoryMode = StoryMode.Silent,
                 Credentials = credentialsFromSession,
                 BinaryCloudRepository = repositoryFromSession,
             };
@@ -69,7 +71,7 @@ namespace SilentNotesTest.Stories.SynchronizationStory
 
             // Run step
             var step = new DownloadCloudRepositoryStep();
-            var result = await step.RunStep(model, serviceCollection.BuildServiceProvider(), StoryMode.Silent);
+            var result = await step.RunStep(model, serviceCollection.BuildServiceProvider(), model.StoryMode);
 
             //StoryBoardStepResult result = await DownloadCloudRepositoryStep.RunSilent(session, CommonMocksAndStubs.CloudStorageClientFactory(cloudStorageClient.Object));
             Assert.IsNotNull(result.Error); // Error message is shown

@@ -19,7 +19,7 @@ namespace SilentNotes.Stories.SynchronizationStory
     internal class DecryptCloudRepositoryStep : SynchronizationStoryStepBase
     {
         /// <inheritdoc/>
-        public override ValueTask<StoryStepResult<SynchronizationStoryModel>> RunStep(SynchronizationStoryModel model, IServiceProvider serviceProvider, StoryMode uiMode)
+        public override Task<StoryStepResult<SynchronizationStoryModel>> RunStep(SynchronizationStoryModel model, IServiceProvider serviceProvider, StoryMode uiMode)
         {
             try
             {
@@ -50,7 +50,7 @@ namespace SilentNotes.Stories.SynchronizationStory
                     if (existsUserEnteredTransferCode)
                     {
                         // Keep transfercode page open and show message
-                        if (uiMode == StoryMode.Gui)
+                        if (uiMode.HasFlag(StoryMode.BusyIndicator))
                             serviceProvider.GetService<IFeedbackService>().SetBusyIndicatorVisible(false, true);
                         return ToTask(ToResultEndOfStory(languageService["sync_error_transfercode"], null));
                     }
@@ -63,7 +63,7 @@ namespace SilentNotes.Stories.SynchronizationStory
             }
             catch (Exception ex)
             {
-                if (uiMode == StoryMode.Gui)
+                if (uiMode.HasFlag(StoryMode.BusyIndicator))
                     serviceProvider.GetService<IFeedbackService>().SetBusyIndicatorVisible(false, true);
 
                 // Keep the current page open and show the error message

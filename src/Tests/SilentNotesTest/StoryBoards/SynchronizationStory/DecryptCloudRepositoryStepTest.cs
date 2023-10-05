@@ -24,6 +24,7 @@ namespace SilentNotesTest.Stories.SynchronizationStory
             byte[] encryptedRepository = CreateEncryptedRepository(transferCode);
             var model = new SynchronizationStoryModel
             {
+                StoryMode = StoryMode.Silent,
                 BinaryCloudRepository = encryptedRepository,
             };
 
@@ -39,7 +40,7 @@ namespace SilentNotesTest.Stories.SynchronizationStory
 
             // Run step
             var step = new DecryptCloudRepositoryStep();
-            var result = await step.RunStep(model, serviceCollection.BuildServiceProvider(), StoryMode.Silent);
+            var result = await step.RunStep(model, serviceCollection.BuildServiceProvider(), model.StoryMode);
 
             // Repository has not changed and was not stored in session
             settingsService.Verify(m => m.TrySaveSettingsToLocalDevice(It.IsNotNull<SettingsModel>()), Times.Never);
@@ -57,6 +58,7 @@ namespace SilentNotesTest.Stories.SynchronizationStory
             byte[] encryptedRepository = CreateEncryptedRepository(transferCode);
             var model = new SynchronizationStoryModel
             {
+                StoryMode = StoryMode.Silent,
                 BinaryCloudRepository = encryptedRepository,
             };
 
@@ -72,7 +74,7 @@ namespace SilentNotesTest.Stories.SynchronizationStory
 
             // Run step
             var step = new DecryptCloudRepositoryStep();
-            var result = await step.RunStep(model, serviceCollection.BuildServiceProvider(), StoryMode.Silent);
+            var result = await step.RunStep(model, serviceCollection.BuildServiceProvider(), model.StoryMode);
 
             // transfercode was moved from history to current and was stored
             Assert.AreEqual(transferCode, settingsModel.TransferCode);
@@ -90,6 +92,7 @@ namespace SilentNotesTest.Stories.SynchronizationStory
             byte[] encryptedRepository = CreateEncryptedRepository(transferCode);
             var model = new SynchronizationStoryModel
             {
+                StoryMode = StoryMode.Silent,
                 BinaryCloudRepository = encryptedRepository,
             };
 
@@ -105,7 +108,7 @@ namespace SilentNotesTest.Stories.SynchronizationStory
 
             // Run step
             var step = new DecryptCloudRepositoryStep();
-            var result = await step.RunStep(model, serviceCollection.BuildServiceProvider(), StoryMode.Silent);
+            var result = await step.RunStep(model, serviceCollection.BuildServiceProvider(), model.StoryMode);
 
             // No changes should be done to the settings
             settingsService.Verify(m => m.TrySaveSettingsToLocalDevice(It.IsNotNull<SettingsModel>()), Times.Never);
@@ -115,11 +118,44 @@ namespace SilentNotesTest.Stories.SynchronizationStory
 
             // Run step with wrong transfer code
             settingsModel.TransferCode = "qqqqqqqq";
-            result = await step.RunStep(model, serviceCollection.BuildServiceProvider(), StoryMode.Silent);
-
-            //Assert.DoesNotThrowAsync(step.Run);
+            result = await step.RunStep(model, serviceCollection.BuildServiceProvider(), model.StoryMode);
             Assert.IsInstanceOf<ShowTransferCodeStep>(result.NextStep);
         }
+
+        [Test]
+        public async Task BusyIndicatorIsStopped()
+        {
+            const string transferCode = "abcdefgh";
+            var settingsModel = CreateSettingsModel(null); // no transfer code at all
+            byte[] encryptedRepository = CreateEncryptedRepository(transferCode);
+            var model = new SynchronizationStoryModel
+            {
+                StoryMode = StoryMode.BusyIndicator,
+                UserEnteredTransferCode = "wrong",
+                BinaryCloudRepository = encryptedRepository,
+            };
+
+            Mock<ISettingsService> settingsService = new Mock<ISettingsService>();
+            settingsService.
+                Setup(m => m.LoadSettingsOrDefault()).Returns(settingsModel);
+            Mock<IFeedbackService> feedbackService = new Mock<IFeedbackService>();
+
+            var serviceCollection = new ServiceCollection();
+            serviceCollection
+                .AddSingleton<ISettingsService>(settingsService.Object)
+                .AddSingleton<ILanguageService>(CommonMocksAndStubs.LanguageService())
+                .AddSingleton<INoteRepositoryUpdater>(new Mock<INoteRepositoryUpdater>().Object)
+                .AddSingleton<IFeedbackService>(feedbackService.Object);
+
+            // Run step
+            var step = new DecryptCloudRepositoryStep();
+
+            // If user entered wrong code, page should be kept open and busy indicator stopped
+            var result = await step.RunStep(model, serviceCollection.BuildServiceProvider(), model.StoryMode);
+            Assert.IsNull(result.NextStep);
+            feedbackService.Verify(m => m.SetBusyIndicatorVisible(It.Is<bool>(visible => visible == false), It.IsAny<bool>()), Times.Once);
+        }
+
 
         [Test]
         public async Task InvalidRepositoryLeadsToErrorMessage()
@@ -130,6 +166,7 @@ namespace SilentNotesTest.Stories.SynchronizationStory
             encryptedRepository[8]++; // make it invalid
             var model = new SynchronizationStoryModel
             {
+                StoryMode = StoryMode.Silent,
                 BinaryCloudRepository = encryptedRepository,
             };
 
@@ -145,7 +182,7 @@ namespace SilentNotesTest.Stories.SynchronizationStory
 
             // Run step
             var step = new DecryptCloudRepositoryStep();
-            var result = await step.RunStep(model, serviceCollection.BuildServiceProvider(), StoryMode.Silent);
+            var result = await step.RunStep(model, serviceCollection.BuildServiceProvider(), model.StoryMode);
 
             Assert.IsNotNull(result.Error); // Error message shown
             Assert.IsNull(result.NextStep); // no next step is called
@@ -162,6 +199,7 @@ namespace SilentNotesTest.Stories.SynchronizationStory
             byte[] encryptedRepository = CreateEncryptedRepository(transferCode);
             var model = new SynchronizationStoryModel
             {
+                StoryMode = StoryMode.Silent,
                 BinaryCloudRepository = encryptedRepository,
             };
 
@@ -181,7 +219,7 @@ namespace SilentNotesTest.Stories.SynchronizationStory
 
             // Run step
             var step = new DecryptCloudRepositoryStep();
-            var result = await step.RunStep(model, serviceCollection.BuildServiceProvider(), StoryMode.Silent);
+            var result = await step.RunStep(model, serviceCollection.BuildServiceProvider(), model.StoryMode);
 
             Assert.IsNotNull(result.Error); // Error message shown
             Assert.IsInstanceOf<SynchronizationStoryExceptions.UnsuportedRepositoryRevisionException>(result.Error);

@@ -1,43 +1,23 @@
-﻿using CommunityToolkit.Mvvm.Messaging;
-using SilentNotes.Services;
+﻿using Microsoft.Maui.Controls;
 
-namespace SilentNotes;
-
-public partial class App : Microsoft.Maui.Controls.Application
+namespace SilentNotes
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="App"/> class.
-    /// </summary>
-    /// <param name="serviceProvider">Sets the <see cref="Ioc"/> property.</param>
-	public App(IServiceProvider serviceProvider)
-	{
-		InitializeComponent();
-        Ioc.Instance.Initialize(serviceProvider);
-        MainPage = new MainPage();
-
-#if ANDROID
-        // Workaround: Android soft keyboard hides the lower part of the content
-        Microsoft.Maui.Controls.PlatformConfiguration.AndroidSpecific.Application.UseWindowSoftInputModeAdjust(
-            Current.On<Microsoft.Maui.Controls.PlatformConfiguration.Android>(),
-            Microsoft.Maui.Controls.PlatformConfiguration.AndroidSpecific.WindowSoftInputModeAdjust.Resize);
-#endif
-    }
-
-#if WINDOWS
-    protected override Window CreateWindow(IActivationState activationState)
+    public partial class App : Application
     {
-        var window = base.CreateWindow(activationState);
-        window.Destroying += OnDestroying;
-        return window;
-    }
+        public App(IServiceProvider serviceProvider)
+        {
+            InitializeComponent();
+            MainPage = new MainPage();
+        }
 
-    private void OnDestroying(object sender, EventArgs e)
-    {
-        WeakReferenceMessenger.Default.Send<StoreUnsavedDataMessage>(new StoreUnsavedDataMessage());
-
-        // Start auto synchronization
-        IAutoSynchronizationService syncService = Ioc.Instance.GetService<IAutoSynchronizationService>();
-        syncService.SynchronizeAtShutdown().GetAwaiter().GetResult();
-    }
+        protected override Window CreateWindow(IActivationState activationState)
+        {
+            Window window = new Window(MainPage);
+            window.Title = "SilentNotes";
+#if DEBUG
+            window.Title = "SilentNotes - dev";
 #endif
+            return window;
+        }
+    }
 }

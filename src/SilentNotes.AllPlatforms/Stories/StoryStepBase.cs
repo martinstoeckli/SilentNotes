@@ -18,23 +18,23 @@ namespace SilentNotes.Stories
     public abstract class StoryStepBase<TModel> : IStoryStep<TModel> where TModel : class
     {
         /// <inheritdoc/>
-        public async ValueTask RunStory(TModel model, IServiceProvider serviceProvider, StoryMode uiMode)
+        public async Task RunStory(TModel model, IServiceProvider serviceProvider, StoryMode uiMode)
         {
             var stepResult = await RunStep(model, serviceProvider, uiMode);
             if (stepResult == null)
                 return;
 
             // Show feedback of this step if not in silent mode
-            if (uiMode.GuiOrMessagesOrToasts())
-                await ShowFeedback(stepResult, serviceProvider);
+            if (stepResult.HasFeedback)
+                await ShowFeedback(stepResult, uiMode, serviceProvider);
 
             // Continue with next step if available
-            if (stepResult?.NextStep != null)
+            if (stepResult.NextStep != null)
                 await stepResult.NextStep.RunStory(model, serviceProvider, uiMode);
         }
 
         /// <inheritdoc/>
-        public abstract ValueTask<StoryStepResult<TModel>> RunStep(TModel model, IServiceProvider serviceProvider, StoryMode uiMode);
+        public abstract Task<StoryStepResult<TModel>> RunStep(TModel model, IServiceProvider serviceProvider, StoryMode uiMode);
 
         /// <summary>
         /// Takes an exception and gets a error message which can be presented to the user.
@@ -50,16 +50,14 @@ namespace SilentNotes.Stories
         /// <see cref="RunStory(TModel, IServiceProvider, StoryMode)"/>.
         /// </summary>
         /// <param name="stepResult">The step result, which may contain a message to show.</param>
+        /// <param name="uiMode">Defines what UI feedback is given.</param>
         /// <param name="serviceProvider">Service provider to get the feedback service from.</param>
         /// <returns>Task for async calling.</returns>
-        protected async ValueTask ShowFeedback(StoryStepResult<TModel> stepResult, IServiceProvider serviceProvider)
+        public async Task ShowFeedback(StoryStepResult<TModel> stepResult, StoryMode uiMode, IServiceProvider serviceProvider)
         {
-            if (!stepResult.HasError && !stepResult.HasMessage && !stepResult.HasToast)
-                return;
-
             IFeedbackService feedbackService = serviceProvider.GetService<IFeedbackService>();
 
-            if (stepResult.HasError)
+            if (stepResult.HasError && uiMode.HasFlag(StoryMode.Toasts))
             {
                 string errorMessage = TranslateException(stepResult.Error, serviceProvider);
                 if (!string.IsNullOrEmpty(errorMessage))
@@ -67,13 +65,13 @@ namespace SilentNotes.Stories
                 return;
             }
 
-            if (stepResult.HasMessage)
+            if (stepResult.HasMessage && uiMode.HasFlag(StoryMode.Messages))
             {
                 if (feedbackService != null)
                     await feedbackService.ShowMessageAsync(stepResult.Message, null, MessageBoxButtons.Ok, false);
             }
 
-            if (stepResult.HasToast)
+            if (stepResult.HasToast && uiMode.HasFlag(StoryMode.Toasts))
             {
                 if (feedbackService != null)
                     feedbackService.ShowToast(stepResult.Toast);
@@ -114,13 +112,13 @@ namespace SilentNotes.Stories
         }
 
         /// <summary>
-        /// Encloses a story step result in a ValueTask so functions without async can return a task.
+        /// Encloses a story step result in a Task so functions without async can return a task.
         /// </summary>
         /// <param name="storyStepResult">The story step to enclose.</param>
-        /// <returns>ValueTask containing the story step result.</returns>
-        protected static ValueTask<StoryStepResult<TModel>> ToTask(StoryStepResult<TModel> storyStepResult)
+        /// <returns>Task containing the story step result.</returns>
+        protected static Task<StoryStepResult<TModel>> ToTask(StoryStepResult<TModel> storyStepResult)
         {
-            return ValueTask.FromResult<StoryStepResult<TModel>>(storyStepResult);
+            return Task.FromResult<StoryStepResult<TModel>>(storyStepResult);
         }
     }
 }

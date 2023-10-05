@@ -13,6 +13,8 @@ namespace SilentNotes.Stories.SynchronizationStory
     /// </summary>
     public class SynchronizationStoryModel
     {
+        public StoryMode StoryMode { get; set; }
+
         public SerializeableCloudStorageCredentials Credentials { get; set; }
 
         public string OauthState { get; set; }

@@ -18,7 +18,7 @@ namespace SilentNotes.Stories.SynchronizationStory
     internal class ExistsTransferCodeStep : SynchronizationStoryStepBase
     {
         /// <inheritdoc/>
-        public override ValueTask<StoryStepResult<SynchronizationStoryModel>> RunStep(SynchronizationStoryModel model, IServiceProvider serviceProvider, StoryMode uiMode)
+        public override Task<StoryStepResult<SynchronizationStoryModel>> RunStep(SynchronizationStoryModel model, IServiceProvider serviceProvider, StoryMode uiMode)
         {
             var settingsService = serviceProvider.GetService<ISettingsService>();
             SettingsModel settings = settingsService.LoadSettingsOrDefault();

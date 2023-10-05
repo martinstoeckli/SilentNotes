@@ -58,6 +58,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\IFeedbackService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\IFilePickerService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\IFolderPickerService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\IInternetStateService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\IKeepScreenOn.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ILanguageCodeProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ILanguageService.cs" />
@@ -69,8 +70,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\IRepositoryStorageService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\IScreenshots.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ISettingsService.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\IStoryBoardService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ISvgIconService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\ISynchronizationService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\IThemeService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\IVersionService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\IXmlFileService.cs" />
@@ -80,8 +81,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\RepositoryStorageServiceBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ServiceFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\SettingsServiceBase.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\StoryBoardService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\SvgIconService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\SynchronizationServiceBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ThemeService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\XmlFileService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SnKeyboardShortcuts.cs" />
@@ -124,6 +125,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\RecycleBinViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\SettingsViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\SliderStepConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\SynchronizationStory\TransferCodePromptViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\TransferCodeHistoryViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ViewModelBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ViewModelBaseExtensions.cs" />
@@ -147,8 +149,5 @@
     <Compile Include="$(MSBuildThisFileDirectory)Workers\UnmixableAlphabet.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Workers\WebviewUtils.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Workers\XmlUtils.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)ViewModels\SynchronizationStory\" />
   </ItemGroup>
 </Project>

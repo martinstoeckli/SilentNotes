@@ -10,33 +10,23 @@ namespace SilentNotes.Stories
     /// <summary>
     /// Enumeration of all modes, a story board can be started with.
     /// </summary>
+    [Flags]
     public enum StoryMode
     {
         /// <summary>Runs in silent mode, doesn't show any dialogs. If the story fails, it does it
         /// silently without informing the user.</summary>
-        Silent,
+        Silent = 0,
 
-        /// <summary>Shows messages and toasts, but doesn't ask for user input by opening dialogs.</summary>
-        MessagesToasts,
+        /// <summary>Shows waiting circle / hour clock.</summary>
+        BusyIndicator = 1,
 
-        /// <summary>Shows the complete user interface, inclusive user dialogs and messages.</summary>
-        Gui,
+        /// <summary>Shows toast messages.</summary>
+        Toasts = 2,
+
+        /// <summary>Shows messageboxes.</summary>
+        Messages = 4,
+
+        /// <summary>Shows pages for user input.</summary>
+        Dialogs = 8,
     }
-
-    /// <summary>
-    /// Extension methods for the <see cref="StoryMode"/> enumeration.
-    /// </summary>
-    public static class StoryModeExtensions
-    {
-        /// <summary>
-        /// Checks whether this mode should show dialogs for user input.
-        /// </summary>
-        /// <param name="mode">Mode to check.</param>
-        /// <returns>Returns true if if requires the gui, otherwise false.</returns>
-        public static bool GuiOrMessagesOrToasts(this StoryMode mode)
-        {
-            return mode == StoryMode.Gui || mode == StoryMode.MessagesToasts;
-        }
-    }
-
 }

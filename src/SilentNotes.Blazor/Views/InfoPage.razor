@@ -11,6 +11,7 @@
 @inject INativeBrowserService NativeBrowserService
 @inject IJSRuntime JSRuntime
 @inject INavigationService Navigation
+@inject IRepositoryStorageService RepositoryStorageService
 
 @* Main menu *@
 <MudAppBar Class="flex-none" Fixed="false" Dense="true" WrapContent="false">
@@ -23,7 +24,7 @@
 		<MudGrid>
 			<MudItem sm="4">
 				<MudPaper Class="ml-2 mr-5 mb-1 pa-2 rounded-xl" Elevation="1" Style="max-width:220px">
-					<MudImage Src="appicon.svg" Fluid="true" />
+					<MudImage @onclick="ToggleSupport" Src="appicon.svg" Fluid="true" />
 				</MudPaper>
 			</MudItem>
 			<MudItem sm="8">
@@ -51,16 +52,23 @@
 					</tbody>
 				</MudSimpleTable>
 
-				<MudAlert Class="mt-3" Severity="Severity.Success" Elevation="1">@LanguageService["license"]</MudAlert>
+				<MudAlert Class="my-3" Severity="Severity.Success" Elevation="1">@LanguageService["license"]</MudAlert>
+
+				@if (_supportCounter >= 5)
+				{
+					<div>@ViewModel.SupportInfos</div>
+				}
 			</MudItem>
 		</MudGrid>
 	</MudContainer>
 </div>
 
 @code {
+	private int _supportCounter;
+
 	protected override void OnInitialized()
 	{
-		ViewModel = new InfoViewModel(VersionService, NativeBrowserService);
+		ViewModel = new InfoViewModel(VersionService, NativeBrowserService, RepositoryStorageService);
 	}
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -74,4 +82,14 @@
 	}
 
 	private InfoViewModel ViewModel { get; set; }
+
+	/// <summary>
+	/// Shows additional support information after 5 clicks on the image.
+	/// </summary>
+	private void ToggleSupport()
+	{
+		_supportCounter++;
+		if (_supportCounter == 5)
+			StateHasChanged();
+	}
 }

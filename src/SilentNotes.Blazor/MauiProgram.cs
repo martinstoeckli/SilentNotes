@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
+using Microsoft.Maui.LifecycleEvents;
 using MudBlazor;
 using MudBlazor.Services;
 using SilentNotes.Platforms;
@@ -21,8 +22,29 @@ public static class MauiProgram
 {
     public static MauiApp CreateMauiApp()
     {
+        var applicationEventHandler = new ApplicationEventHandler();
+
         var builder = MauiApp.CreateBuilder();
-        builder.UseMauiApp<App>();
+        builder
+            .UseMauiApp<App>()
+            .ConfigureLifecycleEvents(events =>
+            {
+#if ANDROID
+                events.AddAndroid(android => android
+                    .OnCreate((activity, bundle) => applicationEventHandler.OnCreate(activity))
+                    .OnResume((activity) => applicationEventHandler.OnResume(activity))
+                    .OnPause((activity) => applicationEventHandler.OnPause(activity))
+                    .OnDestroy((activity) => applicationEventHandler.OnDestroy(activity))
+                    .OnStop((activity) => applicationEventHandler.OnStop(activity))
+                    .OnActivityResult((activity, requestCode, resultCode, data) => applicationEventHandler.OnActivityResult(activity, requestCode, resultCode, data)));
+#elif WINDOWS
+                events.AddWindows(windows => windows
+                    .OnLaunched((window, args) => applicationEventHandler.OnLaunched(window, args))
+                    .OnLaunching((window, args) => applicationEventHandler.OnLaunching(window, args))
+                    .OnActivated((window, args) => applicationEventHandler.OnActivated(window, args))
+                    .OnClosed((window, args) => applicationEventHandler.OnClosed(window, args)));
+#endif
+            });
 
         builder.Services.AddMauiBlazorWebView();
         builder.Services.AddMudServices(config =>
@@ -43,7 +65,10 @@ public static class MauiProgram
         builder.Services.AddBlazorWebViewDeveloperTools();
 		builder.Logging.AddDebug().SetMinimumLevel(LogLevel.Information);
 #endif
-		return builder.Build();
+
+        MauiApp mauiApp = builder.Build();
+        Ioc.Instance.Initialize(mauiApp.Services);
+        return mauiApp;
 	}
 
     private static void RegisterSharedServices(IServiceCollection services)
@@ -54,15 +79,11 @@ public static class MauiProgram
         services.AddSingleton<IThemeService>((serviceProvider) => new ThemeService(
             serviceProvider.GetService<ISettingsService>(),
             serviceProvider.GetService<IEnvironmentService>()));
-        //services.AddSingleton<INotificationService>((serviceProvider) => new NotificationService(
-        //    serviceProvider.GetService<IFeedbackService>(),
-        //    serviceProvider.GetService<ILanguageService>(),
-        //    serviceProvider.GetService<ISettingsService>()));
         services.AddSingleton<IVersionService>((serviceProvider) => new VersionService());
         services.AddSingleton<ICloudStorageClientFactory>((serviceProvider) => new CloudStorageClientFactory());
         services.AddSingleton<IClipboardService>((serviceProvider) => new ClipboardService());
-        services.AddSingleton<IStoryBoardService>((serviceProvider) => new StoryBoardService());
         services.AddSingleton<IBrowserHistoryService>((serviceProvider) => new BrowserHistoryService());
+        services.AddSingleton<IInternetStateService>((serviceProvider) => new InternetStateService());
 
         // Scoped services (some Blazor services like NavigationManager or IJSRuntime seem to be scoped)
         // Workaround: It seems that scoped services are recreated when gotten from Ioc, therefore
@@ -74,6 +95,10 @@ public static class MauiProgram
             serviceProvider.GetService<IDialogService>(),
             serviceProvider.GetService<ISnackbar>(),
             serviceProvider.GetService<ILanguageService>()));
+        services.AddScoped<INotificationService>((serviceProvider) => new NotificationService(
+            serviceProvider.GetService<IFeedbackService>(),
+            serviceProvider.GetService<ILanguageService>(),
+            serviceProvider.GetService<ISettingsService>()));
     }
 
 #if WINDOWS
@@ -93,7 +118,7 @@ public static class MauiProgram
         services.AddSingleton<INativeBrowserService>((serviceProvider) => new NativeBrowserService());
         services.AddSingleton<IFolderPickerService>((serviceProvider) => new FolderPickerService());
         services.AddSingleton<IFilePickerService>((serviceProvider) => new FilePickerService());
-        services.AddSingleton<IAutoSynchronizationService>((serviceProvider) => new AutoSynchronizationService());
+        services.AddSingleton<ISynchronizationService>((serviceProvider) => new SynchronizationService());
     }
 
 #elif ANDROID
@@ -124,7 +149,7 @@ public static class MauiProgram
         services.AddSingleton<IFilePickerService>((serviceProvider) => new FilePickerService(
             serviceProvider.GetService<IAppContextService>(),
             serviceProvider.GetService<IActivityResultAwaiter>()));
-        services.AddSingleton<IAutoSynchronizationService>((serviceProvider) => new AutoSynchronizationService());
+        services.AddSingleton<ISynchronizationService>((serviceProvider) => new SynchronizationService());
     }
 
 #endif

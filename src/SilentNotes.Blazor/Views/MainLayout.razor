@@ -7,6 +7,7 @@
 @inject INavigationService NavigationService
 @inject IBrowserHistoryService BrowserHistoryService
 @inject IFeedbackService FeedbackService
+@inject INotificationService NotificationService
 
 @implements IDisposable
 
@@ -41,7 +42,16 @@
 		Ioc.Instance
 			.ClearInjected()
 			.AddInjected<INavigationService>(NavigationService)
-			.AddInjected<IFeedbackService>(FeedbackService);
+			.AddInjected<IFeedbackService>(FeedbackService)
+			.AddInjected<INotificationService>(NotificationService);
+	}
+
+	protected override void OnAfterRender(bool firstRender)
+	{
+		if (firstRender)
+		{
+			WeakReferenceMessenger.Default.Send<ApplicationReady>();
+		}
 	}
 
 	/// <inheritdoc/>

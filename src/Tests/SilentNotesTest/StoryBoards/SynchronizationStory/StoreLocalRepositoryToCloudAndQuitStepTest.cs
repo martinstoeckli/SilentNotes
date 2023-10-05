@@ -21,6 +21,7 @@ namespace SilentNotesTest.Stories.SynchronizationStory
             NoteRepositoryModel repositoryModel = new NoteRepositoryModel();
             var model = new SynchronizationStoryModel
             {
+                StoryMode = StoryMode.Silent,
                 CloudRepository = repositoryModel,
                 Credentials = credentialsFromSession,
             };
@@ -43,13 +44,16 @@ namespace SilentNotesTest.Stories.SynchronizationStory
 
             // Run step
             var step = new StoreLocalRepositoryToCloudAndQuitStep();
-            var result = await step.RunStep(model, serviceCollection.BuildServiceProvider(), StoryMode.Silent);
+            var result = await step.RunStep(model, serviceCollection.BuildServiceProvider(), model.StoryMode);
 
             // Settings are stored with new transfer code
             settingsService.Verify(m => m.TrySaveSettingsToLocalDevice(It.Is<SettingsModel>(s => !string.IsNullOrEmpty(s.TransferCode))), Times.Once);
 
             // Repository was uploaded
             cloudStorageClient.Verify(m => m.UploadFileAsync(It.IsAny<string>(), It.IsAny<byte[]>(), It.Is<CloudStorageCredentials>(c => c == credentialsFromSession)), Times.Once);
+
+            // Notification trigger was added to settings
+            Assert.AreEqual(1, settingsModel.NotificationTriggers.Count);
 
             // Next step is called
             Assert.IsInstanceOf<StopAndShowRepositoryStep>(result.NextStep);
@@ -63,6 +67,7 @@ namespace SilentNotesTest.Stories.SynchronizationStory
             NoteRepositoryModel repositoryModel = new NoteRepositoryModel();
             var model = new SynchronizationStoryModel
             {
+                StoryMode = StoryMode.Silent,
                 CloudRepository = repositoryModel,
                 Credentials = credentialsFromSession,
             };
@@ -84,7 +89,7 @@ namespace SilentNotesTest.Stories.SynchronizationStory
 
             // Run step
             var step = new StoreLocalRepositoryToCloudAndQuitStep();
-            var result = await step.RunStep(model, serviceCollection.BuildServiceProvider(), StoryMode.Silent);
+            var result = await step.RunStep(model, serviceCollection.BuildServiceProvider(), model.StoryMode);
 
             // No settings are stored
             settingsService.Verify(m => m.TrySaveSettingsToLocalDevice(It.IsAny<SettingsModel>()), Times.Never);

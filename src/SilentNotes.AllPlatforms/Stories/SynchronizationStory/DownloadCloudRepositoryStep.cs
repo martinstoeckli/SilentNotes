@@ -19,7 +19,7 @@ namespace SilentNotes.Stories.SynchronizationStory
     internal class DownloadCloudRepositoryStep : SynchronizationStoryStepBase
     {
         /// <inheritdoc/>
-        public override async ValueTask<StoryStepResult<SynchronizationStoryModel>> RunStep(SynchronizationStoryModel model, IServiceProvider serviceProvider, StoryMode uiMode)
+        public override async Task<StoryStepResult<SynchronizationStoryModel>> RunStep(SynchronizationStoryModel model, IServiceProvider serviceProvider, StoryMode uiMode)
         {
             try
             {
@@ -37,7 +37,7 @@ namespace SilentNotes.Stories.SynchronizationStory
             }
             catch (Exception ex)
             {
-                if (uiMode == StoryMode.Gui)
+                if (uiMode.HasFlag(StoryMode.BusyIndicator))
                     serviceProvider.GetService<IFeedbackService>().SetBusyIndicatorVisible(false, true);
 
                 // Keep the current page open and show the error message

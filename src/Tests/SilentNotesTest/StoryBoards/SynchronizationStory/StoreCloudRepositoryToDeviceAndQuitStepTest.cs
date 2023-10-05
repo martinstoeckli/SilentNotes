@@ -17,6 +17,7 @@ namespace SilentNotesTest.Stories.SynchronizationStory
             NoteRepositoryModel repositoryModel = new NoteRepositoryModel();
             var model = new SynchronizationStoryModel
             {
+                StoryMode = StoryMode.Silent,
                 CloudRepository = repositoryModel,
             };
 
@@ -29,7 +30,7 @@ namespace SilentNotesTest.Stories.SynchronizationStory
 
             // Run step
             var step = new StoreCloudRepositoryToDeviceAndQuitStep();
-            var result = await step.RunStep(model, serviceCollection.BuildServiceProvider(), StoryMode.Silent);
+            var result = await step.RunStep(model, serviceCollection.BuildServiceProvider(), model.StoryMode);
 
             // repository is stored to the local device
             repositoryStorageService.Verify(m => m.TrySaveRepository(It.Is<NoteRepositoryModel>(r => r == repositoryModel)), Times.Once);

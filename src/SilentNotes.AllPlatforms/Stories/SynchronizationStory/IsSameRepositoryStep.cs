@@ -18,7 +18,7 @@ namespace SilentNotes.Stories.SynchronizationStory
     internal class IsSameRepositoryStep : SynchronizationStoryStepBase
     {
         /// <inheritdoc/>
-        public override ValueTask<StoryStepResult<SynchronizationStoryModel>> RunStep(SynchronizationStoryModel model, IServiceProvider serviceProvider, StoryMode uiMode)
+        public override Task<StoryStepResult<SynchronizationStoryModel>> RunStep(SynchronizationStoryModel model, IServiceProvider serviceProvider, StoryMode uiMode)
         {
             var repositoryStorageService = serviceProvider.GetService<IRepositoryStorageService>();
             repositoryStorageService.LoadRepositoryOrDefault(out NoteRepositoryModel localRepository);

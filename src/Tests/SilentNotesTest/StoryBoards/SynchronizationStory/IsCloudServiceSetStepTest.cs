@@ -21,8 +21,8 @@ namespace SilentNotesTest.Stories.SynchronizationStory
             var serviceCollection = new ServiceCollection();
             serviceCollection.AddSingleton<ISettingsService>(settingsService);
 
-            var model = new SynchronizationStoryModel();
-            var res = await new IsCloudServiceSetStep().RunStep(model, serviceCollection.BuildServiceProvider(), StoryMode.Silent);
+            var model = new SynchronizationStoryModel { StoryMode = StoryMode.Silent };
+            var res = await new IsCloudServiceSetStep().RunStep(model, serviceCollection.BuildServiceProvider(), model.StoryMode);
 
             // Continue with correct next step to ask for missing credentials
             Assert.IsInstanceOf<ShowFirstTimeDialogStep>(res.NextStep);
@@ -39,8 +39,8 @@ namespace SilentNotesTest.Stories.SynchronizationStory
             var settingsService = CommonMocksAndStubs.SettingsService(settingsModel);
             serviceCollection.AddSingleton<ISettingsService>(settingsService);
 
-            var model = new SynchronizationStoryModel();
-            var res = await new IsCloudServiceSetStep().RunStep(model, serviceCollection.BuildServiceProvider(), StoryMode.Silent);
+            var model = new SynchronizationStoryModel { StoryMode = StoryMode.Silent };
+            var res = await new IsCloudServiceSetStep().RunStep(model, serviceCollection.BuildServiceProvider(), model.StoryMode);
 
             // Continue with correct next step with credentials set
             Assert.IsInstanceOf<ExistsCloudRepositoryStep>(res.NextStep);

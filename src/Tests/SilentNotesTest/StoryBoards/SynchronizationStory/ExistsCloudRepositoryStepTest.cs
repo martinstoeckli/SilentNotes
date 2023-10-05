@@ -19,6 +19,7 @@ namespace SilentNotesTest.Stories.SynchronizationStory
             SettingsModel settingsModel = new SettingsModel { Credentials = new SerializeableCloudStorageCredentials { CloudStorageId = CloudStorageClientFactory.CloudStorageIdFtp } };
             var model = new SynchronizationStoryModel
             {
+                StoryMode = StoryMode.Silent,
                 Credentials = credentialsFromSession,
             };
 
@@ -38,7 +39,7 @@ namespace SilentNotesTest.Stories.SynchronizationStory
 
             // Run step
             var step = new ExistsCloudRepositoryStep();
-            var result = await step.RunStep(model, serviceCollection.BuildServiceProvider(), StoryMode.Silent);
+            var result = await step.RunStep(model, serviceCollection.BuildServiceProvider(), model.StoryMode);
 
             // Settings are stored with account from session
             settingsService.Verify(m => m.TrySaveSettingsToLocalDevice(It.Is<SettingsModel>(s => s.Credentials == credentialsFromSession)), Times.Once);
@@ -54,6 +55,7 @@ namespace SilentNotesTest.Stories.SynchronizationStory
             SettingsModel settingsModel = new SettingsModel { Credentials = credentials };
             var model = new SynchronizationStoryModel
             {
+                StoryMode = StoryMode.Silent,
                 Credentials = credentials,
             };
 
@@ -73,7 +75,7 @@ namespace SilentNotesTest.Stories.SynchronizationStory
 
             // Run step
             var step = new ExistsCloudRepositoryStep();
-            var result = await step.RunStep(model, serviceCollection.BuildServiceProvider(), StoryMode.Silent);
+            var result = await step.RunStep(model, serviceCollection.BuildServiceProvider(), model.StoryMode);
 
             // Settings are not stored because they are equal
             settingsService.Verify(m => m.TrySaveSettingsToLocalDevice(It.IsAny<SettingsModel>()), Times.Never);

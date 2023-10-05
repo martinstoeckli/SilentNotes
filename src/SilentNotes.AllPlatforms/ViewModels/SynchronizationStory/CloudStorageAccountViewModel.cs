@@ -21,8 +21,7 @@ namespace SilentNotes.ViewModels
     public class CloudStorageAccountViewModel : ViewModelBase
     {
         private readonly IServiceProvider _serviceProvider;
-        private readonly IStoryBoardService _storyBoardService;
-        private readonly INavigationService _navigation;
+        private readonly ISynchronizationService _synchronizationService;
         private readonly CloudStorageCredentialsRequirements _credentialsRequirements;
         private readonly IFeedbackService _feedbackService;
 
@@ -34,8 +33,7 @@ namespace SilentNotes.ViewModels
             SerializeableCloudStorageCredentials model)
         {
             _serviceProvider = serviceProvider;
-            _storyBoardService = serviceProvider.GetService<IStoryBoardService>();
-            _navigation = serviceProvider.GetRequiredService<INavigationService>();
+            _synchronizationService = serviceProvider.GetService<ISynchronizationService>();
             _feedbackService = serviceProvider.GetRequiredService<IFeedbackService>();
 
             Model = model;
@@ -56,9 +54,9 @@ namespace SilentNotes.ViewModels
         private async void Ok()
         {
             _feedbackService.SetBusyIndicatorVisible(true, true);
-            SynchronizationStoryModel storyModel = _storyBoardService.SynchronizationStory;
+            SynchronizationStoryModel storyModel = _synchronizationService.CurrentStory;
             var nextStep = new ExistsCloudRepositoryStep();
-            await nextStep.RunStory(storyModel, _serviceProvider, Stories.StoryMode.Gui);
+            await nextStep.RunStory(storyModel, _serviceProvider, storyModel.StoryMode);
         }
 
         /// <summary>
@@ -69,7 +67,7 @@ namespace SilentNotes.ViewModels
         private async void Cancel()
         {
             var nextStep = new StopAndShowRepositoryStep();
-            await nextStep.RunStory(_storyBoardService.SynchronizationStory, _serviceProvider, Stories.StoryMode.Gui);
+            await nextStep.RunStory(_synchronizationService.CurrentStory, _serviceProvider, _synchronizationService.CurrentStory.StoryMode);
         }
 
         /// <inheritdoc />

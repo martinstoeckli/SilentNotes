@@ -53,7 +53,7 @@ namespace SilentNotes.Services
         }
 
         /// <inheritdoc/>
-        public void UpdateHistoryOnNavigation(string targetLocation, string baseUri)
+        public NavigationDirection UpdateHistoryOnNavigation(string targetLocation, string baseUri)
         {
             if (targetLocation == null)
                 throw new ArgumentNullException(nameof(targetLocation));
@@ -68,23 +68,26 @@ namespace SilentNotes.Services
             if ((lastIndex >= 0) && string.Equals(relativeTargetLocation, _history[lastIndex]))
             {
                 // This is a refresh of the page, don't alter the history
+                return NavigationDirection.Reload;
             }
             else if ((secondToLastIndex >= 0) && string.Equals(relativeTargetLocation, _history[secondToLastIndex]))
             {
                 // This is a back navigation
                 _history.RemoveAt(lastIndex);
+                return NavigationDirection.Back;
             }
             else
             {
                 // This is a forward navigation to a new page
                 _history.Add(relativeTargetLocation);
+                return NavigationDirection.Next;
             }
         }
 
         /// <inheritdoc/>
-        public void Clear()
+        public void ClearAllButHome()
         {
-            _history.Clear();
+            _history.RemoveRange(1, _history.Count - 1);
         }
 
         /// <inheritdoc/>

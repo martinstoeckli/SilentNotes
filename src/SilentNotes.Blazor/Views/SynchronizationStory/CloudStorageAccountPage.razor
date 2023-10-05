@@ -11,7 +11,7 @@
 @inject IJSRuntime JSRuntime
 @inject INavigationService Navigation
 @inject IFeedbackService FeedbackService
-@inject IStoryBoardService StoryBoardService
+@inject ISynchronizationService SynchronizationService
 
 @* Main menu *@
 <MudAppBar Class="flex-none" Fixed="false" Dense="true" WrapContent="false">
@@ -83,7 +83,7 @@
 
 	protected override void OnInitialized()
 	{
-		var credentials = StoryBoardService.SynchronizationStory.Credentials;
+		var credentials = SynchronizationService.CurrentStory.Credentials;
 		ViewModel = new CloudStorageAccountViewModel(Ioc.Instance, credentials);
 		_secureStringConverter = new SecureStringConverter();
 	}

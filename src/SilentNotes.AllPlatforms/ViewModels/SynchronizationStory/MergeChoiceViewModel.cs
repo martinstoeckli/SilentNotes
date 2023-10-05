@@ -18,7 +18,7 @@ namespace SilentNotes.ViewModels
     public class MergeChoiceViewModel : ViewModelBase
     {
         private readonly IServiceProvider _serviceProvider;
-        private readonly IStoryBoardService _storyBoardService;
+        private readonly ISynchronizationService _synchronizationService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MergeChoiceViewModel"/> class.
@@ -26,7 +26,7 @@ namespace SilentNotes.ViewModels
         public MergeChoiceViewModel(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
-            _storyBoardService = serviceProvider.GetService<IStoryBoardService>();
+            _synchronizationService = serviceProvider.GetService<ISynchronizationService>();
 
             UseMergedRepositoryCommand = new RelayCommand(UseMergedRepository);
             UseLocalRepositoryCommand = new RelayCommand(UseLocalRepository);
@@ -42,7 +42,7 @@ namespace SilentNotes.ViewModels
         private async void UseMergedRepository()
         {
             var nextStep = new StoreMergedRepositoryAndQuitStep();
-            await nextStep.RunStory(_storyBoardService.SynchronizationStory, _serviceProvider, Stories.StoryMode.Gui);
+            await nextStep.RunStory(_synchronizationService.CurrentStory, _serviceProvider, _synchronizationService.CurrentStory.StoryMode);
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace SilentNotes.ViewModels
         private async void UseCloudRepository()
         {
             var nextStep = new StoreCloudRepositoryToDeviceAndQuitStep();
-            await nextStep.RunStory(_storyBoardService.SynchronizationStory, _serviceProvider, Stories.StoryMode.Gui);
+            await nextStep.RunStory(_synchronizationService.CurrentStory, _serviceProvider, _synchronizationService.CurrentStory.StoryMode);
         }
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace SilentNotes.ViewModels
         private async void UseLocalRepository()
         {
             var nextStep = new StoreLocalRepositoryToCloudAndQuitStep();
-            await nextStep.RunStory(_storyBoardService.SynchronizationStory, _serviceProvider, Stories.StoryMode.Gui);
+            await nextStep.RunStory(_synchronizationService.CurrentStory, _serviceProvider, _synchronizationService.CurrentStory.StoryMode);
         }
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace SilentNotes.ViewModels
         private async void Cancel()
         {
             var nextStep = new StopAndShowRepositoryStep();
-            await nextStep.RunStory(_storyBoardService.SynchronizationStory, _serviceProvider, Stories.StoryMode.Gui);
+            await nextStep.RunStory(_synchronizationService.CurrentStory, _serviceProvider, _synchronizationService.CurrentStory.StoryMode);
         }
     }
 }

@@ -1,4 +1,9 @@
-﻿using System;
+﻿// Copyright © 2023 Martin Stoeckli.
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+using System;
 
 namespace SilentNotes
 {
@@ -32,6 +37,13 @@ namespace SilentNotes
     }
 
     /// <summary>
+    /// Message to inform the current page that a synchroinization has been completed.
+    /// </summary>
+    public class ReloadAfterSyncMessage
+    {
+    }
+
+    /// <summary>
     /// Message to inform the current page that the system back button was pressed.
     /// </summary>
     public class BackButtonPressedMessage
@@ -40,5 +52,12 @@ namespace SilentNotes
         /// Gets or sets a value indicating whether the listener handled the press event.
         /// </summary>
         public bool Handled { get; set; }
+    }
+
+    /// <summary>
+    /// Message to inform the application that the main layout has finished first rendering.
+    /// </summary>
+    public class ApplicationReady
+    {
     }
 }

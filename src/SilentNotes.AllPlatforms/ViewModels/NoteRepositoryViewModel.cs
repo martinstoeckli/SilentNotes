@@ -25,13 +25,12 @@ namespace SilentNotes.ViewModels
     public class NoteRepositoryViewModel : ViewModelBase
     {
         private readonly INavigationService _navigationService;
-        private readonly IStoryBoardService _storyBoardService;
+        private readonly ISynchronizationService _synchronizationService;
         private readonly IRepositoryStorageService _repositoryService;
         private readonly IFeedbackService _feedbackService;
         private readonly IThemeService _themeService;
         private readonly ISettingsService _settingsService;
         private readonly IEnvironmentService _environmentService;
-        private readonly IAutoSynchronizationService _autoSynchronizationService;
         private readonly SearchableHtmlConverter _searchableTextConverter;
         private readonly ICryptor _noteCryptor;
         private readonly KeyValueList<string, string> _specialTagLocalizations;
@@ -50,8 +49,7 @@ namespace SilentNotes.ViewModels
             IThemeService themeService,
             ISettingsService settingsService,
             IEnvironmentService environmentService,
-            IStoryBoardService storyBoardService,
-            IAutoSynchronizationService autoSynchronizationService,
+            ISynchronizationService synchronizationService,
             ICryptoRandomSource randomSource,
             IRepositoryStorageService repositoryService)
         {
@@ -62,8 +60,7 @@ namespace SilentNotes.ViewModels
             _settingsService = settingsService;
             _environmentService = environmentService;
             _repositoryService = repositoryService;
-            _storyBoardService = storyBoardService;
-            _autoSynchronizationService = autoSynchronizationService;
+            _synchronizationService = synchronizationService;
             _noteCryptor = new Cryptor(NoteModel.CryptorPackageName, randomSource);
             _searchableTextConverter = new SearchableHtmlConverter();
             AllNotes = new List<NoteViewModelReadOnly>();
@@ -480,24 +477,8 @@ namespace SilentNotes.ViewModels
 
         private async void Synchronize()
         {
-            if (_autoSynchronizationService.IsRunning)
-                return;
-
-            //_feedbackService.ShowBusyIndicator(true);
-            try
-            {
-                OnStoringUnsavedData();
-
-                _storyBoardService.SynchronizationStory = new SynchronizationStoryModel();
-                var synchronizationStory = new IsCloudServiceSetStep();
-                await synchronizationStory.RunStory(_storyBoardService.SynchronizationStory, Ioc.Instance, StoryMode.Gui);
-                // todo:
-                //_autoSynchronizationService.LastSynchronizationFingerprint = Model.GetModificationFingerprint();
-            }
-            finally
-            {
-                //_feedbackService.ShowBusyIndicator(false);
-            }
+            OnStoringUnsavedData();
+            _synchronizationService.SynchronizeManually(Ioc.Instance);
         }
 
         /// <summary>

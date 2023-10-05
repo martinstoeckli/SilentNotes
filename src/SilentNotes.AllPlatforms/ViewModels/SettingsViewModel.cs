@@ -26,7 +26,7 @@ namespace SilentNotes.ViewModels
         private readonly ISettingsService _settingsService;
         private readonly IEnvironmentService _environmentService;
         private readonly IThemeService _themeService;
-        private readonly IStoryBoardService _storyBoardService;
+        private readonly ISynchronizationService _synchronizationService;
         private readonly IFeedbackService _feedbackService;
         private readonly IFilePickerService _filePickerService;
         private readonly ICloudStorageClientFactory _cloudStorageClientFactory;
@@ -37,7 +37,7 @@ namespace SilentNotes.ViewModels
             ISettingsService settingsService,
             ILanguageService languageService,
             IEnvironmentService environmentService,
-            IStoryBoardService storyBoardService,
+            ISynchronizationService synchronizationService,
             IThemeService themeService,
             IFeedbackService feedbackService,
             ICloudStorageClientFactory cloudStorageClientFactory,
@@ -46,7 +46,7 @@ namespace SilentNotes.ViewModels
             Language = languageService;
             _settingsService = settingsService;
             _environmentService = environmentService;
-            _storyBoardService = storyBoardService;
+            _synchronizationService = synchronizationService;
             _themeService = themeService;
             _feedbackService = feedbackService;
             _cloudStorageClientFactory = cloudStorageClientFactory;
@@ -399,9 +399,7 @@ namespace SilentNotes.ViewModels
 
         private async void ChangeCloudSettings()
         {
-            _storyBoardService.SynchronizationStory = new SynchronizationStoryModel();
-            var synchronizationStory = new ShowCloudStorageChoiceStep();
-            await synchronizationStory.RunStory(_storyBoardService.SynchronizationStory, Ioc.Instance, StoryMode.Gui);
+            await _synchronizationService.ChangeCloudStorage(Ioc.Instance);
         }
 
         /// <summary>

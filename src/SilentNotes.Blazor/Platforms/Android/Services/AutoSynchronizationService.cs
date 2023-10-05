@@ -76,7 +76,7 @@ namespace SilentNotes.Services
         /// <inheritdoc/>
         public override void Stop()
         {
-            //IsRunning = false;
+            base.Stop();
             //IAppContextService appContext = Ioc.Default.GetService<IAppContextService>();
             //WorkManager workManager = WorkManager.GetInstance(appContext.Context);
             //workManager.CancelAllWorkByTag(ListenableSynchronizationWorker.TAG);

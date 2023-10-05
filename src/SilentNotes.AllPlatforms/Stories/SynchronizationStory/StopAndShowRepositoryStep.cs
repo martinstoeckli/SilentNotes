@@ -18,12 +18,12 @@ namespace SilentNotes.Stories.SynchronizationStory
     internal class StopAndShowRepositoryStep : SynchronizationStoryStepBase
     {
         /// <inheritdoc/>
-        public override ValueTask<StoryStepResult<SynchronizationStoryModel>> RunStep(SynchronizationStoryModel model, IServiceProvider serviceProvider, StoryMode uiMode)
+        public override Task<StoryStepResult<SynchronizationStoryModel>> RunStep(SynchronizationStoryModel model, IServiceProvider serviceProvider, StoryMode uiMode)
         {
-            var storyBoardService = serviceProvider.GetService<IStoryBoardService>();
-            storyBoardService.SynchronizationStory = null;
+            var synchronizationService = serviceProvider.GetService<ISynchronizationService>();
+            synchronizationService.FinishedSynchronization(serviceProvider);
 
-            if (uiMode.GuiOrMessagesOrToasts())
+            if (uiMode.HasFlag(StoryMode.Dialogs))
             {
                 var navigation = serviceProvider.GetService<INavigationService>();
                 navigation.NavigateHome();

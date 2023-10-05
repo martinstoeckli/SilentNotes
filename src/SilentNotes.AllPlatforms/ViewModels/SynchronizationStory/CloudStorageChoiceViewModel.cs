@@ -18,7 +18,7 @@ namespace SilentNotes.ViewModels
     public class CloudStorageChoiceViewModel : ViewModelBase
     {
         private readonly IServiceProvider _serviceProvider;
-        private readonly IStoryBoardService _storyBoardService;
+        private readonly ISynchronizationService _synchronizationService;
         private readonly ICloudStorageClientFactory _cloudStorageClientFactory;
 
         /// <summary>
@@ -27,7 +27,7 @@ namespace SilentNotes.ViewModels
         public CloudStorageChoiceViewModel(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
-            _storyBoardService = _serviceProvider.GetService<IStoryBoardService>();
+            _synchronizationService = _serviceProvider.GetService<ISynchronizationService>();
             _cloudStorageClientFactory = _serviceProvider.GetService<ICloudStorageClientFactory>();
 
             ServiceChoices = new List<CloudStorageChoiceItemViewModel>();
@@ -66,14 +66,14 @@ namespace SilentNotes.ViewModels
 
         private async void Choose(object value)
         {
-            SynchronizationStoryModel storyModel = _storyBoardService.SynchronizationStory;
+            SynchronizationStoryModel storyModel = _synchronizationService.CurrentStory;
             storyModel.Credentials = new SerializeableCloudStorageCredentials
             {
                 CloudStorageId = value.ToString()
             };
 
             var nextStep = new ShowCloudStorageAccountStep();
-            await nextStep.RunStory(storyModel, _serviceProvider, Stories.StoryMode.Gui);
+            await nextStep.RunStory(storyModel, _serviceProvider, storyModel.StoryMode);
         }
 
         /// <summary>

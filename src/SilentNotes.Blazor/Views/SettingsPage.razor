@@ -15,7 +15,7 @@
 @inject IFeedbackService FeedbackService
 @inject IFilePickerService FilePickerService
 @inject ICloudStorageClientFactory CloudStorageClientFactory
-@inject IStoryBoardService StoryBoardService
+@inject ISynchronizationService SynchronizationService
 @inject IJSRuntime JSRuntime
 @inject INavigationService Navigation
 
@@ -272,7 +272,7 @@
 
 	protected override void OnInitialized()
 	{
-		ViewModel = new SettingsViewModel(SettingsService, LanguageService, EnvironmentService, StoryBoardService, ThemeService, FeedbackService, CloudStorageClientFactory, FilePickerService);
+		ViewModel = new SettingsViewModel(SettingsService, LanguageService, EnvironmentService, SynchronizationService, ThemeService, FeedbackService, CloudStorageClientFactory, FilePickerService);
 	}
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)

@@ -22,7 +22,7 @@ namespace SilentNotes.Platforms.Services
         }
 
         /// <inheritdoc/>
-        protected override string GetDirectoryPath()
+        public override string GetLocation()
         {
             return ApplicationData.Current.LocalFolder.Path;
         }

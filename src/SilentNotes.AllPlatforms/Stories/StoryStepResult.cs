@@ -94,5 +94,14 @@ namespace SilentNotes.Stories
         {
             get { return Error != null; }
         }
+
+        /// <summary>
+        /// Returns a value indicating whether any of <see cref="Error"/>, <see cref="Message"/>
+        /// or <see cref="Toast"/> are set.
+        /// </summary>
+        public bool HasFeedback
+        {
+            get { return HasError || HasMessage || HasToast; }
+        }
     }
 }

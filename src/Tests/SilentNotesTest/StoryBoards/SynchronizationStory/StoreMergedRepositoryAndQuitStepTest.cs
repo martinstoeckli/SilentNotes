@@ -20,6 +20,7 @@ namespace SilentNotesTest.Stories.SynchronizationStory
             repositoryModel.Revision = NoteRepositoryModel.NewestSupportedRevision;
             var model = new SynchronizationStoryModel
             {
+                StoryMode = StoryMode.Silent,
                 CloudRepository = repositoryModel
             };
 
@@ -38,7 +39,7 @@ namespace SilentNotesTest.Stories.SynchronizationStory
 
             // Run step
             var step = new StoreMergedRepositoryAndQuitStep();
-            var result = await step.RunStep(model, serviceCollection.BuildServiceProvider(), StoryMode.Silent);
+            var result = await step.RunStep(model, serviceCollection.BuildServiceProvider(), model.StoryMode);
 
             // repository is not stored to the local device
             repositoryStorageService.Verify(m => m.TrySaveRepository(It.IsAny<NoteRepositoryModel>()), Times.Never);
@@ -62,6 +63,7 @@ namespace SilentNotesTest.Stories.SynchronizationStory
             repositoryModelCloud.Notes.Add(new NoteModel());
             var model = new SynchronizationStoryModel
             {
+                StoryMode = StoryMode.Silent,
                 CloudRepository = repositoryModelCloud,
                 Credentials = credentialsFromSession,
             };
@@ -81,7 +83,7 @@ namespace SilentNotesTest.Stories.SynchronizationStory
 
             // Run step
             var step = new StoreMergedRepositoryAndQuitStep();
-            var result = await step.RunStep(model, serviceCollection.BuildServiceProvider(), StoryMode.Silent);
+            var result = await step.RunStep(model, serviceCollection.BuildServiceProvider(), model.StoryMode);
 
             // repository is stored to the local device
             repositoryStorageService.Verify(m => m.TrySaveRepository(It.IsAny<NoteRepositoryModel>()), Times.Once);

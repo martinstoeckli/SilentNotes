@@ -56,7 +56,7 @@ namespace SilentNotes.Services
             bool modelWasUpdated = false;
             try
             {
-                string xmlFilePath = Path.Combine(GetDirectoryPath(), Config.RepositoryFileName);
+                string xmlFilePath = Path.Combine(GetLocation(), Config.RepositoryFileName);
 
                 // A new repository is created only if it does not yet exist, we won't overwrite
                 // an invalid repository.
@@ -134,7 +134,7 @@ namespace SilentNotes.Services
         {
             try
             {
-                string xmlFilePath = Path.Combine(GetDirectoryPath(), Config.RepositoryFileName);
+                string xmlFilePath = Path.Combine(GetLocation(), Config.RepositoryFileName);
                 bool success = _xmlFileService.TrySerializeAndSave(xmlFilePath, repositoryModel);
                 if (success)
                     _cachedRepository = repositoryModel;
@@ -157,7 +157,7 @@ namespace SilentNotes.Services
         {
             try
             {
-                string xmlFilePath = Path.Combine(GetDirectoryPath(), Config.RepositoryFileName);
+                string xmlFilePath = Path.Combine(GetLocation(), Config.RepositoryFileName);
                 return File.ReadAllBytes(xmlFilePath);
             }
             catch (Exception)
@@ -170,7 +170,7 @@ namespace SilentNotes.Services
         /// Sub classes should override this method to change the directory, where the config is stored.
         /// </summary>
         /// <returns>The full directory path for storing the config.</returns>
-        protected abstract string GetDirectoryPath();
+        public abstract string GetLocation();
 
         private void AddWelcomeNote(NoteRepositoryModel repositoryModel)
         {

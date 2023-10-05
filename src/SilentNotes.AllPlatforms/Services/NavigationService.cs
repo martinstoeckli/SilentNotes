@@ -55,8 +55,9 @@ namespace SilentNotes.Services
             // maintains a history on its own. Instead we will update our own controllable history.
             // This allows to navigate to arbitrary history entries and prevents the Windows back
             // key to interfere with the navigation.
+            bool forceLoad = false;
             bool replaceWebviewHistory = true;
-            _navigationManager.NavigateTo(uri, false, replaceWebviewHistory);
+            _navigationManager.NavigateTo(uri, forceLoad, replaceWebviewHistory);
         }
 
         /// <inheritdoc/>
@@ -76,7 +77,7 @@ namespace SilentNotes.Services
         /// <inheritdoc/>
         public void NavigateHome()
         {
-            _browserHistoryService.Clear();
+            _browserHistoryService.ClearAllButHome();
             NavigateTo(Routes.NoteRepository);
         }
 
@@ -91,12 +92,14 @@ namespace SilentNotes.Services
         /// <inheritdoc/>
         private ValueTask LocationChangingHandler(LocationChangingContext context)
         {
-            // Inform current page before navigating to the next page
-            WeakReferenceMessenger.Default.Send<StoreUnsavedDataMessage>(new StoreUnsavedDataMessage());
-            WeakReferenceMessenger.Default.Send<ClosePageMessage>(new ClosePageMessage());
-
             // Update our own browser history
-            _browserHistoryService.UpdateHistoryOnNavigation(context.TargetLocation, _navigationManager.BaseUri);
+            NavigationDirection direction = _browserHistoryService.UpdateHistoryOnNavigation(context.TargetLocation, _navigationManager.BaseUri);
+
+            // Inform current page about being closed, when navigating to another page
+            WeakReferenceMessenger.Default.Send<StoreUnsavedDataMessage>(new StoreUnsavedDataMessage());
+            if ((direction == NavigationDirection.Next) || (direction == NavigationDirection.Back))
+                WeakReferenceMessenger.Default.Send<ClosePageMessage>(new ClosePageMessage());
+
             return ValueTask.CompletedTask;
         }
     }

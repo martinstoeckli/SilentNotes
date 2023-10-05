@@ -25,7 +25,7 @@ namespace SilentNotes.Platforms.Services
         }
 
         /// <inheritdoc/>
-        protected override string GetDirectoryPath()
+        public override string GetLocation()
         {
             return ContextCompat.GetNoBackupFilesDir(_appContext.Context).AbsolutePath;
         }

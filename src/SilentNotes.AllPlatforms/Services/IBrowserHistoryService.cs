@@ -31,16 +31,32 @@ namespace SilentNotes.Services
         /// decide itself whether this is a backwards or forwards navigation, or a refresh of the
         /// current page.</param>
         /// <param name="baseUri">The base Uri of the NavigationManager.</param>
-        void UpdateHistoryOnNavigation(string targetLocation, string baseUri);
+        /// <returns>The direction of the navigation.</returns>
+        NavigationDirection UpdateHistoryOnNavigation(string targetLocation, string baseUri);
 
         /// <summary>
-        /// Clears the whole history.
+        /// Clears the whole history, keeping only the first entry.
         /// </summary>
-        void Clear();
+        void ClearAllButHome();
 
         /// <summary>
         /// Removes/forgets the last entry of the history.
         /// </summary>
         void RemoveCurrent();
+    }
+
+    /// <summary>
+    /// Enumeration of possible directions when navigating.
+    /// </summary>
+    public enum NavigationDirection
+    {
+        /// <summary>Moved forward to a next page, adding to the history.</summary>
+        Next,
+
+        /// <summary>Moved backward to the previous page, making the history smaller.</summary>
+        Back,
+
+        /// <summary>Reloaded the current page, keeping the history.</summary>
+        Reload,
     }
 }

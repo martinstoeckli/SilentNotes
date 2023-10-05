@@ -17,7 +17,7 @@ namespace SilentNotes.ViewModels
     public class FirstTimeSyncViewModel : ViewModelBase
     {
         private readonly IServiceProvider _serviceProvider;
-        private readonly IStoryBoardService _storyBoardService;
+        private readonly ISynchronizationService _synchronizationService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FirstTimeSyncViewModel"/> class.
@@ -25,7 +25,7 @@ namespace SilentNotes.ViewModels
         public FirstTimeSyncViewModel(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
-            _storyBoardService = _serviceProvider.GetService<IStoryBoardService>();
+            _synchronizationService = _serviceProvider.GetService<ISynchronizationService>();
             ContinueCommand = new RelayCommand(Continue);
             CancelCommand = new RelayCommand(Cancel);
         }
@@ -37,9 +37,9 @@ namespace SilentNotes.ViewModels
 
         private async void Continue()
         {
-            SynchronizationStoryModel storyModel = _storyBoardService.SynchronizationStory;
+            SynchronizationStoryModel storyModel = _synchronizationService.CurrentStory;
             var nextStep = new ShowCloudStorageChoiceStep();
-            await nextStep.RunStory(storyModel, _serviceProvider, Stories.StoryMode.Gui);
+            await nextStep.RunStory(storyModel, _serviceProvider, storyModel.StoryMode);
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace SilentNotes.ViewModels
         private async void Cancel()
         {
             var nextStep = new StopAndShowRepositoryStep();
-            await nextStep.RunStory(_storyBoardService.SynchronizationStory, _serviceProvider, Stories.StoryMode.Gui);
+            await nextStep.RunStory(_synchronizationService.CurrentStory, _serviceProvider, _synchronizationService.CurrentStory.StoryMode);
         }
     }
 }

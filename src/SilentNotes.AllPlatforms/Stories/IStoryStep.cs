@@ -28,7 +28,7 @@ namespace SilentNotes.Stories
         /// the same instances for the whole story.</param>
         /// <param name="uiMode">Can be used to run in silent mode.</param>
         /// <returns>Task for async calling.</returns>
-        ValueTask RunStory(TModel model, IServiceProvider serviceProvider, StoryMode uiMode);
+        Task RunStory(TModel model, IServiceProvider serviceProvider, StoryMode uiMode);
 
         /// <summary>
         /// Runs this single step and returns its result.
@@ -39,6 +39,6 @@ namespace SilentNotes.Stories
         /// <param name="uiMode">Can be used to run in silent mode.</param>
         /// closing.</param>
         /// <returns>The result of the story step.</returns>
-        ValueTask<StoryStepResult<TModel>> RunStep(TModel model, IServiceProvider serviceProvider, StoryMode uiMode);
+        Task<StoryStepResult<TModel>> RunStep(TModel model, IServiceProvider serviceProvider, StoryMode uiMode);
     }
 }

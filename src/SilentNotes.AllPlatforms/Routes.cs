@@ -26,7 +26,7 @@ namespace SilentNotes
         public const string OpenSafe = "/opensafe";
         public const string RecycleBin = "/recyclebin";
         public const string Settings = "/settings";
-        public const string TransferCode = "/transfercode";
+        public const string TransferCodePrompt = "/transfercodeprompt";
         public const string TransferCodeHistory = "/transfercodehistory";
     }
 }

@@ -1,0 +1,78 @@
+﻿// Copyright © 2023 Martin Stoeckli.
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+using Android.App;
+using Android.Content;
+using CommunityToolkit.Mvvm.Messaging;
+using Java.Net;
+using SilentNotes.Platforms.Android;
+using SilentNotes.Platforms.Services;
+using SilentNotes.Services;
+
+namespace SilentNotes.Platforms
+{
+    /// <summary>
+    /// Handles application lifecycle events for the Android platform.
+    /// Possible events are listed here: https://learn.microsoft.com/en-us/dotnet/maui/fundamentals/app-lifecycle
+    /// </summary>
+    internal class ApplicationEventHandler : ApplicationEventHandlerBase
+    {
+        internal void OnCreate(Activity activity)
+        {
+            System.Diagnostics.Debug.WriteLine("*** ApplicationEventHandler.OnCreate() " + GetId(activity));
+
+            // Workaround: Android soft keyboard hides the lower part of the content
+            Microsoft.Maui.Controls.PlatformConfiguration.AndroidSpecific.Application.UseWindowSoftInputModeAdjust(
+                Microsoft.Maui.Controls.Application.Current.On<Microsoft.Maui.Controls.PlatformConfiguration.Android>(),
+                Microsoft.Maui.Controls.PlatformConfiguration.AndroidSpecific.WindowSoftInputModeAdjust.Resize);
+
+            AddHttpMethod();
+
+            // Inform services about the new main activity.
+            Ioc.Instance.GetService<IAppContextService>().Initialize(activity);
+        }
+
+        internal void OnResume(Activity activity)
+        {
+            System.Diagnostics.Debug.WriteLine("*** ApplicationEventHandler.OnResume() " + GetId(activity));
+        }
+
+        internal void OnPause(Activity activity)
+        {
+            System.Diagnostics.Debug.WriteLine("*** ApplicationEventHandler.OnPause() " + GetId(activity));
+            WeakReferenceMessenger.Default.Send<StoreUnsavedDataMessage>(new StoreUnsavedDataMessage());
+        }
+
+        internal void OnStop(Activity activity)
+        {
+            System.Diagnostics.Debug.WriteLine("*** ApplicationEventHandler.OnPause() " + GetId(activity));
+        }
+
+        internal void OnDestroy(Activity activity)
+        {
+            System.Diagnostics.Debug.WriteLine("*** ApplicationEventHandler.OnDestroy() " + GetId(activity));
+            WeakReferenceMessenger.Default.Send<ClosePageMessage>(new ClosePageMessage());
+            Ioc.Instance.GetService<IActivityResultAwaiter>().RedirectedOnDestroy();
+        }
+
+        internal void OnActivityResult(Activity activity, int requestCode, Result resultCode, Intent data)
+        {
+            Ioc.Instance.GetService<IActivityResultAwaiter>().RedirectedOnActivityResult(requestCode, resultCode, data);
+        }
+
+        private static string GetId(Activity activity)
+        {
+            if (activity is MainActivity mainActivity)
+                return mainActivity.Id.ToString();
+            return null;
+        }
+
+        private void AddHttpMethod()
+        {
+            //HttpClientExtension ext = new HttpClientExtension();
+            //ext.AddHttpMethodPropfind();
+        }
+    }
+}
