@@ -234,7 +234,7 @@ namespace SilentNotes.ViewModels
         /// Gets a value indicating whether the note is unlocked. An unlocked note is part of a safe
         /// and is decrypted.
         /// </summary>
-        private bool IsUnlocked
+        protected bool IsUnlocked
         {
             get { return IsInSafe && (UnlockedHtmlContent != null); }
         }
@@ -252,49 +252,6 @@ namespace SilentNotes.ViewModels
             byte[] lockedContent = _cryptor.Encrypt(binaryContent, safe.Key, encryptionAlgorithm, null);
             return CryptoUtils.BytesToBase64String(lockedContent);
         }
-
-        ///// <inheritdoc />
-        //public override void OnStoringUnsavedData()
-        //{
-        //    bool pinStateChanged = Model.IsPinned != _originalWasPinned;
-
-        //    if (Modified || pinStateChanged)
-        //    {
-        //        if (IsUnlocked)
-        //            Model.HtmlContent = Lock(_unlockedContent);
-        //        else
-        //            Model.HtmlContent = XmlUtils.SanitizeXmlString(_unlockedContent);
-
-        //        _repositoryService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepository);
-
-        //        if (pinStateChanged)
-        //        {
-        //            RepositionNoteBecausePinStateChanged(noteRepository);
-        //        }
-
-        //        _repositoryService.TrySaveRepository(noteRepository);
-        //        Modified = false;
-        //    }
-        //}
-
-        ///// <summary>
-        ///// Gets the command to go back to the note overview.
-        ///// </summary>
-        //public ICommand GoBackCommand { get; private set; }
-
-        ///// <inheritdoc/>
-        //private void GoBack()
-        //{
-        //    _navigationService.Navigate(new Navigation(
-        //        ControllerNames.NoteRepository, ControllerParameters.NoteId, Model.Id.ToString()));
-        //}
-
-        ///// <inheritdoc/>
-        //public override void OnGoBackPressed(out bool handled)
-        //{
-        //    handled = true;
-        //    GoBack();
-        //}
 
         /// <summary>
         /// Gets or sets a value indicating whether the the note is pinned.

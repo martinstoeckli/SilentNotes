@@ -39,9 +39,6 @@ public static class MauiProgram
                     .OnActivityResult((activity, requestCode, resultCode, data) => applicationEventHandler.OnActivityResult(activity, requestCode, resultCode, data)));
 #elif WINDOWS
                 events.AddWindows(windows => windows
-                    .OnLaunched((window, args) => applicationEventHandler.OnLaunched(window, args))
-                    .OnLaunching((window, args) => applicationEventHandler.OnLaunching(window, args))
-                    .OnActivated((window, args) => applicationEventHandler.OnActivated(window, args))
                     .OnClosed((window, args) => applicationEventHandler.OnClosed(window, args)));
 #endif
             });
@@ -71,7 +68,7 @@ public static class MauiProgram
         return mauiApp;
 	}
 
-    private static void RegisterSharedServices(IServiceCollection services)
+    internal static void RegisterSharedServices(IServiceCollection services)
     {
         services.AddSingleton<ISvgIconService>((serviceProvider) => new SvgIconService());
         services.AddSingleton<ILanguageService>((serviceProvider) => new LanguageService(new LanguageServiceResourceReader(), "SilentNotes", new LanguageCodeService().GetSystemLanguageCode()));
@@ -103,7 +100,7 @@ public static class MauiProgram
 
 #if WINDOWS
 
-    private static void RegisterPlatformServices(IServiceCollection services)
+    internal static void RegisterPlatformServices(IServiceCollection services)
     {
         services.AddSingleton<ICryptoRandomService>((serviceProvider) => new CryptoRandomService());
         services.AddSingleton<IDataProtectionService>((serviceProvider) => new DataProtectionService());
@@ -123,7 +120,7 @@ public static class MauiProgram
 
 #elif ANDROID
 
-    private static void RegisterPlatformServices(IServiceCollection services)
+    internal static void RegisterPlatformServices(IServiceCollection services)
     {
         services.AddSingleton<IAppContextService>((serviceProvider) => new AppContextService());
         services.AddSingleton<ICryptoRandomService>((serviceProvider) => new CryptoRandomService());

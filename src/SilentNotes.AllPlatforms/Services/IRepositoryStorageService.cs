@@ -14,8 +14,7 @@ namespace SilentNotes.Services
     {
         /// <summary>
         /// Loads the note repository from the local storage, or gets the already loaded cached
-        /// repository. Always check whether the repository exists with <see cref="RepositoryExists"/>
-        /// before calling this method.
+        /// repository.
         /// </summary>
         /// <param name="repositoryModel">Retrieves the loaded repository, of null ini case of an error.</param>
         /// <returns>Returns the result whether the repository could be loaded.</returns>

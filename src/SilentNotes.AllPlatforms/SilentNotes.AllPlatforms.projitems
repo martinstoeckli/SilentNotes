@@ -42,13 +42,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)Models\ThemeMode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\WallpaperModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Routes.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\AutoSynchronizationServiceBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\BrowserHistoryService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\CloudStorageClientFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DummyFeedbackService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DummyNavigationService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\FeedbackService.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\IAutoSynchronizationService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\IBrowserHistoryService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\IClipboardService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ICloudStorageClientFactory.cs" />

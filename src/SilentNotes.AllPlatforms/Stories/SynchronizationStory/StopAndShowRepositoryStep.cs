@@ -21,7 +21,7 @@ namespace SilentNotes.Stories.SynchronizationStory
         public override Task<StoryStepResult<SynchronizationStoryModel>> RunStep(SynchronizationStoryModel model, IServiceProvider serviceProvider, StoryMode uiMode)
         {
             var synchronizationService = serviceProvider.GetService<ISynchronizationService>();
-            synchronizationService.FinishedSynchronization(serviceProvider);
+            synchronizationService.FinishedManualSynchronization(serviceProvider);
 
             if (uiMode.HasFlag(StoryMode.Dialogs))
             {

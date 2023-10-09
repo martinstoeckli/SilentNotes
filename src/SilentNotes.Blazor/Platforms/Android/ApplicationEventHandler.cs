@@ -7,7 +7,6 @@ using Android.App;
 using Android.Content;
 using CommunityToolkit.Mvvm.Messaging;
 using Java.Net;
-using SilentNotes.Platforms.Android;
 using SilentNotes.Platforms.Services;
 using SilentNotes.Services;
 
@@ -23,12 +22,11 @@ namespace SilentNotes.Platforms
         {
             System.Diagnostics.Debug.WriteLine("*** ApplicationEventHandler.OnCreate() " + GetId(activity));
 
-            // Workaround: Android soft keyboard hides the lower part of the content
+            // Workaround: Android soft keyboard hides the lower part of the content,
+            // see https://learn.microsoft.com/en-us/dotnet/maui/android/platform-specifics/soft-keyboard-input-mode
             Microsoft.Maui.Controls.PlatformConfiguration.AndroidSpecific.Application.UseWindowSoftInputModeAdjust(
                 Microsoft.Maui.Controls.Application.Current.On<Microsoft.Maui.Controls.PlatformConfiguration.Android>(),
                 Microsoft.Maui.Controls.PlatformConfiguration.AndroidSpecific.WindowSoftInputModeAdjust.Resize);
-
-            AddHttpMethod();
 
             // Inform services about the new main activity.
             Ioc.Instance.GetService<IAppContextService>().Initialize(activity);
@@ -37,6 +35,8 @@ namespace SilentNotes.Platforms
         internal void OnResume(Activity activity)
         {
             System.Diagnostics.Debug.WriteLine("*** ApplicationEventHandler.OnResume() " + GetId(activity));
+            var synchronizationService = Ioc.Instance.GetService<ISynchronizationService>();
+            synchronizationService.StopAutoSynchronization(Ioc.Instance);
         }
 
         internal void OnPause(Activity activity)
@@ -48,6 +48,8 @@ namespace SilentNotes.Platforms
         internal void OnStop(Activity activity)
         {
             System.Diagnostics.Debug.WriteLine("*** ApplicationEventHandler.OnPause() " + GetId(activity));
+            var synchronizationService = Ioc.Instance.GetService<ISynchronizationService>();
+            synchronizationService.AutoSynchronizeAtShutdown(Ioc.Instance);
         }
 
         internal void OnDestroy(Activity activity)
@@ -67,12 +69,6 @@ namespace SilentNotes.Platforms
             if (activity is MainActivity mainActivity)
                 return mainActivity.Id.ToString();
             return null;
-        }
-
-        private void AddHttpMethod()
-        {
-            //HttpClientExtension ext = new HttpClientExtension();
-            //ext.AddHttpMethodPropfind();
         }
     }
 }

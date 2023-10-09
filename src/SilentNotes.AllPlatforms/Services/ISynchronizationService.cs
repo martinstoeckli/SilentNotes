@@ -20,12 +20,24 @@ namespace SilentNotes.Services
         /// <summary>
         /// Synchronize manually with displaying the UI if necessary. The story is potentially
         /// interrupted with UI dialogs or with waiting for OAuth responses, therefore its end
-        /// cannot be awaited. Since this call is triggered by the user, the <see cref="LastSynchronizationFingerprint"/>
-        /// should not preventing the execution.
+        /// cannot be awaited.
         /// </summary>
         /// <param name="serviceProvider">The service provider.</param>
         /// <returns>A task which can be called async.</returns>
         Task SynchronizeManually(IServiceProvider serviceProvider);
+
+        /// <summary>
+        /// Synchronizes manually, starting with the cloud storage choice dialog. 
+        /// </summary>
+        /// <param name="serviceProvider">The service provider.</param>
+        /// <returns>A task which can be called async.</returns>
+        Task SynchronizeManuallyChangeCloudStorage(IServiceProvider serviceProvider);
+
+        /// <summary>
+        /// Should be called when a manually triggered sanchronization ends.
+        /// <param name="serviceProvider">The service provider.</param>
+        /// </summary>
+        void FinishedManualSynchronization(IServiceProvider serviceProvider);
 
         /// <summary>
         /// Synchronize at applications startup time in the background. After a successful
@@ -33,30 +45,23 @@ namespace SilentNotes.Services
         /// </summary>
         /// <param name="serviceProvider">The service provider.</param>
         /// <returns>A task which can be called async.</returns>
-        Task SynchronizeAtStartup(IServiceProvider serviceProvider);
+        Task AutoSynchronizeAtStartup(IServiceProvider serviceProvider);
 
         /// <summary>
         /// Synchronize at applications shutdown time.
         /// </summary>
         /// <param name="serviceProvider">The service provider.</param>
         /// <returns>A task which can be called async.</returns>
-        Task SynchronizeAtShutdown(IServiceProvider serviceProvider);
+        Task AutoSynchronizeAtShutdown(IServiceProvider serviceProvider);
 
         /// <summary>
-        /// Synchronizes manually, starting with the cloud storage choice dialog. 
+        /// Stops a running background synchronization (started at startup or shutdown).
         /// </summary>
         /// <param name="serviceProvider">The service provider.</param>
-        /// <returns>A task which can be called async.</returns>
-        Task ChangeCloudStorage(IServiceProvider serviceProvider);
+        void StopAutoSynchronization(IServiceProvider serviceProvider);
 
         /// <summary>
-        /// Stops a synchronization and cleans up the state of the service.
-        /// <param name="serviceProvider">The service provider.</param>
-        /// </summary>
-        void FinishedSynchronization(IServiceProvider serviceProvider);
-
-        /// <summary>
-        /// Gets the active synchronization story, or null if no story is active.
+        /// Gets the active manual synchronization story, or null if no story is active.
         /// </summary>
         SynchronizationStoryModel CurrentStory { get; }
     }

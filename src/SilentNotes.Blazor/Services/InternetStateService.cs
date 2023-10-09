@@ -22,10 +22,8 @@ namespace SilentNotes.Services
         /// <inheritdoc/>
         public bool IsInternetCostFree()
         {
-            var profiles = Connectivity.Current.ConnectionProfiles;
-            if (profiles.Contains(ConnectionProfile.Cellular))
-                return profiles.Contains(ConnectionProfile.WiFi) || profiles.Contains(ConnectionProfile.Ethernet);
-            return true;
+            return Connectivity.Current.ConnectionProfiles.Any(item =>
+                (item == ConnectionProfile.WiFi) || (item == ConnectionProfile.Ethernet));
         }
     }
 }

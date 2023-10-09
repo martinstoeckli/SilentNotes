@@ -25,7 +25,7 @@ namespace SilentNotes.ViewModels
     public class NoteViewModel : NoteViewModelReadOnly
     {
         private static TimeAgo _timeAgo;
-        //private readonly IRepositoryStorageService _repositoryService;
+        private readonly IRepositoryStorageService _repositoryService;
         private readonly IFeedbackService _feedbackService;
         private readonly IEnvironmentService _environmentService;
         private readonly INativeBrowserService _nativeBrowserService;
@@ -41,6 +41,7 @@ namespace SilentNotes.ViewModels
             SearchableHtmlConverter searchableTextConverter,
             ILanguageService languageService,
             IThemeService themeService,
+            IRepositoryStorageService repositoryService,
             ISettingsService settingsService,
             IFeedbackService feedbackService,
             IEnvironmentService environmentService,
@@ -52,6 +53,7 @@ namespace SilentNotes.ViewModels
         {
             //Model = model;
             Language = languageService;
+            _repositoryService = repositoryService;
             _feedbackService = feedbackService;
             _environmentService = environmentService;
             _nativeBrowserService = nativeBrowserService;
@@ -242,96 +244,75 @@ namespace SilentNotes.ViewModels
             get { return _settingsService.LoadSettingsOrDefault().NoteColorsHex; }
         }
 
-        ///// <inheritdoc />
-        //public override void OnStoringUnsavedData()
-        //{
-        //    bool pinStateChanged = Model.IsPinned != _originalWasPinned;
+        /// <inheritdoc />
+        public override void OnStoringUnsavedData()
+        {
+            bool pinStateChanged = Model.IsPinned != _originalWasPinned;
 
-        //    if (Modified || pinStateChanged)
-        //    {
-        //        if (IsUnlocked)
-        //            Model.HtmlContent = Lock(_unlockedContent);
-        //        else
-        //            Model.HtmlContent = XmlUtils.SanitizeXmlString(_unlockedContent);
+            if (Modified || pinStateChanged)
+            {
+                if (IsUnlocked)
+                    Model.HtmlContent = Lock(_unlockedContent);
+                else
+                    Model.HtmlContent = XmlUtils.SanitizeXmlString(_unlockedContent);
 
-        //        _repositoryService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepository);
+                _repositoryService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepository);
 
-        //        if (pinStateChanged)
-        //        {
-        //            RepositionNoteBecausePinStateChanged(noteRepository);
-        //        }
+                if (pinStateChanged)
+                {
+                    RepositionNoteBecausePinStateChanged(noteRepository);
+                }
 
-        //        _repositoryService.TrySaveRepository(noteRepository);
-        //        Modified = false;
-        //    }
-        //}
+                _repositoryService.TrySaveRepository(noteRepository);
+                Modified = false;
+            }
+        }
 
-        ///// <summary>
-        ///// Handles moving of the note based on <see cref="IsPinned"/> property.
-        ///// </summary>
-        ///// <param name="repository"></param>
-        //private void RepositionNoteBecausePinStateChanged(NoteRepositoryModel repository)
-        //{
-        //    var originalPosition = repository.Notes.IndexOf(Model);
-        //    Model.RefreshModifiedAt();
+        /// <summary>
+        /// Handles moving of the note based on <see cref="IsPinned"/> property.
+        /// </summary>
+        /// <param name="repository"></param>
+        private void RepositionNoteBecausePinStateChanged(NoteRepositoryModel repository)
+        {
+            var originalPosition = repository.Notes.IndexOf(Model);
+            Model.RefreshModifiedAt();
 
-        //    if (Model.IsPinned)
-        //    {
-        //        // the note got pinned, move it to the top
-        //        repository.Notes.Remove(Model);
-        //        repository.Notes.Insert(0, Model);
-        //    }
-        //    else
-        //    {
-        //        // the note got unpinned, move it to the end of pinned notes
-        //        int firstUnpinnedNoteIndex = repository.Notes.IndexOf(
-        //             repository.Notes.FirstOrDefault(x => x.IsPinned == false && x.Id != Model.Id));
+            if (Model.IsPinned)
+            {
+                // the note got pinned, move it to the top
+                repository.Notes.Remove(Model);
+                repository.Notes.Insert(0, Model);
+            }
+            else
+            {
+                // the note got unpinned, move it to the end of pinned notes
+                int firstUnpinnedNoteIndex = repository.Notes.IndexOf(
+                     repository.Notes.FirstOrDefault(x => x.IsPinned == false && x.Id != Model.Id));
 
-        //        if (firstUnpinnedNoteIndex == -1)
-        //        {
-        //            // there's no unpinned note, move to last position
-        //            repository.Notes.Remove(Model);
-        //            repository.Notes.Add(Model);
-        //        }
-        //        else
-        //        {
-        //            firstUnpinnedNoteIndex--; // needs to account for removing the current note
+                if (firstUnpinnedNoteIndex == -1)
+                {
+                    // there's no unpinned note, move to last position
+                    repository.Notes.Remove(Model);
+                    repository.Notes.Add(Model);
+                }
+                else
+                {
+                    firstUnpinnedNoteIndex--; // needs to account for removing the current note
 
-        //            repository.Notes.Remove(Model);
-        //            repository.Notes.Insert(firstUnpinnedNoteIndex, Model);
-        //        }
-        //    }
+                    repository.Notes.Remove(Model);
+                    repository.Notes.Insert(firstUnpinnedNoteIndex, Model);
+                }
+            }
 
-        //    if (originalPosition != repository.Notes.IndexOf(Model))
-        //    {
-        //        repository.RefreshOrderModifiedAt();
-        //    }
-        //}
-
-        ///// <summary>
-        ///// Gets the command to go back to the note overview.
-        ///// </summary>
-        //[VueDataBinding(VueBindingMode.Command)]
-        //public ICommand GoBackCommand { get; private set; }
-
-        ///// <inheritdoc/>
-        //private void GoBack()
-        //{
-        //    _navigationService.Navigate(new Navigation(
-        //        ControllerNames.NoteRepository, ControllerParameters.NoteId, Model.Id.ToString()));
-        //}
-
-        ///// <inheritdoc/>
-        //public override void OnGoBackPressed(out bool handled)
-        //{
-        //    handled = true;
-        //    GoBack();
-        //}
+            if (originalPosition != repository.Notes.IndexOf(Model))
+            {
+                repository.RefreshOrderModifiedAt();
+            }
+        }
 
         ///// <summary>
         ///// Gets the command which can overwrite the local note with the note from the online-storage.
         ///// </summary>
-        //[VueDataBinding(VueBindingMode.Command)]
         //public ICommand PullNoteFromOnlineStorageCommand { get; private set; }
 
         //private async void PullNoteFromOnlineStorage()
@@ -362,7 +343,6 @@ namespace SilentNotes.ViewModels
         ///// <summary>
         ///// Gets the command which can overwrite the note of the online-storage with the locale note.
         ///// </summary>
-        //[VueDataBinding(VueBindingMode.Command)]
         //public ICommand PushNoteToOnlineStorageCommand { get; private set; }
 
         //private async void PushNoteToOnlineStorage()

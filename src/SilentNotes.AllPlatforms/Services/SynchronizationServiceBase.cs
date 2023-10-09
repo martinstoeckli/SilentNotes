@@ -3,6 +3,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using System.Diagnostics;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.DependencyInjection;
 using SilentNotes.Models;
@@ -15,7 +16,7 @@ namespace SilentNotes.Services
     /// <summary>
     /// Base class of all implementations of the <see cref="ISynchronizationService"/> interface.
     /// </summary>
-    internal class SynchronizationServiceBase : ISynchronizationService
+    internal abstract class SynchronizationServiceBase : ISynchronizationService
     {
         /// <inheritdoc/>
         public async Task SynchronizeManually(IServiceProvider serviceProvider)
@@ -25,7 +26,7 @@ namespace SilentNotes.Services
                 return;
 
             // Ignore last fingerprint optimization, because it is triggered by the user
-            LastSynchronizationFingerprint = null;
+            LastSynchronizationFingerprint = 0;
             CurrentStory = new SynchronizationStoryModel
             {
                 StoryMode = StoryMode.BusyIndicator | StoryMode.Toasts | StoryMode.Messages | StoryMode.Dialogs,
@@ -39,10 +40,10 @@ namespace SilentNotes.Services
         }
 
         /// <inheritdoc/>
-        public async Task ChangeCloudStorage(IServiceProvider serviceProvider)
+        public async Task SynchronizeManuallyChangeCloudStorage(IServiceProvider serviceProvider)
         {
             // Always start a new story, ignore last fingerprint, because it is triggered by the user
-            LastSynchronizationFingerprint = null;
+            LastSynchronizationFingerprint = 0;
             CurrentStory = new SynchronizationStoryModel
             {
                 StoryMode = StoryMode.BusyIndicator | StoryMode.Toasts | StoryMode.Messages | StoryMode.Dialogs,
@@ -53,59 +54,7 @@ namespace SilentNotes.Services
         }
 
         /// <inheritdoc/>
-        public virtual async Task SynchronizeAtStartup(IServiceProvider serviceProvider)
-        {
-            bool isAutoSynchronizationRunning = (CurrentStory != null) && (!CurrentStory.StoryMode.HasFlag(StoryMode.Dialogs));
-            if (isAutoSynchronizationRunning)
-                return;
-
-            ILanguageService languageService = serviceProvider.GetService<ILanguageService>();
-            ISettingsService settingsService = serviceProvider.GetService<ISettingsService>();
-            IInternetStateService internetStateService = serviceProvider.GetService<IInternetStateService>();
-            IRepositoryStorageService repositoryStorageService = serviceProvider.GetService<IRepositoryStorageService>();
-            ICloudStorageClientFactory cloudStorageFactory = serviceProvider.GetService<ICloudStorageClientFactory>();
-            ICryptoRandomService cryptoRandomService = serviceProvider.GetService<ICryptoRandomService>();
-            INoteRepositoryUpdater noteRepositoryUpdater = serviceProvider.GetService<INoteRepositoryUpdater>();
-
-            // Check whether the synchronization should be done at all
-            if (repositoryStorageService.LoadRepositoryOrDefault(out NoteRepositoryModel localRepository) != RepositoryStorageLoadResult.SuccessfullyLoaded)
-                return;
-            if (!ShouldSynchronize(internetStateService, settingsService))
-                return;
-
-            // Do the synchronization with the cloud storage in a background thread
-            long oldFingerprint = localRepository.GetModificationFingerprint();
-            var stepResult = await Task.Run(async () =>
-            {
-                return await RunSilent(settingsService, languageService, cloudStorageFactory, cryptoRandomService, repositoryStorageService, noteRepositoryUpdater);
-            }).ConfigureAwait(true); // Come back to the UI thread
-
-            // Memorize fingerprint of the synchronized respository
-            repositoryStorageService.LoadRepositoryOrDefault(out localRepository);
-            long newFingerprint = localRepository.GetModificationFingerprint();
-            LastSynchronizationFingerprint = newFingerprint;
-
-            if (stepResult.HasFeedback)
-            {
-                await new IsCloudServiceSetStep().ShowFeedback(stepResult, StoryMode.Toasts | StoryMode.Messages, serviceProvider);
-            }
-
-            // todo:
-            // Reload active page, but only if the repository differs
-            //if (oldFingerprint != newFingerprint)
-            //{
-                WeakReferenceMessenger.Default.Send<ReloadAfterSyncMessage>();
-            //}
-        }
-
-        /// <inheritdoc/>
-        public virtual Task SynchronizeAtShutdown(IServiceProvider serviceProvider)
-        {
-            return Task.CompletedTask;
-        }
-
-        /// <inheritdoc/>
-        public void FinishedSynchronization(IServiceProvider serviceProvider)
+        public void FinishedManualSynchronization(IServiceProvider serviceProvider)
         {
             if (CurrentStory == null)
                 return;
@@ -123,7 +72,73 @@ namespace SilentNotes.Services
         }
 
         /// <inheritdoc/>
+        public virtual async Task AutoSynchronizeAtStartup(IServiceProvider serviceProvider)
+        {
+            System.Diagnostics.Debug.WriteLine("*** SynchronizationService.SynchronizeAtStartup()");
+
+            IsBackgroundSynchronizationRunning = true;
+            try
+            {
+                ILanguageService languageService = serviceProvider.GetService<ILanguageService>();
+                ISettingsService settingsService = serviceProvider.GetService<ISettingsService>();
+                IInternetStateService internetStateService = serviceProvider.GetService<IInternetStateService>();
+                IRepositoryStorageService repositoryStorageService = serviceProvider.GetService<IRepositoryStorageService>();
+                ICloudStorageClientFactory cloudStorageFactory = serviceProvider.GetService<ICloudStorageClientFactory>();
+                ICryptoRandomService cryptoRandomService = serviceProvider.GetService<ICryptoRandomService>();
+                INoteRepositoryUpdater noteRepositoryUpdater = serviceProvider.GetService<INoteRepositoryUpdater>();
+
+                // Check whether the synchronization should be done at all
+                if (repositoryStorageService.LoadRepositoryOrDefault(out NoteRepositoryModel localRepository) != RepositoryStorageLoadResult.SuccessfullyLoaded)
+                    return;
+                if (!ShouldSynchronize(internetStateService, settingsService))
+                    return;
+
+                System.Diagnostics.Debug.WriteLine("*** SynchronizationService.SynchronizeAtStartup() start");
+
+                // Do the synchronization with the cloud storage in a background thread
+                long oldFingerprint = localRepository.GetModificationFingerprint();
+                var stepResult = await Task.Run(async () =>
+                {
+                    return await RunSilent(settingsService, languageService, cloudStorageFactory, cryptoRandomService, repositoryStorageService, noteRepositoryUpdater);
+                }).ConfigureAwait(true); // Come back to the UI thread
+
+                // Memorize fingerprint of the synchronized respository
+                repositoryStorageService.LoadRepositoryOrDefault(out localRepository);
+                long newFingerprint = localRepository.GetModificationFingerprint();
+                LastSynchronizationFingerprint = newFingerprint;
+
+                if (stepResult.HasFeedback)
+                {
+                    await new IsCloudServiceSetStep().ShowFeedback(stepResult, StoryMode.Toasts | StoryMode.Messages, serviceProvider);
+                }
+
+                // Reload active page, but only if the repository differs
+                if (oldFingerprint != newFingerprint)
+                {
+                    WeakReferenceMessenger.Default.Send<ReloadAfterSyncMessage>();
+                }
+                System.Diagnostics.Debug.WriteLine("*** SynchronizationService.SynchronizeAtStartup() end");
+            }
+            finally
+            {
+                IsBackgroundSynchronizationRunning = false;
+            }
+        }
+
+        /// <inheritdoc/>
+        public abstract Task AutoSynchronizeAtShutdown(IServiceProvider serviceProvider);
+
+        /// <inheritdoc/>
+        public abstract void StopAutoSynchronization(IServiceProvider serviceProvider);
+
+        /// <inheritdoc/>
         public SynchronizationStoryModel CurrentStory { get; private set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether a synchronization is running, which was started
+        /// automatically at the start or the end of the application.
+        /// </summary>
+        protected bool IsBackgroundSynchronizationRunning { get; set; }
 
         /// <summary>
         /// Gets or sets a fingerprint of the last synchronization, which allows to detect whether
@@ -131,7 +146,7 @@ namespace SilentNotes.Services
         /// updated/overwritten when the user does a manual synchronization and used to determine
         /// whether a synchronization at shutdown is necessary at all.
         /// </summary>
-        protected long? LastSynchronizationFingerprint { get; set; }
+        protected long LastSynchronizationFingerprint { get; set; }
 
         /// <summary>
         /// Checks whether the synchronization should and can be done or not.

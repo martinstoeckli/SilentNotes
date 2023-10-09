@@ -12,7 +12,7 @@ namespace SilentNotes
     /// <summary>
     /// Global Ioc service provider.
     /// <example><code>
-    /// var myService = Ioc.Instance.GetService<IMyService>();
+    /// var myService = Ioc.Instance.GetService&lt;IMyService&gt;();
     /// </code></example>
     /// </summary>
     internal class Ioc : IServiceProvider

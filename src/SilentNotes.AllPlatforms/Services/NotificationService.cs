@@ -73,7 +73,7 @@ namespace SilentNotes.Services
 
         /// <summary>
         /// Automatically adds notification triggers to the settings. This allows to add the
-        /// trigger for the <see cref="TransferCodeNotification"/>, even if the transfercode was
+        /// trigger for the <see cref="TransferCodeNotificationId"/>, even if the transfercode was
         /// created before notifications where available.
         /// </summary>
         /// <param name="settings">The currently loaded settings.</param>

@@ -14,7 +14,7 @@ using VanillaCloudStorageClient;
 namespace SilentNotes.Stories.SynchronizationStory
 {
     /// <summary>
-    /// This step is an end point of the <see cref="SynchronizationStoryBoard"/>. It keeps the
+    /// This step is an end point of the <see cref="SynchronizationStory"/>. It keeps the
     /// cloud repository and stores it to the local device.
     /// </summary>
     internal class StoreCloudRepositoryToDeviceAndQuitStep : SynchronizationStoryStepBase

@@ -105,7 +105,7 @@ namespace SilentNotes.ViewModels
         }
 
         /// <summary>
-        /// Gets or sets the <see cref="NoteMaxHeight"/> expressed for the -4...+4 slider.
+        /// Gets or sets the <see cref="SettingsModel.NoteMaxHeightScale"/> expressed for the -4...+4 slider.
         /// </summary>
         public int NoteMaxHeightStep
         {
@@ -399,7 +399,7 @@ namespace SilentNotes.ViewModels
 
         private async void ChangeCloudSettings()
         {
-            await _synchronizationService.ChangeCloudStorage(Ioc.Instance);
+            await _synchronizationService.SynchronizeManuallyChangeCloudStorage(Ioc.Instance);
         }
 
         /// <summary>

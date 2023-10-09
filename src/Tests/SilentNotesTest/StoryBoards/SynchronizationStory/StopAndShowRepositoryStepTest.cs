@@ -26,7 +26,7 @@ namespace SilentNotesTest.Stories.SynchronizationStory
             // Story does not continue
             Assert.IsNull(res.NextStep);
             navigationService.Verify(m => m.NavigateHome(), Times.Once);
-            synchronizationService.Verify(m => m.FinishedSynchronization(It.IsAny<IServiceProvider>()), Times.Once);
+            synchronizationService.Verify(m => m.FinishedManualSynchronization(It.IsAny<IServiceProvider>()), Times.Once);
         }
 
         [Test]
@@ -45,7 +45,7 @@ namespace SilentNotesTest.Stories.SynchronizationStory
             // Story does not continue
             Assert.IsNull(res.NextStep);
             navigationService.Verify(m => m.NavigateHome(), Times.Never);
-            synchronizationService.Verify(m => m.FinishedSynchronization(It.IsAny<IServiceProvider>()), Times.Once);
+            synchronizationService.Verify(m => m.FinishedManualSynchronization(It.IsAny<IServiceProvider>()), Times.Once);
         }
     }
 }

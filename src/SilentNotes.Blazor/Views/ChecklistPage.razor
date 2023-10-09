@@ -278,6 +278,7 @@ div.dark .detail-view.checklist .ProseMirror p::after { content: @(IconService.L
 			null,
 			LanguageService,
 			ThemeService,
+			RepositoryStorageService,
 			SettingsService,
 			FeedbackService,
 			EnvironmentService,
@@ -293,8 +294,6 @@ div.dark .detail-view.checklist .ProseMirror p::after { content: @(IconService.L
 			// NavigationService.NavigateTo( ViewModel.Route, HistoryModification.ReplaceLast);
 			// return;
 		}
-
-		ViewModel.PropertyChanged += PropertyChangedHandler;
 	}
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -334,8 +333,6 @@ div.dark .detail-view.checklist .ProseMirror p::after { content: @(IconService.L
 	protected override async ValueTask OnClosingPageAsync()
 	{
 		await base.OnClosingPageAsync();
-		if (ViewModel != null)
-			ViewModel.PropertyChanged -= PropertyChangedHandler;
 		if (_jsModule != null)
 			await _jsModule.DisposeAsync();
 	}
@@ -347,6 +344,13 @@ div.dark .detail-view.checklist .ProseMirror p::after { content: @(IconService.L
 	/// </summary>
 	[Parameter]
 	public string NoteId { get; set; } = default!;
+
+	/// <inheritdoc/>
+	protected override void OnStoringUnsavedData()
+	{
+		base.OnStoringUnsavedData();
+		ViewModel.OnStoringUnsavedData();
+	}
 
 	/// <inheritdoc/>
 	protected override bool OnCloseMenuOrDialog()
@@ -502,11 +506,5 @@ div.dark .detail-view.checklist .ProseMirror p::after { content: @(IconService.L
 		// initialization steps are completed, so that they can never damage the note content.
 		if (_allowNoteContentChanges)
 			ViewModel.UnlockedHtmlContent = content;
-	}
-
-	private void PropertyChangedHandler(object sender, PropertyChangedEventArgs e)
-	{
-		if (e.PropertyName == "page")
-			StateHasChanged();
 	}
 }

@@ -18,21 +18,23 @@ namespace SilentNotes
         /// </summary>
         public ApplicationEventHandlerBase()
         {
-            WeakReferenceMessenger.Default.Register<ApplicationReady>(
-                this, async (recipient, message) => await OnApplicationReady());
+            WeakReferenceMessenger.Default.Register<MainLayoutReady>(
+                this, async (recipient, message) => await OnMainLayoutReady());
         }
 
         /// <summary>
         /// Is called when the first rendering of the MainLayout has finished.
+        /// At this moment the services are available form IOC, even if they are scoped services.
         /// </summary>
         /// <returns>Task for async calls.</returns>
-        protected virtual async Task OnApplicationReady()
+        protected virtual async Task OnMainLayoutReady()
         {
             INotificationService notificationService = Ioc.Instance.GetService<INotificationService>();
             await notificationService.ShowNextNotification();
 
+            // Do not await the synchronization, so it runs in the background.
             var synchronizationService = Ioc.Instance.GetService<ISynchronizationService>();
-            synchronizationService.SynchronizeAtStartup(Ioc.Instance);
+            _ = synchronizationService.AutoSynchronizeAtStartup(Ioc.Instance);
         }
     }
 }
