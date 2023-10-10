@@ -58,17 +58,11 @@ namespace SilentNotes.Services
         {
             if (CurrentStory == null)
                 return;
+            CurrentStory = null;
 
             var repositoryStorageService = serviceProvider.GetService<IRepositoryStorageService>();
             if (repositoryStorageService.LoadRepositoryOrDefault(out NoteRepositoryModel repositoryModel) == RepositoryStorageLoadResult.SuccessfullyLoaded)
                 LastSynchronizationFingerprint = repositoryModel.GetModificationFingerprint();
-
-            if (CurrentStory.StoryMode.HasFlag(StoryMode.BusyIndicator))
-            {
-                var feedbackService = serviceProvider.GetService<IFeedbackService>();
-                feedbackService.SetBusyIndicatorVisible(false, true);
-            }
-            CurrentStory = null;
         }
 
         /// <inheritdoc/>
@@ -103,20 +97,20 @@ namespace SilentNotes.Services
                 }).ConfigureAwait(true); // Come back to the UI thread
 
                 // Memorize fingerprint of the synchronized respository
-                repositoryStorageService.LoadRepositoryOrDefault(out localRepository);
-                long newFingerprint = localRepository.GetModificationFingerprint();
-                LastSynchronizationFingerprint = newFingerprint;
-
-                if (stepResult.HasFeedback)
+                if (stepResult != null)
                 {
-                    await new IsCloudServiceSetStep().ShowFeedback(stepResult, StoryMode.Toasts | StoryMode.Messages, serviceProvider);
+                    repositoryStorageService.LoadRepositoryOrDefault(out localRepository);
+                    long newFingerprint = localRepository.GetModificationFingerprint();
+                    LastSynchronizationFingerprint = newFingerprint;
+
+                    if (stepResult.HasFeedback)
+                        await new IsCloudServiceSetStep().ShowFeedback(stepResult, StoryMode.Toasts | StoryMode.Messages, serviceProvider);
+
+                    // Reload active page, but only if the repository differs
+                    if (oldFingerprint != newFingerprint)
+                        WeakReferenceMessenger.Default.Send<ReloadAfterSyncMessage>();
                 }
 
-                // Reload active page, but only if the repository differs
-                if (oldFingerprint != newFingerprint)
-                {
-                    WeakReferenceMessenger.Default.Send<ReloadAfterSyncMessage>();
-                }
                 System.Diagnostics.Debug.WriteLine("*** SynchronizationService.SynchronizeAtStartup() end");
             }
             finally

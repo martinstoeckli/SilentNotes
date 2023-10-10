@@ -9,6 +9,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using Java.Net;
 using SilentNotes.Platforms.Services;
 using SilentNotes.Services;
+using SilentNotes.Stories.SynchronizationStory;
 
 namespace SilentNotes.Platforms
 {
@@ -37,6 +38,12 @@ namespace SilentNotes.Platforms
             System.Diagnostics.Debug.WriteLine("*** ApplicationEventHandler.OnResume() " + GetId(activity));
             var synchronizationService = Ioc.Instance.GetService<ISynchronizationService>();
             synchronizationService.StopAutoSynchronization(Ioc.Instance);
+
+            if (IsStartedByOAuthRedirectIndent(synchronizationService))
+            {
+                var startStep = new HandleOAuthRedirectStep();
+                _ = startStep.RunStory(synchronizationService.CurrentStory, Ioc.Instance, synchronizationService.CurrentStory.StoryMode);
+            }
         }
 
         internal void OnPause(Activity activity)
@@ -62,6 +69,11 @@ namespace SilentNotes.Platforms
         internal void OnActivityResult(Activity activity, int requestCode, Result resultCode, Intent data)
         {
             Ioc.Instance.GetService<IActivityResultAwaiter>().RedirectedOnActivityResult(requestCode, resultCode, data);
+        }
+
+        private bool IsStartedByOAuthRedirectIndent(ISynchronizationService synchronizationService)
+        {
+            return synchronizationService.CurrentStory?.OauthRedirectUrl != null;
         }
 
         private static string GetId(Activity activity)

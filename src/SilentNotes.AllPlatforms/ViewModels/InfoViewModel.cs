@@ -49,9 +49,25 @@ namespace SilentNotes.ViewModels
         {
             get
             {
-                string result = string.Format("Repository location: {0}<br>",
-                    (_repositoryStorageService as RepositoryStorageServiceBase).GetLocation());
-                return (MarkupString)result;
+                StringBuilder result = new StringBuilder();
+                result.Append("<table>");
+
+                result.Append("<tr>");
+                result.Append("<th>Exe location</th>");
+                result.Append("<td>");
+                result.Append(System.Reflection.Assembly.GetExecutingAssembly().Location);
+                result.Append("</td>");
+                result.Append("</tr>");
+
+                result.Append("<tr>");
+                result.Append("<th>Repository location</th>");
+                result.Append("<td>");
+                result.Append((_repositoryStorageService as RepositoryStorageServiceBase).GetLocation());
+                result.Append("</td>");
+                result.Append("</tr>");
+
+                result.Append("</table>");
+                return (MarkupString)result.ToString();
             }
         }
 

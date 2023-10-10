@@ -41,6 +41,11 @@ namespace SilentNotes.Stories.SynchronizationStory
                 {
                     CloudStorageToken token = await oauthStorageClient.FetchTokenAsync(
                         model.OauthRedirectUrl, model.OauthState, model.OauthCodeVerifier);
+
+                    model.OauthState = null;
+                    model.OauthCodeVerifier = null;
+                    model.OauthRedirectUrl = null;
+
                     if (token != null)
                     {
                         // User has granted access.

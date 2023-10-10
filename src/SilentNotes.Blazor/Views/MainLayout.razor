@@ -31,7 +31,7 @@
 	{
 		// Give other services a way to redraw the GUI of the whole app.
 		WeakReferenceMessenger.Default.Register<RedrawMainPageMessage>(
-			this, (recipient, message) => StateHasChanged());
+			this, (recipient, message) => InvokeAsync(StateHasChanged));
 
 		// initialize the start page in the browser history, because there are no navigation events yet
 		BrowserHistoryService.UpdateHistoryOnNavigation(Routes.NoteRepository, string.Empty);

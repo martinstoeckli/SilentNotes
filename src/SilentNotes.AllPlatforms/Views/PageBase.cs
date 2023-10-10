@@ -35,7 +35,7 @@ namespace SilentNotes.Views
             WeakReferenceMessenger.Default.Register<ClosePageMessage>(
                 this, async (recipient, message) => await TriggerOnClosingPageAsync());
             WeakReferenceMessenger.Default.Register<RedrawCurrentPageMessage>(
-                this, (recipient, message) => StateHasChanged());
+                this, (recipient, message) => InvokeAsync(StateHasChanged));
             WeakReferenceMessenger.Default.Register<BackButtonPressedMessage>(
                 this, (recipient, message) => TriggerCloseMenuOrDialog(message));
             WeakReferenceMessenger.Default.Register<ReloadAfterSyncMessage>(

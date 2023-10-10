@@ -40,6 +40,8 @@ public static class MauiProgram
 #elif WINDOWS
                 events.AddWindows(windows => windows
                     .OnClosed((window, args) => applicationEventHandler.OnClosed(window, args)));
+                var thisAppInstance = Microsoft.Windows.AppLifecycle.AppInstance.GetCurrent();
+                thisAppInstance.Activated += applicationEventHandler.OnRedirected;
 #endif
             });
 

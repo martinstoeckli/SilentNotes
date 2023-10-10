@@ -7,8 +7,10 @@ using SilentNotes.Services;
 namespace SilentNotes;
 
 [Activity(
+    Label = "SilentNotes",
     Theme = "@style/Maui.SplashTheme",
     MainLauncher = true,
+    LaunchMode = LaunchMode.SingleTask,
     Exported = true,
     ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
 public class MainActivity : MauiAppCompatActivity
