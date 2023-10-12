@@ -20,17 +20,17 @@ namespace SilentNotes.Stories.SynchronizationStory
         /// <inheritdoc/>
         public override Task<StoryStepResult<SynchronizationStoryModel>> RunStep(SynchronizationStoryModel model, IServiceProvider serviceProvider, StoryMode uiMode)
         {
-            var synchronizationService = serviceProvider.GetService<ISynchronizationService>();
-
             if (uiMode.HasFlag(StoryMode.BusyIndicator))
             {
                 var feedbackService = serviceProvider.GetService<IFeedbackService>();
                 feedbackService.SetBusyIndicatorVisible(false, true);
             }
-            synchronizationService.FinishedManualSynchronization(serviceProvider);
 
             if (uiMode.HasFlag(StoryMode.Dialogs))
             {
+                var synchronizationService = serviceProvider.GetService<ISynchronizationService>();
+                synchronizationService.FinishedManualSynchronization(serviceProvider);
+
                 var navigation = serviceProvider.GetService<INavigationService>();
                 navigation.NavigateHome();
             }

@@ -25,7 +25,6 @@ namespace SilentNotes
     /// Message to inform the current page that a call to StateHasChanged is necessary.
     /// </summary>
     public class RedrawCurrentPageMessage
-
     {
     }
 
@@ -33,13 +32,6 @@ namespace SilentNotes
     /// Message to inform the application MainLayout page that a call to StateHasChanged is necessary.
     /// </summary>
     public class RedrawMainPageMessage
-    {
-    }
-
-    /// <summary>
-    /// Message to inform the current page that a synchroinization has been completed.
-    /// </summary>
-    public class ReloadAfterSyncMessage
     {
     }
 

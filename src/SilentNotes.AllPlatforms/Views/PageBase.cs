@@ -38,8 +38,6 @@ namespace SilentNotes.Views
                 this, (recipient, message) => InvokeAsync(StateHasChanged));
             WeakReferenceMessenger.Default.Register<BackButtonPressedMessage>(
                 this, (recipient, message) => TriggerCloseMenuOrDialog(message));
-            WeakReferenceMessenger.Default.Register<ReloadAfterSyncMessage>(
-                this, (recipient, message) => OnReloadAfterSync());
         }
 
         /// <summary>
@@ -80,7 +78,6 @@ namespace SilentNotes.Views
             WeakReferenceMessenger.Default.Unregister<ClosePageMessage>(this);
             WeakReferenceMessenger.Default.Unregister<RedrawCurrentPageMessage>(this);
             WeakReferenceMessenger.Default.Unregister<BackButtonPressedMessage>(this);
-            WeakReferenceMessenger.Default.Unregister<ReloadAfterSyncMessage>(this);
 
             _keyboardShortcuts?.Dispose();
             OnClosingPage();
@@ -126,14 +123,6 @@ namespace SilentNotes.Views
         {
             Debug.WriteLine(string.Format("*** {0}.OnCloseMenuOrDialog {1}", GetType().Name, Id));
             return false;
-        }
-
-        /// <summary>
-        /// Method invoked after a synchronization was run in the background and the data may have
-        /// been changed.
-        /// </summary>
-        protected virtual void OnReloadAfterSync()
-        {
         }
 
         /// <summary>

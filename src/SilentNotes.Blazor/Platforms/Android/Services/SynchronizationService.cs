@@ -26,6 +26,8 @@ namespace SilentNotes.Platforms.Services
         public override Task AutoSynchronizeAtShutdown(IServiceProvider serviceProvider)
         {
             System.Diagnostics.Debug.WriteLine("*** SynchronizationService.SynchronizeAtShutdown()");
+            if (IsWaitingForOAuthRedirect)
+                return Task.CompletedTask;
 
             // Still running from startup?
             if (IsBackgroundSynchronizationRunning)

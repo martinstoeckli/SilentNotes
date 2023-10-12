@@ -63,6 +63,17 @@ namespace SilentNotes.Services
         /// <summary>
         /// Gets the active manual synchronization story, or null if no story is active.
         /// </summary>
-        SynchronizationStoryModel CurrentStory { get; }
+        SynchronizationStoryModel ManualSynchronization { get; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the current synchronization is waiting for the
+        /// redirect response of an OAuth2 authorization.
+        /// </summary>
+        /// <remarks>
+        /// While waiting on the OAuth redirect, no automatic synchronization should take place,
+        /// this is especially important on Android where showing the login page in the external
+        /// browser will restart the app.
+        /// </remarks>
+        bool IsWaitingForOAuthRedirect { get; set; }
     }
 }

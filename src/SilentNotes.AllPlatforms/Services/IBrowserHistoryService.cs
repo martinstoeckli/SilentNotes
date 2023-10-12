@@ -15,7 +15,7 @@ namespace SilentNotes.Services
     public interface IBrowserHistoryService
     {
         /// <summary>
-        /// Gets the Uri of the current route.
+        /// Gets the Uri of the current route, the last item in <see cref="History"/>.
         /// </summary>
         string CurrentLocation { get; }
 
@@ -35,14 +35,24 @@ namespace SilentNotes.Services
         NavigationDirection UpdateHistoryOnNavigation(string targetLocation, string baseUri);
 
         /// <summary>
-        /// Clears the whole history, keeping only the first entry.
+        /// Clears the whole history.
         /// </summary>
-        void ClearAllButHome();
+        /// <param name="keepHomeLocation">Decides whether the first item is kept as the root location.</param>
+        void Clear(bool keepHomeLocation);
 
         /// <summary>
         /// Removes/forgets the last entry of the history.
         /// </summary>
         void RemoveCurrent();
+
+        /// <summary>
+        /// Determines in which direction a given <paramref name="targetLocation"/> would go in the
+        /// history.
+        /// </summary>
+        /// <param name="targetLocation">The new target location.</param>
+        /// <param name="baseUri">The base Uri of the NavigationManager.</param>
+        /// <returns>The direction of a potential navigation.</returns>
+        NavigationDirection DetermineDirection(string targetLocation, string baseUri);
     }
 
     /// <summary>

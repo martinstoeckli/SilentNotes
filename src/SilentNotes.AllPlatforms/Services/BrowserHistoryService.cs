@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace SilentNotes.Services
@@ -12,6 +13,7 @@ namespace SilentNotes.Services
     /// <summary>
     /// Implementation of the <see cref="IBrowserHistoryService"/> interface.
     /// </summary>
+    [DebuggerDisplay("{HistoryAsString}")]
     internal class BrowserHistoryService : IBrowserHistoryService
     {
         private readonly List<string> _history;
@@ -55,39 +57,34 @@ namespace SilentNotes.Services
         /// <inheritdoc/>
         public NavigationDirection UpdateHistoryOnNavigation(string targetLocation, string baseUri)
         {
-            if (targetLocation == null)
-                throw new ArgumentNullException(nameof(targetLocation));
-            if (baseUri == null)
-                throw new ArgumentNullException(nameof(baseUri));
+            NavigationDirection result = DetermineDirection(targetLocation, baseUri);
 
-            string relativeTargetLocation = GetRelativeUri(targetLocation, baseUri);
-
-            int lastIndex = _history.Count - 1;
-            int secondToLastIndex = lastIndex - 1;
-
-            if ((lastIndex >= 0) && string.Equals(relativeTargetLocation, _history[lastIndex]))
+            switch (result)
             {
-                // This is a refresh of the page, don't alter the history
-                return NavigationDirection.Reload;
+                case NavigationDirection.Next:
+                    string relativeTargetLocation = GetRelativeUri(targetLocation, baseUri);
+                    _history.Add(relativeTargetLocation);
+                    break;
+                case NavigationDirection.Back:
+                    int lastIndex = _history.Count - 1;
+                    _history.RemoveAt(lastIndex);
+                    break;
             }
-            else if ((secondToLastIndex >= 0) && string.Equals(relativeTargetLocation, _history[secondToLastIndex]))
-            {
-                // This is a back navigation
-                _history.RemoveAt(lastIndex);
-                return NavigationDirection.Back;
-            }
-            else
-            {
-                // This is a forward navigation to a new page
-                _history.Add(relativeTargetLocation);
-                return NavigationDirection.Next;
-            }
+            return result;
         }
 
         /// <inheritdoc/>
-        public void ClearAllButHome()
+        public void Clear(bool keepHomeLocation)
         {
-            _history.RemoveRange(1, _history.Count - 1);
+            if (keepHomeLocation)
+            {
+                if (_history.Count > 1)
+                    _history.RemoveRange(1, _history.Count - 1);
+            }
+            else
+            {
+                _history.Clear();
+            }
         }
 
         /// <inheritdoc/>
@@ -98,6 +95,36 @@ namespace SilentNotes.Services
                 _history.RemoveAt(lastIndex);
         }
 
+        /// <inheritdoc/>
+        public NavigationDirection DetermineDirection(string targetLocation, string baseUri)
+        {
+            if (targetLocation == null)
+                throw new ArgumentNullException(nameof(targetLocation));
+            if (baseUri == null)
+                throw new ArgumentNullException(nameof(baseUri));
+
+            string relativeTargetLocation = GetRelativeUri(targetLocation, baseUri);
+
+            int lastIndex = _history.Count - 1;
+            int secondToLastIndex = lastIndex - 1;
+
+            if ((lastIndex >= 0) && string.Equals(relativeTargetLocation, _history[lastIndex], StringComparison.InvariantCultureIgnoreCase))
+            {
+                // This is a refresh of the page
+                return NavigationDirection.Reload;
+            }
+            else if ((secondToLastIndex >= 0) && string.Equals(relativeTargetLocation, _history[secondToLastIndex], StringComparison.InvariantCultureIgnoreCase))
+            {
+                // This is a back navigation
+                return NavigationDirection.Back;
+            }
+            else
+            {
+                // This is a forward navigation to a new page
+                return NavigationDirection.Next;
+            }
+        }
+
         internal string GetRelativeUri(string targetUri, string trimmedBaseUri)
         {
             string result = targetUri;
@@ -105,6 +132,11 @@ namespace SilentNotes.Services
             if (result.StartsWith(trimmedBaseUri))
                 result = result.Substring(trimmedBaseUri.Length);
             return result;
+        }
+
+        private string HistoryAsString
+        {
+            get { return string.Join("  ", _history); }
         }
     }
 }

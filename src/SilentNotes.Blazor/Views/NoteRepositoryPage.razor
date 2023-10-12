@@ -3,6 +3,7 @@
 
 @using System.ComponentModel
 @using System.Windows.Input;
+@using CommunityToolkit.Mvvm.Messaging
 @using MudBlazor.Services;
 @using SilentNotes.Models
 @using SilentNotes.ViewModels
@@ -237,7 +238,9 @@
 			CryptoRandomSource,
 			RepositoryStorageService
 		);
-		ViewModel.PropertyChanged += PropertyChangedHandler;
+
+		WeakReferenceMessenger.Default.Register<NoteRepositoryViewModel.BringSelectedNoteIntoViewMessage>(
+			this, (recipient, message) => BringSelectedNoteIntoView());
 
 		// todo: read the SettingsViewMode.StartWithTagsOpen
 		base.OnInitialized();
@@ -279,8 +282,7 @@
 	protected override void OnClosingPage()
 	{
 		base.OnClosingPage();
-		if (ViewModel != null)
-			ViewModel.PropertyChanged -= PropertyChangedHandler;
+		WeakReferenceMessenger.Default.Unregister<NoteRepositoryViewModel.BringSelectedNoteIntoViewMessage>(this);
 		FeedbackService.SetBusyIndicatorVisible(false, false);
 	}
 
@@ -311,13 +313,6 @@
 		return result;
 	}
 
-	/// <inheritdoc/>
-	protected override void OnReloadAfterSync()
-	{
-		// todo:
-		base.OnReloadAfterSync();
-	}
-
 	/// <summary>
 	/// Focus filter control for direct typing on Windows.
 	/// On Android the focus will bring up the keyboard, which we want to avoid.
@@ -325,15 +320,6 @@
 	private bool ShouldAutofocusToFilter
 	{
 		get { return EnvironmentService.Os == Services.OperatingSystem.Windows; }
-	}
-
-	private void PropertyChangedHandler(object sender, PropertyChangedEventArgs e)
-	{
-		if (e.PropertyName == "SelectedOrderNotePosition")
-		{
-			// Remember to scroll to the moved note, as soon as the rendering has finished.
-			_pendingScrollIntoViewSelector = string.Format("[data-note='{0}']", ViewModel.SelectedOrderNote.Id);
-		}
 	}
 
 	/// <summary>
@@ -346,5 +332,11 @@
 		bool isLargeScreen = await ViewportService.IsBreakpointWithinWindowSizeAsync(Breakpoint.MdAndUp);
 		if (!isLargeScreen)
 			ViewModel.IsDrawerOpen = false;
+	}
+
+	private void BringSelectedNoteIntoView()
+	{
+		// Remember to scroll to the moved note, as soon as the rendering has finished.
+		_pendingScrollIntoViewSelector = string.Format("[data-note='{0}']", ViewModel.SelectedOrderNote.Id);
 	}
 }

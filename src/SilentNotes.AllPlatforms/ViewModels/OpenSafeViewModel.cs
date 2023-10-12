@@ -107,7 +107,7 @@ namespace SilentNotes.ViewModels
             }
             else
             {
-                _navigationService.NavigateTo(_navigationTargetRoute, HistoryModification.ReplaceCurrent);
+                _navigationService.NavigateTo(_navigationTargetRoute, true);
             }
         }
 
@@ -155,7 +155,7 @@ namespace SilentNotes.ViewModels
                 Modified = true;
 
                 // Continue with the create safe dialog
-                _navigationService.Reload();
+                _navigationService.NavigateHome();
             }
         }
 

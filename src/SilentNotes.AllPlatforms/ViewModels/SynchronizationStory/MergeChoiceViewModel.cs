@@ -42,7 +42,7 @@ namespace SilentNotes.ViewModels
         private async void UseMergedRepository()
         {
             var nextStep = new StoreMergedRepositoryAndQuitStep();
-            await nextStep.RunStory(_synchronizationService.CurrentStory, _serviceProvider, _synchronizationService.CurrentStory.StoryMode);
+            await nextStep.RunStory(_synchronizationService.ManualSynchronization, _serviceProvider, _synchronizationService.ManualSynchronization.StoryMode);
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace SilentNotes.ViewModels
         private async void UseCloudRepository()
         {
             var nextStep = new StoreCloudRepositoryToDeviceAndQuitStep();
-            await nextStep.RunStory(_synchronizationService.CurrentStory, _serviceProvider, _synchronizationService.CurrentStory.StoryMode);
+            await nextStep.RunStory(_synchronizationService.ManualSynchronization, _serviceProvider, _synchronizationService.ManualSynchronization.StoryMode);
         }
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace SilentNotes.ViewModels
         private async void UseLocalRepository()
         {
             var nextStep = new StoreLocalRepositoryToCloudAndQuitStep();
-            await nextStep.RunStory(_synchronizationService.CurrentStory, _serviceProvider, _synchronizationService.CurrentStory.StoryMode);
+            await nextStep.RunStory(_synchronizationService.ManualSynchronization, _serviceProvider, _synchronizationService.ManualSynchronization.StoryMode);
         }
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace SilentNotes.ViewModels
         private async void Cancel()
         {
             var nextStep = new StopAndShowRepositoryStep();
-            await nextStep.RunStory(_synchronizationService.CurrentStory, _serviceProvider, _synchronizationService.CurrentStory.StoryMode);
+            await nextStep.RunStory(_synchronizationService.ManualSynchronization, _serviceProvider, _synchronizationService.ManualSynchronization.StoryMode);
         }
     }
 }

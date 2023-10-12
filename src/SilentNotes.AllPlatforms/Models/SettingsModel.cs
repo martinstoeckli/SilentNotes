@@ -45,6 +45,7 @@ namespace SilentNotes.Models
             UseColorForAllNotesInDarkMode = false;
             ColorForAllNotesInDarkModeHex = "#323232";
             KeepScreenUpDuration = 15;
+            UseWallpaper = true;
         }
 
         /// <summary>

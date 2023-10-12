@@ -66,7 +66,7 @@ namespace SilentNotes.ViewModels
 
         private async void Choose(object value)
         {
-            SynchronizationStoryModel storyModel = _synchronizationService.CurrentStory;
+            SynchronizationStoryModel storyModel = _synchronizationService.ManualSynchronization;
             storyModel.Credentials = new SerializeableCloudStorageCredentials
             {
                 CloudStorageId = value.ToString()

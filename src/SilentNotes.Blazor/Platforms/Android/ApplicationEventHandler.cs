@@ -42,7 +42,7 @@ namespace SilentNotes.Platforms
             if (IsStartedByOAuthRedirectIndent(synchronizationService))
             {
                 var startStep = new HandleOAuthRedirectStep();
-                _ = startStep.RunStory(synchronizationService.CurrentStory, Ioc.Instance, synchronizationService.CurrentStory.StoryMode);
+                _ = startStep.RunStory(synchronizationService.ManualSynchronization, Ioc.Instance, synchronizationService.ManualSynchronization.StoryMode);
             }
         }
 
@@ -73,7 +73,7 @@ namespace SilentNotes.Platforms
 
         private bool IsStartedByOAuthRedirectIndent(ISynchronizationService synchronizationService)
         {
-            return synchronizationService.CurrentStory?.OauthRedirectUrl != null;
+            return synchronizationService.ManualSynchronization?.OauthRedirectUrl != null;
         }
 
         private static string GetId(Activity activity)

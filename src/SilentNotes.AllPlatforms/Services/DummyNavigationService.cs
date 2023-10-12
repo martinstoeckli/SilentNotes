@@ -20,7 +20,7 @@ namespace SilentNotes.Services
         }
 
         /// <inheritdoc/>
-        public void NavigateTo(string uri, HistoryModification historyModification = HistoryModification.Add)
+        public void NavigateTo(string uri, bool removeCurrentFromHistory = false)
         {
         }
 
@@ -33,12 +33,12 @@ namespace SilentNotes.Services
         }
 
         /// <inheritdoc/>
-        public void NavigateHome()
+        public void NavigateReload()
         {
         }
 
         /// <inheritdoc/>
-        public void Reload()
+        public void NavigateHome()
         {
         }
     }

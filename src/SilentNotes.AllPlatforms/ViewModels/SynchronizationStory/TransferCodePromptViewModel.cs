@@ -52,9 +52,9 @@ namespace SilentNotes.ViewModels
             bool codeIsValid = TransferCode.TrySanitizeUserInput(Code, out string sanitizedCode);
             if (codeIsValid)
             {
-                _synchronizationService.CurrentStory.UserEnteredTransferCode = sanitizedCode;
+                _synchronizationService.ManualSynchronization.UserEnteredTransferCode = sanitizedCode;
                 var nextStep = new DecryptCloudRepositoryStep();
-                await nextStep.RunStory(_synchronizationService.CurrentStory, _serviceProvider, _synchronizationService.CurrentStory.StoryMode);
+                await nextStep.RunStory(_synchronizationService.ManualSynchronization, _serviceProvider, _synchronizationService.ManualSynchronization.StoryMode);
             }
             else
             {
@@ -70,7 +70,7 @@ namespace SilentNotes.ViewModels
         private async void Cancel()
         {
             var nextStep = new StopAndShowRepositoryStep();
-            await nextStep.RunStory(_synchronizationService.CurrentStory, _serviceProvider, _synchronizationService.CurrentStory.StoryMode);
+            await nextStep.RunStory(_synchronizationService.ManualSynchronization, _serviceProvider, _synchronizationService.ManualSynchronization.StoryMode);
         }
     }
 }

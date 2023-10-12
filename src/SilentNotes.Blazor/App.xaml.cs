@@ -12,7 +12,7 @@ namespace SilentNotes
 
         protected override Window CreateWindow(IActivationState activationState)
         {
-            Window window = new Window(MainPage);
+            Window window = base.CreateWindow(activationState);
             window.Title = "SilentNotes";
 #if DEBUG
             window.Title = "SilentNotes - dev";

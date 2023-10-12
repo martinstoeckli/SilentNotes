@@ -83,7 +83,7 @@
 
 	protected override void OnInitialized()
 	{
-		var credentials = SynchronizationService.CurrentStory.Credentials;
+		var credentials = SynchronizationService.ManualSynchronization.Credentials;
 		ViewModel = new CloudStorageAccountViewModel(Ioc.Instance, credentials);
 		_secureStringConverter = new SecureStringConverter();
 	}

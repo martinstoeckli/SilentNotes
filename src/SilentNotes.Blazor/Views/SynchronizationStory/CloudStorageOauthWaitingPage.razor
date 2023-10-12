@@ -10,6 +10,7 @@
 @inject IJSRuntime JSRuntime
 @inject INavigationService Navigation
 @inject IFeedbackService FeedbackService
+@inject ISynchronizationService SynchronizationService
 
 @* Main menu *@
 <MudAppBar Class="flex-none" Fixed="false" Dense="true" WrapContent="false">
@@ -31,6 +32,7 @@
 			await KeyboardShortcuts.InitializeAsync(JSRuntime);
 			KeyboardShortcuts
 				.AddShortcut(new SnKeyboardShortcut(SnKey.Escape), () => Navigation.NavigateBack());
+			SynchronizationService.IsWaitingForOAuthRedirect = true;
 			FeedbackService.SetBusyIndicatorVisible(true, true);
 		}
 	}
@@ -38,6 +40,7 @@
 	protected override void OnClosingPage()
 	{
 		base.OnClosingPage();
+		SynchronizationService.IsWaitingForOAuthRedirect = false;
 		FeedbackService.SetBusyIndicatorVisible(false, false);
 	}
 }

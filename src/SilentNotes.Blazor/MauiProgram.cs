@@ -89,7 +89,8 @@ public static class MauiProgram
         // we have to add them dynamically in MainLayout.razor.
         services.AddScoped<INavigationService>((serviceProvider) => new NavigationService(
             serviceProvider.GetService<NavigationManager>(),
-            serviceProvider.GetService<IBrowserHistoryService>()));
+            serviceProvider.GetService<IBrowserHistoryService>(),
+            Routes.NoteRepository));
         services.AddScoped<IFeedbackService>((serviceProvider) => new FeedbackService(
             serviceProvider.GetService<IDialogService>(),
             serviceProvider.GetService<ISnackbar>(),

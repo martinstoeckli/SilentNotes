@@ -37,7 +37,7 @@ namespace SilentNotes.ViewModels
 
         private async void Continue()
         {
-            SynchronizationStoryModel storyModel = _synchronizationService.CurrentStory;
+            SynchronizationStoryModel storyModel = _synchronizationService.ManualSynchronization;
             var nextStep = new ShowCloudStorageChoiceStep();
             await nextStep.RunStory(storyModel, _serviceProvider, storyModel.StoryMode);
         }
@@ -50,7 +50,7 @@ namespace SilentNotes.ViewModels
         private async void Cancel()
         {
             var nextStep = new StopAndShowRepositoryStep();
-            await nextStep.RunStory(_synchronizationService.CurrentStory, _serviceProvider, _synchronizationService.CurrentStory.StoryMode);
+            await nextStep.RunStory(_synchronizationService.ManualSynchronization, _serviceProvider, _synchronizationService.ManualSynchronization.StoryMode);
         }
     }
 }

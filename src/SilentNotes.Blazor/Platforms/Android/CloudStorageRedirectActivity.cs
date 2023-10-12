@@ -35,8 +35,8 @@ namespace SilentNotes.Android
 
             string redirectUrl = Intent.Data.ToString();
             ISynchronizationService synchronizationService = Ioc.Instance.GetService<ISynchronizationService>();
-            if (synchronizationService.CurrentStory != null)
-                synchronizationService.CurrentStory.OauthRedirectUrl = redirectUrl;
+            if (synchronizationService.ManualSynchronization != null)
+                synchronizationService.ManualSynchronization.OauthRedirectUrl = redirectUrl;
 
             // Clear the activity holding the custom tab and return to already running main activity.
             Intent intent = new Intent(this, typeof(MainActivity));

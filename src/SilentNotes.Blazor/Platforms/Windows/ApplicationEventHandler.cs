@@ -40,16 +40,17 @@ namespace SilentNotes.Platforms
         {
             System.Diagnostics.Debug.WriteLine("*** ApplicationEventHandler.OnRedirected()");
 
+            BringWindowToFront();
+
             if ((e.Kind == ExtendedActivationKind.Protocol) &&
                 (e.Data is ProtocolActivatedEventArgs activatedEventArgs))
             {
                 var synchronizationService = Ioc.Instance.GetService<ISynchronizationService>();
-                if (synchronizationService.CurrentStory != null)
+                if (synchronizationService.ManualSynchronization != null)
                 {
-                    BringWindowToFront();
-                    synchronizationService.CurrentStory.OauthRedirectUrl = activatedEventArgs.Uri.AbsoluteUri;
+                    synchronizationService.ManualSynchronization.OauthRedirectUrl = activatedEventArgs.Uri.AbsoluteUri;
                     var handleOAuthRedirectStep = new HandleOAuthRedirectStep();
-                    _ = handleOAuthRedirectStep.RunStory(synchronizationService.CurrentStory, Ioc.Instance, synchronizationService.CurrentStory.StoryMode);
+                    _ = handleOAuthRedirectStep.RunStory(synchronizationService.ManualSynchronization, Ioc.Instance, synchronizationService.ManualSynchronization.StoryMode);
                 }
             }
         }

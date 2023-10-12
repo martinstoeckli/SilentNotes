@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using MudBlazor;
 using SilentNotes.Crypto;
 using SilentNotes.Models;
@@ -478,7 +479,7 @@ namespace SilentNotes.ViewModels
         private async void Synchronize()
         {
             OnStoringUnsavedData();
-            _synchronizationService.SynchronizeManually(Ioc.Instance);
+            await _synchronizationService.SynchronizeManually(Ioc.Instance);
         }
 
         /// <summary>
@@ -490,7 +491,7 @@ namespace SilentNotes.ViewModels
         {
             foreach (SafeModel safe in Model.Safes)
                 safe.Close();
-            _navigationService.Reload();
+            _navigationService.NavigateHome();
         }
 
         /// <summary>
@@ -621,7 +622,16 @@ namespace SilentNotes.ViewModels
 
             NoteMover.AdjustPinStatusAfterMoving(AllNotes, notePositions.NewAllNotesPos);
             _model.RefreshOrderModifiedAt();
-            OnPropertyChanged("SelectedOrderNotePosition");
+
+            WeakReferenceMessenger.Default.Send(new BringSelectedNoteIntoViewMessage());
+        }
+
+        /// <summary>
+        /// This message can be used to signal that the currently selected note should be brought
+        /// into view.
+        /// </summary>
+        internal class BringSelectedNoteIntoViewMessage
+        {
         }
     }
 }

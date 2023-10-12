@@ -33,9 +33,6 @@
 		WeakReferenceMessenger.Default.Register<RedrawMainPageMessage>(
 			this, (recipient, message) => InvokeAsync(StateHasChanged));
 
-		// initialize the start page in the browser history, because there are no navigation events yet
-		BrowserHistoryService.UpdateHistoryOnNavigation(Routes.NoteRepository, string.Empty);
-
 		// Workaround: Scoped services are always correct when injected, but when adding them to
 		// Ioc as scoped services, it seems they get lost, and when demanded the next time the Ioc
 		// creates a new different service. Therefore we register them as we got them from injection.
