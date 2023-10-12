@@ -38,7 +38,7 @@ namespace SilentNotes.Services
         /// <inheritdoc/>
         public void ShowToast(string message, Severity severity = Severity.Normal)
         {
-            _snackbar.Add(message, severity);
+            _snackbar.Add(message, severity, config => { config.HideIcon = true; });
         }
 
         /// <inheritdoc/>

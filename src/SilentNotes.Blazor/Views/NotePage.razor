@@ -308,18 +308,18 @@
 		NoteModel note = noteRepository.Notes.FindById(noteId);
 		ICryptor cryptor = new Cryptor(NoteModel.CryptorPackageName, CryptoRandomSource);
 		ViewModel = new NoteViewModel(
-			note,
-			null,
-			LanguageService,
-			ThemeService,
-			RepositoryStorageService,
-			SettingsService,
-			FeedbackService,
-			EnvironmentService,
-			NativeBrowserService,
-			cryptor,
-			noteRepository.Safes,
-			noteRepository.CollectActiveTags());
+            note,
+            null,
+            LanguageService,
+            ThemeService,
+            RepositoryStorageService,
+            FeedbackService,
+            SettingsService,
+            EnvironmentService,
+            NativeBrowserService,
+            cryptor,
+            noteRepository.Safes,
+            noteRepository.CollectActiveTags());
 
 		// Redirect to open safe if locked
 		if (ViewModel.IsLocked)

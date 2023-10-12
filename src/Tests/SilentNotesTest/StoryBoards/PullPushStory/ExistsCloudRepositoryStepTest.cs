@@ -11,7 +11,6 @@ namespace SilentNotesTest.StoryBoards.PullPushStory
     [TestFixture]
     public class ExistsCloudRepositoryStepTest
     {
-        // todo: reactivate tests
         //[Test]
         //public void CorrectNextStepWhenCloudRepositoryExists()
         //{
