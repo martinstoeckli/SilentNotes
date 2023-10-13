@@ -16,18 +16,13 @@
 @inject INavigationService Navigation
 
 <style type="text/css">
-	body::after {
-		position: absolute;
-		content: "";
+	.mud-main-content {
 		@(ThemeService.CssNoteRepositoryBackground)
-		top: 0;
-		left: 0;
-		bottom: 0;
-		right: 0;
-		z-index: -1;
+		background-attachment: fixed;
 		-webkit-filter: grayscale(0.8);
 		filter: grayscale(0.8);
 	}
+
 	.note-item, .note-card, .note-locked {
 		min-height: @(SettingsViewModel.ReferenceNoteMinSize)px;
 		max-height: @(SettingsViewModel.ReferenceNoteMaxSize)px;
@@ -60,7 +55,7 @@
 </style>
 
 @* Main menu *@
-<MudAppBar Class="flex-none" Fixed="false" Dense="true" WrapContent="false">
+<MudAppBar Class="flex-none" Fixed="true" Dense="true" WrapContent="false">
 	<MudIconButton OnClick="@(() => Navigation.NavigateBack())" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" Edge="Edge.Start" />
 
 	<MudSpacer />
@@ -69,34 +64,36 @@
 </MudAppBar>
 
 @* body *@
-<div id="content" class="flex-1 px-1 py-2">
-	<ul id="recycled-notes" class="note-list flex-column flex-sm-row">
-		@foreach (var note in ViewModel.RecycledNotes)
-		{
-			<li @key="note.Id" class="note-item">
-				<div class="note-card mud-elevation-3">
-					@if (@note.IsLocked)
-					{
-						<div class="note-locked">@IconService.EmbedSvgLink(IconNames.LockOutline)</div>
-					}
-					else
-					{
-						@* prevent drag start with onmousedown:preventDefault *@
-						<div class="note-viewer over-view @note.CssClassNoteType" @onmousedown:preventDefault="true">@((MarkupString)note.GetShortenedUnlockedHtmlContent())</div>
-					}
+<MudMainContent>
+	<div id="content" class="px-1 py-2">
+		<ul id="recycled-notes" class="note-list flex-column flex-sm-row">
+			@foreach (var note in ViewModel.RecycledNotes)
+			{
+				<li @key="note.Id" class="note-item">
+					<div class="note-card mud-elevation-3">
+						@if (@note.IsLocked)
+						{
+							<div class="note-locked">@IconService.EmbedSvgLink(IconNames.LockOutline)</div>
+						}
+						else
+						{
+							@* prevent drag start with onmousedown:preventDefault *@
+							<div class="note-viewer over-view @note.CssClassNoteType" @onmousedown:preventDefault="true">@((MarkupString)note.GetShortenedUnlockedHtmlContent())</div>
+						}
 
-					<div class="restore" @onclick="@(() => ViewModel.RestoreNoteCommand.Execute(note.Id))" title="@LanguageService["note_undelete"]">
-						@IconService.EmbedSvgLink(IconNames.FileRestore, 64)
-					</div>
+						<div class="restore" @onclick="@(() => ViewModel.RestoreNoteCommand.Execute(note.Id))" title="@LanguageService["note_undelete"]">
+							@IconService.EmbedSvgLink(IconNames.FileRestore, 64)
+						</div>
 
-					<div class="note-handle recycle-handle reddish" @onclick="@(() => ViewModel.DeleteNotePermanentlyCommand.Execute(note.Id))" title="@LanguageService["note_delete_permanent"]">
-						@IconService.EmbedSvgLink(IconNames.DeleteForever, 19)
+						<div class="note-handle recycle-handle reddish" @onclick="@(() => ViewModel.DeleteNotePermanentlyCommand.Execute(note.Id))" title="@LanguageService["note_delete_permanent"]">
+							@IconService.EmbedSvgLink(IconNames.DeleteForever, 19)
+						</div>
 					</div>
-				</div>
-			</li>
-		}
-	</ul>
-</div>
+				</li>
+			}
+		</ul>
+	</div>
+</MudMainContent>
 
 @* Declare icons which can be reused multiple times, to reduce page size *@
 <div hidden>

@@ -14,54 +14,56 @@
 @inject IRepositoryStorageService RepositoryStorageService
 
 @* Main menu *@
-<MudAppBar Class="flex-none" Fixed="false" Dense="true" WrapContent="false">
+<MudAppBar Class="flex-none" Fixed="true" Dense="true" WrapContent="false">
 	<MudIconButton OnClick="@(() => Navigation.NavigateBack())" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" Edge="Edge.Start" />
 </MudAppBar>
 
 @* body *@
-<div id="content" class="flex-1 px-1 py-3">
+<MudMainContent>
 	<MudContainer Class="ms-0" MaxWidth="MaxWidth.Medium">
-		<MudGrid>
-			<MudItem sm="4">
-				<MudPaper Class="ml-2 mr-5 mb-1 pa-2 rounded-xl" Elevation="1" Style="max-width:220px">
-					<MudImage @onclick="ToggleSupport" Src="appicon.svg" Fluid="true" />
-				</MudPaper>
-			</MudItem>
-			<MudItem sm="8">
-				<h1 class="h-colored mb-3">SilentNotes</h1>
+		<div id="content" class="py-3">
+			<MudGrid>
+				<MudItem sm="4">
+					<MudPaper Class="ml-2 mr-5 mb-1 pa-2 rounded-xl" Elevation="1" Style="max-width:220px">
+						<MudImage @onclick="ToggleSupport" Src="appicon.svg" Fluid="true" />
+					</MudPaper>
+				</MudItem>
+				<MudItem sm="8">
+					<h1 class="h-colored mb-3">SilentNotes</h1>
 
-				<MudSimpleTable Elevation="0" Striped="true">
-					<tbody>
-						<tr>
-							<th>@LanguageService["version"]</th>
-							<td>@ViewModel.VersionFmt</td>
-						</tr>
-						<tr>
-							<th>@LanguageService["copyright"]</th>
-							<td>Martin Stoeckli - 2017</td>
-						</tr>
-						<tr>
-							<th>@LanguageService["website"]</th>
-							<td><MudLink OnClick="@(() => ViewModel.OpenHomepageCommand.Execute(0))">www.martinstoeckli.ch/silentnotes</MudLink></td>
-						</tr>
-						<tr>
-							<th>@LanguageService["opensource"]</th>
-							<td>@LanguageService["opensource_desc"]</td>
-						</tr>
-						<tr></tr>
-					</tbody>
-				</MudSimpleTable>
+					<MudSimpleTable Elevation="0" Striped="true">
+						<tbody>
+							<tr>
+								<th>@LanguageService["version"]</th>
+								<td>@ViewModel.VersionFmt</td>
+							</tr>
+							<tr>
+								<th>@LanguageService["copyright"]</th>
+								<td>Martin Stoeckli - 2017</td>
+							</tr>
+							<tr>
+								<th>@LanguageService["website"]</th>
+								<td><MudLink OnClick="@(() => ViewModel.OpenHomepageCommand.Execute(0))">www.martinstoeckli.ch/silentnotes</MudLink></td>
+							</tr>
+							<tr>
+								<th>@LanguageService["opensource"]</th>
+								<td>@LanguageService["opensource_desc"]</td>
+							</tr>
+							<tr></tr>
+						</tbody>
+					</MudSimpleTable>
 
-				<MudAlert Class="my-3" Severity="Severity.Success" Elevation="1">@LanguageService["license"]</MudAlert>
+					<MudAlert Class="my-3" Severity="Severity.Success" Elevation="1">@LanguageService["license"]</MudAlert>
 
-				@if (_supportCounter >= 5)
-				{
-					<div>@ViewModel.SupportInfos</div>
-				}
-			</MudItem>
-		</MudGrid>
+					@if (_supportCounter >= 5)
+					{
+						<div>@ViewModel.SupportInfos</div>
+					}
+				</MudItem>
+			</MudGrid>
+		</div>
 	</MudContainer>
-</div>
+</MudMainContent>
 
 @code {
 	private int _supportCounter;

@@ -16,9 +16,7 @@
 <MudSnackbarProvider />
 
 <MudLayout Class="@ThemeService.LightOrDarkClass">
-	<MudMainContent Class="d-flex flex-column" Style="height:100%; margin:0; padding:0;">
-		@Body
-	</MudMainContent>
+	@Body
 </MudLayout>
 
 @if(FeedbackService.IsBusyIndicatorVisible)

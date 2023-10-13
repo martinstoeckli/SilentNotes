@@ -47,7 +47,7 @@
 </style>
 
 @* Main menu *@
-<MudAppBar Class="flex-none" Fixed="false" Dense="true" WrapContent="false">
+<MudAppBar Class="flex-none" Fixed="true" Dense="true" WrapContent="false">
 	<MudIconButton OnClick="@(() => Navigation.NavigateBack())" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" Edge="Edge.Start" />
 
 	<MudSpacer />
@@ -67,205 +67,207 @@
 <MudIcon Class="background-icon" Icon="@IconService[IconNames.Settings]" Style="@($"right:-128px; top:-154px;")" />
 
 @* body *@
-<div id="content" class="flex-1 px-1 py-3">
+<MudMainContent>
 	<MudContainer Class="ms-0" MaxWidth="MaxWidth.Small">
-		<h2 class="h-colored">@LanguageService["gui_texture"]</h2>
+		<div id="content" class="py-3">
+			<h2 class="h-colored">@LanguageService["gui_texture"]</h2>
 
-		<div class="css-grid">
-			<div><MudIcon Icon="@Icons.Material.Filled.LightMode" Color="Color.Secondary" /></div>
-			<div>
-				<MudSelect @bind-Value="ViewModel.SelectedThemeMode">
-					<MudSelectItem Value="@("Auto")">@LanguageService["gui_theme_auto"]</MudSelectItem>
-					<MudSelectItem Value="@("Dark")">@LanguageService["gui_theme_dark"]</MudSelectItem>
-					<MudSelectItem Value="@("Light")">@LanguageService["gui_theme_light"]</MudSelectItem>
-				</MudSelect>
-			</div>
-
-			<div><MudIcon Icon="@Icons.Material.Filled.ImagesearchRoller" Color="Color.Secondary" /></div>
-			<div>
-				<MudStack Row="true" AlignItems="AlignItems.Center">
-					<MudSwitch @bind-Checked="@ViewModel.UseWallpaper" Color="Color.Tertiary" UnCheckedColor="@GetSwitchUncheckedColor()" />
-
-					<MudCarousel @bind-SelectedIndex="ViewModel.SelectedWallpaperIndex" ItemsSource="@ThemeService.Wallpapers"
-						Class="mud-width-full" Style="height:100px;" ShowArrows="true" ShowBullets="false" EnableSwipeGesture="true" AutoCycle="false" TData="WallpaperModel">
-						<PreviousButtonTemplate>
-							<div Class="mud-button-root mud-icon-button">
-								<span class="rounded-circle mud-icon-button-label" style="background-color: var(--mud-palette-surface)">
-									<MudIcon Icon="@Icons.Material.Filled.KeyboardArrowLeft" Color="@Color.Inherit" />
-								</span>
-							</div>
-						</PreviousButtonTemplate>
-						<NextButtonTemplate>
-							<div Class="mud-button-root mud-icon-button">
-								<span class="rounded-circle mud-icon-button-label" style="background-color: var(--mud-palette-surface)">
-									<MudIcon Icon="@Icons.Material.Filled.KeyboardArrowRight" Color="@Color.Inherit" />
-								</span>
-							</div>
-						</NextButtonTemplate>
-						<ItemTemplate>
-							<div class="design-swatch d-flex" style="@GetBackgroundUrlStyle("wallpapers/" + context.Image)"/>
-						</ItemTemplate>
-					</MudCarousel>
-				</MudStack>
-			</div>
-
-			<div></div>
-			<div>
-				<MudStack Row="true" AlignItems="AlignItems.Center">
-					<MudSwitch @bind-Checked="@ViewModel.UseSolidColorTheme" Color="Color.Tertiary" UnCheckedColor="@GetSwitchUncheckedColor()" />
-
-					<MudColorPicker @bind-Text="@ViewModel.ColorForSolidThemeHex"
-						DisableToolbar="true" DisableAlpha="true"
-						Label="@LanguageService["gui_theme_solid_color"]"
-						ColorPickerMode="ColorPickerMode.HEX"
-						AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight" />
-
-					<div class="color-swatch inline-flex" style="@GetBackgroundColorStyle(ViewModel.ColorForSolidThemeHex)">
-						<span class="@ViewModel.GetDarkClass(ViewModel.ColorForSolidThemeHex)">Abc</span>
-					</div>
-				</MudStack>
-			</div>
-
-			<div></div>
-			<div>
-				<MudStack Row="true" AlignItems="AlignItems.Center">
-					<MudSwitch @bind-Checked="@ViewModel.UseColorForAllNotesInDarkMode" Color="Color.Tertiary" UnCheckedColor="@GetSwitchUncheckedColor()" />
-
-					<MudColorPicker @bind-Text="@ViewModel.ColorForAllNotesInDarkModeHex"
-						DisableToolbar="true" DisableAlpha="true"
-						Label="@LanguageService["gui_theme_color_all_dark"]"
-						ColorPickerMode="ColorPickerMode.HEX"
-						AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight" />
-
-					<div class="color-swatch inline-flex" style="@GetBackgroundColorStyle(ViewModel.ColorForAllNotesInDarkModeHex)">
-						<span class="@ViewModel.GetDarkClass(ViewModel.ColorForAllNotesInDarkModeHex)">Abc</span>
-					</div>
-				</MudStack>
-			</div>
-
-			<div></div>
-			<div>
-				<MudStack Row="true" AlignItems="AlignItems.Center">
-					<MudColorPicker @bind-Text="ViewModel.DefaultNoteColorHex"
-						DisableToolbar="true" DisableAlpha="true"
-						ColorPickerView="ColorPickerView.Palette"
-						Label="@LanguageService["gui_default_color"]"
-						Palette="@ViewModel.NoteColorsHex.Select(color => new MudColor(color))"/>
-
-					<div class="color-swatch inline-flex" style="@GetBackgroundColorStyle(ViewModel.DefaultNoteColorHex)">
-						<span class="@ViewModel.GetDarkClass(ViewModel.DefaultNoteColorHex)">Abc</span>
-					</div>
-				</MudStack>
-			</div>
-		</div>
-
-
-		<h2 class="h-colored mt-10">@LanguageService["gui"]</h2>
-
-		<div class="css-grid">
-			<div><MudIcon Icon="@Icons.Material.Filled.FormatSize" Color="Color.Secondary" /></div>
-			<div>
-				<MudSlider @bind-Value="ViewModel.FontSizeStep"
-					Min="-3" Max="3" Step="1" Color="Color.Tertiary">@LanguageService["gui_font_size"]</MudSlider>
-			</div>
-
-			<div><MudIcon Icon="@Icons.Material.Filled.Expand" Color="Color.Secondary" /></div>
-			<div>
-				<MudSlider @bind-Value="ViewModel.NoteMaxHeightStep"
-					Min="-4" Max="4" Step="1" Color="Color.Tertiary">@LanguageService["gui_note_max_size"]</MudSlider>
-			</div>
-
-			<div><MudIcon Icon="@Icons.Material.Filled.SwapVert" Color="Color.Secondary" /></div>
-			<div>
-				<MudSelect @bind-Value="ViewModel.SelectedNoteInsertionMode"
-					Label="@LanguageService["gui_note_insertion"]">
-					<MudSelectItem Value="@("AtTop")">@LanguageService["gui_note_insertion_top"]</MudSelectItem>
-					<MudSelectItem Value="@("AtBottom")">@LanguageService["gui_note_insertion_bottom"]</MudSelectItem>
-				</MudSelect>
-			</div>
-
-			<div></div>
-			<div>
-				<MudSwitch @bind-Checked="@ViewModel.RememberLastTagFilter"
-					Label="@LanguageService["gui_remember_last_tag_filter"]" Color="Color.Tertiary" UnCheckedColor="@GetSwitchUncheckedColor()" />
-			</div>
-
-			<div></div>
-			<div>
-				<MudSwitch @bind-Checked="@ViewModel.HideClosedSafeNotes"
-					Label="@LanguageService["gui_hide_closed_safe_notes"]" Color="Color.Tertiary" UnCheckedColor="@GetSwitchUncheckedColor()"/>
-			</div>
-
-			@if (ViewModel.CanKeepScreenOn)
-			{
-				<div><MudIcon Icon="@Icons.Material.Outlined.Timer" Color="Color.Secondary" /></div>
+			<div class="css-grid">
+				<div><MudIcon Icon="@Icons.Material.Filled.LightMode" Color="Color.Secondary" /></div>
 				<div>
-					<MudSlider @bind-Value="ViewModel.KeepScreenOnDuration"
-						Min="1" Max="30" Step="1" Color="Color.Tertiary">@ViewModel.KeepScreenOnDurationTitle</MudSlider>
+					<MudSelect @bind-Value="ViewModel.SelectedThemeMode">
+						<MudSelectItem Value="@("Auto")">@LanguageService["gui_theme_auto"]</MudSelectItem>
+						<MudSelectItem Value="@("Dark")">@LanguageService["gui_theme_dark"]</MudSelectItem>
+						<MudSelectItem Value="@("Light")">@LanguageService["gui_theme_light"]</MudSelectItem>
+					</MudSelect>
 				</div>
-			}
-		</div>
 
+				<div><MudIcon Icon="@Icons.Material.Filled.ImagesearchRoller" Color="Color.Secondary" /></div>
+				<div>
+					<MudStack Row="true" AlignItems="AlignItems.Center">
+						<MudSwitch @bind-Checked="@ViewModel.UseWallpaper" Color="Color.Tertiary" UnCheckedColor="@GetSwitchUncheckedColor()" />
 
-		<h2 class="h-colored mt-10">@LanguageService["sync"]</h2>
-
-		<div class="css-grid">
-			<div><MudIcon Icon="@Icons.Material.Filled.Sync" Color="Color.Secondary" /></div>
-			<div>
-				<MudSelect @bind-Value="ViewModel.SelectedAutoSyncMode"
-					Label="@LanguageService["sync_auto"]">
-					<MudSelectItem Value="@("Never")">@LanguageService["sync_auto_never"]</MudSelectItem>
-					<MudSelectItem Value="@("CostFreeInternetOnly")">@LanguageService["sync_auto_costfree"]</MudSelectItem>
-					<MudSelectItem Value="@("Always")">@LanguageService["sync_auto_always"]</MudSelectItem>
-				</MudSelect>
-			</div>
-
-			<div></div>
-			<div>
-				<MudPaper Class="pa-4">
-					<MudText Typo="Typo.caption">@LanguageService["cloud_service"]</MudText>
-					<MudText>@ViewModel.AccountSummary</MudText>
-
-					<MudStack Row="true" Justify="Justify.FlexEnd" Spacing="1" Class="mt-2">
-						<MudButton OnClick="@(() => ViewModel.ChangeCloudSettingsCommand.Execute(null))"
-							Color="Color.Default" Variant="Variant.Filled" title="@LanguageService["cloud_change_settings_desc"]">
-							@LanguageService["cloud_change_settings"]
-						</MudButton>
-						<MudButton OnClick="@(() => ViewModel.ClearCloudSettingsCommand.Execute(null))"
-							Color="Color.Error" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Delete" Disabled="ViewModel.ClearCloudSettingsDisabled" title="@LanguageService["cloud_clear_settings_desc"]">
-							@LanguageService["cloud_clear_settings"]
-						</MudButton>
+						<MudCarousel @bind-SelectedIndex="ViewModel.SelectedWallpaperIndex" ItemsSource="@ThemeService.Wallpapers"
+							Class="mud-width-full" Style="height:100px;" ShowArrows="true" ShowBullets="false" EnableSwipeGesture="true" AutoCycle="false" TData="WallpaperModel">
+							<PreviousButtonTemplate>
+								<div Class="mud-button-root mud-icon-button">
+									<span class="rounded-circle mud-icon-button-label" style="background-color: var(--mud-palette-surface)">
+										<MudIcon Icon="@Icons.Material.Filled.KeyboardArrowLeft" Color="@Color.Inherit" />
+									</span>
+								</div>
+							</PreviousButtonTemplate>
+							<NextButtonTemplate>
+								<div Class="mud-button-root mud-icon-button">
+									<span class="rounded-circle mud-icon-button-label" style="background-color: var(--mud-palette-surface)">
+										<MudIcon Icon="@Icons.Material.Filled.KeyboardArrowRight" Color="@Color.Inherit" />
+									</span>
+								</div>
+							</NextButtonTemplate>
+							<ItemTemplate>
+								<div class="design-swatch d-flex" style="@GetBackgroundUrlStyle("wallpapers/" + context.Image)"/>
+							</ItemTemplate>
+						</MudCarousel>
 					</MudStack>
-				</MudPaper>
-			</div>
-		</div>
+				</div>
 
-
-		<h2 class="h-colored mt-10">@LanguageService["security"]</h2>
-
-		<div class="css-grid">
-			<div><MudIcon Icon="@Icons.Material.Outlined.Lock" Color="Color.Secondary" /></div>
-			<div>
-				<MudSelect @bind-Value="ViewModel.SelectedEncryptionAlgorithm"
-					Label="@LanguageService["encryption_algorithm"]">
-					@foreach (var algorithm in ViewModel.EncryptionAlgorithms)
-					{
-						<MudSelectItem Value="@algorithm.Value">@algorithm.Description</MudSelectItem>
-					}
-				</MudSelect>
-			</div>
-
-			@if (ViewModel.CanPreventScreenshots)
-			{
 				<div></div>
 				<div>
-					<MudSwitch @bind-Checked="@ViewModel.PreventScreenshots"
-						Label="@LanguageService["security_prevent_screenshots"]" Color="Color.Tertiary" UnCheckedColor="@GetSwitchUncheckedColor()" />
+					<MudStack Row="true" AlignItems="AlignItems.Center">
+						<MudSwitch @bind-Checked="@ViewModel.UseSolidColorTheme" Color="Color.Tertiary" UnCheckedColor="@GetSwitchUncheckedColor()" />
+
+						<MudColorPicker @bind-Text="@ViewModel.ColorForSolidThemeHex"
+							DisableToolbar="true" DisableAlpha="true"
+							Label="@LanguageService["gui_theme_solid_color"]"
+							ColorPickerMode="ColorPickerMode.HEX"
+							AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight" />
+
+						<div class="color-swatch inline-flex" style="@GetBackgroundColorStyle(ViewModel.ColorForSolidThemeHex)">
+							<span class="@ViewModel.GetDarkClass(ViewModel.ColorForSolidThemeHex)">Abc</span>
+						</div>
+					</MudStack>
 				</div>
-			}
+
+				<div></div>
+				<div>
+					<MudStack Row="true" AlignItems="AlignItems.Center">
+						<MudSwitch @bind-Checked="@ViewModel.UseColorForAllNotesInDarkMode" Color="Color.Tertiary" UnCheckedColor="@GetSwitchUncheckedColor()" />
+
+						<MudColorPicker @bind-Text="@ViewModel.ColorForAllNotesInDarkModeHex"
+							DisableToolbar="true" DisableAlpha="true"
+							Label="@LanguageService["gui_theme_color_all_dark"]"
+							ColorPickerMode="ColorPickerMode.HEX"
+							AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight" />
+
+						<div class="color-swatch inline-flex" style="@GetBackgroundColorStyle(ViewModel.ColorForAllNotesInDarkModeHex)">
+							<span class="@ViewModel.GetDarkClass(ViewModel.ColorForAllNotesInDarkModeHex)">Abc</span>
+						</div>
+					</MudStack>
+				</div>
+
+				<div></div>
+				<div>
+					<MudStack Row="true" AlignItems="AlignItems.Center">
+						<MudColorPicker @bind-Text="ViewModel.DefaultNoteColorHex"
+							DisableToolbar="true" DisableAlpha="true"
+							ColorPickerView="ColorPickerView.Palette"
+							Label="@LanguageService["gui_default_color"]"
+							Palette="@ViewModel.NoteColorsHex.Select(color => new MudColor(color))"/>
+
+						<div class="color-swatch inline-flex" style="@GetBackgroundColorStyle(ViewModel.DefaultNoteColorHex)">
+							<span class="@ViewModel.GetDarkClass(ViewModel.DefaultNoteColorHex)">Abc</span>
+						</div>
+					</MudStack>
+				</div>
+			</div>
+
+
+			<h2 class="h-colored mt-10">@LanguageService["gui"]</h2>
+
+			<div class="css-grid">
+				<div><MudIcon Icon="@Icons.Material.Filled.FormatSize" Color="Color.Secondary" /></div>
+				<div>
+					<MudSlider @bind-Value="ViewModel.FontSizeStep"
+						Min="-3" Max="3" Step="1" Color="Color.Tertiary">@LanguageService["gui_font_size"]</MudSlider>
+				</div>
+
+				<div><MudIcon Icon="@Icons.Material.Filled.Expand" Color="Color.Secondary" /></div>
+				<div>
+					<MudSlider @bind-Value="ViewModel.NoteMaxHeightStep"
+						Min="-4" Max="4" Step="1" Color="Color.Tertiary">@LanguageService["gui_note_max_size"]</MudSlider>
+				</div>
+
+				<div><MudIcon Icon="@Icons.Material.Filled.SwapVert" Color="Color.Secondary" /></div>
+				<div>
+					<MudSelect @bind-Value="ViewModel.SelectedNoteInsertionMode"
+						Label="@LanguageService["gui_note_insertion"]">
+						<MudSelectItem Value="@("AtTop")">@LanguageService["gui_note_insertion_top"]</MudSelectItem>
+						<MudSelectItem Value="@("AtBottom")">@LanguageService["gui_note_insertion_bottom"]</MudSelectItem>
+					</MudSelect>
+				</div>
+
+				<div></div>
+				<div>
+					<MudSwitch @bind-Checked="@ViewModel.RememberLastTagFilter"
+						Label="@LanguageService["gui_remember_last_tag_filter"]" Color="Color.Tertiary" UnCheckedColor="@GetSwitchUncheckedColor()" />
+				</div>
+
+				<div></div>
+				<div>
+					<MudSwitch @bind-Checked="@ViewModel.HideClosedSafeNotes"
+						Label="@LanguageService["gui_hide_closed_safe_notes"]" Color="Color.Tertiary" UnCheckedColor="@GetSwitchUncheckedColor()"/>
+				</div>
+
+				@if (ViewModel.CanKeepScreenOn)
+				{
+					<div><MudIcon Icon="@Icons.Material.Outlined.Timer" Color="Color.Secondary" /></div>
+					<div>
+						<MudSlider @bind-Value="ViewModel.KeepScreenOnDuration"
+							Min="1" Max="30" Step="1" Color="Color.Tertiary">@ViewModel.KeepScreenOnDurationTitle</MudSlider>
+					</div>
+				}
+			</div>
+
+
+			<h2 class="h-colored mt-10">@LanguageService["sync"]</h2>
+
+			<div class="css-grid">
+				<div><MudIcon Icon="@Icons.Material.Filled.Sync" Color="Color.Secondary" /></div>
+				<div>
+					<MudSelect @bind-Value="ViewModel.SelectedAutoSyncMode"
+						Label="@LanguageService["sync_auto"]">
+						<MudSelectItem Value="@("Never")">@LanguageService["sync_auto_never"]</MudSelectItem>
+						<MudSelectItem Value="@("CostFreeInternetOnly")">@LanguageService["sync_auto_costfree"]</MudSelectItem>
+						<MudSelectItem Value="@("Always")">@LanguageService["sync_auto_always"]</MudSelectItem>
+					</MudSelect>
+				</div>
+
+				<div></div>
+				<div>
+					<MudPaper Class="pa-4">
+						<MudText Typo="Typo.caption">@LanguageService["cloud_service"]</MudText>
+						<MudText>@ViewModel.AccountSummary</MudText>
+
+						<MudStack Row="true" Justify="Justify.FlexEnd" Spacing="1" Class="mt-2">
+							<MudButton OnClick="@(() => ViewModel.ChangeCloudSettingsCommand.Execute(null))"
+								Color="Color.Default" Variant="Variant.Filled" title="@LanguageService["cloud_change_settings_desc"]">
+								@LanguageService["cloud_change_settings"]
+							</MudButton>
+							<MudButton OnClick="@(() => ViewModel.ClearCloudSettingsCommand.Execute(null))"
+								Color="Color.Error" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Delete" Disabled="ViewModel.ClearCloudSettingsDisabled" title="@LanguageService["cloud_clear_settings_desc"]">
+								@LanguageService["cloud_clear_settings"]
+							</MudButton>
+						</MudStack>
+					</MudPaper>
+				</div>
+			</div>
+
+
+			<h2 class="h-colored mt-10">@LanguageService["security"]</h2>
+
+			<div class="css-grid">
+				<div><MudIcon Icon="@Icons.Material.Outlined.Lock" Color="Color.Secondary" /></div>
+				<div>
+					<MudSelect @bind-Value="ViewModel.SelectedEncryptionAlgorithm"
+						Label="@LanguageService["encryption_algorithm"]">
+						@foreach (var algorithm in ViewModel.EncryptionAlgorithms)
+						{
+							<MudSelectItem Value="@algorithm.Value">@algorithm.Description</MudSelectItem>
+						}
+					</MudSelect>
+				</div>
+
+				@if (ViewModel.CanPreventScreenshots)
+				{
+					<div></div>
+					<div>
+						<MudSwitch @bind-Checked="@ViewModel.PreventScreenshots"
+							Label="@LanguageService["security_prevent_screenshots"]" Color="Color.Tertiary" UnCheckedColor="@GetSwitchUncheckedColor()" />
+					</div>
+				}
+			</div>
 		</div>
 	</MudContainer>
-</div>
+</MudMainContent>
 
 @code {
 	private MudMenu _overflowMenu;

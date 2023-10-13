@@ -26,7 +26,7 @@
 @inject INavigationService Navigation
 
 <style type="text/css">
-	#content { background-color: @ViewModel.BackgroundColorHex; }
+	.mud-main-content { background-color: @ViewModel.BackgroundColorHex; }
 	#tag-container {
 		max-height:130px;
 		min-height:60px;
@@ -40,7 +40,7 @@
 </style>
 
 @* Main menu *@
-<MudAppBar Class="flex-none" Fixed="false" Dense="true" WrapContent="false">
+<MudAppBar Class="flex-none" Fixed="true" Dense="true" WrapContent="false">
 	<MudIconButton OnClick="@(() => Navigation.NavigateBack())" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" Edge="Edge.Start" />
 
 	<MudSpacer />
@@ -174,33 +174,37 @@
 </MudAppBar>
 
 @* body *@
-<div id="content" class="@ViewModel.LightOrDarkClass() flex-1 px-1 py-2">
-	@if (ViewModel.IsLocked)
-	{
-		<span class="note-locked"><svg width='128' height='128' viewBox='0 0 24 24'><use xlink:href="#svg-lock-outline" /></svg></span>
-	}
-	else
-	{
-		<div @ref="_editorContainer" id="myeditor" class="note-viewer detail-view @ViewModel.CssClassNoteType"></div>
-	}
-</div>
+<MudMainContent class="@ViewModel.LightOrDarkClass()">
+	<div id="content" class="d-flex flex-column" style="height: 100%">
+		<div class="flex-1" style="overflow-y: auto">
+			@if (ViewModel.IsLocked)
+			{
+				<span class="note-locked"><svg width='128' height='128' viewBox='0 0 24 24'><use xlink:href="#svg-lock-outline" /></svg></span>
+			}
+			else
+			{
+				<div @ref="_editorContainer" id="myeditor" class="note-viewer detail-view @ViewModel.CssClassNoteType"></div>
+			}
+		</div>
 
-@* Tags *@
-<div id="tag-container" class="flex-none pa-2 mud-elevation-5">
-	<MudPaper Class="ml-1 pa-0" Style="float:right; width:45%; max-width:240px" Elevation="0" title="@LanguageService["tag_add"]">
-		<MudAutocomplete T="string" @ref="_tagAutocomplete" ValueChanged="NewTagChanged" SearchFunc="GetNewTagSuggestions"
-			Class="ma-0" Margin="Margin.Dense" Dense="true" Variant="Variant.Outlined"
-			ResetValueOnEmptyText="true" Disabled="@ViewModel.ShoppingModeActive"
-			AdornmentIcon="@IconService.GetSvgLink(IconNames.TagOutline)"
-			AnchorOrigin="Origin.TopCenter" TransformOrigin="Origin.BottomCenter" />
-	</MudPaper>
+		@* Tags *@
+		<div id="tag-container" class="flex-none pa-2 mud-elevation-5">
+			<MudPaper Class="ml-1 pa-0" Style="float:right; width:45%; max-width:240px" Elevation="0" title="@LanguageService["tag_add"]">
+				<MudAutocomplete T="string" @ref="_tagAutocomplete" ValueChanged="NewTagChanged" SearchFunc="GetNewTagSuggestions"
+					Class="ma-0" Margin="Margin.Dense" Dense="true" Variant="Variant.Outlined"
+					ResetValueOnEmptyText="true" Disabled="@ViewModel.ShoppingModeActive"
+					AdornmentIcon="@IconService.GetSvgLink(IconNames.TagOutline)"
+					AnchorOrigin="Origin.TopCenter" TransformOrigin="Origin.BottomCenter" />
+			</MudPaper>
 
-	@foreach (var tag in ViewModel.Tags)
-	{
-		<MudChip Text="@tag" OnClose="@((chip) => ViewModel.DeleteTagCommand.Execute(chip.Text))"
-			Variant="Variant.Filled" Size="Size.Medium" Color="Color.Primary" Label="true" />
-	}
-</div>
+			@foreach (var tag in ViewModel.Tags)
+			{
+				<MudChip Text="@tag" OnClose="@((chip) => ViewModel.DeleteTagCommand.Execute(chip.Text))"
+						 Variant="Variant.Filled" Size="Size.Medium" Color="Color.Primary" Label="true" />
+			}
+		</div>
+	</div>
+</MudMainContent>
 
 @* Search toolbar *@
 <MudPopover Open="@SearchToolbarOpen" Class="secondary-app-bar" AnchorOrigin="Origin.TopRight" TransformOrigin="Origin.TopRight">

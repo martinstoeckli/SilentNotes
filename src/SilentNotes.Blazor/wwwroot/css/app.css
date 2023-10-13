@@ -9,7 +9,6 @@ body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica
 h1 { font-size: 1.7em; }
 h2 { font-size: 1.3em; }
 h3 { font-size: 1.1em; }
-#content { overflow-y: auto; }
 #progress {
 	position: fixed;
 	top: 50%;
@@ -291,6 +290,12 @@ div.ProseMirror {
 }
 div.ProseMirror:focus {
 	outline: none;
+}
+
+.mud-main-content
+{
+	height: 100%;
+	overflow-y: auto;
 }
 
 .mud-button { text-transform: none; }

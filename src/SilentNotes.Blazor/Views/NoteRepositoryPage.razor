@@ -24,7 +24,7 @@
 @inject ISynchronizationService SynchronizationService
 
 <style type="text/css">
-	#content {
+	.mud-main-content {
 		@(ThemeService.CssNoteRepositoryBackground)
 		background-attachment: fixed;
 	}
@@ -44,7 +44,7 @@
 </style>
 
 @* Main menu *@
-<MudAppBar Class="flex-none" Fixed="false" Dense="true" WrapContent="false">
+<MudAppBar Class="flex-none" Fixed="true" Dense="true" WrapContent="false">
 	<MudSpacer />
 
 	@* Tags *@
@@ -98,7 +98,7 @@
 </MudAppBar>
 
 @* Sidebar with tags *@
-<MudDrawer @ref="_sideDrawer" @bind-Open="@ViewModel.IsDrawerOpen" Elevation="1" Variant="@DrawerVariant.Responsive" Breakpoint="Breakpoint.Md" ClipMode="DrawerClipMode.Docked" Style="top:0; height:100%">
+<MudDrawer @ref="_sideDrawer" @bind-Open="@ViewModel.IsDrawerOpen" Elevation="1" Variant="DrawerVariant.Responsive" Breakpoint="Breakpoint.Sm" ClipMode="DrawerClipMode.Docked">
 	<MudDrawerHeader Class="d-inline-flex justify-space-between align-start">
 		<h2>Filter by tag</h2>
 		<MudIconButton OnClick="() => ViewModel.IsDrawerOpen = false" Icon="@IconService.GetSvgLink(IconNames.Close)" Size="Size.Small" />
@@ -121,46 +121,48 @@
 </MudDrawer>
 
 @* body *@
-<div id="content" class="flex-1 px-1 py-2">
-	<ul id="note-repository" class="note-list flex-column flex-sm-row">
-		@foreach (var note in ViewModel.FilteredNotes)
-		{
-			<li @key="note.Id" class="note-item" data-note="@note.Id">
-				<a href="@note.Route">
-					<div class="note-card mud-elevation-3 @note.LightOrDarkClass()" style="background-color:@note.BackgroundColorHex">
-						@if (note.IsLocked)
-						{
-							<div class="note-locked">@IconService.EmbedSvgLink(IconNames.LockOutline)</div>
-						}
-						else
-						{
-							@* prevent drag start with onmousedown:preventDefault *@
-							<div class="note-viewer over-view @note.CssClassNoteType" @onmousedown:preventDefault="true">@((MarkupString)note.GetShortenedUnlockedHtmlContent())</div>
-						}
-
-						@if (note.IsPinned)
-						{
-							<div class="pin">@IconService.EmbedSvgLink(IconNames.Pin, 22)</div>
-						}
-						<div class="note-handle sortable-handle @Css.BuildClass(new CssClassIf("bluish-highlighted", note == ViewModel.SelectedOrderNote))" @onmousedown="() => ViewModel.SelectOrderNote(note)" @onmousedown:preventDefault="true" @onclick:preventDefault="true">@IconService.EmbedSvgLink(IconNames.ArrowAll, 22)</div>
-						<div class="note-handle recycle-handle" @onclick="() => ViewModel.DeleteNoteCommand.Execute(note.Id)" @onclick:preventDefault="true">@IconService.EmbedSvgLink(IconNames.Delete, 19)</div>
-						@if (ViewModel.IsAnySafeOpen && !note.IsLocked)
-						{
-							@if (note.IsInSafe)
+<MudMainContent>
+	<div id="content" class="px-1 py-2">
+		<ul id="note-repository" class="note-list flex-column flex-sm-row">
+			@foreach (var note in ViewModel.FilteredNotes)
+			{
+				<li @key="note.Id" class="note-item" data-note="@note.Id">
+					<a href="@note.Route">
+						<div class="note-card mud-elevation-3 @note.LightOrDarkClass()" style="background-color:@note.BackgroundColorHex">
+							@if (note.IsLocked)
 							{
-								<div class="note-handle safe-handle reddish" @onclick="() => ViewModel.RemoveNoteFromSafe(note.Id)" @onclick:preventDefault="true">@IconService.EmbedSvgLink(IconNames.Lock, 18)</div>
+								<div class="note-locked">@IconService.EmbedSvgLink(IconNames.LockOutline)</div>
 							}
 							else
 							{
-								<div class="note-handle safe-handle greenish" @onclick="() => ViewModel.AddNoteToSafe(note.Id)" @onclick:preventDefault="true">@IconService.EmbedSvgLink(IconNames.LockOpenVariant, 18)</div>
+								@* prevent drag start with onmousedown:preventDefault *@
+								<div class="note-viewer over-view @note.CssClassNoteType" @onmousedown:preventDefault="true">@((MarkupString)note.GetShortenedUnlockedHtmlContent())</div>
 							}
-						}
-					</div>
-				</a>
-			</li>
-		}
-	</ul>
-</div>
+
+							@if (note.IsPinned)
+							{
+								<div class="pin">@IconService.EmbedSvgLink(IconNames.Pin, 22)</div>
+							}
+							<div class="note-handle sortable-handle @Css.BuildClass(new CssClassIf("bluish-highlighted", note == ViewModel.SelectedOrderNote))" @onmousedown="() => ViewModel.SelectOrderNote(note)" @onmousedown:preventDefault="true" @onclick:preventDefault="true">@IconService.EmbedSvgLink(IconNames.ArrowAll, 22)</div>
+							<div class="note-handle recycle-handle" @onclick="() => ViewModel.DeleteNoteCommand.Execute(note.Id)" @onclick:preventDefault="true">@IconService.EmbedSvgLink(IconNames.Delete, 19)</div>
+							@if (ViewModel.IsAnySafeOpen && !note.IsLocked)
+							{
+								@if (note.IsInSafe)
+								{
+									<div class="note-handle safe-handle reddish" @onclick="() => ViewModel.RemoveNoteFromSafe(note.Id)" @onclick:preventDefault="true">@IconService.EmbedSvgLink(IconNames.Lock, 18)</div>
+								}
+								else
+								{
+									<div class="note-handle safe-handle greenish" @onclick="() => ViewModel.AddNoteToSafe(note.Id)" @onclick:preventDefault="true">@IconService.EmbedSvgLink(IconNames.LockOpenVariant, 18)</div>
+								}
+							}
+						</div>
+					</a>
+				</li>
+			}
+		</ul>
+	</div>
+</MudMainContent>
 
 @* Note ordering toolbar *@
 <MudPopover Open="@ViewModel.OrderToolbarVisible" Class="secondary-app-bar" AnchorOrigin="Origin.TopRight" TransformOrigin="Origin.TopRight">
