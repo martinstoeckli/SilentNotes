@@ -83,8 +83,10 @@ namespace SilentNotes.ViewModels
             SynchronizeCommand = new RelayCommand(Synchronize);
             CloseSafeCommand = new RelayCommand(CloseSafe);
 
-            // If a filter was set before e.g. opening a note, set the same filter again.
             SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
+            IsDrawerOpen = settings.StartWithTagsOpen;
+
+            // If a filter was set before e.g. opening a note, set the same filter again.
             if (!SelectedTagExistsInTags())
                 settings.SelectedTag = NoteFilter.SpecialTags.AllNotes;
 
@@ -195,6 +197,13 @@ namespace SilentNotes.ViewModels
             {
                 _repositoryService.TrySaveRepository(Model);
                 _originalFingerPrint = fingerPrint;
+            }
+
+            SettingsModel settings = _settingsService.LoadSettingsOrDefault();
+            if (settings.StartWithTagsOpen != IsDrawerOpen)
+            {
+                settings.StartWithTagsOpen = IsDrawerOpen;
+                _settingsService.TrySaveSettingsToLocalDevice(settings);
             }
         }
 

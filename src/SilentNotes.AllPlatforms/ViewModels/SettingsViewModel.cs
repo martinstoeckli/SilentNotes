@@ -258,7 +258,10 @@ namespace SilentNotes.ViewModels
             set { SetPropertyAndModified(Model.RememberLastTagFilter, value, (bool v) => Model.RememberLastTagFilter = v); }
         }
 
-        // todo:
+        /// <summary>
+        /// Gets or sets a value indicating whether the drawer containing the tags should be opened
+        /// when showing the note repository page.
+        /// </summary>
         public bool StartWithTagsOpen
         {
             get { return Model.StartWithTagsOpen; }

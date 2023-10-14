@@ -243,8 +243,6 @@
 
 		WeakReferenceMessenger.Default.Register<NoteRepositoryViewModel.BringSelectedNoteIntoViewMessage>(
 			this, (recipient, message) => BringSelectedNoteIntoView());
-
-		// todo: read the SettingsViewMode.StartWithTagsOpen
 		base.OnInitialized();
 	}
 
