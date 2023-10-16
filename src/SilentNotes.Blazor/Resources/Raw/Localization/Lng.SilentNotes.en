@@ -26,6 +26,7 @@ welcome_note_2 = <h1>Ordering notes</h1><p>Drag the double-arrow icon on a note 
 welcome_note_3 = <h1>Password protection</h1><p>Open the safe and use the lock icon to protect a note.</p>
 welcome_note_tag = Security
 
+filter_tags = Filter by tags
 filter_show_all_notes = All notes
 filter_only_without_tags = Without tags
 

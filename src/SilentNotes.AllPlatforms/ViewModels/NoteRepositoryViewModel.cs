@@ -38,6 +38,7 @@ namespace SilentNotes.ViewModels
         private NoteRepositoryModel _model;
         private long? _originalFingerPrint;
         private NoteViewModelReadOnly _selectedOrderNote;
+        private ITreeItemViewModel _selectedTagNode;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NoteRepositoryViewModel"/> class.
@@ -66,6 +67,7 @@ namespace SilentNotes.ViewModels
             _searchableTextConverter = new SearchableHtmlConverter();
             AllNotes = new List<NoteViewModelReadOnly>();
             FilteredNotes = new ObservableCollection<NoteViewModelReadOnly>();
+            TagsRootNode = new TagTreeItemViewModel(null, null, AllNotes);
 
             _specialTagLocalizations = new KeyValueList<string, string>();
             _specialTagLocalizations[NoteFilter.SpecialTags.AllNotes] = string.Format("«{0}»", Language.LoadText("filter_show_all_notes"));
@@ -90,6 +92,7 @@ namespace SilentNotes.ViewModels
             if (!SelectedTagExistsInTags())
                 settings.SelectedTag = NoteFilter.SpecialTags.AllNotes;
 
+            // todo:
             if ((settings.SelectedTag != NoteFilter.SpecialTags.AllNotes) || !string.IsNullOrEmpty(settings.Filter))
             {
                 OnPropertyChanged(nameof(SelectedTag));
@@ -237,6 +240,35 @@ namespace SilentNotes.ViewModels
         public ObservableCollection<NoteViewModelReadOnly> FilteredNotes { get; private set; }
 
         /// <summary>
+        /// Gets the root node of the tag tree, its <see cref="ITreeItemViewModel.Children"/>
+        /// list can be used for data binding.
+        /// </summary>
+        public TagTreeItemViewModel TagsRootNode { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the currently selected tag node and marks its anchestors as IsSelected.
+        /// </summary>
+        public ITreeItemViewModel SelectedTagNode
+        {
+            get { return _selectedTagNode; }
+
+            set
+            {
+                _selectedTagNode = value;
+                foreach (var node in TagsRootNode.EnumerateSiblingsRecursive())
+                    node.IsSelected = false;
+
+                // Mark all parent items as selected
+                if (_selectedTagNode != null)
+                {
+                    _selectedTagNode.IsSelected = true;
+                    foreach (var node in _selectedTagNode.EnumerateAnchestorsRecursive())
+                        node.IsSelected = true;
+                }
+            }
+        }
+
+        /// <summary>
         /// Gets or sets the search filter.
         /// A two-way-binding can end up in an endless loop, when typing very fast.
         /// </summary>
@@ -370,7 +402,7 @@ namespace SilentNotes.ViewModels
         /// </summary>
         public ICommand DeleteNoteCommand { get; private set; }
 
-        private void DeleteNote(object value)
+        private async void DeleteNote(object value)
         {
             Guid noteId = (value is Guid) ? (Guid)value : new Guid(value.ToString());
             NoteViewModelReadOnly selectedNote = AllNotes.Find(item => item.Id == noteId);
@@ -384,6 +416,7 @@ namespace SilentNotes.ViewModels
             // Remove note from filtered list
             int selectedIndex = FilteredNotes.IndexOf(selectedNote);
             FilteredNotes.RemoveAt(selectedIndex);
+            await InitializeTagTree();
             UpdateTags();
 
             // If the note was the last one containing the selected tag, the filter should be cleared
@@ -436,6 +469,17 @@ namespace SilentNotes.ViewModels
         /// </summary>
         public bool IsDrawerOpen { get; set; }
 
+        /// <summary>
+        /// Adds all root nodes to the tag tree.
+        /// </summary>
+        /// <returns>Task for async call.</returns>
+        public async Task InitializeTagTree()
+        {
+            TagsRootNode.ResetChildren();
+            await TagsRootNode.LazyLoadChildren();
+        }
+
+        // todo:
         private void UpdateTags()
         {
             Tags = new List<ListItemViewModel<string>>();

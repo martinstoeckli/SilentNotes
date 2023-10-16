@@ -26,6 +26,7 @@ welcome_note_2 = <h1>Notları sıralama</h1><p>Notun üstündeki çapraz ok dü�
 welcome_note_3 = <h1>Şifre ile koruma</h1><p>Notlarınızı korumak için kasa özelliğini açın ve notlarınızı kilitleyin.</p>
 welcome_note_tag = Dijital güvenlik
 
+filter_tags = Filter by tags
 filter_show_all_notes = Tüm notlar
 filter_only_without_tags = Etiketsiz notlar
 

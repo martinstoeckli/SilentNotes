@@ -100,23 +100,34 @@
 @* Sidebar with tags *@
 <MudDrawer @ref="_sideDrawer" @bind-Open="@ViewModel.IsDrawerOpen" Elevation="1" Variant="DrawerVariant.Responsive" Breakpoint="Breakpoint.Sm" ClipMode="DrawerClipMode.Docked">
 	<MudDrawerHeader Class="d-inline-flex justify-space-between align-start">
-		<h2>Filter by tag</h2>
+		<MudStack Row="false">
+			<h3>@LanguageService["filter_tags"]</h3>
+			<MudStack Row="true">
+				<MudIconButton Icon="@IconService.GetSvgLink(IconNames.FilterOff)" Title="@LanguageService["filter_show_all_notes"]" Edge="Edge.Start" />
+				<MudIconButton Icon="@IconService.GetSvgLink(IconNames.TagOff)" Title="@LanguageService["filter_only_without_tags"]" Edge="Edge.Start" />
+			</MudStack>
+		</MudStack>
 		<MudIconButton OnClick="() => ViewModel.IsDrawerOpen = false" Icon="@IconService.GetSvgLink(IconNames.Close)" Size="Size.Small" />
 	</MudDrawerHeader>
 	<MudDrawerContainer>
-		<MudList Clickable="true" @bind-SelectedValue="@ViewModel.SelectedTag" Dense="false">
-			@foreach (var tag in ViewModel.Tags)
-			{
-				if (tag.IsDivider)
-				{
-					<MudDivider />
-				}
-				else
-				{
-					<MudListItem Value="@tag" Text="@tag.Text" Icon="@IconService.GetSvgLink(tag.IconName)" OnClick="() => CloseDrawerWhenItemSelected()" />
-				}
-			}
-		</MudList>
+		<MudTreeView id="tagTree"
+			Items="ViewModel.TagsRootNode.Children"
+			ServerData="TagTreeItemViewModel.LoadData"
+			ExpandOnClick="true"
+			Color="Color.Tertiary" Dense="true">
+			<ItemTemplate>
+				<MudTreeViewItem
+					Items="@context.Children"
+					Value="@context" Text="@context.Title"
+					OnClick="@(() => ViewModel.SelectedTagNode = context)"
+					Activated="@context.IsSelected"
+					Icon="@GetTagIcon(context)" IconColor="@GetTagIconColor(context)">
+					<BodyContent Context="bodyContext">
+						<MudText Color="@GetTagIconColor(context)">@context.Title</MudText>
+					</BodyContent>
+				</MudTreeViewItem>
+			</ItemTemplate>
+		</MudTreeView>
 	</MudDrawerContainer>
 </MudDrawer>
 
@@ -197,9 +208,11 @@
 		IconNames.NoteTextOutline,
 		IconNames.OrderBoolAscendingVariant,
 		IconNames.Pin,
+		IconNames.FilterOff,
 		IconNames.TagMultiple,
 		IconNames.TagOff,
 		IconNames.TagOutline,
+		IconNames.TagPlusOutline,
 		IconNames.SafeSquareOutline,
 		IconNames.ArrowCollapseUp,
 		IconNames.ArrowUp,
@@ -222,7 +235,7 @@
 	/// <summary>
 	/// Initializes a new instance of the <see cref="NoteRepositoryPage"/> class.
 	/// </summary>
-	protected override void OnInitialized()
+	protected override async Task OnInitializedAsync()
 	{
 		RepositoryStorageLoadResult loadResult = RepositoryStorageService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepositoryModel);
 		if (loadResult == RepositoryStorageLoadResult.InvalidRepository)
@@ -240,6 +253,7 @@
 			CryptoRandomSource,
 			RepositoryStorageService
 		);
+		await ViewModel.InitializeTagTree();
 
 		WeakReferenceMessenger.Default.Register<NoteRepositoryViewModel.BringSelectedNoteIntoViewMessage>(
 			this, (recipient, message) => BringSelectedNoteIntoView());
@@ -338,5 +352,19 @@
 	{
 		// Remember to scroll to the moved note, as soon as the rendering has finished.
 		_pendingScrollIntoViewSelector = string.Format("[data-note='{0}']", ViewModel.SelectedOrderNote.Id);
+	}
+
+	private string GetTagIcon(ITreeItemViewModel tagTreeNode)
+	{
+		return tagTreeNode.Parent == ViewModel.TagsRootNode
+			? IconService.GetSvgLink(IconNames.TagOutline)
+			: IconService.GetSvgLink(IconNames.TagPlusOutline, 22);
+	}
+
+	private Color GetTagIconColor(ITreeItemViewModel tagTreeNode)
+	{
+		return ((TagTreeItemViewModel)tagTreeNode).IsSelected
+			? Color.Tertiary
+			: Color.Default;
 	}
 }
