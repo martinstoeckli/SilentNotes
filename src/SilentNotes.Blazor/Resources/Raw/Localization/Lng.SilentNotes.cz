@@ -26,7 +26,7 @@ welcome_note_2 = <h1>Řazení poznámek</h1><p>Pořadí poznámky změníte taž
 welcome_note_3 = <h1>Ochrana heslem</h1><p>Otevřte trezor a kliknutím na ikonu zámku zaheslujte poznámku.</p>
 welcome_note_tag = Bezpečnost
 
-filter_tags = Filter by tags
+filter_tags = Tag filter
 filter_show_all_notes = Veškeré poznámky
 filter_only_without_tags = Bez štítků
 

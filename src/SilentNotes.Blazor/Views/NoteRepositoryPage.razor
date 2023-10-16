@@ -99,9 +99,9 @@
 
 @* Sidebar with tags *@
 <MudDrawer @ref="_sideDrawer" @bind-Open="@ViewModel.IsDrawerOpen" Elevation="1" Variant="DrawerVariant.Responsive" Breakpoint="Breakpoint.Sm" ClipMode="DrawerClipMode.Docked">
-	<MudDrawerHeader Class="d-inline-flex justify-space-between align-start">
-		<MudStack Row="false">
-			<h3>@LanguageService["filter_tags"]</h3>
+	<MudDrawerHeader Class="d-inline-flex justify-space-between align-start pb-1">
+		<MudStack Row="false" Spacing="1">
+			<h3 class="h-colored">@LanguageService["filter_tags"]</h3>
 			<MudStack Row="true">
 				<MudIconButton Icon="@IconService.GetSvgLink(IconNames.FilterOff)" Title="@LanguageService["filter_show_all_notes"]" Edge="Edge.Start" />
 				<MudIconButton Icon="@IconService.GetSvgLink(IconNames.TagOff)" Title="@LanguageService["filter_only_without_tags"]" Edge="Edge.Start" />
@@ -110,11 +110,12 @@
 		<MudIconButton OnClick="() => ViewModel.IsDrawerOpen = false" Icon="@IconService.GetSvgLink(IconNames.Close)" Size="Size.Small" />
 	</MudDrawerHeader>
 	<MudDrawerContainer>
+		<MudDivider Class="pb-2" />
 		<MudTreeView id="tagTree"
 			Items="ViewModel.TagsRootNode.Children"
 			ServerData="TagTreeItemViewModel.LoadData"
 			ExpandOnClick="true"
-			Color="Color.Tertiary" Dense="true">
+			Color="Color.Tertiary">
 			<ItemTemplate>
 				<MudTreeViewItem
 					Items="@context.Children"

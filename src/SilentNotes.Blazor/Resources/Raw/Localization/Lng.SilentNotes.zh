@@ -26,7 +26,7 @@ welcome_note_2 = <h1>笔记排序</h1><p>拖动笔记上的双箭头图标以更
 welcome_note_3 = <h1>密码保护</h1><p>打开保险箱并使用锁图标来保护笔记。</p>
 welcome_note_tag = 安全
 
-filter_tags = Filter by tags
+filter_tags = Tag filter
 filter_show_all_notes = 全部笔记
 filter_only_without_tags = 无标签
 

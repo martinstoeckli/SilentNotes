@@ -26,7 +26,7 @@ welcome_note_2 = <h1>Notizen ordnen</h1><p>Ziehen Sie das Doppelpfeil-Icon einer
 welcome_note_3 = <h1>Passwortschutz</h1><p>Öffnen Sie den Tresor und benützen Sie das Schloss-Icon um eine Notiz zu schützen.</p>
 welcome_note_tag = Sicherheit
 
-filter_tags = Filtern nach Schlagwörter
+filter_tags = Schlagwortfilter
 filter_show_all_notes = Alle Notizen
 filter_only_without_tags = Ohne Schlagwörter
 

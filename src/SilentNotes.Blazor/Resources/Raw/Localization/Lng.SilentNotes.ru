@@ -26,7 +26,7 @@ welcome_note_2 = <h1>Порядок заметок</h1><p>Чтобы измен�
 welcome_note_3 = <h1>Защита паролем</h1><p>Откройте сейф и используйте значок замка для защиты заметки.</p>
 welcome_note_tag = Security
 
-filter_tags = Filter by tags
+filter_tags = Tag filter
 filter_show_all_notes = All notes
 filter_only_without_tags = Without tags
 

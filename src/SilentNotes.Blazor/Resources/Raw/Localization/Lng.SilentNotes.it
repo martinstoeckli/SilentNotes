@@ -26,7 +26,7 @@ welcome_note_2 = <h1>Ordinamento appunti</h1><p>Trascina l'icona della doppia fr
 welcome_note_3 = <h1>Protezione con password</h1><p>Apre la cassaforte e usa l'icona del lucchetto per proteggere un appunto.</p>
 welcome_note_tag = Sicurezza
 
-filter_tags = Filter by tags
+filter_tags = Tag filter
 filter_show_all_notes = Tutti gli appunti
 filter_only_without_tags = Senza etichette
 
