@@ -20,6 +20,11 @@ namespace SilentNotes.ViewModels
         string Title { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the node can be expanded or not.
+        /// </summary>
+        bool CanExpand { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether the node is expanded or not.
         /// </summary>
         bool IsExpanded { get; set; }

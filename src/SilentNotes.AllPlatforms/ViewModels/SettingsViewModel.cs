@@ -249,16 +249,6 @@ namespace SilentNotes.ViewModels
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the last selected tag to filter the notes
-        /// should be remembered across startups.
-        /// </summary>
-        public bool RememberLastTagFilter
-        {
-            get { return Model.RememberLastTagFilter; }
-            set { SetPropertyAndModified(Model.RememberLastTagFilter, value, (bool v) => Model.RememberLastTagFilter = v); }
-        }
-
-        /// <summary>
         /// Gets or sets a value indicating whether the drawer containing the tags should be opened
         /// when showing the note repository page.
         /// </summary>

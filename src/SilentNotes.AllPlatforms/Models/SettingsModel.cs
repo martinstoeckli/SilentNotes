@@ -27,6 +27,7 @@ namespace SilentNotes.Models
         private List<string> _noteColorsHex;
         private List<string> _transferCodeHistory;
         private List<NotificationTriggerModel> _notificationTriggers;
+        private List<string> _filterTags;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SettingsModel"/> class.
@@ -41,7 +42,6 @@ namespace SilentNotes.Models
             DefaultNoteColorHex = StartDefaultNoteColorHex;
             NoteMaxHeightScale = 1.0;
             DefaultNoteInsertion = NoteInsertionMode.AtTop;
-            RememberLastTagFilter = false;
             UseColorForAllNotesInDarkMode = false;
             ColorForAllNotesInDarkModeHex = "#323232";
             KeepScreenUpDuration = 15;
@@ -156,13 +156,6 @@ namespace SilentNotes.Models
         public NoteInsertionMode DefaultNoteInsertion { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the last selected tag to filter the notes
-        /// should be remembered across startups.
-        /// </summary>
-        [XmlElement("remember_last_tag_filter")]
-        public bool RememberLastTagFilter { get; set; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether the drawer with the tag list should be kept open
         /// on wide screens.
         /// </summary>
@@ -272,10 +265,20 @@ namespace SilentNotes.Models
         }
 
         /// <summary>
-        /// Gets or sets the currently selected tag which is used for filtering.
+        /// Gets or sets a temporary list of selected tags which are used for filtering.
         /// </summary>
-        [XmlElement("selected_tag")]
-        public string SelectedTag { get; set; }
+        [XmlIgnore]
+        public List<string> FilterTags
+        {
+            get { return _filterTags ?? (_filterTags = new List<string>()); }
+            set { _filterTags = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether only notes without tags should be shown.
+        /// </summary>
+        [XmlIgnore]
+        public bool FilterNotesWithoutTags { get; set; }
 
         /// <summary>
         /// Gets or sets a list of stored startup notification triggers.

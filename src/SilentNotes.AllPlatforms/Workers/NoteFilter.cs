@@ -15,18 +15,25 @@ namespace SilentNotes.Workers
     public class NoteFilter
     {
         private readonly string _pattern;
-        private readonly string _tag;
+        private readonly HashSet<string> _userDefinedTags;
+        private readonly FilterOptions _options;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NoteFilter"/> class.
         /// </summary>
         /// <param name="pattern">User defined search filter.</param>
-        /// <param name="tag">User defined tag to search for or a value of <see cref="SpecialTags"/>.
+        /// <param name="userDefinedTags">User defined tag to search for or a value of <see cref="SpecialTags"/>.
+        /// <param name="options">Options how to filter the notes.</param>
         /// </param>
-        public NoteFilter(string pattern, string tag)
+        public NoteFilter(string pattern, IEnumerable<string> userDefinedTags, FilterOptions options)
         {
             _pattern = pattern;
-            _tag = tag;
+            if (userDefinedTags == null)
+                userDefinedTags = new string[0];
+            _userDefinedTags = new HashSet<string>(
+                userDefinedTags.Where(tag => !string.IsNullOrWhiteSpace(tag)),
+                StringComparer.InvariantCultureIgnoreCase);
+            _options = options;
         }
 
         /// <summary>
@@ -47,52 +54,51 @@ namespace SilentNotes.Workers
         }
 
         /// <summary>
-        /// Checks whether a note contains a given tag.
+        /// Checks whether a note contains all user defined tags.
         /// </summary>
         /// <param name="noteTags">Tags of the note to test.</param>
-        /// <returns>Returns true if the note contains the tag, otherwise false.</returns>
-        public bool ContainsTag(IEnumerable<string> noteTags)
+        /// <returns>Returns true if the note contains the tags, otherwise false.</returns>
+        public bool MatchTags(List<string> noteTags)
         {
-            // There is no tag to search for
-            if (String.IsNullOrEmpty(_tag) || (_tag == SpecialTags.AllNotes))
-                return true;
+            switch (_options)
+            {
+                case FilterOptions.FilterByTagList:
+                    // There is no tag to search for (no filtering)
+                    if (_userDefinedTags.Count == 0)
+                        return true;
 
-            // Check for special tags
-            bool hasTags = (noteTags != null) && noteTags.Any();
-            if (_tag == SpecialTags.NotesWithoutTags)
-                return !hasTags;
+                    // There is a tag to search for, but no tags in the note
+                    bool hasNoteTags = (noteTags != null) && noteTags.Any();
+                    if (!hasNoteTags)
+                        return false;
 
-            // There is a tag to search for, but no tags in the list
-            if (!hasTags)
-                return false;
-
-            return noteTags.Contains(_tag, StringComparer.InvariantCultureIgnoreCase);
+                    // Check whether all required tags exist in the tags of the note
+                    int foundTags = 0;
+                    foreach (string noteTag in noteTags)
+                    {
+                        if (_userDefinedTags.Contains(noteTag))
+                            foundTags++;
+                        if (foundTags >= _userDefinedTags.Count)
+                            return true;
+                    }
+                    return false;
+                case FilterOptions.NotesWithoutTags:
+                    return (noteTags == null) || !noteTags.Any();
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(FilterOptions));
+            }
         }
 
         /// <summary>
-        /// List of tags with a special meaning.
+        /// All possible options for tag filtering
         /// </summary>
-        public static class SpecialTags
+        public enum FilterOptions
         {
-            /// <summary>
-            /// Show all notes, do not filter them.
-            /// </summary>
-            public const string AllNotes = null;
+            /// <summary>Filters by the user defined tags</summary>
+            FilterByTagList,
 
-            /// <summary>
-            /// Searches for notes without attached tags.
-            /// </summary>
-            public const string NotesWithoutTags = "8ed5a509-59a3-44f4-8360-a02f0d3854b6";
-
-            /// <summary>
-            /// Checks whether a given tag is a special tag.
-            /// </summary>
-            /// <param name="tag">Tag to check.</param>
-            /// <returns>Returns true if the tag is a special tag, otherwise false.</returns>
-            public static bool IsSpecialTag(string tag)
-            {
-                return (tag == AllNotes) || (tag == SpecialTags.NotesWithoutTags);
-            }
+            /// <summary>Finds all notes with no tags attached</summary>
+            NotesWithoutTags,
         }
     }
 }

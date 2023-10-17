@@ -26,6 +26,8 @@ namespace SilentNotes.ViewModels
         {
             Model = model;
             Parent = parent;
+            CanExpand = true;
+            IsExpanded = false;
             Children = new HashSet<ITreeItemViewModel>();
 
             if (Parent != null)
@@ -34,6 +36,9 @@ namespace SilentNotes.ViewModels
 
         /// <inheritdoc/>
         public virtual string Title { get; set; }
+
+        /// <inheritdoc/>
+        public virtual bool CanExpand { get; set; }
 
         /// <inheritdoc/>
         public virtual bool IsExpanded { get; set; }
