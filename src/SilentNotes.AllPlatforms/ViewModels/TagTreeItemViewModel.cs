@@ -36,9 +36,8 @@ namespace SilentNotes.ViewModels
         protected override Task LoadChildren()
         {
             HashSet<string> parentTags = new HashSet<string>(
-                this.EnumerateAnchestorsRecursive().Select(anchestor => anchestor.Title),
+                this.EnumerateAnchestorsRecursive(true).Select(anchestor => anchestor.Title),
                 StringComparer.InvariantCultureIgnoreCase);
-            parentTags.Add(Model); // Include our own tag
             parentTags.Remove(null);
 
             // Find all groups of tags which contain all of the parentTags, and collect the

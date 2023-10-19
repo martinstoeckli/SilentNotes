@@ -62,9 +62,16 @@ namespace SilentNotes.ViewModels
         /// and ending with the root node.
         /// </summary>
         /// <param name="treeItem">The tree node from which to start the search.</param>
+		/// <param name="includeMyself">If true the <paramref name="treeItem"/> will be included in the result.</param>
         /// <returns>Enumeration of parents of the node.</returns>
-        public static IEnumerable<ITreeItemViewModel> EnumerateAnchestorsRecursive(this ITreeItemViewModel treeItem)
+        public static IEnumerable<ITreeItemViewModel> EnumerateAnchestorsRecursive(this ITreeItemViewModel treeItem, bool includeMyself)
         {
+            if (treeItem == null)
+                yield break;
+
+            if (includeMyself)
+                yield return treeItem;
+
             ITreeItemViewModel parent = treeItem.Parent;
             while (parent != null)
             {
@@ -77,16 +84,65 @@ namespace SilentNotes.ViewModels
         /// Enumerates all direct and indirect children of <paramref name="treeItem"/>.
         /// </summary>
         /// <param name="treeItem">The tree node from which to start the search.</param>
+		/// <param name="includeMyself">If true the <paramref name="treeItem"/> will be included in the result.</param>
         /// <returns>Enumeration of children of the node.</returns>
-        public static IEnumerable<ITreeItemViewModel> EnumerateSiblingsRecursive(this ITreeItemViewModel treeItem)
+        public static IEnumerable<ITreeItemViewModel> EnumerateSiblingsRecursive(this ITreeItemViewModel treeItem, bool includeMyself)
         {
+            if (treeItem == null)
+                yield break;
+
+            if (includeMyself)
+                yield return treeItem;
+
             foreach (var child in treeItem.Children)
             {
                 yield return child;
-                var grandChildren = EnumerateSiblingsRecursive(child);
+                var grandChildren = EnumerateSiblingsRecursive(child, false);
                 foreach (var grandChild in grandChildren)
                     yield return grandChild;
             }
+        }
+
+        /// <summary>
+        /// Determines whether the <paramref name="treeItem"/> is the root (has no parent).
+        /// </summary>
+        /// <param name="treeItem">The tree node to check.</param>
+        /// <returns>Returns true if the ode is a leaf, false if it is a branch.</returns>
+        public static bool IsRoot(this ITreeItemViewModel treeItem)
+        {
+            if (treeItem == null)
+                return false;
+
+            return treeItem.Parent == null;
+        }
+
+        /// <summary>
+        /// Determines whether the <paramref name="treeItem"/> is a leaf (has no children).
+        /// </summary>
+        /// <param name="treeItem">The tree node to check.</param>
+        /// <returns>Returns true if the ode is a leaf, false if it is a branch.</returns>
+        public static bool IsLeaf(this ITreeItemViewModel treeItem)
+        {
+            if (treeItem == null)
+                return false;
+
+            return !treeItem.Children.Any();
+        }
+
+        /// <summary>
+        /// Tries to expands the <paramref name="treeItem"/>, by first lazy loading the children
+        /// and afterwards setting the correct expanded state.
+        /// </summary>
+        /// <param name="treeItem">The tree node to expand.</param>
+        /// <returns>Task for async call.</returns>
+        public static async Task Expand(this ITreeItemViewModel treeItem)
+        {
+            if ((treeItem == null) || (treeItem.IsExpanded))
+                return;
+
+            await treeItem.LazyLoadChildren();
+            treeItem.CanExpand = treeItem.Children.Any();
+            treeItem.IsExpanded = true;
         }
     }
 }

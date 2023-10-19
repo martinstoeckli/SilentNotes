@@ -29,9 +29,7 @@ namespace SilentNotes.ViewModels
             CanExpand = true;
             IsExpanded = false;
             Children = new HashSet<ITreeItemViewModel>();
-
-            if (Parent != null)
-                Parent.Children.Add(this);
+            Parent?.Children.Add(this);
         }
 
         /// <inheritdoc/>

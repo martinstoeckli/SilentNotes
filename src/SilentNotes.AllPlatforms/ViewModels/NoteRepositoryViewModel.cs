@@ -72,7 +72,6 @@ namespace SilentNotes.ViewModels
 
             Model = model;
             _originalFingerPrint = Model?.GetModificationFingerprint();
-            UpdateTags();
 
             // Initialize commands and events
             NewNoteCommand = new RelayCommand(NewNote);
@@ -89,35 +88,39 @@ namespace SilentNotes.ViewModels
             IsDrawerOpen = settings.StartWithTagsOpen;
 
             Modified = false;
+        }
 
-            //// If a filter was set before e.g. opening a note, set the same filter again.
-            //if (!SelectedTagExistsInTags())
-            //    settings.SelectedTag = NoteFilter.SpecialTags.AllNotes;
+        /// <summary>
+        /// Adds all root nodes to the tag tree.
+        /// </summary>
+        /// <returns>Task for async call.</returns>
+        public async Task InitializeTagTree()
+        {
+            TagsRootNode.ResetChildren();
+            await TagsRootNode.LazyLoadChildren();
 
-            //// todo:
-            //if ((settings.SelectedTag != NoteFilter.SpecialTags.AllNotes) || !string.IsNullOrEmpty(settings.Filter))
-            //{
-            //    OnPropertyChanged(nameof(SelectedTag));
-            //    OnPropertyChanged(nameof(Filter));
-            //    OnPropertyChanged(nameof(IsFiltered));
-            //    ApplyFilter();
-            //    OnPropertyChanged("Notes");
-            //}
+            SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
+            FilterNotesWithoutTags = settings.FilterNotesWithoutTags;
+
+            // Try to reapply the selected tags
+            ITreeItemViewModel parent = TagsRootNode;
+            ITreeItemViewModel child = null;
+            foreach (string filterTag in settings.FilterTags)
+            {
+                child = parent.Children.FirstOrDefault(child => child.Title == filterTag);
+                if (child == null)
+                    break;
+
+                await child.Expand();
+                parent = child;
+            }
+            if (child != null)
+                SelectedTagNode = child;
+
+            ApplyFilter();
         }
 
         private ILanguageService Language { get; }
-
-        //private bool SelectedTagExistsInTags()
-        //{
-        //    // An invalid selected tag can exist if the user edited a note (deleted a tag) and
-        //    // returned to the overview, which still remembers this selected tag.
-        //    SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
-        //    if (NoteFilter.SpecialTags.IsSpecialTag(settings.SelectedTag))
-        //        return true;
-
-        //    NoteFilter noteFilter = new NoteFilter(null, settings.SelectedTag);
-        //    return noteFilter.ContainsTag(Tags.Select(tag => tag.Value));
-        //}
 
         /// <inheritdoc/>
         public override void OnStoringUnsavedData()
@@ -186,18 +189,16 @@ namespace SilentNotes.ViewModels
         {
             FilterNotesWithoutTags = false;
 
+            // Select or unselect node
             if (treeItem == SelectedTagNode)
                 SelectedTagNode = null;
             else
                 SelectedTagNode = treeItem;
 
-            // Expand the node if not yet expanded
-            if ((SelectedTagNode != null) && !SelectedTagNode.IsExpanded)
-            {
-                await SelectedTagNode.LazyLoadChildren();
-                SelectedTagNode.CanExpand = SelectedTagNode.Children.Count > 0;
-                SelectedTagNode.IsExpanded = true;
-            }
+            if (SelectedTagNode != null)
+                await SelectedTagNode.Expand();
+
+            ApplyFilter();
         }
 
         /// <summary>
@@ -209,6 +210,7 @@ namespace SilentNotes.ViewModels
         {
             FilterNotesWithoutTags = false;
             SelectedTagNode = null;
+            ApplyFilter();
         }
 
         /// <summary>
@@ -220,6 +222,7 @@ namespace SilentNotes.ViewModels
         {
             FilterNotesWithoutTags = !FilterNotesWithoutTags;
             SelectedTagNode = null;
+            ApplyFilter();
         }
 
         /// <summary>
@@ -242,14 +245,13 @@ namespace SilentNotes.ViewModels
             set
             {
                 _selectedTagNode = value;
-                foreach (var node in TagsRootNode.EnumerateSiblingsRecursive())
+                foreach (var node in TagsRootNode.EnumerateSiblingsRecursive(true))
                     node.IsSelected = false;
 
                 // Mark all parent items as selected
                 if (_selectedTagNode != null)
                 {
-                    _selectedTagNode.IsSelected = true;
-                    foreach (var node in _selectedTagNode.EnumerateAnchestorsRecursive())
+                    foreach (var node in _selectedTagNode.EnumerateAnchestorsRecursive(true))
                         node.IsSelected = true;
                 }
 
@@ -267,11 +269,10 @@ namespace SilentNotes.ViewModels
             _filterTags.Clear();
             if (SelectedTagNode != null)
             {
-                _filterTags.AddRange(SelectedTagNode.EnumerateAnchestorsRecursive()
+                _filterTags.AddRange(SelectedTagNode.EnumerateAnchestorsRecursive(true)
                     .Select(node => node.Title)
                     .Where(tag => !string.IsNullOrEmpty(tag))
                     .Reverse());
-                _filterTags.Add(SelectedTagNode.Title);
             }
             return _filterTags;
         }
@@ -426,45 +427,9 @@ namespace SilentNotes.ViewModels
             int selectedIndex = FilteredNotes.IndexOf(selectedNote);
             FilteredNotes.RemoveAt(selectedIndex);
             await InitializeTagTree();
-            UpdateTags();
-
-            // If the note was the last one containing the selected tag, the filter should be cleared
-            // todo:
-            //if (!SelectedTagExistsInTags())
-            //    SelectedTag = null;
-            //else
-            //    OnPropertyChanged("Notes");
 
             _feedbackService.ShowToast(Language.LoadText("feedback_note_to_recycle"), Severity.Info);
         }
-
-        /// <summary>
-        /// Gets a list of all tags which are used in the notes.
-        /// </summary>
-        public List<ListItemViewModel<string>> Tags { get; private set; }
-
-        //public object SelectedTag
-        //{
-        //    get
-        //    {
-        //        SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
-        //        ListItemViewModel<string> result = Tags.Find(item => string.Equals(item.Value, settings.SelectedTag, StringComparison.InvariantCultureIgnoreCase));
-        //        return result ?? Tags[0];
-        //    }
-
-        //    set
-        //    {
-        //        string newValue = ((ListItemViewModel<string>)value).Value;
-        //        SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
-        //        if (SetProperty(settings.SelectedTag, newValue, (string v) => settings.SelectedTag = v))
-        //        {
-        //            OnPropertyChanged(nameof(SelectedTag));
-        //            ApplyFilter();
-        //            OnPropertyChanged("Notes");
-        //            _settingsService.TrySaveSettingsToLocalDevice(settings);
-        //        }
-        //    }
-        //}
 
         /// <summary>
         /// Gets a value indicating whether the notes are filtered by a tag or not.
@@ -478,61 +443,6 @@ namespace SilentNotes.ViewModels
         /// Gets or sets a value indicating whether the side drawer displaying the tags is open or not.
         /// </summary>
         public bool IsDrawerOpen { get; set; }
-
-        /// <summary>
-        /// Adds all root nodes to the tag tree.
-        /// </summary>
-        /// <returns>Task for async call.</returns>
-        public async Task InitializeTagTree()
-        {
-            TagsRootNode.ResetChildren();
-            await TagsRootNode.LazyLoadChildren();
-        }
-
-        // todo:
-        private void UpdateTags()
-        {
-            Tags = new List<ListItemViewModel<string>>();
-            Tags.Add(new ListItemViewModel<string> 
-            { 
-                //Value = NoteFilter.SpecialTags.AllNotes,
-                //Text = _specialTagLocalizations[NoteFilter.SpecialTags.AllNotes],
-                IconName = IconNames.TagMultiple,
-            });
-            Tags.Add(new ListItemViewModel<string>
-            {
-                //Value = NoteFilter.SpecialTags.NotesWithoutTags,
-                //Text = _specialTagLocalizations[NoteFilter.SpecialTags.NotesWithoutTags],
-                IconName = IconNames.TagOff,
-            });
-            Tags.Add(new ListItemViewModel<string>
-            {
-                IsDivider = true,
-            });
-            Tags.AddRange(Model.CollectActiveTags().Select(tag => new ListItemViewModel<string>() 
-            {
-                Text = tag,
-                Value = tag,
-                IconName = IconNames.TagOutline,
-            }));
-            OnPropertyChanged(nameof(Tags));
-        }
-
-        ///// <summary>
-        ///// Gets the localized tag filter to show all notes.
-        ///// </summary>
-        //public string AllNotesTagFilter
-        //{
-        //    get { return _specialTagLocalizations[NoteFilter.SpecialTags.AllNotes]; }
-        //}
-
-        ///// <summary>
-        ///// Gets the localized tag filter to show all notes without tags.
-        ///// </summary>
-        //public string WithoutTagFilter
-        //{
-        //    get { return _specialTagLocalizations[NoteFilter.SpecialTags.NotesWithoutTags]; }
-        //}
 
         /// <summary>
         /// Gets the command which handles the synchronization with the web server.
