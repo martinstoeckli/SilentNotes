@@ -98,48 +98,50 @@
 </MudAppBar>
 
 @* Sidebar with tags *@
-<MudDrawer @ref="_sideDrawer" @bind-Open="@ViewModel.IsDrawerOpen" Elevation="1" Variant="DrawerVariant.Responsive" Breakpoint="Breakpoint.Sm" ClipMode="DrawerClipMode.Docked">
-	<MudDrawerHeader Class="d-inline-flex justify-space-between align-start pb-2">
-		<MudStack Row="false" Spacing="1">
-			<h3 class="h-colored">@LanguageService["filter_tags"]</h3>
-			<MudStack Row="true">
-				<MudIconButton
-					OnClick="@(() => ViewModel.ClearTagFilterCommand.Execute(null))"
-					Icon="@IconService.GetSvgLink(IconNames.FilterOff)"
-					Title="@LanguageService["filter_show_all_notes"]"
-					Edge="Edge.Start" />
-				<MudIconButton
-					OnClick="@(() => ViewModel.ToggleNotesWithoutTagsFilterCommand.Execute(null))"
-					Class="@Css.BuildClass(new CssClassIf("btn-toggled", ViewModel.FilterNotesWithoutTags))"
-					Icon="@IconService.GetSvgLink(IconNames.TagOff)"
-					Title="@LanguageService["filter_only_without_tags"]"
-					Edge="Edge.Start" />
+<MudSwipeArea OnSwipeEnd="OnSwipeDrawer">
+	<MudDrawer @ref="_sideDrawer" @bind-Open="@ViewModel.IsDrawerOpen" Elevation="1" Variant="DrawerVariant.Responsive" Breakpoint="Breakpoint.Sm" ClipMode="DrawerClipMode.Docked">
+		<MudDrawerHeader Class="d-inline-flex justify-space-between align-start pb-2">
+			<MudStack Row="false" Spacing="1">
+				<h3 class="h-colored">@LanguageService["filter_tags"]</h3>
+				<MudStack Row="true">
+					<MudIconButton
+						OnClick="@(() => ViewModel.ClearTagFilterCommand.Execute(null))"
+						Icon="@IconService.GetSvgLink(IconNames.FilterOff)"
+						Title="@LanguageService["filter_show_all_notes"]"
+						Edge="Edge.Start" />
+					<MudIconButton
+						OnClick="@(() => ViewModel.ToggleNotesWithoutTagsFilterCommand.Execute(null))"
+						Class="@Css.BuildClass(new CssClassIf("btn-toggled", ViewModel.FilterNotesWithoutTags))"
+						Icon="@IconService.GetSvgLink(IconNames.TagOff)"
+						Title="@LanguageService["filter_only_without_tags"]"
+						Edge="Edge.Start" />
+				</MudStack>
 			</MudStack>
-		</MudStack>
-		<MudIconButton OnClick="() => ViewModel.IsDrawerOpen = false" Icon="@IconService.GetSvgLink(IconNames.Close)" Size="Size.Small" />
-	</MudDrawerHeader>
-	<MudDivider Class="pb-2" />
-	<MudDrawerContainer Style="height: 100%; overflow: auto;">
-		<MudTreeView id="tagTree"
-			Items="ViewModel.TagsRootNode.Children"
-			ServerData="TagTreeItemViewModel.LoadData"
-			Color="Color.Tertiary">
-			<ItemTemplate>
-				<MudTreeViewItem @bind-Expanded="@context.IsExpanded"
-					Items="@context.Children"
-					Value="@context" Text="@context.Title"
-					OnClick="@(() => ViewModel.SelectTagNodeCommand.Execute(context))"
-					CanExpand="@context.CanExpand"
-					Activated="@context.IsSelected"
-					Icon="@GetTagIcon(context)" IconColor="@GetTagIconColor(context)">
-					<BodyContent Context="bodyContext">
-						<MudText Color="@GetTagIconColor(context)">@context.Title</MudText>
-					</BodyContent>
-				</MudTreeViewItem>
-			</ItemTemplate>
-		</MudTreeView>
-	</MudDrawerContainer>
-</MudDrawer>
+			<MudIconButton OnClick="() => ViewModel.IsDrawerOpen = false" Icon="@IconService.GetSvgLink(IconNames.Close)" Size="Size.Small" />
+		</MudDrawerHeader>
+		<MudDivider Class="pb-2" />
+		<MudDrawerContainer Style="height: 100%; overflow: auto;">
+			<MudTreeView id="tagTree"
+				Items="ViewModel.TagsRootNode.Children"
+				ServerData="TagTreeItemViewModel.LoadData"
+				Color="Color.Tertiary">
+				<ItemTemplate>
+					<MudTreeViewItem @bind-Expanded="@context.IsExpanded"
+						Items="@context.Children"
+						Value="@context" Text="@context.Title"
+						OnClick="@(() => ViewModel.SelectTagNodeCommand.Execute(context))"
+						CanExpand="@context.CanExpand"
+						Activated="@context.IsSelected"
+						Icon="@GetTagIcon(context)" IconColor="@GetTagIconColor(context)">
+						<BodyContent Context="bodyContext">
+							<MudText Color="@GetTagIconColor(context)">@context.Title</MudText>
+						</BodyContent>
+					</MudTreeViewItem>
+				</ItemTemplate>
+			</MudTreeView>
+		</MudDrawerContainer>
+	</MudDrawer>
+</MudSwipeArea>
 
 @* body *@
 <MudMainContent>
@@ -164,17 +166,17 @@
 							{
 								<div class="pin">@IconService.EmbedSvgLink(IconNames.Pin, 22)</div>
 							}
-							<div class="note-handle sortable-handle @Css.BuildClass(new CssClassIf("bluish-highlighted", note == ViewModel.SelectedOrderNote))" @onmousedown="() => ViewModel.SelectOrderNote(note)" @onmousedown:preventDefault="true" @onclick:preventDefault="true">@IconService.EmbedSvgLink(IconNames.ArrowAll, 22)</div>
-							<div class="note-handle recycle-handle" @onclick="() => ViewModel.DeleteNoteCommand.Execute(note.Id)" @onclick:preventDefault="true">@IconService.EmbedSvgLink(IconNames.Delete, 19)</div>
+							<div class="note-handle note-handle-top @Css.BuildClass(new CssClassIf("bluish-highlighted", note == ViewModel.SelectedOrderNote))" @onmousedown="() => ViewModel.SelectOrderNote(note)" @onmousedown:preventDefault="true" @onclick:preventDefault="true">@IconService.EmbedSvgLink(IconNames.ArrowAll, 22)</div>
+							<div class="note-handle note-handle-bottom" @onclick="() => ViewModel.DeleteNoteCommand.Execute(note.Id)" @onclick:preventDefault="true">@IconService.EmbedSvgLink(IconNames.Delete, 19)</div>
 							@if (ViewModel.IsAnySafeOpen && !note.IsLocked)
 							{
 								@if (note.IsInSafe)
 								{
-									<div class="note-handle safe-handle reddish" @onclick="() => ViewModel.RemoveNoteFromSafe(note.Id)" @onclick:preventDefault="true">@IconService.EmbedSvgLink(IconNames.Lock, 18)</div>
+									<div class="note-handle note-handle-top-inset reddish" @onclick="() => ViewModel.RemoveNoteFromSafe(note.Id)" @onclick:preventDefault="true">@IconService.EmbedSvgLink(IconNames.Lock, 18)</div>
 								}
 								else
 								{
-									<div class="note-handle safe-handle greenish" @onclick="() => ViewModel.AddNoteToSafe(note.Id)" @onclick:preventDefault="true">@IconService.EmbedSvgLink(IconNames.LockOpenVariant, 18)</div>
+									<div class="note-handle note-handle-top-inset greenish" @onclick="() => ViewModel.AddNoteToSafe(note.Id)" @onclick:preventDefault="true">@IconService.EmbedSvgLink(IconNames.LockOpenVariant, 18)</div>
 								}
 							}
 						</div>
@@ -355,6 +357,12 @@
 	{
 		bool isLargeScreen = await ViewportService.IsBreakpointWithinWindowSizeAsync(Breakpoint.MdAndUp);
 		if (!isLargeScreen)
+			ViewModel.IsDrawerOpen = false;
+	}
+
+	private void OnSwipeDrawer(SwipeEventArgs args)
+	{
+		if ((args.SwipeDirection == SwipeDirection.RightToLeft) && ViewModel.IsDrawerOpen)
 			ViewModel.IsDrawerOpen = false;
 	}
 

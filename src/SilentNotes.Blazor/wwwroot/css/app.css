@@ -124,15 +124,14 @@ h3 { font-size: 1.1em; }
 	border-radius: 13px;
 	cursor: pointer;
 }
-
-.sortable-handle {
+.note-handle-top {
 }
-.safe-handle {
-	right: calc(var(--note-handle-mx) + 32px);
-}
-.recycle-handle {
+.note-handle-bottom {
 	top: auto;
 	bottom: var(--note-handle-my);
+}
+.note-handle-top-inset {
+	right: calc(var(--note-handle-mx) + 32px);
 }
 
 /* Text formatting */
