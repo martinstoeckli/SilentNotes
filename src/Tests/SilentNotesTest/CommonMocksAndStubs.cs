@@ -21,6 +21,20 @@ namespace SilentNotesTest
         }
 
         /// <summary>
+        /// Creates an <see cref="ILanguageService"/> mock which returns <paramref name="textForAny"/>
+        /// for any key.
+        /// </summary>
+        /// <returns>Mock for a language service.</returns>
+        public static ILanguageService LanguageService(string textForAny)
+        {
+            var result = new Mock<ILanguageService>();
+            result
+                .SetupGet(m => m[It.IsAny<string>()])
+                .Returns(textForAny);
+            return result.Object;
+        }
+
+        /// <summary>
         /// Creates a dummy <see cref="IFeedbackService"/> which does nothing.
         /// </summary>
         /// <returns>Dummy service doing nothing.</returns>

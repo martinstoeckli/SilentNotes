@@ -13,8 +13,8 @@ using VanillaCloudStorageClient;
 namespace SilentNotes.Stories.SynchronizationStory
 {
     /// <summary>
-    /// This step belongs to the <see cref="SynchronizationStory"/>. It checks whether a
-    /// repository exists in the cloud storage.
+    /// This step belongs to the "SynchronizationStory". It checks whether a repository exists in
+    /// the cloud storage.
     /// </summary>
     internal class ExistsCloudRepositoryStep : SynchronizationStoryStepBase
     {

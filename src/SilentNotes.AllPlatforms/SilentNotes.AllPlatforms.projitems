@@ -84,6 +84,13 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\ThemeService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\XmlFileService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SnKeyboardShortcuts.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Stories\PullPushStory\DecryptCloudRepositoryStep.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Stories\PullPushStory\DownloadCloudRepositoryStep.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Stories\PullPushStory\ExistsCloudRepositoryStep.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Stories\PullPushStory\IsSameRepositoryStep.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Stories\PullPushStory\NamespaceDoc.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Stories\PullPushStory\PullPushStoryModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Stories\PullPushStory\StoreMergedRepositoryAndQuitStep.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Stories\StoryMode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Stories\SynchronizationStory\DecryptCloudRepositoryStep.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Stories\SynchronizationStory\DownloadCloudRepositoryStep.cs" />
@@ -92,6 +99,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Stories\SynchronizationStory\HandleOAuthRedirectStep.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Stories\SynchronizationStory\IsCloudServiceSetStep.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Stories\SynchronizationStory\IsSameRepositoryStep.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Stories\SynchronizationStory\NamespaceDoc.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Stories\SynchronizationStory\ShowCloudStorageAccountStep.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Stories\SynchronizationStory\ShowCloudStorageChoiceStep.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Stories\SynchronizationStory\ShowFirstTimeDialogStep.cs" />
