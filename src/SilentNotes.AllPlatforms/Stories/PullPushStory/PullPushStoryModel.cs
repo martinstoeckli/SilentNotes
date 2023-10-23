@@ -8,6 +8,9 @@ using SilentNotes.Stories.SynchronizationStory;
 
 namespace SilentNotes.Stories.PullPushStory
 {
+    /// <summary>
+    /// Model storing the collected information about the pull/push story.
+    /// </summary>
     internal class PullPushStoryModel : SynchronizationStoryModel
     {
         /// <summary>

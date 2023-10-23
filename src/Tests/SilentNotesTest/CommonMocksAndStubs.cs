@@ -21,16 +21,31 @@ namespace SilentNotesTest
         }
 
         /// <summary>
-        /// Creates an <see cref="ILanguageService"/> mock which returns <paramref name="textForAny"/>
-        /// for any key.
+        /// Creates an <see cref="ILanguageService"/> mock which, instead of returning a localized
+        /// text, returns the resource key itself.
         /// </summary>
+        /// <param name="key">The key of the language resource.</param>
         /// <returns>Mock for a language service.</returns>
-        public static ILanguageService LanguageService(string textForAny)
+        public static ILanguageService LanguageService(string key)
+        {
+            return LanguageService(new string[] { key });
+        }
+
+        /// <summary>
+        /// Creates an <see cref="ILanguageService"/> mock which, instead of returning a localized
+        /// text, returns the resource key itself.
+        /// </summary>
+        /// <param name="keys">The keys of the language resources.</param>
+        /// <returns>Mock for a language service.</returns>
+        public static ILanguageService LanguageService(IEnumerable<string> keys)
         {
             var result = new Mock<ILanguageService>();
-            result
-                .SetupGet(m => m[It.IsAny<string>()])
-                .Returns(textForAny);
+            foreach (string keyAndText in keys)
+            {
+                result
+                    .SetupGet(m => m[It.Is<string>(k => k == keyAndText)])
+                    .Returns(keyAndText);
+            }
             return result.Object;
         }
 
@@ -41,6 +56,15 @@ namespace SilentNotesTest
         public static IFeedbackService FeedbackService()
         {
             return new DummyFeedbackService();
+        }
+
+        /// <summary>
+        /// Creates a <see cref="ISettingsService"/> mock.
+        /// </summary>
+        /// <returns>Mock for settings service.</returns>
+        public static ISettingsService SettingsService()
+        {
+            return SettingsService(new SettingsModel());
         }
 
         /// <summary>

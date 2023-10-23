@@ -96,6 +96,7 @@ namespace SilentNotesTest.ViewModels
             NoteViewModel noteViewModel = new NoteViewModel(
                 note,
                 searchableConverter,
+                new Mock<INavigationService>().Object,
                 new Mock<ILanguageService>().Object,
                 new Mock<IThemeService>().Object,
                 repositoryService.Object,
@@ -127,6 +128,7 @@ namespace SilentNotesTest.ViewModels
             NoteViewModel noteViewModel = new NoteViewModel(
                 note,
                 new SearchableHtmlConverter(),
+                new Mock<INavigationService>().Object,
                 new Mock<ILanguageService>().Object,
                 new Mock<IThemeService>().Object,
                 new Mock<IRepositoryStorageService>().Object,
@@ -159,6 +161,7 @@ namespace SilentNotesTest.ViewModels
             NoteViewModel noteViewModel = new NoteViewModel(
                 note,
                 new SearchableHtmlConverter(),
+                new Mock<INavigationService>().Object,
                 new Mock<ILanguageService>().Object,
                 new Mock<IThemeService>().Object,
                 new Mock<IRepositoryStorageService>().Object,
@@ -198,6 +201,7 @@ namespace SilentNotesTest.ViewModels
             NoteViewModel noteViewModel = new NoteViewModel(
                 note,
                 new SearchableHtmlConverter(),
+                new Mock<INavigationService>().Object,
                 new Mock<ILanguageService>().Object,
                 new Mock<IThemeService>().Object,
                 new Mock<IRepositoryStorageService>().Object,
@@ -369,6 +373,7 @@ namespace SilentNotesTest.ViewModels
             return new NoteViewModel(
                 note,
                 new SearchableHtmlConverter(),
+                new Mock<INavigationService>().Object,
                 new Mock<ILanguageService>().Object,
                 new Mock<IThemeService>().Object,
                 repositoryStorageService,

@@ -71,7 +71,7 @@ namespace SilentNotesTest.Stories.PullPushStory
             var serviceCollection = new ServiceCollection();
             serviceCollection
                 .AddSingleton<ISettingsService>(settingsService.Object)
-                .AddSingleton<ILanguageService>(CommonMocksAndStubs.LanguageService("need_sync_first"))
+                .AddSingleton<ILanguageService>(CommonMocksAndStubs.LanguageService("pushpull_error_need_sync_first"))
                 .AddSingleton<ICloudStorageClientFactory>(CommonMocksAndStubs.CloudStorageClientFactory(cloudStorageClient.Object));
 
             // Run step with missing transfercode
@@ -80,7 +80,7 @@ namespace SilentNotesTest.Stories.PullPushStory
 
             // Next step is not called
             Assert.IsNull(result.NextStep);
-            Assert.AreEqual("need_sync_first", result.Toast);
+            Assert.AreEqual("pushpull_error_need_sync_first", result.Toast);
 
             // Run step with missing storage client
             settingsModel.TransferCode = "abc";
@@ -90,7 +90,7 @@ namespace SilentNotesTest.Stories.PullPushStory
 
             // Next step is not called
             Assert.IsNull(result.NextStep);
-            Assert.AreEqual("need_sync_first", result.Toast);
+            Assert.AreEqual("pushpull_error_need_sync_first", result.Toast);
         }
     }
 }

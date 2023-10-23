@@ -169,6 +169,19 @@
 			<MudMenuItem OnClick="@(() => ViewModel.ShowInfoCommand.Execute(null))"
 				Icon="@Icons.Material.Filled.Info"
 				Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_show_info"]</MudMenuItem>
+
+			@if (ViewModel.ShowManualSynchronization)
+			{
+				<MudDivider />
+
+				<MudMenuItem OnClick="@(() => ViewModel.PushNoteToOnlineStorageCommand.Execute(null))"
+					Icon="@IconService.GetSvgLink(IconNames.CloudUpload)"
+					Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_push_to_server"]</MudMenuItem>
+
+				<MudMenuItem OnClick="@(() => ViewModel.PullNoteFromOnlineStorageCommand.Execute(null))"
+					Icon="@IconService.GetSvgLink(IconNames.CloudDownload)"
+					Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_pull_from_server"]</MudMenuItem>
+			}
 		</ChildContent>
 	</MudMenu>
 </MudAppBar>
@@ -273,6 +286,8 @@
 		IconNames.Close,
 		IconNames.Delete,
 		IconNames.TagOutline,
+		IconNames.CloudUpload,
+		IconNames.CloudDownload,
 	});
 </div>
 
@@ -314,6 +329,7 @@
 		ViewModel = new NoteViewModel(
 			note,
 			null,
+			NavigationService,
 			LanguageService,
 			ThemeService,
 			RepositoryStorageService,

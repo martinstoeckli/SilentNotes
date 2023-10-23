@@ -14,7 +14,7 @@ using CommunityToolkit.Mvvm.Input;
 using SilentNotes.Crypto;
 using SilentNotes.Models;
 using SilentNotes.Services;
-//using SilentNotes.StoryBoards.PullPushStory;
+using SilentNotes.Stories.PullPushStory;
 using SilentNotes.Workers;
 
 namespace SilentNotes.ViewModels
@@ -25,6 +25,7 @@ namespace SilentNotes.ViewModels
     public class NoteViewModel : NoteViewModelReadOnly
     {
         private static TimeAgo _timeAgo;
+        private readonly INavigationService _navigationService;
         private readonly IRepositoryStorageService _repositoryService;
         private readonly IFeedbackService _feedbackService;
         private readonly IEnvironmentService _environmentService;
@@ -39,6 +40,7 @@ namespace SilentNotes.ViewModels
         public NoteViewModel(
             NoteModel model,
             SearchableHtmlConverter searchableTextConverter,
+            INavigationService navigationService,
             ILanguageService languageService,
             IThemeService themeService,
             IRepositoryStorageService repositoryService,
@@ -53,6 +55,7 @@ namespace SilentNotes.ViewModels
         {
             //Model = model;
             Language = languageService;
+            _navigationService = navigationService;
             _repositoryService = repositoryService;
             _feedbackService = feedbackService;
             _environmentService = environmentService;
@@ -65,6 +68,8 @@ namespace SilentNotes.ViewModels
             OpenLinkCommand = new RelayCommand<string>(OpenLink);
             AddTagCommand = new RelayCommand<string>(AddTag);
             DeleteTagCommand = new RelayCommand<string>(DeleteTag);
+            PushNoteToOnlineStorageCommand = new AsyncRelayCommand(PushNoteToOnlineStorage);
+            PullNoteFromOnlineStorageCommand = new AsyncRelayCommand(PullNoteFromOnlineStorage);
 
             if (CanKeepScreenOn)
                 _environmentService.KeepScreenOn.StateChanged += KeepScreenOnChanged;
@@ -310,59 +315,62 @@ namespace SilentNotes.ViewModels
             }
         }
 
-        ///// <summary>
-        ///// Gets the command which can overwrite the local note with the note from the online-storage.
-        ///// </summary>
-        //public ICommand PullNoteFromOnlineStorageCommand { get; private set; }
+        /// <summary>
+        /// Gets the command which can overwrite the local note with the note from the online-storage.
+        /// </summary>
+        public ICommand PullNoteFromOnlineStorageCommand { get; private set; }
 
-        //private async void PullNoteFromOnlineStorage()
-        //{
-        //    MessageBoxResult dialogResult = await _feedbackService.ShowMessageAsync(Language["pushpull_pull_confirmation"], Language["note_pull_from_server"], MessageBoxButtons.ContinueCancel, false);
-        //    if (dialogResult != MessageBoxResult.Continue)
-        //        return;
+        private async Task PullNoteFromOnlineStorage()
+        {
+            MessageBoxResult dialogResult = await _feedbackService.ShowMessageAsync(Language["pushpull_pull_confirmation"], Language["note_pull_from_server"], MessageBoxButtons.ContinueCancel, false);
+            if (dialogResult != MessageBoxResult.Continue)
+                return;
 
-        //    _feedbackService.ShowBusyIndicator(true);
-        //    try
-        //    {
-        //        OnStoringUnsavedData();
-        //        PullPushStoryBoard storyBoard = new PullPushStoryBoard(Model.Id, PullPushDirection.PullFromServer);
-        //        await storyBoard.Start();
-        //    }
-        //    finally
-        //    {
-        //        _feedbackService.ShowBusyIndicator(false);
-        //    }
+            _feedbackService.SetBusyIndicatorVisible(true, true);
+            try
+            {
+                OnStoringUnsavedData();
+                var storyModel = new PullPushStoryModel(Model.Id, PullPushDirection.PullFromServer);
+                ExistsCloudRepositoryStep story = new ExistsCloudRepositoryStep();
+                await story.RunStory(storyModel, Ioc.Instance, Stories.StoryMode.Toasts);
+            }
+            finally
+            {
+                bool refreshNecessary = false; // No refresh, because navigation is ahead anyway
+                _feedbackService.SetBusyIndicatorVisible(false, refreshNecessary);
+            }
 
-        //    // Refresh view
-        //    if (Model.InRecyclingBin)
-        //        _navigationService.Navigate(new Navigation(ControllerNames.RecycleBin));
-        //    else
-        //        _navigationService.Navigate(new Navigation(ControllerNames.Note, ControllerParameters.NoteId, Model.Id.ToString()));
-        //}
+            // Refresh view
+            if (Model.InRecyclingBin)
+                _navigationService.NavigateTo(Routes.RecycleBin, true);
+            else
+                _navigationService.NavigateReload();
+        }
 
-        ///// <summary>
-        ///// Gets the command which can overwrite the note of the online-storage with the locale note.
-        ///// </summary>
-        //public ICommand PushNoteToOnlineStorageCommand { get; private set; }
+        /// <summary>
+        /// Gets the command which can overwrite the note of the online-storage with the locale note.
+        /// </summary>
+        public ICommand PushNoteToOnlineStorageCommand { get; private set; }
 
-        //private async void PushNoteToOnlineStorage()
-        //{
-        //    MessageBoxResult dialogResult = await _feedbackService.ShowMessageAsync(Language["pushpull_push_confirmation"], Language["note_push_to_server"], MessageBoxButtons.ContinueCancel, false);
-        //    if (dialogResult != MessageBoxResult.Continue)
-        //        return;
+        private async Task PushNoteToOnlineStorage()
+        {
+            MessageBoxResult dialogResult = await _feedbackService.ShowMessageAsync(Language["pushpull_push_confirmation"], Language["note_push_to_server"], MessageBoxButtons.ContinueCancel, false);
+            if (dialogResult != MessageBoxResult.Continue)
+                return;
 
-        //    _feedbackService.ShowBusyIndicator(true);
-        //    try
-        //    {
-        //        OnStoringUnsavedData();
-        //        PullPushStoryBoard storyBoard = new PullPushStoryBoard(Model.Id, PullPushDirection.PushToServer);
-        //        await storyBoard.Start();
-        //    }
-        //    finally
-        //    {
-        //        _feedbackService.ShowBusyIndicator(false);
-        //    }
-        //}
+            _feedbackService.SetBusyIndicatorVisible(true, true);
+            try
+            {
+                OnStoringUnsavedData();
+                var storyModel = new PullPushStoryModel(Model.Id, PullPushDirection.PushToServer);
+                ExistsCloudRepositoryStep story = new ExistsCloudRepositoryStep();
+                await story.RunStory(storyModel, Ioc.Instance, Stories.StoryMode.Toasts);
+            }
+            finally
+            {
+                _feedbackService.SetBusyIndicatorVisible(false, true);
+            }
+        }
 
         /// <summary>
         /// Gets a value indicating whether the synchronization mode is set to <see cref="AutoSynchronizationMode.Never"/>.

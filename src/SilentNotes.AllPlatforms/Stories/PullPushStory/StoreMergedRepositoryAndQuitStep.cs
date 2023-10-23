@@ -30,15 +30,11 @@ namespace SilentNotes.Stories.PullPushStory
             var settingsService = serviceProvider.GetService<ISettingsService>();
             var languageService = serviceProvider.GetService<ILanguageService>();
             var feedbackService = serviceProvider.GetService<IFeedbackService>();
-            var cryptoRandomService = serviceProvider.GetService<ICryptoRandomService>();
-            var cloudStorageClientFactory = serviceProvider.GetService<ICloudStorageClientFactory>();
 
             try
             {
                 NoteRepositoryModel cloudRepository = model.CloudRepository;
                 repositoryStorageService.LoadRepositoryOrDefault(out NoteRepositoryModel localRepository);
-                SettingsModel settings = settingsService.LoadSettingsOrDefault();
-                SerializeableCloudStorageCredentials credentials = settings.Credentials;
 
                 NoteModel cloudNote = cloudRepository.Notes.FindById(pullPushModel.NoteId);
                 NoteModel localNote = localRepository.Notes.FindById(pullPushModel.NoteId);
@@ -69,6 +65,11 @@ namespace SilentNotes.Stories.PullPushStory
                 }
                 else
                 {
+                    var cryptoRandomService = serviceProvider.GetService<ICryptoRandomService>();
+                    var cloudStorageClientFactory = serviceProvider.GetService<ICloudStorageClientFactory>();
+                    SettingsModel settings = settingsService.LoadSettingsOrDefault();
+                    SerializeableCloudStorageCredentials credentials = settings.Credentials;
+
                     // Uploading explicitely can be seen as a confirmation that this version is the
                     // most current one. So we make sure that the uploaded version is not overwritten
                     // by other devices afterwards.
