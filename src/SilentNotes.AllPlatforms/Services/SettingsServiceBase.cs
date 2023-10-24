@@ -46,7 +46,7 @@ namespace SilentNotes.Services
             bool modelWasUpdated = false;
             try
             {
-                string xmlFilePath = Path.Combine(GetDirectoryPath(), Config.UserSettingsFileName);
+                string xmlFilePath = Path.Combine(GetDirectoryPath(), SettingsModel.UserSettingsFileName);
                 if (_xmlFileService.TryLoad(xmlFilePath, out XDocument xml))
                 {
                     modelWasUpdated = UpdateSettings(xml);
@@ -79,7 +79,7 @@ namespace SilentNotes.Services
             try
             {
                 BeforeSaving(model);
-                string xmlFilePath = Path.Combine(GetDirectoryPath(), Config.UserSettingsFileName);
+                string xmlFilePath = Path.Combine(GetDirectoryPath(), SettingsModel.UserSettingsFileName);
                 bool success = _xmlFileService.TrySerializeAndSave(xmlFilePath, model);
                 if (success)
                     _cachedSettings = model;

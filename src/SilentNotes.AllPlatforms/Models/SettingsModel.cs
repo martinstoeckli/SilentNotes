@@ -18,6 +18,11 @@ namespace SilentNotes.Models
     {
         /// <summary>The highest revision of the settings which can be handled by this application.</summary>
         public const int NewestSupportedRevision = 3;
+#if (RELEASE)
+        public const string UserSettingsFileName = "silentnotes_user_settings.config";
+#else
+        public const string UserSettingsFileName = "silentnotes_user_settings_dev.config";
+#endif
 
         /// <summary>The default color for notes, when the application is started the first time.</summary>
         public const string StartDefaultNoteColorHex = "#fbf4c1";

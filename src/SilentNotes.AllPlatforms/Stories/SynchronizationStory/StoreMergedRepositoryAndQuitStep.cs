@@ -48,7 +48,7 @@ namespace SilentNotes.Stories.SynchronizationStory
                         mergedRepository, settings.TransferCode, cryptoRandomService, settings.SelectedEncryptionAlgorithm);
 
                     ICloudStorageClient cloudStorageClient = cloudStorageClientFactory.GetByKey(model.Credentials.CloudStorageId);
-                    await cloudStorageClient.UploadFileAsync(Config.RepositoryFileName, encryptedRepository, model.Credentials);
+                    await cloudStorageClient.UploadFileAsync(NoteRepositoryModel.RepositoryFileName, encryptedRepository, model.Credentials);
                 }
 
                 return ToResult(new StopAndShowRepositoryStep(), languageService["sync_success"]);

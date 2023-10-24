@@ -56,7 +56,7 @@ namespace SilentNotes.Services
             bool modelWasUpdated = false;
             try
             {
-                string xmlFilePath = Path.Combine(GetLocation(), Config.RepositoryFileName);
+                string xmlFilePath = Path.Combine(GetLocation(), NoteRepositoryModel.RepositoryFileName);
 
                 // A new repository is created only if it does not yet exist, we won't overwrite
                 // an invalid repository.
@@ -134,7 +134,7 @@ namespace SilentNotes.Services
         {
             try
             {
-                string xmlFilePath = Path.Combine(GetLocation(), Config.RepositoryFileName);
+                string xmlFilePath = Path.Combine(GetLocation(), NoteRepositoryModel.RepositoryFileName);
                 bool success = _xmlFileService.TrySerializeAndSave(xmlFilePath, repositoryModel);
                 if (success)
                     _cachedRepository = repositoryModel;
@@ -157,7 +157,7 @@ namespace SilentNotes.Services
         {
             try
             {
-                string xmlFilePath = Path.Combine(GetLocation(), Config.RepositoryFileName);
+                string xmlFilePath = Path.Combine(GetLocation(), NoteRepositoryModel.RepositoryFileName);
                 return File.ReadAllBytes(xmlFilePath);
             }
             catch (Exception)

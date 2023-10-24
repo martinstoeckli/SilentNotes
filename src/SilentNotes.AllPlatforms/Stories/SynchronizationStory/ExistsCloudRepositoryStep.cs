@@ -53,7 +53,7 @@ namespace SilentNotes.Stories.SynchronizationStory
                 }
                 else
                 {
-                    bool repositoryExists = await cloudStorageClient.ExistsFileAsync(Config.RepositoryFileName, credentials);
+                    bool repositoryExists = await cloudStorageClient.ExistsFileAsync(NoteRepositoryModel.RepositoryFileName, credentials);
 
                     // If no error occured the credentials are ok and we can safe them
                     SaveCredentialsToSettings(settingsService, credentials);

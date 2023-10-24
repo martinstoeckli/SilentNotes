@@ -14,9 +14,6 @@ namespace SilentNotes
         {
             Window window = base.CreateWindow(activationState);
             window.Title = "SilentNotes";
-#if DEBUG
-            window.Title = "SilentNotes - dev";
-#endif
             return window;
         }
     }

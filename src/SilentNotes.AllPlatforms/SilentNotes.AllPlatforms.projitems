@@ -9,7 +9,6 @@
     <Import_RootNamespace>SilentNotes</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)Config.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Crypto\CryptoException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Crypto\CryptoHeader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Crypto\CryptoHeaderPacker.cs" />

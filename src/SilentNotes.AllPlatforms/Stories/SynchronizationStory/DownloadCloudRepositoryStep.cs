@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Extensions.DependencyInjection;
+using SilentNotes.Models;
 using SilentNotes.Services;
 using VanillaCloudStorageClient;
 
@@ -31,7 +32,7 @@ namespace SilentNotes.Stories.SynchronizationStory
                 // The repository can be cached for this story, download the repository only once.
                 if (model.BinaryCloudRepository == null)
                 {
-                    model.BinaryCloudRepository = await cloudStorageClient.DownloadFileAsync(Config.RepositoryFileName, credentials);
+                    model.BinaryCloudRepository = await cloudStorageClient.DownloadFileAsync(NoteRepositoryModel.RepositoryFileName, credentials);
                 }
                 return ToResult(new ExistsTransferCodeStep());
             }

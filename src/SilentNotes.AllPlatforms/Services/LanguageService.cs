@@ -44,7 +44,7 @@ namespace SilentNotes.Services
             string fallbackLanguageCode = "en")
         {
             _resourceReader = resourceReader;
-#if (LANG_EN && DEBUG)
+#if (DEBUG)
             languageCode = "en";
 #endif
             _domain = domain;

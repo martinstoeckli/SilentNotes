@@ -376,7 +376,7 @@ namespace SilentNotes.ViewModels
             ICloudStorageClient cloudStorageClient = _cloudStorageClientFactory.GetByKey(credentials.CloudStorageId);
             try
             {
-                await cloudStorageClient.DeleteFileAsync(Config.RepositoryFileName, credentials);
+                await cloudStorageClient.DeleteFileAsync(NoteRepositoryModel.RepositoryFileName, credentials);
                 return true;
             }
             catch (Exception)

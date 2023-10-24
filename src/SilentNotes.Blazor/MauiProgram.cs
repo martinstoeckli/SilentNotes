@@ -11,6 +11,7 @@ using Microsoft.JSInterop;
 using Microsoft.Maui.LifecycleEvents;
 using MudBlazor;
 using MudBlazor.Services;
+using SilentNotes.Models;
 using SilentNotes.Platforms;
 using SilentNotes.Platforms.Services;
 using SilentNotes.Services;
@@ -20,6 +21,19 @@ namespace SilentNotes;
 
 public static class MauiProgram
 {
+    /// <summary>
+    /// Initializes the application and its IOC.
+    /// </summary>
+    /// <remarks>
+    /// There are other configs which can be used for development purposes:
+    /// - <see cref="NoteRepositoryModel"/> The name of the repository file is different for the
+    ///   "debug" and the "release" environment, so that no real notes can be damaged on the device
+    ///   or in the cloud storage when developing.
+    /// - <see cref="SettingsModel"/> The name of the settings file is different for the "debug"
+    ///   and the "release" environment, to not interfere.
+    /// - <see cref="LanguageService"/> The language is fixed to "en" for the "debug" environment,
+    ///   to generate english screenshots.
+    /// </remarks>
     public static MauiApp CreateMauiApp()
     {
         var applicationEventHandler = new ApplicationEventHandler();

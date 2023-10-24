@@ -82,7 +82,7 @@ namespace SilentNotes.Stories.PullPushStory
                         cloudRepository, settings.TransferCode, cryptoRandomService, settings.SelectedEncryptionAlgorithm);
 
                     ICloudStorageClient cloudStorageClient = cloudStorageClientFactory.GetByKey(credentials.CloudStorageId);
-                    await cloudStorageClient.UploadFileAsync(Config.RepositoryFileName, encryptedRepository, credentials);
+                    await cloudStorageClient.UploadFileAsync(NoteRepositoryModel.RepositoryFileName, encryptedRepository, credentials);
                 }
                 return ToResult(null, languageService["pushpull_success"], null);
             }
