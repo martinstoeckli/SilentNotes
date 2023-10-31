@@ -9,6 +9,7 @@ search = Поиск
 undo = Undo
 redo = Redo
 copy = Copy
+reset = Reset
 
 today = сегодня
 yesterday = вчера

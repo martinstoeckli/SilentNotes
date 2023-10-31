@@ -103,12 +103,13 @@
 		<MudDrawerHeader Class="d-inline-flex justify-space-between align-start pb-2">
 			<MudStack Row="false" Spacing="1">
 				<h3 class="h-colored">@LanguageService["filter_tags"]</h3>
-				<MudStack Row="true">
-					<MudIconButton
+				<MudStack Row="true" AlignItems="AlignItems.Center">
+					<MudButton
 						OnClick="@(() => ViewModel.ClearTagFilterCommand.Execute(null))"
-						Icon="@IconService.GetSvgLink(IconNames.FilterOff)"
 						Title="@LanguageService["filter_show_all_notes"]"
-						Edge="Edge.Start" />
+						Size="Size.Medium" Color="Color.Primary" Variant="Variant.Filled">
+						@LanguageService["reset"]
+					</MudButton>
 					<MudIconButton
 						OnClick="@(() => ViewModel.ToggleNotesWithoutTagsFilterCommand.Execute(null))"
 						Class="@Css.BuildClass(new CssClassIf("btn-toggled", ViewModel.FilterNotesWithoutTags))"
@@ -119,7 +120,7 @@
 			</MudStack>
 			<MudIconButton OnClick="() => ViewModel.IsDrawerOpen = false" Icon="@IconService.GetSvgLink(IconNames.Close)" Size="Size.Small" />
 		</MudDrawerHeader>
-		<MudDivider Class="pb-2" />
+		<MudDivider Class="my-2" />
 		<MudDrawerContainer Style="height: 100%; overflow: auto;">
 			<MudTreeView id="tagTree"
 				Items="ViewModel.TagsRootNode.Children"
@@ -220,7 +221,6 @@
 		IconNames.NoteTextOutline,
 		IconNames.OrderBoolAscendingVariant,
 		IconNames.Pin,
-		IconNames.FilterOff,
 		IconNames.TagMultiple,
 		IconNames.TagOff,
 		IconNames.TagOutline,

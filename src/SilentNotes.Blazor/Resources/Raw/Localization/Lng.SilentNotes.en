@@ -9,6 +9,7 @@ search = Search
 undo = Undo
 redo = Redo
 copy = Copy
+reset = Reset
 
 today = today
 yesterday = yesterday

@@ -9,6 +9,7 @@ search = Suchen
 undo = Rückgängig
 redo = Wiederherstellen
 copy = Kopieren
+reset = Zurücksetzen
 
 today = heute
 yesterday = gestern

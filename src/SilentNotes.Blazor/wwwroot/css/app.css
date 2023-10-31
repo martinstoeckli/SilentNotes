@@ -59,27 +59,6 @@ td { word-wrap: anywhere; } /* table should not exceed page width */
 	width: 100%;
 }
 
-/* narrow browser */
-@media screen and (max-width: 600px) {
-}
-/* sm breakpoint */
-@media screen and (min-width: 600px) {
-	:root {
-		--css-grid-topic-icon-width: 40px;
-	}
-	.note-item {
-		display: inline-block;
-		width: 240px;
-	}
-}
-/* narrow device - phone */
-@media screen and (max-device-width: 540px) {
-/*	html { font-size: 17px; }*/
-}
-/* wide device - desktop */
-@media screen and (min-device-width: 540px) {
-}
-
 .note-card {
 	position: relative;
 	width: 100%;
@@ -335,4 +314,30 @@ div.ProseMirror:focus {
 	position: absolute;
 	right: 0.75rem;
 	top: 0.5rem;
+}
+
+/* narrow device - phone */
+@media screen and (max-device-width: 540px) {
+	.note-handle {
+		width: 30px;
+		height: 30px;
+		border-radius: 15px;
+	}
+/*	html { font-size: 17px; }*/
+}
+/* wide device - desktop */
+@media screen and (min-device-width: 540px) {
+}
+/* narrow browser */
+@media screen and (max-width: 600px) {
+}
+/* wide breakpoint */
+@media screen and (min-width: 600px) {
+	:root {
+		--css-grid-topic-icon-width: 40px;
+	}
+	.note-item {
+		display: inline-block;
+		width: 240px;
+	}
 }

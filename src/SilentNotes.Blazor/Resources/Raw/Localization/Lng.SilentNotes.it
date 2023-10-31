@@ -9,6 +9,7 @@ search = Cerca
 undo = Annulla
 redo = Ripristina
 copy = Copy
+reset = Reset
 
 today = oggi
 yesterday = ieri

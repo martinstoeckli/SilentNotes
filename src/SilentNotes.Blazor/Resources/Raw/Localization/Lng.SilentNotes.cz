@@ -9,6 +9,7 @@ search = Vyhledat
 undo = Vrátit
 redo = Opakovat
 copy = Copy
+reset = Reset
 
 today = dnes
 yesterday = včera
