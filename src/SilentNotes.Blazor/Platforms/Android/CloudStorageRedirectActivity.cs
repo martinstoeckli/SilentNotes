@@ -11,7 +11,7 @@ using Android.OS;
 using SilentNotes.Services;
 using SilentNotes.Stories.SynchronizationStory;
 
-namespace SilentNotes.Android
+namespace SilentNotes
 {
     /// <summary>
     /// Intercepts URLs of the scheme "ch.martinstoeckli.silentnotes://...". This scheme is used

@@ -18,7 +18,7 @@ namespace SilentNotes
         /// </summary>
         public ApplicationEventHandlerBase()
         {
-            WeakReferenceMessenger.Default.Register<MainLayoutReady>(
+            WeakReferenceMessenger.Default.Register<MainLayoutReadyMessage>(
                 this, async (recipient, message) => await OnMainLayoutReady());
         }
 

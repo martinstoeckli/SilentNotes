@@ -50,7 +50,7 @@ namespace SilentNotes
     /// Message to inform the application that the main layout has finished first rendering.
     /// At this moment the services are available form IOC, even if they are scoped services.
     /// </summary>
-    public class MainLayoutReady
+    public class MainLayoutReadyMessage
     {
     }
 }
