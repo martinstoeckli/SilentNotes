@@ -17,9 +17,11 @@
 
 <body style="height:100%; width:100%;">
     <div id="app" style="height:100%; width:100%;">
-        <!-- splash dialog shown at startup until ready -->
-        <div style="display:flex; height:100%; width:100%; justify-content:center; align-items:center; background-color:#0080cf">
-            <svg width='48' height='48' viewBox='0 0 24 24'><use xlink:href="#svg-delete" /></svg>
+        <!-- splash screen, shown from then the index.html is loaded until the MainPage is shown -->
+        <div style="display:flex; height:100%; width:100%; justify-content:center; align-items:center; background-color:#0170b0">
+            <div style="padding: 20px; background-color:#57b0e3; border-radius:20px;">
+                <img src="appicon.svg" style="" />
+            </div>
         </div>
     </div>
 
@@ -29,10 +31,6 @@
     </div>
 
     <script src="_framework/blazor.webview.js" autostart="false"></script>
-
-    <div hidden>
-        <svg id='svg-delete' width='24' height='24' viewBox='0 0 24 24'><path d='M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z' /></svg>
-    </div>
 </body>
 
 </html>

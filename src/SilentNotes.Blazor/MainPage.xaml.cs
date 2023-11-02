@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
+using SilentNotes.Workers;
 
 namespace SilentNotes;
 
@@ -13,20 +14,23 @@ public partial class MainPage : ContentPage
     private async void LoadedEventHandler(object sender, EventArgs e)
     {
         Loaded -= LoadedEventHandler;
+
 #if (WINDOWS)
-        var splashColor = (Microsoft.Maui.Graphics.Color)App.Current.Resources["SplashBackgroundColor"];
-        var splashUiColor = Windows.UI.Color.FromArgb((byte)(splashColor.Alpha * 255), (byte)(splashColor.Red * 255), (byte)(splashColor.Green * 255), (byte)(splashColor.Blue * 255));
         var webView2 = (blazorWebView.Handler.PlatformView as Microsoft.UI.Xaml.Controls.WebView2);
         await webView2.EnsureCoreWebView2Async();
-        webView2.DefaultBackgroundColor = splashUiColor;
-#else
-        await Task.CompletedTask;
-#endif
 
+        // Set the splash screen background color, shown from when the webview is displayed until
+        // the the index.html is loaded.
+        var backgroundColor = ColorExtensions.HexToColor("#0170b0");
+        webView2.DefaultBackgroundColor = Windows.UI.Color.FromArgb(
+            backgroundColor.A, backgroundColor.R, backgroundColor.G, backgroundColor.B);
+#endif
 #if (WINDOWS && !DEBUG)
         var settings = webView2.CoreWebView2.Settings;
-        settings.AreBrowserAcceleratorKeysEnabled = false; // In debug mode we need ctrl-shift-i to open the developer view
+        settings.AreBrowserAcceleratorKeysEnabled = false; // Only in debug mode we need ctrl-shift-i to open the developer view
         settings.IsPasswordAutosaveEnabled = false;
 #endif
+
+        await Task.CompletedTask;
     }
 }

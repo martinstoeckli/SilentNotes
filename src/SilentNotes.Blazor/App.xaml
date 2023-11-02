@@ -5,22 +5,6 @@
              x:Class="SilentNotes.App">
     <Application.Resources>
         <ResourceDictionary>
-
-            <Color x:Key="PageBackgroundColor">#32333c</Color>
-            <Color x:Key="PrimaryTextColor">White</Color>
-            <Color x:Key="SplashBackgroundColor">#0080cf</Color>
-
-            <Style TargetType="Label">
-                <Setter Property="TextColor" Value="{DynamicResource PrimaryTextColor}" />
-                <Setter Property="FontFamily" Value="OpenSansRegular" />
-            </Style>
-
-            <Style TargetType="Button">
-                <Setter Property="TextColor" Value="{DynamicResource PrimaryTextColor}" />
-                <Setter Property="FontFamily" Value="OpenSansRegular" />
-                <Setter Property="BackgroundColor" Value="#2b0b98" />
-                <Setter Property="Padding" Value="14,10" />
-            </Style>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

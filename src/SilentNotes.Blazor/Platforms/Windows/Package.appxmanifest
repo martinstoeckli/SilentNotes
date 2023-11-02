@@ -39,7 +39,7 @@
       <Extensions>
         <uap:Extension Category="windows.protocol">
           <uap:Protocol Name="ch.martinstoeckli.silentnotes">
-            <uap:Logo>Resources\AppIcon\appicon44x44.png</uap:Logo>
+            <uap:Logo>Resources\AppIcon\appicon.png</uap:Logo>
             <uap:DisplayName>Protocol for OAuth2 responses</uap:DisplayName>
           </uap:Protocol>
         </uap:Extension>
