@@ -13,6 +13,16 @@ namespace SilentNotesTest.ViewModels
     public class NoteRepositoryViewModelTest
     {
         [Test]
+        public void NewNote_MarksRepositoryAsModified()
+        {
+            NoteRepositoryModel model = CreateTestRepository();
+            NoteRepositoryViewModel viewModel = CreateMockedNoteRepositoryViewModel(model);
+            Assert.IsFalse(viewModel.IsModified);
+            viewModel.NewNoteCommand.Execute(null);
+            Assert.IsTrue(viewModel.IsModified);
+        }
+
+        [Test]
         public void NewNote_IsAddedAfterLastPinned()
         {
             NoteRepositoryModel model = CreateTestRepository();
@@ -74,6 +84,107 @@ namespace SilentNotesTest.ViewModels
             Assert.IsFalse(oldNotes.Contains(newNote));
         }
 
+        [Test]
+        public void DeleteNote_MarksRepositoryAsModified()
+        {
+            NoteRepositoryModel model = CreateTestRepository();
+            NoteRepositoryViewModel viewModel = CreateMockedNoteRepositoryViewModel(model);
+
+            Guid idToDelete = new Guid("22222222-2222-2222-2222-222222222222");
+            Assert.IsFalse(viewModel.IsModified);
+            viewModel.DeleteNoteCommand.Execute(idToDelete);
+            Assert.IsTrue(viewModel.IsModified);
+        }
+
+        [Test]
+        public void DeleteNote_MarksNoteAsDeleted()
+        {
+            NoteRepositoryModel model = CreateTestRepository();
+            NoteRepositoryViewModel viewModel = CreateMockedNoteRepositoryViewModel(model);
+
+            Guid idToDelete = new Guid("22222222-2222-2222-2222-222222222222");
+            viewModel.DeleteNoteCommand.Execute(idToDelete);
+
+            var deletedNote = model.Notes.FindById(idToDelete);
+            Assert.AreEqual(true, deletedNote.InRecyclingBin);
+        }
+
+        [Test]
+        public void DeleteNote_RemovedFromFilteredList()
+        {
+            NoteRepositoryModel model = CreateTestRepository();
+            NoteRepositoryViewModel viewModel = CreateMockedNoteRepositoryViewModel(model);
+
+            Guid idToDelete = new Guid("22222222-2222-2222-2222-222222222222");
+            NoteViewModelReadOnly noteToDelete = viewModel.FilteredNotes.First(item => item.Id == idToDelete);
+
+            viewModel.DeleteNoteCommand.Execute(idToDelete);
+
+            Assert.IsFalse(viewModel.FilteredNotes.Contains(noteToDelete));
+        }
+
+        [Test]
+        public async Task DeleteNote_RemovedFromTagTree()
+        {
+            NoteRepositoryModel model = CreateTestRepository();
+            Guid idToDelete = new Guid("22222222-2222-2222-2222-222222222222");
+            var noteToDelete = model.Notes.FindById(idToDelete);
+            noteToDelete.Tags.Add("fox");
+            NoteRepositoryViewModel viewModel = CreateMockedNoteRepositoryViewModel(model);
+            await viewModel.InitializeTagTree();
+
+            Assert.IsTrue(viewModel.TagsRootNode.EnumerateSiblingsRecursive(false).Any(node => node.Title == "fox"));
+            viewModel.DeleteNoteCommand.Execute(idToDelete);
+            Assert.IsFalse(viewModel.TagsRootNode.EnumerateSiblingsRecursive(false).Any(node => node.Title == "fox"));
+        }
+
+        [Test]
+        public void AddNoteToSafe_MarksRepositoryAsModified()
+        {
+            NoteRepositoryModel model = CreateTestRepository();
+            Guid noteId = new Guid("22222222-2222-2222-2222-222222222222");
+            NoteModel note = model.Notes.FindById(noteId);
+            NoteRepositoryViewModel viewModel = CreateMockedNoteRepositoryViewModel(model);
+
+            model.Safes.Add(new SafeModel { Key = CommonMocksAndStubs.CryptoRandomService().GetRandomBytes(32) });
+            note.SafeId = model.Safes[0].Id;
+            viewModel.ResetIsModified();
+
+            Assert.IsFalse(viewModel.IsModified);
+            viewModel.AddNoteToSafe(noteId);
+            Assert.IsTrue(viewModel.IsModified);
+        }
+
+        [Test]
+        public void RemoveNoteFromSafe_MarksRepositoryAsModified()
+        {
+            NoteRepositoryModel model = CreateTestRepository();
+            Guid noteId = new Guid("22222222-2222-2222-2222-222222222222");
+            NoteModel note = model.Notes.FindById(noteId);
+            NoteRepositoryViewModel viewModel = CreateMockedNoteRepositoryViewModel(model);
+
+            model.Safes.Add(new SafeModel());
+            note.SafeId = model.Safes[0].Id;
+            viewModel.ResetIsModified();
+
+            Assert.IsFalse(viewModel.IsModified);
+            viewModel.RemoveNoteFromSafe(noteId);
+            Assert.IsNull(note.SafeId);
+            Assert.IsTrue(viewModel.IsModified);
+        }
+
+        [Test]
+        public void MoveSelectedOrderNote_MarksRepositoryAsModified()
+        {
+            NoteRepositoryModel model = CreateTestRepository();
+            NoteRepositoryViewModel viewModel = CreateMockedNoteRepositoryViewModel(model);
+            viewModel.SelectOrderNote(viewModel.FilteredNotes[0]);
+
+            Assert.IsFalse(viewModel.IsModified);
+            viewModel.MoveSelectedOrderNote(false, true);
+            Assert.IsTrue(viewModel.IsModified);
+        }
+
         private static NoteRepositoryViewModel CreateMockedNoteRepositoryViewModel(NoteRepositoryModel repository)
         {
             SettingsModel settingsModel = new SettingsModel { DefaultNoteInsertion = NoteInsertionMode.AtTop };
@@ -85,7 +196,7 @@ namespace SilentNotesTest.ViewModels
                 repository,
                 new Mock<ILanguageService>().Object,
                 new Mock<INavigationService>().Object,
-                new Mock<IFeedbackService>().Object,
+                CommonMocksAndStubs.FeedbackService(),
                 new Mock<IThemeService>().Object,
                 settingsService.Object,
                 CommonMocksAndStubs.EnvironmentService(),

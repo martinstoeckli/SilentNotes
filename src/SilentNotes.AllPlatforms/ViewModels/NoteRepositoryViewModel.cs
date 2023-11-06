@@ -71,7 +71,7 @@ namespace SilentNotes.ViewModels
             TagsRootNode = new TagTreeItemViewModel(null, null, AllNotes);
 
             Model = model;
-            _originalFingerPrint = Model?.GetModificationFingerprint();
+            ResetIsModified();
 
             // Initialize commands and events
             NewNoteCommand = new RelayCommand(NewNote);
@@ -86,8 +86,6 @@ namespace SilentNotes.ViewModels
 
             SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
             IsDrawerOpen = settings.StartWithTagsOpen;
-
-            Modified = false;
         }
 
         /// <summary>
@@ -122,6 +120,22 @@ namespace SilentNotes.ViewModels
 
         private ILanguageService Language { get; }
 
+        /// <summary>
+        /// Gets a value indicating whether the repository was modifed.
+        /// </summary>
+        internal bool IsModified
+        {
+            get { return _originalFingerPrint != Model.GetModificationFingerprint(); }
+        }
+
+        /// <summary>
+        /// Sets the <see cref="IsModified"/> to false by recalculating the fingerprint.
+        /// </summary>
+        internal void ResetIsModified()
+        {
+            _originalFingerPrint = Model?.GetModificationFingerprint();
+        }
+
         /// <inheritdoc/>
         public override void OnStoringUnsavedData()
         {
@@ -130,11 +144,10 @@ namespace SilentNotes.ViewModels
             if (Model == null)
                 return;
 
-            long? fingerPrint = Model?.GetModificationFingerprint();
-            if (fingerPrint != _originalFingerPrint)
+            if (IsModified)
             {
                 _repositoryService.TrySaveRepository(Model);
-                _originalFingerPrint = fingerPrint;
+                ResetIsModified();
             }
 
             SettingsModel settings = _settingsService.LoadSettingsOrDefault();
@@ -189,11 +202,10 @@ namespace SilentNotes.ViewModels
         {
             FilterNotesWithoutTags = false;
 
-            // Select or unselect node
             if (treeItem == SelectedTagNode)
-                SelectedTagNode = null;
+                SelectedTagNode = null; // Unselect node
             else
-                SelectedTagNode = treeItem;
+                SelectedTagNode = treeItem; // Select node
 
             if (SelectedTagNode != null)
                 await SelectedTagNode.Expand();
@@ -347,7 +359,6 @@ namespace SilentNotes.ViewModels
 
         private void NewNote(NoteType noteType)
         {
-            Modified = true;
             ClearFilter();
 
             // Create new note and update model list
@@ -382,19 +393,7 @@ namespace SilentNotes.ViewModels
                     throw new ArgumentOutOfRangeException(nameof(insertionMode));
             }
 
-            string targetRoute;
-            switch (noteType)
-            {
-                case NoteType.Text:
-                    targetRoute = "/note/" + noteViewModel.Id;
-                    break;
-                case NoteType.Checklist:
-                    targetRoute = "/checklist/" + noteViewModel.Id;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(noteType));
-            }
-            _navigationService.NavigateTo(targetRoute);
+            _navigationService.NavigateTo(noteViewModel.Route);
         }
 
         /// <summary>
@@ -418,7 +417,6 @@ namespace SilentNotes.ViewModels
             NoteViewModelReadOnly selectedNote = AllNotes.Find(item => item.Id == noteId);
             if (selectedNote == null)
                 return;
-            Modified = true;
 
             // Mark note as deleted
             selectedNote.InRecyclingBin = true;
@@ -492,7 +490,6 @@ namespace SilentNotes.ViewModels
                 note.Model.SafeId = oldestOpenSafe.Id;
                 note.Model.HtmlContent = note.Lock(note.UnlockedHtmlContent);
                 note.Model.RefreshModifiedAt();
-                Modified = true;
             }
         }
 
@@ -504,7 +501,6 @@ namespace SilentNotes.ViewModels
                 note.Model.SafeId = null;
                 note.Model.HtmlContent = note.UnlockedHtmlContent;
                 note.Model.RefreshModifiedAt();
-                Modified = true;
             }
         }
 

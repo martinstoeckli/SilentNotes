@@ -173,11 +173,11 @@
 							{
 								@if (note.IsInSafe)
 								{
-									<div class="note-handle note-handle-top-inset reddish" @onclick="() => ViewModel.RemoveNoteFromSafe(note.Id)" @onclick:preventDefault="true">@IconService.EmbedSvgLink(IconNames.Lock, 18)</div>
+									<div class="note-handle note-handle-inset reddish" @onclick="() => ViewModel.RemoveNoteFromSafe(note.Id)" @onclick:preventDefault="true">@IconService.EmbedSvgLink(IconNames.Lock, 18)</div>
 								}
 								else
 								{
-									<div class="note-handle note-handle-top-inset greenish" @onclick="() => ViewModel.AddNoteToSafe(note.Id)" @onclick:preventDefault="true">@IconService.EmbedSvgLink(IconNames.LockOpenVariant, 18)</div>
+									<div class="note-handle note-handle-inset greenish" @onclick="() => ViewModel.AddNoteToSafe(note.Id)" @onclick:preventDefault="true">@IconService.EmbedSvgLink(IconNames.LockOpenVariant, 18)</div>
 								}
 							}
 						</div>
@@ -348,20 +348,9 @@
 		get { return EnvironmentService.Os == Services.OperatingSystem.Windows; }
 	}
 
-	/// <summary>
-	/// Workaround, because the drawer contains a MudList which consumes the click event and does
-	/// not automatically close the drawer for small screens.
-	/// </summary>
-	/// <returns>Task for async calls.</returns>
-	private async Task CloseDrawerWhenItemSelected()
-	{
-		bool isLargeScreen = await ViewportService.IsBreakpointWithinWindowSizeAsync(Breakpoint.MdAndUp);
-		if (!isLargeScreen)
-			ViewModel.IsDrawerOpen = false;
-	}
-
 	private void OnSwipeDrawer(SwipeEventArgs args)
 	{
+		// Close drawer when swiping to the left
 		if ((args.SwipeDirection == SwipeDirection.RightToLeft) && ViewModel.IsDrawerOpen)
 			ViewModel.IsDrawerOpen = false;
 	}

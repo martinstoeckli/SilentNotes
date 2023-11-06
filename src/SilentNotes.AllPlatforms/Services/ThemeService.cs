@@ -31,6 +31,7 @@ namespace SilentNotes.Services
             _settingsService = settingsService;
             _environmentService = environmentService;
 
+            // todo:
             Theme = new MudTheme()
             {
                 Palette = new PaletteLight()
@@ -40,6 +41,13 @@ namespace SilentNotes.Services
                 PaletteDark = new PaletteDark()
                 {
                     //AppbarBackground = new MudColor("#323232"),
+                },
+                Typography = new Typography()
+                {
+                    Default = new Default()
+                    {
+                        FontSize = "14px",
+                    },
                 },
             };
             Wallpapers = new List<WallpaperModel>();

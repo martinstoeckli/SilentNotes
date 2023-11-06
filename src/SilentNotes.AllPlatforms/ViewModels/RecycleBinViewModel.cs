@@ -24,6 +24,7 @@ namespace SilentNotes.ViewModels
         private readonly IThemeService _themeService;
         private readonly ISettingsService _settingsService;
         private NoteRepositoryModel _model;
+        private long? _originalFingerPrint;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RecycleBinViewModel"/> class.
@@ -31,7 +32,6 @@ namespace SilentNotes.ViewModels
         public RecycleBinViewModel(
             NoteRepositoryModel model,
             ILanguageService languageService,
-            ISvgIconService svgIconService,
             IThemeService themeService,
             IFeedbackService feedbackService,
             ISettingsService settingsService,
@@ -45,11 +45,28 @@ namespace SilentNotes.ViewModels
             RecycledNotes = new List<NoteViewModelReadOnly>();
 
             Model = model;
+            ResetIsModified();
 
             // Initialize commands
             RestoreNoteCommand = new RelayCommand<object>(RestoreNote);
             DeleteNotePermanentlyCommand = new RelayCommand<object>(DeleteNotePermanently);
             EmptyRecycleBinCommand = new RelayCommand(EmptyRecycleBin);
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the repository was modifed.
+        /// </summary>
+        internal bool IsModified
+        {
+            get { return _originalFingerPrint != Model.GetModificationFingerprint(); }
+        }
+
+        /// <summary>
+        /// Sets the <see cref="IsModified"/> to false by recalculating the fingerprint.
+        /// </summary>
+        private void ResetIsModified()
+        {
+            _originalFingerPrint = Model?.GetModificationFingerprint();
         }
 
         private ILanguageService Language { get; }
@@ -86,10 +103,10 @@ namespace SilentNotes.ViewModels
         /// <inheritdoc/>
         public override void OnStoringUnsavedData()
         {
-            if (Modified)
+            if (IsModified)
             {
                 _repositoryService.TrySaveRepository(Model);
-                Modified = false;
+                ResetIsModified();
             }
         }
 
@@ -104,8 +121,6 @@ namespace SilentNotes.ViewModels
             if (dialogResult != MessageBoxResult.Continue)
                 return;
 
-            if (RecycledNotes.Count > 0)
-                Modified = true;
             RecycledNotes.Clear();
 
             // Search for all notes placed in the recycling bin
@@ -133,7 +148,6 @@ namespace SilentNotes.ViewModels
             NoteViewModelReadOnly viewModel = RecycledNotes.Find(item => noteId == item.Id);
             if (viewModel != null)
             {
-                Modified = true;
                 viewModel.InRecyclingBin = false;
                 RecycledNotes.Remove(viewModel);
             }
@@ -151,8 +165,6 @@ namespace SilentNotes.ViewModels
             NoteViewModelReadOnly viewModel = RecycledNotes.Find(item => noteId == item.Id);
             if (viewModel != null)
             {
-                Modified = true;
-
                 // Register the note as deleted and remove the note from the list
                 Model.DeletedNotes.Add(noteId);
                 Model.Notes.Remove(viewModel.Model);

@@ -42,7 +42,7 @@
             Include="Resources\AppIcon\appiconfg.svg" BaseSize="55,55"/>
 
         <MauiIcon Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'"
-            Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" ForegroundScale="0.65" Color="#57b0e3" BaseSize="55,55"/>
+            Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" ForegroundScale="0.60" Color="#57b0e3" BaseSize="55,55"/>
 
         <!-- Splash Screen, shown from the application start until the MainPage is shown (Windows not yet supported) -->
         <MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#0170b0" BaseSize="55,55" />

@@ -102,7 +102,7 @@ td { word-wrap: anywhere; } /* table should not exceed page width */
 	right: var(--note-handle-mx);
 	width: 26px;
 	height: 26px;
-	border-radius: 13px;
+	border-radius: 50%;
 	cursor: pointer;
 }
 .note-handle-top {
@@ -111,7 +111,7 @@ td { word-wrap: anywhere; } /* table should not exceed page width */
 	top: auto;
 	bottom: var(--note-handle-my);
 }
-.note-handle-top-inset {
+.note-handle-inset {
 	right: calc(var(--note-handle-mx) + 32px);
 }
 
@@ -187,7 +187,6 @@ td { word-wrap: anywhere; } /* table should not exceed page width */
 	font: normal normal 0.9em Consolas,monospace,"Courier New" !important;
 	overflow: auto !important;
 	white-space: pre !important;
-	text-wrap: none !important;
 }
 
 .note-viewer blockquote {

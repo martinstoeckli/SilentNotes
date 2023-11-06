@@ -50,6 +50,7 @@ namespace SilentNotes.Services
                 { IconNames.ChevronUp, "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M7.41,15.41L12,10.83L16.59,15.41L18,14L12,8L6,14L7.41,15.41Z' /></svg>" },
                 { IconNames.Close, "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z' /></svg>" },
                 { IconNames.CloseCircleOutline, "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22C17.53,22 22,17.53 22,12C22,6.47 17.53,2 12,2M14.59,8L12,10.59L9.41,8L8,9.41L10.59,12L8,14.59L9.41,16L12,13.41L14.59,16L16,14.59L13.41,12L16,9.41L14.59,8Z' /></svg>" },
+                { IconNames.CloseThick, "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M20 6.91L17.09 4L12 9.09L6.91 4L4 6.91L9.09 12L4 17.09L6.91 20L12 14.91L17.09 20L20 17.09L14.91 12L20 6.91Z' /></svg>" },
                 { IconNames.CloudDownload, "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M17,13L12,18L7,13H10V9H14V13M19.35,10.03C18.67,6.59 15.64,4 12,4C9.11,4 6.6,5.64 5.35,8.03C2.34,8.36 0,10.9 0,14A6,6 0 0,0 6,20H19A5,5 0 0,0 24,15C24,12.36 21.95,10.22 19.35,10.03Z' /></svg>" },
                 { IconNames.CloudSync, "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M12,4C15.64,4 18.67,6.59 19.35,10.04C21.95,10.22 24,12.36 24,15A5,5 0 0,1 19,20H6A6,6 0 0,1 0,14C0,10.91 2.34,8.36 5.35,8.04C6.6,5.64 9.11,4 12,4M7.5,9.69C6.06,11.5 6.2,14.06 7.82,15.68C8.66,16.5 9.81,17 11,17V18.86L13.83,16.04L11,13.21V15C10.34,15 9.7,14.74 9.23,14.27C8.39,13.43 8.26,12.11 8.92,11.12L7.5,9.69M9.17,8.97L10.62,10.42L12,11.79V10C12.66,10 13.3,10.26 13.77,10.73C14.61,11.57 14.74,12.89 14.08,13.88L15.5,15.31C16.94,13.5 16.8,10.94 15.18,9.32C14.34,8.5 13.19,8 12,8V6.14L9.17,8.97Z' /></svg>" },
                 { IconNames.CloudUpload, "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M14,13V17H10V13H7L12,8L17,13M19.35,10.03C18.67,6.59 15.64,4 12,4C9.11,4 6.6,5.64 5.35,8.03C2.34,8.36 0,10.9 0,14A6,6 0 0,0 6,20H19A5,5 0 0,0 24,15C24,12.36 21.95,10.22 19.35,10.03Z' /></svg>" },
@@ -57,11 +58,12 @@ namespace SilentNotes.Services
                 { IconNames.Delete, "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z' /></svg>" },
                 { IconNames.DeleteEmpty, "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M20.37,8.91L19.37,10.64L7.24,3.64L8.24,1.91L11.28,3.66L12.64,3.29L16.97,5.79L17.34,7.16L20.37,8.91M6,19V7H11.07L18,11V19A2,2 0 0,1 16,21H8A2,2 0 0,1 6,19Z' /></svg>" },
                 { IconNames.DeleteForever, "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19M8.46,11.88L9.87,10.47L12,12.59L14.12,10.47L15.53,11.88L13.41,14L15.53,16.12L14.12,17.53L12,15.41L9.88,17.53L8.47,16.12L10.59,14L8.46,11.88M15.5,4L14.5,3H9.5L8.5,4H5V6H19V4H15.5Z' /></svg>" },
+                { IconNames.DeleteRestore, "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M14,14H16L12,10L8,14H10V18H14V14M6,7H18V19C18,19.5 17.8,20 17.39,20.39C17,20.8 16.5,21 16,21H8C7.5,21 7,20.8 6.61,20.39C6.2,20 6,19.5 6,19V7M19,4V6H5V4H8.5L9.5,3H14.5L15.5,4H19Z' /></svg>" },
                 { IconNames.DotsVertical, "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M12,16A2,2 0 0,1 14,18A2,2 0 0,1 12,20A2,2 0 0,1 10,18A2,2 0 0,1 12,16M12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12A2,2 0 0,1 12,10M12,4A2,2 0 0,1 14,6A2,2 0 0,1 12,8A2,2 0 0,1 10,6A2,2 0 0,1 12,4Z' /></svg>" },
                 { IconNames.Earth, "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M17.9,17.39C17.64,16.59 16.89,16 16,16H15V13A1,1 0 0,0 14,12H8V10H10A1,1 0 0,0 11,9V7H13A2,2 0 0,0 15,5V4.59C17.93,5.77 20,8.64 20,12C20,14.08 19.2,15.97 17.9,17.39M11,19.93C7.05,19.44 4,16.08 4,12C4,11.38 4.08,10.78 4.21,10.21L9,15V16A2,2 0 0,0 11,18M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z' /></svg>" },
                 { IconNames.EmoticonHappy, "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M20,12A8,8 0 0,0 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12M22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2A10,10 0 0,1 22,12M10,9.5C10,10.3 9.3,11 8.5,11C7.7,11 7,10.3 7,9.5C7,8.7 7.7,8 8.5,8C9.3,8 10,8.7 10,9.5M17,9.5C17,10.3 16.3,11 15.5,11C14.7,11 14,10.3 14,9.5C14,8.7 14.7,8 15.5,8C16.3,8 17,8.7 17,9.5M12,17.23C10.25,17.23 8.71,16.5 7.81,15.42L9.23,14C9.68,14.72 10.75,15.23 12,15.23C13.25,15.23 14.32,14.72 14.77,14L16.19,15.42C15.29,16.5 13.75,17.23 12,17.23Z' /></svg>" },
                 { IconNames.Export, "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M23,12L19,8V11H10V13H19V16M1,18V6C1,4.89 1.9,4 3,4H15A2,2 0 0,1 17,6V9H15V6H3V18H15V15H17V18A2,2 0 0,1 15,20H3A2,2 0 0,1 1,18Z' /></svg>" },
-                { IconNames.FileRestore, "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M12,18C9.95,18 8.19,16.76 7.42,15H9.13C9.76,15.9 10.81,16.5 12,16.5A3.5,3.5 0 0,0 15.5,13A3.5,3.5 0 0,0 12,9.5C10.65,9.5 9.5,10.28 8.9,11.4L10.5,13H6.5V9L7.8,10.3C8.69,8.92 10.23,8 12,8A5,5 0 0,1 17,13A5,5 0 0,1 12,18Z' /></svg>" },
+                //{ IconNames.FileRestore, "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M12,18C9.95,18 8.19,16.76 7.42,15H9.13C9.76,15.9 10.81,16.5 12,16.5A3.5,3.5 0 0,0 15.5,13A3.5,3.5 0 0,0 12,9.5C10.65,9.5 9.5,10.28 8.9,11.4L10.5,13H6.5V9L7.8,10.3C8.69,8.92 10.23,8 12,8A5,5 0 0,1 17,13A5,5 0 0,1 12,18Z' /></svg>" },
                 { IconNames.FormatBold, "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M13.5,15.5H10V12.5H13.5A1.5,1.5 0 0,1 15,14A1.5,1.5 0 0,1 13.5,15.5M10,6.5H13A1.5,1.5 0 0,1 14.5,8A1.5,1.5 0 0,1 13,9.5H10M15.6,10.79C16.57,10.11 17.25,9 17.25,8C17.25,5.74 15.5,4 13.25,4H7V18H14.04C16.14,18 17.75,16.3 17.75,14.21C17.75,12.69 16.89,11.39 15.6,10.79Z' /></svg>" },
                 { IconNames.FormatHeader1, "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M3,4H5V10H9V4H11V18H9V12H5V18H3V4M14,18V16H16V6.31L13.5,7.75V5.44L16,4H18V16H20V18H14Z' /></svg>" },
                 { IconNames.FormatHeader2, "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M3,4H5V10H9V4H11V18H9V12H5V18H3V4M21,18H15A2,2 0 0,1 13,16C13,15.47 13.2,15 13.54,14.64L18.41,9.41C18.78,9.05 19,8.55 19,8A2,2 0 0,0 17,6A2,2 0 0,0 15,8H13A4,4 0 0,1 17,4A4,4 0 0,1 21,8C21,9.1 20.55,10.1 19.83,10.83L15,16H21V18Z' /></svg>" },
@@ -201,7 +203,6 @@ namespace SilentNotes.Services
         public const string ArrowLeftBoldBoxOutline = "arrow-left-bold-box-outline";
         public const string ArrowRightBold = "arrow-right-bold";
         public const string ArrowRightBoldBoxOutline = "arrow-right-bold-box-outline";
-        //public const string ArrowRightThinCircleOutline = "arrow-right-thin-circle-outline";
         public const string ArrowUp = "arrow-up";
         public const string CheckboxBlankOffOutline = "checkbox-blank-off-outline";
         public const string CheckboxBlankOutline = "checkbox-blank-outline";
@@ -214,6 +215,7 @@ namespace SilentNotes.Services
         public const string ChevronUp = "chevron-up";
         public const string Close = "close";
         public const string CloseCircleOutline = "close-circle-outline";
+        public const string CloseThick = "close-thick";
         public const string CloudDownload = "cloud-download";
         public const string CloudSync = "cloud-sync";
         public const string CloudUpload = "cloud-upload";
@@ -221,11 +223,11 @@ namespace SilentNotes.Services
         public const string Delete = "delete";
         public const string DeleteEmpty = "delete-empty";
         public const string DeleteForever = "delete-forever";
+        public const string DeleteRestore = "delete-restore";
         public const string DotsVertical = "dots-vertical";
         public const string Earth = "earth";
         public const string EmoticonHappy = "emoticon-happy";
         public const string Export = "export";
-        public const string FileRestore = "file-restore";
         public const string FormatBold = "format-bold";
         public const string FormatHeader1 = "format-header-1";
         public const string FormatHeader2 = "format-header-2";
