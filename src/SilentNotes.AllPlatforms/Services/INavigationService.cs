@@ -33,7 +33,8 @@ namespace SilentNotes.Services
         void NavigateBack();
 
         /// <summary>
-        /// Reloads the current page.
+        /// Reloads the current page. A reload doesn't trigger the OnStoreUnsavedData(), it
+        /// forcefully refreshes the current page, loosing the current modifications.
         /// </summary>
         void NavigateReload();
 

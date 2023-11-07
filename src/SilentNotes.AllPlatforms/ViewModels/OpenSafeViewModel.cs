@@ -26,6 +26,7 @@ namespace SilentNotes.ViewModels
         private readonly ISettingsService _settingsService;
         private readonly IRepositoryStorageService _repositoryService;
         private readonly string _navigationTargetRoute;
+        private long? _originalFingerPrint;
         private SecureString _password;
         private SecureString _passwordConfirmation;
         private bool _hasPasswordError;
@@ -54,6 +55,7 @@ namespace SilentNotes.ViewModels
 
             _repositoryService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepository);
             Model = noteRepository;
+            ResetIsModified();
 
             OkCommand = new RelayCommand(Ok);
             ResetSafeCommand = new RelayCommand(ResetSafe);
@@ -64,12 +66,28 @@ namespace SilentNotes.ViewModels
         /// <inheritdoc />
         public override void OnStoringUnsavedData()
         {
-            if (Modified)
+            if (IsModified)
             {
                 _repositoryService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepository);
                 _repositoryService.TrySaveRepository(noteRepository);
-                Modified = false;
+                ResetIsModified();
             }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the repository was modifed.
+        /// </summary>
+        internal bool IsModified
+        {
+            get { return _originalFingerPrint != Model.GetModificationFingerprint(); }
+        }
+
+        /// <summary>
+        /// Sets the <see cref="IsModified"/> to false by recalculating the fingerprint.
+        /// </summary>
+        private void ResetIsModified()
+        {
+            _originalFingerPrint = Model?.GetModificationFingerprint();
         }
 
         /// <summary>
@@ -93,7 +111,6 @@ namespace SilentNotes.ViewModels
             {
                 CreateNewSafe(Password);
                 openedSafes++;
-                Modified = true;
             }
 
             if (openedSafes == 0)
@@ -152,7 +169,6 @@ namespace SilentNotes.ViewModels
 
                 // Remove all safes
                 Model.Safes.Clear();
-                Modified = true;
 
                 // Continue with the create safe dialog. Since the navigation can have a target
                 // note which does not exist anymore, we should not use NavigateReload().

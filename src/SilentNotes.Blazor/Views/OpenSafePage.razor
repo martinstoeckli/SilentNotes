@@ -126,6 +126,12 @@
 		_secureStringConverter = new SecureStringConverter();
 	}
 
+	protected override void OnStoringUnsavedData()
+	{
+		base.OnStoringUnsavedData();
+		ViewModel.OnStoringUnsavedData();
+	}
+
 	private OpenSafeViewModel ViewModel { get; set; }
 
 	/// <inheritdoc/>
