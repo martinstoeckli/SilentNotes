@@ -11,6 +11,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using SilentNotes.Crypto;
 using SilentNotes.Models;
 using SilentNotes.Services;
+using SilentNotes.Workers;
 
 namespace SilentNotes.ViewModels
 {
@@ -24,7 +25,6 @@ namespace SilentNotes.ViewModels
         private readonly IThemeService _themeService;
         private readonly ISettingsService _settingsService;
         private NoteRepositoryModel _model;
-        private long? _originalFingerPrint;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RecycleBinViewModel"/> class.
@@ -45,7 +45,7 @@ namespace SilentNotes.ViewModels
             RecycledNotes = new List<NoteViewModelReadOnly>();
 
             Model = model;
-            ResetIsModified();
+            Modifications = new ModificationDetector(() => Model?.GetModificationFingerprint());
 
             // Initialize commands
             RestoreNoteCommand = new RelayCommand<object>(RestoreNote);
@@ -53,23 +53,12 @@ namespace SilentNotes.ViewModels
             EmptyRecycleBinCommand = new RelayCommand(EmptyRecycleBin);
         }
 
-        /// <summary>
-        /// Gets a value indicating whether the repository was modifed.
-        /// </summary>
-        internal bool IsModified
-        {
-            get { return _originalFingerPrint != Model.GetModificationFingerprint(); }
-        }
-
-        /// <summary>
-        /// Sets the <see cref="IsModified"/> to false by recalculating the fingerprint.
-        /// </summary>
-        private void ResetIsModified()
-        {
-            _originalFingerPrint = Model?.GetModificationFingerprint();
-        }
-
         private ILanguageService Language { get; }
+
+        /// <summary>
+        /// Gets a modification detector.
+        /// </summary>
+        internal ModificationDetector Modifications { get; }
 
         /// <summary>
         /// Gets a bindable list of the recycled notes.
@@ -101,12 +90,12 @@ namespace SilentNotes.ViewModels
         }
 
         /// <inheritdoc/>
-        public override void OnStoringUnsavedData()
+        public void OnStoringUnsavedData()
         {
-            if (IsModified)
+            if (Modifications.IsModified())
             {
                 _repositoryService.TrySaveRepository(Model);
-                ResetIsModified();
+                Modifications.MemorizeCurrentState();
             }
         }
 

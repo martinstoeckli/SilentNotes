@@ -36,9 +36,9 @@ namespace SilentNotesTest.ViewModels
             Guid idToRestore = new Guid("22222222-2222-2222-2222-222222222222");
             RecycleBinViewModel viewModel = CreateMockedRecycleBinViewModel(model);
 
-            Assert.IsFalse(viewModel.IsModified);
+            Assert.IsFalse(viewModel.Modifications.IsModified());
             viewModel.RestoreNoteCommand.Execute(idToRestore);
-            Assert.IsTrue(viewModel.IsModified);
+            Assert.IsTrue(viewModel.Modifications.IsModified());
         }
 
         [Test]
@@ -63,9 +63,9 @@ namespace SilentNotesTest.ViewModels
             NoteRepositoryModel model = CreateTestRepository();
             RecycleBinViewModel viewModel = CreateMockedRecycleBinViewModel(model);
 
-            Assert.IsFalse(viewModel.IsModified);
+            Assert.IsFalse(viewModel.Modifications.IsModified());
             viewModel.EmptyRecycleBinCommand.Execute(null);
-            Assert.IsTrue(viewModel.IsModified);
+            Assert.IsTrue(viewModel.Modifications.IsModified());
         }
 
         [Test]
@@ -93,9 +93,9 @@ namespace SilentNotesTest.ViewModels
             Guid idToDelete = new Guid("22222222-2222-2222-2222-222222222222");
             RecycleBinViewModel viewModel = CreateMockedRecycleBinViewModel(model);
 
-            Assert.IsFalse(viewModel.IsModified);
+            Assert.IsFalse(viewModel.Modifications.IsModified());
             viewModel.DeleteNotePermanentlyCommand.Execute(idToDelete);
-            Assert.IsTrue(viewModel.IsModified);
+            Assert.IsTrue(viewModel.Modifications.IsModified());
         }
 
         private static RecycleBinViewModel CreateMockedRecycleBinViewModel(NoteRepositoryModel repository)

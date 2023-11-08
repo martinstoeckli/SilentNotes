@@ -17,9 +17,9 @@ namespace SilentNotesTest.ViewModels
         {
             NoteRepositoryModel model = CreateTestRepository();
             NoteRepositoryViewModel viewModel = CreateMockedNoteRepositoryViewModel(model);
-            Assert.IsFalse(viewModel.IsModified);
+            Assert.IsFalse(viewModel.Modifications.IsModified());
             viewModel.NewNoteCommand.Execute(null);
-            Assert.IsTrue(viewModel.IsModified);
+            Assert.IsTrue(viewModel.Modifications.IsModified());
         }
 
         [Test]
@@ -91,9 +91,9 @@ namespace SilentNotesTest.ViewModels
             NoteRepositoryViewModel viewModel = CreateMockedNoteRepositoryViewModel(model);
 
             Guid idToDelete = new Guid("22222222-2222-2222-2222-222222222222");
-            Assert.IsFalse(viewModel.IsModified);
+            Assert.IsFalse(viewModel.Modifications.IsModified());
             viewModel.DeleteNoteCommand.Execute(idToDelete);
-            Assert.IsTrue(viewModel.IsModified);
+            Assert.IsTrue(viewModel.Modifications.IsModified());
         }
 
         [Test]
@@ -148,11 +148,11 @@ namespace SilentNotesTest.ViewModels
 
             model.Safes.Add(new SafeModel { Key = CommonMocksAndStubs.CryptoRandomService().GetRandomBytes(32) });
             note.SafeId = model.Safes[0].Id;
-            viewModel.ResetIsModified();
+            viewModel.Modifications.MemorizeCurrentState();
 
-            Assert.IsFalse(viewModel.IsModified);
+            Assert.IsFalse(viewModel.Modifications.IsModified());
             viewModel.AddNoteToSafe(noteId);
-            Assert.IsTrue(viewModel.IsModified);
+            Assert.IsTrue(viewModel.Modifications.IsModified());
         }
 
         [Test]
@@ -165,12 +165,12 @@ namespace SilentNotesTest.ViewModels
 
             model.Safes.Add(new SafeModel());
             note.SafeId = model.Safes[0].Id;
-            viewModel.ResetIsModified();
+            viewModel.Modifications.MemorizeCurrentState();
 
-            Assert.IsFalse(viewModel.IsModified);
+            Assert.IsFalse(viewModel.Modifications.IsModified());
             viewModel.RemoveNoteFromSafe(noteId);
             Assert.IsNull(note.SafeId);
-            Assert.IsTrue(viewModel.IsModified);
+            Assert.IsTrue(viewModel.Modifications.IsModified());
         }
 
         [Test]
@@ -180,9 +180,9 @@ namespace SilentNotesTest.ViewModels
             NoteRepositoryViewModel viewModel = CreateMockedNoteRepositoryViewModel(model);
             viewModel.SelectOrderNote(viewModel.FilteredNotes[0]);
 
-            Assert.IsFalse(viewModel.IsModified);
+            Assert.IsFalse(viewModel.Modifications.IsModified());
             viewModel.MoveSelectedOrderNote(false, true);
-            Assert.IsTrue(viewModel.IsModified);
+            Assert.IsTrue(viewModel.Modifications.IsModified());
         }
 
         private static NoteRepositoryViewModel CreateMockedNoteRepositoryViewModel(NoteRepositoryModel repository)

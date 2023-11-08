@@ -11,6 +11,7 @@ using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
 using SilentNotes.Models;
 using SilentNotes.Services;
+using SilentNotes.Workers;
 using VanillaCloudStorageClient;
 
 namespace SilentNotes.ViewModels
@@ -26,7 +27,6 @@ namespace SilentNotes.ViewModels
         private readonly ISettingsService _settingsService;
         private readonly IRepositoryStorageService _repositoryService;
         private readonly string _navigationTargetRoute;
-        private long? _originalFingerPrint;
         private SecureString _password;
         private SecureString _passwordConfirmation;
         private bool _hasPasswordError;
@@ -55,7 +55,7 @@ namespace SilentNotes.ViewModels
 
             _repositoryService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepository);
             Model = noteRepository;
-            ResetIsModified();
+            Modifications = new ModificationDetector(() => Model?.GetModificationFingerprint());
 
             OkCommand = new RelayCommand(Ok);
             ResetSafeCommand = new RelayCommand(ResetSafe);
@@ -63,31 +63,20 @@ namespace SilentNotes.ViewModels
 
         private ILanguageService Language { get; }
 
+        /// <summary>
+        /// Gets a modification detector.
+        /// </summary>
+        internal ModificationDetector Modifications { get; }
+
         /// <inheritdoc />
-        public override void OnStoringUnsavedData()
+        public void OnStoringUnsavedData()
         {
-            if (IsModified)
+            if (Modifications.IsModified())
             {
                 _repositoryService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepository);
                 _repositoryService.TrySaveRepository(noteRepository);
-                ResetIsModified();
+                Modifications.MemorizeCurrentState();
             }
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether the repository was modifed.
-        /// </summary>
-        internal bool IsModified
-        {
-            get { return _originalFingerPrint != Model.GetModificationFingerprint(); }
-        }
-
-        /// <summary>
-        /// Sets the <see cref="IsModified"/> to false by recalculating the fingerprint.
-        /// </summary>
-        private void ResetIsModified()
-        {
-            _originalFingerPrint = Model?.GetModificationFingerprint();
         }
 
         /// <summary>

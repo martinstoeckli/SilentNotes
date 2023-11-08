@@ -250,7 +250,7 @@ namespace SilentNotes.ViewModels
         }
 
         /// <inheritdoc />
-        public override void OnStoringUnsavedData()
+        public void OnStoringUnsavedData()
         {
             bool pinStateChanged = Model.IsPinned != _originalWasPinned;
 

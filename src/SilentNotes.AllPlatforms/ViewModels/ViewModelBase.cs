@@ -17,39 +17,10 @@ namespace SilentNotes.ViewModels
     /// </summary>
     public abstract class ViewModelBase : ObservableObject //, IViewModel
     {
-        ///// <summary>Gets the injected navigation service.</summary>
-        //protected readonly INavigationService _navigationService;
-
-        ///// <summary>Gets the injected webviewbaseurl service.</summary>
-        //protected readonly IBaseUrlService _webviewBaseUrl;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ViewModelBase"/> class.
         /// </summary>
-        protected ViewModelBase(
-            //INavigationService navigationService,
-            //ILanguageService languageService,
-            //ISvgIconService svgIconService,
-            //IBaseUrlService webviewBaseUrl,
-            //IThemeService themeService
-            )
-        {
-            //_navigationService = navigationService;
-            //Language = languageService;
-            //Icon = svgIconService;
-            //Theme = themeService;
-            //_webviewBaseUrl = webviewBaseUrl;
-
-            //HtmlRecource = new HtmlRecourceService();
-        }
-
-        ///// <inheritdoc/>
-        //public virtual void OnClosing()
-        //{
-        //}
-
-        /// <inheritdoc/>
-        public virtual void OnStoringUnsavedData()
+        protected ViewModelBase()
         {
         }
 

@@ -36,7 +36,6 @@ namespace SilentNotes.ViewModels
         private readonly ICryptor _noteCryptor;
         private readonly List<string> _filterTags;
         private NoteRepositoryModel _model;
-        private long? _originalFingerPrint;
         private NoteViewModelReadOnly _selectedOrderNote;
         private ITreeItemViewModel _selectedTagNode;
 
@@ -71,7 +70,7 @@ namespace SilentNotes.ViewModels
             TagsRootNode = new TagTreeItemViewModel(null, null, AllNotes);
 
             Model = model;
-            ResetIsModified();
+            Modifications = new ModificationDetector(() => Model?.GetModificationFingerprint());
 
             // Initialize commands and events
             NewNoteCommand = new RelayCommand(NewNote);
@@ -87,6 +86,11 @@ namespace SilentNotes.ViewModels
             SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
             IsDrawerOpen = settings.StartWithTagsOpen;
         }
+
+        /// <summary>
+        /// Gets a modification detector.
+        /// </summary>
+        internal ModificationDetector Modifications { get; }
 
         /// <summary>
         /// Adds all root nodes to the tag tree.
@@ -120,34 +124,18 @@ namespace SilentNotes.ViewModels
 
         private ILanguageService Language { get; }
 
-        /// <summary>
-        /// Gets a value indicating whether the repository was modifed.
-        /// </summary>
-        internal bool IsModified
-        {
-            get { return _originalFingerPrint != Model.GetModificationFingerprint(); }
-        }
-
-        /// <summary>
-        /// Sets the <see cref="IsModified"/> to false by recalculating the fingerprint.
-        /// </summary>
-        internal void ResetIsModified()
-        {
-            _originalFingerPrint = Model?.GetModificationFingerprint();
-        }
-
         /// <inheritdoc/>
-        public override void OnStoringUnsavedData()
+        public void OnStoringUnsavedData()
         {
             // If there was an error reading the existing repository, we do not overwrite it, to
             // prevent further damage.
             if (Model == null)
                 return;
 
-            if (IsModified)
+            if (Modifications.IsModified())
             {
                 _repositoryService.TrySaveRepository(Model);
-                ResetIsModified();
+                Modifications.MemorizeCurrentState();
             }
 
             SettingsModel settings = _settingsService.LoadSettingsOrDefault();

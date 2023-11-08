@@ -66,7 +66,7 @@ namespace SilentNotes.ViewModels
         }
 
         /// <inheritdoc/>
-        public override void OnStoringUnsavedData()
+        public void OnStoringUnsavedData()
         {
             if (Modified)
             {

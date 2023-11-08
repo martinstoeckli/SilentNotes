@@ -9,6 +9,7 @@ using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
 using SilentNotes.Models;
 using SilentNotes.Services;
+using SilentNotes.Workers;
 using VanillaCloudStorageClient;
 
 namespace SilentNotes.ViewModels
@@ -42,18 +43,24 @@ namespace SilentNotes.ViewModels
 
             _repositoryService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepository);
             Model = noteRepository;
+            Modifications = new ModificationDetector(() => Model?.GetModificationFingerprint());
 
             OkCommand = new RelayCommand(Ok);
         }
 
+        /// <summary>
+        /// Gets a modification detector.
+        /// </summary>
+        internal ModificationDetector Modifications { get; }
+
         /// <inheritdoc />
-        public override void OnStoringUnsavedData()
+        public void OnStoringUnsavedData()
         {
-            if (Modified)
+            if (Modifications.IsModified())
             {
                 _repositoryService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepository);
                 _repositoryService.TrySaveRepository(noteRepository);
-                Modified = false;
+                Modifications.MemorizeCurrentState();
             }
         }
 
@@ -80,7 +87,6 @@ namespace SilentNotes.ViewModels
                 safeInfo.Safe.RefreshModifiedAt();
             }
 
-            Modified = true;
             _navigationService.NavigateBack();
         }
 

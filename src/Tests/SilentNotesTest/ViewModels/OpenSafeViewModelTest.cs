@@ -67,9 +67,9 @@ namespace SilentNotesTest.ViewModels
             viewModel.Password = SecureStringExtensions.StringToSecureString("somethingvalid");
             viewModel.PasswordConfirmation = SecureStringExtensions.StringToSecureString("somethingvalid");
 
-            Assert.IsFalse(viewModel.IsModified);
+            Assert.IsFalse(viewModel.Modifications.IsModified());
             viewModel.OkCommand.Execute(null);
-            Assert.IsTrue(viewModel.IsModified);
+            Assert.IsTrue(viewModel.Modifications.IsModified());
             navigationService.Verify(m => m.NavigateHome());
         }
 
