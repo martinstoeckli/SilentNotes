@@ -52,6 +52,7 @@ namespace SilentNotes.ViewModels
             _cloudStorageClientFactory = cloudStorageClientFactory;
             _filePickerService = filePickerService;
             Model = _settingsService.LoadSettingsOrDefault();
+            Modifications = new ModificationDetector(() => GetModificationFingerprint(Model));
 
             _fontSizeConverter = new SliderStepConverter(ReferenceFontSize, 1.0);
             _noteMaxHeightConverter = new SliderStepConverter(ReferenceNoteMaxSize, 20.0);
@@ -65,13 +66,18 @@ namespace SilentNotes.ViewModels
             TestNewLocalizationCommand = new RelayCommand(TestNewLocalization);
         }
 
+        /// <summary>
+        /// Gets a modification detector for the note repository.
+        /// </summary>
+        internal ModificationDetector Modifications { get; }
+
         /// <inheritdoc/>
         public void OnStoringUnsavedData()
         {
-            if (Modified)
+            if (Modifications.IsModified())
             {
                 _settingsService.TrySaveSettingsToLocalDevice(Model);
-                Modified = false;
+                Modifications.MemorizeCurrentState();
             }
         }
 
@@ -97,7 +103,7 @@ namespace SilentNotes.ViewModels
 
             set
             {
-                SetPropertyAndModified(
+                SetProperty(
                     _fontSizeConverter.ModelFactorToSliderStep(Model.FontScale),
                     value,
                     (v) => Model.FontScale = _fontSizeConverter.SliderStepToModelFactor(v));
@@ -113,7 +119,7 @@ namespace SilentNotes.ViewModels
 
             set
             {
-                SetPropertyAndModified(
+                SetProperty(
                     _noteMaxHeightConverter.ModelFactorToSliderStep(Model.NoteMaxHeightScale),
                     value,
                     (v) => Model.NoteMaxHeightScale = _noteMaxHeightConverter.SliderStepToModelFactor(v));
@@ -129,7 +135,7 @@ namespace SilentNotes.ViewModels
 
             set
             {
-                if (SetPropertyAndModified(Model.KeepScreenUpDuration, value, (v) => Model.KeepScreenUpDuration = v))
+                if (SetProperty(Model.KeepScreenUpDuration, value, (v) => Model.KeepScreenUpDuration = v))
                 {
                     OnPropertyChanged(nameof(KeepScreenOnDurationTitle));
                 }
@@ -155,7 +161,7 @@ namespace SilentNotes.ViewModels
             set
             {
                 string themeId = _themeService.Wallpapers[value].Id;
-                SetPropertyAndModified(Model.SelectedWallpaper, themeId, (string v) => Model.SelectedWallpaper = v);
+                SetProperty(Model.SelectedWallpaper, themeId, (string v) => Model.SelectedWallpaper = v);
             }
         }
 
@@ -165,7 +171,7 @@ namespace SilentNotes.ViewModels
         public bool UseWallpaper
         {
             get { return Model.UseWallpaper; }
-            set { SetPropertyAndModified(Model.UseWallpaper, value, (bool v) => Model.UseWallpaper = v); }
+            set { SetProperty(Model.UseWallpaper, value, (bool v) => Model.UseWallpaper = v); }
         }
 
         /// <summary>
@@ -175,7 +181,7 @@ namespace SilentNotes.ViewModels
         public bool UseSolidColorTheme
         {
             get { return Model.UseSolidColorTheme; }
-            set { SetPropertyAndModified(Model.UseSolidColorTheme, value, (bool v) => Model.UseSolidColorTheme = v); }
+            set { SetProperty(Model.UseSolidColorTheme, value, (bool v) => Model.UseSolidColorTheme = v); }
         }
 
         /// <summary>
@@ -185,7 +191,7 @@ namespace SilentNotes.ViewModels
         public string ColorForSolidThemeHex
         {
             get { return Model.ColorForSolidTheme; }
-            set { SetPropertyAndModified(Model.ColorForSolidTheme, value, (string v) => Model.ColorForSolidTheme = v); }
+            set { SetProperty(Model.ColorForSolidTheme, value, (string v) => Model.ColorForSolidTheme = v); }
         }
 
         /// <summary>
@@ -197,7 +203,7 @@ namespace SilentNotes.ViewModels
 
             set
             {
-                if (SetPropertyAndModified(Model.ThemeMode.ToString(), value, (string v) => Model.ThemeMode = (ThemeMode)Enum.Parse(typeof(ThemeMode), value)))
+                if (SetProperty(Model.ThemeMode.ToString(), value, (string v) => Model.ThemeMode = (ThemeMode)Enum.Parse(typeof(ThemeMode), value)))
                     _themeService.RedrawTheme();
             }
         }
@@ -209,7 +215,7 @@ namespace SilentNotes.ViewModels
         public bool UseColorForAllNotesInDarkMode
         {
             get { return Model.UseColorForAllNotesInDarkMode; }
-            set { SetPropertyAndModified(Model.UseColorForAllNotesInDarkMode, value, (bool v) => Model.UseColorForAllNotesInDarkMode = v); }
+            set { SetProperty(Model.UseColorForAllNotesInDarkMode, value, (bool v) => Model.UseColorForAllNotesInDarkMode = v); }
         }
 
         /// <summary>
@@ -219,7 +225,7 @@ namespace SilentNotes.ViewModels
         public string ColorForAllNotesInDarkModeHex
         {
             get { return Model.ColorForAllNotesInDarkModeHex; }
-            set { SetPropertyAndModified(Model.ColorForAllNotesInDarkModeHex, value, (string v) => Model.ColorForAllNotesInDarkModeHex = v); }
+            set { SetProperty(Model.ColorForAllNotesInDarkModeHex, value, (string v) => Model.ColorForAllNotesInDarkModeHex = v); }
         }
 
         /// <summary>
@@ -236,7 +242,7 @@ namespace SilentNotes.ViewModels
         public string DefaultNoteColorHex
         {
             get { return Model.DefaultNoteColorHex; }
-            set { SetPropertyAndModified(Model.DefaultNoteColorHex, value, (string v) => Model.DefaultNoteColorHex = v); }
+            set { SetProperty(Model.DefaultNoteColorHex, value, (string v) => Model.DefaultNoteColorHex = v); }
         }
 
         /// <summary>
@@ -245,7 +251,7 @@ namespace SilentNotes.ViewModels
         public string SelectedNoteInsertionMode
         {
             get { return Model.DefaultNoteInsertion.ToString(); }
-            set { SetPropertyAndModified(Model.DefaultNoteInsertion.ToString(), value, (string v) => Model.DefaultNoteInsertion = (NoteInsertionMode)Enum.Parse(typeof(NoteInsertionMode), value)); }
+            set { SetProperty(Model.DefaultNoteInsertion.ToString(), value, (string v) => Model.DefaultNoteInsertion = (NoteInsertionMode)Enum.Parse(typeof(NoteInsertionMode), value)); }
         }
 
         /// <summary>
@@ -255,7 +261,7 @@ namespace SilentNotes.ViewModels
         public bool StartWithTagsOpen
         {
             get { return Model.StartWithTagsOpen; }
-            set { SetPropertyAndModified(Model.StartWithTagsOpen, value, (bool v) => Model.StartWithTagsOpen = v); }
+            set { SetProperty(Model.StartWithTagsOpen, value, (bool v) => Model.StartWithTagsOpen = v); }
         }
 
         /// <summary>
@@ -265,7 +271,7 @@ namespace SilentNotes.ViewModels
         public bool HideClosedSafeNotes
         {
             get { return Model.HideClosedSafeNotes; }
-            set { SetPropertyAndModified(Model.HideClosedSafeNotes, value, (bool v) => Model.HideClosedSafeNotes = v); }
+            set { SetProperty(Model.HideClosedSafeNotes, value, (bool v) => Model.HideClosedSafeNotes = v); }
         }
 
         /// <summary>
@@ -303,7 +309,7 @@ namespace SilentNotes.ViewModels
                 return result.Value;
             }
 
-            set { SetPropertyAndModified(Model.SelectedEncryptionAlgorithm, value, (string v) => Model.SelectedEncryptionAlgorithm = v); }
+            set { SetProperty(Model.SelectedEncryptionAlgorithm, value, (string v) => Model.SelectedEncryptionAlgorithm = v); }
         }
 
         /// <summary>
@@ -314,7 +320,7 @@ namespace SilentNotes.ViewModels
             get { return Model.PreventScreenshots; }
             set
             {
-                if (SetPropertyAndModified(Model.PreventScreenshots, value, (bool v) => Model.PreventScreenshots = v))
+                if (SetProperty(Model.PreventScreenshots, value, (bool v) => Model.PreventScreenshots = v))
                 {
                     if (_environmentService.Screenshots != null)
                         _environmentService.Screenshots.PreventScreenshots = value;
@@ -336,7 +342,7 @@ namespace SilentNotes.ViewModels
         public string SelectedAutoSyncMode
         {
             get { return Model.AutoSyncMode.ToString(); }
-            set { SetPropertyAndModified(Model.AutoSyncMode.ToString(), value, (string v) => Model.AutoSyncMode = (AutoSynchronizationMode)Enum.Parse(typeof(AutoSynchronizationMode), value)); }
+            set { SetProperty(Model.AutoSyncMode.ToString(), value, (string v) => Model.AutoSyncMode = (AutoSynchronizationMode)Enum.Parse(typeof(AutoSynchronizationMode), value)); }
         }
 
         /// <summary>
@@ -359,7 +365,7 @@ namespace SilentNotes.ViewModels
             // Remove account from settings
             if ((dialogResult == MessageBoxResult.Yes) || (dialogResult == MessageBoxResult.No))
             {
-                SetPropertyAndModified(Model.Credentials, null, (v) => Model.Credentials = v, nameof(AccountSummary));
+                SetProperty(Model.Credentials, null, (v) => Model.Credentials = v, nameof(AccountSummary));
                 OnPropertyChanged(nameof(ClearCloudSettingsDisabled));
                 WeakReferenceMessenger.Default.Send<RedrawCurrentPageMessage>();
             }
@@ -434,6 +440,37 @@ namespace SilentNotes.ViewModels
             }
             catch (Exception)
             {
+            }
+        }
+
+        /// <summary>
+        /// Gets a fingerprint of all settings which can be modified in this settings dialog.
+        /// </summary>
+        /// <param name="settings">The settings model from which to create the fingerprint.</param>
+        /// <returns>A fingerprint representing the settings state.</returns>
+        public static long GetModificationFingerprint(SettingsModel settings)
+        {
+            unchecked
+            {
+                long hashCode = settings.Revision;
+                hashCode = (hashCode * 397) ^ settings.FontScale.GetHashCode();
+                hashCode = (hashCode * 397) ^ string.GetHashCode(settings.SelectedWallpaper);
+                hashCode = (hashCode * 397) ^ settings.UseWallpaper.GetHashCode();
+                hashCode = (hashCode * 397) ^ settings.UseSolidColorTheme.GetHashCode();
+                hashCode = (hashCode * 397) ^ string.GetHashCode(settings.ColorForSolidTheme);
+                hashCode = (hashCode * 397) ^ settings.ThemeMode.GetHashCode();
+                hashCode = (hashCode * 397) ^ settings.UseColorForAllNotesInDarkMode.GetHashCode();
+                hashCode = (hashCode * 397) ^ string.GetHashCode(settings.ColorForAllNotesInDarkModeHex);
+                hashCode = (hashCode * 397) ^ string.GetHashCode(settings.DefaultNoteColorHex);
+                hashCode = (hashCode * 397) ^ settings.NoteMaxHeightScale.GetHashCode();
+                hashCode = (hashCode * 397) ^ settings.KeepScreenUpDuration.GetHashCode();
+                hashCode = (hashCode * 397) ^ settings.DefaultNoteInsertion.GetHashCode();
+                hashCode = (hashCode * 397) ^ settings.HideClosedSafeNotes.GetHashCode();
+                hashCode = (hashCode * 397) ^ string.GetHashCode(settings.SelectedEncryptionAlgorithm);
+                hashCode = (hashCode * 397) ^ settings.AutoSyncMode.GetHashCode();
+                hashCode = (hashCode * 397) ^ settings.PreventScreenshots.GetHashCode();
+                hashCode = (hashCode * 397) ^ (settings.Credentials == null).GetHashCode();
+                return hashCode;
             }
         }
 

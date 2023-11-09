@@ -85,12 +85,18 @@ namespace SilentNotes.ViewModels
 
             SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
             IsDrawerOpen = settings.StartWithTagsOpen;
+            SettingsModifications = new ModificationDetector(() => IsDrawerOpen.GetHashCode());
         }
 
         /// <summary>
-        /// Gets a modification detector.
+        /// Gets a modification detector for the note repository.
         /// </summary>
         internal ModificationDetector Modifications { get; }
+
+        /// <summary>
+        /// Gets a modification detector for the settings.
+        /// </summary>
+        private ModificationDetector SettingsModifications { get; }
 
         /// <summary>
         /// Adds all root nodes to the tag tree.
@@ -138,11 +144,12 @@ namespace SilentNotes.ViewModels
                 Modifications.MemorizeCurrentState();
             }
 
-            SettingsModel settings = _settingsService.LoadSettingsOrDefault();
-            if (settings.StartWithTagsOpen != IsDrawerOpen)
+            if (SettingsModifications.IsModified())
             {
+                SettingsModel settings = _settingsService.LoadSettingsOrDefault();
                 settings.StartWithTagsOpen = IsDrawerOpen;
                 _settingsService.TrySaveSettingsToLocalDevice(settings);
+                SettingsModifications.MemorizeCurrentState();
             }
         }
 

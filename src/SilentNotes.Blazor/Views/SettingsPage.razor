@@ -29,19 +29,22 @@
 		grid-row-gap: 20px;
 	}
 
+	<!-- Replace color picker button with our own -->
+	.mud-picker .mud-input-adornment-end {
+		width: 0;
+		visibility: collapse;
+	}
+
 	.color-swatch {
 		height: 36px;
 		margin-top: 4px;
 		margin-left: 6px;
 		padding: 6px;
-		font-size: 0.9em;
 		border: 1px solid;
 		border-color: var(--mud-palette-lines-default);
 		border-radius: 5px;
 		overflow: hidden;
 	}
-	.color-swatch .note-light { color: var(--font-color-light-background); }
-	.color-swatch .note-dark { color: var(--font-color-dark-background); }
 
 	.design-swatch { height: 100%; }
 </style>
@@ -73,6 +76,7 @@
 			<h2 class="h-colored">@LanguageService["gui_texture"]</h2>
 
 			<div class="css-grid">
+				@* Theme *@
 				<div><MudIcon Icon="@Icons.Material.Filled.LightMode" Color="Color.Secondary" /></div>
 				<div>
 					<MudSelect @bind-Value="ViewModel.SelectedThemeMode">
@@ -82,6 +86,7 @@
 					</MudSelect>
 				</div>
 
+				@* Wallpaper *@
 				<div><MudIcon Icon="@Icons.Material.Filled.ImagesearchRoller" Color="Color.Secondary" /></div>
 				<div>
 					<MudStack Row="true" AlignItems="AlignItems.Center">
@@ -110,20 +115,24 @@
 					</MudStack>
 				</div>
 
+				@* Color pickers *@
 				<div></div>
 				<div>
 					<MudStack Row="true" AlignItems="AlignItems.Center">
 						<MudSwitch @bind-Checked="@ViewModel.UseSolidColorTheme" Color="Color.Tertiary" UnCheckedColor="@GetSwitchUncheckedColor()" />
 
-						<MudColorPicker @bind-Text="@ViewModel.ColorForSolidThemeHex"
+						<MudColorPicker @ref="_clpSolidTheme" @bind-Text="@ViewModel.ColorForSolidThemeHex"
 							DisableToolbar="true" DisableAlpha="true"
 							Label="@LanguageService["gui_theme_solid_color"]"
 							ColorPickerMode="ColorPickerMode.HEX"
 							AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight" />
 
-						<div class="color-swatch inline-flex" style="@GetBackgroundColorStyle(ViewModel.ColorForSolidThemeHex)">
-							<span class="@ViewModel.GetDarkClass(ViewModel.ColorForSolidThemeHex)">Abc</span>
-						</div>
+						<MudButton
+							Class="color-swatch inline-flex"
+							Style="@GetBackgroundColorStyle(ViewModel.ColorForSolidThemeHex)"
+							OnClick="@(() => _clpSolidTheme.Open())">
+							<MudIcon Icon="@Icons.Material.Filled.ColorLens" Class="@ViewModel.GetDarkClass(ViewModel.ColorForSolidThemeHex)" />
+						</MudButton>
 					</MudStack>
 				</div>
 
@@ -132,30 +141,36 @@
 					<MudStack Row="true" AlignItems="AlignItems.Center">
 						<MudSwitch @bind-Checked="@ViewModel.UseColorForAllNotesInDarkMode" Color="Color.Tertiary" UnCheckedColor="@GetSwitchUncheckedColor()" />
 
-						<MudColorPicker @bind-Text="@ViewModel.ColorForAllNotesInDarkModeHex"
+						<MudColorPicker @ref="_clpAllNotesInDarkMode" @bind-Text="@ViewModel.ColorForAllNotesInDarkModeHex"
 							DisableToolbar="true" DisableAlpha="true"
 							Label="@LanguageService["gui_theme_color_all_dark"]"
 							ColorPickerMode="ColorPickerMode.HEX"
 							AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight" />
 
-						<div class="color-swatch inline-flex" style="@GetBackgroundColorStyle(ViewModel.ColorForAllNotesInDarkModeHex)">
-							<span class="@ViewModel.GetDarkClass(ViewModel.ColorForAllNotesInDarkModeHex)">Abc</span>
-						</div>
+						<MudButton
+							Class="color-swatch inline-flex"
+							Style="@GetBackgroundColorStyle(ViewModel.ColorForAllNotesInDarkModeHex)"
+							OnClick="@(() => _clpAllNotesInDarkMode.Open())">
+							<MudIcon Icon="@Icons.Material.Filled.ColorLens" Class="@ViewModel.GetDarkClass(ViewModel.ColorForAllNotesInDarkModeHex)" />
+						</MudButton>
 					</MudStack>
 				</div>
 
 				<div></div>
 				<div>
 					<MudStack Row="true" AlignItems="AlignItems.Center">
-						<MudColorPicker @bind-Text="ViewModel.DefaultNoteColorHex"
+						<MudColorPicker @ref="_clpDefaultNoteColor" @bind-Text="ViewModel.DefaultNoteColorHex"
 							DisableToolbar="true" DisableAlpha="true"
 							ColorPickerView="ColorPickerView.Palette"
 							Label="@LanguageService["gui_default_color"]"
 							Palette="@ViewModel.NoteColorsHex.Select(color => new MudColor(color))"/>
 
-						<div class="color-swatch inline-flex" style="@GetBackgroundColorStyle(ViewModel.DefaultNoteColorHex)">
-							<span class="@ViewModel.GetDarkClass(ViewModel.DefaultNoteColorHex)">Abc</span>
-						</div>
+						<MudButton
+							Class="color-swatch inline-flex"
+							Style="@GetBackgroundColorStyle(ViewModel.DefaultNoteColorHex)"
+							OnClick="@(() => _clpDefaultNoteColor.Open())">
+							<MudIcon Icon="@Icons.Material.Filled.ColorLens" Class="@ViewModel.GetDarkClass(ViewModel.DefaultNoteColorHex)" />
+						</MudButton>
 					</MudStack>
 				</div>
 			</div>
@@ -164,18 +179,22 @@
 			<h2 class="h-colored mt-10">@LanguageService["gui"]</h2>
 
 			<div class="css-grid">
+
+				@* Font size *@
 				<div><MudIcon Icon="@Icons.Material.Filled.FormatSize" Color="Color.Secondary" /></div>
 				<div>
 					<MudSlider @bind-Value="ViewModel.FontSizeStep"
 						Min="-3" Max="3" Step="1" Color="Color.Tertiary">@LanguageService["gui_font_size"]</MudSlider>
 				</div>
 
+				@* Note height *@
 				<div><MudIcon Icon="@Icons.Material.Filled.Expand" Color="Color.Secondary" /></div>
 				<div>
 					<MudSlider @bind-Value="ViewModel.NoteMaxHeightStep"
 						Min="-4" Max="4" Step="1" Color="Color.Tertiary">@LanguageService["gui_note_max_size"]</MudSlider>
 				</div>
 
+				@* Insert at top bottom *@
 				<div><MudIcon Icon="@Icons.Material.Filled.SwapVert" Color="Color.Secondary" /></div>
 				<div>
 					<MudSelect @bind-Value="ViewModel.SelectedNoteInsertionMode"
@@ -185,12 +204,14 @@
 					</MudSelect>
 				</div>
 
+				@* Hide closed safe notes *@
 				<div></div>
 				<div>
 					<MudSwitch @bind-Checked="@ViewModel.HideClosedSafeNotes"
 						Label="@LanguageService["gui_hide_closed_safe_notes"]" Color="Color.Tertiary" UnCheckedColor="@GetSwitchUncheckedColor()"/>
 				</div>
 
+				@* Keep screen on *@
 				@if (ViewModel.CanKeepScreenOn)
 				{
 					<div><MudIcon Icon="@Icons.Material.Outlined.Timer" Color="Color.Secondary" /></div>
@@ -205,6 +226,8 @@
 			<h2 class="h-colored mt-10">@LanguageService["sync"]</h2>
 
 			<div class="css-grid">
+
+				@* Synchronization mode *@
 				<div><MudIcon Icon="@Icons.Material.Filled.Sync" Color="Color.Secondary" /></div>
 				<div>
 					<MudSelect @bind-Value="ViewModel.SelectedAutoSyncMode"
@@ -215,6 +238,7 @@
 					</MudSelect>
 				</div>
 
+				@* Online storage *@
 				<div></div>
 				<div>
 					<MudPaper Class="pa-4">
@@ -239,6 +263,8 @@
 			<h2 class="h-colored mt-10">@LanguageService["security"]</h2>
 
 			<div class="css-grid">
+
+				@* Encryption algorithm *@
 				<div><MudIcon Icon="@Icons.Material.Outlined.Lock" Color="Color.Secondary" /></div>
 				<div>
 					<MudSelect @bind-Value="ViewModel.SelectedEncryptionAlgorithm"
@@ -250,6 +276,7 @@
 					</MudSelect>
 				</div>
 
+				@* Screenshot prevention *@
 				@if (ViewModel.CanPreventScreenshots)
 				{
 					<div></div>
@@ -265,6 +292,9 @@
 
 @code {
 	private MudMenu _overflowMenu;
+	private MudColorPicker _clpSolidTheme;
+	private MudColorPicker _clpAllNotesInDarkMode;
+	private MudColorPicker _clpDefaultNoteColor;
 
 	protected override void OnInitialized()
 	{
@@ -319,8 +349,8 @@
 	}
 
 	/// <summary>
-	/// Because the MudSwitch default color is barely visible in dark mode, another color is set
-	/// if the app runs in dark mode.
+	/// Workaround: Because the MudSwitch default color is barely visible in dark mode, another
+	/// color is set if the app runs in dark mode.
 	/// </summary>
 	/// <returns>The color to apply to the <see cref="MudSwitch{T}.UnCheckedColor"/> property.</returns>
 	private MudBlazor.Color GetSwitchUncheckedColor()

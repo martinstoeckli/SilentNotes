@@ -38,11 +38,9 @@
 
     <ItemGroup>
         <!-- App Icon -->
-        <MauiIcon Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'"
-            Include="Resources\AppIcon\appiconfg.svg" BaseSize="55,55"/>
+        <MauiIcon Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'" Include="Resources\AppIcon\appiconfg.svg" BaseSize="55,55" />
 
-        <MauiIcon Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'"
-            Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" ForegroundScale="0.60" Color="#57b0e3" BaseSize="55,55"/>
+        <MauiIcon Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'" Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" ForegroundScale="0.60" Color="#57b0e3" BaseSize="55,55" />
 
         <!-- Splash Screen, shown from the application start until the MainPage is shown (Windows not yet supported) -->
         <MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#0170b0" BaseSize="55,55" />
@@ -75,7 +73,7 @@
 
     <ItemGroup>
         <PackageReference Include="BouncyCastle.Cryptography" Version="2.2.1" />
-        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
         <PackageReference Include="MudBlazor" Version="6.11.0" />
     </ItemGroup>
