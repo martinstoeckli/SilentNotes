@@ -37,7 +37,7 @@ namespace SilentNotes.ViewModels
             ICryptor cryptor,
             SafeListModel safes)
         {
-            Model = model;
+            Model = model ?? NoteModel.NotFound;
             _themeService = themeService;
             _settingsService = settingsService;
             _searchableTextConverter = searchableTextConverter;

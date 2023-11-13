@@ -159,10 +159,9 @@ namespace SilentNotes.ViewModels
                 // Remove all safes
                 Model.Safes.Clear();
 
-                // Continue with the create safe dialog. Since the navigation can have a target
-                // note which does not exist anymore, we should not use NavigateReload().
+                // Continue with the create safe dialog.
                 OnStoringUnsavedData();
-                _navigationService.NavigateTo(Routes.OpenSafe, true);
+                _navigationService.NavigateReload();
             }
         }
 

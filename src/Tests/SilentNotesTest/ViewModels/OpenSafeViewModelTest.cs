@@ -47,7 +47,7 @@ namespace SilentNotesTest.ViewModels
 
             // Is marked as modified and stored before navigating away
             repositoryStorageService.Verify(m => m.TrySaveRepository(It.IsAny<NoteRepositoryModel>()));
-            navigationService.Verify(m => m.NavigateTo(It.Is<string>(route => route == Routes.OpenSafe), It.Is<bool>(remove => remove == true)));
+            navigationService.Verify(m => m.NavigateReload(), Times.Once);
         }
 
         [Test]

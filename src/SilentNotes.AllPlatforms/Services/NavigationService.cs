@@ -20,7 +20,7 @@ namespace SilentNotes.Services
         // maintain a history on its own.
         private const bool ReplaceWebviewHistoryAlways = true;
 
-        // Never do a force load, because this will recreate all scoped services and will show the
+        // Never do a force load, because this will recreate all scoped services and would show the
         // splash screen until the page is reloaded.
         private const bool ForceLoadNever = false;
 

@@ -15,6 +15,14 @@ namespace SilentNotesTest.ViewModels
     public class NoteViewModelTest
     {
         [Test]
+        public void UsesNotFoundNote_WhenConstructorGetsNullModel()
+        {
+            NoteModel inexistingModel = null;
+            NoteViewModel viewModel = CreateMockedNoteViewModel(inexistingModel);
+            Assert.AreSame(NoteModel.NotFound, viewModel.Model);
+        }
+
+        [Test]
         public void DoesNotShowContentWhenSafeIsClosed()
         {
             SearchableHtmlConverter searchableConverter = new SearchableHtmlConverter();

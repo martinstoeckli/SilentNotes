@@ -18,6 +18,11 @@ namespace SilentNotes.Models
         /// <summary>The package name used for encryption, see <see cref="CryptoHeader.PackageName"/></summary>
         public const string CryptorPackageName = "SilentNote";
 
+        /// <summary>
+        /// Can be used instead of null, and acts as replacement for a note which does not exist.
+        /// </summary>
+        public readonly static NoteModel NotFound = new NoteModel { Id=Guid.Empty };
+
         private Guid _id;
         private string _htmlContent;
         private DateTime? _metaModifiedAt;

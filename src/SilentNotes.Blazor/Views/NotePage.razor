@@ -341,8 +341,11 @@
 			noteRepository.Safes,
 			noteRepository.CollectActiveTags());
 
-		// Redirect to open safe if locked
-		if (ViewModel.IsLocked)
+		if (ViewModel.Model == NoteModel.NotFound)
+			// Redirect to home if note was not found
+			NavigationService.NavigateHome();
+		else if (ViewModel.IsLocked)
+			// Redirect to open safe if locked
 			NavigationService.NavigateTo(ViewModel.Route, false);
 	}
 
