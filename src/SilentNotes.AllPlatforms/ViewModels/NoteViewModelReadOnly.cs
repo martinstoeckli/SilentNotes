@@ -48,23 +48,6 @@ namespace SilentNotes.ViewModels
             _unlockedContent = IsInSafe ? UnlockIfSafeOpen(Model.HtmlContent) : Model.HtmlContent;
         }
 
-        ///// <inheritdoc/>
-        //public override void OnClosing()
-        //{
-        //    try
-        //    {
-        //        if (CanKeepScreenOn)
-        //        {
-        //            _environmentService.KeepScreenOn.StateChanged -= KeepScreenOnChanged;
-        //            _environmentService.KeepScreenOn.Stop();
-        //        }
-        //    }
-        //    catch (Exception)
-        //    {
-        //    }
-        //    base.OnClosing();
-        //}
-
         /// <summary>
         /// Gets the unique id of the note.
         /// </summary>
@@ -191,7 +174,7 @@ namespace SilentNotes.ViewModels
 
             set
             {
-                if (SetPropertyAndModified(Model.InRecyclingBin, value, (bool v) => Model.InRecyclingBin = v))
+                if (SetProperty(Model.InRecyclingBin, value, (bool v) => Model.InRecyclingBin = v))
                     Model.RefreshModifiedAt();
             }
         }

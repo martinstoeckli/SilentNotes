@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
@@ -31,7 +32,6 @@ namespace SilentNotes.ViewModels
         private readonly IEnvironmentService _environmentService;
         private readonly INativeBrowserService _nativeBrowserService;
         private readonly IList<string> _allDistinctAndSortedTags;
-        private readonly bool _originalWasPinned;
         private bool _isKeepScreenOnActive;
 
         /// <summary>
@@ -53,7 +53,6 @@ namespace SilentNotes.ViewModels
             IList<string> allDistinctAndSortedTags)
             : base(model, searchableTextConverter, themeService, settingsService, cryptor, safes)
         {
-            //Model = model;
             Language = languageService;
             _navigationService = navigationService;
             _repositoryService = repositoryService;
@@ -74,58 +73,35 @@ namespace SilentNotes.ViewModels
             if (CanKeepScreenOn)
                 _environmentService.KeepScreenOn.StateChanged += KeepScreenOnChanged;
 
-            _originalWasPinned = IsPinned;
+            Modifications = new NoteModificationDetector(() => GetModificationFingerprint(), () => IsPinned);
+            Modifications.MemorizeCurrentState();
         }
 
         private ILanguageService Language { get; }
 
-        ///// <summary>
-        ///// Initializes a new instance of the <see cref="NoteViewModel"/> class.
-        ///// </summary>
-        //public NoteViewModel(
-        //    INavigationService navigationService,
-        //    ILanguageService languageService,
-        //    ISvgIconService svgIconService,
-        //    IThemeService themeService,
-        //    IBaseUrlService webviewBaseUrl,
-        //    SearchableHtmlConverter searchableTextConverter,
-        //    IRepositoryStorageService repositoryService,
-        //    IFeedbackService feedbackService,
-        //    ISettingsService settingsService,
-        //    IEnvironmentService environmentService,
-        //    ICryptor cryptor,
-        //    SafeListModel safes,
-        //    IList<string> allDistinctAndSortedTags,
-        //    NoteModel noteFromRepository)
-        //    : base(navigationService, languageService, svgIconService, themeService, webviewBaseUrl)
-        //{
-        //    _repositoryService = repositoryService;
-        //    _feedbackService = feedbackService;
-        //    _settingsService = settingsService;
-        //    _environmentService = environmentService;
-        //    _searchableTextConverter = searchableTextConverter;
-        //    _cryptor = cryptor;
-        //    _safes = safes;
-        //    _allDistinctAndSortedTags = allDistinctAndSortedTags;
-        //    MarkSearchableContentAsDirty();
-        //    PushNoteToOnlineStorageCommand = new RelayCommand(PushNoteToOnlineStorage);
-        //    PullNoteFromOnlineStorageCommand = new RelayCommand(PullNoteFromOnlineStorage);
-        //    ToggleShoppingModeCommand = new RelayCommand(ToggleShoppingMode);
-        //    TogglePinnedCommand = new RelayCommand(TogglePinned);
-        //    GoBackCommand = new RelayCommand(GoBack);
-        //    AddTagCommand = new RelayCommand<string>(AddTag);
-        //    DeleteTagCommand = new RelayCommand<string>(DeleteTag);
-        //    ShowInfoCommand = new RelayCommand(ShowInfo);
-        //    KeepScreenOnCommand = new RelayCommand(KeepScreenOn);
+        /// <summary>
+        /// Gets a modification detector for the note.
+        /// </summary>
+        private NoteModificationDetector Modifications { get; }
 
-        //    if (CanKeepScreenOn)
-        //        _environmentService.KeepScreenOn.StateChanged += KeepScreenOnChanged;
+        /// <summary>
+        /// Gets a fingerprint of the note which can be edited on this page.
+        /// </summary>
+        /// <returns>A fingerprint representing the state of the note.</returns>
+        public long GetModificationFingerprint()
+        {
+            return ModificationDetector.CombineHashCodes(new long[]
+            {
+                IsPinned.GetHashCode(),
+                string.GetHashCode(UnlockedHtmlContent),
+                string.GetHashCode(BackgroundColorHex),
+                ShoppingModeActive.GetHashCode(),
+                ModificationDetector.CombineHashCodes(
+                    Model.Tags.Select(tag => (long)string.GetHashCode(tag))),
+            });
+        }
 
-        //    Model = noteFromRepository;
-        //    _originalWasPinned = IsPinned;
-        //    _unlockedContent = IsInSafe ? UnlockIfSafeOpen(Model.HtmlContent) : Model.HtmlContent;
-        //}
-
+        // todo:
         ///// <inheritdoc/>
         //public override void OnClosing()
         //{
@@ -155,8 +131,6 @@ namespace SilentNotes.ViewModels
                 if (SetProperty(ref _unlockedContent, value))
                 {
                     MarkSearchableContentAsDirty();
-                    Modified = true;
-                    Model.RefreshModifiedAt();
                 }
             }
         }
@@ -179,8 +153,6 @@ namespace SilentNotes.ViewModels
 
             Model.Tags.Add(value);
             Model.Tags.Sort(StringComparer.InvariantCultureIgnoreCase);
-            Model.RefreshModifiedAt();
-            Modified = true;
             OnPropertyChanged(nameof(Tags));
             OnPropertyChanged(nameof(TagSuggestions));
         }
@@ -201,8 +173,6 @@ namespace SilentNotes.ViewModels
                 return;
 
             Model.Tags.RemoveAt(tagIndex);
-            Model.RefreshModifiedAt();
-            Modified = true;
             OnPropertyChanged(nameof(Tags));
             OnPropertyChanged(nameof(TagSuggestions));
         }
@@ -234,10 +204,7 @@ namespace SilentNotes.ViewModels
                     }
                 }
 
-                if (SetPropertyAndModified(Model.BackgroundColorHex, value, (string v) => Model.BackgroundColorHex = v))
-                {
-                    Model.RefreshModifiedAt();
-                }
+                SetProperty(Model.BackgroundColorHex, value, (string v) => Model.BackgroundColorHex = v);
             }
         }
 
@@ -252,10 +219,10 @@ namespace SilentNotes.ViewModels
         /// <inheritdoc />
         public void OnStoringUnsavedData()
         {
-            bool pinStateChanged = Model.IsPinned != _originalWasPinned;
-
-            if (Modified || pinStateChanged)
+            if (Modifications.IsModified())
             {
+                Model.RefreshModifiedAt();
+
                 if (IsUnlocked)
                     Model.HtmlContent = Lock(_unlockedContent);
                 else
@@ -263,13 +230,13 @@ namespace SilentNotes.ViewModels
 
                 _repositoryService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepository);
 
-                if (pinStateChanged)
+                if (Modifications.IsPinnedChanged)
                 {
                     RepositionNoteBecausePinStateChanged(noteRepository);
                 }
 
                 _repositoryService.TrySaveRepository(noteRepository);
-                Modified = false;
+                Modifications.MemorizeCurrentState();
             }
         }
 
@@ -280,7 +247,6 @@ namespace SilentNotes.ViewModels
         private void RepositionNoteBecausePinStateChanged(NoteRepositoryModel repository)
         {
             var originalPosition = repository.Notes.IndexOf(Model);
-            Model.RefreshModifiedAt();
 
             if (Model.IsPinned)
             {
@@ -387,13 +353,11 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets or sets a value indicating whether the shopping mode is active or inactive
         /// <see cref="NoteModel.ShoppingModeActive"/>
-        /// This property does not call <see cref="NoteModel.RefreshModifiedAt"/>, because it is
-        /// not seen as changed content, so switching should not overwrite other recent changes.
         /// </summary>
         public bool ShoppingModeActive
         {
             get { return Model.ShoppingModeActive; }
-            set { SetPropertyAndModified(Model.ShoppingModeActive, value, (v) => Model.ShoppingModeActive = v); }
+            set { SetProperty(Model.ShoppingModeActive, value, (v) => Model.ShoppingModeActive = v); }
         }
 
         /// <summary>
@@ -413,6 +377,7 @@ namespace SilentNotes.ViewModels
 
         private void ShowInfo()
         {
+            OnStoringUnsavedData();
             StringBuilder sb = new StringBuilder();
 
             string creationDate = Language.FormatDateTime(Model.CreatedAt.ToLocalTime(), "d");
@@ -508,6 +473,32 @@ namespace SilentNotes.ViewModels
                 _timeAgo = new TimeAgo(localization);
             }
             return _timeAgo;
+        }
+
+        /// <summary>
+        /// Extends the <see cref="ModificationDetector"/> with specifics of the note page.
+        /// </summary>
+        private class NoteModificationDetector : ModificationDetector
+        {
+            private readonly Func<bool> _isPinnedProvider;
+            private bool _originalIsPinned;
+
+            public NoteModificationDetector(Func<long?> fingerPrintProvider, Func<bool> isPinnedProvider)
+                : base(fingerPrintProvider, false)
+            {
+                _isPinnedProvider = isPinnedProvider;
+            }
+
+            public override void MemorizeCurrentState()
+            {
+                base.MemorizeCurrentState();
+                _originalIsPinned = _isPinnedProvider();
+            }
+
+            public bool IsPinnedChanged
+            {
+                get { return _originalIsPinned != _isPinnedProvider(); }
+            }
         }
     }
 }

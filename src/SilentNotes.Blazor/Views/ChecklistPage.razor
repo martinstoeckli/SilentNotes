@@ -324,6 +324,9 @@ div.dark .detail-view.checklist .ProseMirror p::after { content: @(IconService.L
 				await _jsModule.InvokeVoidAsync("initialize", DotNetModule, _editorContainer, ViewModel.ShoppingModeActive);
 				string content = ViewModel.UnlockedHtmlContent;
 				await _jsModule.InvokeVoidAsync("setNoteContent", content);
+				bool isNewNote = ViewModel.SearchableContent.Trim().Length == 0;
+				if (isNewNote)
+					await ToggleFormatState("heading", 1);
 				_allowNoteContentChanges = true;
 
 				await KeyboardShortcuts.InitializeAsync(JSRuntime);
@@ -350,6 +353,7 @@ div.dark .detail-view.checklist .ProseMirror p::after { content: @(IconService.L
 	protected override async ValueTask OnClosingPageAsync()
 	{
 		await base.OnClosingPageAsync();
+		_allowNoteContentChanges = false;
 		if (_jsModule != null)
 			await _jsModule.DisposeAsync();
 	}
@@ -513,8 +517,9 @@ div.dark .detail-view.checklist .ProseMirror p::after { content: @(IconService.L
 	public void SetNoteContent(string content)
 	{
 		// The _allowNoteContentChanges guarantees, that changes are only processed after all the
-		// initialization steps are completed, so that they can never damage the note content.
-		if (_allowNoteContentChanges)
-			ViewModel.UnlockedHtmlContent = content;
+		// initialization steps are completed, so premature events can never damage the note content.
+		if (!_allowNoteContentChanges)
+			return;
+		ViewModel.UnlockedHtmlContent = content;
 	}
 }

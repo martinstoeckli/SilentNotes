@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
@@ -70,6 +71,36 @@ namespace SilentNotes.ViewModels
         /// Gets a modification detector for the note repository.
         /// </summary>
         internal ModificationDetector Modifications { get; }
+
+        /// <summary>
+        /// Gets a fingerprint of all settings which can be modified in this settings dialog.
+        /// </summary>
+        /// <param name="settings">The settings model from which to create the fingerprint.</param>
+        /// <returns>A fingerprint representing the settings state.</returns>
+        public static long GetModificationFingerprint(SettingsModel settings)
+        {
+            return ModificationDetector.CombineHashCodes(new long[]
+            {
+                settings.Revision.GetHashCode(),
+                settings.FontScale.GetHashCode(),
+                string.GetHashCode(settings.SelectedWallpaper),
+                settings.UseWallpaper.GetHashCode(),
+                settings.UseSolidColorTheme.GetHashCode(),
+                string.GetHashCode(settings.ColorForSolidTheme),
+                settings.ThemeMode.GetHashCode(),
+                settings.UseColorForAllNotesInDarkMode.GetHashCode(),
+                string.GetHashCode(settings.ColorForAllNotesInDarkModeHex),
+                string.GetHashCode(settings.DefaultNoteColorHex),
+                settings.NoteMaxHeightScale.GetHashCode(),
+                settings.KeepScreenUpDuration.GetHashCode(),
+                settings.DefaultNoteInsertion.GetHashCode(),
+                settings.HideClosedSafeNotes.GetHashCode(),
+                string.GetHashCode(settings.SelectedEncryptionAlgorithm),
+                settings.AutoSyncMode.GetHashCode(),
+                settings.PreventScreenshots.GetHashCode(),
+                (settings.Credentials == null).GetHashCode(),
+            });
+        }
 
         /// <inheritdoc/>
         public void OnStoringUnsavedData()
@@ -440,37 +471,6 @@ namespace SilentNotes.ViewModels
             }
             catch (Exception)
             {
-            }
-        }
-
-        /// <summary>
-        /// Gets a fingerprint of all settings which can be modified in this settings dialog.
-        /// </summary>
-        /// <param name="settings">The settings model from which to create the fingerprint.</param>
-        /// <returns>A fingerprint representing the settings state.</returns>
-        public static long GetModificationFingerprint(SettingsModel settings)
-        {
-            unchecked
-            {
-                long hashCode = settings.Revision;
-                hashCode = (hashCode * 397) ^ settings.FontScale.GetHashCode();
-                hashCode = (hashCode * 397) ^ string.GetHashCode(settings.SelectedWallpaper);
-                hashCode = (hashCode * 397) ^ settings.UseWallpaper.GetHashCode();
-                hashCode = (hashCode * 397) ^ settings.UseSolidColorTheme.GetHashCode();
-                hashCode = (hashCode * 397) ^ string.GetHashCode(settings.ColorForSolidTheme);
-                hashCode = (hashCode * 397) ^ settings.ThemeMode.GetHashCode();
-                hashCode = (hashCode * 397) ^ settings.UseColorForAllNotesInDarkMode.GetHashCode();
-                hashCode = (hashCode * 397) ^ string.GetHashCode(settings.ColorForAllNotesInDarkModeHex);
-                hashCode = (hashCode * 397) ^ string.GetHashCode(settings.DefaultNoteColorHex);
-                hashCode = (hashCode * 397) ^ settings.NoteMaxHeightScale.GetHashCode();
-                hashCode = (hashCode * 397) ^ settings.KeepScreenUpDuration.GetHashCode();
-                hashCode = (hashCode * 397) ^ settings.DefaultNoteInsertion.GetHashCode();
-                hashCode = (hashCode * 397) ^ settings.HideClosedSafeNotes.GetHashCode();
-                hashCode = (hashCode * 397) ^ string.GetHashCode(settings.SelectedEncryptionAlgorithm);
-                hashCode = (hashCode * 397) ^ settings.AutoSyncMode.GetHashCode();
-                hashCode = (hashCode * 397) ^ settings.PreventScreenshots.GetHashCode();
-                hashCode = (hashCode * 397) ^ (settings.Credentials == null).GetHashCode();
-                return hashCode;
             }
         }
 

@@ -4,6 +4,7 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
+using System.Runtime.CompilerServices;
 
 namespace SilentNotes.Workers
 {
@@ -37,7 +38,7 @@ namespace SilentNotes.Workers
         /// <summary>
         /// Calculates the finger print (hash) of the current content of the data.
         /// </summary>
-        public void MemorizeCurrentState()
+        public virtual void MemorizeCurrentState()
         {
             _memorizedFingerPrint = _fingerPrintProvider();
         }
@@ -51,6 +52,23 @@ namespace SilentNotes.Workers
         {
             long? currentFingerprint = _fingerPrintProvider();
             return _memorizedFingerPrint != currentFingerprint;
+        }
+
+        /// <summary>
+        /// Calculates a hash code out of a list of hash codes.
+        /// </summary>
+        /// <remarks>The function guarantees that no integer overflow can happen.</remarks>
+        /// <param name="hashCodes">Enumeration of hash codes to combine.</param>
+        /// <returns>Hash code calculated from the list of hash codes.</returns>
+        public static long CombineHashCodes(IEnumerable<long> hashCodes)
+        {
+            unchecked
+            {
+                long result = 0;
+                foreach (long hashCode in hashCodes)
+                    result = (result * 397) ^ hashCode;
+                return result;
+            }
         }
     }
 }

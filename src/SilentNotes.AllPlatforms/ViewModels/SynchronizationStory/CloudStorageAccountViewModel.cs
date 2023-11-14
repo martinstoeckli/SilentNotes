@@ -77,14 +77,14 @@ namespace SilentNotes.ViewModels
         public string Url
         {
             get { return Model.Url; }
-            set { SetPropertyAndModified(Model.Url, value, (string v) => Model.Url = v); }
+            set { SetProperty(Model.Url, value, (string v) => Model.Url = v); }
         }
 
         /// <inheritdoc />
         public string Username
         {
             get { return Model.Username; }
-            set { SetPropertyAndModified(Model.Username, value, (string v) => Model.Username = v); }
+            set { SetProperty(Model.Username, value, (string v) => Model.Username = v); }
         }
 
         /// <inheritdoc />
@@ -100,7 +100,6 @@ namespace SilentNotes.ViewModels
                     Model.Password?.Clear();
                     Model.Password = value;
                     OnPropertyChanged(nameof(Password));
-                    Modified = true;
                 }
             }
         }
@@ -108,13 +107,13 @@ namespace SilentNotes.ViewModels
         public bool Secure
         {
             get { return Model.Secure; }
-            set { SetPropertyAndModified(Model.Secure, value, (bool v) => Model.Secure = v); }
+            set { SetProperty(Model.Secure, value, (bool v) => Model.Secure = v); }
         }
 
         public bool AcceptInvalidCertificate
         {
             get { return Model.AcceptInvalidCertificate; }
-            set { SetPropertyAndModified(Model.AcceptInvalidCertificate, value, (bool v) => Model.AcceptInvalidCertificate = v); }
+            set { SetProperty(Model.AcceptInvalidCertificate, value, (bool v) => Model.AcceptInvalidCertificate = v); }
         }
 
         /// <summary>
