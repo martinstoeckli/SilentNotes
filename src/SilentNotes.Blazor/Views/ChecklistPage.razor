@@ -185,11 +185,11 @@ div.dark .detail-view.checklist .ProseMirror p::after { content: @(IconService.L
 
 		@* Tags *@
 		<div id="tag-container" class="flex-none pa-2 mud-elevation-5">
-			<MudPaper Class="ml-1 pa-0" Style="float:right; width:45%; max-width:240px" Elevation="0" title="@LanguageService["tag_add"]">
+			<MudPaper Class="ml-1 pa-0" Style="float:right; width:45%; max-width:240px" Elevation="0">
 				<MudAutocomplete T="string" @ref="_tagAutocomplete" ValueChanged="NewTagChanged" SearchFunc="GetNewTagSuggestions"
 					Class="ma-0" Margin="Margin.Dense" Dense="true" Variant="Variant.Outlined"
 					ResetValueOnEmptyText="true" Disabled="@ViewModel.ShoppingModeActive"
-					AdornmentIcon="@IconService.GetSvgLink(IconNames.TagOutline)"
+					Placeholder="@LanguageService["tag_add"]"
 					AnchorOrigin="Origin.TopCenter" TransformOrigin="Origin.BottomCenter" />
 			</MudPaper>
 

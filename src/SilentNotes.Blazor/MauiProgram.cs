@@ -21,6 +21,8 @@ namespace SilentNotes;
 
 public static class MauiProgram
 {
+    private const string DebugForceLanguage = "en"; // A language code can be forced for development (e.g. "en" or "de")
+
     /// <summary>
     /// Initializes the application and its IOC.
     /// </summary>
@@ -86,7 +88,7 @@ public static class MauiProgram
     internal static void RegisterSharedServices(IServiceCollection services)
     {
         services.AddSingleton<ISvgIconService>((serviceProvider) => new SvgIconService());
-        services.AddSingleton<ILanguageService>((serviceProvider) => new LanguageService(new LanguageServiceResourceReader(), "SilentNotes", new LanguageCodeService().GetSystemLanguageCode()));
+        services.AddSingleton<ILanguageService>((serviceProvider) => new LanguageService(new LanguageServiceResourceReader(), "SilentNotes", GetLanguageCode()));
         services.AddSingleton<INoteRepositoryUpdater>((serviceProvider) => new NoteRepositoryUpdater());
         services.AddSingleton<IThemeService>((serviceProvider) => new ThemeService(
             serviceProvider.GetService<ISettingsService>(),
@@ -166,4 +168,14 @@ public static class MauiProgram
     }
 
 #endif
+
+    private static string GetLanguageCode()
+    {
+        string languageCode = new LanguageCodeService().GetSystemLanguageCode();
+#if DEBUG
+        if (!string.IsNullOrEmpty(DebugForceLanguage))
+            languageCode = DebugForceLanguage;
+#endif
+        return languageCode;
+    }
 }
