@@ -77,7 +77,7 @@ namespace SilentNotes.Stories.SynchronizationStory
         /// and saved.
         /// </summary>
         /// <param name="model">The model to persist collected information.</param>
-        /// <param name="settings">The application settings.</param>
+        /// <param name="settingsService">Service which can get the application settings.</param>
         /// <param name="binaryCloudRepository">The repository to decrypt.</param>
         /// <param name="decryptedRepository">The decrypted repository, or null if the decryption
         /// was not successful.</param>

@@ -22,9 +22,8 @@ namespace SilentNotes.Workers
         /// Initializes a new instance of the <see cref="NoteFilter"/> class.
         /// </summary>
         /// <param name="pattern">User defined search filter.</param>
-        /// <param name="userDefinedTags">User defined tag to search for or a value of <see cref="SpecialTags"/>.
+        /// <param name="userDefinedTags">List of user defined tag to search for.</param>
         /// <param name="options">Options how to filter the notes.</param>
-        /// </param>
         public NoteFilter(string pattern, IEnumerable<string> userDefinedTags, FilterOptions options)
         {
             _pattern = pattern;

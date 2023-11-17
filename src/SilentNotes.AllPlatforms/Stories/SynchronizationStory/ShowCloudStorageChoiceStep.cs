@@ -22,7 +22,7 @@ namespace SilentNotes.Stories.SynchronizationStory
             if (uiMode.HasFlag(StoryMode.Dialogs))
             {
                 var navigation = serviceProvider.GetService<INavigationService>();
-                navigation.NavigateTo(Routes.CloudStorageChoice);
+                navigation.NavigateTo(RouteNames.CloudStorageChoice);
             }
             return ToTask(ToResultEndOfStory());
         }

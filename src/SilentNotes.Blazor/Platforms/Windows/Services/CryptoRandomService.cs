@@ -16,12 +16,7 @@ namespace SilentNotes.Platforms.Services
         /// <inheritdoc/>
         public byte[] GetRandomBytes(int numberOfBytes)
         {
-            byte[] result = new byte[numberOfBytes];
-            using (var randomGenerator = new RNGCryptoServiceProvider())
-            {
-                randomGenerator.GetBytes(result);
-            }
-            return result;
+            return RandomNumberGenerator.GetBytes(numberOfBytes);
         }
     }
 }

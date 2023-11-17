@@ -258,7 +258,7 @@ namespace SilentNotes.ViewModels
             {
                 string noteRouteType = CssClassNoteType == "text" ? "note" : CssClassNoteType;
                 if (IsLocked)
-                    return string.Format("{0}/{1}/{2}", Routes.OpenSafe, noteRouteType, Id);
+                    return string.Format("{0}/{1}/{2}", RouteNames.OpenSafe, noteRouteType, Id);
                 else
                     return string.Format("/{0}/{1}", noteRouteType, Id);
             }

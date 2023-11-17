@@ -10,7 +10,7 @@ namespace SilentNotes.Stories.PullPushStory
     /// </para>
     /// <para>
     /// The possible starting points is:
-    /// - The <see cref="SilentNotes.StoryBoards.PullPushStory.ExistsCloudRepositoryStep"/>.
+    /// - The <see cref="SilentNotes.Stories.PullPushStory.ExistsCloudRepositoryStep"/>.
     /// </para>
     /// <para>
     /// This story allows to overwrite a local note with the same note from the online service, or

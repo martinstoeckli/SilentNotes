@@ -37,7 +37,6 @@ namespace SilentNotes.Stories
         /// <param name="serviceProvider">The service provider. Do not rely on the services to be
         /// the same instances for the whole story.</param>
         /// <param name="uiMode">Can be used to run in silent mode.</param>
-        /// closing.</param>
         /// <returns>The result of the story step.</returns>
         Task<StoryStepResult<TModel>> RunStep(TModel model, IServiceProvider serviceProvider, StoryMode uiMode);
     }

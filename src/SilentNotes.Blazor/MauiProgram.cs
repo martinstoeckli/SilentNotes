@@ -105,7 +105,7 @@ public static class MauiProgram
         services.AddScoped<INavigationService>((serviceProvider) => new NavigationService(
             serviceProvider.GetService<NavigationManager>(),
             serviceProvider.GetService<IBrowserHistoryService>(),
-            Routes.NoteRepository));
+            RouteNames.NoteRepository));
         services.AddScoped<IFeedbackService>((serviceProvider) => new FeedbackService(
             serviceProvider.GetService<IDialogService>(),
             serviceProvider.GetService<ISnackbar>(),

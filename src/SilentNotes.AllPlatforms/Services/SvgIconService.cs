@@ -102,12 +102,6 @@ namespace SilentNotes.Services
         }
 
         /// <inheritdoc/>
-        //public MarkupString this[string id]
-        //{
-        //    get { return LoadIcon(id); }
-        //}
-
-        /// <inheritdoc/>
         public string this[string id]
         {
             get { return _svgResources[id]; }
@@ -176,16 +170,6 @@ namespace SilentNotes.Services
             }
             return result;
         }
-
-
-        ///// <inheritdoc/>
-        //private string LoadIconSvgPath(string id)
-        //{
-        //    string result = LoadIcon(id);
-        //    int startPos = result.IndexOf("<path");
-        //    int endPos = result.IndexOf("</svg");
-        //    return result.Substring(startPos, endPos - startPos);
-        //}
     }
 
     /// <summary>

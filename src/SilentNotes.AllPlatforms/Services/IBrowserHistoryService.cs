@@ -15,7 +15,7 @@ namespace SilentNotes.Services
     public interface IBrowserHistoryService
     {
         /// <summary>
-        /// Gets the Uri of the current route, the last item in <see cref="History"/>.
+        /// Gets the Uri of the current route, the last item in the history.
         /// </summary>
         string CurrentLocation { get; }
 

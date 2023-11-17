@@ -40,7 +40,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Models\SettingsModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\ThemeMode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\WallpaperModel.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Routes.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RouteNames.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\BrowserHistoryService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\CloudStorageClientFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DummyFeedbackService.cs" />

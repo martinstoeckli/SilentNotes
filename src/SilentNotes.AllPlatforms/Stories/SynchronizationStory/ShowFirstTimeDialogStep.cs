@@ -18,7 +18,7 @@ namespace SilentNotes.Stories.SynchronizationStory
             if (uiMode.HasFlag(StoryMode.Dialogs))
             {
                 var navigation = serviceProvider.GetService<INavigationService>();
-                navigation.NavigateTo(Routes.FirstTimeSync);
+                navigation.NavigateTo(RouteNames.FirstTimeSync);
             }
             return ToTask(ToResultEndOfStory());
         }

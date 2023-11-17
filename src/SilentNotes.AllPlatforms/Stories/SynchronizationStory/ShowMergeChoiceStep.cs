@@ -23,7 +23,7 @@ namespace SilentNotes.Stories.SynchronizationStory
             if (uiMode.HasFlag(StoryMode.Dialogs))
             {
                 var navigation = serviceProvider.GetService<INavigationService>();
-                navigation.NavigateTo(Routes.MergeChoice);
+                navigation.NavigateTo(RouteNames.MergeChoice);
             }
             return ToTask(ToResultEndOfStory());
         }
