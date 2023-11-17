@@ -5,8 +5,6 @@ VisualStudioVersion = 17.5.33530.505
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SilentNotes", "src\SilentNotes.Blazor\SilentNotes.csproj", "{05DDC644-6399-456A-B255-D1D82353F794}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VanillaCloudStorageClient", "src\VanillaCloudStorageClient\VanillaCloudStorageClient.csproj", "{5A23DDF4-0101-4612-B250-2A939BE0E024}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{1F3F34B1-524B-4855-8336-D9397E00F423}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VanillaCloudStorageClientTest", "src\Tests\VanillaCloudStorageClientTest\VanillaCloudStorageClientTest.csproj", "{60C23796-058A-4C76-8D59-B023A47630FD}"
@@ -14,6 +12,8 @@ EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "SilentNotes.AllPlatforms", "src\SilentNotes.AllPlatforms\SilentNotes.AllPlatforms.shproj", "{BBFA534E-69FD-4B31-B596-01D7317460D5}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SilentNotesTest", "src\Tests\SilentNotesTest\SilentNotesTest.csproj", "{7F3ACBD0-D2E8-494E-8597-540EE89B78ED}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "VanillaCloudStorageClient", "src\VanillaCloudStorageClient\VanillaCloudStorageClient.shproj", "{206E934E-A44E-4ED1-97F0-1FFFE0718E5E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,10 +27,6 @@ Global
 		{05DDC644-6399-456A-B255-D1D82353F794}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{05DDC644-6399-456A-B255-D1D82353F794}.Release|Any CPU.Build.0 = Release|Any CPU
 		{05DDC644-6399-456A-B255-D1D82353F794}.Release|Any CPU.Deploy.0 = Release|Any CPU
-		{5A23DDF4-0101-4612-B250-2A939BE0E024}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5A23DDF4-0101-4612-B250-2A939BE0E024}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5A23DDF4-0101-4612-B250-2A939BE0E024}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5A23DDF4-0101-4612-B250-2A939BE0E024}.Release|Any CPU.Build.0 = Release|Any CPU
 		{60C23796-058A-4C76-8D59-B023A47630FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{60C23796-058A-4C76-8D59-B023A47630FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{60C23796-058A-4C76-8D59-B023A47630FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -52,7 +48,11 @@ Global
 	EndGlobalSection
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		src\SilentNotes.AllPlatforms\SilentNotes.AllPlatforms.projitems*{05ddc644-6399-456a-b255-d1d82353f794}*SharedItemsImports = 5
+		src\VanillaCloudStorageClient\VanillaCloudStorageClient.projitems*{05ddc644-6399-456a-b255-d1d82353f794}*SharedItemsImports = 5
+		src\VanillaCloudStorageClient\VanillaCloudStorageClient.projitems*{206e934e-a44e-4ed1-97f0-1fffe0718e5e}*SharedItemsImports = 13
+		src\VanillaCloudStorageClient\VanillaCloudStorageClient.projitems*{60c23796-058a-4c76-8d59-b023a47630fd}*SharedItemsImports = 5
 		src\SilentNotes.AllPlatforms\SilentNotes.AllPlatforms.projitems*{7f3acbd0-d2e8-494e-8597-540ee89b78ed}*SharedItemsImports = 5
+		src\VanillaCloudStorageClient\VanillaCloudStorageClient.projitems*{7f3acbd0-d2e8-494e-8597-540ee89b78ed}*SharedItemsImports = 5
 		src\SilentNotes.AllPlatforms\SilentNotes.AllPlatforms.projitems*{bbfa534e-69fd-4b31-b596-01d7317460d5}*SharedItemsImports = 13
 	EndGlobalSection
 EndGlobal

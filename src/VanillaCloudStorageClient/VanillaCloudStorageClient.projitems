@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>206e934e-a44e-4ed1-97f0-1fffe0718e5e</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>VanillaCloudStorageClient</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)CloudStorageClientBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CloudStorageCredentials.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CloudStorageCredentialsRequirements.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CloudStorageException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CloudStorageProviders\DropboxCloudStorageClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CloudStorageProviders\FtpCloudStorageClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CloudStorageProviders\GmxCloudStorageClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CloudStorageProviders\GoogleCloudStorageClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CloudStorageProviders\OnedriveCloudStorageClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CloudStorageProviders\WebdavCloudStorageClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CloudStorageToken.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FlurlExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ICloudStorageClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IOAuth2CloudStorageClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)OAuth2\AuthorizationFlow.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)OAuth2\AuthorizationResponse.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)OAuth2\AuthorizationResponseError.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)OAuth2\OAuth2Config.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)OAuth2\OAuth2Utils.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)OAuth2CloudStorageClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SecureStringExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SerializeableCloudStorageCredentials.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)README.md" />
+    <None Include="$(MSBuildThisFileDirectory)VanillaCoudStorageClient128.png" />
+  </ItemGroup>
+</Project>

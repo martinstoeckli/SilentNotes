@@ -74,12 +74,9 @@
     <ItemGroup>
         <PackageReference Include="BouncyCastle.Cryptography" Version="2.2.1" />
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+        <PackageReference Include="Flurl.Http" Version="4.0.0-pre6" />
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
         <PackageReference Include="MudBlazor" Version="6.11.0" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\VanillaCloudStorageClient\VanillaCloudStorageClient.csproj" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net7.0-android33.0'">
@@ -89,5 +86,7 @@
     </ItemGroup>
 
     <Import Project="..\SilentNotes.AllPlatforms\SilentNotes.AllPlatforms.projitems" Label="Shared" />
+
+    <Import Project="..\VanillaCloudStorageClient\VanillaCloudStorageClient.projitems" Label="Shared" />
 
 </Project>

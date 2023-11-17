@@ -20,7 +20,7 @@ namespace VanillaCloudStorageClient
         /// <param name="username">Username, or an empty string for anonymous access.</param>
         /// <param name="password">Password, or an empty string for anonymous access.</param>
         /// <returns>This IFlurlClient or IFlurlRequest.</returns>
-        public static T WithBasicAuthOrAnonymous<T>(this T clientOrRequest, string username, string password) where T : IHttpSettingsContainer
+        public static T WithBasicAuthOrAnonymous<T>(this T clientOrRequest, string username, string password) where T : IFlurlRequest
         {
             if (string.IsNullOrEmpty(username))
                 return clientOrRequest;

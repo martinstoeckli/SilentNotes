@@ -25,6 +25,7 @@
   <ItemGroup>
     <PackageReference Include="BouncyCastle.Cryptography" Version="2.2.1" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+    <PackageReference Include="Flurl.Http" Version="4.0.0-pre6" />
     <PackageReference Include="Moq" Version="4.18.1" />
     <PackageReference Include="MudBlazor" Version="6.11.0" />
     <PackageReference Include="NUnit" Version="3.13.3" />
@@ -32,10 +33,8 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.2.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\VanillaCloudStorageClient\VanillaCloudStorageClient.csproj" />
-  </ItemGroup>
-
   <Import Project="..\..\SilentNotes.AllPlatforms\SilentNotes.AllPlatforms.projitems" Label="Shared" />
+
+  <Import Project="..\..\VanillaCloudStorageClient\VanillaCloudStorageClient.projitems" Label="Shared" />
 
 </Project>
