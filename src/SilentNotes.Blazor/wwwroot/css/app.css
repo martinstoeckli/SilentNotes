@@ -9,7 +9,7 @@ body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica
 h1 { font-size: 1.7em; }
 h2 { font-size: 1.3em; }
 h3 { font-size: 1.1em; }
-td { word-wrap: anywhere; } /* table should not exceed page width */
+td { word-wrap: anywhere; } /* table should not exceed device width */
 
 #progress {
 	position: fixed;
@@ -275,6 +275,10 @@ div.ProseMirror:focus {
 {
 	height: 100%;
 	overflow-y: auto;
+}
+.mud-typography {
+	word-wrap: anywhere; /* text should not exceed device width */
+	overflow-x: scroll;
 }
 
 .mud-button { text-transform: none; }

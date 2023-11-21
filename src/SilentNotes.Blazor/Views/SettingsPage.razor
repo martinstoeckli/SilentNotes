@@ -22,11 +22,11 @@
 <style type="text/css">
 	.css-grid {
 		display: grid;
-		max-width: 100%;
+		width: 100%;
 		overflow:clip;
 		margin-top: 14px;
 		margin-bottom: 14px;
-		grid-template-columns: var(--css-grid-topic-icon-width) auto;
+		grid-template-columns: var(--css-grid-topic-icon-width) calc(100% - var(--css-grid-topic-icon-width));
 		align-items: center;
 		grid-row-gap: 20px;
 	}
@@ -247,7 +247,7 @@
 						<MudText Typo="Typo.caption">@LanguageService["cloud_service"]</MudText>
 						<MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
 							<MudImage Src="@ViewModel.AccountIcon" Width="56" Height="28"/>
-							<MudText Style="word-wrap:anywhere; overflow-wrap:anywhere; overflow:hidden">@ViewModel.AccountSummary</MudText>
+							<MudText>@ViewModel.AccountSummary</MudText>
 						</MudStack>
 
 						<MudStack Row="true" Justify="Justify.FlexEnd" Spacing="1" Class="mt-2">
