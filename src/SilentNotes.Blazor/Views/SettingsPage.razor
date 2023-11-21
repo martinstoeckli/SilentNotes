@@ -22,6 +22,8 @@
 <style type="text/css">
 	.css-grid {
 		display: grid;
+		max-width: 100%;
+		overflow:clip;
 		margin-top: 14px;
 		margin-bottom: 14px;
 		grid-template-columns: var(--css-grid-topic-icon-width) auto;
@@ -125,7 +127,7 @@
 							DisableToolbar="true" DisableAlpha="true"
 							Label="@LanguageService["gui_theme_solid_color"]"
 							ColorPickerMode="ColorPickerMode.HEX"
-							AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight" />
+							AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
 
 						<MudButton
 							Class="color-swatch inline-flex"
@@ -145,7 +147,7 @@
 							DisableToolbar="true" DisableAlpha="true"
 							Label="@LanguageService["gui_theme_color_all_dark"]"
 							ColorPickerMode="ColorPickerMode.HEX"
-							AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight" />
+							AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
 
 						<MudButton
 							Class="color-swatch inline-flex"
@@ -163,6 +165,7 @@
 							DisableToolbar="true" DisableAlpha="true"
 							ColorPickerView="ColorPickerView.Palette"
 							Label="@LanguageService["gui_default_color"]"
+							AnchorOrigin="Origin.BottomLeft" TransformOrigin="Origin.TopLeft"
 							Palette="@ViewModel.NoteColorsHex.Select(color => new MudColor(color))"/>
 
 						<MudButton
@@ -239,11 +242,13 @@
 				</div>
 
 				@* Online storage *@
-				<div></div>
-				<div>
-					<MudPaper Class="pa-4">
+				<div style="grid-column: span 2">
+					<MudPaper Elevation="1" Class="pa-4">
 						<MudText Typo="Typo.caption">@LanguageService["cloud_service"]</MudText>
-						<MudText>@ViewModel.AccountSummary</MudText>
+						<MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+							<MudImage Src="@ViewModel.AccountIcon" Width="56" Height="28"/>
+							<MudText Style="word-wrap:anywhere; overflow-wrap:anywhere; overflow:hidden">@ViewModel.AccountSummary</MudText>
+						</MudStack>
 
 						<MudStack Row="true" Justify="Justify.FlexEnd" Spacing="1" Class="mt-2">
 							<MudButton OnClick="@(() => ViewModel.ChangeCloudSettingsCommand.Execute(null))"

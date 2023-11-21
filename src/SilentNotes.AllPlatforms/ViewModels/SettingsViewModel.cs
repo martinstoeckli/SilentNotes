@@ -432,6 +432,19 @@ namespace SilentNotes.ViewModels
             await _synchronizationService.SynchronizeManuallyChangeCloudStorage(Ioc.Instance);
         }
 
+        public string AccountIcon
+        {
+            get
+            {
+                if (Model.Credentials != null)
+                {
+                    var cloudMetadata = _cloudStorageClientFactory.GetCloudStorageMetadata(Model.Credentials.CloudStorageId);
+                    return cloudMetadata.AssetImageName;
+                }
+                return null;
+            }
+        }
+
         /// <summary>
         /// Gets a summary of the cloud storage account.
         /// </summary>

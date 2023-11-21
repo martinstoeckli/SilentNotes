@@ -17,6 +17,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)CloudStorageProviders\FtpCloudStorageClient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CloudStorageProviders\GmxCloudStorageClient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CloudStorageProviders\GoogleCloudStorageClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CloudStorageProviders\MurenaCloudStorageClient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CloudStorageProviders\OnedriveCloudStorageClient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CloudStorageProviders\WebdavCloudStorageClient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CloudStorageToken.cs" />
