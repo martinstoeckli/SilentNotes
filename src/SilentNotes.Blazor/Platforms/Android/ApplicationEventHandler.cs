@@ -49,7 +49,8 @@ namespace SilentNotes.Platforms
         internal void OnPause(Activity activity)
         {
             System.Diagnostics.Debug.WriteLine("*** ApplicationEventHandler.OnPause() " + GetId(activity));
-            WeakReferenceMessenger.Default.Send<StoreUnsavedDataMessage>(new StoreUnsavedDataMessage());
+            WeakReferenceMessenger.Default.Send<StoreUnsavedDataMessage>(
+                new StoreUnsavedDataMessage(MessageSender.ApplicationEventHandler));
         }
 
         internal void OnStop(Activity activity)

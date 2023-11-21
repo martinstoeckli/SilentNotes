@@ -35,7 +35,7 @@ namespace SilentNotes
 
 		private Task OnMainLayoutReady()
 		{
-			WeakReferenceMessenger.Default.Unregister<MainLayoutReadyMessage>(this);
+			WeakReferenceMessenger.Default.Unregister<MainLayoutReadyMessage>(this); // This is a one time event.
 			_splashScreenCanBeClosed = true;
 			return Task.CompletedTask;
 		}

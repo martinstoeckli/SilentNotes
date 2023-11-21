@@ -3,10 +3,12 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using Android.Content.Res;
 using Android.Views;
+using CommunityToolkit.Mvvm.Messaging;
 using SilentNotes.Services;
 
 namespace SilentNotes.Platforms.Services
@@ -49,66 +51,59 @@ namespace SilentNotes.Platforms.Services
         }
 
         /// <inheritdoc/>
-        void IKeepScreenOn.Start()
+        void IKeepScreenOn.Start(System.TimeSpan duration)
         {
+            Debug.WriteLine("*** IKeepScreenOn.Start");
+
+            // If a timer is already active, deactivate it.
+            _cancellationTokenSource?.Cancel();
+            _cancellationTokenSource = null;
+
+            // Set the activity flag to keep the screen on.
+            _appContext.RootActivity.Window.AddFlags(WindowManagerFlags.KeepScreenOn);
+
+            // (Re)start the timer
+            _cancellationTokenSource = new CancellationTokenSource();
+            Task.Delay(duration, _cancellationTokenSource.Token).ContinueWith(StoppedAfterTimeout);
+        }
+
+        private void StoppedAfterTimeout(Task task)
+        {
+            Debug.WriteLine(string.Format("*** IKeepScreenOn.StoppedAfterTimeout WasCanceled={0}", task.IsCanceled));
+            if (task.IsCanceled)
+                return;
+
+            // Timer was not cancelled, so timeout was reached and KeepScreenOn should be stopped.
+            _cancellationTokenSource = null;
             _appContext.RootActivity.RunOnUiThread(() =>
             {
-                _appContext.RootActivity.Window.AddFlags(WindowManagerFlags.KeepScreenOn);
-                OnStateChanged(true);
+                _appContext.RootActivity.Window.ClearFlags(WindowManagerFlags.KeepScreenOn); // must be called on UI thread
+                WeakReferenceMessenger.Default.Send<KeepScreenOnChangedMessage>(
+                    new KeepScreenOnChangedMessage());
             });
         }
 
         /// <inheritdoc/>
         void IKeepScreenOn.Stop()
         {
-            var cancellationTokenSource = _cancellationTokenSource;
-            _cancellationTokenSource = null;
-
-            // If a timer is active, deactivate it.
-            cancellationTokenSource?.Cancel();
-
-            _appContext.RootActivity.RunOnUiThread(() =>
+            Debug.WriteLine("*** IKeepScreenOn.Stop");
+            if (_cancellationTokenSource != null)
             {
-                _appContext.RootActivity.Window.ClearFlags(WindowManagerFlags.KeepScreenOn);
-                OnStateChanged(false);
-            });
+                // If a timer is active, deactivate it.
+                _cancellationTokenSource.Cancel();
+                _cancellationTokenSource = null;
+
+                _appContext.RootActivity.RunOnUiThread(() =>
+                {
+                    _appContext.RootActivity.Window.ClearFlags(WindowManagerFlags.KeepScreenOn);
+                });
+            }
         }
 
         /// <inheritdoc/>
-        void IKeepScreenOn.StopAfter(System.TimeSpan duration)
+        bool IKeepScreenOn.IsActive
         {
-            var cancellationTokenSource = _cancellationTokenSource;
-            _cancellationTokenSource = null;
-
-            // If a timer is already active, deactivate it.
-            cancellationTokenSource?.Cancel();
-
-            // Start or renew the timer
-            _cancellationTokenSource = new CancellationTokenSource();
-            CancellationToken token = _cancellationTokenSource.Token;
-            Task.Delay(duration, token).ContinueWith(_ => { StopAfterTimeout(token); });
-        }
-
-        private void StopAfterTimeout(CancellationToken token)
-        {
-            _cancellationTokenSource = null;
-            if (token.IsCancellationRequested)
-                return;
-
-            // Timer was not cancelled, so the KeepScreenOn should be stopped.
-            _appContext.RootActivity.RunOnUiThread(() =>
-            {
-                _appContext.RootActivity.Window.ClearFlags(WindowManagerFlags.KeepScreenOn); // must be called on UI thread
-                OnStateChanged(false);
-            });
-        }
-
-        /// <inheritdoc/>
-        public event System.EventHandler<bool> StateChanged;
-
-        private void OnStateChanged(bool isStarted)
-        {
-            StateChanged?.Invoke(this, isStarted);
+            get { return _cancellationTokenSource != null; }
         }
 
         /// <inheritdoc/>

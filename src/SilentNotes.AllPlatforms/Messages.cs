@@ -12,6 +12,25 @@ namespace SilentNotes
     /// </summary>
     public class StoreUnsavedDataMessage
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StoreUnsavedDataMessage"/> class.
+        /// Can be used for testing.
+        /// </summary>
+        internal StoreUnsavedDataMessage()
+            : this(MessageSender.Unknown)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StoreUnsavedDataMessage"/> class.
+        /// </summary>
+        /// <param name="sender">The origin from where the message is sent.</param>
+        public StoreUnsavedDataMessage(MessageSender sender)
+        {
+            Sender = sender;
+        }
+
+        public MessageSender Sender { get; }
     }
 
     /// <summary>
@@ -52,5 +71,16 @@ namespace SilentNotes
     /// </summary>
     public class MainLayoutReadyMessage
     {
+    }
+
+    /// <summary>
+    /// Enumeration of possible sources of a sent message.
+    /// </summary>
+    public enum MessageSender
+    {
+        Unknown,
+        ApplicationEventHandler,
+        NavigationManager,
+        ViewModel,
     }
 }

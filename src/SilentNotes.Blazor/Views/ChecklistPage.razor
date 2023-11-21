@@ -2,6 +2,7 @@
 @inherits PageBase
 
 @using System.ComponentModel
+@using CommunityToolkit.Mvvm.Messaging
 @using MudBlazor.Utilities;
 @using SilentNotes.Crypto;
 @using SilentNotes.Models
@@ -278,6 +279,9 @@ div.dark .detail-view.checklist .ProseMirror p::after { content: @(IconService.L
 	{
 		_formatStates = new FormatToggleStates();
 		_allowNoteContentChanges = false;
+
+		WeakReferenceMessenger.Default.Register<KeepScreenOnChangedMessage>(
+			this, (recipient, message) => OnKeepScreenOnChanged());
 	}
 
 	protected override void OnParametersSet()
@@ -354,6 +358,7 @@ div.dark .detail-view.checklist .ProseMirror p::after { content: @(IconService.L
 	{
 		await base.OnClosingPageAsync();
 		_allowNoteContentChanges = false;
+		WeakReferenceMessenger.Default.Unregister<KeepScreenOnChangedMessage>(this);
 		if (_jsModule != null)
 			await _jsModule.DisposeAsync();
 	}
@@ -367,10 +372,10 @@ div.dark .detail-view.checklist .ProseMirror p::after { content: @(IconService.L
 	public string NoteId { get; set; } = default!;
 
 	/// <inheritdoc/>
-	protected override void OnStoringUnsavedData()
+	protected override void OnStoringUnsavedData(StoreUnsavedDataMessage message)
 	{
-		base.OnStoringUnsavedData();
-		ViewModel.OnStoringUnsavedData();
+		base.OnStoringUnsavedData(message);
+		ViewModel.OnStoringUnsavedData(message);
 	}
 
 	/// <inheritdoc/>
@@ -398,6 +403,11 @@ div.dark .detail-view.checklist .ProseMirror p::after { content: @(IconService.L
 		if (result)
 			StateHasChanged();
 		return result;
+	}
+
+	private void OnKeepScreenOnChanged()
+	{
+		ViewModel.KeepScreenOnActive = EnvironmentService.KeepScreenOn.IsActive;
 	}
 
 	/// <summary>

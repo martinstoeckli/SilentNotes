@@ -70,11 +70,9 @@ namespace SilentNotes.ViewModels
             PushNoteToOnlineStorageCommand = new AsyncRelayCommand(PushNoteToOnlineStorage);
             PullNoteFromOnlineStorageCommand = new AsyncRelayCommand(PullNoteFromOnlineStorage);
 
-            if (CanKeepScreenOn)
-                _environmentService.KeepScreenOn.StateChanged += KeepScreenOnChanged;
-
             Modifications = new NoteModificationDetector(() => GetModificationFingerprint(), () => IsPinned);
             Modifications.MemorizeCurrentState();
+            KeepScreenOnActive = false; // is always canceled when closing
         }
 
         private ILanguageService Language { get; }
@@ -100,24 +98,6 @@ namespace SilentNotes.ViewModels
                     Model.Tags.Select(tag => (long)string.GetHashCode(tag))),
             });
         }
-
-        // todo:
-        ///// <inheritdoc/>
-        //public override void OnClosing()
-        //{
-        //    try
-        //    {
-        //        if (CanKeepScreenOn)
-        //        {
-        //            _environmentService.KeepScreenOn.StateChanged -= KeepScreenOnChanged;
-        //            _environmentService.KeepScreenOn.Stop();
-        //        }
-        //    }
-        //    catch (Exception)
-        //    {
-        //    }
-        //    base.OnClosing();
-        //}
 
         /// <inheritdoc/>
         public new string UnlockedHtmlContent
@@ -217,7 +197,7 @@ namespace SilentNotes.ViewModels
         }
 
         /// <inheritdoc />
-        public void OnStoringUnsavedData()
+        public void OnStoringUnsavedData(StoreUnsavedDataMessage message)
         {
             if (Modifications.IsModified())
             {
@@ -237,6 +217,14 @@ namespace SilentNotes.ViewModels
 
                 _repositoryService.TrySaveRepository(noteRepository);
                 Modifications.MemorizeCurrentState();
+            }
+
+            // Reset the KeepScreenOn. The OnClosingPage() is not called when pausing on Android,
+            // so we do it here whenever the page closes or goes into pause mode.
+            if ((message.Sender == MessageSender.ApplicationEventHandler) || message.Sender == MessageSender.NavigationManager)
+            {
+                KeepScreenOnActive = false;
+                _environmentService.KeepScreenOn?.Stop();
             }
         }
 
@@ -295,7 +283,7 @@ namespace SilentNotes.ViewModels
             _feedbackService.SetBusyIndicatorVisible(true, true);
             try
             {
-                OnStoringUnsavedData();
+                OnStoringUnsavedData(new StoreUnsavedDataMessage(MessageSender.ViewModel));
                 var storyModel = new PullPushStoryModel(Model.Id, PullPushDirection.PullFromServer);
                 ExistsCloudRepositoryStep story = new ExistsCloudRepositoryStep();
                 await story.RunStory(storyModel, Ioc.Instance, Stories.StoryMode.Toasts);
@@ -327,7 +315,7 @@ namespace SilentNotes.ViewModels
             _feedbackService.SetBusyIndicatorVisible(true, true);
             try
             {
-                OnStoringUnsavedData();
+                OnStoringUnsavedData(new StoreUnsavedDataMessage(MessageSender.ViewModel));
                 var storyModel = new PullPushStoryModel(Model.Id, PullPushDirection.PushToServer);
                 ExistsCloudRepositoryStep story = new ExistsCloudRepositoryStep();
                 await story.RunStory(storyModel, Ioc.Instance, Stories.StoryMode.Toasts);
@@ -377,7 +365,7 @@ namespace SilentNotes.ViewModels
 
         private void ShowInfo()
         {
-            OnStoringUnsavedData();
+            OnStoringUnsavedData(new StoreUnsavedDataMessage(MessageSender.ViewModel));
             StringBuilder sb = new StringBuilder();
 
             string creationDate = Language.FormatDateTime(Model.CreatedAt.ToLocalTime(), "d");
@@ -411,9 +399,9 @@ namespace SilentNotes.ViewModels
 
         private void KeepScreenOn()
         {
-            SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
-            _environmentService?.KeepScreenOn?.Start();
-            _environmentService?.KeepScreenOn?.StopAfter(new TimeSpan(0, settings.KeepScreenUpDuration, 0));
+            SettingsModel settings = _settingsService.LoadSettingsOrDefault();
+            KeepScreenOnActive = true;
+            _environmentService?.KeepScreenOn?.Start(TimeSpan.FromMinutes(settings.KeepScreenUpDuration));
         }
 
         /// <summary>
@@ -446,15 +434,6 @@ namespace SilentNotes.ViewModels
         {
             get { return _isKeepScreenOnActive; }
             set { SetProperty(ref _isKeepScreenOnActive, value); }
-        }
-
-        /// <summary>
-        /// Event handler for the <see cref="IKeepScreenOn.StateChanged"/> event, which is used
-        /// to update the active state of the menu item.
-        /// </summary>
-        private void KeepScreenOnChanged(object sender, bool e)
-        {
-            KeepScreenOnActive = e;
         }
 
         private TimeAgo GetOrCreateTimeAgo()

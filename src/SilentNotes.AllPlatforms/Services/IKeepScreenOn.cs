@@ -4,8 +4,6 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SilentNotes.Services
 {
@@ -15,26 +13,30 @@ namespace SilentNotes.Services
     public interface IKeepScreenOn
     {
         /// <summary>
-        /// Starts keeping the screen on, so the device doesn't go to sleep.
+        /// Starts keeping the screen on, so the device doesn't go to sleep. If a timer is already
+        /// running, it will be canceled, consecutive calls will therefore renew the duration.
+        /// If the timer has reached the duration, the message <see cref="KeepScreenOnChangedMessage"/>
+        /// is broadcasted, so the new state can be updated in the GUI.
         /// </summary>
-        void Start();
+        /// <param name="duration">Time span after which the keep screen off is stopped automatically.</param>
+        void Start(TimeSpan duration);
 
         /// <summary>
-        /// Stops keeping the screen on, so the device can go to sleep again. If a timer is running
-        /// after calling <see cref="StopAfter(TimeSpan)"/>, this timer will be canceled.
+        /// Stops keeping the screen on, so the device can go to sleep again. If a timer is running,
+        /// this timer will be canceled.
         /// </summary>
         void Stop();
 
         /// <summary>
-        /// Calls <see cref="Stop"/> after a given time period. If a timer is already running, it
-        /// will be canceled, consecutive calls will therefore renew the duration.
+        /// Gets a value indicating whether the keep screen on function is currently active.
         /// </summary>
-        /// <param name="duration">Time span after which the keep screen off is stopped automatically.</param>
-        void StopAfter(TimeSpan duration);
+        bool IsActive {  get; }
+    }
 
-        /// <summary>
-        /// This event will be called whenever the state changes.
-        /// </summary>
-        event EventHandler<bool> StateChanged;
+    /// <summary>
+    /// Message which can be broadcasted by the WeakReferenceMessenger to signal a state change.
+    /// </summary>
+    public class KeepScreenOnChangedMessage
+    {
     }
 }

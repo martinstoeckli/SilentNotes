@@ -111,9 +111,9 @@
 		}
 	}
 
-	protected override void OnStoringUnsavedData()
+	protected override void OnStoringUnsavedData(StoreUnsavedDataMessage message)
 	{
-		base.OnStoringUnsavedData();
+		base.OnStoringUnsavedData(message);
 		ViewModel.OnStoringUnsavedData();
 	}
 

@@ -2,6 +2,7 @@
 @inherits PageBase
 
 @using System.ComponentModel
+@using CommunityToolkit.Mvvm.Messaging
 @using MudBlazor.Utilities;
 @using SilentNotes.Crypto;
 @using SilentNotes.Models
@@ -314,6 +315,9 @@
 		_formatStates = new FormatToggleStates();
 		_linkState = new LinkState();
 		_allowNoteContentChanges = false;
+
+		WeakReferenceMessenger.Default.Register<KeepScreenOnChangedMessage>(
+			this, (recipient, message) => OnKeepScreenOnChanged());
 	}
 
 	protected override void OnParametersSet()
@@ -390,6 +394,7 @@
 	{
 		await base.OnClosingPageAsync();
 		_allowNoteContentChanges = false;
+		WeakReferenceMessenger.Default.Unregister<KeepScreenOnChangedMessage>(this);
 		if (_jsModule != null)
 			await _jsModule.DisposeAsync();
 	}
@@ -403,10 +408,10 @@
 	public string NoteId { get; set; } = default!;
 
 	/// <inheritdoc/>
-	protected override void OnStoringUnsavedData()
+	protected override void OnStoringUnsavedData(StoreUnsavedDataMessage message)
 	{
-		base.OnStoringUnsavedData();
-		ViewModel.OnStoringUnsavedData();
+		base.OnStoringUnsavedData(message);
+		ViewModel.OnStoringUnsavedData(message);
 	}
 
 	/// <inheritdoc/>
@@ -530,6 +535,11 @@
 				_linkState.OldLinkUrl, _linkState.LinkUrl, _linkState.OldLinkTitle, _linkState.LinkTitle);
 			_linkState.IsDialogOpen = false;
 		}
+	}
+
+	private void OnKeepScreenOnChanged()
+	{
+		ViewModel.KeepScreenOnActive = EnvironmentService.KeepScreenOn.IsActive;
 	}
 
 	private static string MakeLinkSuggestion(string linkTitle)

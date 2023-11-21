@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Moq;
 using NUnit.Framework;
+using SilentNotes;
 using SilentNotes.Crypto;
 using SilentNotes.Models;
 using SilentNotes.Services;
@@ -117,7 +118,7 @@ namespace SilentNotesTest.ViewModels
                 new List<string>());
 
             noteViewModel.UnlockedHtmlContent = "something new";
-            noteViewModel.OnStoringUnsavedData();
+            noteViewModel.OnStoringUnsavedData(new StoreUnsavedDataMessage());
 
             cryptor.Verify(m => m.Encrypt(
                 It.Is<byte[]>(p => p.SequenceEqual(CryptoUtils.StringToBytes("something new"))),
@@ -248,7 +249,7 @@ namespace SilentNotesTest.ViewModels
 
             noteViewModel.TogglePinnedCommand.Execute(null);
             noteViewModel.TogglePinnedCommand.Execute(null);
-            noteViewModel.OnStoringUnsavedData();
+            noteViewModel.OnStoringUnsavedData(new StoreUnsavedDataMessage());
 
             Assert.AreSame(noteToBePinned, repository.Notes[1]); // No modification, no change of position
             Assert.IsFalse(noteToBePinned.IsPinned);
@@ -263,7 +264,7 @@ namespace SilentNotesTest.ViewModels
 
             noteViewModel.TogglePinnedCommand.Execute(null);
             noteViewModel.TogglePinnedCommand.Execute(null);
-            noteViewModel.OnStoringUnsavedData();
+            noteViewModel.OnStoringUnsavedData(new StoreUnsavedDataMessage());
 
             repositoryStorageService.Verify(m => m.TrySaveRepository(It.IsAny<NoteRepositoryModel>()), Times.Never);
         }
@@ -276,7 +277,7 @@ namespace SilentNotesTest.ViewModels
             NoteViewModel noteViewModel = CreateMockedNoteViewModel(noteToBePinned, repository);
 
             noteViewModel.IsPinned = true;
-            noteViewModel.OnStoringUnsavedData();
+            noteViewModel.OnStoringUnsavedData(new StoreUnsavedDataMessage());
 
             Assert.AreSame(noteToBePinned, repository.Notes[0]); // Now on first position
             Assert.IsTrue(noteToBePinned.IsPinned);
@@ -292,7 +293,7 @@ namespace SilentNotesTest.ViewModels
             NoteViewModel noteViewModel = CreateMockedNoteViewModel(noteToBeUnpinned, repository);
 
             noteViewModel.IsPinned = false;
-            noteViewModel.OnStoringUnsavedData();
+            noteViewModel.OnStoringUnsavedData(new StoreUnsavedDataMessage());
 
             Assert.AreSame(noteToBeUnpinned, repository.Notes[1]); // Now on middle position
             Assert.IsFalse(noteToBeUnpinned.IsPinned);
@@ -309,7 +310,7 @@ namespace SilentNotesTest.ViewModels
             NoteViewModel noteViewModel = CreateMockedNoteViewModel(noteToBeUnpinned, repository);
 
             noteViewModel.IsPinned = false;
-            noteViewModel.OnStoringUnsavedData();
+            noteViewModel.OnStoringUnsavedData(new StoreUnsavedDataMessage());
 
             Assert.AreSame(noteToBeUnpinned, repository.Notes[2]); // Now on last position
             Assert.IsFalse(noteToBeUnpinned.IsPinned);
@@ -326,7 +327,7 @@ namespace SilentNotesTest.ViewModels
 
             testNote.IsPinned = true; //should be moved to index 0 and refresh OrderModifiedAt
 
-            noteViewModel.OnStoringUnsavedData();
+            noteViewModel.OnStoringUnsavedData(new StoreUnsavedDataMessage());
 
             Assert.IsTrue(repository.OrderModifiedAt != original);
         }
@@ -342,7 +343,7 @@ namespace SilentNotesTest.ViewModels
 
             testNote.IsPinned = true; //stays on indey 0 and does NOT refresh OrderModifiedAt
 
-            noteViewModel.OnStoringUnsavedData();
+            noteViewModel.OnStoringUnsavedData(new StoreUnsavedDataMessage());
 
             Assert.IsTrue(repository.OrderModifiedAt == original);
         }
@@ -357,7 +358,7 @@ namespace SilentNotesTest.ViewModels
             NoteViewModel noteViewModel = CreateMockedNoteViewModel(noteToBeUnpinned, repository);
 
             noteViewModel.IsPinned = false;
-            noteViewModel.OnStoringUnsavedData();
+            noteViewModel.OnStoringUnsavedData(new StoreUnsavedDataMessage());
 
             Assert.AreSame(noteToBeUnpinned, repository.Notes[0]); // Now on last position
         }

@@ -31,7 +31,7 @@ namespace SilentNotes.Views
             Debug.WriteLine(string.Format("*** {0}.Create {1}", GetType().Name, Id));
 
             WeakReferenceMessenger.Default.Register<StoreUnsavedDataMessage>(
-                this, (recipient, message) => OnStoringUnsavedData());
+                this, (recipient, message) => OnStoringUnsavedData(message));
             WeakReferenceMessenger.Default.Register<ClosePageMessage>(
                 this, async (recipient, message) => await TriggerOnClosingPageAsync());
             WeakReferenceMessenger.Default.Register<RedrawCurrentPageMessage>(
@@ -62,7 +62,8 @@ namespace SilentNotes.Views
         /// the implementing class should be able to work with consecutive calls and thus be able to
         /// check whether its data is modified or not.
         /// </summary>
-        protected virtual void OnStoringUnsavedData()
+        /// <param name="message">The message passed to the message handler.</param>
+        protected virtual void OnStoringUnsavedData(StoreUnsavedDataMessage message)
         {
             Debug.WriteLine(string.Format("*** {0}.OnStoringUnsavedData {1}", GetType().Name, Id));
         }
