@@ -74,6 +74,26 @@ namespace SilentNotes
     }
 
     /// <summary>
+    /// This message can be used to signal that a given note should be brought into view.
+    /// </summary>
+    internal class BringNoteIntoViewMessage
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BringNoteIntoViewMessage"/> class.
+        /// </summary>
+        /// <param name="noteId">The id of the note to bring into view.</param>
+        public BringNoteIntoViewMessage(Guid noteId)
+        {
+            NoteId = noteId;
+        }
+
+        /// <summary>
+        /// Gets the id of the note to bring into view.
+        /// </summary>
+        public Guid NoteId { get; }
+    }
+
+    /// <summary>
     /// Enumeration of possible sources of a sent message.
     /// </summary>
     public enum MessageSender

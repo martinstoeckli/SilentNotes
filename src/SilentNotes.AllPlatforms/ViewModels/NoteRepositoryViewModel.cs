@@ -370,24 +370,9 @@ namespace SilentNotes.ViewModels
                 _noteCryptor,
                 _model.Safes);
             NoteInsertionMode insertionMode = _settingsService.LoadSettingsOrDefault().DefaultNoteInsertion;
-            switch (insertionMode)
-            {
-                case NoteInsertionMode.AtTop:
-                    var lastPinned = AllNotes.LastOrDefault(x => x.IsPinned == true);
-                    var index = lastPinned == null ? 0 : AllNotes.IndexOf(lastPinned) + 1;
-                    _model.Notes.Insert(index, noteModel);
-                    AllNotes.Insert(index, noteViewModel);
-                    break;
-
-                case NoteInsertionMode.AtBottom:
-                    _model.Notes.Add(noteModel);
-                    AllNotes.Add(noteViewModel);
-                    break;
-
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(insertionMode));
-            }
-
+            int insertionIndex = _model.Notes.IndexToInsertNewNote(insertionMode);
+            _model.Notes.Insert(insertionIndex, noteModel);
+            AllNotes.Insert(insertionIndex, noteViewModel);
             _navigationService.NavigateTo(noteViewModel.Route);
         }
 
@@ -587,15 +572,7 @@ namespace SilentNotes.ViewModels
             NoteMover.AdjustPinStatusAfterMoving(AllNotes, notePositions.NewAllNotesPos);
             _model.RefreshOrderModifiedAt();
 
-            WeakReferenceMessenger.Default.Send(new BringSelectedNoteIntoViewMessage());
-        }
-
-        /// <summary>
-        /// This message can be used to signal that the currently selected note should be brought
-        /// into view.
-        /// </summary>
-        internal class BringSelectedNoteIntoViewMessage
-        {
+            WeakReferenceMessenger.Default.Send(new BringNoteIntoViewMessage(SelectedOrderNote.Id));
         }
     }
 }

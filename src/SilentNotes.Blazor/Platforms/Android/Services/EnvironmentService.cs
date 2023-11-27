@@ -78,8 +78,7 @@ namespace SilentNotes.Platforms.Services
             _appContext.RootActivity.RunOnUiThread(() =>
             {
                 _appContext.RootActivity.Window.ClearFlags(WindowManagerFlags.KeepScreenOn); // must be called on UI thread
-                WeakReferenceMessenger.Default.Send<KeepScreenOnChangedMessage>(
-                    new KeepScreenOnChangedMessage());
+                WeakReferenceMessenger.Default.Send(new KeepScreenOnChangedMessage());
             });
         }
 

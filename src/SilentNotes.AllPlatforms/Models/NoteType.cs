@@ -18,4 +18,28 @@ namespace SilentNotes.Models
         /// <summary>The note contains a checklist</summary>
         Checklist
     }
+
+    /// <summary>
+    /// Extension methods to the <see cref="NoteType"/> class.
+    /// </summary>
+    public static class NoteTypeExtensions
+    {
+        /// <summary>
+        /// Gets the value of the <see cref="RouteNames"/> constants matching the note type.
+        /// </summary>
+        /// <param name="noteType">Note type to get the route name from.</param>
+        /// <returns>Route name.</returns>
+        public static string GetRouteName(this NoteType noteType)
+        {
+            switch (noteType)
+            {
+                case NoteType.Text:
+                    return RouteNames.Note;
+                case NoteType.Checklist:
+                    return RouteNames.Checklist;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(NoteType));
+            }
+        }
+    }
 }

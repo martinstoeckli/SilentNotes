@@ -64,4 +64,33 @@ namespace SilentNotes.Models
             return -1;
         }
     }
+
+    /// <summary>
+    /// Extension methods to lists of <see cref="NoteModel"/>.
+    /// </summary>
+    public static class NoteListModelExtensions
+    {
+        /// <summary>
+        /// Searches for the index where a new note should be inserted.
+        /// </summary>
+        /// <param name="notes">List of notes.</param>
+        /// <param name="insertionMode">The mode describing where to insert the new note.</param>
+        /// <returns>Insertion index for new note.</returns>
+        public static int IndexToInsertNewNote(this List<NoteModel> notes, NoteInsertionMode insertionMode)
+        {
+            switch (insertionMode)
+            {
+                case NoteInsertionMode.AtTop:
+                    int lastPinnedIndex = notes.FindLastIndex(note => note.IsPinned);
+                    if (lastPinnedIndex >= 0)
+                        return lastPinnedIndex + 1;
+                    else
+                        return 0;
+                case NoteInsertionMode.AtBottom:
+                    return notes.Count;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(insertionMode));
+            }
+        }
+    }
 }

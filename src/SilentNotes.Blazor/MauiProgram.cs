@@ -46,13 +46,8 @@ public static class MauiProgram
             .ConfigureLifecycleEvents(events =>
             {
 #if ANDROID
-                events.AddAndroid(android => android
-                    .OnCreate((activity, bundle) => applicationEventHandler.OnCreate(activity))
-                    .OnResume((activity) => applicationEventHandler.OnResume(activity))
-                    .OnPause((activity) => applicationEventHandler.OnPause(activity))
-                    .OnDestroy((activity) => applicationEventHandler.OnDestroy(activity))
-                    .OnStop((activity) => applicationEventHandler.OnStop(activity))
-                    .OnActivityResult((activity, requestCode, resultCode, data) => applicationEventHandler.OnActivityResult(activity, requestCode, resultCode, data)));
+                // Registered LifecycleEvents are triggered not only by the MainActivity. To avoid
+                // running them from other activities the MainActivity will trigger them directly.
 #elif WINDOWS
                 events.AddWindows(windows => windows
                     .OnClosed((window, args) => applicationEventHandler.OnClosed(window, args)));

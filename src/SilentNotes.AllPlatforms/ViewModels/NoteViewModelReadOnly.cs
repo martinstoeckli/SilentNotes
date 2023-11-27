@@ -256,11 +256,11 @@ namespace SilentNotes.ViewModels
         {
             get
             {
-                string noteRouteType = CssClassNoteType == "text" ? "note" : CssClassNoteType;
+                string noteRouteName = Model.NoteType.GetRouteName();
                 if (IsLocked)
-                    return string.Format("{0}/{1}/{2}", RouteNames.OpenSafe, noteRouteType, Id);
+                    return string.Format("{0}{1}/{2}", RouteNames.OpenSafe, noteRouteName, Id);
                 else
-                    return string.Format("/{0}/{1}", noteRouteType, Id);
+                    return string.Format("{0}/{1}", noteRouteName, Id);
             }
         }
 

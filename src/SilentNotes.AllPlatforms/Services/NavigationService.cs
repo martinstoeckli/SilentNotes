@@ -134,9 +134,8 @@ namespace SilentNotes.Services
             // Inform current page about being closed, when navigating to another page
             if ((direction == NavigationDirection.Next) || (direction == NavigationDirection.Back))
             {
-                WeakReferenceMessenger.Default.Send<StoreUnsavedDataMessage>(
-                    new StoreUnsavedDataMessage(MessageSender.NavigationManager));
-                WeakReferenceMessenger.Default.Send<ClosePageMessage>(new ClosePageMessage());
+                WeakReferenceMessenger.Default.Send(new StoreUnsavedDataMessage(MessageSender.NavigationManager));
+                WeakReferenceMessenger.Default.Send(new ClosePageMessage());
             }
             return ValueTask.CompletedTask;
         }

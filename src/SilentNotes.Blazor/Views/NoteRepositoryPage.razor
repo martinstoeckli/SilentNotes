@@ -267,8 +267,8 @@
 		);
 		await ViewModel.InitializeTagTree();
 
-		WeakReferenceMessenger.Default.Register<NoteRepositoryViewModel.BringSelectedNoteIntoViewMessage>(
-			this, (recipient, message) => BringSelectedNoteIntoView());
+		WeakReferenceMessenger.Default.Register<BringNoteIntoViewMessage>(
+			this, (recipient, message) => BringNoteIntoView(message));
 		base.OnInitialized();
 	}
 
@@ -308,7 +308,7 @@
 	protected override void OnClosingPage()
 	{
 		base.OnClosingPage();
-		WeakReferenceMessenger.Default.Unregister<NoteRepositoryViewModel.BringSelectedNoteIntoViewMessage>(this);
+		WeakReferenceMessenger.Default.Unregister<BringNoteIntoViewMessage>(this);
 		FeedbackService.SetBusyIndicatorVisible(false, false);
 	}
 
@@ -355,10 +355,10 @@
 			ViewModel.IsDrawerOpen = false;
 	}
 
-	private void BringSelectedNoteIntoView()
+	private void BringNoteIntoView(BringNoteIntoViewMessage message)
 	{
 		// Remember to scroll to the moved note, as soon as the rendering has finished.
-		_pendingScrollIntoViewSelector = string.Format("[data-note='{0}']", ViewModel.SelectedOrderNote.Id);
+		_pendingScrollIntoViewSelector = string.Format("[data-note='{0}']", message.NoteId);
 	}
 
 	private string GetTagIcon(ITreeItemViewModel tagTreeNode)

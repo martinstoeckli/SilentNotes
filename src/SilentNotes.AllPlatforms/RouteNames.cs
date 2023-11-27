@@ -15,6 +15,8 @@ namespace SilentNotes
     public class RouteNames
     {
         public const string NoteRepository = "/";
+        public const string Note = "/note";
+        public const string Checklist = "/checklist";
         public const string ChangePassword = "/changepassword";
         public const string CloudStorageAccount = "/cloudstorageaccount";
         public const string CloudStorageChoice = "/cloudstoragechoice";

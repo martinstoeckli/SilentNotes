@@ -23,7 +23,7 @@ namespace SilentNotes.Platforms
         internal void OnClosed(Microsoft.UI.Xaml.Window window, WindowEventArgs args)
         {
             System.Diagnostics.Debug.WriteLine("*** ApplicationEventHandler.OnClosed()");
-            WeakReferenceMessenger.Default.Send<StoreUnsavedDataMessage>(new StoreUnsavedDataMessage(MessageSender.ApplicationEventHandler));
+            WeakReferenceMessenger.Default.Send(new StoreUnsavedDataMessage(MessageSender.ApplicationEventHandler));
 
             // We need to wait for the end of the synchronization, otherwise the app exits before
             // the work is done.
