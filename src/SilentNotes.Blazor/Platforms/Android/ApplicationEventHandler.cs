@@ -147,7 +147,7 @@ namespace SilentNotes.Platforms
         {
             if (_newNoteFromActionSend != null)
             {
-                WeakReferenceMessenger.Default.Send(new BringNoteIntoViewMessage(_newNoteFromActionSend.Id));
+                WeakReferenceMessenger.Default.Send(new BringNoteIntoViewMessage(_newNoteFromActionSend.Id, false));
                 _newNoteFromActionSend = null;
             }
             return base.OnMainLayoutReady();

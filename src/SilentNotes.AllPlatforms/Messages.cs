@@ -88,16 +88,23 @@ namespace SilentNotes
         /// <summary>
         /// Initializes a new instance of the <see cref="BringNoteIntoViewMessage"/> class.
         /// </summary>
-        /// <param name="noteId">The id of the note to bring into view.</param>
-        public BringNoteIntoViewMessage(Guid noteId)
+        /// <param name="noteId">Sets the <see cref="NoteId"/> property.</param>
+        /// <param name="smooth">Sets the <see cref="Smooth"/> property.</param>
+        public BringNoteIntoViewMessage(Guid noteId, bool smooth)
         {
             NoteId = noteId;
+            Smooth = smooth;
         }
 
         /// <summary>
         /// Gets the id of the note to bring into view.
         /// </summary>
         public Guid NoteId { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether the scrooling should be done smooth, or immediately.
+        /// </summary>
+        public bool Smooth { get; }
     }
 
     /// <summary>

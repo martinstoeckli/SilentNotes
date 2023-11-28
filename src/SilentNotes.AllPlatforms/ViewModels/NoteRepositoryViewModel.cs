@@ -572,7 +572,7 @@ namespace SilentNotes.ViewModels
             NoteMover.AdjustPinStatusAfterMoving(AllNotes, notePositions.NewAllNotesPos);
             _model.RefreshOrderModifiedAt();
 
-            WeakReferenceMessenger.Default.Send(new BringNoteIntoViewMessage(SelectedOrderNote.Id));
+            WeakReferenceMessenger.Default.Send(new BringNoteIntoViewMessage(SelectedOrderNote.Id, true));
         }
     }
 }

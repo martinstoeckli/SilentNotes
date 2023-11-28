@@ -243,7 +243,7 @@
 	private MudDrawer _sideDrawer;
 	private MudIconButton _tagsButton;
 	private MudBaseButton _syncButton;
-	private string _pendingScrollIntoViewSelector;
+	private BringNoteIntoViewMessage _pendingScrollIntoView;
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="NoteRepositoryPage"/> class.
@@ -270,7 +270,7 @@
 		await ViewModel.InitializeTagTree();
 
 		WeakReferenceMessenger.Default.Register<BringNoteIntoViewMessage>(
-			this, (recipient, message) => BringNoteIntoView(message));
+			this, (recipient, message) => _pendingScrollIntoView = message);
 		base.OnInitialized();
 	}
 
@@ -279,7 +279,7 @@
 	{
 		if (!string.IsNullOrEmpty(BringToViewNoteId))
 		{
-			BringNoteIntoView(new BringNoteIntoViewMessage(Guid.Parse(BringToViewNoteId)));
+			_pendingScrollIntoView = new BringNoteIntoViewMessage(Guid.Parse(BringToViewNoteId), false);
 		}
 	}
 
@@ -297,14 +297,14 @@
 				.AddShortcut(new SnKeyboardShortcut("l", true), () => ViewModel.NewChecklistCommand.Execute(null))
 				.AddShortcut(new SnKeyboardShortcut("r", true), () => Navigation.NavigateTo(RouteNames.RecycleBin))
 				.AddShortcut(new SnKeyboardShortcut("i", true), () => Navigation.NavigateTo(RouteNames.Info))
-				.AddShortcut(new SnKeyboardShortcut(SnKey.Home), async () => await ScrollManager.ScrollToTopAsync("#content", ScrollBehavior.Auto))
-				.AddShortcut(new SnKeyboardShortcut(SnKey.End), async () => await ScrollManager.ScrollToBottomAsync("#content", ScrollBehavior.Auto));
+				.AddShortcut(new SnKeyboardShortcut(SnKey.Home, true), async () => await ScrollManager.ScrollToTopAsync("#content", ScrollBehavior.Auto))
+				.AddShortcut(new SnKeyboardShortcut(SnKey.End, true), async () => await ScrollManager.ScrollToBottomAsync("#content", ScrollBehavior.Auto));
 		}
 
-		if (!string.IsNullOrEmpty(_pendingScrollIntoViewSelector))
+		if (_pendingScrollIntoView != null)
 		{
-			await ScrollManager.ScrollIntoViewAsync(_pendingScrollIntoViewSelector, ScrollBehavior.Smooth);
-			_pendingScrollIntoViewSelector = null;
+			await BringNoteIntoView(_pendingScrollIntoView);
+			_pendingScrollIntoView = null;
 		}
 	}
 
@@ -372,10 +372,11 @@
 			ViewModel.IsDrawerOpen = false;
 	}
 
-	private void BringNoteIntoView(BringNoteIntoViewMessage message)
+	private async Task BringNoteIntoView(BringNoteIntoViewMessage message)
 	{
-		// Remember to scroll to the moved note, as soon as the rendering has finished.
-		_pendingScrollIntoViewSelector = string.Format("[data-note='{0}']", message.NoteId);
+		string selector = string.Format("[data-note='{0}']", _pendingScrollIntoView.NoteId);
+		var scrollBehavior = _pendingScrollIntoView.Smooth ? ScrollBehavior.Smooth : ScrollBehavior.Auto;
+		await ScrollManager.ScrollIntoViewAsync(selector, scrollBehavior);
 	}
 
 	private string GetTagIcon(ITreeItemViewModel tagTreeNode)
