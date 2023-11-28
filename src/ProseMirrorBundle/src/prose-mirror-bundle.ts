@@ -275,21 +275,6 @@ export function selectWordAtCurrentPosition(editor: Editor): string {
   return text.substring(textFromPos - toLeft, textToPos + toRight);
 }
 
-/**
- * Tries to guess how an url with the given text would look like.
- * @param {string}  text - A text which may or may not contain an url.
- * @returns {string} A suggestion for an url derrived from the text.
-*/
-export function makeLinkSuggestion(text: string): string {
-  if (!isValidUrl(text)) {
-    text = 'https://' + text;
-    if (!isValidUrl(text)) {
-        text = 'https://';
-    }
-  }
-  return text;
-}
-
 /*
  * Searches for all checklist items (paragraphs) and sets their html class attribute
  * to the new check state "todo".

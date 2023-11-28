@@ -1,4 +1,4 @@
-import { initializeEditor, toggleFormat, isFormatActive, searchAndHighlight, selectNext, selectPrevious, selectWordAtCurrentPosition, makeLinkSuggestion } from '../prose-mirror-bundle.js';
+import { initializeEditor, toggleFormat, isFormatActive, searchAndHighlight, selectNext, selectPrevious, selectWordAtCurrentPosition } from '../prose-mirror-bundle.js';
 
 var _page;
 var _editor;
