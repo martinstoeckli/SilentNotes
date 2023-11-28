@@ -87,7 +87,7 @@ namespace SilentNotes.ViewModels
                 safeInfo.Safe.RefreshModifiedAt();
             }
 
-            _navigationService.NavigateBack();
+            _navigationService.NavigateTo(RouteNames.Home);
         }
 
         public bool HasOldPasswordError

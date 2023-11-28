@@ -17,7 +17,7 @@
 
 @* Main menu *@
 <MudAppBar Class="flex-none" Fixed="true" Dense="true" WrapContent="false">
-	<MudIconButton OnClick="@(() => Navigation.NavigateBack())" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" Edge="Edge.Start" />
+	<MudIconButton OnClick="@(() => Navigation.NavigateTo(BackRoute))" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" Edge="Edge.Start" />
 </MudAppBar>
 
 @* watermark image *@
@@ -37,7 +37,7 @@
 			</MudForm>
 
 			<MudStack Class="my-4" Row="true" Justify="Justify.FlexEnd" Spacing="1">
-				<MudButton OnClick="@(() => Navigation.NavigateBack())" Color="Color.Default" Variant="Variant.Filled">@LanguageService["cancel"]</MudButton>
+				<MudButton OnClick="@(() => Navigation.NavigateTo(BackRoute))" Color="Color.Default" Variant="Variant.Filled">@LanguageService["cancel"]</MudButton>
 				<MudButton @ref="_okButton" OnClick="@(() => ViewModel.OkCommand.Execute(null))" Disabled="ViewModel.OkCommandDisabled" Color="Color.Primary" Variant="Variant.Filled">@LanguageService["ok"]</MudButton>
 			</MudStack>
 		</div>
@@ -58,7 +58,7 @@
 		{
 			await KeyboardShortcuts.InitializeAsync(JSRuntime);
 			KeyboardShortcuts
-				.AddShortcut(new SnKeyboardShortcut(SnKey.Escape), () => Navigation.NavigateBack())
+				.AddShortcut(new SnKeyboardShortcut(SnKey.Escape), () => Navigation.NavigateTo(BackRoute))
 				.AddShortcut(new SnKeyboardShortcut(SnKey.Enter), async () => await SnKeyboardShortcuts.SimulateClickAsync(_okButton));
 		}
 	}

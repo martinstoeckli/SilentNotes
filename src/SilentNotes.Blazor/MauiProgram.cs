@@ -91,7 +91,6 @@ public static class MauiProgram
         services.AddSingleton<IVersionService>((serviceProvider) => new VersionService());
         services.AddSingleton<ICloudStorageClientFactory>((serviceProvider) => new CloudStorageClientFactory());
         services.AddSingleton<IClipboardService>((serviceProvider) => new ClipboardService());
-        services.AddSingleton<IBrowserHistoryService>((serviceProvider) => new BrowserHistoryService());
         services.AddSingleton<IInternetStateService>((serviceProvider) => new InternetStateService());
 
         // Scoped services (some Blazor services like NavigationManager or IJSRuntime seem to be scoped)
@@ -99,7 +98,6 @@ public static class MauiProgram
         // we have to add them dynamically in MainLayout.razor.
         services.AddScoped<INavigationService>((serviceProvider) => new NavigationService(
             serviceProvider.GetService<NavigationManager>(),
-            serviceProvider.GetService<IBrowserHistoryService>(),
             RouteNames.NoteRepository));
         services.AddScoped<IFeedbackService>((serviceProvider) => new FeedbackService(
             serviceProvider.GetService<IDialogService>(),

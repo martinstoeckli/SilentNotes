@@ -42,7 +42,7 @@
 
 @* Main menu *@
 <MudAppBar Class="flex-none" Fixed="true" Dense="true" WrapContent="false">
-	<MudIconButton OnClick="@(() => Navigation.NavigateBack())" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" Edge="Edge.Start" />
+	<MudIconButton OnClick="@(() => Navigation.NavigateTo(BackRoute))" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" Edge="Edge.Start" />
 
 	<MudSpacer />
 
@@ -100,74 +100,74 @@
 			<MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" />
 		</ActivatorContent>
 		<ChildContent>
-			<MudMenuItem OnClick="@(() => ToggleFormatState("heading", 1))"
+			<MudMenuItem OnAction="@(() => ToggleFormatState("heading", 1))"
 				Icon="@IconService.GetSvgLink(IconNames.FormatHeader1)"
 				Class="@Css.BuildClass(new CssClassIf(CssClasses.MenuToggled, _formatStates.Heading1))"
 				Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_header1"]</MudMenuItem>
 
-			<MudMenuItem OnClick="@(() => ToggleFormatState("heading", 2))"
+			<MudMenuItem OnAction="@(() => ToggleFormatState("heading", 2))"
 				Icon="@IconService.GetSvgLink(IconNames.FormatHeader2)"
 				Class="@Css.BuildClass(new CssClassIf(CssClasses.MenuToggled, _formatStates.Heading2))"
 				Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_header2"]</MudMenuItem>
 
-			<MudMenuItem OnClick="@(() => ToggleFormatState("heading", 3))"
+			<MudMenuItem OnAction="@(() => ToggleFormatState("heading", 3))"
 				Icon="@IconService.GetSvgLink(IconNames.FormatHeader3)"
 				Class="@Css.BuildClass(new CssClassIf(CssClasses.MenuToggled, _formatStates.Heading3))"
 				Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_header3"]</MudMenuItem>
 
-			<MudMenuItem OnClick="@(() => ToggleFormatState("underline"))"
+			<MudMenuItem OnAction="@(() => ToggleFormatState("underline"))"
 				Icon="@IconService.GetSvgLink(IconNames.FormatUnderline)"
 				Class="@Css.BuildClass(new CssClassIf(CssClasses.MenuToggled, _formatStates.Underline), "d-sm-none")"
 				Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_underline"]</MudMenuItem>
 
-			<MudMenuItem OnClick="@(() => ToggleFormatState("strike"))"
+			<MudMenuItem OnAction="@(() => ToggleFormatState("strike"))"
 				Icon="@IconService.GetSvgLink(IconNames.FormatStrikethrough)"
 				Class="@Css.BuildClass(new CssClassIf(CssClasses.MenuToggled, _formatStates.Strike), "d-sm-none")"
 				Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_strike"]</MudMenuItem>
 
-			<MudMenuItem OnClick="@(() => ToggleFormatState("orderedlist"))"
+			<MudMenuItem OnAction="@(() => ToggleFormatState("orderedlist"))"
 				Icon="@IconService.GetSvgLink(IconNames.FormatListNumbers)"
 				Class="@Css.BuildClass(new CssClassIf(CssClasses.MenuToggled, _formatStates.Orderedlist), "d-sm-none")"
 				Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_list_ordered"]</MudMenuItem>
 
-			<MudMenuItem OnClick="@(() => ToggleFormatState("bulletlist"))"
+			<MudMenuItem OnAction="@(() => ToggleFormatState("bulletlist"))"
 				Icon="@IconService.GetSvgLink(IconNames.FormatListBulleted)"
 				Class="@Css.BuildClass(new CssClassIf(CssClasses.MenuToggled, _formatStates.Bulletlist), "d-sm-none")"
 				Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_list_unordered"]</MudMenuItem>
 
-			<MudMenuItem OnClick="@(() => ToggleFormatState("codeblock"))"
+			<MudMenuItem OnAction="@(() => ToggleFormatState("codeblock"))"
 				Icon="@IconService.GetSvgLink(IconNames.CodeBraces)"
 				Class="@Css.BuildClass(new CssClassIf(CssClasses.MenuToggled, _formatStates.Codeblock))"
 				Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_code"]</MudMenuItem>
 
-			<MudMenuItem OnClick="@(() => ToggleFormatState("blockquote"))"
+			<MudMenuItem OnAction="@(() => ToggleFormatState("blockquote"))"
 				Icon="@IconService.GetSvgLink(IconNames.FormatQuoteClose)"
 				Class="@Css.BuildClass(new CssClassIf(CssClasses.MenuToggled, _formatStates.Blockquote))"
 				Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_quotation"]</MudMenuItem>
 
-			<MudMenuItem OnClick="@(() => OpenLinkDialog())"
+			<MudMenuItem OnAction="@(() => OpenLinkDialog())"
 				Icon="@IconService.GetSvgLink(IconNames.LinkVariant)"
 				Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_link"]</MudMenuItem>
 
 			<MudDivider/>
 
-			<MudMenuItem OnClick="@(() => _colorPaletteOpen = true)"
+			<MudMenuItem OnAction="@(() => _colorPaletteOpen = true)"
 				Icon="@Icons.Material.Filled.ColorLens"
 				Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_colors"]</MudMenuItem>
 
 			@if (ViewModel.CanKeepScreenOn)
 			{
-				<MudMenuItem OnClick="@(() => ViewModel.KeepScreenOnCommand.Execute(null))"
+				<MudMenuItem OnAction="@(() => ViewModel.KeepScreenOnCommand.Execute(null))"
 					Icon="@Icons.Material.Outlined.Timer"
 					Class="@Css.BuildClass(new CssClassIf(CssClasses.MenuToggled, ViewModel.KeepScreenOnActive))">@ViewModel.KeepScreenOnTitle</MudMenuItem>
 			}
 
-			<MudMenuItem OnClick="@(() => ViewModel.TogglePinnedCommand.Execute(null))"
+			<MudMenuItem OnAction="@(() => ViewModel.TogglePinnedCommand.Execute(null))"
 				Icon="@IconService.GetSvgLink(IconNames.Pin)"
 				Class="@Css.BuildClass(new CssClassIf(CssClasses.MenuToggled, ViewModel.IsPinned))"
 				Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_pin"]</MudMenuItem>
 
-			<MudMenuItem OnClick="@(() => ViewModel.ShowInfoCommand.Execute(null))"
+			<MudMenuItem OnAction="@(() => ViewModel.ShowInfoCommand.Execute(null))"
 				Icon="@Icons.Material.Filled.Info"
 				Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_show_info"]</MudMenuItem>
 
@@ -175,11 +175,11 @@
 			{
 				<MudDivider />
 
-				<MudMenuItem OnClick="@(() => ViewModel.PushNoteToOnlineStorageCommand.Execute(null))"
+				<MudMenuItem OnAction="@(() => ViewModel.PushNoteToOnlineStorageCommand.Execute(null))"
 					Icon="@IconService.GetSvgLink(IconNames.CloudUpload)"
 					Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_push_to_server"]</MudMenuItem>
 
-				<MudMenuItem OnClick="@(() => ViewModel.PullNoteFromOnlineStorageCommand.Execute(null))"
+				<MudMenuItem OnAction="@(() => ViewModel.PullNoteFromOnlineStorageCommand.Execute(null))"
 					Icon="@IconService.GetSvgLink(IconNames.CloudDownload)"
 					Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_pull_from_server"]</MudMenuItem>
 			}
@@ -322,6 +322,8 @@
 
 	protected override void OnParametersSet()
 	{
+		BackRoute = RouteNames.Combine(RouteNames.NoteRepository, "bringtoview", NoteId);
+
 		RepositoryStorageLoadResult loadResult = RepositoryStorageService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepository);
 		if (loadResult == RepositoryStorageLoadResult.InvalidRepository)
 			throw new Exception("Invalid repository");
@@ -347,10 +349,10 @@
 
 		if (ViewModel.Model == NoteModel.NotFound)
 			// Redirect to home if note was not found
-			NavigationService.NavigateHome();
+			NavigationService.NavigateTo(RouteNames.Home);
 		else if (ViewModel.IsLocked)
 			// Redirect to open safe if locked
-			NavigationService.NavigateTo(ViewModel.Route, false);
+			NavigationService.NavigateTo(ViewModel.Route);
 	}
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -372,7 +374,7 @@
 				await KeyboardShortcuts.InitializeAsync(JSRuntime);
 				KeyboardShortcuts
 					.SetCloseMenuShortcut(new SnKeyboardShortcut(SnKey.Escape), OnCloseMenuOrDialog)
-					.AddShortcut(new SnKeyboardShortcut(SnKey.Escape), () => Navigation.NavigateBack())
+					.AddShortcut(new SnKeyboardShortcut(SnKey.Escape), () => Navigation.NavigateTo(BackRoute))
 					.AddShortcut(new SnKeyboardShortcut("f", true), () => SearchToolbarOpen = true)
 					.AddShortcut(new SnKeyboardShortcut(SnKey.F3), async () => await FindNext())
 					.AddShortcut(new SnKeyboardShortcut(SnKey.F3, false, true), async () => await FindPrevious());

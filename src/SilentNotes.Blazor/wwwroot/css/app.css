@@ -277,8 +277,8 @@ div.ProseMirror:focus {
 	overflow-y: auto;
 }
 .mud-typography {
-	word-wrap: anywhere; /* text should not exceed device width */
-	overflow-x: scroll;
+	word-wrap: anywhere; /* text must not exceed device width */
+	overflow-x: hidden;
 }
 
 .mud-button { text-transform: none; }

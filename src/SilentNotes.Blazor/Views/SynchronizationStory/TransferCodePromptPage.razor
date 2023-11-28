@@ -12,7 +12,7 @@
 
 @* Main menu *@
 <MudAppBar Class="flex-none" Fixed="false" Dense="true" WrapContent="false">
-	<MudIconButton OnClick="@(() => Navigation.NavigateBack())" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" Edge="Edge.Start" />
+	<MudIconButton OnClick="@(() => Navigation.NavigateTo(BackRoute))" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" Edge="Edge.Start" />
 </MudAppBar>
 
 @* watermark image *@
@@ -38,11 +38,12 @@
 	</MudContainer>
 </div>
 
-@code {
+	@code {
 	private MudBaseButton _continueButton;
 
 	protected override void OnInitialized()
 	{
+		BackRoute = RouteNames.Home;
 		ViewModel = new TransferCodePromptViewModel(Ioc.Instance);
 	}
 
@@ -52,7 +53,7 @@
 		{
 			await KeyboardShortcuts.InitializeAsync(JSRuntime);
 			KeyboardShortcuts
-				.AddShortcut(new SnKeyboardShortcut(SnKey.Escape), () => Navigation.NavigateBack())
+				.AddShortcut(new SnKeyboardShortcut(SnKey.Escape), () => Navigation.NavigateTo(BackRoute))
 				.AddShortcut(new SnKeyboardShortcut(SnKey.Enter), async () => await SnKeyboardShortcuts.SimulateClickAsync(_continueButton));
 		}
 	}

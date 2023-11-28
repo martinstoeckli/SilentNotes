@@ -12,8 +12,9 @@ namespace SilentNotes
     /// <summary>
     /// List of routes to pages which can be used as navigation targets.
     /// </summary>
-    public class RouteNames
+    public static class RouteNames
     {
+        public const string Home = NoteRepository;
         public const string NoteRepository = "/";
         public const string Note = "/note";
         public const string Checklist = "/checklist";
@@ -30,5 +31,29 @@ namespace SilentNotes
         public const string Settings = "/settings";
         public const string TransferCodePrompt = "/transfercodeprompt";
         public const string TransferCodeHistory = "/transfercodehistory";
+
+        /// <summary>
+        /// Combines a route name with parameters.
+        /// </summary>
+        /// <param name="routeName">The name of the route.</param>
+        /// <param name="parts">0-n parts which are encoded and added to the resulting route path.</param>
+        /// <returns>Route path.</returns>
+        public static string Combine(string routeName, params object[] parts)
+        {
+            char delimiter = '/';
+            StringBuilder result = new StringBuilder();
+            result.Append(routeName);
+            foreach (var part in parts)
+            {
+                if (part != null)
+                {
+                    string encodedPart = System.Web.HttpUtility.UrlEncode(part.ToString());
+                    if (result[result.Length - 1] != delimiter)
+                        result.Append(delimiter);
+                    result.Append(encodedPart);
+                }
+            }
+            return result.ToString();
+        }
     }
 }

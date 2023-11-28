@@ -256,11 +256,11 @@ namespace SilentNotes.ViewModels
         {
             get
             {
-                string noteRouteName = Model.NoteType.GetRouteName();
+                string routeForUnlockedNote = RouteNames.Combine(Model.NoteType.GetRouteName(), Id);
                 if (IsLocked)
-                    return string.Format("{0}{1}/{2}", RouteNames.OpenSafe, noteRouteName, Id);
+                    return RouteNames.Combine(RouteNames.OpenSafe, "target", routeForUnlockedNote);
                 else
-                    return string.Format("{0}/{1}", noteRouteName, Id);
+                    return routeForUnlockedNote;
             }
         }
 

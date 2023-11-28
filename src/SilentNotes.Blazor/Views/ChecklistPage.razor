@@ -54,7 +54,7 @@ div.dark .detail-view.checklist .ProseMirror p::after { content: @(IconService.L
 
 @* Main menu *@
 <MudAppBar Class="flex-none" Fixed="true" Dense="true" WrapContent="false">
-	<MudIconButton OnClick="@(() => Navigation.NavigateBack())" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" Edge="Edge.Start" />
+	<MudIconButton OnClick="@(() => Navigation.NavigateTo(BackRoute))" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" Edge="Edge.Start" />
 
 	<MudSpacer />
 
@@ -90,67 +90,67 @@ div.dark .detail-view.checklist .ProseMirror p::after { content: @(IconService.L
 			<MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" />
 		</ActivatorContent>
 		<ChildContent>
-			<MudMenuItem OnClick="@(() => _jsModule.InvokeVoidAsync("sortPendingToTop"))"
+			<MudMenuItem OnAction="@(() => _jsModule.InvokeVoidAsync("sortPendingToTop"))"
 				Icon="@IconService.GetSvgLink(IconNames.SortBoolDescendingVariant)"
 				Disabled="ViewModel.ShoppingModeActive">@LanguageService["checklist_move_pending_to_top"]</MudMenuItem>
 
-			<MudMenuItem OnClick="@(() => _jsModule.InvokeVoidAsync("sortAlphabetical"))"
+			<MudMenuItem OnAction="@(() => _jsModule.InvokeVoidAsync("sortAlphabetical"))"
 				Icon="@IconService.GetSvgLink(IconNames.SortAlphabeticalAscending)"
 				Disabled="ViewModel.ShoppingModeActive">@LanguageService["checklist_sort_alphabetical"]</MudMenuItem>
 
 			<MudDivider />
 
-			<MudMenuItem OnClick="@(() => _jsModule.InvokeVoidAsync("setForAllToTodo"))"
+			<MudMenuItem OnAction="@(() => _jsModule.InvokeVoidAsync("setForAllToTodo"))"
 				Icon="@IconService.GetSvgLink(IconNames.CheckboxMultipleBlankOutline)"
 				Disabled="ViewModel.ShoppingModeActive">@LanguageService["checklist_uncheck_all"]</MudMenuItem>
 
-			<MudMenuItem OnClick="@(() => _jsModule.InvokeVoidAsync("setForAllToDone"))"
+			<MudMenuItem OnAction="@(() => _jsModule.InvokeVoidAsync("setForAllToDone"))"
 				Icon="@IconService.GetSvgLink(IconNames.CheckboxMultipleOutline)"
 				Disabled="ViewModel.ShoppingModeActive">@LanguageService["checklist_check_all"]</MudMenuItem>
 
-			<MudMenuItem OnClick="@(() => _jsModule.InvokeVoidAsync("setForAllToDisabled"))"
+			<MudMenuItem OnAction="@(() => _jsModule.InvokeVoidAsync("setForAllToDisabled"))"
 				Icon="@IconService.GetSvgLink(IconNames.CheckboxBlankOffOutline)"
 				Disabled="ViewModel.ShoppingModeActive">@LanguageService["checklist_disable_all"]</MudMenuItem>
 
 			<MudDivider />
 
-			<MudMenuItem OnClick="@(() => ToggleFormatState("heading", 1))"
+			<MudMenuItem OnAction="@(() => ToggleFormatState("heading", 1))"
 				Icon="@IconService.GetSvgLink(IconNames.FormatHeader1)"
 				Class="@Css.BuildClass(new CssClassIf(CssClasses.MenuToggled, _formatStates.Heading1))"
 				Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_header1"]</MudMenuItem>
 
-			<MudMenuItem OnClick="@(() => ToggleFormatState("heading", 2))"
+			<MudMenuItem OnAction="@(() => ToggleFormatState("heading", 2))"
 				Icon="@IconService.GetSvgLink(IconNames.FormatHeader2)"
 				Class="@Css.BuildClass(new CssClassIf(CssClasses.MenuToggled, _formatStates.Heading2))"
 				Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_header2"]</MudMenuItem>
 
 			<MudDivider />
 
-			<MudMenuItem OnClick="@(() => _jsModule.InvokeVoidAsync("undo"))"
+			<MudMenuItem OnAction="@(() => _jsModule.InvokeVoidAsync("undo"))"
 				Icon="@IconService.GetSvgLink(IconNames.Undo)"
 				Disabled="ViewModel.ShoppingModeActive">@LanguageService["undo"]</MudMenuItem>
 
-			<MudMenuItem OnClick="@(() => _jsModule.InvokeVoidAsync("redo"))"
+			<MudMenuItem OnAction="@(() => _jsModule.InvokeVoidAsync("redo"))"
 				Icon="@IconService.GetSvgLink(IconNames.Redo)"
 				Disabled="ViewModel.ShoppingModeActive">@LanguageService["redo"]</MudMenuItem>
 
-			<MudMenuItem OnClick="@(() => _colorPaletteOpen = true)"
+			<MudMenuItem OnAction="@(() => _colorPaletteOpen = true)"
 				Icon="@Icons.Material.Filled.ColorLens"
 				Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_colors"]</MudMenuItem>
 
 			@if (ViewModel.CanKeepScreenOn)
 			{
-				<MudMenuItem OnClick="@(() => ViewModel.KeepScreenOnCommand.Execute(null))"
+				<MudMenuItem OnAction="@(() => ViewModel.KeepScreenOnCommand.Execute(null))"
 					Icon="@Icons.Material.Outlined.Timer"
 					Class="@Css.BuildClass(new CssClassIf(CssClasses.MenuToggled, ViewModel.KeepScreenOnActive))">@ViewModel.KeepScreenOnTitle</MudMenuItem>
 			}
 
-			<MudMenuItem OnClick="@(() => ViewModel.TogglePinnedCommand.Execute(null))"
+			<MudMenuItem OnAction="@(() => ViewModel.TogglePinnedCommand.Execute(null))"
 				Icon="@IconService.GetSvgLink(IconNames.Pin)"
 				Class="@Css.BuildClass(new CssClassIf(CssClasses.MenuToggled, ViewModel.IsPinned))"
 				Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_pin"]</MudMenuItem>
 
-			<MudMenuItem OnClick="@(() => ViewModel.ShowInfoCommand.Execute(null))"
+			<MudMenuItem OnAction="@(() => ViewModel.ShowInfoCommand.Execute(null))"
 				Icon="@Icons.Material.Filled.Info"
 				Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_show_info"]</MudMenuItem>
 
@@ -158,11 +158,11 @@ div.dark .detail-view.checklist .ProseMirror p::after { content: @(IconService.L
 			{
 				<MudDivider />
 
-				<MudMenuItem OnClick="@(() => ViewModel.PushNoteToOnlineStorageCommand.Execute(null))"
+				<MudMenuItem OnAction="@(() => ViewModel.PushNoteToOnlineStorageCommand.Execute(null))"
 					Icon="@IconService.GetSvgLink(IconNames.CloudUpload)"
 					Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_push_to_server"]</MudMenuItem>
 
-				<MudMenuItem OnClick="@(() => ViewModel.PullNoteFromOnlineStorageCommand.Execute(null))"
+				<MudMenuItem OnAction="@(() => ViewModel.PullNoteFromOnlineStorageCommand.Execute(null))"
 					Icon="@IconService.GetSvgLink(IconNames.CloudDownload)"
 					Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_pull_from_server"]</MudMenuItem>
 			}
@@ -286,6 +286,8 @@ div.dark .detail-view.checklist .ProseMirror p::after { content: @(IconService.L
 
 	protected override void OnParametersSet()
 	{
+		BackRoute = RouteNames.Combine(RouteNames.NoteRepository, "bringtoview", NoteId);
+
 		RepositoryStorageLoadResult loadResult = RepositoryStorageService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepository);
 		if (loadResult == RepositoryStorageLoadResult.InvalidRepository)
 			throw new Exception("Invalid repository");
@@ -311,10 +313,10 @@ div.dark .detail-view.checklist .ProseMirror p::after { content: @(IconService.L
 
 		if (ViewModel.Model == NoteModel.NotFound)
 			// Redirect to home if note was not found
-			NavigationService.NavigateHome();
+			NavigationService.NavigateTo(RouteNames.Home);
 		else if (ViewModel.IsLocked)
 			// Redirect to open safe if locked
-			NavigationService.NavigateTo(ViewModel.Route, false);
+			NavigationService.NavigateTo(ViewModel.Route);
 	}
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -336,7 +338,7 @@ div.dark .detail-view.checklist .ProseMirror p::after { content: @(IconService.L
 				await KeyboardShortcuts.InitializeAsync(JSRuntime);
 				KeyboardShortcuts
 					.SetCloseMenuShortcut(new SnKeyboardShortcut(SnKey.Escape), OnCloseMenuOrDialog)
-					.AddShortcut(new SnKeyboardShortcut(SnKey.Escape), () => Navigation.NavigateBack())
+					.AddShortcut(new SnKeyboardShortcut(SnKey.Escape), () => Navigation.NavigateTo(BackRoute))
 					.AddShortcut(new SnKeyboardShortcut("f", true), () => SearchToolbarOpen = true)
 					.AddShortcut(new SnKeyboardShortcut(SnKey.F3), async () => await FindNext())
 					.AddShortcut(new SnKeyboardShortcut(SnKey.F3, false, true), async () => await FindPrevious());

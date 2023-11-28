@@ -25,29 +25,23 @@ namespace SilentNotes.Services
         private const bool ForceLoadNever = false;
 
         private readonly NavigationManager _navigationManager;
-        private readonly IBrowserHistoryService _browserHistoryService;
-        private readonly string _homeRoute;
         private IDisposable _eventHandlerDisposable;
-        private bool _clearHistoryAtNextLocationChanging;
+        private string _currentLocation;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NavigationService"/> class.
         /// </summary>
         /// <param name="navigationManager">The navigation manager to wrap.</param>
-        /// <param name="browserHistoryService">The browser history service, which is not scoped
-        /// like the <paramref name="navigationManager"/> and therefore can keep the browser history
-        /// across Android app restarts.</param>
-        public NavigationService(NavigationManager navigationManager, IBrowserHistoryService browserHistoryService, string homeRoute = "/")
+        /// <param name="startRoute">The route of the first shown page.</param>
+        public NavigationService(NavigationManager navigationManager, string startRoute = RouteNames.Home)
         {
             System.Diagnostics.Debug.WriteLine("*** Scoped NavigationService create " + Id);
             _navigationManager = navigationManager;
-            _browserHistoryService = browserHistoryService;
-            _homeRoute = homeRoute;
             _eventHandlerDisposable = _navigationManager.RegisterLocationChangingHandler(LocationChangingHandler);
 
             // Initialize the start page in the browser history, because there is no navigation
             // on the startup of the application yet.
-            _browserHistoryService.UpdateHistoryOnNavigation(_homeRoute, string.Empty);
+            _currentLocation = startRoute;
         }
 
         public Guid Id { get; } = Guid.NewGuid();
@@ -61,60 +55,19 @@ namespace SilentNotes.Services
         }
 
         /// <inheritdoc/>
-        public void NavigateTo(string uri, bool removeCurrentFromHistory = false)
+        public void NavigateTo(string uri)
         {
-            if (removeCurrentFromHistory)
-                _browserHistoryService.RemoveCurrent();
-            NavigateToOrReload(uri);
-        }
-
-        /// <inheritdoc/>
-        public bool CanNavigateBack
-        {
-            get { return !string.IsNullOrEmpty(_browserHistoryService.PreviousLocation); }
-        }
-
-        /// <inheritdoc/>
-        public void NavigateBack()
-        {
-            string lastLocation = _browserHistoryService.PreviousLocation;
-            if (lastLocation != null)
-                NavigateTo(lastLocation);
+            _navigationManager.NavigateTo(uri, ForceLoadNever, ReplaceWebviewHistoryAlways);
         }
 
         /// <inheritdoc/>
         public void NavigateReload()
         {
-            string currentLocation = _browserHistoryService.CurrentLocation;
-            if (currentLocation != null)
-                NavigateTo(currentLocation);
-        }
-
-        /// <inheritdoc/>
-        public void NavigateHome()
-        {
-            _clearHistoryAtNextLocationChanging = true;
-            NavigateToOrReload(_homeRoute);
-        }
-
-        private void NavigateToOrReload(string uri)
-        {
-            NavigationDirection direction = _browserHistoryService.DetermineDirection(uri, _navigationManager.BaseUri);
-
-            switch (direction)
-            {
-                case NavigationDirection.Next:
-                case NavigationDirection.Back:
-                    _navigationManager.NavigateTo(uri, ForceLoadNever, ReplaceWebviewHistoryAlways);
-                    break;
-                case NavigationDirection.Reload:
-                    // Only a "forceReload" would reliably reload the new content of the page.
-                    // Since we don't want to use "forceReload" (see const ForceLoadNever), we call
-                    // a route which immediately redirects to our target route.
-                    string forceLoadRoute = "/forceload/" + System.Web.HttpUtility.UrlEncode(uri);
-                    _navigationManager.NavigateTo(forceLoadRoute, ForceLoadNever, ReplaceWebviewHistoryAlways);
-                    break;
-            }
+            // Only a "forceReload" would reliably reload the new content of the page.
+            // Since we don't want to use "forceReload" (see const ForceLoadNever), we call
+            // a route which immediately redirects to our target route.
+            string forceLoadRoute = RouteNames.Combine("/forceload", _currentLocation);
+            _navigationManager.NavigateTo(forceLoadRoute, ForceLoadNever, ReplaceWebviewHistoryAlways);
         }
 
         /// <inheritdoc/>
@@ -123,21 +76,41 @@ namespace SilentNotes.Services
             if (context.TargetLocation.StartsWith("/forceload/"))
                 return ValueTask.CompletedTask;
 
-            // Update our own browser history
-            NavigationDirection direction = _browserHistoryService.UpdateHistoryOnNavigation(context.TargetLocation, _navigationManager.BaseUri);
-            if (_clearHistoryAtNextLocationChanging)
-            {
-                _clearHistoryAtNextLocationChanging = false;
-                _browserHistoryService.Clear(true);
-            }
+            string currentRoute = ExtractRouteName(_currentLocation, _navigationManager.BaseUri);
+            string targetRoute = ExtractRouteName(context.TargetLocation, _navigationManager.BaseUri);
+            bool isSameRoute = string.Equals(currentRoute, targetRoute, StringComparison.InvariantCultureIgnoreCase);
 
-            // Inform current page about being closed, when navigating to another page
-            if ((direction == NavigationDirection.Next) || (direction == NavigationDirection.Back))
+            _currentLocation = context.TargetLocation;
+
+            if (!isSameRoute)
             {
                 WeakReferenceMessenger.Default.Send(new StoreUnsavedDataMessage(MessageSender.NavigationManager));
                 WeakReferenceMessenger.Default.Send(new ClosePageMessage());
             }
             return ValueTask.CompletedTask;
+        }
+
+        internal static string ExtractRouteName(string targetUri, string baseUri)
+        {
+            if (targetUri == null)
+                throw new ArgumentNullException(nameof(targetUri));
+            if (baseUri == null)
+                throw new ArgumentNullException(nameof(baseUri));
+
+            string result = GetRelativeUri(targetUri, baseUri);
+            int firstNonStartingDelimiter = result.IndexOf('/', 1);
+            if (firstNonStartingDelimiter > 0)
+                result = result.Remove(firstNonStartingDelimiter);
+            return result;
+        }
+
+        internal static string GetRelativeUri(string targetUri, string baseUri)
+        {
+            string result = targetUri;
+            baseUri = baseUri.TrimEnd('/');
+            if (result.StartsWith(baseUri))
+                result = result.Substring(baseUri.Length);
+            return result;
         }
     }
 }

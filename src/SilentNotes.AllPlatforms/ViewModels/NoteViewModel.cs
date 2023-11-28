@@ -296,7 +296,7 @@ namespace SilentNotes.ViewModels
 
             // Refresh view
             if (Model.InRecyclingBin)
-                _navigationService.NavigateTo(RouteNames.RecycleBin, true);
+                _navigationService.NavigateTo(RouteNames.RecycleBin);
             else
                 _navigationService.NavigateReload();
         }

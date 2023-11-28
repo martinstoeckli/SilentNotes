@@ -1,4 +1,5 @@
 ﻿@page "/"
+@page "/bringtoview/{BringToViewNoteId}"
 @inherits PageBase
 
 @using System.ComponentModel
@@ -71,28 +72,28 @@
 			<MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" />
 		</ActivatorContent>
 		<ChildContent>
-			<MudMenuItem OnClick="@(() => ViewModel.NewNoteCommand.Execute(null))" Icon="@IconService.GetSvgLink(IconNames.NoteTextOutline)">@LanguageService["note_create_new"]</MudMenuItem>
-			<MudMenuItem OnClick="@(() => ViewModel.NewChecklistCommand.Execute(null))" Icon="@IconService.GetSvgLink(IconNames.OrderBoolAscendingVariant)">@LanguageService["checklist_create_new"]</MudMenuItem>
-			<MudMenuItem OnClick="@(() => Navigation.NavigateTo(RouteNames.RecycleBin))" Icon="@IconService[IconNames.DeleteEmpty]">@LanguageService["show_recyclebin"]</MudMenuItem>
-			<MudMenuItem OnClick="@(() => Navigation.NavigateTo(RouteNames.Export))" Icon="@IconService[IconNames.Export]">@LanguageService["show_export"]</MudMenuItem>
+			<MudMenuItem OnAction="@(() => ViewModel.NewNoteCommand.Execute(null))" Icon="@IconService.GetSvgLink(IconNames.NoteTextOutline)">@LanguageService["note_create_new"]</MudMenuItem>
+			<MudMenuItem OnAction="@(() => ViewModel.NewChecklistCommand.Execute(null))" Icon="@IconService.GetSvgLink(IconNames.OrderBoolAscendingVariant)">@LanguageService["checklist_create_new"]</MudMenuItem>
+			<MudMenuItem OnAction="@(() => Navigation.NavigateTo(RouteNames.RecycleBin))" Icon="@IconService[IconNames.DeleteEmpty]">@LanguageService["show_recyclebin"]</MudMenuItem>
+			<MudMenuItem OnAction="@(() => Navigation.NavigateTo(RouteNames.Export))" Icon="@IconService[IconNames.Export]">@LanguageService["show_export"]</MudMenuItem>
 
 			<MudDivider />
 
 			@if (ViewModel.IsAnySafeOpen)
 			{
-				<MudMenuItem OnClick="@(() => ViewModel.CloseSafeCommand.Execute(null))" Icon="@IconService.GetSvgLink(IconNames.SafeSquareOutline)">@LanguageService["safe_close"]</MudMenuItem>
+				<MudMenuItem OnAction="@(() => ViewModel.CloseSafeCommand.Execute(null))" Icon="@IconService.GetSvgLink(IconNames.SafeSquareOutline)">@LanguageService["safe_close"]</MudMenuItem>
 			}
 			else
 			{
-				<MudMenuItem OnClick="@(() => Navigation.NavigateTo(RouteNames.OpenSafe))" Icon="@IconService.GetSvgLink(IconNames.SafeSquareOutline)">@LanguageService["safe_open"]</MudMenuItem>
+				<MudMenuItem OnAction="@(() => Navigation.NavigateTo(RouteNames.OpenSafe))" Icon="@IconService.GetSvgLink(IconNames.SafeSquareOutline)">@LanguageService["safe_open"]</MudMenuItem>
 			}
-			<MudMenuItem OnClick="@(() => Navigation.NavigateTo(RouteNames.ChangePassword))" Icon="@IconService[IconNames.LockReset]" Disabled="!ViewModel.SafeExists">@LanguageService["safe_change_password"]</MudMenuItem>
+			<MudMenuItem OnAction="@(() => Navigation.NavigateTo(RouteNames.ChangePassword))" Icon="@IconService[IconNames.LockReset]" Disabled="!ViewModel.SafeExists">@LanguageService["safe_change_password"]</MudMenuItem>
 
 			<MudDivider />
 
-			<MudMenuItem OnClick="@(() => Navigation.NavigateTo(RouteNames.TransferCodeHistory))" Icon="@IconService[IconNames.Key]">@LanguageService["show_transfer_code"]</MudMenuItem>
-			<MudMenuItem OnClick="@(() => Navigation.NavigateTo(RouteNames.Settings))" Icon="@IconService[IconNames.Settings]">@LanguageService["show_settings"]</MudMenuItem>
-			<MudMenuItem OnClick="@(() => Navigation.NavigateTo(RouteNames.Info))" ForceLoad="false" Icon="@Icons.Material.Filled.Info">@LanguageService["show_info"]</MudMenuItem>
+			<MudMenuItem OnAction="@(() => Navigation.NavigateTo(RouteNames.TransferCodeHistory))" Icon="@IconService[IconNames.Key]">@LanguageService["show_transfer_code"]</MudMenuItem>
+			<MudMenuItem OnAction="@(() => Navigation.NavigateTo(RouteNames.Settings))" Icon="@IconService[IconNames.Settings]">@LanguageService["show_settings"]</MudMenuItem>
+			<MudMenuItem OnAction="@(() => Navigation.NavigateTo(RouteNames.Info))" ForceLoad="false" Icon="@Icons.Material.Filled.Info">@LanguageService["show_info"]</MudMenuItem>
 		</ChildContent>
 	</MudMenu>
 </MudAppBar>
@@ -249,6 +250,7 @@
 	/// </summary>
 	protected override async Task OnInitializedAsync()
 	{
+		BackRoute = null; // Close the application when navigating back
 		RepositoryStorageLoadResult loadResult = RepositoryStorageService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepositoryModel);
 		if (loadResult == RepositoryStorageLoadResult.InvalidRepository)
 			throw new Exception("Invalid repository");
@@ -270,6 +272,15 @@
 		WeakReferenceMessenger.Default.Register<BringNoteIntoViewMessage>(
 			this, (recipient, message) => BringNoteIntoView(message));
 		base.OnInitialized();
+	}
+
+	/// <inheritdoc/>
+	protected override void OnParametersSet()
+	{
+		if (!string.IsNullOrEmpty(BringToViewNoteId))
+		{
+			BringNoteIntoView(new BringNoteIntoViewMessage(Guid.Parse(BringToViewNoteId)));
+		}
 	}
 
 	/// <inheritdoc/>
@@ -316,6 +327,12 @@
 	/// Gets or sets the datacontext of this view.
 	/// </summary>
 	private NoteRepositoryViewModel ViewModel { get; set; }
+
+	/// <summary>
+	/// Gets or sets the note id which was passed in the routing.
+	/// </summary>
+	[Parameter]
+	public string BringToViewNoteId { get; set; } = default!;
 
 	/// <inheritdoc/>
 	protected override bool OnCloseMenuOrDialog()

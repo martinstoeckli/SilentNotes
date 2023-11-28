@@ -1,5 +1,5 @@
 ﻿@page "/opensafe"
-@page "/opensafe/{TargetNoteType}/{TargetNoteId}"
+@page "/opensafe/target/{TargetRoute}"
 @inherits PageBase
 
 @using System.ComponentModel;
@@ -23,7 +23,7 @@
 
 @* Main menu *@
 <MudAppBar Class="flex-none" Fixed="true" Dense="true" WrapContent="false">
-	<MudIconButton OnClick="@(() => Navigation.NavigateBack())" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" Edge="Edge.Start" />
+	<MudIconButton OnClick="@(() => Navigation.NavigateTo(RouteNames.Home))" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" Edge="Edge.Start" />
 
 	<MudSpacer/>
 
@@ -33,7 +33,7 @@
 			<MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" />
 		</ActivatorContent>
 		<ChildContent>
-			<MudMenuItem OnClick="@(() => ViewModel.ResetSafeCommand.Execute(_overflowMenu))"
+			<MudMenuItem OnAction="@(() => ViewModel.ResetSafeCommand.Execute(_overflowMenu))"
 				Icon="@IconService.GetSvgLink(IconNames.SafeSquareOutline)" IconColor="Color.Error"
 				Disabled="!ViewModel.SafeExists">@LanguageService["safe_reset"]</MudMenuItem>
 		</ChildContent>
@@ -80,7 +80,7 @@
 			</MudForm>
 
 			<MudStack Class="my-4" Row="true" Justify="Justify.FlexEnd" Spacing="1">
-				<MudButton OnClick="@(() => Navigation.NavigateBack())" Color="Color.Default" Variant="Variant.Filled">@LanguageService["cancel"]</MudButton>
+				<MudButton OnClick="@(() => Navigation.NavigateTo(RouteNames.Home))" Color="Color.Default" Variant="Variant.Filled">@LanguageService["cancel"]</MudButton>
 				<MudButton @ref="_okButton" OnClick="@(() => ViewModel.OkCommand.Execute(null))" Color="Color.Primary" Variant="Variant.Filled">@LanguageService["ok"]</MudButton>
 			</MudStack>
 
@@ -111,7 +111,7 @@
 			await KeyboardShortcuts.InitializeAsync(JSRuntime);
 			KeyboardShortcuts
 				.SetCloseMenuShortcut(new SnKeyboardShortcut(SnKey.Escape), OnCloseMenuOrDialog)
-				.AddShortcut(new SnKeyboardShortcut(SnKey.Escape), () => Navigation.NavigateBack())
+				.AddShortcut(new SnKeyboardShortcut(SnKey.Escape), () => Navigation.NavigateTo(RouteNames.Home))
 				.AddShortcut(new SnKeyboardShortcut(SnKey.Enter), async () => await SnKeyboardShortcuts.SimulateClickAsync(_okButton));
 		}
 	}
@@ -119,10 +119,7 @@
 	protected override void OnParametersSet()
 	{
 		IsPasswordVisible = false;
-		string navigationTargetRoute = null;
-		if (TargetNoteId != null)
-			navigationTargetRoute = string.Format("{0}/{1}", TargetNoteType, TargetNoteId);
-		ViewModel = new OpenSafeViewModel(LanguageService, Navigation, FeedbackService, RandomService, SettingsService, RepositoryService, navigationTargetRoute);
+		ViewModel = new OpenSafeViewModel(LanguageService, Navigation, FeedbackService, RandomService, SettingsService, RepositoryService, TargetRoute);
 		_secureStringConverter = new SecureStringConverter();
 	}
 
@@ -152,10 +149,7 @@
 	}
 
 	[Parameter]
-	public string TargetNoteType { get; set; } = default!;
-
-	[Parameter]
-	public string TargetNoteId { get; set; } = default!;
+	public string TargetRoute { get; set; } = default!;
 
 	/// <summary>
 	/// Gets or sets a value indicating whether the plaintext of the password is shown.

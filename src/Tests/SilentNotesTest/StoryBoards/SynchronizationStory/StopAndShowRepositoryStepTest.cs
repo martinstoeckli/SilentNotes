@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using NUnit.Framework;
+using SilentNotes;
 using SilentNotes.Services;
 using SilentNotes.Stories;
 using SilentNotes.Stories.SynchronizationStory;
@@ -25,7 +26,7 @@ namespace SilentNotesTest.Stories.SynchronizationStory
 
             // Story does not continue
             Assert.IsNull(res.NextStep);
-            navigationService.Verify(m => m.NavigateHome(), Times.Once);
+            navigationService.Verify(m => m.NavigateTo(It.Is<string>(r => r == RouteNames.Home)), Times.Once);
             synchronizationService.Verify(m => m.FinishedManualSynchronization(It.IsAny<IServiceProvider>()), Times.Once);
         }
 
@@ -44,7 +45,7 @@ namespace SilentNotesTest.Stories.SynchronizationStory
 
             // Story does not continue
             Assert.IsNull(res.NextStep);
-            navigationService.Verify(m => m.NavigateHome(), Times.Never);
+            navigationService.Verify(m => m.NavigateTo(It.Is<string>(r => r == RouteNames.Home)), Times.Never);
             synchronizationService.Verify(m => m.FinishedManualSynchronization(It.IsAny<IServiceProvider>()), Times.Never);
         }
     }

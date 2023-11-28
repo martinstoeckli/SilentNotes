@@ -442,7 +442,7 @@ namespace SilentNotes.ViewModels
         {
             foreach (SafeModel safe in Model.Safes)
                 safe.Close();
-            _navigationService.NavigateHome();
+            _navigationService.NavigateReload();
         }
 
         /// <summary>

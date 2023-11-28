@@ -15,30 +15,12 @@ namespace SilentNotes.Services
     public class DummyNavigationService : INavigationService
     {
         /// <inheritdoc/>
-        public void InitializeVirtualRoutes()
-        {
-        }
-
-        /// <inheritdoc/>
-        public void NavigateTo(string uri, bool removeCurrentFromHistory = false)
-        {
-        }
-
-        /// <inheritdoc/>
-        public bool CanNavigateBack { get; }
-
-        /// <inheritdoc/>
-        public void NavigateBack()
+        public void NavigateTo(string uri)
         {
         }
 
         /// <inheritdoc/>
         public void NavigateReload()
-        {
-        }
-
-        /// <inheritdoc/>
-        public void NavigateHome()
         {
         }
     }

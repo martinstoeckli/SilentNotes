@@ -110,12 +110,12 @@ namespace SilentNotes
                 if (message.Handled)
                     return true;
 
-                // Check whether a backward navigation should take place (the WebView browser history is
-                // deactivated, so it would always close the app).
-                var navigation = Ioc.Instance.GetService<INavigationService>();
-                if (navigation.CanNavigateBack)
+                // Navigate backwards to the page which is defined by the current page. If the
+                // back route is null, the application will be closed.
+                if (!string.IsNullOrEmpty(message.BackRoute))
                 {
-                    navigation.NavigateBack();
+                    var navigation = Ioc.Instance.GetService<INavigationService>();
+                    navigation.NavigateTo(message.BackRoute);
                     return true;
                 }
             }

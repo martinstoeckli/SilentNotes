@@ -45,6 +45,13 @@ namespace SilentNotes.Views
         /// </summary>
         public Guid Id { get; } = Guid.NewGuid();
 
+        /// <summary>
+        /// Gets or sets a target for backwards navigation. This route is also called when using
+        /// the back key on Android, a value of null will then close the application.
+        /// Default value is the home route.
+        /// </summary>
+        public string BackRoute { get; set; } = RouteNames.Home;
+
         /// <inheritdoc/>
         public async ValueTask DisposeAsync()
         {
@@ -106,6 +113,7 @@ namespace SilentNotes.Views
 
         private void TriggerCloseMenuOrDialog(BackButtonPressedMessage message)
         {
+            message.BackRoute = BackRoute;
             bool handled = OnCloseMenuOrDialog();
 
             // If just one of the called event handlers returns true, it should remain true.

@@ -53,7 +53,7 @@
 
 @* Main menu *@
 <MudAppBar Class="flex-none" Fixed="true" Dense="true" WrapContent="false">
-	<MudIconButton OnClick="@(() => Navigation.NavigateBack())" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" Edge="Edge.Start" />
+	<MudIconButton OnClick="@(() => Navigation.NavigateTo(BackRoute))" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" Edge="Edge.Start" />
 
 	<MudSpacer />
 
@@ -62,7 +62,7 @@
 			<MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" />
 		</ActivatorContent>
 		<ChildContent>
-			<MudMenuItem OnClick="@(() => ViewModel.TestNewLocalizationCommand.Execute(null))"
+			<MudMenuItem OnAction="@(() => ViewModel.TestNewLocalizationCommand.Execute(null))"
 				Icon="@IconService[IconNames.Earth]">@LanguageService["gui_localization_test"]</MudMenuItem>
 		</ChildContent>
 	</MudMenu>
@@ -313,7 +313,7 @@
 			await KeyboardShortcuts.InitializeAsync(JSRuntime);
 			KeyboardShortcuts
 				.SetCloseMenuShortcut(new SnKeyboardShortcut(SnKey.Escape), OnCloseMenuOrDialog)
-				.AddShortcut(new SnKeyboardShortcut(SnKey.Escape), () => Navigation.NavigateBack());
+				.AddShortcut(new SnKeyboardShortcut(SnKey.Escape), () => Navigation.NavigateTo(BackRoute));
 		}
 	}
 

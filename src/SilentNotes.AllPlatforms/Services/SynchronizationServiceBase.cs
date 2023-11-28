@@ -3,7 +3,6 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-using System.Diagnostics;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.DependencyInjection;
 using SilentNotes.Models;
@@ -114,7 +113,6 @@ namespace SilentNotes.Services
                     // Reload active page, but only if the repository differs
                     if (oldFingerprint != newFingerprint)
                     {
-                        Thread.Sleep(5000);
                         navigation.NavigateReload();
                     }
                 }

@@ -60,9 +60,16 @@ namespace SilentNotes
     public class BackButtonPressedMessage
     {
         /// <summary>
-        /// Gets or sets a value indicating whether the listener handled the press event.
+        /// Gets or sets a value indicating whether the listener handled the press event (e.g. by
+        /// closing an open menu).
         /// </summary>
         public bool Handled { get; set; }
+
+        /// <summary>
+        /// Gets or sets a target for backwards navigation. A page should pass its BackRoute,
+        /// a value of null will close the application.
+        /// </summary>
+        public string BackRoute { get; set; }
     }
 
     /// <summary>
