@@ -24,22 +24,18 @@
 # For a complete CI/CD sample to get started with GitHub Action workflows for Desktop Applications,
 # refer to https://github.com/microsoft/github-actions-for-desktop-apps
 
-name: SilentNotes Build Windows
+name: SilentNotes Build
 
 on: workflow_dispatch
 
 jobs:
-
   build:
-
-    strategy:
-      matrix:
-        configuration: [Release]
-
     runs-on: windows-latest
 
     env:
       Solution_Name: SilentNotes.sln
+      Target_Framework: net7.0-windows10.0.19041.0
+      Test_Project_Path: src\Tests\SilentNotesTest\SilentNotesTest.csproj
       Wap_Project_Directory: your-wap-project-directory-name    # Replace with the Wap project directory relative to the solution, i.e. MyWpfApp.Package.
       Wap_Project_Path: your-wap-project-path                   # Replace with the path to your Wap project, i.e. MyWpf.App.Package\MyWpfApp.Package.wapproj.
 
@@ -60,7 +56,14 @@ jobs:
       uses: microsoft/setup-msbuild@v1.0.2
 
     - name: Install MAUI
-      run: dotnet workload install maui
-      
-    - name: Build
-      run: dotnet build ${{ env.Solution_Name }} -c Release -f:net7.0-windows10.0.19041.0
+      run: dotnet workload install maui-windows --ignore-failed-sources
+
+    # Restore the application to populate the obj folder with RuntimeIdentifiers
+    - name: Restore the application
+      run: msbuild $env:Solution_Name /t:Restore /p:Configuration=$env:Configuration
+      env:
+        Configuration: Release
+
+    # Execute all unit tests in the solution
+    - name: Execute unit tests
+      run: dotnet test ${{ env.Test_Project_Path }}
