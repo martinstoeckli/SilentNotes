@@ -15,7 +15,7 @@ namespace SilentNotes.Services
     public class DummyNavigationService : INavigationService
     {
         /// <inheritdoc/>
-        public void NavigateTo(string uri)
+        public void NavigateTo(string uri, bool reload = false)
         {
         }
 

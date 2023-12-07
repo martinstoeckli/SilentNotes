@@ -4,6 +4,7 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
+using Microsoft.AspNetCore.Components;
 
 namespace SilentNotes.Services
 {
@@ -17,7 +18,9 @@ namespace SilentNotes.Services
         /// Navigates to the specified URI.
         /// </summary>
         /// <param name="uri">The destination URI. This can be absolute, or relative to the base URI.</param>
-        void NavigateTo(string uri);
+        /// <param name="reload">If true, the page will surely be refreshed, even if it is the same
+        /// as the current page.</param>
+        void NavigateTo(string uri, bool reload = false);
 
         /// <summary>
         /// Reloads the current page. A reload doesn't trigger the OnStoreUnsavedData(), it

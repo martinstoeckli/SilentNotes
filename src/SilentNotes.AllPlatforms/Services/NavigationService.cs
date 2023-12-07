@@ -55,8 +55,13 @@ namespace SilentNotes.Services
         }
 
         /// <inheritdoc/>
-        public void NavigateTo(string uri)
+        public void NavigateTo(string uri, bool reload = false)
         {
+            if (reload)
+            {
+                uri = RouteNames.Combine("/forceload", uri);
+            }
+
             _navigationManager.NavigateTo(uri, ForceLoadNever, ReplaceWebviewHistoryAlways);
         }
 
