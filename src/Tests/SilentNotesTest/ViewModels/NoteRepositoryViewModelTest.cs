@@ -13,6 +13,16 @@ namespace SilentNotesTest.ViewModels
     public class NoteRepositoryViewModelTest
     {
         [Test]
+        public void NewNote_MarksRepositoryAsModified()
+        {
+            NoteRepositoryModel model = CreateTestRepository();
+            NoteRepositoryViewModel viewModel = CreateMockedNoteRepositoryViewModel(model);
+            Assert.IsFalse(viewModel.Modifications.IsModified());
+            viewModel.NewNoteCommand.Execute(null);
+            Assert.IsTrue(viewModel.Modifications.IsModified());
+        }
+
+        [Test]
         public void NewNote_IsAddedAfterLastPinned()
         {
             NoteRepositoryModel model = CreateTestRepository();
@@ -75,53 +85,104 @@ namespace SilentNotesTest.ViewModels
         }
 
         [Test]
-        public void CheckPinStatusAtPosition_PinsNoteIfDraggedAboveLastPinnedNote()
+        public void DeleteNote_MarksRepositoryAsModified()
         {
             NoteRepositoryModel model = CreateTestRepository();
-
-            // Note0 was dragged above Note1
-            model.Notes[0].IsPinned = false;
-            model.Notes[1].IsPinned = true;
-            model.Notes[2].IsPinned = false;
-
             NoteRepositoryViewModel viewModel = CreateMockedNoteRepositoryViewModel(model);
-            viewModel.CheckPinStatusAtPosition(0);
-            Assert.IsTrue(model.Notes[0].IsPinned);
+
+            Guid idToDelete = new Guid("22222222-2222-2222-2222-222222222222");
+            Assert.IsFalse(viewModel.Modifications.IsModified());
+            viewModel.DeleteNoteCommand.Execute(idToDelete);
+            Assert.IsTrue(viewModel.Modifications.IsModified());
         }
 
         [Test]
-        public void CheckPinStatusAtPosition_UnpinsNoteIfDraggedBelowFirstUnpinnedNote()
+        public void DeleteNote_MarksNoteAsDeleted()
         {
             NoteRepositoryModel model = CreateTestRepository();
-
-            // Note2 was dragged below Note1
-            model.Notes[0].IsPinned = true;
-            model.Notes[1].IsPinned = false;
-            model.Notes[2].IsPinned = true;
-
             NoteRepositoryViewModel viewModel = CreateMockedNoteRepositoryViewModel(model);
-            viewModel.CheckPinStatusAtPosition(2);
-            Assert.IsFalse(model.Notes[2].IsPinned);
+
+            Guid idToDelete = new Guid("22222222-2222-2222-2222-222222222222");
+            viewModel.DeleteNoteCommand.Execute(idToDelete);
+
+            var deletedNote = model.Notes.FindById(idToDelete);
+            Assert.AreEqual(true, deletedNote.InRecyclingBin);
         }
 
         [Test]
-        public void CheckPinStatusAtPosition_DoesNotChangePinStateIfNotNecessary()
+        public void DeleteNote_RemovedFromFilteredList()
         {
             NoteRepositoryModel model = CreateTestRepository();
-
-            model.Notes[0].IsPinned = false;
-            model.Notes[1].IsPinned = false;
-            model.Notes[2].IsPinned = false;
-
             NoteRepositoryViewModel viewModel = CreateMockedNoteRepositoryViewModel(model);
-            viewModel.CheckPinStatusAtPosition(0);
-            Assert.IsFalse(model.Notes[0].IsPinned);
 
-            model.Notes[0].IsPinned = true;
-            model.Notes[1].IsPinned = true;
-            model.Notes[2].IsPinned = true;
-            viewModel.CheckPinStatusAtPosition(0);
-            Assert.IsTrue(model.Notes[0].IsPinned);
+            Guid idToDelete = new Guid("22222222-2222-2222-2222-222222222222");
+            NoteViewModelReadOnly noteToDelete = viewModel.FilteredNotes.First(item => item.Id == idToDelete);
+
+            viewModel.DeleteNoteCommand.Execute(idToDelete);
+
+            Assert.IsFalse(viewModel.FilteredNotes.Contains(noteToDelete));
+        }
+
+        [Test]
+        public async Task DeleteNote_RemovedFromTagTree()
+        {
+            NoteRepositoryModel model = CreateTestRepository();
+            Guid idToDelete = new Guid("22222222-2222-2222-2222-222222222222");
+            var noteToDelete = model.Notes.FindById(idToDelete);
+            noteToDelete.Tags.Add("fox");
+            NoteRepositoryViewModel viewModel = CreateMockedNoteRepositoryViewModel(model);
+            await viewModel.InitializeTagTree();
+
+            Assert.IsTrue(viewModel.TagsRootNode.EnumerateSiblingsRecursive(false).Any(node => node.Title == "fox"));
+            viewModel.DeleteNoteCommand.Execute(idToDelete);
+            Assert.IsFalse(viewModel.TagsRootNode.EnumerateSiblingsRecursive(false).Any(node => node.Title == "fox"));
+        }
+
+        [Test]
+        public void AddNoteToSafe_MarksRepositoryAsModified()
+        {
+            NoteRepositoryModel model = CreateTestRepository();
+            Guid noteId = new Guid("22222222-2222-2222-2222-222222222222");
+            NoteModel note = model.Notes.FindById(noteId);
+            NoteRepositoryViewModel viewModel = CreateMockedNoteRepositoryViewModel(model);
+
+            model.Safes.Add(new SafeModel { Key = CommonMocksAndStubs.CryptoRandomService().GetRandomBytes(32) });
+            note.SafeId = model.Safes[0].Id;
+            viewModel.Modifications.MemorizeCurrentState();
+
+            Assert.IsFalse(viewModel.Modifications.IsModified());
+            viewModel.AddNoteToSafe(noteId);
+            Assert.IsTrue(viewModel.Modifications.IsModified());
+        }
+
+        [Test]
+        public void RemoveNoteFromSafe_MarksRepositoryAsModified()
+        {
+            NoteRepositoryModel model = CreateTestRepository();
+            Guid noteId = new Guid("22222222-2222-2222-2222-222222222222");
+            NoteModel note = model.Notes.FindById(noteId);
+            NoteRepositoryViewModel viewModel = CreateMockedNoteRepositoryViewModel(model);
+
+            model.Safes.Add(new SafeModel());
+            note.SafeId = model.Safes[0].Id;
+            viewModel.Modifications.MemorizeCurrentState();
+
+            Assert.IsFalse(viewModel.Modifications.IsModified());
+            viewModel.RemoveNoteFromSafe(noteId);
+            Assert.IsNull(note.SafeId);
+            Assert.IsTrue(viewModel.Modifications.IsModified());
+        }
+
+        [Test]
+        public void MoveSelectedOrderNote_MarksRepositoryAsModified()
+        {
+            NoteRepositoryModel model = CreateTestRepository();
+            NoteRepositoryViewModel viewModel = CreateMockedNoteRepositoryViewModel(model);
+            viewModel.SelectOrderNote(viewModel.FilteredNotes[0]);
+
+            Assert.IsFalse(viewModel.Modifications.IsModified());
+            viewModel.MoveSelectedOrderNote(false, true);
+            Assert.IsTrue(viewModel.Modifications.IsModified());
         }
 
         private static NoteRepositoryViewModel CreateMockedNoteRepositoryViewModel(NoteRepositoryModel repository)
@@ -131,23 +192,17 @@ namespace SilentNotesTest.ViewModels
             settingsService.
                 Setup(m => m.LoadSettingsOrDefault()).Returns(settingsModel);
 
-            Mock<IRepositoryStorageService> repositoryStorageService = new Mock<IRepositoryStorageService>();
-            repositoryStorageService.
-                Setup(m => m.LoadRepositoryOrDefault(out repository));
-
             return new NoteRepositoryViewModel(
-                new Mock<INavigationService>().Object,
+                repository,
                 new Mock<ILanguageService>().Object,
-                new Mock<ISvgIconService>().Object,
+                new Mock<INavigationService>().Object,
+                CommonMocksAndStubs.FeedbackService(),
                 new Mock<IThemeService>().Object,
-                new Mock<IBaseUrlService>().Object,
-                new Mock<IStoryBoardService>().Object,
-                new Mock<IFeedbackService>().Object,
                 settingsService.Object,
                 CommonMocksAndStubs.EnvironmentService(),
-                new Mock<IAutoSynchronizationService>().Object,
+                new Mock<ISynchronizationService>().Object,
                 CommonMocksAndStubs.CryptoRandomService(),
-                repositoryStorageService.Object);
+                null);
         }
 
         private static NoteRepositoryModel CreateTestRepository()

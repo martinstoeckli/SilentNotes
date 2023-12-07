@@ -103,7 +103,7 @@ namespace SilentNotesTest.Services
             {
             }
 
-            protected override string GetDirectoryPath()
+            public override string GetLocation()
             {
                 return string.Empty;
             }

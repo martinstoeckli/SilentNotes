@@ -1,6 +1,7 @@
 ﻿using System;
 using NUnit.Framework;
 using SilentNotes;
+using SilentNotes.Workers;
 
 namespace SilentNotesTest
 {

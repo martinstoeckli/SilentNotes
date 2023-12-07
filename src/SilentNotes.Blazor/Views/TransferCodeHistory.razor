@@ -1,0 +1,90 @@
+﻿@page "/transfercodehistory"
+@inherits PageBase
+
+@using SilentNotes.Models
+@using SilentNotes.ViewModels
+@using SilentNotes.Services
+
+@inject ILanguageService LanguageService
+@inject ISvgIconService IconService
+@inject ISettingsService SettingsService
+@inject IClipboardService ClipboardService
+@inject IJSRuntime JSRuntime
+@inject INavigationService Navigation
+
+<style type="text/css">
+	.code {
+		font-family: Consolas;
+		font-size: 28px;
+		text-align: center;
+		background-color: var(--mud-palette-tertiary);
+		color: var(--mud-palette-tertiary-text);
+	}
+</style>
+
+@* Main menu *@
+<MudAppBar Class="flex-none" Fixed="true" Dense="true" WrapContent="false">
+	<MudIconButton OnClick="@(() => Navigation.NavigateTo(BackRoute))" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" Edge="Edge.Start" />
+</MudAppBar>
+
+@* watermark image *@
+<MudIcon Class="background-icon" Icon="@IconService[IconNames.Key]" Style="@($"right:0; top:-50px;")" />
+
+@* body *@
+<MudMainContent>
+	<MudContainer Class="ms-0" MaxWidth="MaxWidth.Medium">
+		<div id="content" class="py-3">
+			<h1 class="h-colored">@LanguageService["transfer_code"]</h1>
+
+			@if (ViewModel.TransferCodeFmt == "")
+			{
+				<MudAlert Class="my-4" Severity="Severity.Info" Elevation="1">@LanguageService["transfer_not_existing"]</MudAlert>
+			}
+			else
+			{
+				<p class="my-4">@LanguageService["transfer_code_usage"]</p>
+
+				<div Class="d-flex justify-center">
+					<MudPaper Class="code px-4 py-2 rounded" Elevation="2">
+						<MudElement>@ViewModel.TransferCodeFmt</MudElement><MudIconButton Class="ml-3" OnClick="@(() => ViewModel.CopyTransferCodeCommand.Execute(null))" Icon="@Icons.Material.Filled.ContentCopy" Color="Color.Inherit" Title="@LanguageService["copy"]"/>
+					</MudPaper>
+				</div>
+
+				<p class="my-4">@LanguageService["transfer_code_writedown"]</p>
+
+				@if (ViewModel.IsTransfercodeHistoryVisible)
+				{
+					<MudExpansionPanels Class="mt-6">
+						<MudExpansionPanel Text="@LanguageService["transfer_code_show_history"]">
+							<MudList >
+								@foreach (var historicalTransferCode in ViewModel.TransferCodeHistory)
+								{
+									<MudListItem Text="@historicalTransferCode" />
+								}
+							</MudList>
+						</MudExpansionPanel>
+					</MudExpansionPanels>
+				}
+			}
+		</div>
+	</MudContainer>
+</MudMainContent>
+
+@code {
+	protected override void OnInitialized()
+	{
+		SettingsModel settings = SettingsService.LoadSettingsOrDefault();
+		ViewModel = new TransferCodeHistoryViewModel(settings, ClipboardService);
+	}
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			await KeyboardShortcuts.InitializeAsync(JSRuntime);
+			KeyboardShortcuts.AddShortcut(new SnKeyboardShortcut(SnKey.Escape), () => Navigation.NavigateTo(BackRoute));
+		}
+	}
+
+	private TransferCodeHistoryViewModel ViewModel { get; set; }
+}

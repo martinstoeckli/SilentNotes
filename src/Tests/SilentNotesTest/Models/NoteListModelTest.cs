@@ -54,5 +54,43 @@ namespace SilentNotesTest.Models
 
             Assert.AreEqual(-1, notes.IndexOfById(id2));
         }
+
+        [Test]
+        public void IndexToInsertNewNoteAppendsNote()
+        {
+            List<NoteModel> notes = new NoteListModel();
+
+            int res = NoteListModelExtensions.IndexToInsertNewNote(notes, NoteInsertionMode.AtBottom);
+            Assert.AreEqual(0, res);
+
+            Guid id1 = Guid.NewGuid();
+            Guid id2 = Guid.NewGuid();
+            notes.Add(new NoteModel { Id = id1 });
+            notes.Add(new NoteModel { Id = id2 });
+            res = notes.IndexToInsertNewNote(NoteInsertionMode.AtBottom);
+            Assert.AreEqual(2, res);
+        }
+
+        [Test]
+        public void IndexToInsertNewNoteInsertsAfterPinned()
+        {
+            List<NoteModel> notes = new NoteListModel();
+
+            int res = NoteListModelExtensions.IndexToInsertNewNote(notes, NoteInsertionMode.AtTop);
+            Assert.AreEqual(0, res);
+
+            Guid id1 = Guid.NewGuid();
+            Guid id2 = Guid.NewGuid();
+            notes.Add(new NoteModel { Id = id1, IsPinned = true });
+            notes.Add(new NoteModel { Id = id2 });
+            res = notes.IndexToInsertNewNote(NoteInsertionMode.AtTop);
+            Assert.AreEqual(1, res);
+
+            notes.Clear();
+            notes.Add(new NoteModel { Id = id1, IsPinned = true });
+            notes.Add(new NoteModel { Id = id2, IsPinned = true });
+            res = notes.IndexToInsertNewNote(NoteInsertionMode.AtTop);
+            Assert.AreEqual(2, res);
+        }
     }
 }

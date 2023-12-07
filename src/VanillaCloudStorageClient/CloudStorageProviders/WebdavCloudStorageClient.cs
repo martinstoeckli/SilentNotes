@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,10 +23,23 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
     /// </summary>
     public class WebdavCloudStorageClient : CloudStorageClientBase, ICloudStorageClient
     {
+        private readonly bool _useSocketsForPropFind;
+
+        /// <summary>
+        /// Initializes a new intance of the <see cref="WebdavCloudStorageClient"/> class.
+        /// </summary>
+        /// <param name="useSocketsForPropFind">Use sockets for the http method "PROPFIND", when
+        /// running on Android, because the default HttpClient will internally use the Java class
+        /// HttpURLConnection, which doesn't allow custom http methods like "PROPFIND".</param>
+        public WebdavCloudStorageClient(bool useSocketsForPropFind)
+        {
+            _useSocketsForPropFind = useSocketsForPropFind;
+        }
+
         /// <inheritdoc/>
         public override CloudStorageCredentialsRequirements CredentialsRequirements
         {
-            get { return CloudStorageCredentialsRequirements.Username | CloudStorageCredentialsRequirements.Password | CloudStorageCredentialsRequirements.Url | CloudStorageCredentialsRequirements.AcceptUnsafeCertificate; }
+            get { return CloudStorageCredentialsRequirements.Username | CloudStorageCredentialsRequirements.Password | CloudStorageCredentialsRequirements.Url; }
         }
 
         /// <inheritdoc/>
@@ -36,7 +50,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
             try
             {
                 HttpContent content = new ByteArrayContent(fileContent);
-                await GetFlurl(credentials.AcceptInvalidCertificate)
+                await GetFlurl()
                     .Request(credentials.Url, filename)
                     .WithBasicAuthOrAnonymous(credentials.Username, credentials.UnprotectedPassword)
                     .PutAsync(content);
@@ -54,7 +68,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
 
             try
             {
-                return await GetFlurl(credentials.AcceptInvalidCertificate)
+                return await GetFlurl()
                     .Request(credentials.Url, filename)
                     .WithBasicAuthOrAnonymous(credentials.Username, credentials.UnprotectedPassword)
                     .GetBytesAsync();
@@ -72,7 +86,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
 
             try
             {
-                await GetFlurl(credentials.AcceptInvalidCertificate)
+                await GetFlurl()
                     .Request(credentials.Url, filename)
                     .WithBasicAuthOrAnonymous(credentials.Username, credentials.UnprotectedPassword)
                     .DeleteAsync();
@@ -102,15 +116,56 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
                 HttpContent content = new ByteArrayContent(requestBytes);
                 XDocument responseXml;
                 Url url = new Url(IncludeTrailingSlash(credentials.Url));
-                using (Stream responseStream = await GetFlurl(credentials.AcceptInvalidCertificate)
-                    .Request(url)
-                    .WithBasicAuthOrAnonymous(credentials.Username, credentials.UnprotectedPassword)
-                    .WithHeader("Depth", "1")
-                    .WithTimeout(20)
-                    .SendAsync(new HttpMethod("PROPFIND"), content)
-                    .ReceiveStream())
+
+                if (!_useSocketsForPropFind)
                 {
-                    responseXml = XDocument.Load(responseStream);
+                    using (Stream responseStream = await GetFlurl()
+                        .Request(url)
+                        .WithBasicAuthOrAnonymous(credentials.Username, credentials.UnprotectedPassword)
+                        .WithHeader("Depth", "1")
+                        .WithTimeout(20)
+                        .SendAsync(new HttpMethod("PROPFIND"), content)
+                        .ReceiveStream())
+                    {
+                        responseXml = XDocument.Load(responseStream);
+                    }
+                }
+                else
+                {
+                    // Workaround: On Android the default HttpClientHandler uses the underlying Java
+                    // class "HttpURLConnection", which unfortunately cannot handle the http method
+                    // "PROPFIND".
+                    // So we make an expection for this request and use the "SocketsHttpHandler"
+                    // which has its own implementation, though it cannot validate SSL certificates
+                    // from LetsEncrypt. We can safely ignore the validation, because consecutive
+                    // calls will do the validation with the Android implementation.
+                    // see: https://github.com/martinstoeckli/SilentNotes/issues/111
+                    using (HttpMessageHandler httpMessageHandler = new SocketsHttpHandler
+                    {
+                        AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate,
+                        Credentials = new NetworkCredential(credentials.Username, credentials.Password),
+                        SslOptions = new System.Net.Security.SslClientAuthenticationOptions
+                        {
+                            RemoteCertificateValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; },
+                        },
+                    })
+                    {
+                        using (HttpClient httpClient = new HttpClient(httpMessageHandler, false) // Disposed by its own "using"
+                            { Timeout = TimeSpan.FromSeconds(20) })
+                        using (HttpRequestMessage msg = new HttpRequestMessage(new HttpMethod("PROPFIND"), url))
+                        {
+                            msg.Content = content;
+                            msg.Content.Headers.TryAddWithoutValidation("Depth", "1");
+                            using (HttpResponseMessage response = await httpClient.SendAsync(msg, new HttpCompletionOption()))
+                            {
+                                response.EnsureSuccessStatusCode();
+                                using (Stream responseStream = await response.Content.ReadAsStreamAsync())
+                                {
+                                    responseXml = XDocument.Load(responseStream);
+                                }
+                            }
+                        }
+                    }
                 }
 
                 // Files have an empty resourcetype element, folders a child element "collection"

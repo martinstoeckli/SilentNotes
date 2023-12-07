@@ -15,6 +15,15 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
     /// </summary>
     public class GmxCloudStorageClient : WebdavCloudStorageClient
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GmxCloudStorageClient"/> class.
+        /// </summary>
+        /// <param name="useSocketsForPropFind">See <see cref="WebdavCloudStorageClient"/>.</param>
+        public GmxCloudStorageClient(bool useSocketsForPropFind)
+            : base(useSocketsForPropFind)
+        {
+        }
+
         /// <inheritdoc/>
         public override CloudStorageCredentialsRequirements CredentialsRequirements
         {

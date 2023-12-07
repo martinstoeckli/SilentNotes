@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Moq;
 using NUnit.Framework;
+using SilentNotes;
 using SilentNotes.Crypto;
 using SilentNotes.Models;
 using SilentNotes.Services;
@@ -14,6 +15,14 @@ namespace SilentNotesTest.ViewModels
     [TestFixture]
     public class NoteViewModelTest
     {
+        [Test]
+        public void UsesNotFoundNote_WhenConstructorGetsNullModel()
+        {
+            NoteModel inexistingModel = null;
+            NoteViewModel viewModel = CreateMockedNoteViewModel(inexistingModel);
+            Assert.AreSame(NoteModel.NotFound, viewModel.Model);
+        }
+
         [Test]
         public void DoesNotShowContentWhenSafeIsClosed()
         {
@@ -28,21 +37,13 @@ namespace SilentNotesTest.ViewModels
             });
             NoteModel note = new NoteModel { Id = Guid.NewGuid(), HtmlContent = "secret", SafeId = safes[0].Id };
 
-            NoteViewModel noteViewModel = new NoteViewModel(
-                new Mock<INavigationService>().Object,
-                new Mock<ILanguageService>().Object,
-                new Mock<ISvgIconService>().Object,
-                new Mock<IThemeService>().Object,
-                new Mock<IBaseUrlService>().Object,
+            var noteViewModel = new NoteViewModelReadOnly(
+                note,
                 searchableConverter,
-                repositoryService.Object,
-                new Mock<IFeedbackService>().Object,
+                new Mock<IThemeService>().Object,
                 settingsService.Object,
-                new Mock<IEnvironmentService>().Object,
                 cryptor.Object,
-                safes,
-                new List<string>(),
-                note);
+                safes);
 
             Assert.IsNull(noteViewModel.UnlockedHtmlContent);
             Assert.IsNull(noteViewModel.SearchableContent);
@@ -67,21 +68,13 @@ namespace SilentNotesTest.ViewModels
             });
             NoteModel note = new NoteModel { Id = Guid.NewGuid(), HtmlContent = modelHtmlContent, SafeId = safes[0].Id };
 
-            NoteViewModel noteViewModel = new NoteViewModel(
-                new Mock<INavigationService>().Object,
-                new Mock<ILanguageService>().Object,
-                new Mock<ISvgIconService>().Object,
-                new Mock<IThemeService>().Object,
-                new Mock<IBaseUrlService>().Object,
+            var noteViewModel = new NoteViewModelReadOnly(
+                note,
                 searchableConverter,
-                repositoryService.Object,
-                new Mock<IFeedbackService>().Object,
+                new Mock<IThemeService>().Object,
                 settingsService.Object,
-                new Mock<IEnvironmentService>().Object,
                 cryptor.Object,
-                safes,
-                new List<string>(),
-                note);
+                safes);
 
             Assert.AreEqual("not secret anymore", noteViewModel.UnlockedHtmlContent);
             Assert.AreEqual("not secret anymore", noteViewModel.SearchableContent);
@@ -110,23 +103,22 @@ namespace SilentNotesTest.ViewModels
             NoteModel note = new NoteModel { Id = Guid.NewGuid(), HtmlContent = modelHtmlContent, SafeId = safes[0].Id };
 
             NoteViewModel noteViewModel = new NoteViewModel(
+                note,
+                searchableConverter,
                 new Mock<INavigationService>().Object,
                 new Mock<ILanguageService>().Object,
-                new Mock<ISvgIconService>().Object,
                 new Mock<IThemeService>().Object,
-                new Mock<IBaseUrlService>().Object,
-                searchableConverter,
                 repositoryService.Object,
                 new Mock<IFeedbackService>().Object,
                 settingsService.Object,
                 new Mock<IEnvironmentService>().Object,
+                new Mock<INativeBrowserService>().Object,
                 cryptor.Object,
                 safes,
-                new List<string>(),
-                note);
+                new List<string>());
 
             noteViewModel.UnlockedHtmlContent = "something new";
-            noteViewModel.OnStoringUnsavedData();
+            noteViewModel.OnStoringUnsavedData(new StoreUnsavedDataMessage());
 
             cryptor.Verify(m => m.Encrypt(
                 It.Is<byte[]>(p => p.SequenceEqual(CryptoUtils.StringToBytes("something new"))),
@@ -143,20 +135,19 @@ namespace SilentNotesTest.ViewModels
             NoteModel note = new NoteModel { Id = Guid.NewGuid(), HtmlContent = "secret" };
 
             NoteViewModel noteViewModel = new NoteViewModel(
+                note,
+                new SearchableHtmlConverter(),
                 new Mock<INavigationService>().Object,
                 new Mock<ILanguageService>().Object,
-                new Mock<ISvgIconService>().Object,
                 new Mock<IThemeService>().Object,
-                new Mock<IBaseUrlService>().Object,
-                new SearchableHtmlConverter(),
                 new Mock<IRepositoryStorageService>().Object,
                 new Mock<IFeedbackService>().Object,
                 new Mock<ISettingsService>().Object,
                 new Mock<IEnvironmentService>().Object,
+                new Mock<INativeBrowserService>().Object,
                 new Mock<ICryptor>().Object,
                 new SafeListModel(),
-                new List<string>(),
-                note);
+                new List<string>());
 
             noteViewModel.AddTagCommand.Execute("Paddington");
             Assert.AreEqual(1, noteViewModel.Tags.Count);
@@ -177,20 +168,19 @@ namespace SilentNotesTest.ViewModels
             NoteModel note = new NoteModel { Id = Guid.NewGuid(), HtmlContent = "secret" };
 
             NoteViewModel noteViewModel = new NoteViewModel(
+                note,
+                new SearchableHtmlConverter(),
                 new Mock<INavigationService>().Object,
                 new Mock<ILanguageService>().Object,
-                new Mock<ISvgIconService>().Object,
                 new Mock<IThemeService>().Object,
-                new Mock<IBaseUrlService>().Object,
-                new SearchableHtmlConverter(),
                 new Mock<IRepositoryStorageService>().Object,
                 new Mock<IFeedbackService>().Object,
                 new Mock<ISettingsService>().Object,
                 new Mock<IEnvironmentService>().Object,
+                new Mock<INativeBrowserService>().Object,
                 new Mock<ICryptor>().Object,
                 new SafeListModel(),
-                new List<string>(),
-                note);
+                new List<string>());
 
             noteViewModel.AddTagCommand.Execute("abc");
             noteViewModel.AddTagCommand.Execute("def");
@@ -218,20 +208,19 @@ namespace SilentNotesTest.ViewModels
             NoteModel note = new NoteModel { Id = Guid.NewGuid() };
             note.Tags.Add("Aaa");
             NoteViewModel noteViewModel = new NoteViewModel(
+                note,
+                new SearchableHtmlConverter(),
                 new Mock<INavigationService>().Object,
                 new Mock<ILanguageService>().Object,
-                new Mock<ISvgIconService>().Object,
                 new Mock<IThemeService>().Object,
-                new Mock<IBaseUrlService>().Object,
-                new SearchableHtmlConverter(),
                 new Mock<IRepositoryStorageService>().Object,
                 new Mock<IFeedbackService>().Object,
                 new Mock<ISettingsService>().Object,
                 new Mock<IEnvironmentService>().Object,
+                new Mock<INativeBrowserService>().Object,
                 new Mock<ICryptor>().Object,
                 new SafeListModel(),
-                new string[] { "aaa", "bbb" },
-                note);
+                new string[] { "aaa", "bbb" });
 
             List<string> suggestions = noteViewModel.TagSuggestions.ToList();
             Assert.AreEqual(1, suggestions.Count);
@@ -260,7 +249,7 @@ namespace SilentNotesTest.ViewModels
 
             noteViewModel.TogglePinnedCommand.Execute(null);
             noteViewModel.TogglePinnedCommand.Execute(null);
-            noteViewModel.OnStoringUnsavedData();
+            noteViewModel.OnStoringUnsavedData(new StoreUnsavedDataMessage());
 
             Assert.AreSame(noteToBePinned, repository.Notes[1]); // No modification, no change of position
             Assert.IsFalse(noteToBePinned.IsPinned);
@@ -275,7 +264,7 @@ namespace SilentNotesTest.ViewModels
 
             noteViewModel.TogglePinnedCommand.Execute(null);
             noteViewModel.TogglePinnedCommand.Execute(null);
-            noteViewModel.OnStoringUnsavedData();
+            noteViewModel.OnStoringUnsavedData(new StoreUnsavedDataMessage());
 
             repositoryStorageService.Verify(m => m.TrySaveRepository(It.IsAny<NoteRepositoryModel>()), Times.Never);
         }
@@ -288,7 +277,7 @@ namespace SilentNotesTest.ViewModels
             NoteViewModel noteViewModel = CreateMockedNoteViewModel(noteToBePinned, repository);
 
             noteViewModel.IsPinned = true;
-            noteViewModel.OnStoringUnsavedData();
+            noteViewModel.OnStoringUnsavedData(new StoreUnsavedDataMessage());
 
             Assert.AreSame(noteToBePinned, repository.Notes[0]); // Now on first position
             Assert.IsTrue(noteToBePinned.IsPinned);
@@ -304,7 +293,7 @@ namespace SilentNotesTest.ViewModels
             NoteViewModel noteViewModel = CreateMockedNoteViewModel(noteToBeUnpinned, repository);
 
             noteViewModel.IsPinned = false;
-            noteViewModel.OnStoringUnsavedData();
+            noteViewModel.OnStoringUnsavedData(new StoreUnsavedDataMessage());
 
             Assert.AreSame(noteToBeUnpinned, repository.Notes[1]); // Now on middle position
             Assert.IsFalse(noteToBeUnpinned.IsPinned);
@@ -321,7 +310,7 @@ namespace SilentNotesTest.ViewModels
             NoteViewModel noteViewModel = CreateMockedNoteViewModel(noteToBeUnpinned, repository);
 
             noteViewModel.IsPinned = false;
-            noteViewModel.OnStoringUnsavedData();
+            noteViewModel.OnStoringUnsavedData(new StoreUnsavedDataMessage());
 
             Assert.AreSame(noteToBeUnpinned, repository.Notes[2]); // Now on last position
             Assert.IsFalse(noteToBeUnpinned.IsPinned);
@@ -338,7 +327,7 @@ namespace SilentNotesTest.ViewModels
 
             testNote.IsPinned = true; //should be moved to index 0 and refresh OrderModifiedAt
 
-            noteViewModel.OnStoringUnsavedData();
+            noteViewModel.OnStoringUnsavedData(new StoreUnsavedDataMessage());
 
             Assert.IsTrue(repository.OrderModifiedAt != original);
         }
@@ -354,7 +343,7 @@ namespace SilentNotesTest.ViewModels
 
             testNote.IsPinned = true; //stays on indey 0 and does NOT refresh OrderModifiedAt
 
-            noteViewModel.OnStoringUnsavedData();
+            noteViewModel.OnStoringUnsavedData(new StoreUnsavedDataMessage());
 
             Assert.IsTrue(repository.OrderModifiedAt == original);
         }
@@ -369,7 +358,7 @@ namespace SilentNotesTest.ViewModels
             NoteViewModel noteViewModel = CreateMockedNoteViewModel(noteToBeUnpinned, repository);
 
             noteViewModel.IsPinned = false;
-            noteViewModel.OnStoringUnsavedData();
+            noteViewModel.OnStoringUnsavedData(new StoreUnsavedDataMessage());
 
             Assert.AreSame(noteToBeUnpinned, repository.Notes[0]); // Now on last position
         }
@@ -391,20 +380,19 @@ namespace SilentNotesTest.ViewModels
         private static NoteViewModel CreateMockedNoteViewModel(NoteModel note, IRepositoryStorageService repositoryStorageService)
         {
             return new NoteViewModel(
+                note,
+                new SearchableHtmlConverter(),
                 new Mock<INavigationService>().Object,
                 new Mock<ILanguageService>().Object,
-                new Mock<ISvgIconService>().Object,
                 new Mock<IThemeService>().Object,
-                new Mock<IBaseUrlService>().Object,
-                new SearchableHtmlConverter(),
                 repositoryStorageService,
                 new Mock<IFeedbackService>().Object,
                 new Mock<ISettingsService>().Object,
                 new Mock<IEnvironmentService>().Object,
+                new Mock<INativeBrowserService>().Object,
                 new Mock<ICryptor>().Object,
                 new SafeListModel(),
-                new string[] { },
-                note);
+                new string[] { });
         }
 
         private static NoteRepositoryModel CreateTestRepository()

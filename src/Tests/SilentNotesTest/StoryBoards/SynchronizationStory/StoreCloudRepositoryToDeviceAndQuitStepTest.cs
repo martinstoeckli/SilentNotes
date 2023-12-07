@@ -1,38 +1,42 @@
-﻿using Moq;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Moq;
 using NUnit.Framework;
 using SilentNotes.Models;
 using SilentNotes.Services;
-using SilentNotes.StoryBoards;
-using SilentNotes.StoryBoards.SynchronizationStory;
+using SilentNotes.Stories;
+using SilentNotes.Stories.SynchronizationStory;
 
-namespace SilentNotesTest.StoryBoards.SynchronizationStory
+namespace SilentNotesTest.Stories.SynchronizationStory
 {
     [TestFixture]
     public class StoreCloudRepositoryToDeviceAndQuitStepTest
     {
         [Test]
-        public void StoresRepositoryToDevice()
+        public async Task StoresRepositoryToDevice()
         {
             NoteRepositoryModel repositoryModel = new NoteRepositoryModel();
+            var model = new SynchronizationStoryModel
+            {
+                StoryMode = StoryMode.Silent,
+                CloudRepository = repositoryModel,
+            };
 
-            Mock<IStoryBoard> storyBoard = new Mock<IStoryBoard>();
-            storyBoard.
-                Setup(m => m.Session.Load<NoteRepositoryModel>(It.Is<SynchronizationStorySessionKey>(p => p == SynchronizationStorySessionKey.CloudRepository))).
-                Returns(repositoryModel);
-            Mock<ILanguageService> languageService = new Mock<ILanguageService>();
-            Mock<IFeedbackService> feedbackService = new Mock<IFeedbackService>();
             Mock<IRepositoryStorageService> repositoryStorageService = new Mock<IRepositoryStorageService>();
 
+            var serviceCollection = new ServiceCollection();
+            serviceCollection
+                .AddSingleton<IRepositoryStorageService>(repositoryStorageService.Object)
+                .AddSingleton<ILanguageService>(CommonMocksAndStubs.LanguageService());
+
             // Run step
-            var step = new StoreCloudRepositoryToDeviceAndQuitStep(
-                SynchronizationStoryStepId.StoreCloudRepositoryToDeviceAndQuit, storyBoard.Object, languageService.Object, feedbackService.Object, repositoryStorageService.Object);
-            Assert.DoesNotThrowAsync(step.Run);
+            var step = new StoreCloudRepositoryToDeviceAndQuitStep();
+            var result = await step.RunStep(model, serviceCollection.BuildServiceProvider(), model.StoryMode);
 
             // repository is stored to the local device
             repositoryStorageService.Verify(m => m.TrySaveRepository(It.Is<NoteRepositoryModel>(r => r == repositoryModel)), Times.Once);
 
             // Next step is called
-            storyBoard.Verify(m => m.ContinueWith(It.Is<SynchronizationStoryStepId>(x => x == SynchronizationStoryStepId.StopAndShowRepository)), Times.Once);
+            Assert.IsInstanceOf<StopAndShowRepositoryStep>(result.NextStep);
         }
     }
 }

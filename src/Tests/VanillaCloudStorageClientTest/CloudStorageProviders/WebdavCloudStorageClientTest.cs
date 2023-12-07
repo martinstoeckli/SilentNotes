@@ -98,13 +98,13 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
 
         private async Task UploadFileWorksAsync(string fileName, byte[] fileContent)
         {
-            ICloudStorageClient client = new WebdavCloudStorageClient();
+            ICloudStorageClient client = new WebdavCloudStorageClient(false);
             await client.UploadFileAsync(fileName, fileContent, GetCredentials());
         }
 
         private async Task<byte[]> DownloadFileWorksAsync(string fileName, CloudStorageCredentials credentials = null)
         {
-            ICloudStorageClient client = new WebdavCloudStorageClient();
+            ICloudStorageClient client = new WebdavCloudStorageClient(false);
             if (credentials == null)
                 credentials = GetCredentials();
             return await client.DownloadFileAsync(fileName, credentials);
@@ -112,20 +112,20 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
 
         private async Task DeleteFileWorksAsync(string fileName)
         {
-            ICloudStorageClient client = new WebdavCloudStorageClient();
+            ICloudStorageClient client = new WebdavCloudStorageClient(false);
             await client.DeleteFileAsync(fileName, GetCredentials());
         }
 
         private async Task<List<string>> ListFileNamesWorksAsync()
         {
-            ICloudStorageClient client = new WebdavCloudStorageClient();
+            ICloudStorageClient client = new WebdavCloudStorageClient(false);
             List<string> result = await client.ListFileNamesAsync(GetCredentials());
             return result;
         }
 
         private async Task<bool> FileExistsWorksAsync(string filename)
         {
-            ICloudStorageClient client = new WebdavCloudStorageClient();
+            ICloudStorageClient client = new WebdavCloudStorageClient(false);
             return await client.ExistsFileAsync(filename, GetCredentials());
         }
 

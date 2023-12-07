@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Security;
 using Moq;
 using NUnit.Framework;
 using SilentNotes;
-using SilentNotes.Controllers;
 using SilentNotes.Models;
 using SilentNotes.Services;
 using SilentNotes.ViewModels;
+using VanillaCloudStorageClient;
 
 namespace SilentNotesTest.ViewModels
 {
@@ -13,7 +14,7 @@ namespace SilentNotesTest.ViewModels
     public class OpenSafeViewModelTest
     {
         [Test]
-        public void ResetSafeRemovesNotesAndSafes()
+        public void ResetSafe_RemovesNotesAndSafes()
         {
             Guid note1Id = new Guid("10000000000000000000000000000000");
             Guid note2Id = new Guid("20000000000000000000000000000000");
@@ -29,22 +30,9 @@ namespace SilentNotesTest.ViewModels
             Mock<IRepositoryStorageService> repositoryStorageService = new Mock<IRepositoryStorageService>();
             repositoryStorageService.
                 Setup(m => m.LoadRepositoryOrDefault(out repository));
-            Mock<IFeedbackService> feedbackService = new Mock<IFeedbackService>();
-            feedbackService.
-                Setup(m => m.ShowMessageAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<MessageBoxButtons>(), It.IsAny<bool>()))
-                .ReturnsAsync(MessageBoxResult.Continue);
 
-            OpenSafeViewModel viewModel = new OpenSafeViewModel(
-                navigationService.Object,
-                CommonMocksAndStubs.LanguageService(),
-                new Mock<ISvgIconService>().Object,
-                new Mock<IThemeService>().Object,
-                new Mock<IBaseUrlService>().Object,
-                feedbackService.Object,
-                CommonMocksAndStubs.CryptoRandomService(),
-                new Mock<ISettingsService>().Object,
-                repositoryStorageService.Object,
-                null);
+            OpenSafeViewModel viewModel = CreateMockedOpenSafeViewModelViewModel(
+                repositoryStorageService.Object, navigationService.Object);
 
             viewModel.ResetSafeCommand.Execute(null);
 
@@ -57,10 +45,52 @@ namespace SilentNotesTest.ViewModels
             // Safes are removed
             Assert.AreEqual(0, repository.Safes.Count);
 
-            // Is marked as modified and navigated away, so it will be stored.
-            Assert.IsTrue(viewModel.Modified);
-            navigationService.Verify(m => m.Navigate(It.Is<Navigation>(v => v.ControllerId == ControllerNames.OpenSafe)));
-            feedbackService.Verify(m => m.ShowMessageAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<MessageBoxButtons>(), It.Is<bool>(v => v == true)), Times.Once);
+            // Is marked as modified and stored before navigating away
+            repositoryStorageService.Verify(m => m.TrySaveRepository(It.IsAny<NoteRepositoryModel>()));
+            navigationService.Verify(m => m.NavigateReload(), Times.Once);
+        }
+
+        [Test]
+        public void Ok_CreatesNewSafeAndMarksRepositoryAsModified()
+        {
+            Guid note1Id = new Guid("10000000000000000000000000000000");
+            NoteRepositoryModel repository = new NoteRepositoryModel();
+            repository.Notes.Add(new NoteModel { Id = note1Id });
+
+            Mock<INavigationService> navigationService = new Mock<INavigationService>();
+            Mock<IRepositoryStorageService> repositoryStorageService = new Mock<IRepositoryStorageService>();
+            repositoryStorageService.
+                Setup(m => m.LoadRepositoryOrDefault(out repository));
+
+            OpenSafeViewModel viewModel = CreateMockedOpenSafeViewModelViewModel(
+                repositoryStorageService.Object, navigationService.Object);
+            viewModel.Password = SecureStringExtensions.StringToSecureString("somethingvalid");
+            viewModel.PasswordConfirmation = SecureStringExtensions.StringToSecureString("somethingvalid");
+
+            Assert.IsFalse(viewModel.Modifications.IsModified());
+            viewModel.OkCommand.Execute(null);
+            Assert.IsTrue(viewModel.Modifications.IsModified());
+            navigationService.Verify(m => m.NavigateTo(It.Is<string>(r => r == RouteNames.Home)), Times.Once);
+        }
+
+        private static OpenSafeViewModel CreateMockedOpenSafeViewModelViewModel(
+            IRepositoryStorageService repositoryStorageService, INavigationService navigationService = null)
+        {
+            if (navigationService == null)
+                navigationService = new Mock<INavigationService>().Object;
+            SettingsModel settingsModel = new SettingsModel();
+            Mock<ISettingsService> settingsService = new Mock<ISettingsService>();
+            settingsService.
+                Setup(m => m.LoadSettingsOrDefault()).Returns(settingsModel);
+
+            return new OpenSafeViewModel(
+                CommonMocksAndStubs.LanguageService(),
+                navigationService,
+                CommonMocksAndStubs.FeedbackService(),
+                CommonMocksAndStubs.CryptoRandomService(),
+                settingsService.Object,
+                repositoryStorageService,
+                null);
         }
     }
 }

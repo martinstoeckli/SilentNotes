@@ -1,26 +1,28 @@
-﻿using Moq;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Moq;
 using NUnit.Framework;
 using SilentNotes.Models;
 using SilentNotes.Services;
-using SilentNotes.StoryBoards;
-using SilentNotes.StoryBoards.SynchronizationStory;
+using SilentNotes.Stories;
+using SilentNotes.Stories.SynchronizationStory;
 using VanillaCloudStorageClient;
 
-namespace SilentNotesTest.StoryBoards.SynchronizationStory
+namespace SilentNotesTest.Stories.SynchronizationStory
 {
     [TestFixture]
     public class ExistsCloudRepositoryStepTest
     {
         [Test]
-        public void AccountIsStoredWhenDifferent()
+        public async Task AccountIsStoredWhenDifferent()
         {
             SerializeableCloudStorageCredentials credentialsFromSession = new SerializeableCloudStorageCredentials { CloudStorageId = CloudStorageClientFactory.CloudStorageIdDropbox };
             SettingsModel settingsModel = new SettingsModel { Credentials = new SerializeableCloudStorageCredentials { CloudStorageId = CloudStorageClientFactory.CloudStorageIdFtp } };
+            var model = new SynchronizationStoryModel
+            {
+                StoryMode = StoryMode.Silent,
+                Credentials = credentialsFromSession,
+            };
 
-            Mock<IStoryBoard> storyBoard = new Mock<IStoryBoard>();
-            storyBoard.
-                Setup(m => m.Session.Load<SerializeableCloudStorageCredentials>(It.Is<SynchronizationStorySessionKey>(p => p == SynchronizationStorySessionKey.CloudStorageCredentials))).
-                Returns(credentialsFromSession);
             Mock<ISettingsService> settingsService = new Mock<ISettingsService>();
             settingsService.
                 Setup(m => m.LoadSettingsOrDefault()).Returns(settingsModel);
@@ -29,33 +31,34 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
                 Setup(m => m.ExistsFileAsync(It.IsAny<string>(), It.IsAny<CloudStorageCredentials>())).
                 ReturnsAsync(true);
 
+            var serviceCollection = new ServiceCollection();
+            serviceCollection
+                .AddSingleton<ISettingsService>(settingsService.Object)
+                .AddSingleton<ILanguageService>(CommonMocksAndStubs.LanguageService())
+                .AddSingleton<ICloudStorageClientFactory>(CommonMocksAndStubs.CloudStorageClientFactory(cloudStorageClient.Object));
+
             // Run step
-            var step = new ExistsCloudRepositoryStep(
-                SynchronizationStoryStepId.ExistsCloudRepository,
-                storyBoard.Object,
-                CommonMocksAndStubs.LanguageService(),
-                CommonMocksAndStubs.FeedbackService(),
-                settingsService.Object,
-                CommonMocksAndStubs.CloudStorageClientFactory(cloudStorageClient.Object));
-            Assert.DoesNotThrowAsync(step.Run);
+            var step = new ExistsCloudRepositoryStep();
+            var result = await step.RunStep(model, serviceCollection.BuildServiceProvider(), model.StoryMode);
 
             // Settings are stored with account from session
             settingsService.Verify(m => m.TrySaveSettingsToLocalDevice(It.Is<SettingsModel>(s => s.Credentials == credentialsFromSession)), Times.Once);
 
             // Next step is called
-            storyBoard.Verify(m => m.ContinueWith(It.Is<SynchronizationStoryStepId>(x => x == SynchronizationStoryStepId.DownloadCloudRepository)), Times.Once);
+            Assert.IsInstanceOf<DownloadCloudRepositoryStep>(result.NextStep);
         }
 
         [Test]
-        public void CorrectNextStepWhenNoCloudRepositoryExists()
+        public async Task CorrectNextStepWhenNoCloudRepositoryExists()
         {
             SerializeableCloudStorageCredentials credentials = new SerializeableCloudStorageCredentials { CloudStorageId = CloudStorageClientFactory.CloudStorageIdDropbox };
             SettingsModel settingsModel = new SettingsModel { Credentials = credentials };
+            var model = new SynchronizationStoryModel
+            {
+                StoryMode = StoryMode.Silent,
+                Credentials = credentials,
+            };
 
-            Mock<IStoryBoard> storyBoard = new Mock<IStoryBoard>();
-            storyBoard.
-                Setup(m => m.Session.Load<SerializeableCloudStorageCredentials>(It.Is<SynchronizationStorySessionKey>(p => p == SynchronizationStorySessionKey.CloudStorageCredentials))).
-                Returns(credentials);
             Mock<ISettingsService> settingsService = new Mock<ISettingsService>();
             settingsService.
                 Setup(m => m.LoadSettingsOrDefault()).Returns(settingsModel);
@@ -64,21 +67,21 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
                 Setup(m => m.ExistsFileAsync(It.IsAny<string>(), It.IsAny<CloudStorageCredentials>())).
                 ReturnsAsync(false);
 
+            var serviceCollection = new ServiceCollection();
+            serviceCollection
+                .AddSingleton<ISettingsService>(settingsService.Object)
+                .AddSingleton<ILanguageService>(CommonMocksAndStubs.LanguageService())
+                .AddSingleton<ICloudStorageClientFactory>(CommonMocksAndStubs.CloudStorageClientFactory(cloudStorageClient.Object));
+
             // Run step
-            var step = new ExistsCloudRepositoryStep(
-                SynchronizationStoryStepId.ExistsCloudRepository,
-                storyBoard.Object,
-                CommonMocksAndStubs.LanguageService(),
-                CommonMocksAndStubs.FeedbackService(),
-                settingsService.Object,
-                CommonMocksAndStubs.CloudStorageClientFactory(cloudStorageClient.Object));
-            Assert.DoesNotThrowAsync(step.Run);
+            var step = new ExistsCloudRepositoryStep();
+            var result = await step.RunStep(model, serviceCollection.BuildServiceProvider(), model.StoryMode);
 
             // Settings are not stored because they are equal
             settingsService.Verify(m => m.TrySaveSettingsToLocalDevice(It.IsAny<SettingsModel>()), Times.Never);
 
             // Next step is called
-            storyBoard.Verify(m => m.ContinueWith(It.Is<SynchronizationStoryStepId>(x => x == SynchronizationStoryStepId.StoreLocalRepositoryToCloudAndQuit)), Times.Once);
+            Assert.IsInstanceOf<StoreLocalRepositoryToCloudAndQuitStep>(result.NextStep);
         }
     }
 }

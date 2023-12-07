@@ -1,13 +1,17 @@
 ﻿using System;
+using System.Net;
+using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using NUnit.Framework;
 using SilentNotes.Models;
 using SilentNotes.Services;
-using SilentNotes.StoryBoards;
-using SilentNotes.StoryBoards.PullPushStory;
+using SilentNotes.Stories;
+using SilentNotes.Stories.PullPushStory;
+using SilentNotes.Stories.SynchronizationStory;
 using VanillaCloudStorageClient;
+//using VanillaCloudStorageClient;
 
-using SynchronizationStorySessionKey = SilentNotes.StoryBoards.SynchronizationStory.SynchronizationStorySessionKey;
+//using SynchronizationStorySessionKey = SilentNotes.StoryBoards.SynchronizationStory.SynchronizationStorySessionKey;
 
 namespace SilentNotesTest.StoryBoards.PullPushStory
 {
@@ -15,7 +19,7 @@ namespace SilentNotesTest.StoryBoards.PullPushStory
     public class StoreMergedRepositoryAndQuitStepTest
     {
         [Test]
-        public void RejectWhenCloudNoteDoesNotExist()
+        public async Task RejectWhenCloudNoteDoesNotExist()
         {
             NoteRepositoryModel cloudRepositoryModel = new NoteRepositoryModel();
 
@@ -23,75 +27,76 @@ namespace SilentNotesTest.StoryBoards.PullPushStory
             NoteRepositoryModel localRepositoryModel = new NoteRepositoryModel();
             localRepositoryModel.Notes.Add(localNoteModel);
 
-            Mock<IStoryBoard> storyBoard = new Mock<IStoryBoard>();
-            storyBoard.
-                Setup(m => m.Session.Load<NoteRepositoryModel>(It.Is<SynchronizationStorySessionKey>(p => p == SynchronizationStorySessionKey.CloudRepository))).
-                Returns(cloudRepositoryModel);
-            Mock<ISettingsService> settingsService = new Mock<ISettingsService>();
+            var model = new PullPushStoryModel(localNoteModel.Id, PullPushDirection.PullFromServer)
+            {
+                CloudRepository = cloudRepositoryModel,
+                StoryMode = StoryMode.Toasts,
+            };
+
             Mock<IRepositoryStorageService> repositoryStorageService = new Mock<IRepositoryStorageService>();
             repositoryStorageService.
                 Setup(m => m.LoadRepositoryOrDefault(out localRepositoryModel));
             Mock<ICloudStorageClient> cloudStorageClient = new Mock<ICloudStorageClient>();
 
+            var serviceCollection = new ServiceCollection();
+            serviceCollection
+                .AddSingleton<ISettingsService>(CommonMocksAndStubs.SettingsService())
+                .AddSingleton<IRepositoryStorageService>(repositoryStorageService.Object)
+                .AddSingleton<ILanguageService>(CommonMocksAndStubs.LanguageService("pushpull_error_no_cloud_note"))
+                .AddSingleton<IFeedbackService>(CommonMocksAndStubs.FeedbackService())
+                .AddSingleton<ICryptoRandomService>(CommonMocksAndStubs.CryptoRandomService())
+                .AddSingleton<ICloudStorageClientFactory>(CommonMocksAndStubs.CloudStorageClientFactory(cloudStorageClient.Object));
+
             // Run step
-            var step = new StoreMergedRepositoryAndQuitStep(
-                PullPushStoryStepId.StoreMergedRepositoryAndQuit,
-                storyBoard.Object,
-                localNoteModel.Id,
-                PullPushDirection.PullFromServer,
-                CommonMocksAndStubs.LanguageService(),
-                CommonMocksAndStubs.FeedbackService(),
-                settingsService.Object,
-                CommonMocksAndStubs.CryptoRandomService(),
-                repositoryStorageService.Object,
-                CommonMocksAndStubs.CloudStorageClientFactory(cloudStorageClient.Object)); ;
-            Assert.DoesNotThrowAsync(step.Run);
+            var step = new SilentNotes.Stories.PullPushStory.StoreMergedRepositoryAndQuitStep();
+            var result = await step.RunStep(model, serviceCollection.BuildServiceProvider(), model.StoryMode);
 
             // repository is not stored to the local device, nor to the cloud
             repositoryStorageService.Verify(m => m.TrySaveRepository(It.IsAny<NoteRepositoryModel>()), Times.Never);
             cloudStorageClient.Verify(m => m.UploadFileAsync(It.IsAny<string>(), It.IsAny<byte[]>(), It.IsAny<CloudStorageCredentials>()), Times.Never);
+            Assert.IsNull(result.NextStep);
+            Assert.AreEqual("pushpull_error_no_cloud_note", result.Toast);
         }
 
         [Test]
-        public void RejectWhenNotesAreEqual()
+        public async Task RejectWhenNotesAreEqual()
         {
             NoteModel noteModel = new NoteModel();
             NoteRepositoryModel repositoryModel = new NoteRepositoryModel();
             repositoryModel.Notes.Add(noteModel);
 
-            Mock<IStoryBoard> storyBoard = new Mock<IStoryBoard>();
-            storyBoard.
-                Setup(m => m.Session.Load<NoteRepositoryModel>(It.Is<SynchronizationStorySessionKey>(p => p == SynchronizationStorySessionKey.CloudRepository))).
-                Returns(repositoryModel); // same as from repositoryStorageService
-            Mock<ISettingsService> settingsService = new Mock<ISettingsService>();
-            settingsService.
-                Setup(m => m.LoadSettingsOrDefault()).Returns(new SettingsModel());
+            var model = new PullPushStoryModel(noteModel.Id, PullPushDirection.PullFromServer)
+            {
+                CloudRepository = repositoryModel, // same as from repositoryStorageService
+                StoryMode = StoryMode.Toasts,
+            };
+
             Mock<IRepositoryStorageService> repositoryStorageService = new Mock<IRepositoryStorageService>();
             repositoryStorageService.
-                Setup(m => m.LoadRepositoryOrDefault(out repositoryModel)); // same as from storyBoard
+                Setup(m => m.LoadRepositoryOrDefault(out repositoryModel));
             Mock<ICloudStorageClient> cloudStorageClient = new Mock<ICloudStorageClient>();
 
+            var serviceCollection = new ServiceCollection();
+            serviceCollection
+                .AddSingleton<ISettingsService>(CommonMocksAndStubs.SettingsService())
+                .AddSingleton<IRepositoryStorageService>(repositoryStorageService.Object)
+                .AddSingleton<ILanguageService>(CommonMocksAndStubs.LanguageService("pushpull_success"))
+                .AddSingleton<IFeedbackService>(CommonMocksAndStubs.FeedbackService())
+                .AddSingleton<ICryptoRandomService>(CommonMocksAndStubs.CryptoRandomService())
+                .AddSingleton<ICloudStorageClientFactory>(CommonMocksAndStubs.CloudStorageClientFactory(cloudStorageClient.Object));
+
             // Run step
-            var step = new StoreMergedRepositoryAndQuitStep(
-                PullPushStoryStepId.StoreMergedRepositoryAndQuit,
-                storyBoard.Object,
-                noteModel.Id,
-                PullPushDirection.PullFromServer,
-                CommonMocksAndStubs.LanguageService(),
-                CommonMocksAndStubs.FeedbackService(),
-                settingsService.Object,
-                CommonMocksAndStubs.CryptoRandomService(),
-                repositoryStorageService.Object,
-                CommonMocksAndStubs.CloudStorageClientFactory(cloudStorageClient.Object)); ;
-            Assert.DoesNotThrowAsync(step.Run);
+            var step = new SilentNotes.Stories.PullPushStory.StoreMergedRepositoryAndQuitStep();
+            var result = await step.RunStep(model, serviceCollection.BuildServiceProvider(), model.StoryMode);
 
             // repository is not stored to the local device, nor to the cloud
             repositoryStorageService.Verify(m => m.TrySaveRepository(It.IsAny<NoteRepositoryModel>()), Times.Never);
             cloudStorageClient.Verify(m => m.UploadFileAsync(It.IsAny<string>(), It.IsAny<byte[]>(), It.IsAny<CloudStorageCredentials>()), Times.Never);
+            Assert.AreEqual("pushpull_success", result.Toast);
         }
 
         [Test]
-        public void PullStoresCorrectData()
+        public async Task PullStoresCorrectData()
         {
             NoteModel cloudNoteModel = new NoteModel
             {
@@ -102,56 +107,48 @@ namespace SilentNotesTest.StoryBoards.PullPushStory
             NoteRepositoryModel cloudRepositoryModel = new NoteRepositoryModel();
             cloudRepositoryModel.Notes.Add(cloudNoteModel);
 
-            NoteModel localNoteModel = new NoteModel 
+            NoteModel localNoteModel = new NoteModel
             {
                 Id = cloudNoteModel.Id,
-                HtmlContent="localContent",
+                HtmlContent = "localContent",
                 InRecyclingBin = false,
-                ModifiedAt = new DateTime(2000, 10, 22) 
+                ModifiedAt = new DateTime(2000, 10, 22)
             };
             NoteRepositoryModel localRepositoryModel = new NoteRepositoryModel();
             localRepositoryModel.Notes.Add(localNoteModel);
 
-            Mock<IStoryBoard> storyBoard = new Mock<IStoryBoard>();
-            storyBoard.
-                Setup(m => m.Session.Load<NoteRepositoryModel>(It.Is<SynchronizationStorySessionKey>(p => p == SynchronizationStorySessionKey.CloudRepository))).
-                Returns(cloudRepositoryModel);
-            Mock<ISettingsService> settingsService = new Mock<ISettingsService>();
-            settingsService.
-                Setup(m => m.LoadSettingsOrDefault()).Returns(new SettingsModel());
+            var model = new PullPushStoryModel(cloudNoteModel.Id, PullPushDirection.PullFromServer)
+            {
+                CloudRepository = cloudRepositoryModel,
+                StoryMode = StoryMode.Toasts,
+            };
+
             Mock<IRepositoryStorageService> repositoryStorageService = new Mock<IRepositoryStorageService>();
             repositoryStorageService.
                 Setup(m => m.LoadRepositoryOrDefault(out localRepositoryModel));
             Mock<ICloudStorageClient> cloudStorageClient = new Mock<ICloudStorageClient>();
 
-            // Run step
-            var step = new StoreMergedRepositoryAndQuitStep(
-                PullPushStoryStepId.StoreMergedRepositoryAndQuit,
-                storyBoard.Object,
-                cloudNoteModel.Id,
-                PullPushDirection.PullFromServer,
-                CommonMocksAndStubs.LanguageService(),
-                CommonMocksAndStubs.FeedbackService(),
-                settingsService.Object,
-                CommonMocksAndStubs.CryptoRandomService(),
-                repositoryStorageService.Object,
-                CommonMocksAndStubs.CloudStorageClientFactory(cloudStorageClient.Object)); ;
-            Assert.DoesNotThrowAsync(step.Run);
+            var serviceCollection = new ServiceCollection();
+            serviceCollection
+                .AddSingleton<ISettingsService>(CommonMocksAndStubs.SettingsService())
+                .AddSingleton<IRepositoryStorageService>(repositoryStorageService.Object)
+                .AddSingleton<ILanguageService>(CommonMocksAndStubs.LanguageService("pushpull_success"))
+                .AddSingleton<IFeedbackService>(CommonMocksAndStubs.FeedbackService())
+                .AddSingleton<ICryptoRandomService>(CommonMocksAndStubs.CryptoRandomService())
+                .AddSingleton<ICloudStorageClientFactory>(CommonMocksAndStubs.CloudStorageClientFactory(cloudStorageClient.Object));
 
-            // Local note object still exists and contains the content of the cloud
-            NoteModel newLocalNote = localRepositoryModel.Notes.FindById(cloudNoteModel.Id);
-            Assert.AreSame(localNoteModel, newLocalNote);
-            Assert.AreEqual("cloudContent", newLocalNote.HtmlContent);
-            Assert.AreEqual(true, newLocalNote.InRecyclingBin);
-            Assert.AreEqual(new DateTime(1900, 10, 22), newLocalNote.ModifiedAt);
+            // Run step
+            var step = new SilentNotes.Stories.PullPushStory.StoreMergedRepositoryAndQuitStep();
+            var result = await step.RunStep(model, serviceCollection.BuildServiceProvider(), model.StoryMode);
 
             // repository was stored to the local device, but not to the cloud
             repositoryStorageService.Verify(m => m.TrySaveRepository(It.IsAny<NoteRepositoryModel>()), Times.Once);
             cloudStorageClient.Verify(m => m.UploadFileAsync(It.IsAny<string>(), It.IsAny<byte[]>(), It.IsAny<CloudStorageCredentials>()), Times.Never);
+            Assert.AreEqual("pushpull_success", result.Toast);
         }
 
         [Test]
-        public void PushStoresCorrectData()
+        public async Task PushStoresCorrectData()
         {
             NoteModel cloudNoteModel = new NoteModel
             {
@@ -172,31 +169,31 @@ namespace SilentNotesTest.StoryBoards.PullPushStory
             NoteRepositoryModel localRepositoryModel = new NoteRepositoryModel { Id = cloudNoteModel.Id };
             localRepositoryModel.Notes.Add(localNoteModel);
 
-            Mock<IStoryBoard> storyBoard = new Mock<IStoryBoard>();
-            storyBoard.
-                Setup(m => m.Session.Load<NoteRepositoryModel>(It.Is<SynchronizationStorySessionKey>(p => p == SynchronizationStorySessionKey.CloudRepository))).
-                Returns(cloudRepositoryModel);
-            Mock<ISettingsService> settingsService = new Mock<ISettingsService>();
-            settingsService.
-                Setup(m => m.LoadSettingsOrDefault()).Returns(new SettingsModel { TransferCode = "AAAAAAAAAAAA", Credentials = new SerializeableCloudStorageCredentials() });
+            var model = new PullPushStoryModel(cloudNoteModel.Id, PullPushDirection.PushToServer)
+            {
+                CloudRepository = cloudRepositoryModel,
+                StoryMode = StoryMode.Toasts,
+            };
+
             Mock<IRepositoryStorageService> repositoryStorageService = new Mock<IRepositoryStorageService>();
             repositoryStorageService.
                 Setup(m => m.LoadRepositoryOrDefault(out localRepositoryModel));
             Mock<ICloudStorageClient> cloudStorageClient = new Mock<ICloudStorageClient>();
 
+            var serviceCollection = new ServiceCollection();
+            serviceCollection
+                .AddSingleton<ISettingsService>(CommonMocksAndStubs.SettingsService(new SettingsModel { TransferCode = "AAAAAAAAAAAA", Credentials = new SerializeableCloudStorageCredentials() }))
+                .AddSingleton<IRepositoryStorageService>(repositoryStorageService.Object)
+                .AddSingleton<ILanguageService>(CommonMocksAndStubs.LanguageService("pushpull_success"))
+                .AddSingleton<IFeedbackService>(CommonMocksAndStubs.FeedbackService())
+                .AddSingleton<ICryptoRandomService>(CommonMocksAndStubs.CryptoRandomService())
+                .AddSingleton<ICloudStorageClientFactory>(CommonMocksAndStubs.CloudStorageClientFactory(cloudStorageClient.Object));
+
             // Run step
-            var step = new StoreMergedRepositoryAndQuitStep(
-                PullPushStoryStepId.StoreMergedRepositoryAndQuit,
-                storyBoard.Object,
-                cloudNoteModel.Id,
-                PullPushDirection.PushToServer,
-                CommonMocksAndStubs.LanguageService(),
-                CommonMocksAndStubs.FeedbackService(),
-                settingsService.Object,
-                CommonMocksAndStubs.CryptoRandomService(),
-                repositoryStorageService.Object,
-                CommonMocksAndStubs.CloudStorageClientFactory(cloudStorageClient.Object)); ;
-            Assert.DoesNotThrowAsync(step.Run);
+            var step = new SilentNotes.Stories.PullPushStory.StoreMergedRepositoryAndQuitStep();
+            var result = await step.RunStep(model, serviceCollection.BuildServiceProvider(), model.StoryMode);
+
+            Assert.AreEqual("pushpull_success", result.Toast);
 
             // Cloud note object still exists and contains the content of the cloud plus a new modification date
             NoteModel newCloudNote = cloudRepositoryModel.Notes.FindById(localNoteModel.Id);

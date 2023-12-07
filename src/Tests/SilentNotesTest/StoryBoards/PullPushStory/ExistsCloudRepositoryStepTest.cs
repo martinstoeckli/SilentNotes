@@ -1,26 +1,29 @@
-﻿using Moq;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Moq;
 using NUnit.Framework;
 using SilentNotes.Models;
 using SilentNotes.Services;
-using SilentNotes.StoryBoards;
-using SilentNotes.StoryBoards.PullPushStory;
+using SilentNotes.Stories;
+using SilentNotes.Stories.PullPushStory;
+using SilentNotes.Stories.SynchronizationStory;
 using VanillaCloudStorageClient;
 
-namespace SilentNotesTest.StoryBoards.PullPushStory
+namespace SilentNotesTest.Stories.PullPushStory
 {
     [TestFixture]
     public class ExistsCloudRepositoryStepTest
     {
         [Test]
-        public void CorrectNextStepWhenCloudRepositoryExists()
+        public async Task CorrectNextStepWhenCloudRepositoryExists()
         {
             SerializeableCloudStorageCredentials credentials = new SerializeableCloudStorageCredentials { CloudStorageId = CloudStorageClientFactory.CloudStorageIdDropbox };
             SettingsModel settingsModel = new SettingsModel { Credentials = credentials, TransferCode = "abc" };
-            StoryBoardSession session = new StoryBoardSession();
+            var model = new PullPushStoryModel(new Guid(), PullPushDirection.PullFromServer)
+            {
+                StoryMode = StoryMode.Toasts,
+                Credentials = credentials,
+            };
 
-            Mock<IStoryBoard> storyBoard = new Mock<IStoryBoard>();
-            storyBoard.
-                SetupGet(m => m.Session).Returns(session);
             Mock<ISettingsService> settingsService = new Mock<ISettingsService>();
             settingsService.
                 Setup(m => m.LoadSettingsOrDefault()).Returns(settingsModel);
@@ -29,30 +32,34 @@ namespace SilentNotesTest.StoryBoards.PullPushStory
                 Setup(m => m.ExistsFileAsync(It.IsAny<string>(), It.IsAny<CloudStorageCredentials>())).
                 ReturnsAsync(true);
 
+            var serviceCollection = new ServiceCollection();
+            serviceCollection
+                .AddSingleton<ISettingsService>(settingsService.Object)
+                .AddSingleton<ILanguageService>(CommonMocksAndStubs.LanguageService())
+                .AddSingleton<ICloudStorageClientFactory>(CommonMocksAndStubs.CloudStorageClientFactory(cloudStorageClient.Object));
+
             // Run step
-            var step = new ExistsCloudRepositoryStep(
-                PullPushStoryStepId.ExistsCloudRepository,
-                storyBoard.Object,
-                CommonMocksAndStubs.LanguageService(),
-                CommonMocksAndStubs.FeedbackService(),
-                settingsService.Object,
-                CommonMocksAndStubs.CloudStorageClientFactory(cloudStorageClient.Object));
-            Assert.DoesNotThrowAsync(step.Run);
+            var step = new SilentNotes.Stories.PullPushStory.ExistsCloudRepositoryStep();
+            var result = await step.RunStep(model, serviceCollection.BuildServiceProvider(), model.StoryMode);
 
             // Settings are not stored because no token needs to be refreshed
-            settingsService.Verify(m => m.TrySaveSettingsToLocalDevice(It.IsAny<SettingsModel>()), Times.Never);
+            settingsService.Verify(m => m.TrySaveSettingsToLocalDevice(It.Is<SettingsModel>(s => s.Credentials == credentials)), Times.Never);
 
             // Next step is called
-            storyBoard.Verify(m => m.ContinueWith(It.Is<PullPushStoryStepId>(x => x == PullPushStoryStepId.DownloadCloudRepository)), Times.Once);
+            Assert.IsInstanceOf<SilentNotes.Stories.PullPushStory.DownloadCloudRepositoryStep>(result.NextStep);
         }
 
         [Test]
-        public void QuitWhenMissingClientOrTransfercode()
+        public async Task QuitWhenMissingClientOrTransfercode()
         {
             SerializeableCloudStorageCredentials credentials = new SerializeableCloudStorageCredentials { CloudStorageId = CloudStorageClientFactory.CloudStorageIdDropbox };
             SettingsModel settingsModel = new SettingsModel { Credentials = credentials };
+            var model = new PullPushStoryModel(new Guid(), PullPushDirection.PullFromServer)
+            {
+                StoryMode = StoryMode.Toasts,
+                Credentials = credentials,
+            };
 
-            Mock<IStoryBoard> storyBoard = new Mock<IStoryBoard>();
             Mock<ISettingsService> settingsService = new Mock<ISettingsService>();
             settingsService.
                 Setup(m => m.LoadSettingsOrDefault()).Returns(settingsModel);
@@ -61,26 +68,29 @@ namespace SilentNotesTest.StoryBoards.PullPushStory
                 Setup(m => m.ExistsFileAsync(It.IsAny<string>(), It.IsAny<CloudStorageCredentials>())).
                 ReturnsAsync(true);
 
-            // Run step with missing transfercode
-            var step = new ExistsCloudRepositoryStep(
-                PullPushStoryStepId.ExistsCloudRepository,
-                storyBoard.Object,
-                CommonMocksAndStubs.LanguageService(),
-                CommonMocksAndStubs.FeedbackService(),
-                settingsService.Object,
-                CommonMocksAndStubs.CloudStorageClientFactory(cloudStorageClient.Object));
-            Assert.DoesNotThrowAsync(step.Run);
+            var serviceCollection = new ServiceCollection();
+            serviceCollection
+                .AddSingleton<ISettingsService>(settingsService.Object)
+                .AddSingleton<ILanguageService>(CommonMocksAndStubs.LanguageService("pushpull_error_need_sync_first"))
+                .AddSingleton<ICloudStorageClientFactory>(CommonMocksAndStubs.CloudStorageClientFactory(cloudStorageClient.Object));
 
-            // Next step is called
-            storyBoard.Verify(m => m.ContinueWith(It.Is<PullPushStoryStepId>(x => x == PullPushStoryStepId.DownloadCloudRepository)), Times.Never);
+            // Run step with missing transfercode
+            var step = new SilentNotes.Stories.PullPushStory.ExistsCloudRepositoryStep();
+            var result = await step.RunStep(model, serviceCollection.BuildServiceProvider(), model.StoryMode);
+
+            // Next step is not called
+            Assert.IsNull(result.NextStep);
+            Assert.AreEqual("pushpull_error_need_sync_first", result.Toast);
 
             // Run step with missing storage client
             settingsModel.TransferCode = "abc";
             settingsModel.Credentials.CloudStorageId = null;
-            Assert.DoesNotThrowAsync(step.Run);
+            step = new SilentNotes.Stories.PullPushStory.ExistsCloudRepositoryStep();
+            result = await step.RunStep(model, serviceCollection.BuildServiceProvider(), model.StoryMode);
 
-            // Next step is called
-            storyBoard.Verify(m => m.ContinueWith(It.Is<PullPushStoryStepId>(x => x == PullPushStoryStepId.DownloadCloudRepository)), Times.Never);
+            // Next step is not called
+            Assert.IsNull(result.NextStep);
+            Assert.AreEqual("pushpull_error_need_sync_first", result.Toast);
         }
     }
 }

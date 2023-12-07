@@ -14,39 +14,43 @@ namespace SilentNotesTest.Workers
         [Test]
         public void ContainsTag_FindsTagCaseInsensitive()
         {
-            NoteFilter filter = new NoteFilter(string.Empty, "mytag");
-            List<string> tagList = new List<string> { "something", "MyTag" };
+            NoteFilter filter = new NoteFilter(string.Empty, new[] { "mytag" }, NoteFilter.FilterOptions.FilterByTagList);
+            List<string> noteTagList = new List<string> { "something", "MyTag" };
 
-            Assert.IsTrue(filter.ContainsTag(tagList));
-            Assert.IsFalse(filter.ContainsTag(null));
+            Assert.IsTrue(filter.MatchTags(noteTagList));
+            Assert.IsFalse(filter.MatchTags(null));
+        }
+
+        [Test]
+        public void ContainsTag_FindsOnlyWhenAllTagsAreFound()
+        {
+            NoteFilter filter = new NoteFilter(string.Empty, new[] { "Jan", "Mar" }, NoteFilter.FilterOptions.FilterByTagList);
+
+            List<string> noteTagList = new List<string> { "Jan", "Feb", "Mar", "Apr" };
+            Assert.IsTrue(filter.MatchTags(noteTagList));
+
+            noteTagList = new List<string> { "Feb", "Mar", "Apr" };
+            Assert.IsFalse(filter.MatchTags(noteTagList));
         }
 
         [Test]
         public void ContainsTag_AcceptsNullParameters()
         {
-            NoteFilter filter = new NoteFilter(string.Empty, null);
+            NoteFilter filter = new NoteFilter(string.Empty, null, NoteFilter.FilterOptions.FilterByTagList);
 
-            Assert.IsTrue(filter.ContainsTag(null));
+            Assert.IsTrue(filter.MatchTags(null));
         }
 
         [Test]
         public void ContainsTag_Applies_SpecialTagNotesWithoutTags()
         {
-            NoteFilter filter = new NoteFilter(string.Empty, NoteFilter.SpecialTags.NotesWithoutTags);
+            NoteFilter filter = new NoteFilter(string.Empty, null, NoteFilter.FilterOptions.NotesWithoutTags);
 
             List<string> nonEmptyTagList = new List<string> { "something", "MyTag" };
-            Assert.IsFalse(filter.ContainsTag(nonEmptyTagList));
+            Assert.IsFalse(filter.MatchTags(nonEmptyTagList));
 
             List<string> emptyTagList = new List<string>();
-            Assert.IsTrue(filter.ContainsTag(emptyTagList));
-        }
-
-        [Test]
-        public void IsSpecialTag_RecognizesTag()
-        {
-            Assert.IsTrue(NoteFilter.SpecialTags.IsSpecialTag(NoteFilter.SpecialTags.AllNotes));
-            Assert.IsTrue(NoteFilter.SpecialTags.IsSpecialTag(NoteFilter.SpecialTags.NotesWithoutTags));
-            Assert.IsFalse(NoteFilter.SpecialTags.IsSpecialTag("real tag"));
+            Assert.IsTrue(filter.MatchTags(emptyTagList));
         }
     }
 }

@@ -1,0 +1,56 @@
+﻿@page "/cloudstoragechoice"
+@inherits PageBase
+
+@using SilentNotes.Models
+@using SilentNotes.ViewModels
+@using SilentNotes.Services
+
+@inject ILanguageService LanguageService
+@inject ISvgIconService IconService
+@inject IJSRuntime JSRuntime
+@inject INavigationService Navigation
+
+@* Main menu *@
+<MudAppBar Class="flex-none" Fixed="false" Dense="true" WrapContent="false">
+	<MudIconButton OnClick="@(() => Navigation.NavigateTo(BackRoute))" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" Edge="Edge.Start" />
+</MudAppBar>
+
+@* body *@
+<div id="content" class="flex-1 px-1 py-3">
+	<MudContainer Class="ms-0" MaxWidth="MaxWidth.ExtraSmall">
+		<h1 class="h-colored mb-3">@LanguageService["cloud_service_choice"]</h1>
+
+		<MudStack Row="false" Spacing="0"> @* Spacing is ignored in Android, do it on the items *@
+			@foreach (var serviceChoice in ViewModel.ServiceChoices)
+			{
+				<MudButton OnClick="@(() => ViewModel.ChooseCommand.Execute(serviceChoice.CloudStorageId))"
+					Class="justify-start mb-2 py-2" Variant="Variant.Outlined" Color="Color.Default" FullWidth="true">
+					<MudStack Row="true" Class="d-flex align-center">
+						<MudImage Src="@serviceChoice.Icon" Width="64" Height="32" Class="mr-2"/>
+						<MudText>@serviceChoice.Title</MudText>
+					</MudStack>
+				</MudButton>
+			}
+		</MudStack>
+	</MudContainer>
+</div>
+
+@code {
+	protected override void OnInitialized()
+	{
+		BackRoute = RouteNames.Home;
+		ViewModel = new CloudStorageChoiceViewModel(Ioc.Instance);
+	}
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			await KeyboardShortcuts.InitializeAsync(JSRuntime);
+			KeyboardShortcuts
+				.AddShortcut(new SnKeyboardShortcut(SnKey.Escape), () => Navigation.NavigateTo(BackRoute));
+		}
+	}
+
+	private CloudStorageChoiceViewModel ViewModel { get; set; }
+}

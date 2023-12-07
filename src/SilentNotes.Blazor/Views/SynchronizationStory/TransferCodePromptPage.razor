@@ -1,0 +1,62 @@
+﻿@page "/transfercodeprompt"
+@inherits PageBase
+
+@using SilentNotes.Models
+@using SilentNotes.ViewModels
+@using SilentNotes.Services
+
+@inject ILanguageService LanguageService
+@inject ISvgIconService IconService
+@inject IJSRuntime JSRuntime
+@inject INavigationService Navigation
+
+@* Main menu *@
+<MudAppBar Class="flex-none" Fixed="false" Dense="true" WrapContent="false">
+	<MudIconButton OnClick="@(() => Navigation.NavigateTo(BackRoute))" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" Edge="Edge.Start" />
+</MudAppBar>
+
+@* watermark image *@
+<MudIcon Class="background-icon" Icon="@IconService[IconNames.Key]" Style="@($"right:0; top:-50px;")" />
+
+@* body *@
+<div id="content" class="flex-1 px-1 py-3">
+	<MudContainer Class="ms-0" MaxWidth="MaxWidth.Medium">
+		<h1 class="h-colored">@LanguageService["transfer_code"]</h1>
+
+		<p class="my-4">@LanguageService.LoadTextFmt("transfer_code_required", @LanguageService["show_transfer_code"])</p>
+
+		<MudForm>
+			<MudTextFieldEx @bind-Value="ViewModel.Code"
+				Label="@LanguageService["transfer_code"]"
+				Variant="Variant.Outlined" />
+		</MudForm>
+
+		<MudStack Class="my-4" Row="true" Justify="Justify.FlexEnd" Spacing="1">
+			<MudButton OnClick="@(() => ViewModel.CancelCommand.Execute(null))" Color="Color.Default" Variant="Variant.Filled">@LanguageService["cancel"]</MudButton>
+			<MudButton @ref="_continueButton" OnClick="@(() => ViewModel.OkCommand.Execute(null))" Color="Color.Primary" Variant="Variant.Filled">@LanguageService["continue"]</MudButton>
+		</MudStack>
+	</MudContainer>
+</div>
+
+	@code {
+	private MudBaseButton _continueButton;
+
+	protected override void OnInitialized()
+	{
+		BackRoute = RouteNames.Home;
+		ViewModel = new TransferCodePromptViewModel(Ioc.Instance);
+	}
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			await KeyboardShortcuts.InitializeAsync(JSRuntime);
+			KeyboardShortcuts
+				.AddShortcut(new SnKeyboardShortcut(SnKey.Escape), () => Navigation.NavigateTo(BackRoute))
+				.AddShortcut(new SnKeyboardShortcut(SnKey.Enter), async () => await SnKeyboardShortcuts.SimulateClickAsync(_continueButton));
+		}
+	}
+
+	private TransferCodePromptViewModel ViewModel { get; set; }
+}

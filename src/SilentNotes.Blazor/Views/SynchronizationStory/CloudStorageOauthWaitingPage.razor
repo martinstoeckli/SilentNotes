@@ -1,0 +1,51 @@
+﻿@page "/cloudstorageoauthwaiting"
+@inherits PageBase
+
+@using SilentNotes.Models
+@using SilentNotes.ViewModels
+@using SilentNotes.Services
+
+@inject ILanguageService LanguageService
+@inject ISvgIconService IconService
+@inject IJSRuntime JSRuntime
+@inject INavigationService Navigation
+@inject IFeedbackService FeedbackService
+@inject ISynchronizationService SynchronizationService
+
+@* Main menu *@
+<MudAppBar Class="flex-none" Fixed="false" Dense="true" WrapContent="false">
+	<MudIconButton OnClick="@(() => Navigation.NavigateTo(BackRoute))" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" Edge="Edge.Start" />
+</MudAppBar>
+
+@* body *@
+<div id="content" class="flex-1 px-1 py-3">
+	<MudContainer Class="ms-0" MaxWidth="MaxWidth.Medium">
+		<MudAlert Class="my-4" Severity="Severity.Info">@LanguageService["cloud_oauth_code_desc"]</MudAlert>
+	</MudContainer>
+</div>
+
+	@code {
+	protected override void OnInitialized()
+	{
+		BackRoute = RouteNames.CloudStorageChoice;
+	}
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			await KeyboardShortcuts.InitializeAsync(JSRuntime);
+			KeyboardShortcuts
+				.AddShortcut(new SnKeyboardShortcut(SnKey.Escape), () => Navigation.NavigateTo(BackRoute));
+			SynchronizationService.IsWaitingForOAuthRedirect = true;
+			FeedbackService.SetBusyIndicatorVisible(true, true);
+		}
+	}
+
+	protected override void OnClosingPage()
+	{
+		base.OnClosingPage();
+		SynchronizationService.IsWaitingForOAuthRedirect = false;
+		FeedbackService.SetBusyIndicatorVisible(false, false);
+	}
+}

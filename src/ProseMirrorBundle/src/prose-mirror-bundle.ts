@@ -265,27 +265,14 @@ export function selectWordAtCurrentPosition(editor: Editor): string {
 
   let textToPos = selection.$to.parentOffset;
   let toRight = 0;
+  if (textFromPos != textToPos)
+    toRight--; // for the case that the selection includes a trailing whitespace (after a double click)
   while ((textToPos + toRight < text.length) && !isWhitespace(text[textToPos + toRight])) {
       toRight++;
   }
 
   editor.commands.setTextSelection({ from: selection.$from.pos - toLeft, to: selection.$to.pos + toRight });
   return text.substring(textFromPos - toLeft, textToPos + toRight);
-}
-
-/**
- * Tries to guess how an url with the given text would look like.
- * @param {string}  text - A text which may or may not contain an url.
- * @returns {string} A suggestion for an url derrived from the text.
-*/
-export function makeLinkSuggestion(text: string): string {
-  if (!isValidUrl(text)) {
-    text = 'https://' + text;
-    if (!isValidUrl(text)) {
-        text = 'https://';
-    }
-  }
-  return text;
 }
 
 /*

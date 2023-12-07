@@ -1,0 +1,77 @@
+﻿@page "/mergechoice"
+@inherits PageBase
+
+@using SilentNotes.Models
+@using SilentNotes.ViewModels
+@using SilentNotes.Services
+
+@inject ILanguageService LanguageService
+@inject ISvgIconService IconService
+@inject IVersionService VersionService
+@inject INativeBrowserService NativeBrowserService
+@inject IJSRuntime JSRuntime
+@inject INavigationService Navigation
+
+@* Main menu *@
+<MudAppBar Class="flex-none" Fixed="false" Dense="true" WrapContent="false">
+	<MudIconButton OnClick="@(() => Navigation.NavigateTo(BackRoute))" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" Edge="Edge.Start" />
+</MudAppBar>
+
+@* body *@
+<div id="content" class="flex-1 px-1 py-3">
+	<MudContainer Class="ms-0" MaxWidth="MaxWidth.ExtraSmall">
+		<h1 class="h-colored mb-6">@LanguageService["cloud_service_choice"]</h1>
+
+		<MudStack Row="false" Spacing="0"> @* Spacing is ignored in Android, do it on the items *@
+			<MudButton OnClick="@(() => ViewModel.UseMergedRepositoryCommand.Execute(null))"
+				Class="justify-start mb-2 py-2" Variant="Variant.Outlined" Color="Color.Default" FullWidth="true"
+				StartIcon="@IconService.GetSvgLink(IconNames.ArrowRightBold)" IconColor="Color.Secondary">
+				@LanguageService["sync_repository_merge"]
+			</MudButton>
+
+			<MudButton OnClick="@(() => ViewModel.UseCloudRepositoryCommand.Execute(null))"
+				Class="justify-start mb-2 py-2" Variant="Variant.Outlined" Color="Color.Default" FullWidth="true"
+				StartIcon="@IconService.GetSvgLink(IconNames.ArrowRightBold)" IconColor="Color.Secondary">
+				@LanguageService["sync_repository_cloud"]
+			</MudButton>
+
+			<MudButton OnClick="@(() => ViewModel.UseLocalRepositoryCommand.Execute(null))"
+				Class="justify-start mb-2 py-2" Variant="Variant.Outlined" Color="Color.Default" FullWidth="true"
+				StartIcon="@IconService.GetSvgLink(IconNames.Alert)" IconColor="Color.Secondary">
+				@LanguageService["sync_repository_device"]
+			</MudButton>
+		</MudStack>
+
+		<MudStack Class="my-4" Row="true" Justify="Justify.FlexEnd" Spacing="1">
+			<MudButton OnClick="@(() => ViewModel.CancelCommand.Execute(null))" Color="Color.Default" Variant="Variant.Filled">@LanguageService["cancel"]</MudButton>
+		</MudStack>
+	</MudContainer>
+</div>
+
+@* Declare icons which can be reused multiple times, to reduce page size *@
+<div hidden>
+	@IconService.EmbedLinkableSvgs( new [] {
+		IconNames.Alert,
+		IconNames.ArrowRightBold,
+	});
+</div>
+
+@code {
+	protected override void OnInitialized()
+	{
+		BackRoute = RouteNames.Home;
+		ViewModel = new MergeChoiceViewModel(Ioc.Instance);
+	}
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			await KeyboardShortcuts.InitializeAsync(JSRuntime);
+			KeyboardShortcuts
+				.AddShortcut(new SnKeyboardShortcut(SnKey.Escape), () => Navigation.NavigateTo(BackRoute));
+		}
+	}
+
+	private MergeChoiceViewModel ViewModel { get; set; }
+}

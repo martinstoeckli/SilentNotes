@@ -1,0 +1,135 @@
+﻿@page "/cloudstorageaccount"
+@inherits PageBase
+
+@using System.Security
+@using SilentNotes.Models
+@using SilentNotes.ViewModels
+@using SilentNotes.Services
+
+@inject ILanguageService LanguageService
+@inject ISvgIconService IconService
+@inject IJSRuntime JSRuntime
+@inject INavigationService Navigation
+@inject IFeedbackService FeedbackService
+@inject ISynchronizationService SynchronizationService
+
+@* Main menu *@
+<MudAppBar Class="flex-none" Fixed="false" Dense="true" WrapContent="false">
+	<MudIconButton OnClick="@(() => Navigation.NavigateTo(BackRoute))" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" Edge="Edge.Start" />
+</MudAppBar>
+
+@* watermark image *@
+<MudIcon Class="background-icon" Icon="@IconService[IconNames.Settings]" Style="@($"right:-128px; top:-154px;")" />
+
+@* body *@
+<div id="content" class="flex-1 px-1 py-3">
+	<MudContainer Class="ms-0" MaxWidth="MaxWidth.Small">
+		<h1 class="h-colored mb-6">@LanguageService["cloud_service_credentials"]</h1>
+
+		<MudForm>
+			<MudAlert Severity="Severity.Normal" NoIcon="true">@CloudServiceName</MudAlert>
+
+			@if (ViewModel.NeedsUrl)
+			{
+				<MudTextFieldEx @bind-Value="ViewModel.Url"
+					Label="@LanguageService["cloud_url"]"
+					Variant="Variant.Outlined"
+					Adornment="Adornment.End" AdornmentIcon="@IconService.GetSvgLink(IconNames.LinkVariant)" />
+			}
+
+			@if (ViewModel.NeedsUsername)
+			{
+				<MudTextFieldEx @bind-Value="ViewModel.Username"
+					Label="@LanguageService["cloud_username"]"
+					Variant="Variant.Outlined" />
+			}
+
+			@if (ViewModel.NeedsPassword)
+			{
+				<MudTextFieldEx T="SecureString" @bind-Value="ViewModel.Password"
+					Label="@LanguageService["cloud_password"]"
+					Converter="@_secureStringConverter"
+					Variant="Variant.Outlined" InputType="@PasswordInputType"
+					Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="@(() => IsPasswordVisible = !IsPasswordVisible)" />
+			}
+
+			@if (ViewModel.NeedsSecureFlag)
+			{
+				<MudCheckBox @bind-Checked="@ViewModel.Secure" Label="@LanguageService["cloud_secure"]" />
+			}
+
+			@if (ViewModel.NeedsAcceptUnsafeCertificate)
+			{
+				<MudCheckBox @bind-Checked="@ViewModel.AcceptInvalidCertificate" Label="@LanguageService["cloud_accept_invalid_certificate"]" />
+			}
+		</MudForm>
+
+		<MudStack Class="my-4" Row="true" Justify="Justify.FlexEnd" Spacing="1">
+			<MudButton OnClick="@(() => ViewModel.CancelCommand.Execute(null))" Color="Color.Default" Variant="Variant.Filled">@LanguageService["cancel"]</MudButton>
+			<MudButton OnClick="@(() => ViewModel.OkCommand.Execute(null))" Color="Color.Primary" Variant="Variant.Filled">@LanguageService["continue"]</MudButton>
+		</MudStack>
+	</MudContainer>
+</div>
+
+@* Declare icons which can be reused multiple times, to reduce page size *@
+<div hidden>
+	@IconService.EmbedLinkableSvgs( new [] {
+		IconNames.LinkVariant,
+	});
+</div>
+
+@code {
+	private SecureStringConverter _secureStringConverter;
+
+	protected override void OnInitialized()
+	{
+		BackRoute = RouteNames.CloudStorageChoice;
+		var credentials = SynchronizationService.ManualSynchronization.Credentials;
+		ViewModel = new CloudStorageAccountViewModel(Ioc.Instance, credentials);
+		_secureStringConverter = new SecureStringConverter();
+	}
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			await KeyboardShortcuts.InitializeAsync(JSRuntime);
+			KeyboardShortcuts
+				.AddShortcut(new SnKeyboardShortcut(SnKey.Escape), () => Navigation.NavigateTo(BackRoute));
+		}
+	}
+
+	protected override void OnClosingPage()
+	{
+		base.OnClosingPage();
+		FeedbackService.SetBusyIndicatorVisible(false, false);
+	}
+
+	private string CloudServiceName
+	{
+		get { return string.Format("{0}: {1}", @LanguageService["cloud_service"], ViewModel.CloudServiceName); }
+	}
+
+	/// <summary>
+	/// Gets or sets a value indicating whether the plaintext of the password is shown.
+	/// </summary>
+	private bool IsPasswordVisible { get; set; }
+
+	/// <summary>
+	/// Gets the type for the password input field (dots/plaintext).
+	/// </summary>
+	private InputType PasswordInputType
+	{
+		get { return IsPasswordVisible ? InputType.Text : InputType.Password; }
+	}
+
+	/// <summary>
+	/// Gets the "password visible" icon for the password input field.
+	/// </summary>
+	private string PasswordInputIcon
+	{
+		get { return IsPasswordVisible ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff; }
+	}
+
+	private CloudStorageAccountViewModel ViewModel { get; set; }
+}

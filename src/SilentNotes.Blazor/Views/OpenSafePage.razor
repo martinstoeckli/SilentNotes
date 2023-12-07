@@ -1,0 +1,174 @@
+﻿@page "/opensafe"
+@page "/opensafe/target/{TargetRoute}"
+@inherits PageBase
+
+@using System.ComponentModel;
+@using System.Security
+@using SilentNotes.Models
+@using SilentNotes.ViewModels
+@using SilentNotes.Views
+@using SilentNotes.Services
+
+@inject ILanguageService LanguageService
+@inject ISvgIconService IconService
+@inject ISettingsService SettingsService
+@inject IFeedbackService FeedbackService
+@inject ICryptoRandomService RandomService
+@inject IRepositoryStorageService RepositoryService
+@inject IJSRuntime JSRuntime
+@inject INavigationService Navigation
+
+<style type="text/css">
+</style>
+
+@* Main menu *@
+<MudAppBar Class="flex-none" Fixed="true" Dense="true" WrapContent="false">
+	<MudIconButton OnClick="@(() => Navigation.NavigateTo(RouteNames.Home))" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" Edge="Edge.Start" />
+
+	<MudSpacer/>
+
+	@* Overflow menu *@
+	<MudMenu @ref="_overflowMenu" Dense="true" AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight">
+		<ActivatorContent>
+			<MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" />
+		</ActivatorContent>
+		<ChildContent>
+			<MudMenuItem OnAction="@(() => ViewModel.ResetSafeCommand.Execute(_overflowMenu))"
+				Icon="@IconService.GetSvgLink(IconNames.SafeSquareOutline)" IconColor="Color.Error"
+				Disabled="!ViewModel.SafeExists">@LanguageService["safe_reset"]</MudMenuItem>
+		</ChildContent>
+	</MudMenu>
+</MudAppBar>
+
+@* watermark image *@
+<MudIcon Class="background-icon" Icon="@IconService[IconNames.SafeSquareOutline]" Style="@($"right:-110px; top:-160px;")" />
+
+@* body *@
+<MudMainContent>
+	<MudContainer Class="ms-0" MaxWidth="MaxWidth.Medium">
+		<div id="content" class="py-3">
+			@if (ViewModel.SafeExists)
+			{
+				<h1 class="h-colored">@LanguageService["safe_open"]</h1>
+				<p class="my-4">@LanguageService["safe_open_existing"]</p>
+			}
+			else
+			{
+				<h1 class="h-colored">@LanguageService["safe_new"]</h1>
+				<p class="my-4">@LanguageService["safe_open_new"]</p>
+			}
+
+			<MudForm>
+				<MudTextFieldEx T="SecureString" @bind-Value="ViewModel.Password"
+					AutoFocus="true"
+					Label="@LanguageService["cloud_password"]"
+					Converter="@_secureStringConverter"
+					Variant="Variant.Outlined" InputType="@PasswordInputType"
+					Error="@ViewModel.HasPasswordError"
+					ErrorText="@ViewModel.PasswordErrorText"
+					Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="@(() => IsPasswordVisible = !IsPasswordVisible)" />
+
+				@if (!ViewModel.SafeExists)
+				{
+					<MudTextFieldEx @bind-Value="ViewModel.PasswordConfirmation"
+						Label="@LanguageService["safe_confirm_password"]"
+						Converter="@_secureStringConverter"
+						Variant="Variant.Outlined" InputType="@PasswordInputType"
+						Error="@ViewModel.HasPasswordConfirmationError"
+						ErrorText="@LanguageService["password_confirmation_error"]" />
+				}
+			</MudForm>
+
+			<MudStack Class="my-4" Row="true" Justify="Justify.FlexEnd" Spacing="1">
+				<MudButton OnClick="@(() => Navigation.NavigateTo(RouteNames.Home))" Color="Color.Default" Variant="Variant.Filled">@LanguageService["cancel"]</MudButton>
+				<MudButton @ref="_okButton" OnClick="@(() => ViewModel.OkCommand.Execute(null))" Color="Color.Primary" Variant="Variant.Filled">@LanguageService["ok"]</MudButton>
+			</MudStack>
+
+			@if (!ViewModel.SafeExists)
+			{
+				<MudAlert Class="my-4" Severity="Severity.Info" Elevation="1">@LanguageService["safe_password_requirement"]</MudAlert>
+			}
+		</div>
+	</MudContainer>
+</MudMainContent>
+
+@* Declare icons which can be reused multiple times, to reduce page size *@
+<div hidden>
+	@IconService.EmbedLinkableSvgs( new [] {
+		IconNames.SafeSquareOutline,
+	});
+</div>
+
+@code {
+	private MudMenu _overflowMenu;
+	private MudBaseButton _okButton;
+	private SecureStringConverter _secureStringConverter;
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			await KeyboardShortcuts.InitializeAsync(JSRuntime);
+			KeyboardShortcuts
+				.SetCloseMenuShortcut(new SnKeyboardShortcut(SnKey.Escape), OnCloseMenuOrDialog)
+				.AddShortcut(new SnKeyboardShortcut(SnKey.Escape), () => Navigation.NavigateTo(RouteNames.Home))
+				.AddShortcut(new SnKeyboardShortcut(SnKey.Enter), async () => await SnKeyboardShortcuts.SimulateClickAsync(_okButton));
+		}
+	}
+
+	protected override void OnParametersSet()
+	{
+		IsPasswordVisible = false;
+		ViewModel = new OpenSafeViewModel(LanguageService, Navigation, FeedbackService, RandomService, SettingsService, RepositoryService, TargetRoute);
+		_secureStringConverter = new SecureStringConverter();
+	}
+
+	protected override void OnStoringUnsavedData(StoreUnsavedDataMessage message)
+	{
+		base.OnStoringUnsavedData(message);
+		ViewModel.OnStoringUnsavedData();
+	}
+
+	private OpenSafeViewModel ViewModel { get; set; }
+
+	/// <inheritdoc/>
+	protected override bool OnCloseMenuOrDialog()
+	{
+		base.OnCloseMenuOrDialog();
+		bool result = false;
+
+		if (_overflowMenu.IsOpen)
+		{
+			_overflowMenu.CloseMenu();
+			result = true;
+		}
+
+		if (result)
+			StateHasChanged();
+		return result;
+	}
+
+	[Parameter]
+	public string TargetRoute { get; set; } = default!;
+
+	/// <summary>
+	/// Gets or sets a value indicating whether the plaintext of the password is shown.
+	/// </summary>
+	private bool IsPasswordVisible { get; set; }
+
+	/// <summary>
+	/// Gets the type for the password input field (dots/plaintext).
+	/// </summary>
+	private InputType PasswordInputType
+	{
+		get { return IsPasswordVisible ? InputType.Text : InputType.Password; }
+	}
+
+	/// <summary>
+	/// Gets the "password visible" icon for the password input field.
+	/// </summary>
+	private string PasswordInputIcon
+	{
+		get { return IsPasswordVisible ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff; }
+	}
+}

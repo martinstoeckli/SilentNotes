@@ -1,0 +1,67 @@
+﻿@page "/export"
+@inherits PageBase
+
+@using SilentNotes.Models
+@using SilentNotes.ViewModels
+@using SilentNotes.Services
+
+@inject ILanguageService LanguageService
+@inject INavigationService NavigationService
+@inject IFeedbackService FeedbackService
+@inject ISvgIconService IconService
+@inject IRepositoryStorageService RepositoryStorageService
+@inject ICryptoRandomService CryptoRandomSource
+@inject IFolderPickerService FolderPickerService
+@inject IJSRuntime JSRuntime
+@inject INavigationService Navigation
+
+@* Main menu *@
+<MudAppBar Class="flex-none" Fixed="true" Dense="true" WrapContent="false">
+	<MudIconButton OnClick="@(() => Navigation.NavigateTo(BackRoute))" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" Edge="Edge.Start" />
+</MudAppBar>
+
+@* watermark image *@
+<MudIcon Class="background-icon" Icon="@IconService[IconNames.Export]" Style="@($"right:-30px; top:-100px;")" />
+
+@* body *@
+<MudMainContent>
+	<MudContainer Class="ms-0" MaxWidth="MaxWidth.Medium">
+		<div id="content" class="py-3">
+			<h1 class="h-colored">@LanguageService["show_export"]</h1>
+
+			<p class="my-4">@LanguageService["export_desc"]</p>
+
+			<MudForm>
+				<MudCheckBox @bind-Checked="@ViewModel.ExportUnprotectedNotes" Dense="true" Label="@LanguageService["export_unencrypted"]"></MudCheckBox>
+				<MudCheckBox @bind-Checked="@ViewModel.ExportProtectedNotes" Disabled="!ViewModel.HasExportableProtectedNotes" Dense="true" Label="@LanguageService["export_encrypted"]"></MudCheckBox>
+			</MudForm>
+
+			<MudStack Class="my-4" Row="true" Justify="Justify.FlexEnd" Spacing="1">
+				<MudButton OnClick="@(() => Navigation.NavigateTo(BackRoute))" Color="Color.Default" Variant="Variant.Filled">@LanguageService["cancel"]</MudButton>
+				<MudButton @ref="_okButton" OnClick="@(() => ViewModel.OkCommand.Execute(null))" Disabled="ViewModel.OkCommandDisabled" Color="Color.Primary" Variant="Variant.Filled">@LanguageService["ok"]</MudButton>
+			</MudStack>
+		</div>
+	</MudContainer>
+</MudMainContent>
+
+@code {
+	private MudBaseButton _okButton;
+
+	protected override void OnInitialized()
+	{
+		ViewModel = new ExportViewModel(NavigationService, LanguageService, FeedbackService, CryptoRandomSource, RepositoryStorageService, FolderPickerService);
+	}
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			await KeyboardShortcuts.InitializeAsync(JSRuntime);
+			KeyboardShortcuts
+				.AddShortcut(new SnKeyboardShortcut(SnKey.Escape), () => Navigation.NavigateTo(BackRoute))
+				.AddShortcut(new SnKeyboardShortcut(SnKey.Enter), async () => await SnKeyboardShortcuts.SimulateClickAsync(_okButton));
+		}
+	}
+
+	private ExportViewModel ViewModel { get; set; }
+}

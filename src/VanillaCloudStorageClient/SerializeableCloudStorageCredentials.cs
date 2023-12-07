@@ -5,8 +5,8 @@
 
 using System;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 using System.Xml.Serialization;
-using Newtonsoft.Json;
 
 namespace VanillaCloudStorageClient
 {
@@ -72,7 +72,7 @@ namespace VanillaCloudStorageClient
         /// Gets or sets the serializable <see cref="CloudStorageCredentials.CloudStorageId"/>.
         /// </summary>
         [XmlElement("cloud_storage_id")]
-        [JsonProperty("cloud_storage_id")]
+        [JsonPropertyName("cloud_storage_id")]
         [DataMember(Name = "cloud_storage_id")]
         public string SerializeableCloudStorageId { get; set; }
 
@@ -80,7 +80,7 @@ namespace VanillaCloudStorageClient
         /// Gets or sets the serializable <see cref="CloudStorageToken.AccessToken"/>.
         /// </summary>
         [XmlElement("access_token")]
-        [JsonProperty("access_token")]
+        [JsonPropertyName("access_token")]
         [DataMember(EmitDefaultValue = false, Name = "access_token")]
         public string SerializeableAccessToken { get; set; }
         [JsonIgnore]
@@ -90,7 +90,7 @@ namespace VanillaCloudStorageClient
         /// Gets or sets the serializable <see cref="CloudStorageToken.ExpiryDate"/>.
         /// </summary>
         [XmlElement("token_expiry_date")]
-        [JsonProperty("token_expiry_date")]
+        [JsonPropertyName("token_expiry_date")]
         [DataMember(EmitDefaultValue = false, Name = "token_expiry_date")]
         public DateTime? SerializeableExpiryDate { get; set; }
         [JsonIgnore]
@@ -100,7 +100,7 @@ namespace VanillaCloudStorageClient
         /// Gets or sets the serializable <see cref="CloudStorageToken.RefreshToken"/>.
         /// </summary>
         [XmlElement("refresh_token")]
-        [JsonProperty("refresh_token")]
+        [JsonPropertyName("refresh_token")]
         [DataMember(EmitDefaultValue = false, Name = "refresh_token")]
         public string SerializeableRefreshToken { get; set; }
         [JsonIgnore]
@@ -110,7 +110,7 @@ namespace VanillaCloudStorageClient
         /// Gets or sets the serializable <see cref="CloudStorageCredentials.Username"/>.
         /// </summary>
         [XmlElement("username")]
-        [JsonProperty("username")]
+        [JsonPropertyName("username")]
         [DataMember(EmitDefaultValue = false, Name = "username")]
         public string SerializeableUsername { get; set; }
         [JsonIgnore]
@@ -120,7 +120,7 @@ namespace VanillaCloudStorageClient
         /// Gets or sets the serializable <see cref="CloudStorageCredentials.Password"/>.
         /// </summary>
         [XmlElement("password")]
-        [JsonProperty("password")]
+        [JsonPropertyName("password")]
         [DataMember(EmitDefaultValue = false, Name = "password")]
         public string SerializeablePassword { get; set; }
         [JsonIgnore]
@@ -130,7 +130,7 @@ namespace VanillaCloudStorageClient
         /// Gets or sets the url for login if necessary, otherwise this is null.
         /// </summary>
         [XmlElement("url")]
-        [JsonProperty("url")]
+        [JsonPropertyName("url")]
         [DataMember(EmitDefaultValue = false, Name = "url")]
         public string SerializeableUrl { get; set; }
         [JsonIgnore]
@@ -141,7 +141,7 @@ namespace VanillaCloudStorageClient
         /// This value is currently used onyl by the FTP provider, others will ignore this value.
         /// </summary>
         [XmlElement("secure")]
-        [JsonProperty("secure")]
+        [JsonPropertyName("secure")]
         [DataMember(EmitDefaultValue = false, Name = "secure")]
         public bool SerializeableSecure { get; set; }
         [JsonIgnore]
@@ -153,7 +153,7 @@ namespace VanillaCloudStorageClient
         /// This value is currently used onyl by the FTP provider, others will ignore this value.
         /// </summary>
         [XmlElement("accept_invalid_certificate")]
-        [JsonProperty("accept_invalid_certificate")]
+        [JsonPropertyName("accept_invalid_certificate")]
         [DataMember(EmitDefaultValue = false, Name = "accept_invalid_certificate")]
         public bool SerializeableAcceptInvalidCertificate { get; set; }
         [JsonIgnore]

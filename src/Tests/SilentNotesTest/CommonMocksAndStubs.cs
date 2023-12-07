@@ -21,12 +21,50 @@ namespace SilentNotesTest
         }
 
         /// <summary>
+        /// Creates an <see cref="ILanguageService"/> mock which, instead of returning a localized
+        /// text, returns the resource key itself.
+        /// </summary>
+        /// <param name="key">The key of the language resource.</param>
+        /// <returns>Mock for a language service.</returns>
+        public static ILanguageService LanguageService(string key)
+        {
+            return LanguageService(new string[] { key });
+        }
+
+        /// <summary>
+        /// Creates an <see cref="ILanguageService"/> mock which, instead of returning a localized
+        /// text, returns the resource key itself.
+        /// </summary>
+        /// <param name="keys">The keys of the language resources.</param>
+        /// <returns>Mock for a language service.</returns>
+        public static ILanguageService LanguageService(IEnumerable<string> keys)
+        {
+            var result = new Mock<ILanguageService>();
+            foreach (string keyAndText in keys)
+            {
+                result
+                    .SetupGet(m => m[It.Is<string>(k => k == keyAndText)])
+                    .Returns(keyAndText);
+            }
+            return result.Object;
+        }
+
+        /// <summary>
         /// Creates a dummy <see cref="IFeedbackService"/> which does nothing.
         /// </summary>
         /// <returns>Dummy service doing nothing.</returns>
         public static IFeedbackService FeedbackService()
         {
             return new DummyFeedbackService();
+        }
+
+        /// <summary>
+        /// Creates a <see cref="ISettingsService"/> mock.
+        /// </summary>
+        /// <returns>Mock for settings service.</returns>
+        public static ISettingsService SettingsService()
+        {
+            return SettingsService(new SettingsModel());
         }
 
         /// <summary>

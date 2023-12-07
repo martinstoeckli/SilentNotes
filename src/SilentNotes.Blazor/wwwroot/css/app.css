@@ -1,0 +1,346 @@
+﻿:root {
+	--note-handle-mx: 10px;
+	--note-handle-my: 8px;
+	--css-grid-topic-icon-width: 30px;
+}
+
+/*html { font-size: 14px; }*/
+body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji" }
+h1 { font-size: 1.7em; }
+h2 { font-size: 1.3em; }
+h3 { font-size: 1.1em; }
+td { word-wrap: anywhere; } /* table should not exceed device width */
+
+#progress {
+	position: fixed;
+	top: 50%;
+	left: calc(50% - 28px);
+	pointer-events: none;
+}
+
+.background-icon {
+	position: fixed;
+	display: inline-block;
+	right: 0;
+	top: 0;
+	width: 360px;
+	height: 360px;
+	z-index: -1;
+}
+
+.secondary-app-bar {
+	right: 0;
+	left: auto !important; /* overwrite calculated left, not adapting to browser width */
+	margin: 0;
+	padding: 48px 24px 0 4px;
+}
+
+.fab-position {
+	position: fixed;
+	right: 2em;
+	bottom: 2em;
+}
+
+.filter-input, .filter-input:hover, .filter-input:before, .filter-input:after, .filter-input:focus, .filter-input:focus-within {
+	border-bottom-style: none !important;
+}
+
+.note-list {
+	display: flex;
+	flex-wrap: wrap;
+}
+.note-item {
+	display: flex;
+	width: 100%;
+	padding: 0 6px; /* flex gap not working on Android 7, only padding and margin */
+	margin: 6px 0;
+}
+.note-item a {
+	width: 100%;
+}
+
+.note-card {
+	position: relative;
+	width: 100%;
+	padding: 12px;
+	overflow: hidden;
+	font-size: 0.9em;
+	user-select: none;
+	cursor: default;
+}
+.note-card a:hover {
+	cursor: default;
+}
+
+.note-locked {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+}
+.note-locked svg {
+	width: 36px;
+	height: 36px;
+	fill: rgba(160, 160, 160, 0.4);
+}
+
+.pin {
+	display: inline-flex;
+	position: absolute;
+	left: 0;
+	top: 5px;
+	fill: #e60000;
+	filter: drop-shadow(1px 2px 2px rgb(0 0 0 / 0.4));
+}
+
+.note-handle {
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+	position: absolute;
+	top: var(--note-handle-my);
+	right: var(--note-handle-mx);
+	width: 26px;
+	height: 26px;
+	border-radius: 50%;
+	cursor: pointer;
+}
+.note-handle-top {
+}
+.note-handle-bottom {
+	top: auto;
+	bottom: var(--note-handle-my);
+}
+.note-handle-inset {
+	right: calc(var(--note-handle-mx) + 32px);
+}
+
+/* Text formatting */
+
+.note-viewer h1 {
+	margin: 0.7em 0 0.3em 0 !important;
+	font: normal bold 1.35em "Segoe UI",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol" !important;
+}
+.note-viewer h2 {
+	margin: 0.8em 0 0.2em 0 !important;
+	font: normal bold 1.2em "Segoe UI",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol" !important;
+}
+.note-viewer h3 {
+	margin: 0.8em 0 0.2em 0 !important;
+	font: normal bold 1.1em "Segoe UI",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol" !important;
+}
+
+.note-viewer p {
+	margin: 0 0 0.2em 0 !important;
+	font: normal normal 1em "Segoe UI",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol" !important;
+}
+
+.note-viewer ol {
+	margin: 0.5em 0 0.5em 0 !important;
+	padding: 0 !important;
+	font: normal normal 1em "Segoe UI",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol" !important;
+	list-style: none;
+	counter-reset: sn-counter;
+}
+.note-viewer ol > li {
+	margin-left: 1.8em !important;
+	padding: 0 !important;
+	counter-increment: sn-counter;
+}
+.note-viewer ol > li::before {
+	display: inline-block;
+	margin: 0 0 0 -1.8em !important;
+	padding: 0 0.3em 0 0 !important;
+	width: 1.8em !important;
+	content: counter(sn-counter) ".";
+	text-align: right !important;
+	vertical-align: top;
+}
+
+.note-viewer ul {
+	margin: 0.5em 0 0.5em 0 !important;
+	padding: 0 !important;
+	font: normal normal 1em "Segoe UI",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol" !important;
+	/* list-style-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='-32 -32 64 64' fill='blue' ><circle r='16' /></svg>"); */
+}
+.note-viewer ul > li {
+	margin-left: 1.8em !important;
+	padding: 0 !important;
+}
+.note-viewer ul > li::before {
+	display: inline-block;
+	margin: 0 0 0 -1.8em !important;
+	padding: 0 0.3em 0 0 !important;
+	width: 1.8em !important;
+	white-space: nowrap;
+	content: '•';
+	text-align: right !important;
+	vertical-align: top;
+}
+.note-viewer li>p:first-child {
+    display: inline;
+}
+
+.note-viewer pre {
+	margin: 0.5em 0 0.5em 0 !important;
+	padding: 1em !important;
+	font: normal normal 0.9em Consolas,monospace,"Courier New" !important;
+	overflow: auto !important;
+	white-space: pre !important;
+}
+
+.note-viewer blockquote {
+	margin: 0.5em 0 0.5em 0 !important;
+	padding: 0 0 0 1em !important;
+	font: normal normal 1em "Segoe UI",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol" !important;
+	border-left: 3px solid rgba(128, 128, 128, 0.4) !important;
+}
+.note-viewer.dark blockquote {
+	border-left: 3px solid rgba(211, 211, 211, 0.6) !important;
+}
+.note-viewer a { text-decoration: none !important; }
+.note-viewer a:hover { text-decoration: underline !important; }
+
+/* Checklist in overview. The svg content: url() is set in view with the IconService. */
+
+.note-viewer.over-view.checklist p {
+	position: relative;
+	padding: 0.2em 2em 0.2em 2em;
+	overflow: hidden;
+	min-height: 2em;
+	max-height: 3em;
+	border-radius: 4px;
+}
+.note-viewer.over-view.checklist p::before {
+	display: inline-block;
+	position: absolute;
+	left: 0.1em;
+	vertical-align: middle;
+}
+.note-viewer.over-view.checklist p.disabled {
+	text-decoration: line-through;
+}
+.note-viewer.over-view.checklist p.disabled::before {
+	opacity: .2;
+}
+
+/* Checklist in editor. The content: url() is set in view to avoid external resource and to configure the color. */
+
+.note-viewer.detail-view.checklist .ProseMirror p {
+	position: relative;
+	padding: 0.5em 3em 0.5em 3em;
+	border-radius: 4px;
+	pointer-events: none;
+}
+.note-viewer.detail-view.checklist .ProseMirror p::before {
+	display: inline-block;
+	position: absolute;
+	left: 0.8em;
+	padding-right: 0.25em;
+	vertical-align: middle;
+	pointer-events: all;
+	cursor: pointer;
+}
+.note-viewer.detail-view.checklist .ProseMirror p::after {
+	display: inline-block;
+	position: absolute;
+	bottom: 0;
+	right: 0.8em;
+	vertical-align: middle;
+	pointer-events: all;
+	cursor: pointer;
+	opacity: .65;
+}
+.note-viewer.detail-view.dark.checklist .ProseMirror p::after {
+	opacity: .7;
+}
+.note-viewer.detail-view.checklist .ProseMirror p.disabled {
+	text-decoration: line-through;
+}
+.note-viewer.detail-view.checklist .ProseMirror p.disabled::before {
+	opacity: .2;
+}
+
+/* Tweaking 3rd party elements */
+
+div.ProseMirror {
+	border: none 0;
+	padding: 0.8em 1em;
+}
+div.ProseMirror:focus {
+	outline: none;
+}
+
+.mud-main-content
+{
+	height: 100%;
+	overflow-y: auto;
+}
+.mud-typography {
+	word-wrap: anywhere; /* text must not exceed device width */
+	overflow-x: hidden;
+}
+
+.mud-button { text-transform: none; }
+.mud-switch { margin-right: 0; }
+.mud-button-filled-default { /* shadow appeared too strong */
+	box-shadow:
+		0 3px 1px -2px rgba(0,0,0,.01),
+		0 2px 2px 0 rgba(0,0,0,.08),
+		0 1px 5px 0 rgba(0,0,0,.06);
+}
+.mud-button-outlined-default {
+	background-color: rgba(127, 127, 127, 0.04);
+}
+
+.mud-appbar .mud-icon-size-medium { font-size: 1.75rem; } /* bigger toolbar icons */
+.mud-list-item-icon { min-width: 38px; } /* smaller gap between icon and menuitem */
+
+.dialog { max-width: 92vw; }
+.dialog .mud-input { max-width: 100%; }
+
+#blazor-error-ui {
+	background: red;
+	color: white;
+	bottom: 0;
+	box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+	display: none;
+	left: 0;
+	padding: 0.6rem 1.25rem 0.7rem 1.25rem;
+	position: fixed;
+	width: 100%;
+	z-index: 1000;
+}
+
+#blazor-error-ui .dismiss {
+	cursor: pointer;
+	position: absolute;
+	right: 0.75rem;
+	top: 0.5rem;
+}
+
+/* narrow device - phone */
+@media screen and (max-device-width: 540px) {
+	.note-handle {
+		width: 30px;
+		height: 30px;
+		border-radius: 15px;
+	}
+/*	html { font-size: 17px; }*/
+}
+/* wide device - desktop */
+@media screen and (min-device-width: 540px) {
+}
+/* narrow browser */
+@media screen and (max-width: 600px) {
+}
+/* wide breakpoint */
+@media screen and (min-width: 600px) {
+	:root {
+		--css-grid-topic-icon-width: 40px;
+	}
+	.note-item {
+		display: inline-block;
+		width: 240px;
+	}
+}

@@ -1,160 +1,207 @@
-﻿using Moq;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Moq;
 using NUnit.Framework;
 using SilentNotes.Crypto;
 using SilentNotes.Crypto.SymmetricEncryption;
 using SilentNotes.Models;
 using SilentNotes.Services;
-using SilentNotes.StoryBoards;
-using SilentNotes.StoryBoards.SynchronizationStory;
+using SilentNotes.Stories;
+using SilentNotes.Stories.SynchronizationStory;
 using SilentNotes.Workers;
 using System.Xml.Linq;
+using VanillaCloudStorageClient;
 
-namespace SilentNotesTest.StoryBoards.SynchronizationStory
+namespace SilentNotesTest.Stories.SynchronizationStory
 {
     [TestFixture]
     public class DecryptCloudRepositoryStepTest
     {
         [Test]
-        public void SuccessfulFlowEndsInNextStep()
+        public async Task SuccessfulFlowEndsInNextStep()
         {
             const string transferCode = "abcdefgh";
             var settingsModel = CreateSettingsModel(transferCode);
             byte[] encryptedRepository = CreateEncryptedRepository(transferCode);
+            var model = new SynchronizationStoryModel
+            {
+                StoryMode = StoryMode.Silent,
+                BinaryCloudRepository = encryptedRepository,
+            };
 
-            Mock<IStoryBoard> storyBoard = new Mock<IStoryBoard>();
-            storyBoard.
-                Setup(m => m.Session.Load<byte[]>(It.Is<SynchronizationStorySessionKey>(p => p == SynchronizationStorySessionKey.BinaryCloudRepository))).
-                Returns(encryptedRepository);
             Mock<ISettingsService> settingsService = new Mock<ISettingsService>();
             settingsService.
                 Setup(m => m.LoadSettingsOrDefault()).Returns(settingsModel);
-            Mock<INoteRepositoryUpdater> updater = new Mock<INoteRepositoryUpdater>();
+
+            var serviceCollection = new ServiceCollection();
+            serviceCollection
+                .AddSingleton<ISettingsService>(settingsService.Object)
+                .AddSingleton<ILanguageService>(CommonMocksAndStubs.LanguageService())
+                .AddSingleton<INoteRepositoryUpdater>(new Mock<INoteRepositoryUpdater>().Object);
 
             // Run step
-            var step = new DecryptCloudRepositoryStep(
-                SynchronizationStoryStepId.DecryptCloudRepository,
-                storyBoard.Object,
-                CommonMocksAndStubs.LanguageService(),
-                CommonMocksAndStubs.FeedbackService(),
-                settingsService.Object,
-                updater.Object);
-            Assert.DoesNotThrowAsync(step.Run);
+            var step = new DecryptCloudRepositoryStep();
+            var result = await step.RunStep(model, serviceCollection.BuildServiceProvider(), model.StoryMode);
 
             // Repository has not changed and was not stored in session
             settingsService.Verify(m => m.TrySaveSettingsToLocalDevice(It.IsNotNull<SettingsModel>()), Times.Never);
 
             // Next step is called
-            storyBoard.Verify(m => m.ContinueWith(It.Is<SynchronizationStoryStepId>(x => x == SynchronizationStoryStepId.IsSameRepository)), Times.Once);
+            Assert.IsInstanceOf<IsSameRepositoryStep>(result.NextStep);
         }
 
         [Test]
-        public void TransfercodeOfHistoryWillBeReused()
+        public async Task TransfercodeOfHistoryWillBeReused()
         {
             const string transferCode = "abcdefgh";
             var settingsModel = CreateSettingsModel("qqqqqqqq");
             settingsModel.TransferCodeHistory.Add(transferCode); // Good transfercode is in history
             byte[] encryptedRepository = CreateEncryptedRepository(transferCode);
+            var model = new SynchronizationStoryModel
+            {
+                StoryMode = StoryMode.Silent,
+                BinaryCloudRepository = encryptedRepository,
+            };
 
-            Mock<IStoryBoard> storyBoard = new Mock<IStoryBoard>();
-            storyBoard.
-                Setup(m => m.Session.Load<byte[]>(It.Is<SynchronizationStorySessionKey>(p => p == SynchronizationStorySessionKey.BinaryCloudRepository))).
-                Returns(encryptedRepository);
             Mock<ISettingsService> settingsService = new Mock<ISettingsService>();
             settingsService.
                 Setup(m => m.LoadSettingsOrDefault()).Returns(settingsModel);
-            Mock<INoteRepositoryUpdater> updater = new Mock<INoteRepositoryUpdater>();
+
+            var serviceCollection = new ServiceCollection();
+            serviceCollection
+                .AddSingleton<ISettingsService>(settingsService.Object)
+                .AddSingleton<ILanguageService>(CommonMocksAndStubs.LanguageService())
+                .AddSingleton<INoteRepositoryUpdater>(new Mock<INoteRepositoryUpdater>().Object);
 
             // Run step
-            var step = new DecryptCloudRepositoryStep(
-                SynchronizationStoryStepId.DecryptCloudRepository,
-                storyBoard.Object,
-                CommonMocksAndStubs.LanguageService(),
-                CommonMocksAndStubs.FeedbackService(),
-                settingsService.Object,
-                updater.Object);
-            Assert.DoesNotThrowAsync(step.Run);
+            var step = new DecryptCloudRepositoryStep();
+            var result = await step.RunStep(model, serviceCollection.BuildServiceProvider(), model.StoryMode);
 
             // transfercode was moved from history to current and was stored
             Assert.AreEqual(transferCode, settingsModel.TransferCode);
             settingsService.Verify(m => m.TrySaveSettingsToLocalDevice(It.IsNotNull<SettingsModel>()), Times.Once);
 
             // Next step is called
-            storyBoard.Verify(m => m.ContinueWith(It.Is<SynchronizationStoryStepId>(x => x == SynchronizationStoryStepId.IsSameRepository)), Times.Once);
+            Assert.IsInstanceOf<IsSameRepositoryStep>(result.NextStep);
         }
 
         [Test]
-        public void MissingOrWrongTransfercodeLeadsToInputDialog()
+        public async Task MissingOrWrongTransfercodeLeadsToInputDialog()
         {
             const string transferCode = "abcdefgh";
             var settingsModel = CreateSettingsModel(null); // no transfer code at all
             byte[] encryptedRepository = CreateEncryptedRepository(transferCode);
+            var model = new SynchronizationStoryModel
+            {
+                StoryMode = StoryMode.Silent,
+                BinaryCloudRepository = encryptedRepository,
+            };
 
-            Mock<IStoryBoard> storyBoard = new Mock<IStoryBoard>();
-            storyBoard.
-                Setup(m => m.Session.Load<byte[]>(It.Is<SynchronizationStorySessionKey>(p => p == SynchronizationStorySessionKey.BinaryCloudRepository))).
-                Returns(encryptedRepository);
             Mock<ISettingsService> settingsService = new Mock<ISettingsService>();
             settingsService.
                 Setup(m => m.LoadSettingsOrDefault()).Returns(settingsModel);
-            Mock<INoteRepositoryUpdater> updater = new Mock<INoteRepositoryUpdater>();
+
+            var serviceCollection = new ServiceCollection();
+            serviceCollection
+                .AddSingleton<ISettingsService>(settingsService.Object)
+                .AddSingleton<ILanguageService>(CommonMocksAndStubs.LanguageService())
+                .AddSingleton<INoteRepositoryUpdater>(new Mock<INoteRepositoryUpdater>().Object);
 
             // Run step
-            var step = new DecryptCloudRepositoryStep(
-                SynchronizationStoryStepId.DecryptCloudRepository,
-                storyBoard.Object,
-                CommonMocksAndStubs.LanguageService(),
-                CommonMocksAndStubs.FeedbackService(),
-                settingsService.Object,
-                updater.Object);
-            Assert.DoesNotThrowAsync(step.Run);
+            var step = new DecryptCloudRepositoryStep();
+            var result = await step.RunStep(model, serviceCollection.BuildServiceProvider(), model.StoryMode);
 
             // No changes should be done to the settings
             settingsService.Verify(m => m.TrySaveSettingsToLocalDevice(It.IsNotNull<SettingsModel>()), Times.Never);
 
             // Next step is called
-            storyBoard.Verify(m => m.ContinueWith(It.Is<SynchronizationStoryStepId>(x => x == SynchronizationStoryStepId.ShowTransferCode)), Times.Once);
+            Assert.IsInstanceOf<ShowTransferCodeStep>(result.NextStep);
 
             // Run step with wrong transfer code
             settingsModel.TransferCode = "qqqqqqqq";
-            Assert.DoesNotThrowAsync(step.Run);
-            storyBoard.Verify(m => m.ContinueWith(It.Is<SynchronizationStoryStepId>(x => x == SynchronizationStoryStepId.ShowTransferCode)), Times.Exactly(2));
+            result = await step.RunStep(model, serviceCollection.BuildServiceProvider(), model.StoryMode);
+            Assert.IsInstanceOf<ShowTransferCodeStep>(result.NextStep);
         }
 
         [Test]
-        public void InvalidRepositoryLeadsToErrorMessage()
+        public async Task BusyIndicatorIsStopped()
+        {
+            const string transferCode = "abcdefgh";
+            var settingsModel = CreateSettingsModel(null); // no transfer code at all
+            byte[] encryptedRepository = CreateEncryptedRepository(transferCode);
+            var model = new SynchronizationStoryModel
+            {
+                StoryMode = StoryMode.BusyIndicator,
+                UserEnteredTransferCode = "wrong",
+                BinaryCloudRepository = encryptedRepository,
+            };
+
+            Mock<ISettingsService> settingsService = new Mock<ISettingsService>();
+            settingsService.
+                Setup(m => m.LoadSettingsOrDefault()).Returns(settingsModel);
+            Mock<IFeedbackService> feedbackService = new Mock<IFeedbackService>();
+
+            var serviceCollection = new ServiceCollection();
+            serviceCollection
+                .AddSingleton<ISettingsService>(settingsService.Object)
+                .AddSingleton<ILanguageService>(CommonMocksAndStubs.LanguageService())
+                .AddSingleton<INoteRepositoryUpdater>(new Mock<INoteRepositoryUpdater>().Object)
+                .AddSingleton<IFeedbackService>(feedbackService.Object);
+
+            // Run step
+            var step = new DecryptCloudRepositoryStep();
+
+            // If user entered wrong code, page should be kept open and busy indicator stopped
+            var result = await step.RunStep(model, serviceCollection.BuildServiceProvider(), model.StoryMode);
+            Assert.IsNull(result.NextStep);
+            feedbackService.Verify(m => m.SetBusyIndicatorVisible(It.Is<bool>(visible => visible == false), It.IsAny<bool>()), Times.Once);
+        }
+
+
+        [Test]
+        public async Task InvalidRepositoryLeadsToErrorMessage()
         {
             const string transferCode = "abcdefgh";
             var settingsModel = CreateSettingsModel(transferCode);
             byte[] encryptedRepository = CreateEncryptedRepository(transferCode);
             encryptedRepository[8]++; // make it invalid
-
-            StoryBoardSession session = new StoryBoardSession();
-            session.Store(SynchronizationStorySessionKey.BinaryCloudRepository, encryptedRepository);
+            var model = new SynchronizationStoryModel
+            {
+                StoryMode = StoryMode.Silent,
+                BinaryCloudRepository = encryptedRepository,
+            };
 
             Mock<ISettingsService> settingsService = new Mock<ISettingsService>();
             settingsService.
                 Setup(m => m.LoadSettingsOrDefault()).Returns(settingsModel);
-            Mock<INoteRepositoryUpdater> updater = new Mock<INoteRepositoryUpdater>();
+
+            var serviceCollection = new ServiceCollection();
+            serviceCollection
+                .AddSingleton<ISettingsService>(settingsService.Object)
+                .AddSingleton<ILanguageService>(CommonMocksAndStubs.LanguageService())
+                .AddSingleton<INoteRepositoryUpdater>(new Mock<INoteRepositoryUpdater>().Object);
 
             // Run step
-            StoryBoardStepResult result = DecryptCloudRepositoryStep.RunSilent(session, settingsService.Object, CommonMocksAndStubs.LanguageService(), updater.Object);
+            var step = new DecryptCloudRepositoryStep();
+            var result = await step.RunStep(model, serviceCollection.BuildServiceProvider(), model.StoryMode);
 
             Assert.IsNotNull(result.Error); // Error message shown
-            Assert.IsNull(result.NextStepId); // no next step is called
+            Assert.IsNull(result.NextStep); // no next step is called
 
             // No changes should be done to the settings
             settingsService.Verify(m => m.TrySaveSettingsToLocalDevice(It.IsNotNull<SettingsModel>()), Times.Never);
         }
 
         [Test]
-        public void RepositoryTooNewForApplicationLeadsToErrorMessage()
+        public async Task RepositoryTooNewForApplicationLeadsToErrorMessage()
         {
             const string transferCode = "abcdefgh";
             var settingsModel = CreateSettingsModel(transferCode);
             byte[] encryptedRepository = CreateEncryptedRepository(transferCode);
-
-            StoryBoardSession session = new StoryBoardSession();
-            session.Store(SynchronizationStorySessionKey.BinaryCloudRepository, encryptedRepository);
+            var model = new SynchronizationStoryModel
+            {
+                StoryMode = StoryMode.Silent,
+                BinaryCloudRepository = encryptedRepository,
+            };
 
             Mock<ISettingsService> settingsService = new Mock<ISettingsService>();
             settingsService.
@@ -164,11 +211,19 @@ namespace SilentNotesTest.StoryBoards.SynchronizationStory
                 Setup(m => m.IsTooNewForThisApp(It.IsAny<XDocument>())).
                 Returns(true);
 
+            var serviceCollection = new ServiceCollection();
+            serviceCollection
+                .AddSingleton<ISettingsService>(settingsService.Object)
+                .AddSingleton<ILanguageService>(CommonMocksAndStubs.LanguageService())
+                .AddSingleton<INoteRepositoryUpdater>(updater.Object);
+
             // Run step
-            StoryBoardStepResult result = DecryptCloudRepositoryStep.RunSilent(session, settingsService.Object, CommonMocksAndStubs.LanguageService(), updater.Object);
+            var step = new DecryptCloudRepositoryStep();
+            var result = await step.RunStep(model, serviceCollection.BuildServiceProvider(), model.StoryMode);
 
             Assert.IsNotNull(result.Error); // Error message shown
-            Assert.IsNull(result.NextStepId); // no next step is called
+            Assert.IsInstanceOf<SynchronizationStoryExceptions.UnsuportedRepositoryRevisionException>(result.Error);
+            Assert.IsNull(result.NextStep); // no next step is called
         }
 
         private static SettingsModel CreateSettingsModel(string transferCode)

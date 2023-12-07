@@ -1,0 +1,56 @@
+﻿@inherits LayoutComponentBase
+
+@using CommunityToolkit.Mvvm.Messaging
+@using SilentNotes.Services
+
+@inject IThemeService ThemeService
+@inject INavigationService NavigationService
+@inject IFeedbackService FeedbackService
+@inject INotificationService NotificationService
+
+@implements IDisposable
+
+<MudThemeProvider @bind-IsDarkMode="ThemeService.IsDarkMode" Theme="@ThemeService.Theme" />
+<MudDialogProvider DisableBackdropClick="true" CloseOnEscapeKey="true"/>
+<MudSnackbarProvider />
+
+<MudLayout Class="@ThemeService.LightOrDarkClass">
+	@Body
+</MudLayout>
+
+@if(FeedbackService.IsBusyIndicatorVisible)
+{
+	<MudProgressCircular id="progress" Indeterminate="true" Color="Color.Tertiary" Size="Size.Large" />
+}
+
+@code {
+	protected override void OnInitialized()
+	{
+		// Give other services a way to redraw the GUI of the whole app.
+		WeakReferenceMessenger.Default.Register<RedrawMainPageMessage>(
+			this, (recipient, message) => InvokeAsync(StateHasChanged));
+
+		// Workaround: Scoped services are always correct when injected, but when adding them to
+		// Ioc as scoped services, it seems they get lost, and when demanded the next time the Ioc
+		// creates a new different service. Therefore we register them as we got them from injection.
+		Ioc.Instance
+			.ClearInjected()
+			.AddInjected<INavigationService>(NavigationService)
+			.AddInjected<IFeedbackService>(FeedbackService)
+			.AddInjected<INotificationService>(NotificationService);
+	}
+
+	protected override void OnAfterRender(bool firstRender)
+	{
+		if (firstRender)
+		{
+			WeakReferenceMessenger.Default.Send<MainLayoutReadyMessage>();
+		}
+	}
+
+	/// <inheritdoc/>
+	public void Dispose()
+	{
+		WeakReferenceMessenger.Default.Unregister<RedrawMainPageMessage>(this);
+	}
+}
