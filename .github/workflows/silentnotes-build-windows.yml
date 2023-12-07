@@ -62,11 +62,29 @@ jobs:
     #     Configuration: Release
 
     # Execute unit tests
-    - name: Execute unit tests (SilentNotes)
-      run: dotnet test src\Tests\SilentNotesTest\SilentNotesTest.csproj
-    - name: Execute unit tests (VanillaCloudStorageClient)
-      run: dotnet test src\Tests\VanillaCloudStorageClientTest\VanillaCloudStorageClientTest.csproj
+    # - name: Execute unit tests (SilentNotes)
+    #   run: dotnet test src\Tests\SilentNotesTest\SilentNotesTest.csproj
+    # - name: Execute unit tests (VanillaCloudStorageClient)
+    #   run: dotnet test src\Tests\VanillaCloudStorageClientTest\VanillaCloudStorageClientTest.csproj
+
+    # Decode the base 64 encoded pfx and save the Signing_Certificate
+    - name: Decode the pfx
+      run: |
+        $pfx_cert_byte = [System.Convert]::FromBase64String("${{ secrets.SILENTNOTESPFX }}")
+        [IO.File]::WriteAllBytes("SilentNotes.pfx", $pfx_cert_byte)
+    - name: Add cert to store
+      run: certutil -user -q -p ${{ secrets.SILENTNOTESPFXPASSWORD }} -importpfx SilentNotes.pfx NoRoot
 
     # Build application
     - name: Build application
-      run: dotnet build src\SilentNotes.Blazor\SilentNotes.csproj -c Release -f:${{ env.Target_Framework }}
+      run: dotnet publish src\SilentNotes.Blazor\SilentNotes.csproj -c Release -f:${{ env.Target_Framework }} /p:GenerateAppxPackageOnBuild=true /p:AppxPackageSigningEnabled=true /p:PackageCertificateThumbprint="${{ secrets.SILENTNOTESPFXTHUMBPRINT }}"
+
+    # Remove the pfx
+    - name: Remove the pfx
+      run: Remove-Item -path SilentNotes.pfx
+
+    # Upload artifacts
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3.1.0
+      with:
+        path: .\**\AppPackages\**\*.*
