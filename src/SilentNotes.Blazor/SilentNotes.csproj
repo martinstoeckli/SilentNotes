@@ -16,7 +16,7 @@
         <ApplicationTitle>SilentNotes</ApplicationTitle>
 
         <!-- App Identifier -->
-        <ApplicationId>com.companyname.silentnotes</ApplicationId>
+        <ApplicationId>ch.martinstoeckli.silentnotes</ApplicationId>
         <ApplicationIdGuid>11EC9146-7F8B-417D-B616-3CF75D22866E</ApplicationIdGuid>
 
         <!-- Versions -->
@@ -30,6 +30,14 @@
     <PropertyGroup>
       <BaseOutputPath>..\..\bin</BaseOutputPath>
       <BaseIntermediateOutputPath></BaseIntermediateOutputPath>
+      <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
+      <AppxPackageSigningEnabled>False</AppxPackageSigningEnabled>
+      <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
+      <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
+      <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
+      <GenerateTestArtifacts>True</GenerateTestArtifacts>
+      <GenerateTemporaryStoreCertificate>True</GenerateTemporaryStoreCertificate>
+      <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-android33.0|AnyCPU'">
