@@ -1,8 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8" ?> 
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:width="128dp" android:height="128dp" android:gravity="center">
-        <bitmap
-            android:src="@drawable/silent_notes_256"
-            android:gravity="fill"/>
-    </item>
-</layer-list>
