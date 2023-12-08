@@ -33,7 +33,7 @@ jobs:
     strategy:
       matrix:
         configuration: [Release]
-        platform: [x64, ARM64]
+        platform: [x64]
   
     runs-on: windows-latest
 
