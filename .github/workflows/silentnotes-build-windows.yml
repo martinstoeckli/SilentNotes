@@ -74,6 +74,16 @@ jobs:
     # - name: Execute unit tests (VanillaCloudStorageClient)
     #   run: dotnet test src\Tests\VanillaCloudStorageClientTest\VanillaCloudStorageClientTest.csproj
 
+    - name: Generate temp certificate
+      shell: pwsh
+      run: |
+        $password = ConvertTo-SecureString -String $Env:Pwd -Force -AsPlainText
+        $cert = "Cert:\CurrentUser\My\" + $Env.Thumbprint
+        Export-PfxCertificate -cert $cert -FilePath SilentNotesTemp.pfx -Password $password
+      env:
+        Pwd: ${{ secrets.SILENTNOTESPFXPASSWORD }}
+        Thumbprint: ${{ secrets.SILENTNOTESPFXTHUMBPRINT }}
+
     # Decode the base 64 encoded pfx and save the Signing_Certificate
     - name: Decode the pfx
       run: |
@@ -86,11 +96,11 @@ jobs:
 
     # Build application
     - name: Build application
-      run: dotnet publish ${{ env.Project_Path }} -c ${{ env.Configuration }} -f ${{ env.Target_Framework }} -p:UapAppxPackageBuildMode=$env:BuildMode -p:GenerateAppxPackageOnBuild=true -p:RuntimeIdentifierOverride=${{ env.RuntimeIdentifier }} -p:AppxPackageSigningEnabled=true -p:PackageCertificateThumbprint="${{ secrets.SILENTNOTESPFXTHUMBPRINT }}"
+      run: dotnet publish "${{ env.Project_Path }}" -c ${{ env.Configuration }} -f ${{ env.Target_Framework }} -p:UapAppxPackageBuildMode=${{ env.BuildMode }} -p:GenerateAppxPackageOnBuild=true -p:RuntimeIdentifierOverride=${{ env.RuntimeIdentifier }} -p:AppxPackageSigningEnabled=true -p:PackageCertificateThumbprint="${{ secrets.SILENTNOTESPFXTHUMBPRINT }}"
       env:
         Configuration: ${{ matrix.configuration }}
         RuntimeIdentifier: win-${{ matrix.platform }}
-        Build_Mode: StoreOnly
+        BuildMode: StoreOnly
         
     # Remove the pfx
     - name: Remove the pfx
