@@ -30,10 +30,16 @@ on: workflow_dispatch
 
 jobs:
   build:
+    strategy:
+      matrix:
+        configuration: [Release]
+        platform: [x64, ARM64]
+  
     runs-on: windows-latest
 
     env:
       Solution_Name: SilentNotes.sln
+      Project_Path: src\SilentNotes.Blazor\SilentNotes.csproj
       Target_Framework: net7.0-windows10.0.19041.0
 
     steps:
@@ -57,9 +63,10 @@ jobs:
 
     # Restore the application to populate the obj folder with RuntimeIdentifiers
     # - name: Restore the application
-    #   run: msbuild $env:Solution_Name /t:Restore /p:Configuration=$env:Configuration
+    #   run: msbuild $env:Project_Path /t:Restore /p:Configuration=$env:Configuration /p:RuntimeIdentifier=$env:RuntimeIdentifier
     #   env:
-    #     Configuration: Release
+    #     Configuration: ${{ matrix.configuration }}
+    #     RuntimeIdentifier: win-${{ matrix.platform }}
 
     # Execute unit tests
     # - name: Execute unit tests (SilentNotes)
@@ -79,8 +86,12 @@ jobs:
 
     # Build application
     - name: Build application
-      run: dotnet publish src\SilentNotes.Blazor\SilentNotes.csproj -c Release -f:${{ env.Target_Framework }} /p:GenerateAppxPackageOnBuild=true /p:AppxPackageSigningEnabled=true /p:PackageCertificateThumbprint="${{ secrets.SILENTNOTESPFXTHUMBPRINT }}"
-
+      run: dotnet publish ${{ env.Project_Path }} -c ${{ env.Configuration }} -f ${{ env.Target_Framework }} -p:UapAppxPackageBuildMode=$env:BuildMode -p:GenerateAppxPackageOnBuild=true -p:RuntimeIdentifierOverride=${{ env.RuntimeIdentifier }} -p:AppxPackageSigningEnabled=true -p:PackageCertificateThumbprint="${{ secrets.SILENTNOTESPFXTHUMBPRINT }}"
+      env:
+        Configuration: ${{ matrix.configuration }}
+        RuntimeIdentifier: win-${{ matrix.platform }}
+        Build_Mode: StoreOnly
+        
     # Remove the pfx
     - name: Remove the pfx
       run: Remove-Item -path SilentNotes.pfx
