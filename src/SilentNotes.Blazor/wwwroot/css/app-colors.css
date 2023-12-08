@@ -1,6 +1,8 @@
 ﻿:root {
 	--font-color-light-background: black;
 	--font-color-dark-background: white;
+	--logo-background: #57a0db;
+	--logo-background-light: #64a7dd;
 }
 
 /* light and dark note */
@@ -64,6 +66,12 @@
 .theme-dark  #recycled-notes .note-card { background-color: #696969; }
 
 /* independend of light and dark */
+
+.logo-gradient {
+	background-color: var(--logo-background);
+	background-image: -moz-linear-gradient(top, var(--logo-background-light), var(--logo-background)); /* Firefox 3.6-15 */
+	background-image: linear-gradient(to bottom, var(--logo-background-light), var(--logo-background)); /* Chrome 26+, Firefox 16+, IE 10+, Opera 12.50+ */
+}
 
 .background-icon { color: var(--mud-palette-background-grey) }
 

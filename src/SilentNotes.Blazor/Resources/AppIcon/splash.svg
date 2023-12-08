@@ -13,6 +13,17 @@
   <defs
      id="defs1">
     <linearGradient
+       id="linearGradient2">
+      <stop
+         style="stop-color:#57a0db;stop-opacity:1;"
+         offset="0"
+         id="stop2" />
+      <stop
+         style="stop-color:#64a7dd;stop-opacity:1;"
+         offset="1"
+         id="stop3" />
+    </linearGradient>
+    <linearGradient
        id="linearGradient4211-1">
       <stop
          style="stop-color:#806600;stop-opacity:0;"
@@ -266,6 +277,14 @@
          id="stop48" />
     </linearGradient>
     <linearGradient
+       xlink:href="#linearGradient2"
+       id="linearGradient3"
+       x1="27.317568"
+       y1="55.047298"
+       x2="27.317568"
+       y2="0.18243244"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
        xlink:href="#linearGradient4211"
        id="linearGradient4217"
        x1="792.99518"
@@ -326,6 +345,16 @@
          id="feGaussianBlur49" />
     </filter>
   </defs>
+  <g
+     id="layer2">
+    <rect
+       style="fill:url(#linearGradient3);fill-opacity:1;stroke:none;stroke-width:0"
+       id="rect1"
+       width="55"
+       height="55"
+       x="0"
+       y="0" />
+  </g>
   <g
      id="layer1"
      transform="translate(-100.7027,-137.91892)"

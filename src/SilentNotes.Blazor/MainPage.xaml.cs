@@ -21,7 +21,7 @@ public partial class MainPage : ContentPage
 
         // Set the splash screen background color, shown from when the webview is displayed until
         // the the index.html is loaded.
-        var backgroundColor = ColorExtensions.HexToColor("#0170b0");
+        var backgroundColor = ColorExtensions.HexToColor("#4793d1");
         webView2.DefaultBackgroundColor = Windows.UI.Color.FromArgb(
             backgroundColor.A, backgroundColor.R, backgroundColor.G, backgroundColor.B);
 #endif
