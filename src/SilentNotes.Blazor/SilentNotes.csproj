@@ -48,14 +48,13 @@
         <!-- App Icon -->
         <MauiIcon Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'" Include="Resources\AppIcon\appiconfg.svg" BaseSize="55,55" />
 
-        <MauiIcon Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'" Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" ForegroundScale="0.60" Color="#57b0e3" BaseSize="55,55" />
+        <MauiIcon Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'" Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" ForegroundScale="0.66" Color="#64a7dd" BaseSize="55,55" />
 
         <!-- Splash Screen, shown from the application start until the MainPage is shown (Windows not yet supported) -->
-        <MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#0170b0" BaseSize="55,55" />
+        <MauiSplashScreen Include="Resources\AppIcon\splash.svg" Color="#57a0db" BaseSize="55,55" />
 
         <!-- Images -->
         <MauiImage Include="Resources\Images\*" />
-        <MauiImage Update="Resources\Images\dotnet_bot.svg" BaseSize="168,208" />
 
         <!-- Custom Fonts -->
         <MauiFont Include="Resources\Fonts\*" />
@@ -65,17 +64,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Remove="Resources\Raw\Lng.SilentNotes.cz" />
-      <None Remove="Resources\Raw\Lng.SilentNotes.de" />
-      <None Remove="Resources\Raw\Lng.SilentNotes.en" />
-      <None Remove="Resources\Raw\Lng.SilentNotes.it" />
-      <None Remove="Resources\Raw\Lng.SilentNotes.ru" />
-      <None Remove="Resources\Raw\Lng.SilentNotes.tr" />
-      <None Remove="Resources\Raw\Lng.SilentNotes.zh" />
-      <None Remove="Views\NotePage.razor.js" />
-    </ItemGroup>
-
-    <ItemGroup>
+      <Content Include="Resources\AppIcon\appicon44x44.png" />
       <Content Include="Views\NotePage.razor.js" />
     </ItemGroup>
 
@@ -96,5 +85,4 @@
     <Import Project="..\SilentNotes.AllPlatforms\SilentNotes.AllPlatforms.projitems" Label="Shared" />
 
     <Import Project="..\VanillaCloudStorageClient\VanillaCloudStorageClient.projitems" Label="Shared" />
-
 </Project>
