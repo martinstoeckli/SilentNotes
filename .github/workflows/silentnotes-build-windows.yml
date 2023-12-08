@@ -51,11 +51,12 @@ jobs:
     - name: Generate temp certificate
       shell: pwsh
       run: |
-        $password = ConvertTo-SecureString -String "kdie9f9ewfjef9u" -Force -AsPlainText
-        $cert = "Cert:\CurrentUser\My\" + $Env.thumbprint
+        $password = ConvertTo-SecureString -String $env:pwd -Force -AsPlainText
+        $cert = "Cert:\CurrentUser\My\" + $env.thumbprint
         echo $cert
         Export-PfxCertificate -cert $cert -FilePath SilentNotesTemp.pfx -Password $password
       env:
+        pwd: ${{ secrets.SILENTNOTESPFXPASSWORD }}
         thumbprint: ${{ secrets.SILENTNOTESPFXTHUMBPRINT }}
 
     # Install the .NET Core workload
