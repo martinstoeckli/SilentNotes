@@ -70,8 +70,10 @@ jobs:
     # Decode the base 64 encoded pfx and save the Signing_Certificate
     - name: Decode the pfx
       run: |
-        $pfx_cert_byte = [System.Convert]::FromBase64String("${{ secrets.SILENTNOTESPFX }}")
-        [IO.File]::WriteAllBytes("SilentNotes.pfx", $pfx_cert_byte)
+        echo "${{ secrets.SILENTNOTESPFX }}" > SilentNotes.pfx.asc
+        certutil -decode SilentNotes.pfx.asc SilentNotes.pfx
+    - name: Remove decoded pfx
+      run: Remove-Item -path SilentNotes.pfx.asc
     - name: Add cert to store
       run: certutil -user -q -p ${{ secrets.SILENTNOTESPFXPASSWORD }} -importpfx SilentNotes.pfx NoRoot
 
