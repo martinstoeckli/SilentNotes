@@ -3,7 +3,7 @@ name: Test up and download
 on: workflow_dispatch
 
 jobs:
-  build:
+  job_build:
     strategy:
       matrix:
         configuration: [Release]
@@ -34,7 +34,8 @@ jobs:
         path: .\**\*.msix
         retention-days: 1
 
-  package:
+  job_package:
+    needs: job_build
     runs-on: windows-latest
 
     steps:
