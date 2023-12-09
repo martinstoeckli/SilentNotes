@@ -17,17 +17,21 @@ jobs:
       Target_Framework: net7.0-windows10.0.19041.0
 
     steps:
+    - name: Create test dir
+      run: |
+        mkdir test
+          
     - name: write file 1
-      run: echo hello > test/world.txt
+      run: echo hello > test/world.msix
     - name: write file 2
-      run: echo uhu > test/velo.txt
+      run: echo uhu > test/velo.msix
     
     # Upload artifacts
     - name: Upload build artifacts
       uses: actions/upload-artifact@v3.1.0
       with:
         name: msix-files
-        path: .\**\*.txt
+        path: .\**\*.msix
         retention-days: 1
 
   package:
@@ -38,4 +42,14 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: msix-files
-  
+
+    - name: write bundle
+      run: echo vogel > world.msixbundle
+      
+    # Upload artifacts
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3.1.0
+      with:
+        name: msix-files
+        path: .\**\*.msixbundle
+        retention-days: 1
