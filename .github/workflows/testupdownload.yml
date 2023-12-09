@@ -1,0 +1,41 @@
+name: Test up and download
+
+on: workflow_dispatch
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        configuration: [Release]
+        platform: [x86, x64]
+  
+    runs-on: windows-latest
+
+    env:
+      Solution_Name: SilentNotes.sln
+      Project_Path: src\SilentNotes.Blazor\SilentNotes.csproj
+      Target_Framework: net7.0-windows10.0.19041.0
+
+    steps:
+    - name: write file 1
+      run: echo hello > test/world.txt
+    - name: write file 2
+      run: echo uhu > test/velo.txt
+    
+    # Upload artifacts
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3.1.0
+      with:
+        name: msix-files
+        path: .\**\*.txt
+        retention-days: 1
+
+  package:
+    runs-on: windows-latest
+
+    steps:
+    - name: Download a single artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: msix-files
+  
