@@ -43,14 +43,20 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: msix-files
-
-    - name: write bundle
-      run: echo vogel > world.msixbundle
+        path: msixdirectory
       
+    - name: Make msixbundle
+      id: bundler
+      uses: LanceMcCarthy/Action-MsixBundler@v1.0.0
+      with:
+        msix-folder: "msixdirectory"
+        msixbundle-filepath: "silentnotes.msixbundle"
+        msixbundle-version: "1.0.0.0"
+
     # Upload artifacts
     - name: Upload build artifacts
       uses: actions/upload-artifact@v3.1.0
       with:
-        name: msix-files
+        name: msixbundle
         path: .\**\*.msixbundle
         retention-days: 1
