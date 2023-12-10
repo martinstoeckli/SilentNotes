@@ -29,12 +29,12 @@ jobs:
 
     - name: publish on version change
       id: csproj_version_2
-      uses: chenryhabana205/dotnetgetversion@v6
+      uses: QwerMike/xpath-action@v1
       with:
-        VERSION_FILE_PATH: "${{ env.Project_Path }}"
-        VERSION_REGEX: ^\s*<ApplicationDisplayVersion>(.*)<\/ApplicationDisplayVersion>\s*$
+        filename: "${{ env.Project_Path }}"
+        expression: //PropertyGroup/ApplicationDisplayVersion
           
     - name: logging
       run: |
         echo "version=${{ steps.csproj_version.outputs.version }}"
-        echo "version=${{ steps.csproj_version_2.outputs.version }}"
+        echo "version2=${{ steps.csproj_version_2.outputs.result }}"
