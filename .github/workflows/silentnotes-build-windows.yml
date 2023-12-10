@@ -89,7 +89,7 @@ jobs:
       run: dotnet publish "${{ env.Project_Path }}" -c ${{ env.Configuration }} -f ${{ env.Target_Framework }} -r ${{ env.Platform }} --no-self-contained -p:GenerateAppxPackageOnBuild=true -p:AppxPackageSigningEnabled=true -p:PackageCertificateThumbprint="${{ secrets.SILENTNOTESPFXTHUMBPRINT }}"
       env:
         Configuration: ${{ matrix.configuration }}
-        Platform: win-${{ matrix.platform }}
+        Platform: ${{ matrix.platform }}
         BuildMode: StoreOnly
         
     # Remove the pfx
