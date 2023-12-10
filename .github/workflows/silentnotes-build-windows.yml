@@ -83,11 +83,10 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - name: Download msix files
-      uses: actions/download-artifact@v3
+    - name: Checkout
+      uses: actions/checkout@v3
       with:
-        name: msix-files
-        path: msixdirectory
+        fetch-depth: 0
 
     # Read verion from csproj
     - name: Read version
@@ -96,6 +95,12 @@ jobs:
       with:
         xml-file: "${{ env.Project_Path }}"
         xpath: //PropertyGroup/ApplicationDisplayVersion
+
+    - name: Download msix files
+      uses: actions/download-artifact@v3
+      with:
+        name: msix-files
+        path: msixdirectory
 
     - name: Make msixbundle
       id: bundler
