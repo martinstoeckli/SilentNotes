@@ -84,6 +84,14 @@ jobs:
     - name: Add cert to store
       run: certutil -user -q -p ${{ secrets.SILENTNOTESPFXPASSWORD }} -importpfx SilentNotes.pfx NoRoot
 
+    # Read verion from csproj
+    - name: publish on version change
+      id: csproj_version
+      uses: mavrosxristoforos/get-xml-info@1
+      with:
+        xml-file: "${{ env.Project_Path }}"
+        xpath: //PropertyGroup/ApplicationDisplayVersion
+
     # Build application
     - name: Build application
       run: dotnet publish "${{ env.Project_Path }}" -c ${{ env.Configuration }} -f ${{ env.Target_Framework }} -a ${{ env.Platform }} -o ".\" --no-self-contained -p:RuntimeIdentifierOverride=win10-${{ env.Platform }} -p:GenerateAppxPackageOnBuild=true -p:AppxPackageSigningEnabled=true -p:PackageCertificateThumbprint="${{ secrets.SILENTNOTESPFXTHUMBPRINT }}"
@@ -120,7 +128,7 @@ jobs:
       with:
         msix-folder: "msixdirectory"
         msixbundle-filepath: "silentnotes.msixbundle"
-        msixbundle-version: "1.0.0.0"
+        msixbundle-version: ${{ steps.csproj_version.outputs.info }}"
       
     # Upload artifacts
     - name: Upload build artifacts
