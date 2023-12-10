@@ -85,9 +85,9 @@ jobs:
       run: certutil -user -q -p ${{ secrets.SILENTNOTESPFXPASSWORD }} -importpfx SilentNotes.pfx NoRoot
 
     # Read verion from csproj
-    - name: publish on version change
+    - name: Read version
       id: csproj_version
-      uses: mavrosxristoforos/get-xml-info@1
+      uses: mavrosxristoforos/get-xml-info@1.2.1
       with:
         xml-file: "${{ env.Project_Path }}"
         xpath: //PropertyGroup/ApplicationDisplayVersion
