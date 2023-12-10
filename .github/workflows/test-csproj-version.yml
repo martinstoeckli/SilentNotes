@@ -1,4 +1,4 @@
-name: test read csproj version
+name: Test read csproj version
 
 on: workflow_dispatch
 
@@ -29,4 +29,4 @@ jobs:
           
     - name: logging
       run: |
-        echo "version=${{ steps.test.csproj_version.version }}"
+        echo "version=${{ steps.csproj_version.version }}"
