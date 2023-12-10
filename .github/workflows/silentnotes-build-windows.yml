@@ -89,12 +89,15 @@ jobs:
         fetch-depth: 0
 
     # Read verion from csproj
-    - name: Read version
+    - name: Read version from csproj
       id: csproj_version
       uses: mavrosxristoforos/get-xml-info@1.2.1
       with:
         xml-file: "${{ env.Project_Path }}"
         xpath: //PropertyGroup/ApplicationDisplayVersion
+    - name: Log version
+      run: |
+        echo "version=${{ steps.csproj_version.outputs.info }}"
 
     - name: Download msix files
       uses: actions/download-artifact@v3
@@ -108,7 +111,7 @@ jobs:
       with:
         msix-folder: "msixdirectory"
         msixbundle-filepath: "silentnotes.msixbundle"
-        msixbundle-version: ${{ steps.csproj_version.outputs.info }}"
+        msixbundle-version: "${{ steps.csproj_version.outputs.info }}.0"
       
     # Upload artifacts
     - name: Upload build artifacts
