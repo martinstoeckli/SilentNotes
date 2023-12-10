@@ -33,8 +33,16 @@ jobs:
       with:
         filename: "${{ env.Project_Path }}"
         expression: //PropertyGroup/ApplicationDisplayVersion
+
+    - name: publish on version change
+      id: csproj_version_3
+      uses: mavrosxristoforos/get-xml-info@1.0
+      with:
+        xml-file: "${{ env.Project_Path }}"
+        xpath: //PropertyGroup/ApplicationDisplayVersion
           
     - name: logging
       run: |
         echo "version=${{ steps.csproj_version.outputs.version }}"
         echo "version2=${{ steps.csproj_version_2.outputs.result }}"
+        echo "version3=${{ steps.csproj_version_3.outputs.info }}"
