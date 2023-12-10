@@ -26,7 +26,15 @@ jobs:
       with:
         file: "${{ env.Project_Path }}"
         xpath: //PropertyGroup/ApplicationDisplayVersion
+
+    - name: publish on version change
+      id: csproj_version_2
+      uses: chenryhabana205/dotnetgetversion@v6
+      with:
+        VERSION_FILE_PATH: "${{ env.Project_Path }}"
+        VERSION_REGEX: ^\s*<ApplicationDisplayVersion>(.*)<\/ApplicationDisplayVersion>\s*$
           
     - name: logging
       run: |
         echo "version=${{ steps.csproj_version.outputs.version }}"
+        echo "version=${{ steps.csproj_version_2.outputs.version }}"
