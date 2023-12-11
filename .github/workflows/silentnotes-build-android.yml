@@ -48,10 +48,6 @@ jobs:
         gpg -d --passphrase "${{ secrets.SILENTNOTESANDROIDKEYSTOREGPGPASSWORD }}" --batch ${{ env.Keystore_Filename }}.asc > ${{ env.Keystore_Filename }}
     - name: Remove encoded keystore
       run: Remove-Item -path ${{ env.Keystore_Filename }}.asc
-    - name: Check file exists
-      if: ${{ hashFiles("${{ env.Keystore_Filename }}") != '' }}
-      run: |
-        echo "keystore created successfully"
      
     # Build application
     - name: Build application
