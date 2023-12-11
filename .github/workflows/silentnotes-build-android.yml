@@ -33,8 +33,14 @@ jobs:
     - name: Setup MSBuild.exe
       uses: microsoft/setup-msbuild@v1.0.2
 
+    - name: Install Java
+      uses: actions/setup-java@v2
+      with:
+        distribution: 'microsoft'
+        java-version: '11'
+
     - name: Install MAUI
-      run: dotnet workload install maui --ignore-failed-sources
+      run: dotnet workload install maui-android --ignore-failed-sources
 
     # Restore the application to populate the obj folder with RuntimeIdentifiers
     # - name: Restore the application
