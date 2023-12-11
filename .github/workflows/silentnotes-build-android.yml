@@ -13,7 +13,7 @@ jobs:
     strategy:
       matrix:
         configuration: [Release]
-        platform: [android-arm64]
+        platform: [arm64]
   
     runs-on: windows-latest
 
@@ -48,7 +48,7 @@ jobs:
 
     # Build application
     - name: Build application
-      run: dotnet publish "${{ env.Project_Path }}" -c ${{ env.Configuration }} -f ${{ env.Target_Framework }} -r ${{ env.Platform }} -o ".\bin" -p:AndroidKeyStore=True -p:AndroidSigningKeyStore="SilentNotes.keystore" -p:AndroidSigningKeyAlias="androidmartinstoeckli" -p:AndroidSigningStorePass="${{ secrets.SILENTNOTESANDROIDKEYSTOREPASSWORD }}"
+      run: dotnet publish "${{ env.Project_Path }}" -c ${{ env.Configuration }} -f ${{ env.Target_Framework }} -r android-${{ env.Platform }} -o ".\bin" -p:AndroidKeyStore=True -p:AndroidSigningKeyStore="SilentNotes.keystore" -p:AndroidSigningKeyAlias="androidmartinstoeckli" -p:AndroidSigningKeyPass="${{ secrets.SILENTNOTESANDROIDKEYSTOREPASSWORD }}" -p:AndroidSigningStorePass="${{ secrets.SILENTNOTESANDROIDKEYSTOREPASSWORD }}"
       env:
         Configuration: ${{ matrix.configuration }}
         Platform: ${{ matrix.platform }}
