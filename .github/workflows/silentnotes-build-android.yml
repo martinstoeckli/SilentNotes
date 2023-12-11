@@ -43,9 +43,16 @@ jobs:
     - name: Decode the keystore file
       run: |
         echo "${{ secrets.SILENTNOTESANDROIDKEYSTORE }}" > "${{ env.Keystore_Path }}.asc"
-        gpg -d --passphrase ${{ env.KeystoreGpgPassword }} --batch "${{ env.Keystore_Path }}.asc" > "${{ env.Keystore_Path }}"
+        gpg -d --quiet --batch --yes --passphrase="${{ env.KeystoreGpgPassword }}" --output "${{ env.Keystore_Path }}" "${{ env.Keystore_Path }}.asc"
       env:
         KeystoreGpgPassword: ${{ secrets.SILENTNOTESANDROIDKEYSTOREGPGPASSWORD }}
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: store
+        path: |
+          .\**\*.keystore
         
     # Build application
     - name: Build application
