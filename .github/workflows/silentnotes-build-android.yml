@@ -6,6 +6,7 @@ on: workflow_dispatch
 env:
   Solution_Name: SilentNotes.sln
   Project_Path: src\SilentNotes.Blazor\SilentNotes.csproj
+  Keystore_Path: src\SilentNotes.Blazor\silentnotes.keystore
   Target_Framework: net7.0-android33.0
 
 jobs:
@@ -17,9 +18,6 @@ jobs:
   
     runs-on: windows-latest
 
-    env:
-      Keystore_Filename: ./androidmartinstoeckli.keystore
-      
     steps:
     - name: Checkout
       uses: actions/checkout@v3
@@ -44,20 +42,23 @@ jobs:
     # Decode the base 64 encoded pfx and save the Signing_Certificate
     - name: Decode the keystore file
       run: |
-        echo "${{ secrets.SILENTNOTESANDROIDKEYSTORE }}" > ${{ env.Keystore_Filename }}.asc
-        gpg -d --passphrase "${{ secrets.SILENTNOTESANDROIDKEYSTOREGPGPASSWORD }}" --batch ${{ env.Keystore_Filename }}.asc > ${{ env.Keystore_Filename }}
-    - name: Remove encoded keystore
-      run: Remove-Item -path ${{ env.Keystore_Filename }}.asc
-     
+        echo "${{ secrets.SILENTNOTESANDROIDKEYSTORE }}" > "${{ env.Keystore_Path }}.asc"
+        gpg -d --passphrase ${{ env.KeystoreGpgPassword }} --batch "${{ env.Keystore_Path }}.asc" > "${{ env.Keystore_Path }}"
+      env:
+        KeystoreGpgPassword: ${{ secrets.SILENTNOTESANDROIDKEYSTOREGPGPASSWORD }}
+        
     # Build application
     - name: Build application
-      run: dotnet publish "${{ env.Project_Path }}" -c ${{ env.Configuration }} -f ${{ env.Target_Framework }} -r android-${{ env.Platform }} -o ".\bin" -p:AndroidKeyStore=True -p:AndroidSigningKeyStore=${{ env.Keystore_Filename }} -p:AndroidSigningKeyAlias=androidmartinstoeckli -p:AndroidSigningKeyPass="${{ secrets.SILENTNOTESANDROIDKEYSTOREPASSWORD }}" -p:AndroidSigningStorePass="${{ secrets.SILENTNOTESANDROIDKEYSTOREPASSWORD }}"
+      run: dotnet publish "${{ env.Project_Path }}" -c ${{ env.Configuration }} -f ${{ env.Target_Framework }} -r android-${{ env.Platform }} -o ".\bin" -p:AndroidKeyStore=True -p:AndroidSigningKeyStore="${{ env.Keystore_Path }}" -p:AndroidSigningKeyAlias=androidmartinstoeckli -p:AndroidSigningKeyPass=${{ env.KeystorePassword }} -p:AndroidSigningStorePass=${{ env.KeystorePassword }}
       env:
         Configuration: ${{ matrix.configuration }}
         Platform: ${{ matrix.platform }}
+        KeystorePassword: ${{ secrets.SILENTNOTESANDROIDKEYSTOREPASSWORD }}
         
     - name: Remove the keystore
-      run: Remove-Item -path ${{ env.Keystore_Filename }}
+      run: Remove-Item -path "${{ env.Keystore_Path }}"
+    - name: Remove encoded keystore
+      run: Remove-Item -path "${{ env.Keystore_Path }}.asc"
 
     # Upload artifacts
     - name: Upload build artifacts
