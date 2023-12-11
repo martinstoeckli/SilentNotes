@@ -34,7 +34,7 @@ jobs:
       uses: microsoft/setup-msbuild@v1.0.2
 
     - name: Install MAUI
-      run: dotnet workload install maui-android --ignore-failed-sources
+      run: dotnet workload install maui --ignore-failed-sources
 
     # Restore the application to populate the obj folder with RuntimeIdentifiers
     # - name: Restore the application
