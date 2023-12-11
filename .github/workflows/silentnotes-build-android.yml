@@ -49,7 +49,7 @@ jobs:
 
     # Build application
     - name: Build application
-      run: dotnet build "${{ env.Project_Path }}" -c ${{ env.Configuration }} -f ${{ env.Target_Framework }} -r android-${{ env.Platform }} -o ".\bin" -p:AndroidKeyStore=True -p:AndroidSigningKeyStore="${{ env.Keystore_Path }}" -p:AndroidSigningKeyAlias=androidmartinstoeckli -p:AndroidSigningKeyPass=${{ env.KeystorePassword }} -p:AndroidSigningStorePass=${{ env.KeystorePassword }}
+      run: dotnet build "${{ env.Project_Path }}" -c ${{ env.Configuration }} -f ${{ env.Target_Framework }} -r android-${{ env.Platform }} -o ".\bin" -p:AndroidKeyStore=True -p:AndroidSigningKeyStore=silentnotes.keystore -p:AndroidSigningKeyAlias=androidmartinstoeckli -p:AndroidSigningKeyPass=${{ env.KeystorePassword }} -p:AndroidSigningStorePass=${{ env.KeystorePassword }}
       env:
         Configuration: ${{ matrix.configuration }}
         Platform: ${{ matrix.platform }}
