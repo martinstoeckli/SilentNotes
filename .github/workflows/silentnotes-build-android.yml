@@ -71,5 +71,5 @@ jobs:
     - name: Upload build artifacts
       uses: actions/upload-artifact@v3
       with:
-        name: download
+        name: silentnotes_downloads
         path: .\android
