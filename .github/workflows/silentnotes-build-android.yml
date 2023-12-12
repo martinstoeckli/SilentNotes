@@ -63,12 +63,13 @@ jobs:
 
     - name: Collect apk files
       run: |
-        Copy-Item -Path .\bin -Filter *.apk -Destination .\android -Recurse -Container:$true
+        Copy-Item -Path .\bin -Filter *Signed.apk -Destination ".\android\SilentNotes_${{ env.Platform }}.apk" -Recurse -Container:$false
+      env:
+        Platform: ${{ matrix.platform }}
 
     # Upload artifacts
     - name: Upload build artifacts
       uses: actions/upload-artifact@v3
       with:
         name: download
-        path: |
-          .\android
+        path: .\android
