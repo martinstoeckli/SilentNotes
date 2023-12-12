@@ -9,6 +9,7 @@ env:
   Target_Framework_Windows: net7.0-windows10.0.19041.0
 
 jobs:
+  # Android
   job_build_android:
     strategy:
       matrix:
@@ -78,7 +79,7 @@ jobs:
         name: silentnotes_binaries
         path: .\android
 
-
+  # Windows
   job_build_windows:
     strategy:
       matrix:
@@ -172,6 +173,7 @@ jobs:
 
     - name: Collect msix files
       run: |
+        New-Item -Path ".\msixdirectory" -ItemType "directory"
         Move-Item -Path .\downloaddirectory\*.msix -Destination .\msixdirectory
 
     - name: Make msixbundle
