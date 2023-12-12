@@ -1,22 +1,25 @@
-# Builds the msixbundle file which can be uploaded to the Google Play store
-name: SilentNotes Build for Android
+# Builds the binaries which can be uploaded to the Microsoft/Google store
+name: Build SilentNotes binaries
 
 on: workflow_dispatch
 
 env:
-  Solution_Name: SilentNotes.sln
   Project_Path: src\SilentNotes.Blazor\SilentNotes.csproj
-  Keystore_Path: src\SilentNotes.Blazor\silentnotes.keystore
-  Target_Framework: net7.0-android33.0
+  Target_Framework_Android: net7.0-android33.0
+  Target_Framework_Windows: net7.0-windows10.0.19041.0
 
 jobs:
-  job_build:
+  # Android
+  job_build_android:
     strategy:
       matrix:
         configuration: [Release]
         platform: [arm64,x64]
   
     runs-on: windows-latest
+
+    env:
+      Keystore_Path: src\SilentNotes.Blazor\silentnotes.keystore # Same directory as csproj
 
     steps:
     - name: Checkout
@@ -50,7 +53,7 @@ jobs:
     # Build application
     # The keystore location seems to be relative to the csproj file, so we placed it in the same directory pass only the filename
     - name: Build application
-      run: dotnet publish "${{ env.Project_Path }}" -c ${{ env.Configuration }} -f ${{ env.Target_Framework }} -r android-${{ env.Platform }} -o ".\bin" -p:AndroidKeyStore=True -p:AndroidSigningKeyStore=silentnotes.keystore -p:AndroidSigningKeyAlias=androidmartinstoeckli -p:AndroidSigningKeyPass=${{ env.KeystorePassword }} -p:AndroidSigningStorePass=${{ env.KeystorePassword }}
+      run: dotnet publish "${{ env.Project_Path }}" -c ${{ env.Configuration }} -f ${{ env.Target_Framework_Android }} -r android-${{ env.Platform }} -o ".\bin" -p:AndroidPackageFormats=apk -p:PublishTrimmed=true -p:AndroidKeyStore=True -p:AndroidSigningKeyStore=silentnotes.keystore -p:AndroidSigningKeyAlias=androidmartinstoeckli -p:AndroidSigningKeyPass=${{ env.KeystorePassword }} -p:AndroidSigningStorePass=${{ env.KeystorePassword }}
       env:
         Configuration: ${{ matrix.configuration }}
         Platform: ${{ matrix.platform }}
@@ -63,12 +66,9 @@ jobs:
 
     - name: Collect apk files
       run: |
-        New-Item -Path ".\android" -ItemType "directory"
         $apks = Get-ChildItem -Path .\bin\* -Filter *Signed.apk -Recurse -File
-        $dest = ".\android\SilentNotes_${{ env.Platform }}.apk"
-        echo $apks[0].FullName
-        echo $dest
-        Move-Item -Path $apks[0].FullName -Destination $dest
+        New-Item -Path ".\android" -ItemType "directory"
+        Move-Item -Path $apks[0].FullName -Destination ".\android\SilentNotes_${{ env.Platform }}.apk"
       env:
         Platform: ${{ matrix.platform }}
 
@@ -76,5 +76,5 @@ jobs:
     - name: Upload build artifacts
       uses: actions/upload-artifact@v3
       with:
-        name: silentnotes_downloads
+        name: silentnotes_binaries
         path: .\android
