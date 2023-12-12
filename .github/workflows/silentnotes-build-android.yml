@@ -14,7 +14,7 @@ jobs:
     strategy:
       matrix:
         configuration: [Release]
-        platform: [arm64]
+        platform: [arm64,x64]
   
     runs-on: windows-latest
 
@@ -61,12 +61,14 @@ jobs:
     - name: Remove encoded keystore
       run: Remove-Item -path "${{ env.Keystore_Path }}.asc"
 
+    - name: Collect apk files
+      run: |
+        Copy-Item -Path .\bin -Filter *.apk -Destination .\android -Recurse -Container:$true
+
     # Upload artifacts
     - name: Upload build artifacts
       uses: actions/upload-artifact@v3
       with:
-        name: msix-files
+        name: download
         path: |
-          .\**\*.apk
-          .\**\*.aab
-          
+          .\android
