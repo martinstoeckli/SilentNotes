@@ -63,9 +63,10 @@ jobs:
 
     - name: Collect apk files
       run: |
+        New-Item -Path ".\android" -ItemType "directory"
         $apks = Get-ChildItem -Path .\bin\* -Filter *Signed.apk -Recurse -File
-        echo $apks[0]
-        $dest = ".\android\SilentNotes_" + "$Platform" + ".apk"
+        $dest = ".\android\SilentNotes_${{ env.Platform }}.apk"
+        echo $apks[0].FullName
         echo $dest
         Move-Item -Path $apks[0].FullName -Destination $dest
       env:
