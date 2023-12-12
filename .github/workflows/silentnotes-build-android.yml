@@ -63,8 +63,8 @@ jobs:
 
     - name: Collect apk files
       run: |
-        Get-ChildItem -Path ".\bin\*Signed.apk" -Recurse | Move-Item -Destination ".\android"
-        Get-ChildItem -Path ".\android\*.apk" | Rename-Item -NewName "SilentNotes_${{ env.Platform }}.apk"
+        $apks = Get-ChildItem -Path .\bin -Filter *Signed.apk -Recurse -File
+        Move-Item -Path $apks[0].FullName -Destination ".\android\SilentNotes_${{ env.Platform }}.apk"
       env:
         Platform: ${{ matrix.platform }}
 
