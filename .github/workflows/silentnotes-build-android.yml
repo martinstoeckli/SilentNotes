@@ -14,7 +14,6 @@ jobs:
     strategy:
       matrix:
         configuration: [Release]
-        platform: [arm64,x64]
   
     runs-on: windows-latest
 
@@ -53,10 +52,9 @@ jobs:
     # Build application
     # The keystore location seems to be relative to the csproj file, so we placed it in the same directory pass only the filename
     - name: Build application
-      run: dotnet publish "${{ env.Project_Path }}" -c ${{ env.Configuration }} -f ${{ env.Target_Framework_Android }} -r android-${{ env.Platform }} -o ".\bin" -p:AndroidPackageFormats=apk -p:PublishTrimmed=true -p:AndroidKeyStore=True -p:AndroidSigningKeyStore=silentnotes.keystore -p:AndroidSigningKeyAlias=androidmartinstoeckli -p:AndroidSigningKeyPass=${{ env.KeystorePassword }} -p:AndroidSigningStorePass=${{ env.KeystorePassword }}
+      run: dotnet publish "${{ env.Project_Path }}" -c ${{ env.Configuration }} -f ${{ env.Target_Framework_Android }} -o ".\bin" -p:AndroidPackageFormats=apk -p:PublishTrimmed=true -p:AndroidKeyStore=True -p:AndroidSigningKeyStore=silentnotes.keystore -p:AndroidSigningKeyAlias=androidmartinstoeckli -p:AndroidSigningKeyPass=${{ env.KeystorePassword }} -p:AndroidSigningStorePass=${{ env.KeystorePassword }}
       env:
         Configuration: ${{ matrix.configuration }}
-        Platform: ${{ matrix.platform }}
         KeystorePassword: ${{ secrets.SILENTNOTESANDROIDKEYSTOREPASSWORD }}
         
     - name: Remove the keystore
@@ -68,9 +66,7 @@ jobs:
       run: |
         $apks = Get-ChildItem -Path .\bin\* -Filter *Signed.apk -Recurse -File
         New-Item -Path ".\android" -ItemType "directory"
-        Move-Item -Path $apks[0].FullName -Destination ".\android\SilentNotes_${{ env.Platform }}.apk"
-      env:
-        Platform: ${{ matrix.platform }}
+        Move-Item -Path $apks[0].FullName -Destination ".\android\SilentNotes_arms.apk"
 
     # Upload artifacts
     - name: Upload build artifacts

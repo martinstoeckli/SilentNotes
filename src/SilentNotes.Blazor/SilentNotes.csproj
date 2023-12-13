@@ -42,6 +42,7 @@
 
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-android33.0|AnyCPU'">
       <AndroidLinkTool>r8</AndroidLinkTool>
+      <RuntimeIdentifiers>android-arm;android-arm64</RuntimeIdentifiers>
     </PropertyGroup>
 
     <ItemGroup>
