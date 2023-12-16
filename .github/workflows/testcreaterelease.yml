@@ -1,0 +1,46 @@
+name: Test create release
+
+on: workflow_dispatch
+
+jobs:
+  job_build:
+    strategy:
+      matrix:
+        configuration: [Release]
+  
+    runs-on: windows-latest
+
+    env:
+      Solution_Name: SilentNotes.sln
+      Project_Path: src\SilentNotes.Blazor\SilentNotes.csproj
+      Target_Framework: net7.0-windows10.0.19041.0
+
+    steps:
+    - name: Create test dir
+      run: |
+        mkdir test
+          
+    - name: write file 1
+      run: echo test 1 content > test/test1.msix
+    - name: write file 2
+      run: echo test2 content > test/test2.msix
+    
+    # Upload artifacts
+#    - name: Upload build artifacts
+#      uses: actions/upload-artifact@v3.1.0
+#      with:
+#        name: msix-files
+#        path: .\**\*.msix
+#        retention-days: 1
+
+    - name: release
+      uses: actions/create-release@v1
+      id: create_release
+      with:
+        draft: false
+        prerelease: false
+        release_name: Version 7.99.0 test
+        tag_name: v7.99.0_test
+        body_path: fastlane\metadata\android\en-US\changelogs\64.txt
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
