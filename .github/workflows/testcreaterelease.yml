@@ -3,7 +3,7 @@ name: Test create release
 on: workflow_dispatch
 
 jobs:
-  job_build:
+  job_create_release:
     strategy:
       matrix:
         configuration: [Release]
@@ -13,7 +13,7 @@ jobs:
     env:
       Solution_Name: SilentNotes.sln
       Project_Path: src\SilentNotes.Blazor\SilentNotes.csproj
-      Target_Framework: net7.0-windows10.0.19041.0
+      Android_Manifest: src\SilentNotes.Blazor\Platforms\Android\AndroidManifest.xml
 
     steps:
     - name: Checkout
@@ -21,15 +21,17 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: Create test dir
+    # Read verion from csproj
+    - name: Read version from csproj
+      id: csproj_version
+      uses: mavrosxristoforos/get-xml-info@1.2.1
+      with:
+        xml-file: "${{ env.Project_Path }}"
+        xpath: //PropertyGroup/ApplicationDisplayVersion
+    - name: Log version
       run: |
-        mkdir test
-          
-    - name: write file 1
-      run: echo test 1 content > test/test1.msix
-    - name: write file 2
-      run: echo test2 content > test/test2.msix
-    
+        echo "version=${{ steps.csproj_version.outputs.info }}"
+
     # Upload artifacts
 #    - name: Upload build artifacts
 #      uses: actions/upload-artifact@v3.1.0
@@ -45,8 +47,8 @@ jobs:
         draft: true
         prerelease: true
         overwrite: true
-        name: Version 7.99.0 CI test
-        tag_name: v7.99.0_test
+        name: "Version ${{ steps.csproj_version.outputs.info }} CI test"
+        tag_name: "${{ steps.csproj_version.outputs.info }}"
         body_path: .\fastlane\metadata\android\en-US\changelogs\64.txt
       env:
         GITHUB_TOKEN: ${{ github.token }}
