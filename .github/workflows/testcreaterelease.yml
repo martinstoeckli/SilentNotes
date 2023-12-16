@@ -16,6 +16,11 @@ jobs:
       Target_Framework: net7.0-windows10.0.19041.0
 
     steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
     - name: Create test dir
       run: |
         mkdir test
@@ -34,13 +39,14 @@ jobs:
 #        retention-days: 1
 
     - name: release
-      uses: actions/create-release@v1
+      uses: softprops/action-gh-release@v1
       id: create_release
       with:
-        draft: false
-        prerelease: false
-        release_name: Version 7.99.0 test
+        draft: true
+        prerelease: true
+        overwrite: true
+        name: Version 7.99.0 CI test
         tag_name: v7.99.0_test
-        body_path: fastlane\metadata\android\en-US\changelogs\64.txt
+        body_path: .\fastlane\metadata\android\en-US\changelogs\64.txt
       env:
         GITHUB_TOKEN: ${{ github.token }}
