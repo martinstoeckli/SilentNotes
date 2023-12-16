@@ -45,6 +45,9 @@ jobs:
 #        path: .\**\*.msix
 #        retention-days: 1
 
+    - name: write file 1
+      run: echo hello > appendme.test
+
     - name: release
       uses: softprops/action-gh-release@v1
       id: create_release
@@ -55,8 +58,11 @@ jobs:
         name: ${{ env.Version_Title }}
         tag_name: ${{ env.Tag }}
         body_path: ${{ env.Change_Log }}
+        files: |
+          appendme.test
       env:
         GITHUB_TOKEN: ${{ github.token }}
         Version_Title: "Version ${{ steps.csproj_version.outputs.info }} CI test"
         Tag: "v${{ steps.csproj_version.outputs.info }}"
-        Change_Log: "./fastlane/metadata/android/en-US/changelogs/${{ steps.android_version.outputs.info }}.txt" 
+        Change_Log: "./fastlane/metadata/android/en-US/changelogs/64.txt" 
+#        Change_Log: "./fastlane/metadata/android/en-US/changelogs/${{ steps.android_version.outputs.info }}.txt" 
