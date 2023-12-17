@@ -5,6 +5,7 @@ on:
     inputs:
       publish-release:
         type: boolean
+        default: true
         description: Publish new release on GitHub
 
 jobs:
