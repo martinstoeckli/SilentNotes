@@ -1,7 +1,13 @@
 # Builds the binaries which can be uploaded to the Microsoft/Google store
 name: Build SilentNotes binaries
 
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+    inputs:
+      publish-release:
+        type: boolean
+        default: true
+        description: Publish new release on GitHub
 
 env:
   Project_Path: src\SilentNotes.Blazor\SilentNotes.csproj
@@ -268,3 +274,68 @@ jobs:
         name: silentnotes_binaries
         path: .\**\*.msixbundle
         retention-days: 1
+
+  ##############################################################################
+  # Publish release on Github
+  ##############################################################################
+  job_publish_release:
+    needs: [job_build_android, job_build_android_additional_platform]
+    if: ${{ inputs.publish-release }}
+
+    runs-on: windows-latest
+
+    env:
+      Solution_Name: SilentNotes.sln
+      Project_Path: src\SilentNotes.Blazor\SilentNotes.csproj
+      Android_Manifest: src\SilentNotes.Blazor\Platforms\Android\AndroidManifest.xml
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    # Read version from csproj
+    - name: Read version from csproj
+      id: csproj_version
+      uses: mavrosxristoforos/get-xml-info@1.2.1
+      with:
+        xml-file: "${{ env.Project_Path }}"
+        xpath: //PropertyGroup/ApplicationDisplayVersion
+
+    # Read increasing android version
+    - name: Read version for android
+      id: android_version
+      uses: mavrosxristoforos/get-xml-info@1.2.1
+      with:
+        xml-file: "${{ env.Project_Path }}"
+        xpath: //PropertyGroup/ApplicationVersion
+
+    - name: Download files for publishing
+      uses: actions/download-artifact@v3
+      with:
+        name: silentnotes_binaries
+        path: downloaddirectory
+
+    - name: Collect files for publishing
+      run: |
+        New-Item -Path ".\publish" -ItemType "directory"
+        Move-Item -Path .\downloaddirectory\*.apk -Destination .\publish
+
+    - name: release
+      uses: softprops/action-gh-release@v1
+      id: create_release
+      with:
+        draft: true
+        prerelease: true
+        name: ${{ env.Version_Title }}
+        tag_name: ${{ env.Tag }}
+        body_path: ${{ env.Change_Log }}
+        files: |
+          ./publish/*.apk
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+        Version_Title: "Version ${{ steps.csproj_version.outputs.info }} CI test"
+        Tag: "v${{ steps.csproj_version.outputs.info }}"
+        Change_Log: "./fastlane/metadata/android/en-US/changelogs/64.txt" 
+#        Change_Log: "./fastlane/metadata/android/en-US/changelogs/${{ steps.android_version.outputs.info }}.txt" 
