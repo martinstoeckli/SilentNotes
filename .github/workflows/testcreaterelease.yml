@@ -62,12 +62,11 @@ jobs:
       with:
         draft: true
         prerelease: true
-        overwrite: true
         name: ${{ env.Version_Title }}
         tag_name: ${{ env.Tag }}
         body_path: ${{ env.Change_Log }}
         files: |
-          appendme.test
+          *.test
       env:
         GITHUB_TOKEN: ${{ github.token }}
         Version_Title: "Version ${{ steps.csproj_version.outputs.info }} CI test"
