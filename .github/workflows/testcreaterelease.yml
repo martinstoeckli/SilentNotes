@@ -1,9 +1,16 @@
 name: Test create release
 
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+    inputs:
+      publish-release:
+        type: boolean
+        description: Publish new release on GitHub
 
 jobs:
   job_create_release:
+    if: ${{ inputs.publish-release }}
+
     strategy:
       matrix:
         configuration: [Release]
