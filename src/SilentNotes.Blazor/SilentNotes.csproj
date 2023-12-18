@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
     <PropertyGroup>
-        <TargetFrameworks>net7.0-windows10.0.19041.0;net7.0-android33.0</TargetFrameworks>
-        <!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
-        <!-- <TargetFrameworks>$(TargetFrameworks);net7.0-tizen</TargetFrameworks> -->
+        <TargetFrameworks>net8.0-android</TargetFrameworks>
+        <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net8.0-windows10.0.19041.0</TargetFrameworks>
+
         <OutputType>Exe</OutputType>
         <RootNamespace>SilentNotes</RootNamespace>
         <UseMaui>true</UseMaui>
@@ -11,6 +11,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <EnableDefaultCssItems>false</EnableDefaultCssItems>
         <DefaultLanguage>en</DefaultLanguage>
+        <BaseOutputPath>..\..\bin</BaseOutputPath>
 
         <!-- Display name -->
         <ApplicationTitle>SilentNotes</ApplicationTitle>
@@ -25,22 +26,10 @@
 
         <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">24.0</SupportedOSPlatformVersion>
         <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
+        <TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
     </PropertyGroup>
 
-    <PropertyGroup>
-      <BaseOutputPath>..\..\bin</BaseOutputPath>
-      <BaseIntermediateOutputPath></BaseIntermediateOutputPath>
-      <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
-      <AppxPackageSigningEnabled>False</AppxPackageSigningEnabled>
-      <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
-      <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
-      <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
-      <GenerateTestArtifacts>True</GenerateTestArtifacts>
-      <GenerateTemporaryStoreCertificate>True</GenerateTemporaryStoreCertificate>
-      <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
-    </PropertyGroup>
-
-    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-android33.0|AnyCPU'">
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-android|AnyCPU'">
       <AndroidLinkTool>r8</AndroidLinkTool>
       <RuntimeIdentifiers>android-arm;android-arm64</RuntimeIdentifiers>
     </PropertyGroup>
@@ -52,7 +41,7 @@
         <MauiIcon Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'" Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" ForegroundScale="0.66" Color="#64a7dd" BaseSize="55,55" />
 
         <!-- Splash Screen, shown from the application start until the MainPage is shown (Windows not yet supported) -->
-        <MauiSplashScreen Include="Resources\AppIcon\splash.svg" Color="#57a0db" BaseSize="55,55" />
+        <MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#57a0db" BaseSize="55,55" />
 
         <!-- Images -->
         <MauiImage Include="Resources\Images\*" />
@@ -66,20 +55,21 @@
 
     <ItemGroup>
       <Content Include="Resources\AppIcon\appicon44x44.png" />
-      <Content Include="Views\NotePage.razor.js" />
     </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="BouncyCastle.Cryptography" Version="2.2.1" />
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
-        <PackageReference Include="Flurl.Http" Version="4.0.0-pre6" />
-        <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
+        <PackageReference Include="Flurl.Http" Version="4.0.0" />
+        <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebView.Maui" Version="$(MauiVersion)" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
         <PackageReference Include="MudBlazor" Version="6.11.1" />
     </ItemGroup>
 
-    <ItemGroup Condition="'$(TargetFramework)' == 'net7.0-android33.0'">
+    <ItemGroup Condition="'$(TargetFramework)' == 'net8.0-android'">
       <PackageReference Include="Xamarin.AndroidX.Work.Runtime">
-        <Version>2.7.1.5</Version>
+        <Version>2.8.1</Version>
       </PackageReference>
     </ItemGroup>
 

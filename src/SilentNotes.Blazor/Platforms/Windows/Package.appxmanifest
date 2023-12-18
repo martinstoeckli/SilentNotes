@@ -10,9 +10,9 @@
   <Identity Name="22846MartinStoeckli.SilentNotes" Publisher="CN=ED1E5C1E-F8CD-4A09-A57F-18D151833C31" Version="7.99.2.0" />
 
   <Properties>
-    <DisplayName>SilentNotes</DisplayName>
+    <DisplayName>$placeholder$</DisplayName>
     <PublisherDisplayName>Martin Stoeckli</PublisherDisplayName>
-    <Logo>Resources\AppIcon\appicon44x44.png</Logo>
+    <Logo>$placeholder$.png</Logo>
   </Properties>
 
   <Dependencies>
@@ -47,6 +47,7 @@
   </Applications>
 
   <Capabilities>
+    <rescap:Capability Name="runFullTrust" />
     <Capability Name="internetClientServer"/>
     <Capability Name="internetClient"/>
     <Capability Name="privateNetworkClientServer"/>

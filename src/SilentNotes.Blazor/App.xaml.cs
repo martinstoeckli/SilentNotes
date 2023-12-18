@@ -1,6 +1,4 @@
-﻿using Microsoft.Maui.Controls;
-
-namespace SilentNotes
+﻿namespace SilentNotes
 {
     public partial class App : Application
     {

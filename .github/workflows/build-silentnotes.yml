@@ -11,8 +11,8 @@ on:
 
 env:
   Project_Path: src\SilentNotes.Blazor\SilentNotes.csproj
-  Target_Framework_Android: net7.0-android33.0
-  Target_Framework_Windows: net7.0-windows10.0.19041.0
+  Target_Framework_Android: net8.0-android
+  Target_Framework_Windows: net8.0-windows10.0.19041.0
 
 jobs:
   ##############################################################################
