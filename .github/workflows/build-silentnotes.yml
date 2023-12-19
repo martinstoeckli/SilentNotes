@@ -78,11 +78,11 @@ jobs:
       with:
         dotnet-version: ${{ env.Dotnet_Version }}
 
-    - name: Install Java
-      uses: actions/setup-java@v2
-      with:
-        distribution: 'microsoft'
-        java-version: '11'
+    #- name: Install Java
+    #  uses: actions/setup-java@v2
+    #  with:
+    #    distribution: 'microsoft'
+    #    java-version: '11'
 
     - name: Install MAUI
       run: dotnet workload install maui-android --ignore-failed-sources
@@ -221,7 +221,9 @@ jobs:
       uses: microsoft/setup-msbuild@v1.0.2
 
     - name: Install MAUI
-      run: dotnet workload install maui-windows --ignore-failed-sources
+      run: |
+        dotnet workload install maui-windows --ignore-failed-sources
+        dotnet workload install maui-android --ignore-failed-sources
 
     # Decode the base 64 encoded pfx and save the Signing_Certificate
     - name: Decode the pfx
