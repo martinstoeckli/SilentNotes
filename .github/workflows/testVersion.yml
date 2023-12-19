@@ -65,5 +65,7 @@ jobs:
         echo "Formatted version: ${{ env.formattedVersion }}"
         echo "Integer version: ${{ env.integerVersion }}"
       env:
-        formattedVersion: ${{needs.job_version.outputs.formatted_version}}
-        integerVersion: ${{needs.job_version.outputs.integer_version}}
+        #formattedVersion: ${{needs.job_version.outputs.formatted_version}}
+        #integerVersion: ${{needs.job_version.outputs.integer_version}}
+        formattedVersion: hallo
+        integerVersion: velo
