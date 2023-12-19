@@ -23,10 +23,8 @@ jobs:
     runs-on: windows-latest
 
     outputs:
-      formatted_version: candy
-      integer_version: sugus
-      #formatted_version: ${{ steps.output_formatted_version.outputs.version }}
-      #integer_version: ${{ steps.output_integer_version.outputs.version }}
+      formatted_version: ${{ steps.output_formatted_version.outputs.version }}
+      integer_version: ${{ steps.output_integer_version.outputs.version }}
 
     steps:
     - name: Checkout
@@ -42,7 +40,9 @@ jobs:
         xml-file: "${{ env.Project_Path }}"
         xpath: //PropertyGroup/ApplicationDisplayVersion
     - id: output_formatted_version
-      run: echo "version=${{ steps.formatted_version.outputs.info }}" >> "$GITHUB_OUTPUT"
+      run: echo "version=$formattedVersion" >> "$GITHUB_OUTPUT"
+      env:
+        formattedVersion: ${{ steps.formatted_version.outputs.info }} 
 
     # Read increasing android version
     - name: Read version for android
