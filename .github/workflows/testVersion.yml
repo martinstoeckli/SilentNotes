@@ -1,0 +1,67 @@
+# Builds the binaries which can be uploaded to the Microsoft/Google store
+name: Test version extract
+
+on:
+  workflow_dispatch:
+    inputs:
+      publish-release:
+        type: boolean
+        default: true
+        description: Test version
+
+env:
+  Project_Path: src\SilentNotes.Blazor\SilentNotes.csproj
+  Target_Framework_Android: net8.0-android
+  Target_Framework_Windows: net8.0-windows10.0.19041.0
+
+jobs:
+  ##############################################################################
+  # Extract version from csproj.
+  ##############################################################################
+  job_get_version:
+
+    runs-on: windows-latest
+
+    outputs:
+      formatted_version: ${{ steps.set_output.outputs.formattedVersion }}
+      integer_version: ${{ steps.set_output.outputs.integerVersion }}
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    # Read version from csproj
+    - name: Read version from csproj
+      id: formatted_version
+      uses: mavrosxristoforos/get-xml-info@1.2.1
+      with:
+        xml-file: "${{ env.Project_Path }}"
+        xpath: //PropertyGroup/ApplicationDisplayVersion
+
+    # Read increasing android version
+    - name: Read version for android
+      id: integer_version
+      uses: mavrosxristoforos/get-xml-info@1.2.1
+      with:
+        xml-file: "${{ env.Project_Path }}"
+        xpath: //PropertyGroup/ApplicationVersion
+        
+    - id: set_output
+      run: |
+        echo "formattedVersion=${{ steps.formatted_version.outputs.info }}" >> "$GITHUB_OUTPUT"
+        echo "integerVersion=${{ steps.integer_version.outputs.info }}" >> "$GITHUB_OUTPUT"
+
+  ##############################################################################
+  # Rad version
+  ##############################################################################
+  job_use_version:
+    runs-on: windows-latest
+    needs: job_get_version
+
+    steps:
+    - id: use_version
+      run: |
+        echo "Formatted version: ${{needs.job_get_version.outputs.formatted_version}}"
+        echo "Integer version: ${{needs.job_get_version.outputs.integer_version}}"
