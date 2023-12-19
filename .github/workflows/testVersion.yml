@@ -23,8 +23,8 @@ jobs:
     runs-on: windows-latest
 
     outputs:
-      formatted_version: ${{ steps.output_formatted_version.outputs.formattedVersion }}
-      integer_version: ${{ steps.output_integer_version.outputs.integerVersion }}
+      formatted_version: ${{ steps.output_formatted_version.outputs.version }}
+      integer_version: ${{ steps.output_integer_version.outputs.version }}
 
     steps:
     - name: Checkout
@@ -40,7 +40,7 @@ jobs:
         xml-file: "${{ env.Project_Path }}"
         xpath: //PropertyGroup/ApplicationDisplayVersion
     - id: output_formatted_version
-      run: echo "formattedVersion=${{ steps.formatted_version.outputs.info }}" >> "$GITHUB_OUTPUT"
+      run: echo "version=${{ steps.formatted_version.outputs.info }}" >> "$GITHUB_OUTPUT"
 
     # Read increasing android version
     - name: Read version for android
@@ -50,7 +50,7 @@ jobs:
         xml-file: "${{ env.Project_Path }}"
         xpath: //PropertyGroup/ApplicationVersion
     - id: output_integer_version
-      run: echo "integerVersion=${{ steps.integer_version.outputs.info }}" >> "$GITHUB_OUTPUT"
+      run: echo "version=${{ steps.integer_version.outputs.info }}" >> "$GITHUB_OUTPUT"
 
   ##############################################################################
   # Rad version
@@ -62,5 +62,8 @@ jobs:
     steps:
     - id: use_version
       run: |
-        echo "Formatted version: ${{needs.job_version.outputs.formatted_version}}"
-        echo "Integer version: ${{needs.job_version.outputs.integer_version}}"
+        echo "Formatted version: $formattedVersion"
+        echo "Integer version: $integerVersion"
+      env:
+        formattedVersion: ${{needs.job_version.outputs.formatted_version}}
+        integerVersion: ${{needs.job_version.outputs.integer_version}}
