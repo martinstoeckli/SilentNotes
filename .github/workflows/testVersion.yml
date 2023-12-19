@@ -62,8 +62,8 @@ jobs:
     steps:
     - id: use_version
       run: |
-        echo "Formatted version: $formattedVersion"
-        echo "Integer version: $integerVersion"
+        echo "Formatted version: ${{ env.formattedVersion }}"
+        echo "Integer version: ${{ env.integerVersion }}"
       env:
         formattedVersion: ${{needs.job_version.outputs.formatted_version}}
         integerVersion: ${{needs.job_version.outputs.integer_version}}
