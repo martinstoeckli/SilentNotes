@@ -23,8 +23,10 @@ jobs:
     runs-on: windows-latest
 
     outputs:
-      formatted_version: ${{ steps.output_formatted_version.outputs.version }}
-      integer_version: ${{ steps.output_integer_version.outputs.version }}
+      formatted_version: candy
+      integer_version: sugus
+      #formatted_version: ${{ steps.output_formatted_version.outputs.version }}
+      #integer_version: ${{ steps.output_integer_version.outputs.version }}
 
     steps:
     - name: Checkout
@@ -65,7 +67,5 @@ jobs:
         echo "Formatted version: ${{ env.formattedVersion }}"
         echo "Integer version: ${{ env.integerVersion }}"
       env:
-        #formattedVersion: ${{needs.job_version.outputs.formatted_version}}
-        #integerVersion: ${{needs.job_version.outputs.integer_version}}
-        formattedVersion: hallo
-        integerVersion: velo
+        formattedVersion: ${{needs.job_version.outputs.formatted_version}}
+        integerVersion: ${{needs.job_version.outputs.integer_version}}
