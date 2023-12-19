@@ -40,7 +40,7 @@ jobs:
         xml-file: "${{ env.Project_Path }}"
         xpath: //PropertyGroup/ApplicationDisplayVersion
     - id: output_formatted_version
-      run: echo "version=${{ steps.formatted_version.outputs.info }} " >> $Env:GITHUB_OUTPUT
+      run: echo "version=${{ steps.formatted_version.outputs.info }}" >> $Env:GITHUB_OUTPUT
 
     # Read increasing android version
     - name: Read version for android
@@ -147,11 +147,11 @@ jobs:
       with:
         dotnet-version: ${{ env.Dotnet_Version }}
 
-    - name: Install Java
-      uses: actions/setup-java@v2
-      with:
-        distribution: 'microsoft'
-        java-version: '11'
+    #- name: Install Java
+    #  uses: actions/setup-java@v2
+    #  with:
+    #    distribution: 'microsoft'
+    #    java-version: '11'
 
     - name: Install MAUI
       run: dotnet workload install maui-android --ignore-failed-sources
