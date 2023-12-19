@@ -40,9 +40,7 @@ jobs:
         xml-file: "${{ env.Project_Path }}"
         xpath: //PropertyGroup/ApplicationDisplayVersion
     - id: output_formatted_version
-      run: echo "version=${{ env.formattedVersion }}" >> $Env:GITHUB_OUTPUT
-      env:
-        formattedVersion: ${{ steps.formatted_version.outputs.info }} 
+      run: echo "version=${{ steps.formatted_version.outputs.info }} " >> $Env:GITHUB_OUTPUT
 
     # Read increasing android version
     - name: Read version for android
@@ -64,7 +62,7 @@ jobs:
     steps:
     - id: use_version
       run: |
-        echo "Formatted version: ${{ env.formattedVersion }}"
+        echo "Formatted version: ${{needs.job_version.outputs.formatted_version}}"
         echo "Integer version: ${{ env.integerVersion }}"
       env:
         formattedVersion: ${{needs.job_version.outputs.formatted_version}}
