@@ -40,7 +40,7 @@ jobs:
         xml-file: "${{ env.Project_Path }}"
         xpath: //PropertyGroup/ApplicationDisplayVersion
     - id: output_formatted_version
-      run: echo "version=$formattedVersion" >> "$GITHUB_OUTPUT"
+      run: echo "version=${{ env.formattedVersion }}" >> $GITHUB_OUTPUT
       env:
         formattedVersion: ${{ steps.formatted_version.outputs.info }} 
 
@@ -52,7 +52,7 @@ jobs:
         xml-file: "${{ env.Project_Path }}"
         xpath: //PropertyGroup/ApplicationVersion
     - id: output_integer_version
-      run: echo "version=${{ steps.integer_version.outputs.info }}" >> "$GITHUB_OUTPUT"
+      run: echo "version=${{ steps.integer_version.outputs.info }}" >> $GITHUB_OUTPUT
 
   ##############################################################################
   # Rad version
