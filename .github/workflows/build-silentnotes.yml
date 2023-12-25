@@ -225,6 +225,12 @@ jobs:
         dotnet workload install maui-windows --ignore-failed-sources
         dotnet workload install maui-android --ignore-failed-sources
 
+    # Restore the application to populate the obj folder with RuntimeIdentifiers
+    - name: Restore the application
+      run: msbuild $env:Project_Path /t:Restore /p:Configuration=$env:Configuration
+      env:
+        Configuration: ${{ matrix.configuration }}
+
     # Decode the base 64 encoded pfx and save the Signing_Certificate
     - name: Decode the pfx
       run: |
