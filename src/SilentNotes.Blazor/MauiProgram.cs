@@ -72,7 +72,7 @@ public static class MauiProgram
 
 #if DEBUG
         builder.Services.AddBlazorWebViewDeveloperTools();
-		builder.Logging.AddDebug().SetMinimumLevel(LogLevel.Information);
+		//builder.Logging.AddDebug().SetMinimumLevel(LogLevel.Information);
 #endif
 
         MauiApp mauiApp = builder.Build();

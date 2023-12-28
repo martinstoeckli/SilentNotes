@@ -12,7 +12,6 @@
         <EnableDefaultCssItems>false</EnableDefaultCssItems>
         <DefaultLanguage>en</DefaultLanguage>
         <BaseOutputPath>..\..\bin</BaseOutputPath>
-        <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
 
         <!-- Display name -->
         <ApplicationTitle>SilentNotes</ApplicationTitle>
@@ -24,6 +23,9 @@
         <!-- Versions -->
         <ApplicationDisplayVersion>7.99.2</ApplicationDisplayVersion>
         <ApplicationVersion>65</ApplicationVersion>
+
+        <!-- Workaround: for https://github.com/dotnet/maui/issues/12859 -->
+        <Version>$(ApplicationDisplayVersion)</Version>
 
         <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">24.0</SupportedOSPlatformVersion>
         <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
@@ -37,9 +39,7 @@
 
     <ItemGroup>
         <!-- App Icon -->
-        <MauiIcon Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'" Include="Resources\AppIcon\appiconfg.svg" BaseSize="55,55" />
-
-        <MauiIcon Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'" Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" ForegroundScale="0.66" Color="#64a7dd" BaseSize="55,55" />
+        <MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" ForegroundScale="0.66" Color="#64a7dd" BaseSize="55,55" />
 
         <!-- Splash Screen, shown from the application start until the MainPage is shown (Windows not yet supported) -->
         <MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#57a0db" BaseSize="55,55" />
@@ -55,7 +55,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Content Include="Resources\AppIcon\appicon44x44.png" />
+      <Content Include="Resources\oauthicon44x44.png" />
     </ItemGroup>
 
     <ItemGroup>
@@ -65,7 +65,6 @@
         <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
         <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
         <PackageReference Include="Microsoft.AspNetCore.Components.WebView.Maui" Version="$(MauiVersion)" />
-        <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
         <PackageReference Include="MudBlazor" Version="6.11.1" />
     </ItemGroup>
 
