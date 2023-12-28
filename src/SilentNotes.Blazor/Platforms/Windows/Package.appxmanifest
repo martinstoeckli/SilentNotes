@@ -10,7 +10,7 @@
   <Identity Name="22846MartinStoeckli.SilentNotes" Publisher="CN=ED1E5C1E-F8CD-4A09-A57F-18D151833C31" Version="7.99.3.0" />
 
   <Properties>
-    <DisplayName>$placeholder$</DisplayName>
+    <DisplayName>SilentNotes</DisplayName>
     <PublisherDisplayName>Martin Stoeckli</PublisherDisplayName>
     <Logo>$placeholder$.png</Logo>
   </Properties>
@@ -27,7 +27,7 @@
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="$targetentrypoint$">
       <uap:VisualElements
-        DisplayName="$placeholder$"
+        DisplayName="SilentNotes"
         Description="$placeholder$"
         Square150x150Logo="$placeholder$.png"
         Square44x44Logo="$placeholder$.png"
