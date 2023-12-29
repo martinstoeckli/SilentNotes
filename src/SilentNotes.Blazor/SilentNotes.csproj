@@ -21,11 +21,13 @@
         <ApplicationIdGuid>11EC9146-7F8B-417D-B616-3CF75D22866E</ApplicationIdGuid>
 
         <!-- Versions -->
-        <ApplicationDisplayVersion>7.99.3</ApplicationDisplayVersion>
+        <ApplicationDisplayVersion>7.99.4</ApplicationDisplayVersion>
         <ApplicationVersion>65</ApplicationVersion>
 
         <!-- Workaround: for https://github.com/dotnet/maui/issues/12859 -->
         <Version>$(ApplicationDisplayVersion)</Version>
+
+        <WindowsAppSDKSelfContained>True</WindowsAppSDKSelfContained>
 
         <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">24.0</SupportedOSPlatformVersion>
         <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
@@ -33,9 +35,9 @@
         <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
         <AppxPackageSigningEnabled>False</AppxPackageSigningEnabled>
         <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
-        <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
+        <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
         <AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
-        <GenerateTestArtifacts>True</GenerateTestArtifacts>
+        <GenerateTestArtifacts>False</GenerateTestArtifacts>
         <GenerateTemporaryStoreCertificate>True</GenerateTemporaryStoreCertificate>
         <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
     </PropertyGroup>
@@ -47,7 +49,9 @@
 
     <ItemGroup>
         <!-- App Icon -->
-        <MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" ForegroundScale="0.66" Color="#64a7dd" BaseSize="55,55" />
+        <MauiIcon Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'" Include="Resources\AppIcon\appiconfg.svg" BaseSize="55,55" />
+
+        <MauiIcon Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'" Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" ForegroundScale="0.66" Color="#64a7dd" BaseSize="55,55" />
 
         <!-- Splash Screen, shown from the application start until the MainPage is shown (Windows not yet supported) -->
         <MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#57a0db" BaseSize="55,55" />
