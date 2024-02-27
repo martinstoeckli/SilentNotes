@@ -4,7 +4,6 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using SilentNotes.Services;
-using Windows.Storage;
 
 namespace SilentNotes.Platforms.Services
 {
@@ -24,7 +23,7 @@ namespace SilentNotes.Platforms.Services
         /// <inheritdoc/>
         public override string GetLocation()
         {
-            return ApplicationData.Current.LocalFolder.Path;
+            return FileSystem.Current.AppDataDirectory;
         }
     }
 }
