@@ -1,4 +1,5 @@
-﻿using Microsoft.UI.Xaml;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.UI.Xaml;
 using Microsoft.Windows.AppLifecycle;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -17,17 +18,38 @@ namespace SilentNotes.WinUI
         /// </summary>
         public App()
         {
-            // Allow only a single application instance
-            if (TryGetAlreadyRunningInstance(out AppInstance otherInstance))
+            MauiProgram.RegisterLogger();
+
+            try
             {
-                var activatedEventArgs = Microsoft.Windows.AppLifecycle.AppInstance.GetCurrent()?.GetActivatedEventArgs();
-                otherInstance.RedirectActivationToAsync(activatedEventArgs).AsTask().Wait();
-                System.Diagnostics.Process.GetCurrentProcess().Kill();
+                // Allow only a single application instance
+                if (TryGetAlreadyRunningInstance(out AppInstance otherInstance))
+                {
+                    var activatedEventArgs = Microsoft.Windows.AppLifecycle.AppInstance.GetCurrent()?.GetActivatedEventArgs();
+                    otherInstance.RedirectActivationToAsync(activatedEventArgs).AsTask().Wait();
+                    System.Diagnostics.Process.GetCurrentProcess().Kill();
+                }
+                this.InitializeComponent();
             }
-            this.InitializeComponent();
+            catch (Exception ex)
+            {
+                Ioc.Instance.GetService<ILogger>()?.LogError(ex, null, null);
+                throw;
+            }
         }
 
-        protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();
+        protected override MauiApp CreateMauiApp()
+        {
+            try
+            {
+                return MauiProgram.CreateMauiApp();
+            }
+            catch (Exception ex)
+            {
+                Ioc.Instance.GetService<ILogger>()?.LogError(ex, null, null);
+                throw;
+            }
+        }
 
         /// <summary>
         /// Checks whether another instance of this application is already open and returns it.

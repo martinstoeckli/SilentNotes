@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace SilentNotes
 {
@@ -19,6 +20,7 @@ namespace SilentNotes
     {
         private IServiceProvider _serviceProvider;
         private Dictionary<Type, object> _injectedServices = new Dictionary<Type, object>();
+        private ILogger _logger = null;
 
         /// <summary>
         /// Gets a static instance of the Ioc service provider.
@@ -34,9 +36,22 @@ namespace SilentNotes
             _serviceProvider = serviceProvider;
         }
 
+        /// <summary>
+        /// Some services like a logger may be required from the startup of the application. Here
+        /// we can define a logger even before <see cref="Initialize(IServiceProvider)"/> is called.
+        /// </summary>
+        /// <param name="loger">The logger to register.</param>
+        public void InitializeLogger(ILogger loger)
+        {
+            _logger = loger;
+        }
+
         /// <inheritdoc/>
         public object GetService(Type serviceType)
         {
+            if ((serviceType == typeof(ILogger)) && (_logger != null))
+                return _logger;
+
             // Check if there is an injected service first
             if (_injectedServices.TryGetValue(serviceType, out object instance))
                 return instance;

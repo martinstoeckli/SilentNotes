@@ -1,15 +1,24 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.Extensions.Logging;
 using SilentNotes.Workers;
 
 namespace SilentNotes;
 
 public partial class MainPage : ContentPage
 {
-	public MainPage()
-	{
-		InitializeComponent();
-        Loaded += LoadedEventHandler;
-	}
+    public MainPage()
+    {
+        try
+        {
+            InitializeComponent();
+            Loaded += LoadedEventHandler;
+        }
+        catch (Exception ex)
+        {
+            Ioc.Instance.GetService<ILogger>()?.LogError(ex, null, null);
+            throw;
+        }
+    }
 
     private async void LoadedEventHandler(object sender, EventArgs e)
     {

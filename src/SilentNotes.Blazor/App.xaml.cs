@@ -1,4 +1,5 @@
-﻿using Microsoft.Maui.Controls;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.Maui.Controls;
 
 namespace SilentNotes
 {
@@ -6,15 +7,31 @@ namespace SilentNotes
     {
         public App(IServiceProvider serviceProvider)
         {
-            InitializeComponent();
-            MainPage = new MainPage();
+            try
+            {
+                InitializeComponent();
+                MainPage = new MainPage();
+            }
+            catch (Exception ex)
+            {
+                Ioc.Instance.GetService<ILogger>()?.LogError(ex, null, null);
+                throw;
+            }
         }
 
         protected override Window CreateWindow(IActivationState activationState)
         {
-            Window window = base.CreateWindow(activationState);
-            window.Title = "SilentNotes";
-            return window;
+            try
+            {
+                Window window = base.CreateWindow(activationState);
+                window.Title = "SilentNotes";
+                return window;
+            }
+            catch (Exception ex)
+            {
+                Ioc.Instance.GetService<ILogger>()?.LogError(ex, null, null);
+                throw;
+            }
         }
     }
 }

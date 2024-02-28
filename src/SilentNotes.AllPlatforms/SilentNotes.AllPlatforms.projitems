@@ -71,6 +71,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\IVersionService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\IXmlFileService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\LanguageService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\LoggerService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\NavigationService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\NotificationService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\RepositoryStorageServiceBase.cs" />
@@ -156,5 +157,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Workers\UnmixableAlphabet.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Workers\WebviewUtils.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Workers\XmlUtils.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)Services\Directory.Build.props" />
   </ItemGroup>
 </Project>

@@ -162,6 +162,19 @@ public static class MauiProgram
 
 #endif
 
+    /// <summary>
+    /// Initializes the logger for application. THis can be done at the very startup of the
+    /// application, even before <see cref="CreateMauiApp"/> is called, so that exceptions can be
+    /// logged.
+    /// </summary>
+    public static void RegisterLogger()
+    {
+        // Activate it only for test versions.
+        string logFilePath = Path.Combine(FileSystem.AppDataDirectory, "silentnotes.log");
+        ILogger logger = new LoggerService(logFilePath);
+        Ioc.Instance.InitializeLogger(logger);
+    }
+
     private static string GetLanguageCode()
     {
         string languageCode = new LanguageCodeService().GetSystemLanguageCode();
