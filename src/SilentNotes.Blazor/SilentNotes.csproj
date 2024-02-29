@@ -65,10 +65,24 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Remove="Resources\AppIcon\silentnotes.png" />
-    </ItemGroup>
-
-    <ItemGroup>
+      <Content Include="Resources\AppIcon\$placeholder$.scale-100.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="Resources\AppIcon\$placeholder$.scale-200.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="Resources\AppIcon\$placeholder$.scale-400.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="Resources\AppIcon\$placeholder$.targetsize-16.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="Resources\AppIcon\$placeholder$.targetsize-256.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="Resources\AppIcon\$placeholder$.targetsize-48.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
       <Content Include="Resources\AppIcon\silentnotes.png">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
