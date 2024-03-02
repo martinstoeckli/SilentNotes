@@ -7,12 +7,12 @@
   xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
   IgnorableNamespaces="uap mp rescap">
 
-  <Identity Name="22846MartinStoeckli.SilentNotes" Publisher="CN=ED1E5C1E-F8CD-4A09-A57F-18D151833C31" Version="7.99.6.0" />
+  <Identity Name="22846MartinStoeckli.SilentNotes" Publisher="CN=ED1E5C1E-F8CD-4A09-A57F-18D151833C31" Version="7.99.7.0" />
 
   <Properties>
     <DisplayName>SilentNotes</DisplayName>
     <PublisherDisplayName>Martin Stoeckli</PublisherDisplayName>
-    <Logo>Resources\AppIcon\$placeholder$.png</Logo>
+    <Logo>appiconfgLogo.png</Logo>
   </Properties>
 
   <Dependencies>
@@ -28,9 +28,9 @@
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="$targetentrypoint$">
       <uap:VisualElements
         DisplayName="SilentNotes"
-        BackgroundColor="transparent" Description="SilentNotes is a simple note taking app which respects your privacy." Square150x150Logo="Resources\AppIcon\$placeholder$.png" Square44x44Logo="Resources\AppIcon\$placeholder$.png">
+        BackgroundColor="transparent" Description="SilentNotes is a simple note taking app which respects your privacy." Square150x150Logo="Resources\appicon150x150.png" Square44x44Logo="Resources\appicon44x44.png">
         <uap:DefaultTile/>
-        <uap:SplashScreen Image="Resources\AppIcon\SilentNotes.png"/>
+        <uap:SplashScreen Image="splashSplashScreen.png"/>
       </uap:VisualElements>
       <Extensions>
         <uap:Extension Category="windows.protocol">
