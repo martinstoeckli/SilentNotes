@@ -65,6 +65,8 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Content Include="Resources\appicon150x150.png" />
+      <Content Include="Resources\appicon44x44.png" />
       <Content Include="Resources\AppIcon\$placeholder$.scale-100.png">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
