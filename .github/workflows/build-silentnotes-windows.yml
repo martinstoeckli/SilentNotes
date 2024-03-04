@@ -27,7 +27,7 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         fetch-depth: 0
 
@@ -64,29 +64,34 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         fetch-depth: 0
 
     # Install the .NET Core workload
     - name: Install .NET Core
-      uses: actions/setup-dotnet@v3
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: ${{ env.Dotnet_Version }}
 
     # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
-    - name: Setup MSBuild.exe
-      uses: microsoft/setup-msbuild@v1.0.2
+#    - name: Setup MSBuild.exe
+#      uses: microsoft/setup-msbuild@v1.0.2
 
     - name: Install MAUI
       run: |
         dotnet workload install maui-windows --ignore-failed-sources
 
-    # Restore the application to populate the obj folder with RuntimeIdentifiers
-    - name: Restore the application
-      run: msbuild $env:Project_Path /t:Restore /p:Configuration=$env:Configuration
+    - name: Restore Dependencies
+      run: dotnet restore "${{ env.Project_Path }}" -a ${{ env.Platform }} 
       env:
-        Configuration: ${{ matrix.configuration }}
+        Platform: ${{ matrix.platform }}
+
+    # Restore the application to populate the obj folder with RuntimeIdentifiers
+#    - name: Restore the application
+#      run: msbuild $env:Project_Path /t:Restore /p:Configuration=$env:Configuration
+#      env:
+#        Configuration: ${{ matrix.configuration }}
 
     # Decode the base 64 encoded pfx and save the Signing_Certificate
     - name: Decode the pfx
@@ -100,7 +105,7 @@ jobs:
 
     # Build application
     - name: Build application
-      run: dotnet publish "${{ env.Project_Path }}" -c ${{ env.Configuration }} -f ${{ env.Target_Framework_Windows }} -a ${{ env.Platform }} -o ".\bin" -p:WindowsAppSDKSelfContained -p:RuntimeIdentifierOverride=win-${{ env.Platform }} -p:AppxPackageSigningEnabled=true -p:PackageCertificateThumbprint="${{ secrets.SILENTNOTESPFXTHUMBPRINT }}"
+      run: dotnet publish "${{ env.Project_Path }}" -c ${{ env.Configuration }} -f ${{ env.Target_Framework_Windows }} -a ${{ env.Platform }} -o ".\bin" -p:RuntimeIdentifierOverride=win-${{ env.Platform }} -p:AppxPackageSigningEnabled=true -p:PackageCertificateThumbprint="${{ secrets.SILENTNOTESPFXTHUMBPRINT }}"
       env:
         Configuration: ${{ matrix.configuration }}
         Platform: ${{ matrix.platform }}
@@ -120,7 +125,7 @@ jobs:
 
     # Upload artifacts
     - name: Upload build artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: silentnotes_binaries
         path: .\windows
@@ -135,12 +140,12 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         fetch-depth: 0
 
     - name: Download msix files
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: silentnotes_binaries
         path: downloaddirectory
@@ -160,7 +165,7 @@ jobs:
 
     # Upload artifacts
     - name: Upload build artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: silentnotes_binaries
         path: .\**\*.msixbundle
