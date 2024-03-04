@@ -1,0 +1,98 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+    <PropertyGroup>
+        <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net8.0-windows10.0.22621.0</TargetFrameworks>
+
+        <OutputType>Exe</OutputType>
+        <RootNamespace>SilentNotes</RootNamespace>
+        <UseMaui>true</UseMaui>
+        <SingleProject>true</SingleProject>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <EnableDefaultCssItems>false</EnableDefaultCssItems>
+        <DefaultLanguage>en</DefaultLanguage>
+        <BaseOutputPath>..\..\bin</BaseOutputPath>
+
+        <!-- Display name -->
+        <ApplicationTitle>SilentNotes</ApplicationTitle>
+
+        <!-- App Identifier -->
+        <ApplicationId>ch.martinstoeckli.silentnotes</ApplicationId>
+        <ApplicationIdGuid>11EC9146-7F8B-417D-B616-3CF75D22866E</ApplicationIdGuid>
+
+        <!-- Versions -->
+        <ApplicationDisplayVersion>7.99.8</ApplicationDisplayVersion>
+        <ApplicationVersion>65</ApplicationVersion>
+
+        <!-- Workaround: for https://github.com/dotnet/maui/issues/12859 -->
+        <Version>$(ApplicationDisplayVersion)</Version>
+
+        <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
+        <TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
+        <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
+        <AppxPackageSigningEnabled>False</AppxPackageSigningEnabled>
+        <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
+        <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
+        <AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
+        <GenerateTestArtifacts>False</GenerateTestArtifacts>
+        <GenerateTemporaryStoreCertificate>True</GenerateTemporaryStoreCertificate>
+        <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <!-- App Icon -->
+        <MauiIcon Include="Resources\AppIcon\appiconfg.svg" BaseSize="55,55" />
+
+        <!-- Splash Screen, shown from the application start until the MainPage is shown (Windows not yet supported) -->
+        <MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#57a0db" BaseSize="55,55" />
+
+        <!-- Images -->
+        <MauiImage Include="Resources\Images\*" />
+
+        <!-- Custom Fonts -->
+        <MauiFont Include="Resources\Fonts\*" />
+
+        <!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
+        <MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="Resources\appicon150x150.png" />
+      <Content Include="Resources\appicon44x44.png" />
+      <Content Include="Resources\AppIcon\$placeholder$.scale-100.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="Resources\AppIcon\$placeholder$.scale-200.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="Resources\AppIcon\$placeholder$.scale-400.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="Resources\AppIcon\$placeholder$.targetsize-16.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="Resources\AppIcon\$placeholder$.targetsize-256.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="Resources\AppIcon\$placeholder$.targetsize-48.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="Resources\AppIcon\silentnotes.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="Resources\oauthicon44x44.png" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="BouncyCastle.Cryptography" Version="2.2.1" />
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+        <PackageReference Include="Flurl.Http" Version="4.0.2" />
+        <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.7" />
+        <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.7" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebView.Maui" Version="8.0.7" />
+        <PackageReference Include="MudBlazor" Version="6.16.0" />
+    </ItemGroup>
+
+    <Import Project="..\SilentNotes.AllPlatforms\SilentNotes.AllPlatforms.projitems" Label="Shared" />
+
+    <Import Project="..\VanillaCloudStorageClient\VanillaCloudStorageClient.projitems" Label="Shared" />
+</Project>
