@@ -1,0 +1,167 @@
+# Builds the binaries which can be uploaded to the Microsoft/Google store
+name: Build SilentNotes Windows binaries
+
+on:
+  workflow_dispatch:
+    inputs:
+      publish-release:
+        type: boolean
+        default: true
+        description: Publish new release on GitHub
+
+env:
+  Project_Path: src\SilentNotes.Blazor\SilentNotes.Windows.csproj
+  Dotnet_Version: 8.0.x
+  Target_Framework_Windows: net8.0-windows10.0.22621.0
+
+jobs:
+  ##############################################################################
+  # Extract version from csproj.
+  ##############################################################################
+  job_version:
+    runs-on: windows-latest
+
+    outputs:
+      formatted_version: ${{ steps.output_formatted_version.outputs.version }}
+      integer_version: ${{ steps.output_integer_version.outputs.version }}
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    # Read version from csproj
+    - name: Read version from csproj
+      id: formatted_version
+      uses: mavrosxristoforos/get-xml-info@1.2.1
+      with:
+        xml-file: "${{ env.Project_Path }}"
+        xpath: //PropertyGroup/ApplicationDisplayVersion
+    - id: output_formatted_version
+      run: echo "version=${{ steps.formatted_version.outputs.info }}" >> $Env:GITHUB_OUTPUT
+
+    # Read increasing android version
+    - name: Read version for android
+      id: integer_version
+      uses: mavrosxristoforos/get-xml-info@1.2.1
+      with:
+        xml-file: "${{ env.Project_Path }}"
+        xpath: //PropertyGroup/ApplicationVersion
+    - id: output_integer_version
+      run: echo "version=${{ steps.integer_version.outputs.info }}" >> $Env:GITHUB_OUTPUT
+
+  ##############################################################################
+  # Windows
+  ##############################################################################
+  job_build_windows:
+    strategy:
+      matrix:
+        configuration: [Release]
+        platform: [x86,x64,arm64]
+  
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    # Install the .NET Core workload
+    - name: Install .NET Core
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: ${{ env.Dotnet_Version }}
+
+    # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
+    - name: Setup MSBuild.exe
+      uses: microsoft/setup-msbuild@v1.0.2
+
+    - name: Install MAUI
+      run: |
+        dotnet workload install maui-windows --ignore-failed-sources
+
+    # Restore the application to populate the obj folder with RuntimeIdentifiers
+    - name: Restore the application
+      run: msbuild $env:Project_Path /t:Restore /p:Configuration=$env:Configuration
+      env:
+        Configuration: ${{ matrix.configuration }}
+
+    # Decode the base 64 encoded pfx and save the Signing_Certificate
+    - name: Decode the pfx
+      run: |
+        echo "${{ secrets.SILENTNOTESPFX }}" > SilentNotes.pfx.asc
+        certutil -decode SilentNotes.pfx.asc SilentNotes.pfx
+    - name: Remove decoded pfx
+      run: Remove-Item -path SilentNotes.pfx.asc
+    - name: Add cert to store
+      run: certutil -user -q -p ${{ secrets.SILENTNOTESPFXPASSWORD }} -importpfx SilentNotes.pfx NoRoot
+
+    # Build application
+    - name: Build application
+      run: dotnet publish "${{ env.Project_Path }}" -c ${{ env.Configuration }} -f ${{ env.Target_Framework_Windows }} -a ${{ env.Platform }} -o ".\bin" -p:WindowsAppSDKSelfContained -p:RuntimeIdentifierOverride=win-${{ env.Platform }} -p:AppxPackageSigningEnabled=true -p:PackageCertificateThumbprint="${{ secrets.SILENTNOTESPFXTHUMBPRINT }}"
+      env:
+        Configuration: ${{ matrix.configuration }}
+        Platform: ${{ matrix.platform }}
+        BuildMode: StoreOnly
+
+    # Remove the pfx
+    - name: Remove the pfx
+      run: Remove-Item -path SilentNotes.pfx
+
+    - name: Collect apk files
+      run: |
+        $apks = Get-ChildItem -Path .\bin\* -Filter SilentNotes*.msix -Recurse -File
+        New-Item -Path ".\windows" -ItemType "directory"
+        Move-Item -Path $apks[0].FullName -Destination ".\windows\silentnotes_${{ env.Platform }}.msix"
+      env:
+        Platform: ${{ matrix.platform }}
+
+    # Upload artifacts
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: silentnotes_binaries
+        path: .\windows
+
+  ##############################################################################
+  # Windows packaging
+  # Package all msix to a single msixbundle for uploading to the Microsoft store
+  ##############################################################################
+  job_package:
+    needs: [job_version, job_build_windows]
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Download msix files
+      uses: actions/download-artifact@v3
+      with:
+        name: silentnotes_binaries
+        path: downloaddirectory
+
+    - name: Collect msix files
+      run: |
+        New-Item -Path ".\msixdirectory" -ItemType "directory"
+        Move-Item -Path .\downloaddirectory\*.msix -Destination .\msixdirectory
+
+    - name: Make msixbundle
+      id: bundler
+      uses: LanceMcCarthy/Action-MsixBundler@v1.0.0
+      with:
+        msix-folder: "msixdirectory"
+        msixbundle-filepath: "silentnotes.msixbundle"
+        msixbundle-version: "${{needs.job_version.outputs.formatted_version}}.0"
+
+    # Upload artifacts
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: silentnotes_binaries
+        path: .\**\*.msixbundle
+        retention-days: 1
