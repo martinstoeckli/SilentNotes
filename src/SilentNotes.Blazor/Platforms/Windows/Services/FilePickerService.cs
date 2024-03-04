@@ -23,11 +23,11 @@ namespace SilentNotes.Platforms.Services
         public async Task<bool> PickFile()
         {
             FileOpenPicker filePicker = new FileOpenPicker();
+            WinRT.Interop.InitializeWithWindow.Initialize(filePicker, GetMainWindowHandle());
+
             filePicker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.Desktop;
             filePicker.SettingsIdentifier = "oiwurei223i4u";
             filePicker.FileTypeFilter.Add("*");
-
-            WinRT.Interop.InitializeWithWindow.Initialize(filePicker, GetMainWindowHandle());
 
             _pickedFile = await filePicker.PickSingleFileAsync();
             return _pickedFile != null;

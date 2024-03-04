@@ -21,11 +21,12 @@ namespace SilentNotes.Platforms.Services
         public async Task<bool> PickFolder()
         {
             var folderPicker = new Windows.Storage.Pickers.FolderPicker();
+            WinRT.Interop.InitializeWithWindow.Initialize(folderPicker, GetMainWindowHandle());
+
             folderPicker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.Desktop;
             folderPicker.SettingsIdentifier = "D6EDA6465535";
             folderPicker.FileTypeFilter.Add("*");
 
-            WinRT.Interop.InitializeWithWindow.Initialize(folderPicker, GetMainWindowHandle());
 
             _pickedFolder = await folderPicker.PickSingleFolderAsync();
             return _pickedFolder != null;
