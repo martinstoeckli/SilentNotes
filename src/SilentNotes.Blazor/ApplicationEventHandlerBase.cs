@@ -18,8 +18,8 @@ namespace SilentNotes
         /// </summary>
         public ApplicationEventHandlerBase()
         {
-            WeakReferenceMessenger.Default.Register<MainLayoutReadyMessage>(
-                this, async (recipient, message) => await OnMainLayoutReady());
+            //WeakReferenceMessenger.Default.Register<MainLayoutReadyMessage>(
+            //    this, async (recipient, message) => await OnMainLayoutReady());
         }
 
         /// <summary>
@@ -29,12 +29,13 @@ namespace SilentNotes
         /// <returns>Task for async calls.</returns>
         protected virtual async Task OnMainLayoutReady()
         {
-            INotificationService notificationService = Ioc.Instance.GetService<INotificationService>();
-            await notificationService.ShowNextNotification();
+            //INotificationService notificationService = Ioc.Instance.GetService<INotificationService>();
+            //await notificationService.ShowNextNotification();
 
-            // Do not await the synchronization, so it runs in the background.
-            var synchronizationService = Ioc.Instance.GetService<ISynchronizationService>();
-            _ = synchronizationService.AutoSynchronizeAtStartup(Ioc.Instance);
+            //// Do not await the synchronization, so it runs in the background.
+            //var synchronizationService = Ioc.Instance.GetService<ISynchronizationService>();
+            //_ = synchronizationService.AutoSynchronizeAtStartup(Ioc.Instance);
+            await Task.CompletedTask;
         }
     }
 }

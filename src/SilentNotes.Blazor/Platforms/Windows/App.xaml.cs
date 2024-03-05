@@ -22,13 +22,13 @@ namespace SilentNotes.WinUI
 
             try
             {
-                // Allow only a single application instance
-                if (TryGetAlreadyRunningInstance(out AppInstance otherInstance))
-                {
-                    var activatedEventArgs = Microsoft.Windows.AppLifecycle.AppInstance.GetCurrent()?.GetActivatedEventArgs();
-                    otherInstance.RedirectActivationToAsync(activatedEventArgs).AsTask().Wait();
-                    System.Diagnostics.Process.GetCurrentProcess().Kill();
-                }
+                //// Allow only a single application instance
+                //if (TryGetAlreadyRunningInstance(out AppInstance otherInstance))
+                //{
+                //    var activatedEventArgs = Microsoft.Windows.AppLifecycle.AppInstance.GetCurrent()?.GetActivatedEventArgs();
+                //    otherInstance.RedirectActivationToAsync(activatedEventArgs).AsTask().Wait();
+                //    System.Diagnostics.Process.GetCurrentProcess().Kill();
+                //}
                 this.InitializeComponent();
             }
             catch (Exception ex)

@@ -49,10 +49,10 @@ public static class MauiProgram
                 // Registered LifecycleEvents are triggered not only by the MainActivity. To avoid
                 // running them from other activities the MainActivity will trigger them directly.
 #elif WINDOWS
-                events.AddWindows(windows => windows
-                    .OnClosed((window, args) => applicationEventHandler.OnClosed(window, args)));
-                var thisAppInstance = Microsoft.Windows.AppLifecycle.AppInstance.GetCurrent();
-                thisAppInstance.Activated += applicationEventHandler.OnRedirected;
+                //events.AddWindows(windows => windows
+                //    .OnClosed((window, args) => applicationEventHandler.OnClosed(window, args)));
+                //var thisAppInstance = Microsoft.Windows.AppLifecycle.AppInstance.GetCurrent();
+                //thisAppInstance.Activated += applicationEventHandler.OnRedirected;
 #endif
             });
 
