@@ -10,7 +10,7 @@ on:
         description: Publish new release on GitHub
 
 env:
-  Project_Path: src\SilentNotes.Blazor\SilentNotes.Windows.csproj
+  Project_Path: src\SilentNotes.Maui\SilentNotes.csproj
   Dotnet_Version: 8.0.x
   Target_Framework_Windows: net8.0-windows10.0.22621.0
 
