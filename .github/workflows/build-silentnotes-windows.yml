@@ -27,7 +27,7 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v3
       with:
         fetch-depth: 0
 
@@ -64,13 +64,13 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v3
       with:
         fetch-depth: 0
 
     # Install the .NET Core workload
     - name: Install .NET Core
-      uses: actions/setup-dotnet@v4
+      uses: actions/setup-dotnet@v3
       with:
         dotnet-version: ${{ env.Dotnet_Version }}
 
@@ -140,12 +140,12 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v3
       with:
         fetch-depth: 0
 
     - name: Download msix files
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v3
       with:
         name: silentnotes_binaries
         path: downloaddirectory
