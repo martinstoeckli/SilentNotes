@@ -125,7 +125,7 @@ jobs:
 
     # Upload artifacts
     - name: Upload build artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v3
       with:
         name: silentnotes_binaries
         path: .\windows
@@ -165,7 +165,7 @@ jobs:
 
     # Upload artifacts
     - name: Upload build artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v3
       with:
         name: silentnotes_binaries
         path: .\**\*.msixbundle
