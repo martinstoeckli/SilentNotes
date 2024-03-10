@@ -58,7 +58,7 @@ jobs:
     strategy:
       matrix:
         configuration: [Release]
-        platform: [x86,x64,arm64]
+        platform: [x86,x64]
   
     runs-on: windows-latest
 
