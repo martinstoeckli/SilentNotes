@@ -22,6 +22,7 @@
         <Nullable>disable</Nullable>
 		<WindowsAppSDKSelfContained>True</WindowsAppSDKSelfContained>
 		<SelfContained>True</SelfContained>
+		<WindowsAppSdkDeploymentManagerInitialize>false</WindowsAppSdkDeploymentManagerInitialize>
 
         <!-- Display name -->
         <ApplicationTitle>SilentNotes</ApplicationTitle>
