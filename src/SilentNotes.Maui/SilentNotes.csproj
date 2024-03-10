@@ -20,6 +20,8 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <EnableDefaultCssItems>false</EnableDefaultCssItems>
         <Nullable>disable</Nullable>
+		<WindowsAppSDKSelfContained>True</WindowsAppSDKSelfContained>
+		<SelfContained>True</SelfContained>
 
         <!-- Display name -->
         <ApplicationTitle>SilentNotes</ApplicationTitle>
