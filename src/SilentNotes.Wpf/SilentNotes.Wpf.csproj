@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <RootNamespace>SilentNotes</RootNamespace>
+    <AssemblyName>SilentNotes</AssemblyName>
+    <SupportedOSPlatformVersion>10.0.17763.0</SupportedOSPlatformVersion>
+    <BaseOutputPath>..\..\bin</BaseOutputPath>
+    <Version>7.99.14</Version>
+    <Company>Martin Stoeckli</Company>
+    <Description>SilentNotes is a simple note taking app which respects your privacy.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebView.Wpf" Version="8.0.7" />
+  </ItemGroup>
+
+</Project>
