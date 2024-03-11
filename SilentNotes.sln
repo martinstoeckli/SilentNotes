@@ -5,48 +5,41 @@ VisualStudioVersion = 17.5.33530.505
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{1F3F34B1-524B-4855-8336-D9397E00F423}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VanillaCloudStorageClientTest", "src\Tests\VanillaCloudStorageClientTest\VanillaCloudStorageClientTest.csproj", "{60C23796-058A-4C76-8D59-B023A47630FD}"
-EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "SilentNotes.AllPlatforms", "src\SilentNotes.AllPlatforms\SilentNotes.AllPlatforms.shproj", "{BBFA534E-69FD-4B31-B596-01D7317460D5}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SilentNotesTest", "src\Tests\SilentNotesTest\SilentNotesTest.csproj", "{7F3ACBD0-D2E8-494E-8597-540EE89B78ED}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "VanillaCloudStorageClient", "src\VanillaCloudStorageClient\VanillaCloudStorageClient.shproj", "{206E934E-A44E-4ED1-97F0-1FFFE0718E5E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SilentNotes", "src\SilentNotes.Maui\SilentNotes.csproj", "{76F16F09-F84C-45CD-9D7F-4980BBFE14C3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SilentNotes", "src\SilentNotes.Maui\SilentNotes.csproj", "{76F16F09-F84C-45CD-9D7F-4980BBFE14C3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
 		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{60C23796-058A-4C76-8D59-B023A47630FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{60C23796-058A-4C76-8D59-B023A47630FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7F3ACBD0-D2E8-494E-8597-540EE89B78ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7F3ACBD0-D2E8-494E-8597-540EE89B78ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{76F16F09-F84C-45CD-9D7F-4980BBFE14C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{76F16F09-F84C-45CD-9D7F-4980BBFE14C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{76F16F09-F84C-45CD-9D7F-4980BBFE14C3}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{76F16F09-F84C-45CD-9D7F-4980BBFE14C3}.Debug|x64.ActiveCfg = Debug|x64
+		{76F16F09-F84C-45CD-9D7F-4980BBFE14C3}.Debug|x64.Build.0 = Debug|x64
+		{76F16F09-F84C-45CD-9D7F-4980BBFE14C3}.Debug|x64.Deploy.0 = Debug|x64
 		{76F16F09-F84C-45CD-9D7F-4980BBFE14C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{76F16F09-F84C-45CD-9D7F-4980BBFE14C3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{76F16F09-F84C-45CD-9D7F-4980BBFE14C3}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{76F16F09-F84C-45CD-9D7F-4980BBFE14C3}.Release|x64.ActiveCfg = Release|x64
+		{76F16F09-F84C-45CD-9D7F-4980BBFE14C3}.Release|x64.Build.0 = Release|x64
+		{76F16F09-F84C-45CD-9D7F-4980BBFE14C3}.Release|x64.Deploy.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{60C23796-058A-4C76-8D59-B023A47630FD} = {1F3F34B1-524B-4855-8336-D9397E00F423}
-		{7F3ACBD0-D2E8-494E-8597-540EE89B78ED} = {1F3F34B1-524B-4855-8336-D9397E00F423}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {80AD4A6C-D265-4488-BC79-AA6B05EF090E}
 	EndGlobalSection
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		src\VanillaCloudStorageClient\VanillaCloudStorageClient.projitems*{206e934e-a44e-4ed1-97f0-1fffe0718e5e}*SharedItemsImports = 13
-		src\VanillaCloudStorageClient\VanillaCloudStorageClient.projitems*{60c23796-058a-4c76-8d59-b023a47630fd}*SharedItemsImports = 5
-		src\SilentNotes.AllPlatforms\SilentNotes.AllPlatforms.projitems*{7f3acbd0-d2e8-494e-8597-540ee89b78ed}*SharedItemsImports = 5
-		src\VanillaCloudStorageClient\VanillaCloudStorageClient.projitems*{7f3acbd0-d2e8-494e-8597-540ee89b78ed}*SharedItemsImports = 5
 		src\SilentNotes.AllPlatforms\SilentNotes.AllPlatforms.projitems*{bbfa534e-69fd-4b31-b596-01d7317460d5}*SharedItemsImports = 13
 	EndGlobalSection
 EndGlobal
