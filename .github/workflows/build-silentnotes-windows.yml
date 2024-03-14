@@ -80,7 +80,7 @@ jobs:
 
     - name: Install MAUI
       run: |
-        dotnet workload install maui-windows maui-android
+        dotnet workload install maui-windows maui-android wasm-tools
 
 #    - name: Restore Dependencies
 #      run: dotnet restore "${{ env.Project_Path }}" -a ${{ env.Platform }} 
