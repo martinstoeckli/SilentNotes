@@ -10,7 +10,8 @@ on:
         description: Publish new release on GitHub
 
 env:
-  Project_Path: src\SilentNotes.Maui\SilentNotes.csproj
+  Project_Path: src\SilentNotes.Wpf\SilentNotes.Wpf.csproj
+  Wapproj_Path: src\SilentNotes.Wpf.Packaging\SilentNotes.Wpf.Packaging.wapproj
   Dotnet_Version: 8.0.x
   Target_Framework_Windows: net8.0-windows10.0.22621.0
 
@@ -41,16 +42,6 @@ jobs:
     - id: output_formatted_version
       run: echo "version=${{ steps.formatted_version.outputs.info }}" >> $Env:GITHUB_OUTPUT
 
-    # Read increasing android version
-    - name: Read version for android
-      id: integer_version
-      uses: mavrosxristoforos/get-xml-info@1.2.1
-      with:
-        xml-file: "${{ env.Project_Path }}"
-        xpath: //PropertyGroup/ApplicationVersion
-    - id: output_integer_version
-      run: echo "version=${{ steps.integer_version.outputs.info }}" >> $Env:GITHUB_OUTPUT
-
   ##############################################################################
   # Windows
   ##############################################################################
@@ -78,9 +69,9 @@ jobs:
 #    - name: Setup MSBuild.exe
 #      uses: microsoft/setup-msbuild@v1.0.2
 
-    - name: Install MAUI
-      run: |
-        dotnet workload install maui-windows --ignore-failed-sources
+#    - name: Install MAUI
+#      run: |
+#        dotnet workload install maui-windows --ignore-failed-sources
 
     - name: Restore Dependencies
       run: dotnet restore "${{ env.Project_Path }}" -a ${{ env.Platform }} 
@@ -104,18 +95,25 @@ jobs:
       run: certutil -user -q -p ${{ secrets.SILENTNOTESPFXPASSWORD }} -importpfx SilentNotes.pfx NoRoot
 
     # Build application
+#    - name: Build application
+#      run: dotnet build "${{ env.Project_Path }}" -c ${{ env.Configuration }} -f ${{ env.Target_Framework_Windows }} -a ${{ env.Platform }} -o ".\bin" -p:RuntimeIdentifierOverride=win-${{ env.Platform }} -p:AppxPackageSigningEnabled=true -p:PackageCertificateThumbprint="${{ secrets.SILENTNOTESPFXTHUMBPRINT }}"
+#      env:
+#        Configuration: ${{ matrix.configuration }}
+#        Platform: ${{ matrix.platform }}
+#        BuildMode: StoreOnly
+
+    # Build application
     - name: Build application
-      run: dotnet publish "${{ env.Project_Path }}" -c ${{ env.Configuration }} -f ${{ env.Target_Framework_Windows }} -a ${{ env.Platform }} -o ".\bin" -p:RuntimeIdentifierOverride=win-${{ env.Platform }} -p:AppxPackageSigningEnabled=true -p:PackageCertificateThumbprint="${{ secrets.SILENTNOTESPFXTHUMBPRINT }}"
+      run: dotnet publish "${{ env.Wapproj_Path }}" -c ${{ env.Configuration }} -f ${{ env.Target_Framework_Windows }} -a ${{ env.Platform }} -o ".\bin" -p:RuntimeIdentifierOverride=win-${{ env.Platform }} -p:AppxPackageSigningEnabled=true -p:PackageCertificateThumbprint="${{ secrets.SILENTNOTESPFXTHUMBPRINT }}"
       env:
         Configuration: ${{ matrix.configuration }}
         Platform: ${{ matrix.platform }}
-        BuildMode: StoreOnly
 
     # Remove the pfx
     - name: Remove the pfx
       run: Remove-Item -path SilentNotes.pfx
 
-    - name: Collect apk files
+    - name: Collect msix files
       run: |
         $apks = Get-ChildItem -Path .\bin\* -Filter SilentNotes*.msix -Recurse -File
         New-Item -Path ".\windows" -ItemType "directory"

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
+    <TargetFramework>net8.0-windows10.0.22621.0</TargetFramework>
     <Nullable>disable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
@@ -10,7 +10,7 @@
     <AssemblyName>SilentNotes</AssemblyName>
     <SupportedOSPlatformVersion>10.0.17763.0</SupportedOSPlatformVersion>
     <BaseOutputPath>..\..\bin</BaseOutputPath>
-    <Version>7.99.14</Version>
+    <Version>7.99.17</Version>
     <Company>Martin Stoeckli</Company>
     <Description>SilentNotes is a simple note taking app which respects your privacy.</Description>
   </PropertyGroup>
