@@ -38,7 +38,7 @@ jobs:
       uses: mavrosxristoforos/get-xml-info@1.2.1
       with:
         xml-file: "${{ env.Project_Path }}"
-        xpath: //PropertyGroup/ApplicationDisplayVersion
+        xpath: //PropertyGroup/Version
     - id: output_formatted_version
       run: echo "version=${{ steps.formatted_version.outputs.info }}" >> $Env:GITHUB_OUTPUT
 
@@ -49,7 +49,7 @@ jobs:
     strategy:
       matrix:
         configuration: [Release]
-        platform: [x86,x64,arm64]
+        platform: [x86,x64]
   
     runs-on: windows-latest
 
@@ -74,9 +74,9 @@ jobs:
 #        dotnet workload install maui-windows --ignore-failed-sources
 
     - name: Restore Dependencies
-      run: dotnet restore "${{ env.Project_Path }}" -a ${{ env.Platform }} 
+      run: dotnet restore "${{ env.Project_Path }}" -r ${{ env.RuntimeIdentifier }}
       env:
-        Platform: ${{ matrix.platform }}
+        RuntimeIdentifier: win-${{ matrix.platform }}
 
     # Restore the application to populate the obj folder with RuntimeIdentifiers
 #    - name: Restore the application
@@ -104,10 +104,11 @@ jobs:
 
     # Build application
     - name: Build application
-      run: dotnet publish "${{ env.Wapproj_Path }}" -c ${{ env.Configuration }} -f ${{ env.Target_Framework_Windows }} -a ${{ env.Platform }} -o ".\bin" -p:RuntimeIdentifierOverride=win-${{ env.Platform }} -p:AppxPackageSigningEnabled=true -p:PackageCertificateThumbprint="${{ secrets.SILENTNOTESPFXTHUMBPRINT }}"
+      run: dotnet publish "${{ env.Wapproj_Path }}" -c ${{ env.Configuration }} -f ${{ env.Target_Framework_Windows }} -r ${{ env.RuntimeIdentifier }} -o ".\bin" -p:AppxPackageSigningEnabled=true -p:PackageCertificateThumbprint="${{ secrets.SILENTNOTESPFXTHUMBPRINT }}"
       env:
         Configuration: ${{ matrix.configuration }}
         Platform: ${{ matrix.platform }}
+        RuntimeIdentifier: win-${{ matrix.platform }}
 
     # Remove the pfx
     - name: Remove the pfx
