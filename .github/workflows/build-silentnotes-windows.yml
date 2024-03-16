@@ -103,8 +103,14 @@ jobs:
 #        BuildMode: StoreOnly
 
     # Build application
-    - name: Build application
-      run: dotnet publish "${{ env.Wapproj_Path }}" -c ${{ env.Configuration }} -f ${{ env.Target_Framework_Windows }} -r ${{ env.RuntimeIdentifier }} -o ".\bin" -p:AppxPackageSigningEnabled=true -p:PackageCertificateThumbprint="${{ secrets.SILENTNOTESPFXTHUMBPRINT }}"
+#    - name: Build application
+#      run: dotnet publish "${{ env.Wapproj_Path }}" -c ${{ env.Configuration }} -f ${{ env.Target_Framework_Windows }} -r ${{ env.RuntimeIdentifier }} -o ".\bin" -p:AppxPackageSigningEnabled=true -p:PackageCertificateThumbprint="${{ secrets.SILENTNOTESPFXTHUMBPRINT }}"
+#      env:
+#        Configuration: ${{ matrix.configuration }}
+#        RuntimeIdentifier: win-${{ matrix.platform }}
+
+    -name: Build application
+      run: msbuild "${{ env.Wapproj_Path }}" /p:Platform=x86 /p:AppxBundle=Always /AppxBundlePlatforms="x86|x64" /p:AppxPackageDir=".\bin" -p:AppxPackageSigningEnabled=true -p:PackageCertificateThumbprint="${{ secrets.SILENTNOTESPFXTHUMBPRINT }}" /restore
       env:
         Configuration: ${{ matrix.configuration }}
         RuntimeIdentifier: win-${{ matrix.platform }}
