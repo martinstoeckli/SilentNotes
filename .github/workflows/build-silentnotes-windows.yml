@@ -69,9 +69,9 @@ jobs:
     - name: Setup MSBuild.exe
       uses: microsoft/setup-msbuild@v1.0.2
 
-    - name: Install additional workloads
-      run: |
-        dotnet workload install wasm-tools --ignore-failed-sources
+#    - name: Install additional workloads
+#      run: |
+#        dotnet workload install wasm-tools --ignore-failed-sources
 
     - name: Restore Dependencies
       run: dotnet restore "${{ env.Project_Path }}" -r ${{ env.RuntimeIdentifier }}
@@ -109,7 +109,8 @@ jobs:
 #        Configuration: ${{ matrix.configuration }}
 #        RuntimeIdentifier: win-${{ matrix.platform }}
 
-    -name: Build application
+    # Build application
+    - name: Build application
       run: msbuild "${{ env.Wapproj_Path }}" /p:Platform=x86 /p:AppxBundle=Always /AppxBundlePlatforms="x86|x64" /p:AppxPackageDir=".\bin" -p:AppxPackageSigningEnabled=true -p:PackageCertificateThumbprint="${{ secrets.SILENTNOTESPFXTHUMBPRINT }}" /restore
       env:
         Configuration: ${{ matrix.configuration }}
