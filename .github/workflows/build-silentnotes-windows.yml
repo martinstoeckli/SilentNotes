@@ -10,6 +10,7 @@ on:
         description: Publish new release on GitHub
 
 env:
+  Project_Dir: src\SilentNotes.Maui
   Project_Path: src\SilentNotes.Maui\SilentNotes.csproj
   Dotnet_Version: 7.x
   Target_Framework_Windows: net7.0-windows10.0.19041.0
@@ -79,6 +80,8 @@ jobs:
 #    - name: Setup MSBuild.exe
 #      uses: microsoft/setup-msbuild@v2
 
+    # Add the C++ workload, it is used later by the "dotnet publish" command for some reasons to build the msix.
+    # Mitigates the error: Path to `mspdbcmf.exe` could not be found
     - name: Add MSVC
       uses: ilammy/msvc-dev-cmd@v1
       with:
@@ -86,7 +89,7 @@ jobs:
 
     - name: Install MAUI
       run: |
-        dotnet workload install maui wasm-tools-net7
+        dotnet workload install maui-windows maui-android wasm-tools-net7
 
     # Restore the application to populate the obj folder with RuntimeIdentifiers
 #    - name: Restore the application
@@ -111,6 +114,7 @@ jobs:
         RuntimeIdentifier: win-${{ matrix.platform }}
 
     # Build application
+    # declare the -r parameter and also the -p:Platform paramter to mitigate error:  The platform 'AnyCPU' is not supported for Self Contained mode
     - name: Build application
       run: dotnet publish "${{ env.Project_Path }}" -c ${{ env.Configuration }} -f ${{ env.Target_Framework_Windows }} -r ${{ env.RuntimeIdentifier }} -p:Platform=${{ env.Platform }} -o ".\bin" -p:PublishTrimmed=false --force --self-contained=true -p:WindowsAppSDKSelfContained=true -p:RuntimeIdentifierOverride=win-${{ env.Platform }} -p:AppxPackageSigningEnabled=true -p:PackageCertificateThumbprint="${{ secrets.SILENTNOTESPFXTHUMBPRINT }}"
       env:
@@ -123,11 +127,12 @@ jobs:
     - name: Remove the pfx
       run: Remove-Item -path SilentNotes.pfx
 
+    # Collect files for upload
     - name: Collect msix files
       run: |
-        $apks = Get-ChildItem -Path .\bin\* -Filter SilentNotes*.msix -Recurse -File
+        $files = Get-ChildItem -Path "${{ env.Project_Dir }}" -Filter SilentNotes*.msix -Recurse -File
         New-Item -Path ".\windows" -ItemType "directory"
-        Move-Item -Path $apks[0].FullName -Destination ".\windows\silentnotes_${{ env.Platform }}.msix"
+        Move-Item -Path $files[0].FullName -Destination ".\windows\silentnotes_${{ env.Platform }}.msix"
       env:
         Platform: ${{ matrix.platform }}
 
