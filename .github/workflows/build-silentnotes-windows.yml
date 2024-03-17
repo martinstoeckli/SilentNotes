@@ -75,12 +75,12 @@ jobs:
         dotnet-version: ${{ env.Dotnet_Version }}
 
     # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
-#    - name: Setup MSBuild.exe
-#      uses: microsoft/setup-msbuild@v1.0.2
+    - name: Setup MSBuild.exe
+      uses: microsoft/setup-msbuild@v2
 
     - name: Install MAUI
       run: |
-        dotnet workload install maui
+        dotnet workload install maui wasm-tools-net7
 
     # Restore the application to populate the obj folder with RuntimeIdentifiers
 #    - name: Restore the application
