@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using SilentNotes.Data;
 
 namespace SilentNotes
 {
@@ -20,6 +21,8 @@ namespace SilentNotes
     		builder.Services.AddBlazorWebViewDeveloperTools();
     		builder.Logging.AddDebug();
 #endif
+
+            builder.Services.AddSingleton<WeatherForecastService>();
 
             return builder.Build();
         }

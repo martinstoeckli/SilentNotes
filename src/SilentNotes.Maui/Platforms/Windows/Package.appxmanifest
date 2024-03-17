@@ -6,9 +6,9 @@
   xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
   IgnorableNamespaces="uap rescap">
 
-  <Identity Name="22846MartinStoeckli.SilentNotes" Publisher="CN=ED1E5C1E-F8CD-4A09-A57F-18D151833C31" Version="7.99.16.0" />
-  
-  <mp:PhoneIdentity PhoneProductId="CB5BEA71-A55C-4A74-8BCB-F9C4D8F84BE4" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <Identity Name="22846MartinStoeckli.SilentNotes" Publisher="CN=ED1E5C1E-F8CD-4A09-A57F-18D151833C31" Version="7.99.17.0" />
+
+  <mp:PhoneIdentity PhoneProductId="8A9E0F0E-4CCA-4445-A7A4-39972AE1E152" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
     <DisplayName>SilentNotes</DisplayName>
@@ -34,7 +34,7 @@
         Square44x44Logo="$placeholder$.png"
         BackgroundColor="transparent">
         <uap:DefaultTile Square71x71Logo="$placeholder$.png" Wide310x150Logo="$placeholder$.png" Square310x310Logo="$placeholder$.png" />
-        <uap:SplashScreen Image="$placeholder$.png" />
+        <uap:SplashScreen Image="splashSplashScreen.png" />
       </uap:VisualElements>
     </Application>
   </Applications>
