@@ -106,9 +106,10 @@ jobs:
 
     # Build application
     - name: Build application
-      run: dotnet publish "${{ env.Project_Path }}" -c ${{ env.Configuration }} -f ${{ env.Target_Framework_Windows }} -r ${{ env.RuntimeIdentifier }} -o ".\bin" -p:PublishTrimmed=false --force --self-contained=true -p:WindowsAppSDKSelfContained=true -p:RuntimeIdentifierOverride=win-${{ env.Platform }} -p:AppxPackageSigningEnabled=true -p:PackageCertificateThumbprint="${{ secrets.SILENTNOTESPFXTHUMBPRINT }}"
+      run: dotnet publish "${{ env.Project_Path }}" -c ${{ env.Configuration }} -f ${{ env.Target_Framework_Windows }} -r ${{ env.RuntimeIdentifier }} -p:Platform=${{ env.Platform }} -o ".\bin" -p:PublishTrimmed=false --force --self-contained=true -p:WindowsAppSDKSelfContained=true -p:RuntimeIdentifierOverride=win-${{ env.Platform }} -p:AppxPackageSigningEnabled=true -p:PackageCertificateThumbprint="${{ secrets.SILENTNOTESPFXTHUMBPRINT }}"
       env:
         Configuration: ${{ matrix.configuration }}
+        Platform: ${{ matrix.platform }}
         RuntimeIdentifier: win-${{ matrix.platform }}
         BuildMode: StoreOnly
 
