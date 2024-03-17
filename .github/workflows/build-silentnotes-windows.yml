@@ -58,7 +58,8 @@ jobs:
     strategy:
       matrix:
         configuration: [Release]
-        platform: [x86,x64]
+        platform: [x64]
+        # todo: reenable x86
   
     runs-on: windows-latest
 
@@ -75,8 +76,13 @@ jobs:
         dotnet-version: ${{ env.Dotnet_Version }}
 
     # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
-    - name: Setup MSBuild.exe
-      uses: microsoft/setup-msbuild@v2
+#    - name: Setup MSBuild.exe
+#      uses: microsoft/setup-msbuild@v2
+
+    - name: Add MSVC
+      uses: ilammy/msvc-dev-cmd@v1
+      with:
+        arch: ${{ matrix.platform }}
 
     - name: Install MAUI
       run: |
