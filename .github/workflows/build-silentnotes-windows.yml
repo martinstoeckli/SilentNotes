@@ -81,10 +81,17 @@ jobs:
 
     # Add the C++ workload, it is used later by the "dotnet publish" command for some reasons to build the msix.
     # Mitigates the error: Path to `mspdbcmf.exe` could not be found
-    - name: Add MSVC
-      uses: ilammy/msvc-dev-cmd@v1
+#    - name: Add MSVC
+#      uses: ilammy/msvc-dev-cmd@v1
+#      with:
+#        arch: ${{ matrix.platform }}
+
+    # Add Windwows10 SDK
+    - name: Add Windows10 SDK
+      uses: ChristopheLav/windows-sdk-install@v1
       with:
-        arch: ${{ matrix.platform }}
+        version-sdk: 19041
+        features: 'OptionId.UWPCPP'
 
     - name: Install MAUI
       run: |
@@ -115,7 +122,7 @@ jobs:
     # Build application
     # declare the -r parameter and also the -p:Platform paramter to mitigate error:  The platform 'AnyCPU' is not supported for Self Contained mode
     - name: Build application
-      run: dotnet publish "${{ env.Project_Path }}" -c ${{ env.Configuration }} -f ${{ env.Target_Framework_Windows }} -r ${{ env.RuntimeIdentifier }} -p:Platform=${{ env.Platform }} -o ".\bin" -p:PublishTrimmed=false --force --self-contained=true -p:WindowsAppSDKSelfContained=true -p:RuntimeIdentifierOverride=win-${{ env.Platform }} -p:AppxPackageSigningEnabled=true -p:PackageCertificateThumbprint="${{ secrets.SILENTNOTESPFXTHUMBPRINT }}"
+      run: dotnet publish "${{ env.Project_Path }}" -c ${{ env.Configuration }} -f ${{ env.Target_Framework_Windows }} -r ${{ env.RuntimeIdentifier }} -p:Platform=${{ env.Platform }} -p:RuntimeIdentifierOverride=${{ env.RuntimeIdentifier }} -o ".\bin" -p:PublishTrimmed=false --force --self-contained=true -p:WindowsAppSDKSelfContained=true -p:RuntimeIdentifierOverride=win-${{ env.Platform }} -p:PublishTrimmed=true -p:AppxPackageSigningEnabled=true -p:PackageCertificateThumbprint="${{ secrets.SILENTNOTESPFXTHUMBPRINT }}"
       env:
         Configuration: ${{ matrix.configuration }}
         Platform: ${{ matrix.platform }}
