@@ -80,7 +80,7 @@ jobs:
 
     - name: Install MAUI
       run: |
-        dotnet workload install maui-windows maui-android wasm-tools
+        dotnet workload install maui
 
     # Restore the application to populate the obj folder with RuntimeIdentifiers
 #    - name: Restore the application
