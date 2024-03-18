@@ -57,6 +57,7 @@ jobs:
   # Platforms are taken from the csproj, to build one apk with multiple platforms
   ##############################################################################
   job_build_android:
+    if: false
     strategy:
       matrix:
         configuration: [Release]
@@ -125,6 +126,7 @@ jobs:
   # Android additional platforms
   ##############################################################################
   job_build_android_additional_platform:
+    if: false
     strategy:
       matrix:
         configuration: [Release]
@@ -200,7 +202,8 @@ jobs:
     strategy:
       matrix:
         configuration: [Release]
-        platform: [x86,x64,arm64]
+        platform: [x64]
+#        platform: [x86,x64]
   
     runs-on: windows-latest
 
@@ -221,15 +224,7 @@ jobs:
       uses: microsoft/setup-msbuild@v1.0.2
 
     - name: Install MAUI
-      run: |
-        dotnet workload install maui-windows --ignore-failed-sources
-        dotnet workload install maui-android --ignore-failed-sources
-
-    # Restore the application to populate the obj folder with RuntimeIdentifiers
-    - name: Restore the application
-      run: msbuild $env:Project_Path /t:Restore /p:Configuration=$env:Configuration
-      env:
-        Configuration: ${{ matrix.configuration }}
+      run: dotnet workload install maui-windows maui-android wasm-tools-net7
 
     # Decode the base 64 encoded pfx and save the Signing_Certificate
     - name: Decode the pfx
@@ -241,23 +236,31 @@ jobs:
     - name: Add cert to store
       run: certutil -user -q -p ${{ secrets.SILENTNOTESPFXPASSWORD }} -importpfx SilentNotes.pfx NoRoot
 
+    # Restore the application to populate the obj folder with RuntimeIdentifiers
+    - name: Restore Dependencies
+      run: dotnet restore "${{ env.Project_Path }}" -r ${{ env.RuntimeIdentifier }} 
+      env:
+        RuntimeIdentifier: win-${{ matrix.platform }}
+
     # Build application
+    # declare the -r parameter and also the -p:Platform paramter to mitigate error:  The platform 'AnyCPU' is not supported for Self Contained mode
     - name: Build application
-      run: dotnet publish "${{ env.Project_Path }}" -c ${{ env.Configuration }} -f ${{ env.Target_Framework_Windows }} -a ${{ env.Platform }} -o ".\bin" -p:WindowsAppSDKSelfContained -p:RuntimeIdentifierOverride=win10-${{ env.Platform }} -p:AppxPackageSigningEnabled=true -p:PackageCertificateThumbprint="${{ secrets.SILENTNOTESPFXTHUMBPRINT }}"
+      run: dotnet publish "${{ env.Project_Path }}" -c ${{ env.Configuration }} -f ${{ env.Target_Framework_Windows }} -r ${{ env.RuntimeIdentifier }} -p:Platform=${{ env.Platform }} -p:RuntimeIdentifierOverride=${{ env.RuntimeIdentifier }} -p:UapAppxPackageBuildMode=CI -p:AppxBundle=Never -p:AppxPackageDir=".\bin" -p:GenerateAppxPackageOnBuild=true -o ".\bin" -p:PublishTrimmed=true --self-contained=true -p:WindowsAppSDKSelfContained=true -p:AppxPackageSigningEnabled=true -p:PackageCertificateThumbprint="${{ secrets.SILENTNOTESPFXTHUMBPRINT }}"
       env:
         Configuration: ${{ matrix.configuration }}
         Platform: ${{ matrix.platform }}
-        BuildMode: StoreOnly
+        RuntimeIdentifier: win-${{ matrix.platform }}
         
     # Remove the pfx
     - name: Remove the pfx
       run: Remove-Item -path SilentNotes.pfx
 
-    - name: Collect apk files
+    # Collect files for upload
+    - name: Collect msix files
       run: |
-        $apks = Get-ChildItem -Path .\bin\* -Filter SilentNotes*.msix -Recurse -File
+        $files = Get-ChildItem -Path "${{ env.Project_Dir }}" -Filter SilentNotes*.msix -Recurse -File
         New-Item -Path ".\windows" -ItemType "directory"
-        Move-Item -Path $apks[0].FullName -Destination ".\windows\silentnotes_${{ env.Platform }}.msix"
+        Move-Item -Path $files[0].FullName -Destination ".\windows\silentnotes_${{ env.Platform }}.msix"
       env:
         Platform: ${{ matrix.platform }}
 
@@ -314,7 +317,8 @@ jobs:
   ##############################################################################
   job_publish_release:
     needs: [job_version, job_build_android, job_build_android_additional_platform]
-    if: ${{ inputs.publish-release }}
+    if: false
+    # if: ${{ inputs.publish-release }}
 
     runs-on: windows-latest
 

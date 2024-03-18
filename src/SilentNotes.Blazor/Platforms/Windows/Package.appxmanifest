@@ -7,7 +7,7 @@
   xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
   IgnorableNamespaces="uap mp rescap">
 
-  <Identity Name="22846MartinStoeckli.SilentNotes" Publisher="CN=ED1E5C1E-F8CD-4A09-A57F-18D151833C31" Version="7.99.4.0" />
+  <Identity Name="22846MartinStoeckli.SilentNotes" Publisher="CN=ED1E5C1E-F8CD-4A09-A57F-18D151833C31" Version="7.99.18.0" />
 
   <Properties>
     <DisplayName>SilentNotes</DisplayName>
@@ -28,12 +28,12 @@
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="$targetentrypoint$">
       <uap:VisualElements
         DisplayName="SilentNotes"
-        Description="$placeholder$"
+        Description="SilentNotes is a simple note taking app which respects your privacy."
         Square150x150Logo="$placeholder$.png"
         Square44x44Logo="$placeholder$.png"
         BackgroundColor="transparent">
         <uap:DefaultTile Square71x71Logo="$placeholder$.png" Wide310x150Logo="$placeholder$.png" Square310x310Logo="$placeholder$.png" />
-        <uap:SplashScreen Image="$placeholder$.png" />
+        <uap:SplashScreen Image="splashSplashScreen.png" />
       </uap:VisualElements>
       <Extensions>
         <uap:Extension Category="windows.protocol">
@@ -48,9 +48,6 @@
 
   <Capabilities>
     <rescap:Capability Name="runFullTrust" />
-    <Capability Name="internetClientServer"/>
-    <Capability Name="internetClient"/>
-    <Capability Name="privateNetworkClientServer"/>
   </Capabilities>
 
 </Package>
