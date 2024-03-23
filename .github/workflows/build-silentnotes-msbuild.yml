@@ -252,7 +252,7 @@ jobs:
         
     # Build application
     - name: Build application
-      run: msbuild "${{ env.Project_Path }}" -restore -p:Configuration=Release /p:AppxBundlePlatforms="x86|x64" /p:AppxPackageDir=".\bin" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload /p:GenerateAppxPackageOnBuild=true
+      run: msbuild "${{ env.Project_Path }}" -restore -p:Configuration=Release /p:TargetFrameworks=${{ env.Target_Framework_Windows }} /p:AppxBundlePlatforms="x86|x64" /p:AppxPackageDir=".\bin" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload /p:GenerateAppxPackageOnBuild=true /p:AppxPackageSigningEnabled=true /p:PackageCertificateThumbprint="${{ secrets.SILENTNOTESPFXTHUMBPRINT }}"
 
     # Remove the pfx
 #    - name: Remove the pfx
