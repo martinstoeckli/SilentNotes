@@ -43,14 +43,14 @@ jobs:
       run: echo "version=${{ steps.formatted_version.outputs.info }}" >> $Env:GITHUB_OUTPUT
 
     # Read increasing android version
-#    - name: Read version for android
-#      id: integer_version
-#      uses: mavrosxristoforos/get-xml-info@1.2.1
-#      with:
-#        xml-file: "${{ env.Project_Path }}"
-#        xpath: //PropertyGroup/ApplicationVersion
-#    - id: output_integer_version
-#      run: echo "version=${{ steps.integer_version.outputs.info }}" >> $Env:GITHUB_OUTPUT
+    - name: Read version for android
+      id: integer_version
+      uses: mavrosxristoforos/get-xml-info@1.2.1
+      with:
+        xml-file: "${{ env.Project_Path }}"
+        xpath: //PropertyGroup/ApplicationVersion
+    - id: output_integer_version
+      run: echo "version=${{ steps.integer_version.outputs.info }}" >> $Env:GITHUB_OUTPUT
 
   ##############################################################################
   # Android multi platform apk (armeabi-v7;arm64-v8a)
@@ -199,7 +199,6 @@ jobs:
   # Windows
   ##############################################################################
   job_build_windows:
-    needs: [job_version]
     strategy:
       matrix:
         platform: [x64]
@@ -237,57 +236,44 @@ jobs:
       run: certutil -user -q -p ${{ secrets.SILENTNOTESPFXPASSWORD }} -importpfx SilentNotes.pfx NoRoot
 
     # Restore the application to populate the obj folder with RuntimeIdentifiers
-#    - name: Restore Dependencies
-#      run: dotnet restore "${{ env.Project_Path }}" -r ${{ env.RuntimeIdentifier }} 
-#      env:
-#        RuntimeIdentifier: win-${{ matrix.platform }}
+    - name: Restore Dependencies
+      run: dotnet restore "${{ env.Project_Path }}" -r ${{ env.RuntimeIdentifier }} 
+      env:
+        RuntimeIdentifier: win-${{ matrix.platform }}
 
     # Build application
     # declare the -r parameter and also the -p:Platform paramter to mitigate error:  The platform 'AnyCPU' is not supported for Self Contained mode
-#    - name: Build application
-#      run: dotnet publish "${{ env.Project_Path }}" -c Release -f ${{ env.Target_Framework_Windows }} -r ${{ env.RuntimeIdentifier }} -p:Platform=${{ env.Platform }} -p:RuntimeIdentifierOverride=${{ env.RuntimeIdentifier }} -p:UapAppxPackageBuildMode=CI -p:AppxBundle=Never -p:AppxPackageDir=".\bin" -p:GenerateAppxPackageOnBuild=true -o ".\bin" -p:PublishTrimmed=true --self-contained=true -p:WindowsAppSDKSelfContained=true -p:AppxPackageSigningEnabled=true -p:PackageCertificateThumbprint="${{ secrets.SILENTNOTESPFXTHUMBPRINT }}"
-#      env:
-#        Platform: ${{ matrix.platform }}
-#        RuntimeIdentifier: win-${{ matrix.platform }}
-        
-    # Build application
     - name: Build application
-      run: msbuild "${{ env.Project_Path }}" -restore -p:Configuration=Release /p:TargetFrameworks=${{ env.Target_Framework_Windows }} /p:AppxBundlePlatforms="x86|x64" /p:AppxPackageDir=".\bin" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload /p:GenerateAppxPackageOnBuild=true /p:AppxPackageSigningEnabled=true /p:PackageCertificateThumbprint="${{ secrets.SILENTNOTESPFXTHUMBPRINT }}"
-
+      run: dotnet msbuild "${{ env.Project_Path }}" -t:Publish -restore -p:configuration=release -p:AppxPackageDir=".\bin" -p:TargetFramework=${{ env.Target_Framework_Windows }} -p:RuntimeIdentifierOverride=${{ env.RuntimeIdentifier }} -p:GenerateAppxPackageOnBuild=true -p:AppxPackageSigningEnabled=true -p:PackageCertificateThumbprint="${{ secrets.SILENTNOTESPFXTHUMBPRINT }}"
+      env:
+        Platform: ${{ matrix.platform }}
+        RuntimeIdentifier: win-${{ matrix.platform }}
+        
     # Remove the pfx
-#    - name: Remove the pfx
-#      run: Remove-Item -path SilentNotes.pfx
+    - name: Remove the pfx
+      run: Remove-Item -path SilentNotes.pfx
 
     # Collect files for upload
     - name: Collect msix files
       run: |
         $files = Get-ChildItem -Path "${{ env.Project_Dir }}" -Filter SilentNotes*.msix -Recurse -File
-        New-Item -Path "msixdirectory" -ItemType "directory"
-        Move-Item -Path $files[0].FullName -Destination "msixdirectory"
+        New-Item -Path ".\windows" -ItemType "directory"
+        Move-Item -Path $files[0].FullName -Destination ".\windows\silentnotes_${{ env.Platform }}.msix"
       env:
         Platform: ${{ matrix.platform }}
-
-    - name: Make msixbundle
-      id: bundler
-      uses: LanceMcCarthy/Action-MsixBundler@v1.0.0
-      with:
-        msix-folder: "msixdirectory"
-        msixbundle-filepath: "silentnotes.msixbundle"
-        msixbundle-version: "${{needs.job_version.outputs.formatted_version}}.0"
 
     # Upload artifacts
     - name: Upload build artifacts
       uses: actions/upload-artifact@v3
       with:
         name: silentnotes_binaries
-        path: msixdirectory
+        path: .\windows
 
   ##############################################################################
   # Windows packaging
   # Package all msix to a single msixbundle for uploading to the Microsoft store
   ##############################################################################
   job_package:
-    if: false
     needs: [job_version, job_build_windows]
     runs-on: windows-latest
 
