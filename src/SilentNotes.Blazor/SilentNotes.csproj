@@ -21,7 +21,7 @@
         <ApplicationIdGuid>11EC9146-7F8B-417D-B616-3CF75D22866E</ApplicationIdGuid>
 
         <!-- Versions -->
-        <ApplicationDisplayVersion>7.99.20</ApplicationDisplayVersion>
+        <ApplicationDisplayVersion>7.99.21</ApplicationDisplayVersion>
         <ApplicationVersion>65</ApplicationVersion>
 
         <!-- Workaround: for https://github.com/dotnet/maui/issues/12859 -->

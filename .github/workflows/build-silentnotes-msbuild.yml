@@ -236,15 +236,15 @@ jobs:
       run: certutil -user -q -p ${{ secrets.SILENTNOTESPFXPASSWORD }} -importpfx SilentNotes.pfx NoRoot
 
     # Restore the application to populate the obj folder with RuntimeIdentifiers
-    - name: Restore Dependencies
-      run: dotnet restore "${{ env.Project_Path }}" -r ${{ env.RuntimeIdentifier }} 
-      env:
-        RuntimeIdentifier: win-${{ matrix.platform }}
+#    - name: Restore Dependencies
+#      run: dotnet restore "${{ env.Project_Path }}" -r ${{ env.RuntimeIdentifier }} 
+#      env:
+#        RuntimeIdentifier: win-${{ matrix.platform }}
 
     # Build application
     # declare the -r parameter and also the -p:Platform paramter to mitigate error:  The platform 'AnyCPU' is not supported for Self Contained mode
     - name: Build application
-      run: dotnet msbuild "${{ env.Project_Path }}" -t:Publish -restore -p:configuration=release -p:AppxPackageDir=".\bin" -p:TargetFramework=${{ env.Target_Framework_Windows }} -p:RuntimeIdentifierOverride=${{ env.RuntimeIdentifier }} -p:GenerateAppxPackageOnBuild=true -p:AppxPackageSigningEnabled=true -p:PackageCertificateThumbprint="${{ secrets.SILENTNOTESPFXTHUMBPRINT }}"
+      run: msbuild "${{ env.Project_Path }}" -t:Publish -restore -p:configuration=release -p:AppxPackageDir=".\bin" -p:TargetFramework=${{ env.Target_Framework_Windows }} -p:RuntimeIdentifierOverride=${{ env.RuntimeIdentifier }} -p:GenerateAppxPackageOnBuild=true -p:AppxPackageSigningEnabled=true -p:PackageCertificateThumbprint="${{ secrets.SILENTNOTESPFXTHUMBPRINT }}"
       env:
         Platform: ${{ matrix.platform }}
         RuntimeIdentifier: win-${{ matrix.platform }}
