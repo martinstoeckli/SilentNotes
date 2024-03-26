@@ -244,8 +244,10 @@ jobs:
     # Build application
     # declare the -r parameter and also the -p:Platform paramter to mitigate error:  The platform 'AnyCPU' is not supported for Self Contained mode
     - name: Build application
-      run: dotnet publish -p:PublishProfile=${{ env.Profile }} -p:AppxPackageSigningEnabled=true -p:PackageCertificateThumbprint="${{ secrets.SILENTNOTESPFXTHUMBPRINT }}"
+      run: dotnet publish -c Release -p:PublishProfile=${{ env.Profile }} -f ${{ env.Target_Framework_Windows }} -r ${{ env.RuntimeIdentifier }} -p:Platform=${{ env.Platform }} -p:AppxPackageSigningEnabled=true -p:PackageCertificateThumbprint="${{ secrets.SILENTNOTESPFXTHUMBPRINT }}"
       env:
+        Platform: ${{ matrix.platform }}
+        RuntimeIdentifier: win10-${{ matrix.platform }}
         Profile: MSIX-win10-${{ matrix.platform }}
         
     # Remove the pfx
