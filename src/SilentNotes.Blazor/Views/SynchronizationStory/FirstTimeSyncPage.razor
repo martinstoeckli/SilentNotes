@@ -1,4 +1,4 @@
-﻿@page "/firsttimesync"
+﻿@attribute [Route(RouteNames.FirstTimeSync)]
 @inherits PageBase
 
 @using SilentNotes.Models
@@ -34,7 +34,7 @@
 
 	protected override void OnInitialized()
 	{
-		BackRoute = RouteNames.Home;
+		BackRoute = RouteNames.NoteRepository;
 		ViewModel = new FirstTimeSyncViewModel(Ioc.Instance);
 	}
 

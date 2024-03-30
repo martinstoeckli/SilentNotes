@@ -50,7 +50,7 @@ namespace SilentNotes.Views
         /// the back key on Android, a value of null will then close the application.
         /// Default value is the home route.
         /// </summary>
-        public string BackRoute { get; set; } = RouteNames.Home;
+        public string BackRoute { get; set; } = RouteNames.NoteRepository;
 
         /// <inheritdoc/>
         public async ValueTask DisposeAsync()

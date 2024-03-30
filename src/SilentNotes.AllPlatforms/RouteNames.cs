@@ -14,8 +14,7 @@ namespace SilentNotes
     /// </summary>
     public static class RouteNames
     {
-        public const string Home = NoteRepository;
-        public const string NoteRepository = "/";
+        public const string NoteRepository = "/noterepository";
         public const string Note = "/note";
         public const string Checklist = "/checklist";
         public const string ChangePassword = "/changepassword";
@@ -31,6 +30,8 @@ namespace SilentNotes
         public const string Settings = "/settings";
         public const string TransferCodePrompt = "/transfercodeprompt";
         public const string TransferCodeHistory = "/transfercodehistory";
+
+        public const string ForceLoad = "/forceload";
 
         /// <summary>
         /// Combines a route name with parameters.

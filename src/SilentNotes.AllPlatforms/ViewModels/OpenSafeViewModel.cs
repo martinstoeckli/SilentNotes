@@ -109,7 +109,7 @@ namespace SilentNotes.ViewModels
             }
             else if (string.IsNullOrEmpty(_navigationTargetRoute))
             {
-                _navigationService.NavigateTo(RouteNames.Home);
+                _navigationService.NavigateTo(RouteNames.NoteRepository);
             }
             else
             {

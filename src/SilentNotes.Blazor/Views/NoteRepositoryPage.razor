@@ -1,5 +1,6 @@
-﻿@page "/"
-@page "/bringtoview/{BringToViewNoteId}"
+﻿@attribute [Route("/")]
+@attribute [Route(RouteNames.NoteRepository)]
+@attribute [Route(RouteNames.NoteRepository + "bringtoview/{BringToViewNoteId}")]
 @inherits PageBase
 
 @using System.ComponentModel

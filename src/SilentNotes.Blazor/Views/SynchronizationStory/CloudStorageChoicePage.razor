@@ -1,4 +1,4 @@
-﻿@page "/cloudstoragechoice"
+﻿@attribute [Route(RouteNames.CloudStorageChoice)]
 @inherits PageBase
 
 @using SilentNotes.Models
@@ -38,7 +38,7 @@
 @code {
 	protected override void OnInitialized()
 	{
-		BackRoute = RouteNames.Home;
+		BackRoute = RouteNames.NoteRepository;
 		ViewModel = new CloudStorageChoiceViewModel(Ioc.Instance);
 	}
 
