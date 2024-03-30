@@ -1,4 +1,4 @@
-﻿@page "/transfercodeprompt"
+﻿@attribute [Route(RouteNames.TransferCodePrompt)]
 @inherits PageBase
 
 @using SilentNotes.Models
@@ -43,7 +43,7 @@
 
 	protected override void OnInitialized()
 	{
-		BackRoute = RouteNames.Home;
+		BackRoute = RouteNames.NoteRepository;
 		ViewModel = new TransferCodePromptViewModel(Ioc.Instance);
 	}
 

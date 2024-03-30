@@ -1,5 +1,5 @@
-﻿@page "/opensafe"
-@page "/opensafe/target/{TargetRoute}"
+﻿@attribute [Route(RouteNames.OpenSafe)]
+@attribute [Route(RouteNames.OpenSafe + "/{TargetRoute}")]
 @inherits PageBase
 
 @using System.ComponentModel;
@@ -23,7 +23,7 @@
 
 @* Main menu *@
 <MudAppBar Class="flex-none" Fixed="true" Dense="true" WrapContent="false">
-	<MudIconButton OnClick="@(() => Navigation.NavigateTo(RouteNames.Home))" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" Edge="Edge.Start" />
+	<MudIconButton OnClick="@(() => Navigation.NavigateTo(RouteNames.NoteRepository))" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" Edge="Edge.Start" />
 
 	<MudSpacer/>
 
@@ -80,7 +80,7 @@
 			</MudForm>
 
 			<MudStack Class="my-4" Row="true" Justify="Justify.FlexEnd" Spacing="1">
-				<MudButton OnClick="@(() => Navigation.NavigateTo(RouteNames.Home))" Color="Color.Default" Variant="Variant.Filled">@LanguageService["cancel"]</MudButton>
+				<MudButton OnClick="@(() => Navigation.NavigateTo(RouteNames.NoteRepository))" Color="Color.Default" Variant="Variant.Filled">@LanguageService["cancel"]</MudButton>
 				<MudButton @ref="_okButton" OnClick="@(() => ViewModel.OkCommand.Execute(null))" Color="Color.Primary" Variant="Variant.Filled">@LanguageService["ok"]</MudButton>
 			</MudStack>
 
@@ -111,7 +111,7 @@
 			await KeyboardShortcuts.InitializeAsync(JSRuntime);
 			KeyboardShortcuts
 				.SetCloseMenuShortcut(new SnKeyboardShortcut(SnKey.Escape), OnCloseMenuOrDialog)
-				.AddShortcut(new SnKeyboardShortcut(SnKey.Escape), () => Navigation.NavigateTo(RouteNames.Home))
+				.AddShortcut(new SnKeyboardShortcut(SnKey.Escape), () => Navigation.NavigateTo(RouteNames.NoteRepository))
 				.AddShortcut(new SnKeyboardShortcut(SnKey.Enter), async () => await SnKeyboardShortcuts.SimulateClickAsync(_okButton));
 		}
 	}

@@ -1,7 +1,9 @@
-﻿@page "/forceload/{TargetUri}"
+﻿@attribute [Route(RouteNames.ForceLoad + "/{TargetUri}")]
 
 @* This route is used to reload the content of an already open page, it immediately redirects to
 another route. For more information see the implementation of INavigationService *@
+
+<div>Reloading page</div>
 
 @code {
 	[Inject] private NavigationManager _navigationManager { get; set; }

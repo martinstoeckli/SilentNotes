@@ -74,7 +74,7 @@ namespace SilentNotes.ViewModels
                 if (success)
                 {
                     _feedbackService.ShowToast(Language.LoadText("export_success"));
-                    _navigationService.NavigateTo(RouteNames.Home);
+                    _navigationService.NavigateTo(RouteNames.NoteRepository);
                 }
                 else
                 {

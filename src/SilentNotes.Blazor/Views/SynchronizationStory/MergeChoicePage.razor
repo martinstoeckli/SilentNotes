@@ -1,4 +1,4 @@
-﻿@page "/mergechoice"
+﻿@attribute [Route(RouteNames.MergeChoice)]
 @inherits PageBase
 
 @using SilentNotes.Models
@@ -59,7 +59,7 @@
 @code {
 	protected override void OnInitialized()
 	{
-		BackRoute = RouteNames.Home;
+		BackRoute = RouteNames.NoteRepository;
 		ViewModel = new MergeChoiceViewModel(Ioc.Instance);
 	}
 

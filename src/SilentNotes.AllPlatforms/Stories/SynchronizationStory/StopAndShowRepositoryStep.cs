@@ -32,7 +32,7 @@ namespace SilentNotes.Stories.SynchronizationStory
                 synchronizationService.FinishedManualSynchronization(serviceProvider);
 
                 var navigation = serviceProvider.GetService<INavigationService>();
-                navigation.NavigateTo(RouteNames.Home, true);
+                navigation.NavigateTo(RouteNames.NoteRepository, true);
             }
             return ToTask(ToResultEndOfStory());
         }

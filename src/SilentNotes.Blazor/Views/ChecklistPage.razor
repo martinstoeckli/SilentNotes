@@ -1,4 +1,4 @@
-﻿@page "/checklist/{NoteId}"
+﻿@attribute [Route(RouteNames.Checklist + "/{NoteId}")]
 @inherits PageBase
 
 @using System.ComponentModel
@@ -313,7 +313,7 @@ div.dark .detail-view.checklist .ProseMirror p::after { content: @(IconService.L
 
 		if (ViewModel.Model == NoteModel.NotFound)
 			// Redirect to home if note was not found
-			NavigationService.NavigateTo(RouteNames.Home);
+			NavigationService.NavigateTo(RouteNames.NoteRepository);
 		else if (ViewModel.IsLocked)
 			// Redirect to open safe if locked
 			NavigationService.NavigateTo(ViewModel.Route);

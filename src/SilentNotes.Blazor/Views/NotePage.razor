@@ -1,4 +1,4 @@
-﻿@page "/note/{NoteId}"
+﻿@attribute [Route(RouteNames.Note + "/{NoteId}")]
 @inherits PageBase
 
 @using System.ComponentModel
@@ -349,7 +349,7 @@
 
 		if (ViewModel.Model == NoteModel.NotFound)
 			// Redirect to home if note was not found
-			NavigationService.NavigateTo(RouteNames.Home);
+			NavigationService.NavigateTo(RouteNames.NoteRepository);
 		else if (ViewModel.IsLocked)
 			// Redirect to open safe if locked
 			NavigationService.NavigateTo(ViewModel.Route);
