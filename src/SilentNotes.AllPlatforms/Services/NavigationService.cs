@@ -4,6 +4,7 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
+using System.Text;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.AspNetCore.Components;
@@ -59,7 +60,10 @@ namespace SilentNotes.Services
         {
             if (reload)
             {
-                uri = RouteNames.Combine(RouteNames.ForceLoad, uri);
+                // Only a "forceReload" would reliably reload the new content of the page.
+                // Since we don't want to use "forceReload" (see const ForceLoadNever), we call
+                // a route which immediately redirects to our target route.
+                uri = RouteNames.Combine(RouteNames.ForceLoad, HexEncode(uri));
             }
 
             _navigationManager.NavigateTo(uri, ForceLoadNever, ReplaceWebviewHistoryAlways);
@@ -68,11 +72,13 @@ namespace SilentNotes.Services
         /// <inheritdoc/>
         public void NavigateReload()
         {
-            // Only a "forceReload" would reliably reload the new content of the page.
-            // Since we don't want to use "forceReload" (see const ForceLoadNever), we call
-            // a route which immediately redirects to our target route.
-            string forceLoadRoute = RouteNames.Combine(RouteNames.ForceLoad, _currentLocation);
-            _navigationManager.NavigateTo(forceLoadRoute, ForceLoadNever, ReplaceWebviewHistoryAlways);
+            NavigateTo(_currentLocation, true);
+        }
+
+        private static string HexEncode(string text)
+        {
+            byte[] bytes = Encoding.UTF8.GetBytes(text);
+            return Convert.ToHexString(bytes);
         }
 
         /// <inheritdoc/>

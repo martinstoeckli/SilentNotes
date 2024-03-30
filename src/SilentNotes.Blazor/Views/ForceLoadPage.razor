@@ -1,4 +1,6 @@
-﻿@attribute [Route(RouteNames.ForceLoad + "/{TargetUri}")]
+﻿@attribute [Route(RouteNames.ForceLoad + "/{TargetUriHexEncoded}")]
+
+@inject NavigationManager NavigationManager
 
 @* This route is used to reload the content of an already open page, it immediately redirects to
 another route. For more information see the implementation of INavigationService *@
@@ -6,13 +8,22 @@ another route. For more information see the implementation of INavigationService
 <div>Reloading page</div>
 
 @code {
-	[Inject] private NavigationManager _navigationManager { get; set; }
-
+	/// <summary>
+	/// The hex encoding of the target url avoids any wrong interpretation, even with future
+	/// implementations of the NavigationManager.
+	/// </summary>
 	[Parameter]
-	public string TargetUri { get; set; }
+	public string TargetUriHexEncoded { get; set; }
 
 	protected override void OnParametersSet()
 	{
-		_navigationManager.NavigateTo(TargetUri, false, true);
+		string decodedTargetUri = HexDecode(TargetUriHexEncoded);
+		NavigationManager.NavigateTo(decodedTargetUri, false, true);
+	}
+
+	private static string HexDecode(string hexEncodedText)
+	{
+		byte[] bytes = Convert.FromHexString(hexEncodedText);
+		return System.Text.Encoding.UTF8.GetString(bytes, 0, bytes.Length);
 	}
 }
