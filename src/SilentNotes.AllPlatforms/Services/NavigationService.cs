@@ -3,9 +3,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-using System;
 using System.Text;
-using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
@@ -63,7 +61,7 @@ namespace SilentNotes.Services
                 // Only a "forceReload" would reliably reload the new content of the page.
                 // Since we don't want to use "forceReload" (see const ForceLoadNever), we call
                 // a route which immediately redirects to our target route.
-                uri = RouteNames.Combine(RouteNames.ForceLoad, HexEncode(uri));
+                uri = "/forceload/" + HexEncode(uri);
             }
 
             _navigationManager.NavigateTo(uri, ForceLoadNever, ReplaceWebviewHistoryAlways);
@@ -84,7 +82,7 @@ namespace SilentNotes.Services
         /// <inheritdoc/>
         private ValueTask LocationChangingHandler(LocationChangingContext context)
         {
-            if (context.TargetLocation.StartsWith(RouteNames.ForceLoad))
+            if (context.TargetLocation.StartsWith("/forceload"))
                 return ValueTask.CompletedTask;
 
             string currentRoute = ExtractRouteName(_currentLocation, _navigationManager.BaseUri);

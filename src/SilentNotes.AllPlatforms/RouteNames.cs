@@ -31,8 +31,6 @@ namespace SilentNotes
         public const string TransferCodePrompt = "/transfercodeprompt";
         public const string TransferCodeHistory = "/transfercodehistory";
 
-        public const string ForceLoad = "/forceload";
-
         /// <summary>
         /// Combines a route name with parameters.
         /// </summary>

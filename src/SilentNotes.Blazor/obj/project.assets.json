@@ -17615,12 +17615,6 @@
           "buildTransitive/Microsoft.Maui.Resizetizer.targets": {}
         }
       },
-      "Microsoft.NET.ILLink.Tasks/8.0.2": {
-        "type": "package",
-        "build": {
-          "build/Microsoft.NET.ILLink.Tasks.props": {}
-        }
-      },
       "Microsoft.Windows.SDK.BuildTools/10.0.22621.756": {
         "type": "package",
         "build": {
@@ -18632,12 +18626,6 @@
           "buildTransitive/Microsoft.Maui.Resizetizer.targets": {}
         }
       },
-      "Microsoft.NET.ILLink.Tasks/8.0.2": {
-        "type": "package",
-        "build": {
-          "build/Microsoft.NET.ILLink.Tasks.props": {}
-        }
-      },
       "Microsoft.Windows.SDK.BuildTools/10.0.22621.756": {
         "type": "package",
         "build": {
@@ -19627,12 +19615,6 @@
         "build": {
           "buildTransitive/Microsoft.Maui.Resizetizer.props": {},
           "buildTransitive/Microsoft.Maui.Resizetizer.targets": {}
-        }
-      },
-      "Microsoft.NET.ILLink.Tasks/8.0.2": {
-        "type": "package",
-        "build": {
-          "build/Microsoft.NET.ILLink.Tasks.props": {}
         }
       },
       "Microsoft.Windows.SDK.BuildTools/10.0.22621.756": {
@@ -20626,12 +20608,6 @@
           "buildTransitive/Microsoft.Maui.Resizetizer.targets": {}
         }
       },
-      "Microsoft.NET.ILLink.Tasks/8.0.2": {
-        "type": "package",
-        "build": {
-          "build/Microsoft.NET.ILLink.Tasks.props": {}
-        }
-      },
       "Microsoft.Windows.SDK.BuildTools/10.0.22621.756": {
         "type": "package",
         "build": {
@@ -21621,12 +21597,6 @@
         "build": {
           "buildTransitive/Microsoft.Maui.Resizetizer.props": {},
           "buildTransitive/Microsoft.Maui.Resizetizer.targets": {}
-        }
-      },
-      "Microsoft.NET.ILLink.Tasks/8.0.2": {
-        "type": "package",
-        "build": {
-          "build/Microsoft.NET.ILLink.Tasks.props": {}
         }
       },
       "Microsoft.Windows.SDK.BuildTools/10.0.22621.756": {
@@ -22621,12 +22591,6 @@
         "build": {
           "buildTransitive/Microsoft.Maui.Resizetizer.props": {},
           "buildTransitive/Microsoft.Maui.Resizetizer.targets": {}
-        }
-      },
-      "Microsoft.NET.ILLink.Tasks/8.0.2": {
-        "type": "package",
-        "build": {
-          "build/Microsoft.NET.ILLink.Tasks.props": {}
         }
       },
       "Microsoft.Windows.SDK.BuildTools/10.0.22621.756": {
@@ -27784,7 +27748,6 @@
       "Microsoft.AspNetCore.Components.WebView.Maui >= 8.0.7",
       "Microsoft.Maui.Controls >= 8.0.7",
       "Microsoft.Maui.Controls.Compatibility >= 8.0.7",
-      "Microsoft.NET.ILLink.Tasks >= 8.0.2",
       "MudBlazor >= 6.16.0"
     ]
   },
@@ -27793,7 +27756,7 @@
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
-    "version": "7.99.24",
+    "version": "7.99.26",
     "restore": {
       "projectUniqueName": "D:\\Source\\SilentNotes\\GitHub\\src\\SilentNotes.Blazor\\SilentNotes.csproj",
       "projectName": "SilentNotes",
@@ -27930,12 +27893,6 @@
           "Microsoft.Maui.Controls.Compatibility": {
             "target": "Package",
             "version": "[8.0.7, )"
-          },
-          "Microsoft.NET.ILLink.Tasks": {
-            "suppressParent": "All",
-            "target": "Package",
-            "version": "[8.0.2, )",
-            "autoReferenced": true
           },
           "MudBlazor": {
             "target": "Package",

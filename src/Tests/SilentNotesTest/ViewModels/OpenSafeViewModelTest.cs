@@ -70,7 +70,7 @@ namespace SilentNotesTest.ViewModels
             Assert.IsFalse(viewModel.Modifications.IsModified());
             viewModel.OkCommand.Execute(null);
             Assert.IsTrue(viewModel.Modifications.IsModified());
-            navigationService.Verify(m => m.NavigateTo(It.Is<string>(r => r == RouteNames.Home), It.IsAny<bool>()), Times.Once);
+            navigationService.Verify(m => m.NavigateTo(It.Is<string>(r => r == RouteNames.NoteRepository), It.IsAny<bool>()), Times.Once);
         }
 
         private static OpenSafeViewModel CreateMockedOpenSafeViewModelViewModel(

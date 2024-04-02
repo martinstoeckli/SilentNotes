@@ -5,7 +5,7 @@
   },
   "projects": {
     "D:\\Source\\SilentNotes\\GitHub\\src\\SilentNotes.Blazor\\SilentNotes.csproj": {
-      "version": "7.99.24",
+      "version": "7.99.26",
       "restore": {
         "projectUniqueName": "D:\\Source\\SilentNotes\\GitHub\\src\\SilentNotes.Blazor\\SilentNotes.csproj",
         "projectName": "SilentNotes",
@@ -142,12 +142,6 @@
             "Microsoft.Maui.Controls.Compatibility": {
               "target": "Package",
               "version": "[8.0.7, )"
-            },
-            "Microsoft.NET.ILLink.Tasks": {
-              "suppressParent": "All",
-              "target": "Package",
-              "version": "[8.0.2, )",
-              "autoReferenced": true
             },
             "MudBlazor": {
               "target": "Package",
