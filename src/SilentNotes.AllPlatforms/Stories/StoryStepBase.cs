@@ -18,19 +18,29 @@ namespace SilentNotes.Stories
     public abstract class StoryStepBase<TModel> : IStoryStep<TModel> where TModel : class
     {
         /// <inheritdoc/>
-        public async Task RunStory(TModel model, IServiceProvider serviceProvider, StoryMode uiMode)
+        public async Task RunStoryAndShowLastFeedback(TModel model, IServiceProvider serviceProvider, StoryMode uiMode)
         {
-            var stepResult = await RunStep(model, serviceProvider, uiMode);
+            var storyStepResults = await RunStory(model, serviceProvider, uiMode);
+            await ShowLastFeedback(storyStepResults, serviceProvider, uiMode);
+        }
+
+        /// <inheritdoc/>
+        public async Task<List<StoryStepResult<TModel>>> RunStory(TModel model, IServiceProvider serviceProvider, StoryMode uiMode)
+        {
+            var result = new List<StoryStepResult<TModel>>();
+            StoryStepResult<TModel> stepResult = await RunStep(model, serviceProvider, uiMode);
             if (stepResult == null)
-                return;
+                return result;
+            else
+                result.Add(stepResult);
 
-            // Show feedback of this step if not in silent mode
-            if (stepResult.HasFeedback)
-                await ShowFeedback(stepResult, uiMode, serviceProvider);
-
-            // Continue with next step if available
+            // Continue with next step if available and collect results
             if (stepResult.NextStep != null)
-                await stepResult.NextStep.RunStory(model, serviceProvider, uiMode);
+            {
+                var nextStepResults = await stepResult.NextStep.RunStory(model, serviceProvider, uiMode);
+                result.AddRange(nextStepResults);
+            }
+            return result;
         }
 
         /// <inheritdoc/>
@@ -46,14 +56,30 @@ namespace SilentNotes.Stories
         protected abstract string TranslateException(Exception ex, IServiceProvider serviceProvider);
 
         /// <summary>
-        /// Shows messages or toasts if necessary. This function is called automatically by
+        /// Shows the last error, message or toast if one exists in the result list.
         /// <see cref="RunStory(TModel, IServiceProvider, StoryMode)"/>.
         /// </summary>
-        /// <param name="stepResult">The step result, which may contain a message to show.</param>
-        /// <param name="uiMode">Defines what UI feedback is given.</param>
+        /// <param name="stepResults">The step result list, which may contain a messae to show.</param>
         /// <param name="serviceProvider">Service provider to get the feedback service from.</param>
+        /// <param name="uiMode">Defines what UI feedback is given.</param>
         /// <returns>Task for async calling.</returns>
-        public async Task ShowFeedback(StoryStepResult<TModel> stepResult, StoryMode uiMode, IServiceProvider serviceProvider)
+        public async Task ShowLastFeedback(List<StoryStepResult<TModel>> stepResults, IServiceProvider serviceProvider, StoryMode uiMode)
+        {
+            var lastError = stepResults.LastOrDefault(stepResult => stepResult.HasError);
+            var lastMessage = stepResults.LastOrDefault(stepResult => stepResult.HasMessage);
+            var lastToast = stepResults.LastOrDefault(stepResult => stepResult.HasToast);
+
+            StoryStepResult<TModel> stepResultWithFeedback = null;
+            if (lastError != null)
+                stepResultWithFeedback = new StoryStepResult<TModel>(lastError.Error);
+            else if ((lastToast != null) || (lastMessage != null))
+                stepResultWithFeedback = new StoryStepResult<TModel>(null, lastToast?.Toast, lastMessage?.Message);
+
+            if (stepResultWithFeedback != null)
+                await ShowFeedback(stepResultWithFeedback, serviceProvider, uiMode);
+        }
+
+        public async Task ShowFeedback(StoryStepResult<TModel> stepResult, IServiceProvider serviceProvider, StoryMode uiMode)
         {
             IFeedbackService feedbackService = serviceProvider.GetService<IFeedbackService>();
 

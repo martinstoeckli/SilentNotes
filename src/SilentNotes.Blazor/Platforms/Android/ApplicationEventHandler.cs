@@ -91,7 +91,7 @@ namespace SilentNotes.Platforms
             else if (IsStartedByOAuthRedirectIndent(synchronizationService))
             {
                 var startStep = new HandleOAuthRedirectStep();
-                _ = startStep.RunStory(synchronizationService.ManualSynchronization, Ioc.Instance, synchronizationService.ManualSynchronization.StoryMode);
+                _ = startStep.RunStoryAndShowLastFeedback(synchronizationService.ManualSynchronization, Ioc.Instance, synchronizationService.ManualSynchronization.StoryMode);
             }
         }
 

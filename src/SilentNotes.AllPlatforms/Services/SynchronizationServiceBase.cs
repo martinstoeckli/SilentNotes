@@ -34,7 +34,7 @@ namespace SilentNotes.Services
             feedbackService.SetBusyIndicatorVisible(true, true);
 
             var synchronizationStory = new IsCloudServiceSetStep();
-            await synchronizationStory.RunStory(ManualSynchronization, serviceProvider, ManualSynchronization.StoryMode);
+            await synchronizationStory.RunStoryAndShowLastFeedback(ManualSynchronization, serviceProvider, ManualSynchronization.StoryMode);
         }
 
         /// <inheritdoc/>
@@ -51,7 +51,7 @@ namespace SilentNotes.Services
             };
 
             var synchronizationStory = new ShowCloudStorageChoiceStep();
-            await synchronizationStory.RunStory(ManualSynchronization, serviceProvider, ManualSynchronization.StoryMode);
+            await synchronizationStory.RunStoryAndShowLastFeedback(ManualSynchronization, serviceProvider, ManualSynchronization.StoryMode);
         }
 
         /// <inheritdoc/>
@@ -108,7 +108,7 @@ namespace SilentNotes.Services
                     LastSynchronizationFingerprint = newFingerprint;
 
                     if (stepResult.HasFeedback)
-                        await new IsCloudServiceSetStep().ShowFeedback(stepResult, StoryMode.Toasts | StoryMode.Messages, serviceProvider);
+                        await new IsCloudServiceSetStep().ShowFeedback(stepResult, serviceProvider, StoryMode.Toasts | StoryMode.Messages);
 
                     // Reload active page, but only if the repository differs
                     if (oldFingerprint != newFingerprint)

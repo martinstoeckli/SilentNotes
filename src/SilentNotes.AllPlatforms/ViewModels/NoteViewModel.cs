@@ -12,6 +12,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.DependencyInjection;
 using SilentNotes.Crypto;
 using SilentNotes.Models;
 using SilentNotes.Services;
@@ -286,7 +287,7 @@ namespace SilentNotes.ViewModels
                 OnStoringUnsavedData(new StoreUnsavedDataMessage(MessageSender.ViewModel));
                 var storyModel = new PullPushStoryModel(Model.Id, PullPushDirection.PullFromServer);
                 ExistsCloudRepositoryStep story = new ExistsCloudRepositoryStep();
-                await story.RunStory(storyModel, Ioc.Instance, Stories.StoryMode.Toasts);
+                await story.RunStoryAndShowLastFeedback(storyModel, Ioc.Instance, Stories.StoryMode.Toasts);
             }
             finally
             {
@@ -318,7 +319,7 @@ namespace SilentNotes.ViewModels
                 OnStoringUnsavedData(new StoreUnsavedDataMessage(MessageSender.ViewModel));
                 var storyModel = new PullPushStoryModel(Model.Id, PullPushDirection.PushToServer);
                 ExistsCloudRepositoryStep story = new ExistsCloudRepositoryStep();
-                await story.RunStory(storyModel, Ioc.Instance, Stories.StoryMode.Toasts);
+                await story.RunStoryAndShowLastFeedback(storyModel, Ioc.Instance, Stories.StoryMode.Toasts);
             }
             finally
             {

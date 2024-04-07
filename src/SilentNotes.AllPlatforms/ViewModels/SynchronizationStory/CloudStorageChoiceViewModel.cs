@@ -73,7 +73,7 @@ namespace SilentNotes.ViewModels
             };
 
             var nextStep = new ShowCloudStorageAccountStep();
-            await nextStep.RunStory(storyModel, _serviceProvider, storyModel.StoryMode);
+            await nextStep.RunStoryAndShowLastFeedback(storyModel, _serviceProvider, storyModel.StoryMode);
         }
 
         /// <summary>

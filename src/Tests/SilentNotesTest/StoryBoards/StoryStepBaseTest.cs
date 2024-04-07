@@ -16,7 +16,7 @@ namespace SilentNotesTest.Stories
             var nextStep = new TestStoryStep(null, null, null);
             var storyStep = new TestStoryStep(nextStep, null, null);
 
-            await storyStep.RunStory(null, null, StoryMode.Toasts);
+            await storyStep.RunStoryAndShowLastFeedback(null, null, StoryMode.Toasts);
             Assert.AreEqual(1, storyStep.RunStepCount);
             Assert.AreEqual(1, nextStep.RunStepCount);
         }
@@ -29,10 +29,10 @@ namespace SilentNotesTest.Stories
                 .AddSingleton<IFeedbackService>(feedbackService.Object);
             var storyStep = new TestStoryStep(null, "abc", null);
 
-            await storyStep.RunStory(null, services.BuildServiceProvider(), StoryMode.Silent);
+            await storyStep.RunStoryAndShowLastFeedback(null, services.BuildServiceProvider(), StoryMode.Silent);
             feedbackService.Verify(m => m.ShowToast(It.IsAny<string>(), It.IsAny<Severity>()), Times.Never);
 
-            await storyStep.RunStory(null, services.BuildServiceProvider(), StoryMode.Toasts);
+            await storyStep.RunStoryAndShowLastFeedback(null, services.BuildServiceProvider(), StoryMode.Toasts);
             feedbackService.Verify(m => m.ShowToast(It.IsAny<string>(), It.IsAny<Severity>()), Times.Once);
         }
 
@@ -44,10 +44,10 @@ namespace SilentNotesTest.Stories
                 .AddSingleton<IFeedbackService>(feedbackService.Object);
             var storyStep = new TestStoryStep(null, null, "abc");
 
-            await storyStep.RunStory(null, services.BuildServiceProvider(), StoryMode.Silent);
+            await storyStep.RunStoryAndShowLastFeedback(null, services.BuildServiceProvider(), StoryMode.Silent);
             feedbackService.Verify(m => m.ShowMessageAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<MessageBoxButtons>(), It.IsAny<bool>()), Times.Never);
 
-            await storyStep.RunStory(null, services.BuildServiceProvider(), StoryMode.Toasts | StoryMode.Messages);
+            await storyStep.RunStoryAndShowLastFeedback(null, services.BuildServiceProvider(), StoryMode.Toasts | StoryMode.Messages);
             feedbackService.Verify(m => m.ShowMessageAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<MessageBoxButtons>(), It.IsAny<bool>()), Times.Once);
         }
     }

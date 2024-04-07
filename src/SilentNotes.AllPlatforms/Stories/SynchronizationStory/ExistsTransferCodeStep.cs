@@ -20,6 +20,8 @@ namespace SilentNotes.Stories.SynchronizationStory
         /// <inheritdoc/>
         public override Task<StoryStepResult<SynchronizationStoryModel>> RunStep(SynchronizationStoryModel model, IServiceProvider serviceProvider, StoryMode uiMode)
         {
+            System.Diagnostics.Debug.WriteLine("** " + nameof(ExistsTransferCodeStep) + " " + uiMode.ToString());
+
             var settingsService = serviceProvider.GetService<ISettingsService>();
             SettingsModel settings = settingsService.LoadSettingsOrDefault();
 

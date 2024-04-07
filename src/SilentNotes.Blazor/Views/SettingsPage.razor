@@ -242,11 +242,15 @@
 				</div>
 
 				@* Online storage *@
-				<div style="grid-column: span 2">
+				<div><MudIcon Icon="@Icons.Material.Outlined.Cloud" Color="Color.Secondary" /></div>
+				<div>
 					<MudPaper Elevation="1" Class="pa-4">
 						<MudText Typo="Typo.caption">@LanguageService["cloud_service"]</MudText>
 						<MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
-							<MudImage Src="@ViewModel.AccountIcon" Width="56" Height="28"/>
+							@if (!ViewModel.ClearCloudSettingsDisabled)
+							{
+								<MudImage Src="@ViewModel.AccountIcon" Width="56" Height="28" />
+							}
 							<MudText>@ViewModel.AccountSummary</MudText>
 						</MudStack>
 

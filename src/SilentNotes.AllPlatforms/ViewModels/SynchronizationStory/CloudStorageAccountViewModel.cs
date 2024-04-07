@@ -56,7 +56,7 @@ namespace SilentNotes.ViewModels
             _feedbackService.SetBusyIndicatorVisible(true, true);
             SynchronizationStoryModel storyModel = _synchronizationService.ManualSynchronization;
             var nextStep = new ExistsCloudRepositoryStep();
-            await nextStep.RunStory(storyModel, _serviceProvider, storyModel.StoryMode);
+            await nextStep.RunStoryAndShowLastFeedback(storyModel, _serviceProvider, storyModel.StoryMode);
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace SilentNotes.ViewModels
         private async void Cancel()
         {
             var nextStep = new StopAndShowRepositoryStep();
-            await nextStep.RunStory(_synchronizationService.ManualSynchronization, _serviceProvider, _synchronizationService.ManualSynchronization.StoryMode);
+            await nextStep.RunStoryAndShowLastFeedback(_synchronizationService.ManualSynchronization, _serviceProvider, _synchronizationService.ManualSynchronization.StoryMode);
         }
 
         /// <inheritdoc />

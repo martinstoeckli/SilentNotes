@@ -21,6 +21,8 @@ namespace SilentNotes.Stories.SynchronizationStory
         /// <inheritdoc/>
         public override Task<StoryStepResult<SynchronizationStoryModel>> RunStep(SynchronizationStoryModel model, IServiceProvider serviceProvider, StoryMode uiMode)
         {
+            System.Diagnostics.Debug.WriteLine("** " + nameof(DecryptCloudRepositoryStep) + " " + uiMode.ToString());
+
             try
             {
                 var settingsService = serviceProvider.GetService<ISettingsService>();

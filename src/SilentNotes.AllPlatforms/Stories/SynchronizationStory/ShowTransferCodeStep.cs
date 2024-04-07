@@ -17,6 +17,8 @@ namespace SilentNotes.Stories.SynchronizationStory
         /// <inheritdoc/>
         public override Task<StoryStepResult<SynchronizationStoryModel>> RunStep(SynchronizationStoryModel model, IServiceProvider serviceProvider, StoryMode uiMode)
         {
+            System.Diagnostics.Debug.WriteLine("** " + nameof(ShowTransferCodeStep) + " " + uiMode.ToString());
+
             if (uiMode.HasFlag(StoryMode.Dialogs))
             {
                 var navigation = serviceProvider.GetService<INavigationService>();

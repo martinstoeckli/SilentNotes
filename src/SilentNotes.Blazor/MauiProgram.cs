@@ -99,10 +99,6 @@ public static class MauiProgram
         services.AddScoped<INavigationService>((serviceProvider) => new NavigationService(
             serviceProvider.GetService<NavigationManager>(),
             RouteNames.NoteRepository));
-        services.AddScoped<IFeedbackService>((serviceProvider) => new FeedbackService(
-            serviceProvider.GetService<IDialogService>(),
-            serviceProvider.GetService<ISnackbar>(),
-            serviceProvider.GetService<ILanguageService>()));
         services.AddScoped<INotificationService>((serviceProvider) => new NotificationService(
             serviceProvider.GetService<IFeedbackService>(),
             serviceProvider.GetService<ILanguageService>(),
@@ -127,6 +123,10 @@ public static class MauiProgram
         services.AddSingleton<IFolderPickerService>((serviceProvider) => new FolderPickerService());
         services.AddSingleton<IFilePickerService>((serviceProvider) => new FilePickerService());
         services.AddSingleton<ISynchronizationService>((serviceProvider) => new SynchronizationService());
+
+        services.AddScoped<IFeedbackService>((serviceProvider) => new FeedbackService(
+            serviceProvider.GetService<ISnackbar>(),
+            serviceProvider.GetService<ILanguageService>()));
     }
 
 #elif ANDROID
@@ -158,6 +158,11 @@ public static class MauiProgram
             serviceProvider.GetService<IAppContextService>(),
             serviceProvider.GetService<IActivityResultAwaiter>()));
         services.AddSingleton<ISynchronizationService>((serviceProvider) => new SynchronizationService());
+
+        services.AddScoped<IFeedbackService>((serviceProvider) => new FeedbackService(
+            serviceProvider.GetService<IAppContextService>(),
+            serviceProvider.GetService<ISnackbar>(),
+            serviceProvider.GetService<ILanguageService>()));
     }
 
 #endif

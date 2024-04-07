@@ -23,6 +23,8 @@ namespace SilentNotes.Stories.SynchronizationStory
         /// <inheritdoc/>
         public override Task<StoryStepResult<SynchronizationStoryModel>> RunStep(SynchronizationStoryModel model, IServiceProvider serviceProvider, StoryMode uiMode)
         {
+            System.Diagnostics.Debug.WriteLine("** " + nameof(ShowCloudStorageAccountStep) + " " + uiMode.ToString());
+
             if (uiMode.HasFlag(StoryMode.Dialogs))
             {
                 var cloudStorageClientFactory = serviceProvider.GetService<ICloudStorageClientFactory>();

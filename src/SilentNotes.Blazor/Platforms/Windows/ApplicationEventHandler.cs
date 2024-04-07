@@ -45,12 +45,13 @@ namespace SilentNotes.Platforms
             if ((e.Kind == ExtendedActivationKind.Protocol) &&
                 (e.Data is ProtocolActivatedEventArgs activatedEventArgs))
             {
+                // Continue manual synchronization, after the user confirmed the OAuth2 login.
                 var synchronizationService = Ioc.Instance.GetService<ISynchronizationService>();
                 if (synchronizationService.ManualSynchronization != null)
                 {
                     synchronizationService.ManualSynchronization.OauthRedirectUrl = activatedEventArgs.Uri.AbsoluteUri;
                     var handleOAuthRedirectStep = new HandleOAuthRedirectStep();
-                    _ = handleOAuthRedirectStep.RunStory(synchronizationService.ManualSynchronization, Ioc.Instance, synchronizationService.ManualSynchronization.StoryMode);
+                    _ = handleOAuthRedirectStep.RunStoryAndShowLastFeedback(synchronizationService.ManualSynchronization, Ioc.Instance, synchronizationService.ManualSynchronization.StoryMode);
                 }
             }
         }

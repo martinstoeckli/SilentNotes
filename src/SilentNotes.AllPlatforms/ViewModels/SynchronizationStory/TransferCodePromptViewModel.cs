@@ -54,7 +54,7 @@ namespace SilentNotes.ViewModels
             {
                 _synchronizationService.ManualSynchronization.UserEnteredTransferCode = sanitizedCode;
                 var nextStep = new DecryptCloudRepositoryStep();
-                await nextStep.RunStory(_synchronizationService.ManualSynchronization, _serviceProvider, _synchronizationService.ManualSynchronization.StoryMode);
+                await nextStep.RunStoryAndShowLastFeedback(_synchronizationService.ManualSynchronization, _serviceProvider, _synchronizationService.ManualSynchronization.StoryMode);
             }
             else
             {
@@ -70,7 +70,7 @@ namespace SilentNotes.ViewModels
         private async void Cancel()
         {
             var nextStep = new StopAndShowRepositoryStep();
-            await nextStep.RunStory(_synchronizationService.ManualSynchronization, _serviceProvider, _synchronizationService.ManualSynchronization.StoryMode);
+            await nextStep.RunStoryAndShowLastFeedback(_synchronizationService.ManualSynchronization, _serviceProvider, _synchronizationService.ManualSynchronization.StoryMode);
         }
     }
 }

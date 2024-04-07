@@ -20,6 +20,8 @@ namespace SilentNotes.Stories.SynchronizationStory
         /// <inheritdoc/>
         public override Task<StoryStepResult<SynchronizationStoryModel>> RunStep(SynchronizationStoryModel model, IServiceProvider serviceProvider, StoryMode uiMode)
         {
+            System.Diagnostics.Debug.WriteLine("** " + nameof(StopAndShowRepositoryStep) + " " + uiMode.ToString());
+
             if (uiMode.HasFlag(StoryMode.BusyIndicator))
             {
                 var feedbackService = serviceProvider.GetService<IFeedbackService>();

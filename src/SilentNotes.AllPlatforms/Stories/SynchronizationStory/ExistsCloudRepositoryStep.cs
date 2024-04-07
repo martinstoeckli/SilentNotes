@@ -21,6 +21,8 @@ namespace SilentNotes.Stories.SynchronizationStory
         /// <inheritdoc/>
         public override async Task<StoryStepResult<SynchronizationStoryModel>> RunStep(SynchronizationStoryModel model, IServiceProvider serviceProvider, StoryMode uiMode)
         {
+            System.Diagnostics.Debug.WriteLine("** " + nameof(ExistsCloudRepositoryStep) + " " + uiMode.ToString());
+
             var cloudStorageClientFactory = serviceProvider.GetService<ICloudStorageClientFactory>();
             var settingsService = serviceProvider.GetService<ISettingsService>();
             var languageService = serviceProvider.GetService<ILanguageService>();

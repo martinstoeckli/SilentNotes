@@ -20,6 +20,8 @@ namespace SilentNotes.Stories.SynchronizationStory
         /// <inheritdoc/>
         public override Task<StoryStepResult<SynchronizationStoryModel>> RunStep(SynchronizationStoryModel model, IServiceProvider serviceProvider, StoryMode uiMode)
         {
+            System.Diagnostics.Debug.WriteLine("** " + nameof(IsSameRepositoryStep) + " " + uiMode.ToString());
+
             var repositoryStorageService = serviceProvider.GetService<IRepositoryStorageService>();
             repositoryStorageService.LoadRepositoryOrDefault(out NoteRepositoryModel localRepository);
 

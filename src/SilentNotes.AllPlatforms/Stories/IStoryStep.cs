@@ -21,14 +21,26 @@ namespace SilentNotes.Stories
     {
         /// <summary>
         /// Runs the story step and continues with the next steps, until the story ends or is
+        /// halted to show a user interface. Afterwards it shows the last toast, message or error
+        /// if available.
+        /// </summary>
+        /// <param name="model">The model to persist collected information.</param>
+        /// <param name="serviceProvider">The service provider. Do not rely on the services to be
+        /// the same instances for the whole story.</param>
+        /// <param name="uiMode">Can be used to run in silent mode.</param>
+        /// <returns></returns>
+        Task RunStoryAndShowLastFeedback(TModel model, IServiceProvider serviceProvider, StoryMode uiMode);
+
+        /// <summary>
+        /// Runs the story step and continues with the next steps, until the story ends or is
         /// halted to show a user interface.
         /// </summary>
         /// <param name="model">The model to persist collected information.</param>
         /// <param name="serviceProvider">The service provider. Do not rely on the services to be
         /// the same instances for the whole story.</param>
         /// <param name="uiMode">Can be used to run in silent mode.</param>
-        /// <returns>Task for async calling.</returns>
-        Task RunStory(TModel model, IServiceProvider serviceProvider, StoryMode uiMode);
+        /// <returns>A list the results of all steps.</returns>
+        Task<List<StoryStepResult<TModel>>> RunStory(TModel model, IServiceProvider serviceProvider, StoryMode uiMode);
 
         /// <summary>
         /// Runs this single step and returns its result.
