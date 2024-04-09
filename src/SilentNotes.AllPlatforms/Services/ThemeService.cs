@@ -17,7 +17,8 @@ namespace SilentNotes.Services
     /// </summary>
     public class ThemeService : IThemeService
     {
-        private const int DefaultWallpaper = 0;
+        private const int DefaultWallpaper = 0; // cork
+        private const string DefaultColorTheme = "Classic";
         private readonly ISettingsService _settingsService;
         private readonly IEnvironmentService _environmentService;
 
@@ -31,33 +32,15 @@ namespace SilentNotes.Services
             _settingsService = settingsService;
             _environmentService = environmentService;
 
-            // todo:
-            Theme = new MudTheme()
-            {
-                Palette = new PaletteLight()
-                {
-                    //AppbarBackground = new MudColor("#323232"),
-                },
-                PaletteDark = new PaletteDark()
-                {
-                    //AppbarBackground = new MudColor("#323232"),
-                },
-                Typography = new Typography()
-                {
-                    Default = new Default()
-                    {
-                        FontSize = "14px",
-                    },
-                },
-            };
+            // For now we fix the classic color theme, so users get their accustoment environment,
+            // later this will become configurable.
+            ColorThemes = new List<ColorThemeModel>();
+            FillColorThemes(ColorThemes);
+            SelectedColorTheme = ColorThemes.FindByNameOrDefault(DefaultColorTheme);
+            Theme = CreateMudTheme(SelectedColorTheme);
+
             Wallpapers = new List<WallpaperModel>();
             FillWallpapers(Wallpapers);
-        }
-
-        /// <inheritdoc/>
-        public void RedrawTheme()
-        {
-            WeakReferenceMessenger.Default.Send<RedrawMainPageMessage>();
         }
 
         /// <inheritdoc/>
@@ -88,12 +71,21 @@ namespace SilentNotes.Services
         /// <inheritdoc/>
         public MudTheme Theme { get; set; }
 
+        /// <summary>
+        /// Gets a list of available color themes.
+        /// </summary>
+        private List<ColorThemeModel> ColorThemes { get; }
+
+        /// <summary>
+        /// Gets the currenctly selected color theme.
+        /// </summary>
+        private ColorThemeModel SelectedColorTheme { get; set; }
+
         /// <inheritdoc/>
         public string LightOrDarkClass 
         {
             get { return IsDarkMode ? "theme-dark" : "theme-light"; }
         }
-
 
         private void FillWallpapers(List<WallpaperModel> themes)
         {
@@ -109,32 +101,6 @@ namespace SilentNotes.Services
             themes.Add(new WallpaperModel("sand", "sand.jpg"));
             themes.Add(new WallpaperModel("stars", "stars.jpg"));
         }
-
-        ///// <inheritdoc/>
-        //public bool DarkMode
-        //{
-        //    get
-        //    {
-        //        SettingsModel settings = _settingsService.LoadSettingsOrDefault();
-        //        switch (settings.ThemeMode)
-        //        {
-        //            case ThemeMode.Auto:
-        //                //return _environmentService.InDarkMode;
-        //            case ThemeMode.Dark:
-        //                return true;
-        //            case ThemeMode.Light:
-        //                return false;
-        //            default:
-        //                throw new ArgumentOutOfRangeException(nameof(settings.ThemeMode));
-        //        }
-        //    }
-        //}
-
-        ///// <inheritdoc/>
-        //public string CssClassDark
-        //{
-        //    get { return DarkMode ? "dark" : string.Empty; }
-        //}
 
         /// <inheritdoc/>
         public string CssNoteRepositoryBackground
@@ -164,6 +130,94 @@ namespace SilentNotes.Services
         {
             int result = Wallpapers.FindIndex(item => string.Equals(item.Id, themeId));
             return result >= 0 ? result : DefaultWallpaper;
+        }
+
+        private static MudTheme CreateMudTheme(ColorThemeModel colorTheme)
+        {
+            return new MudTheme()
+            {
+                Palette = new PaletteLight()
+                {
+                    AppbarBackground = colorTheme.LightColors.AppBar,
+                    Primary = colorTheme.LightColors.Primary,
+                    Secondary = colorTheme.LightColors.Decoration,
+                    Tertiary = colorTheme.LightColors.Secondary,
+                },
+                PaletteDark = new PaletteDark()
+                {
+                    AppbarBackground = colorTheme.DarkColors.AppBar,
+                    Primary = colorTheme.DarkColors.Primary,
+                    Secondary = colorTheme.DarkColors.Decoration,
+                    Tertiary = colorTheme.DarkColors.Secondary,
+                },
+                Typography = new Typography()
+                {
+                    Default = new Default()
+                    {
+                        FontSize = "14px",
+                    },
+                },
+            };
+        }
+
+        private void FillColorThemes(List<ColorThemeModel> themes)
+        {
+            themes.Add(new ColorThemeModel
+            {
+                Name = "Standard",
+                LightColors = new ColorThemeModel.ColorSetModel
+                {
+                    AppBar = "#594AE2",
+                    Primary = "#594AE2",
+                    Secondary = "#1EC8A5",
+                    Decoration = "#FF4081",
+                },
+                DarkColors = new ColorThemeModel.ColorSetModel
+                {
+                    AppBar = "#776be7",
+                    Primary = "#776be7",
+                    Secondary = "#1EC8A5",
+                    Decoration = "#FF4081",
+                },
+            });
+
+            themes.Add(new ColorThemeModel
+            {
+                Name = "Tropical",
+                LightColors = new ColorThemeModel.ColorSetModel
+                {
+                    AppBar = "#f05638",
+                    Primary = "#f05638",
+                    Secondary = "#e31c5e",
+                    Decoration = "#f0f028",
+                },
+                DarkColors = new ColorThemeModel.ColorSetModel
+                {
+                    AppBar = "#db4729",
+                    Primary = "#db4729",
+                    Secondary = "#e31c5e",
+                    Decoration = "#dce763",
+                },
+            });
+
+            themes.Add(new ColorThemeModel
+            {
+                Name = "Classic",
+                LightColors = new ColorThemeModel.ColorSetModel
+                {
+                    AppBar = "#323232",
+                    Primary = "#1f8fe9",
+                    Secondary = "#1EC8A5",
+                    Decoration = "#FF4081",
+                },
+                DarkColors = new ColorThemeModel.ColorSetModel
+                {
+                    AppBar = "#121212",
+                    Primary = "#66b4e8",
+                    Secondary = "#1EC8A5",
+                    Decoration = "#FF4081",
+                },
+            });
         }
     }
 }

@@ -16,12 +16,6 @@ namespace SilentNotes.Services
     public interface IThemeService
     {
         /// <summary>
-        /// Can be called when the theme has changed, to refresh the GUI of the whole app (instead
-        /// of just the active component).
-        /// </summary>
-        void RedrawTheme();
-
-        /// <summary>
         /// Gets or sets a value indicating whether the app should show its dark theme.
         /// </summary>
         bool IsDarkMode { get; set; }
@@ -30,17 +24,6 @@ namespace SilentNotes.Services
         /// Gets or sets the current theme.
         /// </summary>
         MudTheme Theme { get; set; }
-
-        ///// <summary>
-        ///// Gets a value indicating whether the app should show its dark theme.
-        ///// </summary>
-        //bool DarkMode { get; }
-
-        ///// <summary>
-        ///// Gets the keyword "dark" or "" depending on <see cref="DarkMode"/>, which can be used
-        ///// inside the Html class attributes, to refer to the Css dark class.
-        ///// </summary>
-        //string CssClassDark { get; }
 
         /// <summary>
         /// Gets the keyword "theme-light" or "theme-dark" depending on <see cref="IsDarkMode"/>,

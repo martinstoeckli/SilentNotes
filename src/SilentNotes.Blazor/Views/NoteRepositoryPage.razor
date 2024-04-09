@@ -37,6 +37,9 @@
 	.note-viewer {
 		font-size: @(ViewModel.GetNoteBaseFontSize(SettingsService, true))px !important;
 	}
+	.filter-input .mud-svg-icon {
+		fill: var(--mud-palette-appbar-background);
+	}
 	.note-light .note-viewer.over-view.checklist p::before { content: @(IconService.LoadIconAsCssUrl(IconNames.CheckboxBlankOutline, new[] { new KeyValuePair<string, string>("fill", "#000000") })) }
 	.note-light .note-viewer.over-view.checklist p.done::before { content: @(IconService.LoadIconAsCssUrl(IconNames.CheckboxOutline, new[] { new KeyValuePair<string, string>("fill", "#000000") })) }
 	.note-light .note-viewer.over-view.checklist p.disabled::before { content: @(IconService.LoadIconAsCssUrl(IconNames.CheckboxBlankOutline, new[] { new KeyValuePair<string, string>("fill", "#000000") })) }
@@ -56,9 +59,10 @@
 		Title="@GetTagsTooltip()" />
 
 	@* Filter *@
-	<MudPaper Class="d-inline-flex align-center rounded-pill pa-0" MaxWidth="55%" MaxHeight="36px" Elevation="0">
+	<MudPaper Class="d-inline-flex align-center rounded-pill pa-0" Style="background-color: var(--mud-palette-appbar-text)" MaxWidth="55%" MaxHeight="36px" Elevation="0">
 		<MudInput @ref="_filterInput" @bind-Value="ViewModel.Filter"
 			Class="filter-input ml-2 mr-1 my-0"
+			Style="color: #000000"
 			AutoFocus="@ShouldAutofocusToFilter"
 			Adornment="@(ViewModel.IsFiltered ? Adornment.None : Adornment.End)" AdornmentIcon="@IconService.GetSvgLink(IconNames.Magnify)"
 			Immediate="true" Clearable="true" />
