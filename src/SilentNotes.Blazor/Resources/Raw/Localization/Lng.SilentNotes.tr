@@ -1,6 +1,6 @@
 ok = Tamam
 cancel = İptal
-close = Close
+close = Kapat
 yes = Evet
 no = Hayır
 back = Geri
@@ -8,8 +8,8 @@ continue = Devam Et
 search = Ara
 undo = Geri al
 redo = Yeniden yaz
-copy = Copy
-reset = Reset
+copy = Kopyala
+reset = Sıfırla
 
 today = Bugün
 yesterday = Dün
@@ -33,7 +33,7 @@ filter_only_without_tags = Etiketsiz notlar
 
 note_create_new = Not oluştur
 note_undelete = Notu geri yükle
-note_delete_permanent = Delete note permanently
+note_delete_permanent = Notu kalıcı olarak sil
 note_title = Başlık
 note_content = Metin
 note_colors = Sayfa rengi seç
