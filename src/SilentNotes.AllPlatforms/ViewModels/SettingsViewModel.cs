@@ -235,7 +235,9 @@ namespace SilentNotes.ViewModels
             set
             {
                 if (SetProperty(Model.ThemeMode.ToString(), value, (string v) => Model.ThemeMode = (ThemeMode)Enum.Parse(typeof(ThemeMode), value)))
-                    _themeService.RedrawTheme();
+                {
+                    WeakReferenceMessenger.Default.Send<RedrawMainPageMessage>();
+                }
             }
         }
 

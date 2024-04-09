@@ -29,6 +29,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Ioc.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Messages.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\AutoSynchronizationMode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\ColorThemeModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\NoteInsertionMode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\NoteListModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\NoteModel.cs" />
