@@ -1,6 +1,6 @@
 ok = OK
 cancel = Annulla
-close = Close
+close = Chiudi
 yes = Sì
 no = No
 back = Indietro
@@ -8,8 +8,8 @@ continue = Continua
 search = Cerca
 undo = Annulla
 redo = Ripristina
-copy = Copy
-reset = Reset
+copy = Copia
+reset = Azzera
 
 today = oggi
 yesterday = ieri
@@ -33,7 +33,7 @@ filter_only_without_tags = Senza etichette
 
 note_create_new = Crea un nuovo appunto
 note_undelete = Ripristina l'appunto
-note_delete_permanent = Delete note permanently
+note_delete_permanent = Elimina l'appunto definitivamente
 note_title = Titolo
 note_content = Testo
 note_colors = Seleziona il colore dell'appunto
