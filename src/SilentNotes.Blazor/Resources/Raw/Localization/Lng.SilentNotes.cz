@@ -1,6 +1,6 @@
 ok = OK
 cancel = Zrušit
-close = Close
+close = Zavřít
 back = Zpět
 yes = Ano
 no = Ne
@@ -8,7 +8,7 @@ continue = Pokračovat
 search = Vyhledat
 undo = Vrátit
 redo = Opakovat
-copy = Copy
+copy = Zkopírovat
 reset = Reset
 
 today = dnes
@@ -33,7 +33,7 @@ filter_only_without_tags = Bez štítků
 
 note_create_new = Vytvořit novou poznámku
 note_undelete = Obnovit poznámku
-note_delete_permanent = Delete note permanently
+note_delete_permanent = Trvale odstranit poznámku
 note_title = Titulek
 note_content = Text
 note_colors = Vybrat barvu poznámky
