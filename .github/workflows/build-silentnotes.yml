@@ -4,6 +4,14 @@ name: Build SilentNotes binaries
 on:
   workflow_dispatch:
     inputs:
+      build-android:
+        type: boolean
+        default: true
+        description: Build the Android binaries
+      build-windows:
+        type: boolean
+        default: true
+        description: Build the Windows binaries
       publish-release:
         type: boolean
         default: true
@@ -57,7 +65,7 @@ jobs:
   # Platforms are taken from the csproj, to build one apk with multiple platforms
   ##############################################################################
   job_build_android:
-    if: false
+    if: ${{ inputs.build-android }}
     strategy:
       matrix:
         configuration: [Release]
@@ -97,7 +105,7 @@ jobs:
         KeystoreGpgPassword: ${{ secrets.SILENTNOTESANDROIDKEYSTOREGPGPASSWORD }}
 
     # Build application
-    # The keystore location seems to be relative to the csproj file, so we placed it in the same directory pass only the filename
+    # The keystore location seems to be relative to the csproj file, so we placed it in the same directory and pass only the filename
     - name: Build application
       run: dotnet publish "${{ env.Project_Path }}" -c ${{ env.Configuration }} -f ${{ env.Target_Framework_Android }} -o ".\bin" -p:AndroidPackageFormats=apk -p:PublishTrimmed=true -p:AndroidKeyStore=True -p:AndroidSigningKeyStore=silentnotes.keystore -p:AndroidSigningKeyAlias=androidmartinstoeckli -p:AndroidSigningKeyPass=${{ env.KeystorePassword }} -p:AndroidSigningStorePass=${{ env.KeystorePassword }}
       env:
@@ -117,16 +125,16 @@ jobs:
 
     # Upload artifacts
     - name: Upload build artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
-        name: silentnotes_binaries
+        name: silentnotes_android_arm_binaries
         path: .\artifacts
 
   ##############################################################################
   # Android additional platforms
   ##############################################################################
   job_build_android_additional_platform:
-    if: false
+    if: ${{ inputs.build-android }}
     strategy:
       matrix:
         configuration: [Release]
@@ -167,7 +175,7 @@ jobs:
         KeystoreGpgPassword: ${{ secrets.SILENTNOTESANDROIDKEYSTOREGPGPASSWORD }}
 
     # Build application
-    # The keystore location seems to be relative to the csproj file, so we placed it in the same directory pass only the filename
+    # The keystore location seems to be relative to the csproj file, so we placed it in the same directory and pass only the filename
     - name: Build application
       run: dotnet publish "${{ env.Project_Path }}" -c ${{ env.Configuration }} -f ${{ env.Target_Framework_Android }} -r android-${{ env.Platform }} -o ".\bin" -p:AndroidKeyStore=True -p:AndroidSigningKeyStore=silentnotes.keystore -p:AndroidSigningKeyAlias=androidmartinstoeckli -p:AndroidSigningKeyPass=${{ env.KeystorePassword }} -p:AndroidSigningStorePass=${{ env.KeystorePassword }}
       env:
@@ -190,15 +198,16 @@ jobs:
 
     # Upload artifacts
     - name: Upload build artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
-        name: silentnotes_binaries
+        name: silentnotes_android_x64_binaries
         path: .\artifacts
 
   ##############################################################################
   # Windows
   ##############################################################################
   job_build_windows:
+    if: ${{ inputs.build-windows }}
     strategy:
       matrix:
         platform: [x86,x64]
@@ -275,6 +284,7 @@ jobs:
   ##############################################################################
   job_package:
     needs: [job_version, job_build_windows]
+    if: ${{ inputs.build-windows }}
     runs-on: windows-latest
 
     steps:
@@ -315,8 +325,7 @@ jobs:
   ##############################################################################
   job_publish_release:
     needs: [job_version, job_build_android, job_build_android_additional_platform]
-    if: false
-    # if: ${{ inputs.publish-release }}
+    if: ${{ inputs.publish-release }}
 
     runs-on: windows-latest
 
