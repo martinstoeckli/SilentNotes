@@ -75,6 +75,19 @@ namespace SilentNotesTest.Models
         }
 
         [Test]
+        public void GetModificationFingerprint_DetectsRecycleBinRestore()
+        {
+            NoteRepositoryModel model = CreateNoteRepositoryModel();
+
+            model.Notes[0].InRecyclingBin = true;
+            long fingerprintBefore = model.GetModificationFingerprint();
+
+            model.Notes[0].InRecyclingBin = false;
+            long fingerprintAfter = model.GetModificationFingerprint();
+            Assert.AreNotEqual(fingerprintBefore, fingerprintAfter);
+        }
+
+        [Test]
         public void RemoveUnusedSafesWorksCorrectly()
         {
             Guid safe1Id = new Guid("10000000000000000000000000000000");

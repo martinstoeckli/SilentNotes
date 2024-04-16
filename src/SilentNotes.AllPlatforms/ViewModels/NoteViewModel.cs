@@ -71,7 +71,7 @@ namespace SilentNotes.ViewModels
             PushNoteToOnlineStorageCommand = new AsyncRelayCommand(PushNoteToOnlineStorage);
             PullNoteFromOnlineStorageCommand = new AsyncRelayCommand(PullNoteFromOnlineStorage);
 
-            Modifications = new NoteModificationDetector(() => GetModificationFingerprint(), () => IsPinned);
+            Modifications = new NoteModificationDetector(() => GetModificationFingerprint(this), () => IsPinned);
             Modifications.MemorizeCurrentState();
             KeepScreenOnActive = false; // is always canceled when closing
         }
@@ -84,19 +84,26 @@ namespace SilentNotes.ViewModels
         private NoteModificationDetector Modifications { get; }
 
         /// <summary>
-        /// Gets a fingerprint of the note which can be edited on this page.
+        /// Gets a fingerprint of all properties which can be modified on this page. Getting the
+        /// same fingerprint means that no changes where made, or that they where undone.
         /// </summary>
-        /// <returns>A fingerprint representing the state of the note.</returns>
-        public long GetModificationFingerprint()
+        /// <param name="noteViewModel">The note viewmodel from which to create the fingerprint.
+        /// The model cannot read the unlocked html content, so we need the viewmodel.</param>
+        /// <returns>The fingerprint representing the current state.</returns>
+        public static long GetModificationFingerprint(NoteViewModel noteViewModel)
         {
+            // - The note content can have been changed.
+            // - Tags can have been added or removed.
+            // - The states (pinned, shopping mode) can have been changed.
+            // - The color can have been changed.
             return ModificationDetector.CombineHashCodes(new long[]
             {
-                IsPinned.GetHashCode(),
-                string.GetHashCode(UnlockedHtmlContent),
-                string.GetHashCode(BackgroundColorHex),
-                ShoppingModeActive.GetHashCode(),
+                string.GetHashCode(noteViewModel.UnlockedHtmlContent),
+                string.GetHashCode(noteViewModel.BackgroundColorHex),
+                noteViewModel.IsPinned.GetHashCode(),
+                noteViewModel.ShoppingModeActive.GetHashCode(),
                 ModificationDetector.CombineHashCodes(
-                    Model.Tags.Select(tag => (long)string.GetHashCode(tag))),
+                    noteViewModel.Tags.Select(tag => (long)string.GetHashCode(tag))),
             });
         }
 

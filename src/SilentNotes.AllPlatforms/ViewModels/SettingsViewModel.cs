@@ -19,6 +19,13 @@ using Color = System.Drawing.Color;
 
 namespace SilentNotes.ViewModels
 {
+    /// <summary>
+    /// View model to present the settings page.
+    /// </summary>
+    /// <remarks>
+    /// Update <see cref="SettingsViewModel.GetModificationFingerprint(SettingsModel)"/> when adding
+    /// new properties to this class!
+    /// </remarks>
     internal class SettingsViewModel : ViewModelBase
     {
         public const double ReferenceFontSize = 15.0; // Used as reference to calculate the font scale
@@ -73,12 +80,16 @@ namespace SilentNotes.ViewModels
         internal ModificationDetector Modifications { get; }
 
         /// <summary>
-        /// Gets a fingerprint of all settings which can be modified in this settings dialog.
+        /// Gets a fingerprint of all properties which can be modified on this page. Getting the
+        /// same fingerprint means that no changes where made, or that they where undone.
         /// </summary>
         /// <param name="settings">The settings model from which to create the fingerprint.</param>
-        /// <returns>A fingerprint representing the settings state.</returns>
+        /// <returns>The fingerprint representing the current state.</returns>
         public static long GetModificationFingerprint(SettingsModel settings)
         {
+            if (settings == null)
+                return 0;
+
             return ModificationDetector.CombineHashCodes(new long[]
             {
                 settings.Revision.GetHashCode(),

@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Serialization;
+using SilentNotes.Workers;
 
 namespace SilentNotes.Models
 {
@@ -139,29 +140,29 @@ namespace SilentNotes.Models
         /// <returns>A fingerprint representing the modification state.</returns>
         public long GetModificationFingerprint()
         {
-            unchecked
+            List<long> hashCodes = new List<long>();
+            hashCodes.Add(Id.GetHashCode());
+            hashCodes.Add(Revision);
+            hashCodes.Add(OrderModifiedAt.GetHashCode());
+            foreach (NoteModel note in Notes)
             {
-                long hashCode = Id.GetHashCode();
-                hashCode = (hashCode * 397) ^ Revision;
-                hashCode = (hashCode * 397) ^ OrderModifiedAt.GetHashCode();
-                foreach (NoteModel note in Notes)
-                {
-                    hashCode = (hashCode * 397) ^ note.ModifiedAt.GetHashCode();
-                    if (note.MetaModifiedAt != null)
-                        hashCode = (hashCode * 397) ^ note.MetaModifiedAt.GetHashCode();
-                }
-                foreach (Guid deletedNote in DeletedNotes)
-                {
-                    hashCode = (hashCode * 397) ^ deletedNote.GetHashCode();
-                }
-                foreach (SafeModel safe in Safes)
-                {
-                    hashCode = (hashCode * 397) ^ safe.ModifiedAt.GetHashCode();
-                    if (safe.MaintainedAt != null)
-                        hashCode = (hashCode * 397) ^ safe.MaintainedAt.GetHashCode();
-                }
-                return hashCode;
+                hashCodes.Add(note.ModifiedAt.GetHashCode());
+                if (note.MetaModifiedAt != null)
+                    hashCodes.Add(note.MetaModifiedAt.GetHashCode());
+                hashCodes.Add(note.InRecyclingBin.GetHashCode());
             }
+            foreach (Guid deletedNote in DeletedNotes)
+            {
+                hashCodes.Add(deletedNote.GetHashCode());
+            }
+            foreach (SafeModel safe in Safes)
+            {
+                hashCodes.Add(safe.ModifiedAt.GetHashCode());
+                if (safe.MaintainedAt != null)
+                    hashCodes.Add(safe.MaintainedAt.GetHashCode());
+            }
+
+            return ModificationDetector.CombineHashCodes(hashCodes);
         }
 
         public void RemoveUnusedSafes()
