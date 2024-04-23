@@ -1,0 +1,22 @@
+<Project>
+    <PropertyGroup>
+        <!--
+        Here we can define solution wide defines for conditional compiling. Write them semikolon
+        delimited after $(DefineConstants) like this...
+        
+          $(DefineConstants);FORCE_LANG_EN;FORCE_REPO_DEMO;FORCE_WINDOW_SIZE
+        
+        ...but don't forget to reset this file before building for production. After changing a
+        value, please rebuild the solution. Remove DEMO to run unit tests.
+        
+        Only when compiled in RELEASE mode, the repository has the name "silentnotes_repository.silentnotes",
+        otherwise it uses an alternative name to keep the original repo intact, see also NoteRepositoryModel.RepositoryFileName
+        
+        Known defines are:
+        FORCE_LANG_EN:     Enforces an english localization (works only in DEBUG mode)
+        FORCE_REPO_DEMO:   Loads hard coded demo data (works only in DEBUG mode)
+        FORCE_WINDOW_SIZE: Fixes the size of the main window, so screenshots can be taken (works only in DEBUG mode)
+        -->
+        <DefineConstants>$(DefineConstants)</DefineConstants>
+    </PropertyGroup>
+</Project>

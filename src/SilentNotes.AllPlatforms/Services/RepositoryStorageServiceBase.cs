@@ -37,7 +37,7 @@ namespace SilentNotes.Services
             _languageService = languageService;
             _updater = new NoteRepositoryUpdater();
 
-#if (DEMO && DEBUG)
+#if (DEBUG && FORCE_REPO_DEMO)
             _cachedRepository = new DemoNoteRepositoryModel();
 #endif
         }
@@ -132,6 +132,10 @@ namespace SilentNotes.Services
         /// <inheritdoc/>
         public bool TrySaveRepository(NoteRepositoryModel repositoryModel)
         {
+#if (DEBUG && FORCE_REPO_DEMO)
+            return true;
+#endif
+
             try
             {
                 string xmlFilePath = Path.Combine(GetLocation(), NoteRepositoryModel.RepositoryFileName);

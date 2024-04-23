@@ -21,8 +21,6 @@ namespace SilentNotes;
 
 public static class MauiProgram
 {
-    private const string DebugForceLanguage = "en"; // A language code can be forced for development (e.g. "en" or "de")
-
     /// <summary>
     /// Initializes the application and its IOC.
     /// </summary>
@@ -49,7 +47,8 @@ public static class MauiProgram
                 // Registered LifecycleEvents are triggered not only by the MainActivity. To avoid
                 // running them from other activities the MainActivity will trigger them directly.
 #elif WINDOWS
-                events.AddWindows(windows => windows
+                events.AddWindows(lifeCycleBuilder => lifeCycleBuilder
+                    .OnWindowCreated((window) => applicationEventHandler.OnWindowCreated(window))
                     .OnClosed((window, args) => applicationEventHandler.OnClosed(window, args)));
                 var thisAppInstance = Microsoft.Windows.AppLifecycle.AppInstance.GetCurrent();
                 thisAppInstance.Activated += applicationEventHandler.OnRedirected;
@@ -170,9 +169,8 @@ public static class MauiProgram
     private static string GetLanguageCode()
     {
         string languageCode = new LanguageCodeService().GetSystemLanguageCode();
-#if DEBUG
-        if (!string.IsNullOrEmpty(DebugForceLanguage))
-            languageCode = DebugForceLanguage;
+#if (DEBUG && FORCE_LANG_EN)
+        languageCode = "en";
 #endif
         return languageCode;
     }

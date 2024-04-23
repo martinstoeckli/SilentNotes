@@ -11,6 +11,7 @@ using Microsoft.Windows.AppLifecycle;
 using SilentNotes.Services;
 using SilentNotes.Stories.SynchronizationStory;
 using Windows.ApplicationModel.Activation;
+using Windows.Graphics;
 
 namespace SilentNotes.Platforms
 {
@@ -20,6 +21,11 @@ namespace SilentNotes.Platforms
     /// </summary>
     internal class ApplicationEventHandler : ApplicationEventHandlerBase
     {
+        internal void OnWindowCreated(Microsoft.UI.Xaml.Window window)
+        {
+            AdjustWindowSizeInDemoMode(window);
+        }
+
         internal void OnClosed(Microsoft.UI.Xaml.Window window, WindowEventArgs args)
         {
             System.Diagnostics.Debug.WriteLine("*** ApplicationEventHandler.OnClosed()");
@@ -61,6 +67,25 @@ namespace SilentNotes.Platforms
             var mainWindow = ((MauiWinUIWindow)App.Current.Windows[0].Handler.PlatformView);
             var mainWindowHandle = mainWindow.GetWindowHandle();
             SetForegroundWindow(mainWindowHandle);
+        }
+
+        /// <summary>
+        /// This method should set the size of the main window when the FORCE_WINDOW_SIZE condition
+        /// is set in the Directory.Build.props, so that screenshots all have a preset size.
+        /// </summary>
+        private static void AdjustWindowSizeInDemoMode(Microsoft.UI.Xaml.Window window)
+        {
+#if (DEBUG && FORCE_WINDOW_SIZE)
+            float density = window.GetDisplayDensity();
+
+            // Set size to get 4:3 screenshots (800:600) on a unscaled screen.
+            int width = (int)Math.Round(808.0 * density + 6);
+            int height = (int)Math.Round(604.0 * density + 3);
+            var size = new SizeInt32(width, height);
+
+            var appWindow = window.GetAppWindow();
+            appWindow.Resize(size);
+#endif
         }
 
         [DllImport("user32.dll")]
