@@ -39,7 +39,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
         /// <inheritdoc/>
         public override CloudStorageCredentialsRequirements CredentialsRequirements
         {
-            get { return CloudStorageCredentialsRequirements.Username | CloudStorageCredentialsRequirements.Password | CloudStorageCredentialsRequirements.Url; }
+            get { return CloudStorageCredentialsRequirements.Username | CloudStorageCredentialsRequirements.Password | CloudStorageCredentialsRequirements.Url | CloudStorageCredentialsRequirements.AcceptUnsafeCertificate; }
         }
 
         /// <inheritdoc/>
@@ -50,7 +50,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
             try
             {
                 HttpContent content = new ByteArrayContent(fileContent);
-                await GetFlurl()
+                await GetFlurl(credentials.AcceptInvalidCertificate)
                     .Request(credentials.Url, filename)
                     .WithBasicAuthOrAnonymous(credentials.Username, credentials.UnprotectedPassword)
                     .PutAsync(content);
@@ -68,7 +68,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
 
             try
             {
-                return await GetFlurl()
+                return await GetFlurl(credentials.AcceptInvalidCertificate)
                     .Request(credentials.Url, filename)
                     .WithBasicAuthOrAnonymous(credentials.Username, credentials.UnprotectedPassword)
                     .GetBytesAsync();
@@ -86,7 +86,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
 
             try
             {
-                await GetFlurl()
+                await GetFlurl(credentials.AcceptInvalidCertificate)
                     .Request(credentials.Url, filename)
                     .WithBasicAuthOrAnonymous(credentials.Username, credentials.UnprotectedPassword)
                     .DeleteAsync();
@@ -119,7 +119,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
 
                 if (!_useSocketsForPropFind)
                 {
-                    using (Stream responseStream = await GetFlurl()
+                    using (Stream responseStream = await GetFlurl(credentials.AcceptInvalidCertificate)
                         .Request(url)
                         .WithBasicAuthOrAnonymous(credentials.Username, credentials.UnprotectedPassword)
                         .WithHeader("Depth", "1")
