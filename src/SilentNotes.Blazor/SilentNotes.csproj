@@ -48,16 +48,37 @@
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-android|AnyCPU'">
       <AndroidLinkTool>r8</AndroidLinkTool>
       <RuntimeIdentifiers>android-arm;android-arm64</RuntimeIdentifiers>
+      <RunAOTCompilation>False</RunAOTCompilation>
+      <PublishTrimmed>True</PublishTrimmed>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-android|x86'">
       <AndroidLinkTool>r8</AndroidLinkTool>
       <RuntimeIdentifiers>android-arm;android-arm64</RuntimeIdentifiers>
+      <RunAOTCompilation>False</RunAOTCompilation>
+      <PublishTrimmed>True</PublishTrimmed>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-android|x64'">
       <AndroidLinkTool>r8</AndroidLinkTool>
       <RuntimeIdentifiers>android-arm;android-arm64</RuntimeIdentifiers>
+      <RunAOTCompilation>False</RunAOTCompilation>
+      <PublishTrimmed>True</PublishTrimmed>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-android|AnyCPU'">
+      <PublishTrimmed>True</PublishTrimmed>
+      <TrimMode>partial</TrimMode>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-android|x64'">
+      <PublishTrimmed>True</PublishTrimmed>
+      <TrimMode>partial</TrimMode>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-android|x86'">
+      <PublishTrimmed>True</PublishTrimmed>
+      <TrimMode>partial</TrimMode>
     </PropertyGroup>
 
     <ItemGroup>
@@ -86,6 +107,7 @@
     <ItemGroup>
         <PackageReference Include="BouncyCastle.Cryptography" Version="2.2.1" />
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+        <PackageReference Include="FluentFTP" Version="50.0.1" />
         <PackageReference Include="Flurl.Http" Version="4.0.2" />
         <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.7" />
         <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.7" />

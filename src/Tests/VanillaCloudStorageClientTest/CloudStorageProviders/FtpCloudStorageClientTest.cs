@@ -19,6 +19,7 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
         /// • <see cref="AuthorizationUsername"/>
         /// • <see cref="AuthorizationPassword"/>
         /// must then be set to valid credentials.
+        /// Hint: The test also works with URLs including a directory.
         /// </summary>
         private const bool DoRealWebRequests = false;
         private const string AuthorizationUrl = "ftp://example.com";
@@ -26,7 +27,6 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
         private const string AuthorizationPassword = "ValidPassword";
         private const bool UseSecureSsl = false;
         private const bool AcceptInvalidCertificate = false;
-
         [Test]
         public void FileLifecycleWorks()
         {
@@ -136,34 +136,6 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
         }
 
         [Test]
-        public void ThrowsWithHttpInsteadOfFtp()
-        {
-            var credentials = GetCredentials();
-            credentials.Url = "http://example.com/";
-            Assert.ThrowsAsync<ConnectionFailedException>(() => DownloadFileWorksAsync("irrelevant.txt", credentials, null));
-        }
-
-        [Test]
-        public void SecureSslConnectionWorks()
-        {
-            string fileName = "notexistingdummy.dat";
-            IFtpFakeResponse fakeResponse = null;
-            if (!DoRealWebRequests)
-            {
-                Mock<IFtpFakeResponse> fakeResponseMock = new Mock<IFtpFakeResponse>();
-                fakeResponseMock.
-                    Setup(m => m.GetFakeServerResponseString(It.Is<string>(r => r == AuthorizationUrl))).
-                    Returns(".\r\n..\r\nunittest.dat\r\n");
-                fakeResponse = fakeResponseMock.Object;
-            }
-
-            var credentials = GetCredentials();
-            credentials.Secure = true;
-            Assert.DoesNotThrowAsync(() => FileExistsWorksAsync(fileName, credentials, fakeResponse));
-        }
-
-
-        [Test]
         [Ignore("Too many consecutive fails seems to block an FTP server.")]
         public void ThrowsWithInvalidUsername()
         {
@@ -206,29 +178,18 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
         }
 
         [Test]
-        public void SanitizeCredentials_ChangesInvalidPrefix()
+        [Ignore("Too many consecutive fails seems to block an FTP server.")]
+        public void ThrowsWithInvalidHost()
         {
-            // Keep valid url
-            var credentials = new CloudStorageCredentials { Url = "ftp://correct", Secure = false };
-            FtpCloudStorageClient.SanitizeCredentials(credentials);
-            Assert.AreEqual("ftp://correct", credentials.Url);
-            Assert.IsFalse(credentials.Secure);
-
-            // Correct ftps
-            credentials = new CloudStorageCredentials { Url = "ftps://invalidprefix", Secure = false };
-            FtpCloudStorageClient.SanitizeCredentials(credentials);
-            Assert.AreEqual("ftp://invalidprefix", credentials.Url);
-            Assert.IsTrue(credentials.Secure);
-
-            credentials = new CloudStorageCredentials { Url = "Ftps://invalidprefix", Secure = false };
-            FtpCloudStorageClient.SanitizeCredentials(credentials);
-            Assert.AreEqual("ftp://invalidprefix", credentials.Url);
-            Assert.IsTrue(credentials.Secure);
-
-            credentials = new CloudStorageCredentials { Url = null, Secure = false };
-            FtpCloudStorageClient.SanitizeCredentials(credentials);
-            Assert.IsNull(credentials.Url);
-            Assert.IsFalse(credentials.Secure);
+            // Unfortunately there is no way to mock a the FtpWebResponse for a WebException, so we
+            // can do only real web requests.
+            if (DoRealWebRequests)
+            {
+                var credentials = GetCredentials();
+                credentials.Url = "ftp://sl287.web.hostpoint.c";
+                string nonExistingFile = "nonexisting.non";
+                Assert.ThrowsAsync<ConnectionFailedException>(() => DownloadFileWorksAsync(nonExistingFile, credentials, null));
+            }
         }
 
         private static CloudStorageCredentials GetCredentials()

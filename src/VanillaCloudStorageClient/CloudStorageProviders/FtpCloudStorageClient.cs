@@ -5,10 +5,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Net;
-using System.Net.Security;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
+using FluentFTP;
 using Flurl;
 
 namespace VanillaCloudStorageClient.CloudStorageProviders
@@ -19,11 +20,10 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
     /// </summary>
     public class FtpCloudStorageClient : CloudStorageClientBase, ICloudStorageClient
     {
-        private const int UploadTimeoutSeconds = 90;
-        private const int DownloadTimeoutSeconds = 60;
-        private const int DeleteTimeoutSeconds = 20;
-        private const int ListTimeoutSeconds = 20;
+        private const int UploadTimeoutSeconds = 40;
+        private const int DownloadTimeoutSeconds = 30;
         private readonly IFtpFakeResponse _fakeResponse;
+        private FtpProfile _lastConnectionProfile;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FtpCloudStorageClient"/> class.
@@ -51,58 +51,55 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
         }
 
         /// <inheritdoc/>
-        public override async Task UploadFileAsync(string filename, byte[] fileContent, CloudStorageCredentials credentials)
+        public override Task UploadFileAsync(string filename, byte[] fileContent, CloudStorageCredentials credentials)
         {
             credentials.ThrowIfInvalid(CredentialsRequirements, true);
-            SanitizeCredentials(credentials);
 
             try
             {
                 Url fileUrl = new Url(credentials.Url).AppendPathSegment(filename);
-                using (var certificateAcceptor = new CertificateAcceptor(credentials.AcceptInvalidCertificate))
-                using (WebClient webClient = new CustomFtpWebClient(request =>
-                    {
-                        request.Timeout = (int)TimeSpan.FromSeconds(UploadTimeoutSeconds).TotalMilliseconds;
-                        request.UseBinary = true;
-                        request.EnableSsl = credentials.Secure;
-                    }))
+                using (var ftp = new FtpClient(fileUrl.Host, new NetworkCredential(credentials.Username, credentials.Password)))
                 {
-                    webClient.Credentials = new NetworkCredential(credentials.Username, credentials.Password);
+                    ftp.Config.ValidateAnyCertificate = credentials.AcceptInvalidCertificate;
+                    ftp.Config.ReadTimeout = UploadTimeoutSeconds * 1000;
                     if (!IsInTestMode)
-                        await webClient.UploadDataTaskAsync(fileUrl, fileContent);
+                    {
+                        _lastConnectionProfile = ConnectOrAutoConnect(ftp, _lastConnectionProfile);
+                        ftp.UploadBytes(fileContent, fileUrl.Path);
+                    }
                 }
             }
             catch (Exception ex)
             {
                 throw ConvertToCloudStorageException(ex);
             }
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc/>
-        public override async Task<byte[]> DownloadFileAsync(string filename, CloudStorageCredentials credentials)
+        public override Task<byte[]> DownloadFileAsync(string filename, CloudStorageCredentials credentials)
         {
             credentials.ThrowIfInvalid(CredentialsRequirements, true);
-            SanitizeCredentials(credentials);
 
             try
             {
                 Url fileUrl = new Url(credentials.Url).AppendPathSegment(filename);
                 byte[] responseData;
-                using (var certificateAcceptor = new CertificateAcceptor(credentials.AcceptInvalidCertificate))
-                using (WebClient webClient = new CustomFtpWebClient(request =>
-                    {
-                        request.Timeout = (int)TimeSpan.FromSeconds(DownloadTimeoutSeconds).TotalMilliseconds;
-                        request.UseBinary = true;
-                        request.EnableSsl = credentials.Secure;
-                    }))
+                using (var ftp = new FtpClient(fileUrl.Host, new NetworkCredential(credentials.Username, credentials.Password)))
                 {
-                    webClient.Credentials = new NetworkCredential(credentials.Username, credentials.Password);
+                    ftp.Config.ValidateAnyCertificate = credentials.AcceptInvalidCertificate;
+                    ftp.Config.ReadTimeout = DownloadTimeoutSeconds * 1000;
                     if (IsInTestMode)
-                        responseData = _fakeResponse.GetFakeServerResponseBytes(fileUrl);
+                    {
+                        responseData = _fakeResponse.GetFakeServerResponseBytes(new Url(credentials.Url).AppendPathSegment(filename));
+                    }
                     else
-                        responseData = await webClient.DownloadDataTaskAsync(fileUrl);
+                    {
+                        _lastConnectionProfile = ConnectOrAutoConnect(ftp, _lastConnectionProfile);
+                        ftp.DownloadBytes(out responseData, fileUrl.Path, 0);
+                    }
                 }
-                return responseData;
+                return Task.FromResult(responseData);
             }
             catch (Exception ex)
             {
@@ -111,69 +108,61 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
         }
 
         /// <inheritdoc/>
-        public override async Task DeleteFileAsync(string filename, CloudStorageCredentials credentials)
+        public override Task DeleteFileAsync(string filename, CloudStorageCredentials credentials)
         {
             credentials.ThrowIfInvalid(CredentialsRequirements, true);
-            SanitizeCredentials(credentials);
 
             try
             {
                 Url fileUrl = new Url(credentials.Url).AppendPathSegment(filename);
-
-                using (var certificateAcceptor = new CertificateAcceptor(credentials.AcceptInvalidCertificate))
-                using (WebClient webClient = new CustomFtpWebClient(request =>
-                    {
-                        request.Timeout = (int)TimeSpan.FromSeconds(DeleteTimeoutSeconds).TotalMilliseconds;
-                        request.Method = WebRequestMethods.Ftp.DeleteFile; // "DELE"
-                        request.EnableSsl = credentials.Secure;
-                    }))
+                using (var ftp = new FtpClient(fileUrl.Host, new NetworkCredential(credentials.Username, credentials.Password)))
                 {
-                    webClient.Credentials = new NetworkCredential(credentials.Username, credentials.Password);
+                    ftp.Config.ValidateAnyCertificate = credentials.AcceptInvalidCertificate;
                     if (!IsInTestMode)
-                        await webClient.DownloadDataTaskAsync(fileUrl);
+                    {
+                        _lastConnectionProfile = ConnectOrAutoConnect(ftp, _lastConnectionProfile);
+                        ftp.DeleteFile(fileUrl.Path);
+                    }
                 }
             }
             catch (Exception ex)
             {
                 throw ConvertToCloudStorageException(ex);
             }
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc/>
-        public override async Task<List<string>> ListFileNamesAsync(CloudStorageCredentials credentials)
+        public override Task<List<string>> ListFileNamesAsync(CloudStorageCredentials credentials)
         {
             credentials.ThrowIfInvalid(CredentialsRequirements, true);
-            SanitizeCredentials(credentials);
 
             try
             {
-                // Call the list command
-                Uri directoryUri = new Uri(IncludeTrailingSlash(credentials.Url));
-                string responseData = null;
-                using (var certificateAcceptor = new CertificateAcceptor(credentials.AcceptInvalidCertificate))
-                using (WebClient webClient = new CustomFtpWebClient(request =>
-                    {
-                        request.Timeout = (int)TimeSpan.FromSeconds(ListTimeoutSeconds).TotalMilliseconds;
-                        request.Proxy = WebRequest.DefaultWebProxy;
-                        request.Method = WebRequestMethods.Ftp.ListDirectory; // "NLST"
-                        request.EnableSsl = credentials.Secure;
-                    }))
+                Url directoryUrl = new Url(credentials.Url);
+                string[] fileNames = null;
+                using (var ftp = new FtpClient(directoryUrl.Host, new NetworkCredential(credentials.Username, credentials.Password)))
                 {
-                    webClient.Credentials = new NetworkCredential(credentials.Username, credentials.Password);
+                    ftp.Config.ValidateAnyCertificate = credentials.AcceptInvalidCertificate;
                     if (IsInTestMode)
-                        responseData = _fakeResponse.GetFakeServerResponseString(credentials.Url);
+                    {
+                        string responseData = _fakeResponse.GetFakeServerResponseString(credentials.Url);
+
+                        // Interpret the response
+                        string unixDelimitedResponse = responseData.Replace("\r\n", "\n");
+                        fileNames = unixDelimitedResponse.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+                    }
                     else
-                        responseData = await webClient.DownloadStringTaskAsync(directoryUri);
+                    {
+                        _lastConnectionProfile = ConnectOrAutoConnect(ftp, _lastConnectionProfile);
+                        fileNames = ftp.GetNameListing(directoryUrl.Path?.TrimEnd('/'));
+                    }
                 }
 
-                // Interpret the response
-                string unixDelimitedResponse = responseData.Replace("\r\n", "\n");
-                string[] fileNames = unixDelimitedResponse.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
-
-                List<string> result = new List<string>(fileNames);
+                List<string> result = fileNames.Select(fileName => Path.GetFileName(fileName)).ToList();
                 result.Remove("..");
                 result.Remove(".");
-                return result;
+                return Task.FromResult(result);
             }
             catch (Exception ex)
             {
@@ -181,110 +170,26 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
             }
         }
 
-        /// <summary>
-        /// DotNet only supports FTP urls of the form "ftp://", but no "ftps://". Since SSL does
-        /// not depend on this prefix and is rather controlled by the secure flag, we can change
-        /// the prefix to a valid and accepted "ftp://".
-        /// </summary>
-        public static void SanitizeCredentials(CloudStorageCredentials credentials)
+        private static FtpProfile ConnectOrAutoConnect(FtpClient ftpClient, FtpProfile lastProfile)
         {
-            const string DisallowedPrefix = "ftps:";
-            if (!string.IsNullOrEmpty(credentials.Url) && credentials.Url.StartsWith(DisallowedPrefix, StringComparison.OrdinalIgnoreCase))
+            bool canReuseLastProfile = (lastProfile != null) && (string.Equals(ftpClient.Host, lastProfile.Host));
+            if (canReuseLastProfile)
             {
-                credentials.Url = "ftp:" + credentials.Url.Remove(0, DisallowedPrefix.Length);
-                credentials.Secure = true;
+                ftpClient.Connect(lastProfile);
+                return lastProfile;
+            }
+            else
+            {
+                FtpProfile connectionProfile = ftpClient.AutoConnect();
+                if (connectionProfile == null)
+                    throw new ConnectionFailedException();
+                return connectionProfile;
             }
         }
 
         private bool IsInTestMode
         {
             get { return _fakeResponse != null; }
-        }
-
-        /// <summary>
-        /// Extends a WebClient with the possibility to adjust the FtpWebRequest parameters.
-        /// </summary>
-        private class CustomFtpWebClient : WebClient
-        {
-            private readonly Action<FtpWebRequest> _adjustWebRequest;
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="CustomFtpWebClient"/> class.
-            /// </summary>
-            /// <param name="adjustWebRequest">A delegate which allows to adjust the ftp web
-            /// request.</param>
-            public CustomFtpWebClient(Action<FtpWebRequest> adjustWebRequest)
-            {
-                _adjustWebRequest = adjustWebRequest;
-            }
-
-            /// <summary>
-            /// Overrides creation of the web request to set custom parameters.
-            /// </summary>
-            /// <param name="uri">The uri to get a webrequest from.</param>
-            /// <returns>The web request object.</returns>
-            protected override WebRequest GetWebRequest(Uri uri)
-            {
-                WebRequest request = base.GetWebRequest(uri);
-
-                FtpWebRequest ftpRequest = request as FtpWebRequest;
-                if (ftpRequest == null)
-                    throw new ConnectionFailedException(string.Format("The Ftp web client cannot connect to the non Ftp url '{0}'.", uri.AbsoluteUri), null);
-
-                _adjustWebRequest?.Invoke(ftpRequest);
-                return request;
-            }
-        }
-
-        /// <summary>
-        /// Helper class which can add a callback to the certificate validation, which accepts
-        /// even invalid certificates.
-        /// </summary>
-        private class CertificateAcceptor : IDisposable
-        {
-            private readonly bool _acceptInvalidCertificates;
-            private bool _disposed;
-            private RemoteCertificateValidationCallback _oldCertificateValidationCallback;
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="CertificateAcceptor"/> class.
-            /// </summary>
-            /// <param name="acceptInvalidCertificates">A value indicating whether all certificates
-            /// should be accepted.</param>
-            public CertificateAcceptor(bool acceptInvalidCertificates)
-            {
-                _acceptInvalidCertificates = acceptInvalidCertificates;
-                if (_acceptInvalidCertificates)
-                {
-                    _oldCertificateValidationCallback = ServicePointManager.ServerCertificateValidationCallback;
-                    ServicePointManager.ServerCertificateValidationCallback = CertificateValidationCallback;
-                }
-            }
-
-            /// <summary>
-            /// Finalizes an instance of the <see cref="CertificateAcceptor"/> class.
-            /// </summary>
-            ~CertificateAcceptor()
-            {
-                Dispose();
-            }
-
-            /// <inheritdoc/>
-            public void Dispose()
-            {
-                if (!_disposed)
-                {
-                    _disposed = true;
-                    if (_acceptInvalidCertificates)
-                        ServicePointManager.ServerCertificateValidationCallback = _oldCertificateValidationCallback;
-                }
-            }
-
-            private bool CertificateValidationCallback(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
-            {
-                // Accept every certificate, even if it is invalid.
-                return true;
-            }
         }
     }
 
