@@ -31,6 +31,19 @@
           "buildTransitive/netstandard2.1/CommunityToolkit.Mvvm.targets": {}
         }
       },
+      "FluentFTP/50.0.1": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/FluentFTP.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/FluentFTP.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Flurl/4.0.0": {
         "type": "package",
         "compile": {
@@ -2830,6 +2843,19 @@
           "buildTransitive/netstandard2.1/CommunityToolkit.Mvvm.targets": {}
         }
       },
+      "FluentFTP/50.0.1": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/FluentFTP.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/FluentFTP.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Flurl/4.0.0": {
         "type": "package",
         "compile": {
@@ -5621,6 +5647,19 @@
         },
         "build": {
           "buildTransitive/netstandard2.1/CommunityToolkit.Mvvm.targets": {}
+        }
+      },
+      "FluentFTP/50.0.1": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/FluentFTP.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/FluentFTP.dll": {
+            "related": ".xml"
+          }
         }
       },
       "Flurl/4.0.0": {
@@ -8416,6 +8455,19 @@
           "buildTransitive/netstandard2.1/CommunityToolkit.Mvvm.targets": {}
         }
       },
+      "FluentFTP/50.0.1": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/FluentFTP.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/FluentFTP.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Flurl/4.0.0": {
         "type": "package",
         "compile": {
@@ -11207,6 +11259,19 @@
         },
         "build": {
           "buildTransitive/netstandard2.1/CommunityToolkit.Mvvm.targets": {}
+        }
+      },
+      "FluentFTP/50.0.1": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/FluentFTP.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/FluentFTP.dll": {
+            "related": ".xml"
+          }
         }
       },
       "Flurl/4.0.0": {
@@ -14002,6 +14067,19 @@
           "buildTransitive/netstandard2.1/CommunityToolkit.Mvvm.targets": {}
         }
       },
+      "FluentFTP/50.0.1": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/FluentFTP.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/FluentFTP.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Flurl/4.0.0": {
         "type": "package",
         "compile": {
@@ -16795,6 +16873,19 @@
           "buildTransitive/netstandard2.1/CommunityToolkit.Mvvm.targets": {}
         }
       },
+      "FluentFTP/50.0.1": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/FluentFTP.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/FluentFTP.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Flurl/4.0.0": {
         "type": "package",
         "compile": {
@@ -17820,6 +17911,19 @@
           "buildTransitive/netstandard2.1/CommunityToolkit.Mvvm.targets": {}
         }
       },
+      "FluentFTP/50.0.1": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/FluentFTP.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/FluentFTP.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Flurl/4.0.0": {
         "type": "package",
         "compile": {
@@ -18809,6 +18913,19 @@
         },
         "build": {
           "buildTransitive/netstandard2.1/CommunityToolkit.Mvvm.targets": {}
+        }
+      },
+      "FluentFTP/50.0.1": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/FluentFTP.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/FluentFTP.dll": {
+            "related": ".xml"
+          }
         }
       },
       "Flurl/4.0.0": {
@@ -19802,6 +19919,19 @@
           "buildTransitive/netstandard2.1/CommunityToolkit.Mvvm.targets": {}
         }
       },
+      "FluentFTP/50.0.1": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/FluentFTP.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/FluentFTP.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Flurl/4.0.0": {
         "type": "package",
         "compile": {
@@ -20793,6 +20923,19 @@
           "buildTransitive/netstandard2.1/CommunityToolkit.Mvvm.targets": {}
         }
       },
+      "FluentFTP/50.0.1": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/FluentFTP.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/FluentFTP.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Flurl/4.0.0": {
         "type": "package",
         "compile": {
@@ -21782,6 +21925,19 @@
         },
         "build": {
           "buildTransitive/netstandard2.1/CommunityToolkit.Mvvm.targets": {}
+        }
+      },
+      "FluentFTP/50.0.1": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/FluentFTP.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/FluentFTP.dll": {
+            "related": ".xml"
+          }
         }
       },
       "Flurl/4.0.0": {
@@ -22802,6 +22958,31 @@
         "lib/netstandard2.1/CommunityToolkit.Mvvm.dll",
         "lib/netstandard2.1/CommunityToolkit.Mvvm.pdb",
         "lib/netstandard2.1/CommunityToolkit.Mvvm.xml"
+      ]
+    },
+    "FluentFTP/50.0.1": {
+      "sha512": "iNG+wYZcBoOQmnrgR0EzUU1KHy3mOG/osGcd+bZMDcTC45tTLR45o0uInKd74t669d1JhGHBTzZKpSQOxBSisg==",
+      "type": "package",
+      "path": "fluentftp/50.0.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.TXT",
+        "fluentftp.50.0.1.nupkg.sha512",
+        "fluentftp.nuspec",
+        "lib/net462/FluentFTP.dll",
+        "lib/net462/FluentFTP.xml",
+        "lib/net472/FluentFTP.dll",
+        "lib/net472/FluentFTP.xml",
+        "lib/net5.0/FluentFTP.dll",
+        "lib/net5.0/FluentFTP.xml",
+        "lib/net6.0/FluentFTP.dll",
+        "lib/net6.0/FluentFTP.xml",
+        "lib/netstandard2.0/FluentFTP.dll",
+        "lib/netstandard2.0/FluentFTP.xml",
+        "lib/netstandard2.1/FluentFTP.dll",
+        "lib/netstandard2.1/FluentFTP.xml",
+        "logo-nuget.png"
       ]
     },
     "Flurl/4.0.0": {
@@ -27733,6 +27914,7 @@
     "net8.0-android34.0": [
       "BouncyCastle.Cryptography >= 2.2.1",
       "CommunityToolkit.Mvvm >= 8.2.2",
+      "FluentFTP >= 50.0.1",
       "Flurl.Http >= 4.0.2",
       "Microsoft.AspNetCore.Components.WebView.Maui >= 8.0.7",
       "Microsoft.Maui.Controls >= 8.0.7",
@@ -27744,6 +27926,7 @@
     "net8.0-windows10.0.19041": [
       "BouncyCastle.Cryptography >= 2.2.1",
       "CommunityToolkit.Mvvm >= 8.2.2",
+      "FluentFTP >= 50.0.1",
       "Flurl.Http >= 4.0.2",
       "Microsoft.AspNetCore.Components.WebView.Maui >= 8.0.7",
       "Microsoft.Maui.Controls >= 8.0.7",
@@ -27815,6 +27998,10 @@
             "target": "Package",
             "version": "[8.2.2, )"
           },
+          "FluentFTP": {
+            "target": "Package",
+            "version": "[50.0.1, )"
+          },
           "Flurl.Http": {
             "target": "Package",
             "version": "[4.0.2, )"
@@ -27877,6 +28064,10 @@
           "CommunityToolkit.Mvvm": {
             "target": "Package",
             "version": "[8.2.2, )"
+          },
+          "FluentFTP": {
+            "target": "Package",
+            "version": "[50.0.1, )"
           },
           "Flurl.Http": {
             "target": "Package",

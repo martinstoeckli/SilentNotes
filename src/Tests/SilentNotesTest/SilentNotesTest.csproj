@@ -43,6 +43,7 @@
   <ItemGroup>
     <PackageReference Include="BouncyCastle.Cryptography" Version="2.2.1" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+    <PackageReference Include="FluentFTP" Version="50.0.1" />
     <PackageReference Include="Flurl.Http" Version="4.0.2" />
     <PackageReference Include="Moq" Version="4.18.1" />
     <PackageReference Include="MudBlazor" Version="6.16.0" />

@@ -64,6 +64,10 @@
               "target": "Package",
               "version": "[8.2.2, )"
             },
+            "FluentFTP": {
+              "target": "Package",
+              "version": "[50.0.1, )"
+            },
             "Flurl.Http": {
               "target": "Package",
               "version": "[4.0.2, )"
@@ -126,6 +130,10 @@
             "CommunityToolkit.Mvvm": {
               "target": "Package",
               "version": "[8.2.2, )"
+            },
+            "FluentFTP": {
+              "target": "Package",
+              "version": "[50.0.1, )"
             },
             "Flurl.Http": {
               "target": "Package",

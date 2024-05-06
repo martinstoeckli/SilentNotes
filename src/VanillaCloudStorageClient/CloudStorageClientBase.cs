@@ -9,6 +9,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using FluentFTP.Exceptions;
 using Flurl.Http;
 
 namespace VanillaCloudStorageClient
@@ -150,23 +151,17 @@ namespace VanillaCloudStorageClient
                     }
                 }
             }
-            else if (catchedException is WebException webException)
+            else if (catchedException is FluentFTP.Exceptions.FtpException)
             {
-                // Handle WebExceptions
-                if (webException.Response is FtpWebResponse ftpResponse)
+                if (catchedException is FluentFTP.Exceptions.FtpAuthenticationException)
+                    return new AccessDeniedException(catchedException);
+                if (catchedException is FluentFTP.Exceptions.FtpCommandException ftpCommandException)
                 {
-                    switch (ftpResponse.StatusCode)
-                    {
-                        case FtpStatusCode.ActionNotTakenFileUnavailable:
-                            return new ConnectionFailedException(catchedException);
-                        case FtpStatusCode.NotLoggedIn:
-                            return new AccessDeniedException(catchedException);
-                    }
+                    // Error codes have 3 digits, eg "530" means 5=permanent 3=authentication
+                    if (ftpCommandException.CompletionCode.StartsWith("53"))
+                        return new AccessDeniedException(catchedException);
                 }
-                else if ((webException.Status == WebExceptionStatus.NameResolutionFailure) || (webException.Status == WebExceptionStatus.ConnectFailure))
-                {
-                    return new ConnectionFailedException(catchedException);
-                }
+                return new ConnectionFailedException(catchedException);
             }
             else if (catchedException is HttpRequestException httpRequestException)
             {
