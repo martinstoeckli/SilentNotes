@@ -132,6 +132,36 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
             return Task.CompletedTask;
         }
 
+        public override Task<bool> ExistsFileAsync(string filename, CloudStorageCredentials credentials)
+        {
+            credentials.ThrowIfInvalid(CredentialsRequirements, true);
+
+            try
+            {
+                Url fileUrl = new Url(credentials.Url).AppendPathSegment(filename);
+                bool result;
+                using (var ftp = new FtpClient(fileUrl.Host, new NetworkCredential(credentials.Username, credentials.Password)))
+                {
+                    ftp.Config.ValidateAnyCertificate = credentials.AcceptInvalidCertificate;
+                    if (IsInTestMode)
+                    {
+                        result = _fakeResponse.GetFakeServerExistsFile(credentials.Url);
+                    }
+                    else
+                    {
+                        _lastConnectionProfile = ConnectOrAutoConnect(ftp, _lastConnectionProfile);
+                        result = ftp.FileExists(fileUrl.Path);
+                    }
+                }
+
+                return Task.FromResult(result);
+            }
+            catch (Exception ex)
+            {
+                throw ConvertToCloudStorageException(ex);
+            }
+        }
+
         /// <inheritdoc/>
         public override Task<List<string>> ListFileNamesAsync(CloudStorageCredentials credentials)
         {
@@ -211,5 +241,12 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
         /// <param name="url">The url called by the <see cref="FtpCloudStorageClient"/>.</param>
         /// <returns>The mock returns the fake response.</returns>
         byte[] GetFakeServerResponseBytes(string url);
+
+        /// <summary>
+        /// T
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns></returns>
+        bool GetFakeServerExistsFile(string url);
     }
 }

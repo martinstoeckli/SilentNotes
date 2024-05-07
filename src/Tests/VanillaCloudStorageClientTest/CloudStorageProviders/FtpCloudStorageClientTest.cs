@@ -61,8 +61,8 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
             {
                 Mock<IFtpFakeResponse> fakeResponseMock = new Mock<IFtpFakeResponse>();
                 fakeResponseMock.
-                    Setup(m => m.GetFakeServerResponseString(It.Is<string>(r => r == AuthorizationUrl))).
-                    Returns(".\r\n..\r\nXyz\r\nunittest.dat\r\nb.txt\r\nc.txt\r\n");
+                    Setup(m => m.GetFakeServerExistsFile(It.Is<string>(r => r == AuthorizationUrl))).
+                    Returns(true);
                 fakeResponse = fakeResponseMock.Object;
             }
             bool exists = Task.Run(async () => await FileExistsWorksAsync(fileName, GetCredentials(), fakeResponse)).Result;
@@ -93,8 +93,8 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
             {
                 Mock<IFtpFakeResponse> fakeResponseMock = new Mock<IFtpFakeResponse>();
                 fakeResponseMock.
-                    Setup(m => m.GetFakeServerResponseString(It.Is<string>(r => r == AuthorizationUrl))).
-                    Returns(".\r\n..\r\nXyz\r\nb.txt\r\nc.txt\r\n");
+                    Setup(m => m.GetFakeServerExistsFile(It.Is<string>(r => r == AuthorizationUrl))).
+                    Returns(false);
                 fakeResponse = fakeResponseMock.Object;
             }
             exists = Task.Run(async () => await FileExistsWorksAsync(fileName, GetCredentials(), fakeResponse)).Result;
