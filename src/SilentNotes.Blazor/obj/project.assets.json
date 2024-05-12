@@ -27939,7 +27939,7 @@
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
-    "version": "7.99.29",
+    "version": "7.99.30",
     "restore": {
       "projectUniqueName": "D:\\Source\\SilentNotes\\GitHub\\src\\SilentNotes.Blazor\\SilentNotes.csproj",
       "projectName": "SilentNotes",
