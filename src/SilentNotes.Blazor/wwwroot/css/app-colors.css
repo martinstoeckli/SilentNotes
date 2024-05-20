@@ -76,17 +76,17 @@
 .background-icon { color: var(--mud-palette-background-grey) }
 
 .secondary-app-bar { 
-	background-color: var(--mud-palette-tertiary);
+	background-color: var(--theme-appbar-secondary);
 	color: var(--mud-palette-tertiary-text);
 }
 
-.h-colored { color: var(--mud-palette-primary-darken); }
+.h-colored { color: var(--theme-header); }
 
 .btn-toggled:not([disabled]) svg {
-	color: var(--mud-palette-tertiary);
+	color: var(--theme-appbar-toggled);
 }
-.btn-tags-toggled:not([disabled]) svg {
-	color: var(--mud-palette-secondary);
+.mud-icon-button:disabled svg {
+	color: #606060;
 }
 .mnu-toggled {
 	color: var(--mud-palette-primary);

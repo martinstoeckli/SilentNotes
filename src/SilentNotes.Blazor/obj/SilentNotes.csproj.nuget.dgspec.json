@@ -58,7 +58,7 @@
           "dependencies": {
             "BouncyCastle.Cryptography": {
               "target": "Package",
-              "version": "[2.2.1, )"
+              "version": "[2.3.1, )"
             },
             "CommunityToolkit.Mvvm": {
               "target": "Package",
@@ -125,7 +125,7 @@
           "dependencies": {
             "BouncyCastle.Cryptography": {
               "target": "Package",
-              "version": "[2.2.1, )"
+              "version": "[2.3.1, )"
             },
             "CommunityToolkit.Mvvm": {
               "target": "Package",

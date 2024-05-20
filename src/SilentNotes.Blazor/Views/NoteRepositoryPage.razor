@@ -54,7 +54,7 @@
 
 	@* Tags *@
 	<MudIconButton @ref="_tagsButton" OnClick="@(() => ViewModel.IsDrawerOpen = !ViewModel.IsDrawerOpen)"
-		Class="@Css.BuildClass(new CssClassIf("btn-tags-toggled", ViewModel.IsFilteredByTag))"
+		Class="@Css.BuildClass(new CssClassIf("btn-toggled", ViewModel.IsFilteredByTag))"
 		Icon="@(IconService.GetSvgLink(IconNames.TagMultiple))" Color="Color.Inherit"
 		Title="@GetTagsTooltip()" />
 

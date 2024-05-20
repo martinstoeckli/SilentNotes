@@ -71,6 +71,18 @@ namespace SilentNotes.Models
             /// </summary>
             [XmlAttribute(AttributeName = "app_bar")]
             public string AppBar { get; set; }
+
+            /// <summary>
+            /// Gets of sets the color of the icon of a toggled button on the app bar.
+            /// </summary>
+            [XmlAttribute(AttributeName = "app_bar_toggled")]
+            public string AppBarToggled { get; set; }
+
+            /// <summary>
+            /// Gets of sets the background color of the secondary expandable app bar.
+            /// </summary>
+            [XmlAttribute(AttributeName = "app_bar_secondary")]
+            public string AppBarSecondary { get; set; }
         }
     }
 

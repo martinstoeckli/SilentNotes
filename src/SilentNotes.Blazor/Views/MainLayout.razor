@@ -10,6 +10,10 @@
 
 @implements IDisposable
 
+<style type="text/css">
+	@ThemeService.CssTheme
+</style>
+
 <MudThemeProvider @bind-IsDarkMode="ThemeService.IsDarkMode" Theme="@ThemeService.Theme" />
 <MudDialogProvider DisableBackdropClick="true" CloseOnEscapeKey="true"/>
 <MudSnackbarProvider />

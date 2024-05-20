@@ -42,6 +42,11 @@ namespace SilentNotes.Services
         string CssNoteRepositoryBackground { get; }
 
         /// <summary>
+        /// Gets a Css with variables for the current theme.
+        /// </summary>
+        string CssTheme {  get; }
+
+        /// <summary>
         /// Gets a list of all available wallpapers.
         /// </summary>
         List<WallpaperModel> Wallpapers { get; }

@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text;
 using CommunityToolkit.Mvvm.Messaging;
 using MudBlazor;
 using MudBlazor.Utilities;
@@ -123,6 +124,29 @@ namespace SilentNotes.Services
         }
 
         /// <inheritdoc/>
+        public string CssTheme
+        {
+            get
+            {
+                var colorSet = IsDarkMode ? SelectedColorTheme.DarkColors : SelectedColorTheme.LightColors;
+
+                MudColor colorPrimary = colorSet.Primary;
+                MudColor colorHeader = IsDarkMode ? colorPrimary.ColorLighten(0.1) : colorPrimary.ColorDarken(0.1);
+
+                StringBuilder result = new StringBuilder();
+                result.Append(":root {");
+                result.Append("--theme-appbar: " + colorSet.AppBar + ";");
+                result.Append("--theme-appbar-toggled: " + colorSet.AppBarToggled + ";");
+                result.Append("--theme-appbar-secondary: " + colorSet.AppBarSecondary + ";");
+
+                // Dynamically created colors
+                result.Append("--theme-header: " + colorHeader + ";");
+                result.Append("}");
+                return result.ToString();
+            }
+        }
+
+        /// <inheritdoc/>
         public List<WallpaperModel> Wallpapers { get; private set; }
 
         /// <inheritdoc/>
@@ -205,17 +229,21 @@ namespace SilentNotes.Services
                 Name = "Classic",
                 LightColors = new ColorThemeModel.ColorSetModel
                 {
-                    AppBar = "#323232",
-                    Primary = "#1f8fe9",
-                    Secondary = "#1EC8A5",
-                    Decoration = "#FF4081",
+                    AppBar = "#323232", // Kind of dark grey
+                    AppBarToggled = "#82b7e3", // Blue matt SilentNotes brightened
+                    AppBarSecondary = "#1f8fe9", // Same as Primary
+                    Primary = "#1f8fe9", // Kind of blue
+                    Secondary = "#1f8fe9", // Same as Primary
+                    Decoration = "#f5d062", // Yellow SilentNotes darkened
                 },
                 DarkColors = new ColorThemeModel.ColorSetModel
                 {
-                    AppBar = "#121212",
-                    Primary = "#66b4e8",
-                    Secondary = "#1EC8A5",
-                    Decoration = "#FF4081",
+                    AppBar = "#121212", // Kind of dark grey
+                    AppBarToggled = "#68a9de", // Blue matt SilentNotes
+                    AppBarSecondary = "#1f8fe9", // Same as Primary
+                    Primary = "#1f8fe9", // Kind of blue
+                    Secondary = "#68a9de", // Blue matt SilentNotes
+                    Decoration = "#ffe083", // Yellow banana SilentNotes
                 },
             });
         }

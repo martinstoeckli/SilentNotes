@@ -2,7 +2,7 @@
   "version": 3,
   "targets": {
     "net8.0-android34.0": {
-      "BouncyCastle.Cryptography/2.2.1": {
+      "BouncyCastle.Cryptography/2.3.1": {
         "type": "package",
         "compile": {
           "lib/net6.0/BouncyCastle.Cryptography.dll": {
@@ -2814,7 +2814,7 @@
       }
     },
     "net8.0-android34.0/android-arm": {
-      "BouncyCastle.Cryptography/2.2.1": {
+      "BouncyCastle.Cryptography/2.3.1": {
         "type": "package",
         "compile": {
           "lib/net6.0/BouncyCastle.Cryptography.dll": {
@@ -5620,7 +5620,7 @@
       }
     },
     "net8.0-android34.0/android-arm64": {
-      "BouncyCastle.Cryptography/2.2.1": {
+      "BouncyCastle.Cryptography/2.3.1": {
         "type": "package",
         "compile": {
           "lib/net6.0/BouncyCastle.Cryptography.dll": {
@@ -8426,7 +8426,7 @@
       }
     },
     "net8.0-android34.0/android-x64": {
-      "BouncyCastle.Cryptography/2.2.1": {
+      "BouncyCastle.Cryptography/2.3.1": {
         "type": "package",
         "compile": {
           "lib/net6.0/BouncyCastle.Cryptography.dll": {
@@ -11232,7 +11232,7 @@
       }
     },
     "net8.0-android34.0/android-x86": {
-      "BouncyCastle.Cryptography/2.2.1": {
+      "BouncyCastle.Cryptography/2.3.1": {
         "type": "package",
         "compile": {
           "lib/net6.0/BouncyCastle.Cryptography.dll": {
@@ -14038,7 +14038,7 @@
       }
     },
     "net8.0-android34.0/win10-x64": {
-      "BouncyCastle.Cryptography/2.2.1": {
+      "BouncyCastle.Cryptography/2.3.1": {
         "type": "package",
         "compile": {
           "lib/net6.0/BouncyCastle.Cryptography.dll": {
@@ -16844,7 +16844,7 @@
       }
     },
     "net8.0-windows10.0.19041": {
-      "BouncyCastle.Cryptography/2.2.1": {
+      "BouncyCastle.Cryptography/2.3.1": {
         "type": "package",
         "compile": {
           "lib/net6.0/BouncyCastle.Cryptography.dll": {
@@ -17882,7 +17882,7 @@
       }
     },
     "net8.0-windows10.0.19041/android-arm": {
-      "BouncyCastle.Cryptography/2.2.1": {
+      "BouncyCastle.Cryptography/2.3.1": {
         "type": "package",
         "compile": {
           "lib/net6.0/BouncyCastle.Cryptography.dll": {
@@ -18886,7 +18886,7 @@
       }
     },
     "net8.0-windows10.0.19041/android-arm64": {
-      "BouncyCastle.Cryptography/2.2.1": {
+      "BouncyCastle.Cryptography/2.3.1": {
         "type": "package",
         "compile": {
           "lib/net6.0/BouncyCastle.Cryptography.dll": {
@@ -19890,7 +19890,7 @@
       }
     },
     "net8.0-windows10.0.19041/android-x64": {
-      "BouncyCastle.Cryptography/2.2.1": {
+      "BouncyCastle.Cryptography/2.3.1": {
         "type": "package",
         "compile": {
           "lib/net6.0/BouncyCastle.Cryptography.dll": {
@@ -20894,7 +20894,7 @@
       }
     },
     "net8.0-windows10.0.19041/android-x86": {
-      "BouncyCastle.Cryptography/2.2.1": {
+      "BouncyCastle.Cryptography/2.3.1": {
         "type": "package",
         "compile": {
           "lib/net6.0/BouncyCastle.Cryptography.dll": {
@@ -21898,7 +21898,7 @@
       }
     },
     "net8.0-windows10.0.19041/win10-x64": {
-      "BouncyCastle.Cryptography/2.2.1": {
+      "BouncyCastle.Cryptography/2.3.1": {
         "type": "package",
         "compile": {
           "lib/net6.0/BouncyCastle.Cryptography.dll": {
@@ -22909,16 +22909,16 @@
     }
   },
   "libraries": {
-    "BouncyCastle.Cryptography/2.2.1": {
-      "sha512": "A6Zr52zVqJKt18ZBsTnX0qhG0kwIQftVAjLmszmkiR/trSp8H+xj1gUOzk7XHwaKgyREMSV1v9XaKrBUeIOdvQ==",
+    "BouncyCastle.Cryptography/2.3.1": {
+      "sha512": "buwoISwecYke3CmgG1AQSg+sNZjJeIb93vTAtJiHZX35hP/teYMxsfg0NDXGUKjGx6BKBTNKc77O2M3vKvlXZQ==",
       "type": "package",
-      "path": "bouncycastle.cryptography/2.2.1",
+      "path": "bouncycastle.cryptography/2.3.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "LICENSE.md",
         "README.md",
-        "bouncycastle.cryptography.2.2.1.nupkg.sha512",
+        "bouncycastle.cryptography.2.3.1.nupkg.sha512",
         "bouncycastle.cryptography.nuspec",
         "lib/net461/BouncyCastle.Cryptography.dll",
         "lib/net461/BouncyCastle.Cryptography.xml",
@@ -27912,7 +27912,7 @@
   },
   "projectFileDependencyGroups": {
     "net8.0-android34.0": [
-      "BouncyCastle.Cryptography >= 2.2.1",
+      "BouncyCastle.Cryptography >= 2.3.1",
       "CommunityToolkit.Mvvm >= 8.2.2",
       "FluentFTP >= 50.0.1",
       "Flurl.Http >= 4.0.2",
@@ -27924,7 +27924,7 @@
       "Xamarin.AndroidX.Work.Runtime >= 2.8.1"
     ],
     "net8.0-windows10.0.19041": [
-      "BouncyCastle.Cryptography >= 2.2.1",
+      "BouncyCastle.Cryptography >= 2.3.1",
       "CommunityToolkit.Mvvm >= 8.2.2",
       "FluentFTP >= 50.0.1",
       "Flurl.Http >= 4.0.2",
@@ -27992,7 +27992,7 @@
         "dependencies": {
           "BouncyCastle.Cryptography": {
             "target": "Package",
-            "version": "[2.2.1, )"
+            "version": "[2.3.1, )"
           },
           "CommunityToolkit.Mvvm": {
             "target": "Package",
@@ -28059,7 +28059,7 @@
         "dependencies": {
           "BouncyCastle.Cryptography": {
             "target": "Package",
-            "version": "[2.2.1, )"
+            "version": "[2.3.1, )"
           },
           "CommunityToolkit.Mvvm": {
             "target": "Package",
