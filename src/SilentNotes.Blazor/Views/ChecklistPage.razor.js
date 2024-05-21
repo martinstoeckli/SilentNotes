@@ -1,4 +1,4 @@
-﻿import { initializeChecklist, registerIsShoppingModeActive, toggleFormat, isFormatActive, searchAndHighlight, selectNext, selectPrevious, moveChecklist, sortChecklistPendingToTop, sortChecklistAlphabetical, setCheckStateForAllToTodo, setCheckStateForAllToDone, setCheckStateForAllToDisabled } from '../prose-mirror-bundle.js';
+﻿import { initializeChecklist, registerIsShoppingModeActive, toggleFormat, isFormatActive, searchAndHighlight, selectNextWhileTyping, selectNext, selectPrevious, moveChecklist, sortChecklistPendingToTop, sortChecklistAlphabetical, setCheckStateForAllToTodo, setCheckStateForAllToDone, setCheckStateForAllToDisabled } from '../prose-mirror-bundle.js';
 
 var _page;
 var _editor;
@@ -94,6 +94,7 @@ export function redo() {
 
 export function search(searchPattern) {
     searchAndHighlight(_editor, searchPattern);
+    selectNextWhileTyping(_editor);
 }
 
 export function findNext() {
