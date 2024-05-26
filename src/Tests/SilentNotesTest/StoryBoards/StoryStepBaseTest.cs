@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Moq;
-using MudBlazor;
 using NUnit.Framework;
 using SilentNotes.Services;
 using SilentNotes.Stories;
@@ -30,10 +29,10 @@ namespace SilentNotesTest.Stories
             var storyStep = new TestStoryStep(null, "abc", null);
 
             await storyStep.RunStoryAndShowLastFeedback(null, services.BuildServiceProvider(), StoryMode.Silent);
-            feedbackService.Verify(m => m.ShowToast(It.IsAny<string>(), It.IsAny<Severity>()), Times.Never);
+            feedbackService.Verify(m => m.ShowToast(It.IsAny<string>(), It.IsAny<FeedbackSeverity>()), Times.Never);
 
             await storyStep.RunStoryAndShowLastFeedback(null, services.BuildServiceProvider(), StoryMode.Toasts);
-            feedbackService.Verify(m => m.ShowToast(It.IsAny<string>(), It.IsAny<Severity>()), Times.Once);
+            feedbackService.Verify(m => m.ShowToast(It.IsAny<string>(), It.IsAny<FeedbackSeverity>()), Times.Once);
         }
 
         [Test]

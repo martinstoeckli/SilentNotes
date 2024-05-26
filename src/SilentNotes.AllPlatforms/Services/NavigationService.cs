@@ -23,20 +23,19 @@ namespace SilentNotes.Services
         // splash screen until the page is reloaded.
         private const bool ForceLoadNever = false;
 
-        private readonly NavigationManager _navigationManager;
+        private readonly IScopedServiceProvider<NavigationManager> _navigationManagerProvider;
         private IDisposable _eventHandlerDisposable;
         private string _currentLocation;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NavigationService"/> class.
         /// </summary>
-        /// <param name="navigationManager">The navigation manager to wrap.</param>
+        /// <param name="navigationManagerProvider">The navigation manager to wrap.</param>
         /// <param name="startRoute">The route of the first shown page.</param>
-        public NavigationService(NavigationManager navigationManager, string startRoute)
+        public NavigationService(IScopedServiceProvider<NavigationManager> navigationManagerProvider, string startRoute)
         {
-            System.Diagnostics.Debug.WriteLine("*** Scoped NavigationService create " + Id);
-            _navigationManager = navigationManager;
-            _eventHandlerDisposable = _navigationManager.RegisterLocationChangingHandler(LocationChangingHandler);
+            _navigationManagerProvider = navigationManagerProvider;
+            _navigationManagerProvider.BeforeRegister += BeforeRegisterEventHandler;
 
             // Initialize the start page in the browser history, because there is no navigation
             // on the startup of the application yet.
@@ -48,14 +47,23 @@ namespace SilentNotes.Services
         /// <inheritdoc/>
         public void Dispose()
         {
-            System.Diagnostics.Debug.WriteLine("*** Scoped NavigationService dispose " + Id);
+            _navigationManagerProvider.BeforeRegister -= BeforeRegisterEventHandler;
             _eventHandlerDisposable?.Dispose();
             _eventHandlerDisposable = null;
+        }
+
+        private void BeforeRegisterEventHandler(object sender, NavigationManager navigationManager)
+        {
+            _eventHandlerDisposable?.Dispose();
+            _eventHandlerDisposable = navigationManager.RegisterLocationChangingHandler(LocationChangingHandler);
         }
 
         /// <inheritdoc/>
         public void NavigateTo(string uri, bool reload = false)
         {
+            if (!TryGetNavigationManager(out NavigationManager navigationManager))
+                return;
+
             if (reload)
             {
                 // Only a "forceReload" would reliably reload the new content of the page.
@@ -64,13 +72,19 @@ namespace SilentNotes.Services
                 uri = "/forceload/" + HexEncode(uri);
             }
 
-            _navigationManager.NavigateTo(uri, ForceLoadNever, ReplaceWebviewHistoryAlways);
+            navigationManager.NavigateTo(uri, ForceLoadNever, ReplaceWebviewHistoryAlways);
         }
 
         /// <inheritdoc/>
         public void NavigateReload()
         {
             NavigateTo(_currentLocation, true);
+        }
+
+        private bool TryGetNavigationManager(out NavigationManager navigationManager)
+        {
+            navigationManager = _navigationManagerProvider.Get();
+            return navigationManager != null;
         }
 
         private static string HexEncode(string text)
@@ -82,11 +96,12 @@ namespace SilentNotes.Services
         /// <inheritdoc/>
         private ValueTask LocationChangingHandler(LocationChangingContext context)
         {
-            if (context.TargetLocation.StartsWith("/forceload"))
+            if (context.TargetLocation.StartsWith("/forceload") ||
+                !TryGetNavigationManager(out NavigationManager navigationManager))
                 return ValueTask.CompletedTask;
 
-            string currentRoute = ExtractRouteName(_currentLocation, _navigationManager.BaseUri);
-            string targetRoute = ExtractRouteName(context.TargetLocation, _navigationManager.BaseUri);
+            string currentRoute = ExtractRouteName(_currentLocation, navigationManager.BaseUri);
+            string targetRoute = ExtractRouteName(context.TargetLocation, navigationManager.BaseUri);
             bool isSameRoute = string.Equals(currentRoute, targetRoute, StringComparison.InvariantCultureIgnoreCase);
 
             _currentLocation = context.TargetLocation;

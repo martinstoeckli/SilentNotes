@@ -4,7 +4,7 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
-using MudBlazor;
+using Android.Widget;
 using SilentNotes.Services;
 
 namespace SilentNotes.Platforms.Services
@@ -12,6 +12,10 @@ namespace SilentNotes.Platforms.Services
     /// <summary>
     /// Implementation of the <see cref="IFeedbackService"/> interface for the Android platform.
     /// </summary>
+    /// <remarks>
+    /// The decision to use a native implementation was made, because a message can also be started
+    /// from a background thread, when the page is not yet ready to access the JSRuntime.
+    /// </remarks>
     internal class FeedbackService : FeedbackServiceBase
     {
         private readonly IAppContextService _appContext;
@@ -21,15 +25,31 @@ namespace SilentNotes.Platforms.Services
         /// </summary>
         /// <param name="appContextService">A service which knows about the current main activity.</param>
         /// <param name="languageService">A language service.</param>
-        public FeedbackService(IAppContextService appContextService, ISnackbar snackbar, ILanguageService languageService)
-            : base(snackbar, languageService)
+        public FeedbackService(IAppContextService appContextService, ILanguageService languageService)
+            : base(languageService)
         {
             _appContext = appContextService;
         }
 
         /// <inheritdoc/>
+        public override void ShowToast(string message, FeedbackSeverity severity = FeedbackSeverity.Normal)
+        {
+            if (_appContext.RootActivity == null)
+                return;
+
+            _appContext.RootActivity.RunOnUiThread(() =>
+            {
+                Toast toast = Toast.MakeText(_appContext.RootActivity, message, ToastLength.Long);
+                toast.Show();
+            });
+        }
+
+        /// <inheritdoc/>
         public override async Task<MessageBoxResult> ShowMessageAsync(string message, string title, MessageBoxButtons buttons, bool conservativeDefault)
         {
+            if (_appContext.RootActivity == null)
+                return MessageBoxResult.Cancel;
+
             ButtonArrangement arrangement = new ButtonArrangement(buttons, _languageService);
             AlertDialogHelper.DialogResult dialogResult = await AlertDialogHelper.ShowAsync(
                 _appContext.RootActivity,

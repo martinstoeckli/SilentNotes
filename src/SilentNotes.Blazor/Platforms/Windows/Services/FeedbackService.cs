@@ -13,12 +13,29 @@ namespace SilentNotes.Platforms.Services
     /// <summary>
     /// Implementation of the <see cref="IFeedbackService"/> interface for the Windows platform.
     /// </summary>
+    /// <remarks>
+    /// The decision to use a native implementation was made, because a message can also be started
+    /// from a background thread, when the page is not yet ready to access the JSRuntime.
+    /// </remarks>
     internal class FeedbackService : FeedbackServiceBase
     {
-        /// <inheritdoc/>
-        public FeedbackService(ISnackbar snackbar, ILanguageService languageService)
-            : base(snackbar, languageService)
+        protected readonly IScopedServiceProvider<ISnackbar> _snackbarService;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FeedbackService"/> class.
+        /// </summary>
+        /// <param name="snackbarService">The Mudblazor snackbar, to show toasts.</param>
+        /// <param name="languageService">Language service to get localized textes.</param>
+        public FeedbackService(IScopedServiceProvider<ISnackbar> snackbarService, ILanguageService languageService)
+            : base(languageService)
         {
+            _snackbarService = snackbarService;
+        }
+
+        /// <inheritdoc/>
+        public override void ShowToast(string message, FeedbackSeverity severity = FeedbackSeverity.Normal)
+        {
+            _snackbarService.Get()?.Add(message, ToMudBlazorSeverity(severity), config => { config.HideIcon = true; });
         }
 
         /// <summary>
@@ -53,6 +70,11 @@ namespace SilentNotes.Platforms.Services
                 ContentDialogResult result = await dialog.ShowAsync();
                 return arrangement.ToMessageBoxResult(result);
             });
+        }
+
+        private static Severity ToMudBlazorSeverity(FeedbackSeverity severity)
+        {
+            return (Severity)severity;
         }
 
         private class ButtonArrangement

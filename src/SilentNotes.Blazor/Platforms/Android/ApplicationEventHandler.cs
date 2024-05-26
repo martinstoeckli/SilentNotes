@@ -25,9 +25,9 @@ namespace SilentNotes.Platforms
         private string _actionSendParameter;
         private NoteModel _newNoteFromActionSend;
 
-        internal void OnCreate(Activity activity)
+        internal void OnCreate(MainActivity activity)
         {
-            System.Diagnostics.Debug.WriteLine("*** ApplicationEventHandler.OnCreate() " + GetId(activity));
+            System.Diagnostics.Debug.WriteLine("*** ApplicationEventHandler.OnCreate() " + GetIdFmt(activity));
 
             // Workaround: Android soft keyboard hides the lower part of the content,
             // see https://learn.microsoft.com/en-us/dotnet/maui/android/platform-specifics/soft-keyboard-input-mode
@@ -36,7 +36,7 @@ namespace SilentNotes.Platforms
                 Microsoft.Maui.Controls.PlatformConfiguration.AndroidSpecific.WindowSoftInputModeAdjust.Resize);
 
             // Inform services about the new main activity.
-            Ioc.Instance.GetService<IAppContextService>().Initialize(activity);
+            Ioc.Instance.GetService<IAppContextService>().Register(activity.Id, activity);
 
             // Check for arguments passed by the ActionSendActivity.
             ConsumeActionSendIntentParameter(activity.Intent);
@@ -79,7 +79,7 @@ namespace SilentNotes.Platforms
         /// </summary>
         internal void OnResume(Activity activity)
         {
-            System.Diagnostics.Debug.WriteLine("*** ApplicationEventHandler.OnResume() " + GetId(activity));
+            System.Diagnostics.Debug.WriteLine("*** ApplicationEventHandler.OnResume() " + GetIdFmt(activity));
             var synchronizationService = Ioc.Instance.GetService<ISynchronizationService>();
             synchronizationService.StopAutoSynchronization(Ioc.Instance);
 
@@ -115,22 +115,23 @@ namespace SilentNotes.Platforms
 
         internal void OnPause(Activity activity)
         {
-            System.Diagnostics.Debug.WriteLine("*** ApplicationEventHandler.OnPause() " + GetId(activity));
+            System.Diagnostics.Debug.WriteLine("*** ApplicationEventHandler.OnPause() " + GetIdFmt(activity));
             WeakReferenceMessenger.Default.Send(new StoreUnsavedDataMessage(MessageSender.ApplicationEventHandler));
         }
 
         internal void OnStop(Activity activity)
         {
-            System.Diagnostics.Debug.WriteLine("*** ApplicationEventHandler.OnPause() " + GetId(activity));
+            System.Diagnostics.Debug.WriteLine("*** ApplicationEventHandler.OnPause() " + GetIdFmt(activity));
             var synchronizationService = Ioc.Instance.GetService<ISynchronizationService>();
             synchronizationService.AutoSynchronizeAtShutdown(Ioc.Instance);
         }
 
-        internal void OnDestroy(Activity activity)
+        internal void OnDestroy(MainActivity activity)
         {
-            System.Diagnostics.Debug.WriteLine("*** ApplicationEventHandler.OnDestroy() " + GetId(activity));
+            System.Diagnostics.Debug.WriteLine("*** ApplicationEventHandler.OnDestroy() " + GetIdFmt(activity));
             WeakReferenceMessenger.Default.Send(new ClosePageMessage());
             Ioc.Instance.GetService<IActivityResultAwaiter>().RedirectedOnDestroy();
+            Ioc.Instance.GetService<IAppContextService>().Unregister(activity.Id);
         }
 
         internal void OnActivityResult(Activity activity, int requestCode, Result resultCode, Intent data)
@@ -153,7 +154,7 @@ namespace SilentNotes.Platforms
             return base.OnMainLayoutReady();
         }
 
-        private static string GetId(Activity activity)
+        private static string GetIdFmt(Activity activity)
         {
             if (activity is MainActivity mainActivity)
                 return mainActivity.Id.ToString();

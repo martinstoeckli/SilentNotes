@@ -4,9 +4,9 @@
 @using SilentNotes.Services
 
 @inject IThemeService ThemeService
-@inject INavigationService NavigationService
 @inject IFeedbackService FeedbackService
-@inject INotificationService NotificationService
+@inject ISnackbar SnackbarService
+@inject NavigationManager Navigation
 
 @implements IDisposable
 
@@ -28,6 +28,8 @@
 }
 
 @code {
+	private Guid _id = Guid.NewGuid();
+
 	protected override void OnInitialized()
 	{
 		// Give other services a way to redraw the GUI of the whole app.
@@ -36,12 +38,10 @@
 
 		// Workaround: Scoped services are always correct when injected, but when adding them to
 		// Ioc as scoped services, it seems they get lost, and when demanded the next time the Ioc
-		// creates a new different service. Therefore we register them as we got them from injection.
-		Ioc.Instance
-			.ClearInjected()
-			.AddInjected<INavigationService>(NavigationService)
-			.AddInjected<IFeedbackService>(FeedbackService)
-			.AddInjected<INotificationService>(NotificationService);
+		// creates a new different service. Therefore we register the injected scoped objects
+		// to scoped service providers.
+		Ioc.Instance.GetService<IScopedServiceProvider<ISnackbar>>().Register(_id, SnackbarService);
+		Ioc.Instance.GetService<IScopedServiceProvider<NavigationManager>>().Register(_id, Navigation);
 	}
 
 	protected override void OnAfterRender(bool firstRender)
@@ -56,5 +56,8 @@
 	public void Dispose()
 	{
 		WeakReferenceMessenger.Default.Unregister<RedrawMainPageMessage>(this);
+
+		Ioc.Instance.GetService<IScopedServiceProvider<ISnackbar>>().Unregister(_id);
+		Ioc.Instance.GetService<IScopedServiceProvider<NavigationManager>>().Unregister(_id);
 	}
 }

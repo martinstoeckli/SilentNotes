@@ -5,6 +5,7 @@
 
 using Android.App;
 using Android.Content;
+using SilentNotes.Services;
 
 namespace SilentNotes.Platforms.Services
 {
@@ -19,22 +20,8 @@ namespace SilentNotes.Platforms.Services
     /// dynamically from the <see cref="IAppContextService"/> and should not store a reference
     /// to it.
     /// </remarks>
-    internal interface IAppContextService
+    internal interface IAppContextService : IScopedServiceProvider<Context>
     {
-        /// <summary>
-        /// Initializes the service, this is usually done when the root activity is created.
-        /// </summary>
-        /// <param name="rootActivity">Sets the <see cref="RootActivity"/> and the <see cref="Context"/>
-        /// property.</param>
-        void Initialize(Activity rootActivity);
-
-        /// <summary>
-        /// Initializes the service. If the activity is known call <see cref="Initialize(Activity)"/>
-        /// instead, this overload can be used for background tasks, if no activity exists anymore.
-        /// </summary>
-        /// <param name="appContext">Sets the <see cref="Context"/> property.</param>
-        void InitializeWithContextOnly(Context appContext);
-
         /// <summary>
         /// Gets the root activity which started/restarted the app.
         /// </summary>
@@ -49,26 +36,24 @@ namespace SilentNotes.Platforms.Services
     /// <summary>
     /// Implementation of the <see cref="IAppContextService"/> interface.
     /// </summary>
-    internal class AppContextService : IAppContextService
+    internal class AppContextService : ScopedServiceProvider<Context>, IAppContextService
     {
         /// <inheritdoc/>
-        public void Initialize(Activity rootActivity)
+        public Activity RootActivity
         {
-            RootActivity = rootActivity;
-            Context = rootActivity;
+            get
+            {
+                var context = Get();
+                if (context is Activity result)
+                    return result;
+                return null;
+            }
         }
 
         /// <inheritdoc/>
-        public void InitializeWithContextOnly(Context appContext)
+        public Context Context
         {
-            RootActivity = null;
-            Context = appContext;
+            get { return Get(); }
         }
-
-        /// <inheritdoc/>
-        public Activity RootActivity { get; private set; }
-
-        /// <inheritdoc/>
-        public Context Context { get; private set; }
     }
 }

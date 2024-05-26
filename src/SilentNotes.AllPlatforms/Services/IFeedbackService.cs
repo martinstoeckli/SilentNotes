@@ -5,7 +5,6 @@
 
 using System.ComponentModel;
 using System.Threading.Tasks;
-using MudBlazor;
 
 namespace SilentNotes.Services
 {
@@ -19,14 +18,9 @@ namespace SilentNotes.Services
         /// Implementing classes should ensure that this method can also be called from a non-ui
         /// thread.
         /// </summary>
-        /// <remarks>
-        /// Implementing classes should ensure that this method can be called from the gui-thread
-        /// as well as from a non-ui thread.
-        /// thread.
-        /// </remarks>
         /// <param name="message">Message to display.</param>
         /// <param name="severity">The severity defines the color and the icon of the toast.</param>
-        void ShowToast(string message, Severity severity = Severity.Normal);
+        void ShowToast(string message, FeedbackSeverity severity = FeedbackSeverity.Normal);
 
         /// <summary>
         /// Sets the <see cref="IsBusyIndicatorVisible"/> property and decides whether a redraw is
@@ -52,6 +46,19 @@ namespace SilentNotes.Services
         /// <param name="conservativeDefault">Sets the non destructive cancel button as default.</param>
         /// <returns>The pressed button.</returns>
         Task<MessageBoxResult> ShowMessageAsync(string message, string title, MessageBoxButtons buttons, bool conservativeDefault);
+    }
+
+    /// <summary>
+    /// Enumeration of all known severities for feedback. It depends on the platform how and
+    /// whether the severity is handled.
+    /// </summary>
+    public enum FeedbackSeverity
+    {
+        Normal,
+        Info,
+        Success,
+        Warning,
+        Error
     }
 
     /// <summary>

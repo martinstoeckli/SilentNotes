@@ -142,16 +142,22 @@ namespace SilentNotes.Platforms.Services
                 MauiProgram.RegisterPlatformServices(services);
                 ServiceProvider serviceProvider = services.BuildServiceProvider();
 
-                IAppContextService appContextService = serviceProvider.GetService<IAppContextService>();
-                appContextService.InitializeWithContextOnly(_appContext);
-
-                var result = await RunSilent(
-                    serviceProvider.GetService<ISettingsService>(),
-                    serviceProvider.GetService<ILanguageService>(),
-                    serviceProvider.GetService<ICloudStorageClientFactory>(),
-                    serviceProvider.GetService<ICryptoRandomService>(),
-                    serviceProvider.GetService<IRepositoryStorageService>(),
-                    serviceProvider.GetService<INoteRepositoryUpdater>());
+                Guid owner = Guid.NewGuid();
+                serviceProvider.GetService<IAppContextService>().Register(owner, _appContext);
+                try
+                {
+                    var result = await RunSilent(
+                        serviceProvider.GetService<ISettingsService>(),
+                        serviceProvider.GetService<ILanguageService>(),
+                        serviceProvider.GetService<ICloudStorageClientFactory>(),
+                        serviceProvider.GetService<ICryptoRandomService>(),
+                        serviceProvider.GetService<IRepositoryStorageService>(),
+                        serviceProvider.GetService<INoteRepositoryUpdater>());
+                }
+                finally
+                {
+                    serviceProvider.GetService<IAppContextService>().Unregister(owner);
+                }
 
                 System.Diagnostics.Debug.WriteLine("*** SynchronizationService.SynchronizeAtShutdown() end");
             }

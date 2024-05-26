@@ -4,7 +4,6 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System.Threading.Tasks;
-using MudBlazor;
 
 namespace SilentNotes.Services
 {
@@ -42,7 +41,7 @@ namespace SilentNotes.Services
         }
 
         /// <inheritdoc/>
-        public void ShowToast(string message, Severity severity = Severity.Normal)
+        public void ShowToast(string message, FeedbackSeverity severity = FeedbackSeverity.Normal)
         {
         }
     }

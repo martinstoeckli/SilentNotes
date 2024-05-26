@@ -91,14 +91,12 @@ public static class MauiProgram
         services.AddSingleton<ICloudStorageClientFactory>((serviceProvider) => new CloudStorageClientFactory());
         services.AddSingleton<IClipboardService>((serviceProvider) => new ClipboardService());
         services.AddSingleton<IInternetStateService>((serviceProvider) => new InternetStateService());
-
-        // Scoped services (some Blazor services like NavigationManager or IJSRuntime seem to be scoped)
-        // Workaround: It seems that scoped services are recreated when gotten from Ioc, therefore
-        // we have to add them dynamically in MainLayout.razor.
-        services.AddScoped<INavigationService>((serviceProvider) => new NavigationService(
-            serviceProvider.GetService<NavigationManager>(),
+        services.AddSingleton<IScopedServiceProvider<ISnackbar>>((serviceProvider) => new ScopedServiceProvider<ISnackbar>());
+        services.AddSingleton<IScopedServiceProvider<NavigationManager>>((serviceProvider) => new ScopedServiceProvider<NavigationManager>());
+        services.AddSingleton<INavigationService>((serviceProvider) => new NavigationService(
+            serviceProvider.GetService<IScopedServiceProvider<NavigationManager>>(),
             RouteNames.NoteRepository));
-        services.AddScoped<INotificationService>((serviceProvider) => new NotificationService(
+        services.AddSingleton<INotificationService>((serviceProvider) => new NotificationService(
             serviceProvider.GetService<IFeedbackService>(),
             serviceProvider.GetService<ILanguageService>(),
             serviceProvider.GetService<ISettingsService>()));
@@ -122,9 +120,8 @@ public static class MauiProgram
         services.AddSingleton<IFolderPickerService>((serviceProvider) => new FolderPickerService());
         services.AddSingleton<IFilePickerService>((serviceProvider) => new FilePickerService());
         services.AddSingleton<ISynchronizationService>((serviceProvider) => new SynchronizationService());
-
-        services.AddScoped<IFeedbackService>((serviceProvider) => new FeedbackService(
-            serviceProvider.GetService<ISnackbar>(),
+        services.AddSingleton<IFeedbackService>((serviceProvider) => new FeedbackService(
+            serviceProvider.GetService<IScopedServiceProvider<ISnackbar>>(),
             serviceProvider.GetService<ILanguageService>()));
     }
 
@@ -157,10 +154,8 @@ public static class MauiProgram
             serviceProvider.GetService<IAppContextService>(),
             serviceProvider.GetService<IActivityResultAwaiter>()));
         services.AddSingleton<ISynchronizationService>((serviceProvider) => new SynchronizationService());
-
-        services.AddScoped<IFeedbackService>((serviceProvider) => new FeedbackService(
+        services.AddSingleton<IFeedbackService>((serviceProvider) => new FeedbackService(
             serviceProvider.GetService<IAppContextService>(),
-            serviceProvider.GetService<ISnackbar>(),
             serviceProvider.GetService<ILanguageService>()));
     }
 
