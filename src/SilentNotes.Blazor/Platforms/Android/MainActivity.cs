@@ -34,6 +34,7 @@ namespace SilentNotes
             // https://developer.android.com/develop/ui/views/launch/splash-screen#suspend-drawing
             WeakReferenceMessenger.Default.Register<MainLayoutReadyMessage>(
                 this, async (recipient, message) => await OnMainLayoutReady());
+            _splashScreenCanBeClosed = false;
             _contentView = FindViewById<Android.Views.View>(Android.Resource.Id.Content);
             _contentView.ViewTreeObserver.AddOnPreDrawListener(this);
 

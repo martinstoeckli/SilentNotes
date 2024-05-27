@@ -35,7 +35,7 @@ namespace SilentNotes.Platforms.Services
         /// <inheritdoc/>
         public override void ShowToast(string message, FeedbackSeverity severity = FeedbackSeverity.Normal)
         {
-            _snackbarService.Get()?.Add(message, ToMudBlazorSeverity(severity), config => { config.HideIcon = true; });
+            _snackbarService.GetScopedService()?.Add(message, ToMudBlazorSeverity(severity), config => { config.HideIcon = true; });
         }
 
         /// <summary>

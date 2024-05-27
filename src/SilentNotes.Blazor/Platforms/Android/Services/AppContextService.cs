@@ -43,7 +43,7 @@ namespace SilentNotes.Platforms.Services
         {
             get
             {
-                var context = Get();
+                var context = GetScopedService();
                 if (context is Activity result)
                     return result;
                 return null;
@@ -53,7 +53,7 @@ namespace SilentNotes.Platforms.Services
         /// <inheritdoc/>
         public Context Context
         {
-            get { return Get(); }
+            get { return GetScopedService(); }
         }
     }
 }

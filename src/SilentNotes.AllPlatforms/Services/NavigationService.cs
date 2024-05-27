@@ -83,7 +83,7 @@ namespace SilentNotes.Services
 
         private bool TryGetNavigationManager(out NavigationManager navigationManager)
         {
-            navigationManager = _navigationManagerProvider.Get();
+            navigationManager = _navigationManagerProvider.GetScopedService();
             return navigationManager != null;
         }
 

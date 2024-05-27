@@ -11,7 +11,7 @@ namespace SilentNotesTest.Services
     public class ScopedServiceProviderTest
     {
         [Test]
-        public void Get_FindsLatestRegisteredService()
+        public void GetScopedService_FindsLatestRegisteredService()
         {
             IScopedServiceProvider<TestCandidate> provider = new ScopedServiceProvider<TestCandidate>();
             Guid owner = Guid.NewGuid();
@@ -20,14 +20,14 @@ namespace SilentNotesTest.Services
             provider.Register(owner, firstCandidate);
             provider.Register(owner, lastCandidate);
 
-            Assert.AreSame(lastCandidate, provider.Get());
+            Assert.AreSame(lastCandidate, provider.GetScopedService());
         }
 
         [Test]
-        public void Get_ReturnsNullIfNoServiceRegistered()
+        public void GetScopedService_ReturnsNullIfNoServiceRegistered()
         {
             IScopedServiceProvider<TestCandidate> provider = new ScopedServiceProvider<TestCandidate>();
-            Assert.IsNull(provider.Get());
+            Assert.IsNull(provider.GetScopedService());
         }
 
         [Test]
@@ -40,7 +40,7 @@ namespace SilentNotesTest.Services
             provider.Register(owner, firstCandidate);
             provider.Register(owner, lastCandidate);
             provider.Unregister(owner);
-            Assert.IsNull(provider.Get());
+            Assert.IsNull(provider.GetScopedService());
         }
 
         [Test]
@@ -54,7 +54,7 @@ namespace SilentNotesTest.Services
             provider.Register(owner1, owner1Candidate);
             provider.Register(owner2, owner2Candidate);
             provider.Unregister(owner1);
-            Assert.AreSame(owner2Candidate, provider.Get());
+            Assert.AreSame(owner2Candidate, provider.GetScopedService());
         }
 
         private class TestCandidate

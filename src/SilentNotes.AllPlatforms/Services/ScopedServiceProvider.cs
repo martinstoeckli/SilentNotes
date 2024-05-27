@@ -40,7 +40,13 @@ namespace SilentNotes.Services
         }
 
         /// <inheritdoc/>
-        public T Get()
+        public void UnregisterAll()
+        {
+            _services.Clear();
+        }
+
+        /// <inheritdoc/>
+        public T GetScopedService()
         {
             var item = _services.LastOrDefault();
             return (item != null) ? item.Service : null;

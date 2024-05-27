@@ -3,6 +3,9 @@ using Android.Runtime;
 
 namespace SilentNotes
 {
+    /// <summary>
+    /// The Maui application on Android.
+    /// </summary>
 	[Application]
 	public class MainApplication : MauiApplication
 	{

@@ -39,14 +39,21 @@ namespace SilentNotes.Services
         void Unregister(Guid owner);
 
         /// <summary>
+        /// Removes all registered scoped objects. This can be called when the application is
+        /// restarted (Android OnDestroy/OnCreate).
+        /// </summary>
+        void UnregisterAll();
+
+        /// <summary>
         /// Gets the most current registered scoped object.
         /// </summary>
         /// <returns>Currently registered scoped object, or null if no such object is reistered at
         /// this moment.</returns>
-        T Get();
+        T GetScopedService();
 
         /// <summary>
-        /// This event is called immediately before a new scoped object is registered.
+        /// This event is called immediately before a new scoped object is registered. If an object
+        /// is already registered, it can be gotten by <see cref="GetScopedService"/>.
         /// </summary>
         event EventHandler<T> BeforeRegister;
     }

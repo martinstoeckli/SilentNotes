@@ -7,7 +7,7 @@ using Microsoft.Windows.AppLifecycle;
 namespace SilentNotes.WinUI
 {
     /// <summary>
-    /// Provides application-specific behavior to supplement the default Application class.
+    /// The Maui application on Windows.
     /// </summary>
     public partial class App : MauiWinUIApplication
     {
