@@ -30,12 +30,19 @@ namespace SilentNotes.Views
         {
             Debug.WriteLine(string.Format("*** {0}.Create {1}", GetType().Name, Id));
 
+            // Offer virtual method for the StoreUnsavedDataMessage
             WeakReferenceMessenger.Default.Register<StoreUnsavedDataMessage>(
                 this, (recipient, message) => OnStoringUnsavedData(message));
+
+            // Actions for the ClosePageMessage, triggered by the navigation service
             WeakReferenceMessenger.Default.Register<ClosePageMessage>(
                 this, async (recipient, message) => await TriggerOnClosingPageAsync());
+
+            // Offer redraw of page for the RedrawCurrentPageMessage
             WeakReferenceMessenger.Default.Register<RedrawCurrentPageMessage>(
                 this, (recipient, message) => InvokeAsync(StateHasChanged));
+
+            // Calls virtual method OnCloseMenuOrDialog for the Android system back button
             WeakReferenceMessenger.Default.Register<BackButtonPressedMessage>(
                 this, (recipient, message) => TriggerCloseMenuOrDialog(message));
         }

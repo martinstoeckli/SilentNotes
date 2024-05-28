@@ -91,8 +91,6 @@ public static class MauiProgram
         services.AddSingleton<ICloudStorageClientFactory>((serviceProvider) => new CloudStorageClientFactory());
         services.AddSingleton<IClipboardService>((serviceProvider) => new ClipboardService());
         services.AddSingleton<IInternetStateService>((serviceProvider) => new InternetStateService());
-        services.AddSingleton<IScopedServiceProvider<ISnackbar>>((serviceProvider) => new ScopedServiceProvider<ISnackbar>());
-        services.AddSingleton<IScopedServiceProvider<NavigationManager>>((serviceProvider) => new ScopedServiceProvider<NavigationManager>());
         services.AddSingleton<INavigationService>((serviceProvider) => new NavigationService(
             serviceProvider.GetService<IScopedServiceProvider<NavigationManager>>(),
             RouteNames.NoteRepository));
@@ -100,6 +98,11 @@ public static class MauiProgram
             serviceProvider.GetService<IFeedbackService>(),
             serviceProvider.GetService<ILanguageService>(),
             serviceProvider.GetService<ISettingsService>()));
+
+        // Scoped services must be updated as soon as they are available, usually this is done
+        // in the MainActivity.
+        services.AddSingleton<IScopedServiceProvider<ISnackbar>>((serviceProvider) => new ScopedServiceProvider<ISnackbar>());
+        services.AddSingleton<IScopedServiceProvider<NavigationManager>>((serviceProvider) => new ScopedServiceProvider<NavigationManager>());
     }
 
 #if WINDOWS
