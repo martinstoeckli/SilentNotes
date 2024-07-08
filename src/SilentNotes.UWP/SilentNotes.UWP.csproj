@@ -176,6 +176,9 @@
     <Content Include="..\SilentNotes.Shared\Assets\Html\cloud_service_googledrive.png">
       <Link>Assets\Html\cloud_service_googledrive.png</Link>
     </Content>
+    <Content Include="..\SilentNotes.Shared\Assets\Html\cloud_service_murena.png">
+      <Link>Assets\Html\cloud_service_murena.png</Link>
+    </Content>
     <Content Include="..\SilentNotes.Shared\Assets\Html\cloud_service_nextcloud.png">
       <Link>Assets\Html\cloud_service_nextcloud.png</Link>
     </Content>

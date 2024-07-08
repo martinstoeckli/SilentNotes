@@ -337,7 +337,11 @@
       <Link>Assets\Html\prose-mirror-bundle.js</Link>
     </AndroidAsset>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <AndroidAsset Include="..\SilentNotes.Shared\Assets\Html\cloud_service_murena.png">
+      <Link>Assets\Html\cloud_service_murena.png</Link>
+    </AndroidAsset>
+  </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-v31\splash_screen.xml">
       <Generator>MSBuild:UpdateGeneratedFiles</Generator>
