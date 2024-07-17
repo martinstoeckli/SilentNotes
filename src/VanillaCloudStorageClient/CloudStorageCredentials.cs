@@ -6,8 +6,8 @@
 using System;
 using System.Runtime.Serialization;
 using System.Security;
+using System.Text.Json.Serialization;
 using System.Xml.Serialization;
-using Newtonsoft.Json;
 
 namespace VanillaCloudStorageClient
 {
