@@ -1,6 +1,6 @@
 SilentNotes version 7.3.3
 
-* Targeting Android 14, to comply with the newest Android requirements.
+* Targeting Android 14, to comply with the newest Android requirements (only Android).
 * Migration from Newtonsoft.Json to System.Text.Json (Flurl 4.0.2)
 * Added Murena as online storage provider.
 * Editor now stays readonly as long as the startup synchronization is running, to avoid interferences.
