@@ -6,6 +6,7 @@
 using System;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Mvvm.Messaging;
 using SilentNotes.Controllers;
 using SilentNotes.Models;
 using SilentNotes.StoryBoards;
@@ -70,6 +71,7 @@ namespace SilentNotes.Services
             finally
             {
                 IsRunning = false;
+                WeakReferenceMessenger.Default.Send<SynchronizationAtStartupFinishedMessage>();
             }
         }
 

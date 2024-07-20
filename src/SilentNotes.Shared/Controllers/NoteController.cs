@@ -5,7 +5,9 @@
 
 using System;
 using System.Text;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Mvvm.Messaging;
 using SilentNotes.Crypto;
 using SilentNotes.HtmlView;
 using SilentNotes.Models;
@@ -32,11 +34,13 @@ namespace SilentNotes.Controllers
             : base(viewService)
         {
             _repositoryService = repositoryService;
+            WeakReferenceMessenger.Default.Register<SynchronizationAtStartupFinishedMessage>(this, SynchronizationAtStartupHandler);
         }
 
         /// <inheritdoc/>
         protected override void OverrideableDispose()
         {
+            WeakReferenceMessenger.Default.Unregister<SynchronizationAtStartupFinishedMessage>(this);
             if (View != null)
             {
                 View.HtmlView.Navigating -= NavigatingEventHandler;
@@ -105,6 +109,8 @@ namespace SilentNotes.Controllers
                 noteRepository.Safes,
                 noteRepository.CollectActiveTags(),
                 note);
+            _viewModel.AutoSynchronizationRunning = true; // Always start with controls in readonly mode.
+
             SetHtmlViewBackgroundColor(View.HtmlView);
 
             VueBindingShortcut[] shortcuts = new[]
@@ -143,6 +149,15 @@ namespace SilentNotes.Controllers
 
             string html = _viewService.GenerateHtml(_viewModel);
             View.HtmlView.LoadHtml(html);
+        }
+
+        private async void SynchronizationAtStartupHandler(object recipient, SynchronizationAtStartupFinishedMessage message)
+        {
+            if (_viewModel == null)
+                return;
+
+            await View.HtmlView.ExecuteJavaScriptReturnString("activateEditor();");
+            _viewModel.AutoSynchronizationRunning = false;
         }
 
         /// <inheritdoc/>
@@ -184,10 +199,15 @@ namespace SilentNotes.Controllers
             }
         }
 
-        private void ViewLoadedEventHandler(object sender, EventArgs e)
+        private async void ViewLoadedEventHandler(object sender, EventArgs e)
         {
             VueBindings.ViewLoadedEvent -= ViewLoadedEventHandler;
             View.HtmlView.Navigating += NavigatingEventHandler;
+
+            // Remove readonly mode when no auto synchronization is running. If a synchronization
+            // is still running it will send a message at the end of the synchronization.
+            IAutoSynchronizationService autoSynchronizationService = Ioc.Default.GetService<IAutoSynchronizationService>();
+            bool noSynchronizationRunning = !autoSynchronizationService.IsRunning;
 
             // To load the content in the view, the javascript would have to be written into the page,
             // which would have to be interpreted by the WebView and would increase the size of the content.
@@ -201,7 +221,12 @@ namespace SilentNotes.Controllers
             if (isNewNote)
                 script.Append("toggleFormat('heading', 1);");
             script.Append("startSendingViewModelUpdates();");
-            View.HtmlView.ExecuteJavaScript(script.ToString());
+            if (noSynchronizationRunning)
+                script.Append("activateEditor();");
+
+            await View.HtmlView.ExecuteJavaScriptReturnString(script.ToString());
+            if (noSynchronizationRunning)
+                _viewModel.AutoSynchronizationRunning = false;
         }
     }
 }
