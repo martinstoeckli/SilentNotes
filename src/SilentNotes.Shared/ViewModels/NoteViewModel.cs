@@ -39,6 +39,7 @@ namespace SilentNotes.ViewModels
         protected string _unlockedContent;
         private string _searchableContent;
         private bool _isKeepScreenOnActive;
+        private bool _autoSynchronizationRunning;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NoteViewModel"/> class.
@@ -550,6 +551,31 @@ namespace SilentNotes.ViewModels
         }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the note should be shown readonly. This is used
+        /// to block user input while the auto synchronisation is still running.
+        /// </summary>
+        [VueDataBinding(VueBindingMode.OneWayToView)]
+        public bool AutoSynchronizationRunning
+        {
+            get { return _autoSynchronizationRunning; }
+            set
+            {
+                if (SetProperty(ref _autoSynchronizationRunning, value))
+                    OnPropertyChanged(nameof(IsReadOnly));
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether either the shopping mode is active, or a
+        /// synchronization is currently running.
+        /// </summary>
+        [VueDataBinding(VueBindingMode.OneWayToView)]
+        public bool IsReadOnly
+        {
+            get { return ShoppingModeActive || AutoSynchronizationRunning; }
+        }
+
+        /// <summary>
         /// Gets or sets a value indicating whether the shopping mode is active or inactive
         /// <see cref="NoteModel.ShoppingModeActive"/>
         /// This property does not call <see cref="NoteModel.RefreshModifiedAt"/>, because it is
@@ -559,7 +585,11 @@ namespace SilentNotes.ViewModels
         public bool ShoppingModeActive
         {
             get { return Model.ShoppingModeActive; }
-            set { SetPropertyAndModified(Model.ShoppingModeActive, value, (v) => Model.ShoppingModeActive = v); }
+            set 
+            {
+                if (SetPropertyAndModified(Model.ShoppingModeActive, value, (v) => Model.ShoppingModeActive = v))
+                    OnPropertyChanged(nameof(IsReadOnly));
+            }
         }
 
         /// <summary>
