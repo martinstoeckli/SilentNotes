@@ -5,7 +5,7 @@
   },
   "projects": {
     "D:\\Source\\SilentNotes\\GitHub\\src\\SilentNotes.Blazor\\SilentNotes.csproj": {
-      "version": "7.99.30",
+      "version": "7.99.31",
       "restore": {
         "projectUniqueName": "D:\\Source\\SilentNotes\\GitHub\\src\\SilentNotes.Blazor\\SilentNotes.csproj",
         "projectName": "SilentNotes",
@@ -87,7 +87,7 @@
             "Microsoft.NET.ILLink.Tasks": {
               "suppressParent": "All",
               "target": "Package",
-              "version": "[8.0.2, )",
+              "version": "[8.0.6, )",
               "autoReferenced": true
             },
             "MudBlazor": {
@@ -118,7 +118,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302/PortableRuntimeIdentifierGraph.json"
         },
         "net8.0-windows10.0.19041": {
           "targetAlias": "net8.0-windows10.0.19041.0",
@@ -181,7 +181,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302\\RuntimeIdentifierGraph.json"
         }
       },
       "runtimes": {

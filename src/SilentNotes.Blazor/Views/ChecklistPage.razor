@@ -330,6 +330,7 @@ div.dark .detail-view.checklist .ProseMirror p::after { content: @(IconService.L
 				await _jsModule.InvokeVoidAsync("initialize", DotNetModule, _editorContainer, ViewModel.ShoppingModeActive);
 				string content = ViewModel.UnlockedHtmlContent;
 				await _jsModule.InvokeVoidAsync("setNoteContent", content);
+				await _jsModule.InvokeVoidAsync("setEditable", !ViewModel.ShoppingModeActive);
 				bool isNewNote = ViewModel.SearchableContent.Trim().Length == 0;
 				if (isNewNote)
 					await ToggleFormatState("heading", 1);

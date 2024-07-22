@@ -9,7 +9,7 @@ var _ignoreNoteContentChanged;
 export function initialize(dotnetPage, editorContainer, shoppingModeActive) {
     _page = dotnetPage;
     _editor = initializeChecklist(editorContainer);
-    _editor.setEditable(!shoppingModeActive);
+    _editor.setEditable(false); // Set editable later when everything is ready.
     _ignoreNoteContentChanged = false;
 
     _editor.on('selectionUpdate', function (editor) {
@@ -36,7 +36,8 @@ export function setNoteContent(text) {
 }
 
 export function setEditable(editable) {
-    _editor.setEditable(editable);
+    if (_editor)
+        _editor.setEditable(editable);
 }
 
 export function setShoppingModeActive(shoppingModeActive) {
