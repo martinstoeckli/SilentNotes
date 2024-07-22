@@ -160,7 +160,7 @@ namespace SilentNotes.Services
         {
             return new MudTheme()
             {
-                Palette = new PaletteLight()
+                PaletteLight = new PaletteLight()
                 {
                     AppbarBackground = colorTheme.LightColors.AppBar,
                     Primary = colorTheme.LightColors.Primary,

@@ -28,7 +28,7 @@ namespace SilentNotes.ViewModels
             Parent = parent;
             CanExpand = true;
             IsExpanded = false;
-            Children = new HashSet<ITreeItemViewModel>();
+            Children = new List<ITreeItemViewModel>();
             Parent?.Children.Add(this);
         }
 
@@ -48,7 +48,7 @@ namespace SilentNotes.ViewModels
         public ITreeItemViewModel Parent { get; }
 
         /// <inheritdoc/>
-        public HashSet<ITreeItemViewModel> Children { get; set; }
+        public List<ITreeItemViewModel> Children { get; set; }
 
         /// <summary>
         /// Gets the wrapped model.
@@ -81,7 +81,7 @@ namespace SilentNotes.ViewModels
         /// </summary>
         /// <param name="parentNode">The node to expand.</param>
         /// <returns>A hash set of child nodes.</returns>
-        public static async Task<HashSet<ITreeItemViewModel>> LoadData(ITreeItemViewModel parentNode)
+        public static async Task<List<ITreeItemViewModel>> LoadData(ITreeItemViewModel parentNode)
         {
             await parentNode.LazyLoadChildren();
             return parentNode.Children;
