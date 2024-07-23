@@ -76,7 +76,7 @@
 		<ActivatorContent>
 			<MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" />
 		</ActivatorContent>
-		<ChildContent>
+		<ChildContent><span class="menu-font">
 			<MudMenuItem OnAction="@(() => ViewModel.NewNoteCommand.Execute(null))" Icon="@IconService.GetSvgLink(IconNames.NoteTextOutline)">@LanguageService["note_create_new"]</MudMenuItem>
 			<MudMenuItem OnAction="@(() => ViewModel.NewChecklistCommand.Execute(null))" Icon="@IconService.GetSvgLink(IconNames.OrderBoolAscendingVariant)">@LanguageService["checklist_create_new"]</MudMenuItem>
 			<MudMenuItem OnAction="@(() => Navigation.NavigateTo(RouteNames.RecycleBin))" Icon="@IconService[IconNames.DeleteEmpty]">@LanguageService["show_recyclebin"]</MudMenuItem>
@@ -99,7 +99,7 @@
 			<MudMenuItem OnAction="@(() => Navigation.NavigateTo(RouteNames.TransferCodeHistory))" Icon="@IconService[IconNames.Key]">@LanguageService["show_transfer_code"]</MudMenuItem>
 			<MudMenuItem OnAction="@(() => Navigation.NavigateTo(RouteNames.Settings))" Icon="@IconService[IconNames.Settings]">@LanguageService["show_settings"]</MudMenuItem>
 			<MudMenuItem OnAction="@(() => Navigation.NavigateTo(RouteNames.Info))" ForceLoad="false" Icon="@Icons.Material.Filled.Info">@LanguageService["show_info"]</MudMenuItem>
-		</ChildContent>
+		</span></ChildContent>
 	</MudMenu>
 </MudAppBar>
 
@@ -118,10 +118,9 @@
 					</MudButton>
 					<MudIconButton
 						OnClick="@(() => ViewModel.ToggleNotesWithoutTagsFilterCommand.Execute(null))"
-						Class="@Css.BuildClass(new CssClassIf("btn-toggled", ViewModel.FilterNotesWithoutTags))"
+						Class="@Css.BuildClass(new CssClassIf("btn-toggled", ViewModel.FilterNotesWithoutTags), "ml-1")"
 						Icon="@IconService.GetSvgLink(IconNames.TagOff)"
-						Title="@LanguageService["filter_only_without_tags"]"
-						Edge="Edge.Start" />
+						Title="@LanguageService["filter_only_without_tags"]" />
 				</MudStack>
 			</MudStack>
 			<MudIconButton OnClick="() => ViewModel.IsDrawerOpen = false" Icon="@IconService.GetSvgLink(IconNames.Close)" Size="Size.Small" />

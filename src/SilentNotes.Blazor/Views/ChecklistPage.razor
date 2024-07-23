@@ -89,7 +89,7 @@ div.dark .detail-view.checklist .ProseMirror p::after { content: @(IconService.L
 		<ActivatorContent>
 			<MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" />
 		</ActivatorContent>
-		<ChildContent>
+		<ChildContent><span class="menu-font">
 			<MudMenuItem OnAction="@(() => _jsModule.InvokeVoidAsync("sortPendingToTop"))"
 				Icon="@IconService.GetSvgLink(IconNames.SortBoolDescendingVariant)"
 				Disabled="ViewModel.ShoppingModeActive">@LanguageService["checklist_move_pending_to_top"]</MudMenuItem>
@@ -166,7 +166,7 @@ div.dark .detail-view.checklist .ProseMirror p::after { content: @(IconService.L
 					Icon="@IconService.GetSvgLink(IconNames.CloudDownload)"
 					Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_pull_from_server"]</MudMenuItem>
 			}
-		</ChildContent>
+		</span></ChildContent>
 	</MudMenu>
 </MudAppBar>
 

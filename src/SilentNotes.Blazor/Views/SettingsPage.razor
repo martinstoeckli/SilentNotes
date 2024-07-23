@@ -61,10 +61,10 @@
 		<ActivatorContent>
 			<MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" />
 		</ActivatorContent>
-		<ChildContent>
+		<ChildContent><span class="menu-font">
 			<MudMenuItem OnAction="@(() => ViewModel.TestNewLocalizationCommand.Execute(null))"
 				Icon="@IconService[IconNames.Earth]">@LanguageService["gui_localization_test"]</MudMenuItem>
-		</ChildContent>
+		</span></ChildContent>
 	</MudMenu>
 </MudAppBar>
 
@@ -187,7 +187,7 @@
 				<div><MudIcon Icon="@Icons.Material.Filled.FormatSize" Color="Color.Secondary" /></div>
 				<div>
 					<MudSlider @bind-Value="ViewModel.FontSizeStep"
-						Min="-3" Max="3" Step="1" Color="Color.Tertiary">@LanguageService["gui_font_size"]</MudSlider>
+						Min="-3" Max="4" Step="1" Color="Color.Tertiary">@LanguageService["gui_font_size"]</MudSlider>
 				</div>
 
 				@* Note height *@

@@ -4,7 +4,6 @@
 	--css-grid-topic-icon-width: 30px;
 }
 
-/*html { font-size: 14px; }*/
 body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji" }
 h1 { font-size: 1.7em; }
 h2 { font-size: 1.3em; }
@@ -64,7 +63,6 @@ td { word-wrap: anywhere; } /* table should not exceed device width */
 	width: 100%;
 	padding: 12px;
 	overflow: hidden;
-	font-size: 0.9em;
 	user-select: none;
 	cursor: default;
 }
@@ -280,6 +278,12 @@ div.ProseMirror:focus {
 	word-wrap: anywhere; /* text must not exceed device width */
 	overflow-x: hidden;
 }
+.menu-font {
+	font-size: 14px;
+}
+.menu-font .mud-typography-body2 {
+	font-size: 1em; /* instead of 0.875em */
+}
 
 .mud-button { text-transform: none; }
 .mud-switch { margin-right: 0; }
@@ -326,7 +330,7 @@ div.ProseMirror:focus {
 		height: 30px;
 		border-radius: 15px;
 	}
-/*	html { font-size: 17px; }*/
+	.menu-font { font-size: 16px; }
 }
 /* wide device - desktop */
 @media screen and (min-device-width: 540px) {

@@ -99,7 +99,7 @@
 		<ActivatorContent>
 			<MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" />
 		</ActivatorContent>
-		<ChildContent>
+		<ChildContent><span class="menu-font">
 			<MudMenuItem OnAction="@(() => ToggleFormatState("heading", 1))"
 				Icon="@IconService.GetSvgLink(IconNames.FormatHeader1)"
 				Class="@Css.BuildClass(new CssClassIf(CssClasses.MenuToggled, _formatStates.Heading1))"
@@ -183,7 +183,7 @@
 					Icon="@IconService.GetSvgLink(IconNames.CloudDownload)"
 					Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_pull_from_server"]</MudMenuItem>
 			}
-		</ChildContent>
+		</span></ChildContent>
 	</MudMenu>
 </MudAppBar>
 
