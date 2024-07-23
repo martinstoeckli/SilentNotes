@@ -366,5 +366,4 @@ jobs:
         GITHUB_TOKEN: ${{ github.token }}
         Version_Title: "Version ${{needs.job_version.outputs.formatted_version}} CI test"
         Tag: "v${{needs.job_version.outputs.formatted_version}}"
-        Change_Log: "./fastlane/metadata/android/en-US/changelogs/64.txt" 
-#        Change_Log: "./fastlane/metadata/android/en-US/changelogs/${{needs.job_version.outputs.integer_version}}.txt" 
+        Change_Log: "./fastlane/metadata/android/en-US/changelogs/${{needs.job_version.outputs.integer_version}}.txt" 
