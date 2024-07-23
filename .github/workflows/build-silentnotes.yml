@@ -335,21 +335,10 @@ jobs:
       Android_Manifest: src\SilentNotes.Blazor\Platforms\Android\AndroidManifest.xml
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
-
     - name: Download files for publishing
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
-        name: silentnotes_android_arm_binaries
-        path: downloaddirectory
-
-    - name: Download files for publishing
-      uses: actions/download-artifact@v3
-      with:
-        name: silentnotes_android_x64_binaries
+        pattern: *android*
         path: downloaddirectory
 
     - name: Collect files for publishing
