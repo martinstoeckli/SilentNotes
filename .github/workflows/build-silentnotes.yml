@@ -343,8 +343,9 @@ jobs:
     - name: Download files for publishing
       uses: actions/download-artifact@v4
       with:
-        pattern: *android*
         path: downloaddirectory
+        pattern: silentnotes_android*
+        merge-multiple: true
 
     - name: Collect files for publishing
       run: |
