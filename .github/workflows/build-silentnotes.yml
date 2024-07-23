@@ -275,7 +275,7 @@ jobs:
     - name: Upload build artifacts
       uses: actions/upload-artifact@v3
       with:
-        name: silentnotes_binaries
+        name: silentnotes_windows_binaries
         path: .\windows
 
   ##############################################################################
@@ -296,7 +296,7 @@ jobs:
     - name: Download msix files
       uses: actions/download-artifact@v3
       with:
-        name: silentnotes_binaries
+        name: silentnotes_windows_binaries
         path: downloaddirectory
 
     - name: Collect msix files
@@ -316,7 +316,7 @@ jobs:
     - name: Upload build artifacts
       uses: actions/upload-artifact@v3
       with:
-        name: silentnotes_binaries
+        name: silentnotes_windows_binaries
         path: .\**\*.msixbundle
         retention-days: 1
 
@@ -343,7 +343,13 @@ jobs:
     - name: Download files for publishing
       uses: actions/download-artifact@v3
       with:
-        name: silentnotes_binaries
+        name: silentnotes_arm_binaries
+        path: downloaddirectory
+
+    - name: Download files for publishing
+      uses: actions/download-artifact@v3
+      with:
+        name: silentnotes_x64_binaries
         path: downloaddirectory
 
     - name: Collect files for publishing
@@ -364,6 +370,6 @@ jobs:
           ./publish/*.apk
       env:
         GITHUB_TOKEN: ${{ github.token }}
-        Version_Title: "Version ${{needs.job_version.outputs.formatted_version}} CI test"
+        Version_Title: "Version ${{needs.job_version.outputs.formatted_version}}"
         Tag: "v${{needs.job_version.outputs.formatted_version}}"
         Change_Log: "./fastlane/metadata/android/en-US/changelogs/${{needs.job_version.outputs.integer_version}}.txt" 
