@@ -121,7 +121,7 @@ jobs:
       run: |
         $apks = Get-ChildItem -Path .\bin\* -Filter *Signed.apk -Recurse -File
         New-Item -Path ".\artifacts" -ItemType "directory"
-        Move-Item -Path $apks[0].FullName -Destination ".\artifacts\silentnotes.apk"
+        Move-Item -Path $apks[0].FullName -Destination ".\artifacts\silentnotes_arm.apk"
 
     # Upload artifacts
     - name: Upload build artifacts
@@ -356,8 +356,8 @@ jobs:
       uses: softprops/action-gh-release@v1
       id: create_release
       with:
-        draft: true
-        prerelease: true
+        draft: false
+        prerelease: false
         name: ${{ env.Version_Title }}
         tag_name: ${{ env.Tag }}
         body_path: ${{ env.Change_Log }}
