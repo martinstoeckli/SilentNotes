@@ -207,6 +207,15 @@ namespace SilentNotes.ViewModels
         /// <inheritdoc />
         public void OnStoringUnsavedData(StoreUnsavedDataMessage message)
         {
+            // Safeguarding against unwanted loss of note content has highest priority, so we
+            // accept the inconvenience that an empty note is not stored. An unwanted note can
+            // be deleted by the user after all.
+            if (IsEmptyContent(_unlockedContent))
+            {
+                // Reapply the original note
+                _unlockedContent = IsInSafe ? UnlockIfSafeOpen(Model.HtmlContent) : Model.HtmlContent;
+            }
+
             if (Modifications.IsModified())
             {
                 Model.RefreshModifiedAt();
@@ -234,6 +243,29 @@ namespace SilentNotes.ViewModels
                 KeepScreenOnActive = false;
                 _environmentService.KeepScreenOn?.Stop();
             }
+        }
+
+        /// <summary>
+        /// Checks whether the note does not contain visible text. Used as safeguard against loss
+        /// of note content.
+        /// </summary>
+        /// <remarks>
+        /// In the past it happened that the JS-Editor/WebView removed the whole content of the
+        /// note. The problem could not be reproduced, it could have been a async/threading problem
+        /// of the WebView ⇔ ViewModel or a unfortunate timing of the startup synchronization and
+        /// its update of the view.
+        /// </remarks>
+        /// <param name="content">The note content to ckeck.</param>
+        /// <returns>Returns true uf the note is empty, otherwise false.</returns>
+        private bool IsEmptyContent(string content)
+        {
+            if (content.Length > 150)
+                return false; // Assume that it doesn't contain so many empty tags
+
+            var searchableHtmlConverter = new SearchableHtmlConverter();
+            if (searchableHtmlConverter.TryConvertHtml(content, out string searchableContent))
+                return searchableContent.Trim().Length == 0;
+            return false;
         }
 
         /// <summary>

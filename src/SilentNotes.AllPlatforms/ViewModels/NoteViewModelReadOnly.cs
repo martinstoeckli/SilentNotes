@@ -202,7 +202,7 @@ namespace SilentNotes.ViewModels
         /// Decrypts the note, if the belonging safe is open.
         /// </summary>
         /// <returns>Decrypted note content, or null if the safe is closed.</returns>
-        private string UnlockIfSafeOpen(string lockedContent)
+        protected string UnlockIfSafeOpen(string lockedContent)
         {
             SafeModel safe = _safes.FindById(Model.SafeId);
             if ((safe != null) && safe.IsOpen)

@@ -395,8 +395,8 @@
 
 	protected override async ValueTask OnClosingPageAsync()
 	{
-		await base.OnClosingPageAsync();
 		_allowNoteContentChanges = false;
+		await base.OnClosingPageAsync();
 		WeakReferenceMessenger.Default.Unregister<KeepScreenOnChangedMessage>(this);
 		if (_jsModule != null)
 			await _jsModule.DisposeAsync();
