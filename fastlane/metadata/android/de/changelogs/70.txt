@@ -1,0 +1,7 @@
+SilentNotes version 8.0.0
+
+* Portiert nach Blazor Hybrid (Maui/WASM).
+* Zahlreiche GUI Verbesserungen.
+* Dynamische Baumdarstellung zum filtern nach Schlagwörtern.
+* Sortierung der Notizen optimiert für mobile Geräte.
+* Problem mit NextCloud Zertifikaten auf Android gelöst.
