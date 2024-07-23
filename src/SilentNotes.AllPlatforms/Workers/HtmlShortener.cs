@@ -26,6 +26,8 @@ namespace SilentNotes.Workers
         // Sorted list of tags which are affecting the maximum number of tags / maximum length
         private static string[] _relevantTagNames = { "blockquote", "dd", "div", "dt", "h1", "h2", "h3", "h4", "li", "p", "pre", "table" };
 
+        private static string _linkTagName = "a";
+
         /// <summary>
         /// Initializes a new instance of the <see cref="HtmlShortener"/> class.
         /// </summary>
@@ -76,6 +78,33 @@ namespace SilentNotes.Workers
 
             string result = BuildShortenedContent(content, lastItem, branchToLastItem);
             return result;
+        }
+
+        public string DisableLinks(string content)
+        {
+            if (content == null)
+                return content;
+
+            // Find all tags and their names
+            List<Match> tags = EnumerateTags(content).ToList();
+            string[] tagNames = tags.Select(tag => GetLowerCaseTagName(tag.Value)).ToArray();
+
+            if (!tagNames.Contains(_linkTagName))
+                return content;
+
+            // Replace link tags with span tags, working from the end to the start.
+            var result = new StringBuilder(content);
+            for (int index = tags.Count - 1; index >= 0; index--)
+            {
+                if (tagNames[index] == _linkTagName)
+                {
+                    Match tag = tags[index];
+                    int startOfTagName = tag.Index + tag.Value.IndexOf(_linkTagName);
+                    result.Remove(startOfTagName, _linkTagName.Length);
+                    result.Insert(startOfTagName, "span");
+                }
+            }
+            return result.ToString();
         }
 
         /// <summary>

@@ -134,5 +134,29 @@ namespace SilentNotesTest.Workers
             string result = shortener.Shorten("<p>aaa</p><div/><p>bbb</p><br><p>ccc</p><br/><p>ddd</p><p>eee</p>");
             Assert.AreEqual("<p>aaa</p><div/><p>bbb</p><br><p>ccc</p><br/><p>ddd</p>", result);
         }
+
+        [Test]
+        public void DeactivateLinks_ReplacesAnchorTagsWithSpanTags()
+        {
+            HtmlShortener shortener = new HtmlShortener { MinimumLengthForShortening = 1, WantedTagNumber = 5 };
+            string result = shortener.DisableLinks("<p>aaa <a href='https://sbb.ch'>SBB</a> bbb</p>");
+            Assert.AreEqual("<p>aaa <span href='https://sbb.ch'>SBB</span> bbb</p>", result);
+
+            // Empty anchor tag
+            result = shortener.DisableLinks("<p>aaa <a></a> bbb</p>");
+            Assert.AreEqual("<p>aaa <span></span> bbb</p>", result);
+
+            // Uncommon formatted tag
+            result = shortener.DisableLinks("< a  href = '#' ></ a >");
+            Assert.AreEqual("< span  href = '#' ></ span >", result);
+
+            // Without link tag
+            result = shortener.DisableLinks("<p>aaa <div></div> bbb</p>");
+            Assert.AreEqual("<p>aaa <div></div> bbb</p>", result);
+
+            // Tag with child tag
+            result = shortener.DisableLinks("<a href='#'><img src=''/></a>");
+            Assert.AreEqual("<span href='#'><img src=''/></span>", result);
+        }
     }
 }

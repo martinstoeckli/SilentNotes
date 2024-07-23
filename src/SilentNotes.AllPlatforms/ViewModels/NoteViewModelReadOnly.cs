@@ -111,11 +111,12 @@ namespace SilentNotes.ViewModels
             {
                 // Create a short version for large notes, with only the first part of the note.
                 // This is a performance improvement if there are large notes in the repository.
-                HtmlShortener shortener = new HtmlShortener();
+                var shortener = new HtmlShortener();
                 shortener.WantedLength = 600; // Should be enough even for settings with
                 shortener.WantedTagNumber = 20; // small font and very height notes.
 
                 result = shortener.Shorten(result);
+                result = shortener.DisableLinks(result);
             }
             return result;
         }
