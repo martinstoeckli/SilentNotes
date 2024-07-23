@@ -343,13 +343,13 @@ jobs:
     - name: Download files for publishing
       uses: actions/download-artifact@v3
       with:
-        name: silentnotes_arm_binaries
+        name: silentnotes_android_arm_binaries
         path: downloaddirectory
 
     - name: Download files for publishing
       uses: actions/download-artifact@v3
       with:
-        name: silentnotes_x64_binaries
+        name: silentnotes_android_x64_binaries
         path: downloaddirectory
 
     - name: Collect files for publishing
