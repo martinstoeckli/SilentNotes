@@ -60,6 +60,30 @@ namespace SilentNotes.Crypto
         }
 
         /// <summary>
+        /// Gets a base64 encoded string from a given text.
+        /// </summary>
+        /// <param name="text">Unencoded text.</param>
+        /// <returns>Base64 encoded text, or null if <paramref name="text"/> was null.</returns>
+        public static string StringToBase64String(string text)
+        {
+            if (text == null)
+                return null;
+            return BytesToBase64String(StringToBytes(text));
+        }
+
+        /// <summary>
+        /// Gets a text from a base64 encoded string.
+        /// </summary>
+        /// <param name="base64Text">Encoded text.</param>
+        /// <returns>Decoded text, or null if <paramref name="base64Text"/> was null.</returns>
+        public static string Base64StringToString(string base64Text)
+        {
+            if (base64Text == null)
+                return null;
+            return BytesToString(Base64StringToBytes(base64Text));
+        }
+
+        /// <summary>
         /// Sets the content of an array to zero.
         /// </summary>
         /// <typeparam name="T">Type of the array to clean.</typeparam>
