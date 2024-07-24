@@ -1,0 +1,4 @@
+SilentNotes version 8.0.1
+
+* Fixed problem with showing the open safe dialog, when clicking encrypted note.
+* Fixed problem with Dropbox synchronization (only Android).

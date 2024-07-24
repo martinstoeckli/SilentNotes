@@ -1,0 +1,4 @@
+SilentNotes version 8.0.0
+
+* Problem behoben mit der Anzeige des Tresor öffnen Dialogs, beim Klick auf verschlüsselte Notiz.
+* Problem behoben mit der Dropbox Synchronisation (nur Android).
