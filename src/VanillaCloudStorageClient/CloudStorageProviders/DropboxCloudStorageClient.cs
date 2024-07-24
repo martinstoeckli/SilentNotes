@@ -107,7 +107,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
                 byte[] result = await GetFlurl().Request(DownloadUrl)
                     .WithOAuthBearerToken(credentials.Token.AccessToken)
                     .WithHeader("Dropbox-API-Arg", jsonPathParameter)
-                    .PostAsync(null)
+                    .GetAsync() // On Android Post does not work anymore
                     .ReceiveBytes();
 
                 return result;
