@@ -1,9 +1,10 @@
 ﻿@attribute [Route(RouteNames.OpenSafe)]
-@attribute [Route(RouteNames.OpenSafe + "/{TargetRoute}")]
+@attribute [Route(RouteNames.OpenSafe + "/target/{TargetRouteBase64}")]
 @inherits PageBase
 
 @using System.ComponentModel;
 @using System.Security
+@using SilentNotes.Crypto
 @using SilentNotes.Models
 @using SilentNotes.ViewModels
 @using SilentNotes.Views
@@ -119,7 +120,7 @@
 	protected override void OnParametersSet()
 	{
 		IsPasswordVisible = false;
-		ViewModel = new OpenSafeViewModel(LanguageService, Navigation, FeedbackService, RandomService, SettingsService, RepositoryService, TargetRoute);
+		ViewModel = new OpenSafeViewModel(LanguageService, Navigation, FeedbackService, RandomService, SettingsService, RepositoryService, CryptoUtils.Base64StringToString(TargetRouteBase64));
 		_secureStringConverter = new SecureStringConverter();
 	}
 
@@ -149,7 +150,7 @@
 	}
 
 	[Parameter]
-	public string TargetRoute { get; set; } = default!;
+	public string TargetRouteBase64 { get; set; } = default!;
 
 	/// <summary>
 	/// Gets or sets a value indicating whether the plaintext of the password is shown.

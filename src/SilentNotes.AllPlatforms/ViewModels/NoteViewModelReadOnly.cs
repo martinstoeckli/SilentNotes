@@ -259,7 +259,7 @@ namespace SilentNotes.ViewModels
             {
                 string routeForUnlockedNote = RouteNames.Combine(Model.NoteType.GetRouteName(), Id);
                 if (IsLocked)
-                    return RouteNames.Combine(RouteNames.OpenSafe, "target", routeForUnlockedNote);
+                    return RouteNames.Combine(RouteNames.OpenSafe, "target", CryptoUtils.StringToBase64String(routeForUnlockedNote));
                 else
                     return routeForUnlockedNote;
             }
