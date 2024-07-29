@@ -4,7 +4,9 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
-using System.Runtime.CompilerServices;
+using System.Buffers.Binary;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace SilentNotes.Workers
 {
@@ -59,16 +61,48 @@ namespace SilentNotes.Workers
         /// </summary>
         /// <remarks>The function guarantees that no integer overflow can happen.</remarks>
         /// <param name="hashCodes">Enumeration of hash codes to combine.</param>
+        /// <param name="withOldHashCode">Optional base hash code. If specified, the new hash is
+        /// combined with the old hash value, making chaining possible.</param>
         /// <returns>Hash code calculated from the list of hash codes.</returns>
-        public static long CombineHashCodes(IEnumerable<long> hashCodes)
+        public static long CombineHashCodes(IEnumerable<long> hashCodes, long withOldHashCode = 0)
         {
             unchecked
             {
-                long result = 0;
+                long result = withOldHashCode;
                 foreach (long hashCode in hashCodes)
                     result = (result * 397) ^ hashCode;
                 return result;
             }
+        }
+
+        /// <summary>
+        /// Calculates a hash code out of a string.
+        /// </summary>
+        /// <remarks>The function guarantees that no integer overflow can happen. It uses SHA256
+        /// to calculate the hash, giving the string a better collision resistance of 4 long hashes.</remarks>
+        /// <param name="text">The text to hash.</param>
+        /// <param name="withOldHashCode">Optional base hash code. If specified, the new hash is
+        /// combined with the old hash value, making chaining possible.</param>
+        /// <returns>Hash code calculated from the string.</returns>
+        public static long CombineWithStringHash(string text, long withOldHashCode = 0)
+        {
+            if (text == null)
+                return withOldHashCode;
+
+            Span<byte> textHashBytes;
+            using (var sha256 = SHA256.Create())
+            {
+                textHashBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(text));
+            }
+
+            // Convert 32 byte hash into 4 long values.
+            long[] hashCodes = new long[4];
+            for (int index = 0; index < 4; index++)
+            {
+                Span<byte> bytes = textHashBytes.Slice(index * 8, 8);
+                hashCodes[index] =  BinaryPrimitives.ReadInt64BigEndian(bytes);
+            }
+            return CombineHashCodes(hashCodes, withOldHashCode);
         }
     }
 }

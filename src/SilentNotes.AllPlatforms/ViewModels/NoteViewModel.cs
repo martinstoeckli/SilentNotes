@@ -96,15 +96,19 @@ namespace SilentNotes.ViewModels
             // - Tags can have been added or removed.
             // - The states (pinned, shopping mode) can have been changed.
             // - The color can have been changed.
-            return ModificationDetector.CombineHashCodes(new long[]
+            long result = ModificationDetector.CombineHashCodes(new long[]
             {
-                string.GetHashCode(noteViewModel.UnlockedHtmlContent),
                 string.GetHashCode(noteViewModel.BackgroundColorHex),
                 noteViewModel.IsPinned.GetHashCode(),
                 noteViewModel.ShoppingModeActive.GetHashCode(),
-                ModificationDetector.CombineHashCodes(
-                    noteViewModel.Tags.Select(tag => (long)string.GetHashCode(tag))),
             });
+
+            foreach (var tag in noteViewModel.Tags)
+            {
+                result = ModificationDetector.CombineWithStringHash(tag, result);
+            }
+            result = ModificationDetector.CombineWithStringHash(noteViewModel.UnlockedHtmlContent, result);
+            return result;
         }
 
         /// <inheritdoc/>

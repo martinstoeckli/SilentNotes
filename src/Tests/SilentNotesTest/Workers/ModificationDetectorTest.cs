@@ -61,5 +61,32 @@ namespace SilentNotesTest.Workers
         {
             Assert.DoesNotThrow(() => ModificationDetector.CombineHashCodes(new long[] { long.MaxValue, long.MaxValue }));
         }
+
+        [Test]
+        public void CombineHashCodes_ChainingUsesOriginalHashCode()
+        {
+            long originalHashCode = ModificationDetector.CombineHashCodes(new long[] { 11, 88, 99 });
+            long hashCode = ModificationDetector.CombineHashCodes(new long[] { 77 }, originalHashCode);
+            Assert.AreNotEqual(originalHashCode, hashCode);
+        }
+
+        [Test]
+        public void CombineWithStringHash_UsesSha()
+        {
+            long hashCode = ModificationDetector.CombineWithStringHash("the lazy fox", 0);
+            Assert.AreEqual(4208979722577018513, hashCode); // This hash is reproduceable
+        }
+
+        [Test]
+
+        public void CombineWithStringHash_WorksWithNull()
+        {
+            long hashCode = ModificationDetector.CombineWithStringHash(null, 88);
+            Assert.AreEqual(88, hashCode); // orignal hash unchanged
+
+            // Empty string is not the same as null
+            hashCode = ModificationDetector.CombineWithStringHash(string.Empty, 0);
+            Assert.AreEqual(655463537771531689, hashCode); // No crash, reproduceable hash
+        }
     }
 }
