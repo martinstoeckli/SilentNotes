@@ -24,7 +24,16 @@ namespace SilentNotes.WinUI
                 otherInstance.RedirectActivationToAsync(activatedEventArgs).AsTask().Wait();
                 System.Diagnostics.Process.GetCurrentProcess().Kill();
             }
+            AdjustWebviewLanguage();
             this.InitializeComponent();
+        }
+
+        private static void AdjustWebviewLanguage()
+        {
+            // Workaround: On Windows we have to convince the WebView to use the user language (e.g. for auto correction).
+            string userLanguage = Windows.System.UserProfile.GlobalizationPreferences.Languages.FirstOrDefault();
+            string environmentVariable = "--lang=" + userLanguage;
+            Environment.SetEnvironmentVariable("WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS", environmentVariable);
         }
 
         protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();
