@@ -138,9 +138,10 @@
 		base.OnCloseMenuOrDialog();
 		bool result = false;
 
-		if (_overflowMenu.IsOpen)
+		if (_overflowMenu.Open)
 		{
-			_overflowMenu.CloseMenu();
+			// todo: test
+			_ = _overflowMenu.CloseMenuAsync();
 			result = true;
 		}
 

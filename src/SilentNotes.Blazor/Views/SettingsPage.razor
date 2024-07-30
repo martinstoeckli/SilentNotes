@@ -92,7 +92,7 @@
 				<div><MudIcon Icon="@Icons.Material.Filled.ImagesearchRoller" Color="Color.Secondary" /></div>
 				<div>
 					<MudStack Row="true" AlignItems="AlignItems.Center">
-						<MudSwitch @bind-Checked="@ViewModel.UseWallpaper" Color="Color.Tertiary" UnCheckedColor="@GetSwitchUncheckedColor()" />
+						<MudSwitch @bind-Value="@ViewModel.UseWallpaper" Color="Color.Tertiary" UncheckedColor="@GetSwitchUncheckedColor()" />
 
 						<MudCarousel @bind-SelectedIndex="ViewModel.SelectedWallpaperIndex" ItemsSource="@ThemeService.Wallpapers"
 							Class="mud-width-full" Style="height:100px;" ShowArrows="true" ShowBullets="false" EnableSwipeGesture="true" AutoCycle="false" TData="WallpaperModel">
@@ -121,10 +121,10 @@
 				<div></div>
 				<div>
 					<MudStack Row="true" AlignItems="AlignItems.Center">
-						<MudSwitch @bind-Checked="@ViewModel.UseSolidColorTheme" Color="Color.Tertiary" UnCheckedColor="@GetSwitchUncheckedColor()" />
+						<MudSwitch @bind-Value="@ViewModel.UseSolidColorTheme" Color="Color.Tertiary" UncheckedColor="@GetSwitchUncheckedColor()" />
 
 						<MudColorPicker @ref="_clpSolidTheme" @bind-Text="@ViewModel.ColorForSolidThemeHex"
-							DisableToolbar="true" DisableAlpha="true"
+							ShowToolbar="false" ShowAlpha="false"
 							Label="@LanguageService["gui_theme_solid_color"]"
 							ColorPickerMode="ColorPickerMode.HEX"
 							AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
@@ -132,7 +132,7 @@
 						<MudButton
 							Class="color-swatch inline-flex"
 							Style="@GetBackgroundColorStyle(ViewModel.ColorForSolidThemeHex)"
-							OnClick="@(() => _clpSolidTheme.Open())">
+							OnClick="@(() => _clpSolidTheme.OpenAsync())">
 							<MudIcon Icon="@Icons.Material.Filled.ColorLens" Class="@ViewModel.GetDarkClass(ViewModel.ColorForSolidThemeHex)" />
 						</MudButton>
 					</MudStack>
@@ -141,10 +141,10 @@
 				<div></div>
 				<div>
 					<MudStack Row="true" AlignItems="AlignItems.Center">
-						<MudSwitch @bind-Checked="@ViewModel.UseColorForAllNotesInDarkMode" Color="Color.Tertiary" UnCheckedColor="@GetSwitchUncheckedColor()" />
+						<MudSwitch @bind-Value="@ViewModel.UseColorForAllNotesInDarkMode" Color="Color.Tertiary" UncheckedColor="@GetSwitchUncheckedColor()" />
 
 						<MudColorPicker @ref="_clpAllNotesInDarkMode" @bind-Text="@ViewModel.ColorForAllNotesInDarkModeHex"
-							DisableToolbar="true" DisableAlpha="true"
+							ShowToolbar="false" ShowAlpha="false"
 							Label="@LanguageService["gui_theme_color_all_dark"]"
 							ColorPickerMode="ColorPickerMode.HEX"
 							AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
@@ -152,7 +152,7 @@
 						<MudButton
 							Class="color-swatch inline-flex"
 							Style="@GetBackgroundColorStyle(ViewModel.ColorForAllNotesInDarkModeHex)"
-							OnClick="@(() => _clpAllNotesInDarkMode.Open())">
+							OnClick="@(() => _clpAllNotesInDarkMode.OpenAsync())">
 							<MudIcon Icon="@Icons.Material.Filled.ColorLens" Class="@ViewModel.GetDarkClass(ViewModel.ColorForAllNotesInDarkModeHex)" />
 						</MudButton>
 					</MudStack>
@@ -162,7 +162,7 @@
 				<div>
 					<MudStack Row="true" AlignItems="AlignItems.Center">
 						<MudColorPicker @ref="_clpDefaultNoteColor" @bind-Text="ViewModel.DefaultNoteColorHex"
-							DisableToolbar="true" DisableAlpha="true"
+							ShowToolbar="false" ShowAlpha="false"
 							ColorPickerView="ColorPickerView.Palette"
 							Label="@LanguageService["gui_default_color"]"
 							AnchorOrigin="Origin.BottomLeft" TransformOrigin="Origin.TopLeft"
@@ -171,7 +171,7 @@
 						<MudButton
 							Class="color-swatch inline-flex"
 							Style="@GetBackgroundColorStyle(ViewModel.DefaultNoteColorHex)"
-							OnClick="@(() => _clpDefaultNoteColor.Open())">
+							OnClick="@(() => _clpDefaultNoteColor.OpenAsync())">
 							<MudIcon Icon="@Icons.Material.Filled.ColorLens" Class="@ViewModel.GetDarkClass(ViewModel.DefaultNoteColorHex)" />
 						</MudButton>
 					</MudStack>
@@ -210,7 +210,7 @@
 				@* Hide closed safe notes *@
 				<div></div>
 				<div>
-					<MudSwitch @bind-Checked="@ViewModel.HideClosedSafeNotes"
+					<MudSwitch @bind-Value="@ViewModel.HideClosedSafeNotes"
 						Label="@LanguageService["gui_hide_closed_safe_notes"]" Color="Color.Tertiary" UnCheckedColor="@GetSwitchUncheckedColor()"/>
 				</div>
 
@@ -290,7 +290,7 @@
 				{
 					<div></div>
 					<div>
-						<MudSwitch @bind-Checked="@ViewModel.PreventScreenshots"
+						<MudSwitch @bind-Value="@ViewModel.PreventScreenshots"
 							Label="@LanguageService["security_prevent_screenshots"]" Color="Color.Tertiary" UnCheckedColor="@GetSwitchUncheckedColor()" />
 					</div>
 				}
@@ -336,9 +336,10 @@
 		base.OnCloseMenuOrDialog();
 		bool result = false;
 
-		if (_overflowMenu.IsOpen)
+		if (_overflowMenu.Open)
 		{
-			_overflowMenu.CloseMenu();
+			// todo: test
+			_ = _overflowMenu.CloseMenuAsync();
 			result = true;
 		}
 

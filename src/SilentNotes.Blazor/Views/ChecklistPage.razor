@@ -196,8 +196,8 @@ div.dark .detail-view.checklist .ProseMirror p::after { content: @(IconService.L
 
 			@foreach (var tag in ViewModel.Tags)
 			{
-				<MudChip Text="@tag" OnClose="@((chip) => ViewModel.DeleteTagCommand.Execute(chip.Text))"
-						 Variant="Variant.Filled" Size="Size.Medium" Color="Color.Primary" Label="true" />
+				<MudChip T="string" Text="@tag" OnClose="@((chip) => ViewModel.DeleteTagCommand.Execute(chip.Text))"
+					Variant="Variant.Filled" Size="Size.Medium" Color="Color.Primary" Label="true" />
 			}
 		</div>
 	</div>
@@ -273,7 +273,7 @@ div.dark .detail-view.checklist .ProseMirror p::after { content: @(IconService.L
 	private bool _allowNoteContentChanges;
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="NotePage"/> class.
+	/// Initializes a new instance of the <see cref="ChecklistPage"/> class.
 	/// </summary>
 	public ChecklistPage()
 	{
@@ -387,9 +387,10 @@ div.dark .detail-view.checklist .ProseMirror p::after { content: @(IconService.L
 		base.OnCloseMenuOrDialog();
 		bool result = false;
 
-		if (_overflowMenu.IsOpen)
+		if (_overflowMenu.Open)
 		{
-			_overflowMenu.CloseMenu();
+			// todo: test
+			_overflowMenu.CloseMenuAsync();
 			result = true;
 		}
 		if (SearchToolbarOpen)
@@ -494,7 +495,7 @@ div.dark .detail-view.checklist .ProseMirror p::after { content: @(IconService.L
 		}
 	}
 
-	private Task<IEnumerable<string>> GetNewTagSuggestions(string value)
+	private Task<IEnumerable<string>> GetNewTagSuggestions(string value, CancellationToken token)
 	{
 		// If text is null or empty, show complete list
 		if (string.IsNullOrWhiteSpace(value))

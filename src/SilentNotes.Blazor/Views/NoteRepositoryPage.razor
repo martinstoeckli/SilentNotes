@@ -98,7 +98,7 @@
 
 			<MudMenuItem OnAction="@(() => Navigation.NavigateTo(RouteNames.TransferCodeHistory))" Icon="@IconService[IconNames.Key]">@LanguageService["show_transfer_code"]</MudMenuItem>
 			<MudMenuItem OnAction="@(() => Navigation.NavigateTo(RouteNames.Settings))" Icon="@IconService[IconNames.Settings]">@LanguageService["show_settings"]</MudMenuItem>
-			<MudMenuItem OnAction="@(() => Navigation.NavigateTo(RouteNames.Info))" ForceLoad="false" Icon="@Icons.Material.Filled.Info">@LanguageService["show_info"]</MudMenuItem>
+			<MudMenuItem OnClick="@(() => Navigation.NavigateTo(RouteNames.Info))" ForceLoad="false" Icon="@Icons.Material.Filled.Info">@LanguageService["show_info"]</MudMenuItem>
 		</span></ChildContent>
 	</MudMenu>
 </MudAppBar>
@@ -127,7 +127,7 @@
 		</MudDrawerHeader>
 		<MudDivider Class="my-2" />
 		<MudDrawerContainer Style="height: 100%; overflow: auto;">
-			<MudTreeView id="tagTree"
+@*			<MudTreeView id="tagTree"
 				Items="ViewModel.TagsRootNode.Children"
 				ServerData="TagTreeItemViewModel.LoadData"
 				Color="Color.Tertiary">
@@ -137,7 +137,7 @@
 						Value="@context" Text="@context.Title"
 						OnClick="@(() => ViewModel.SelectTagNodeCommand.Execute(context))"
 						CanExpand="@context.CanExpand"
-						Activated="@context.IsSelected"
+						Selected="@context.IsSelected"
 						Icon="@GetTagIcon(context)" IconColor="@GetTagIconColor(context)">
 						<BodyContent Context="bodyContext">
 							<MudText Color="@GetTagIconColor(context)">@context.Title</MudText>
@@ -145,6 +145,7 @@
 					</MudTreeViewItem>
 				</ItemTemplate>
 			</MudTreeView>
+			*@
 		</MudDrawerContainer>
 	</MudDrawer>
 </MudSwipeArea>
@@ -344,19 +345,22 @@
 		base.OnCloseMenuOrDialog();
 		bool result = false;
 
-		if (_overflowMenu.IsOpen)
+		if (_overflowMenu.Open)
 		{
-			_overflowMenu.CloseMenu();
+			// todo: test
+			_ = _overflowMenu.CloseMenuAsync();
 			result = true;
 		}
-		if (_fabMenu.IsOpen)
+		if (_fabMenu.Open)
 		{
-			_fabMenu.CloseMenu();
+			// todo: test
+			_ = _fabMenu.CloseMenuAsync();
 			result = true;
 		}
 
-		if (result)
-			StateHasChanged();
+		// todo: nicht mehr nötig?
+		// if (result)
+		// 	StateHasChanged();
 		return result;
 	}
 

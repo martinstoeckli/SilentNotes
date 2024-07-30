@@ -55,12 +55,12 @@
 
 			@if (ViewModel.NeedsSecureFlag)
 			{
-				<MudCheckBox @bind-Checked="@ViewModel.Secure" Label="@LanguageService["cloud_secure"]" />
+				<MudCheckBox @bind-Value="@ViewModel.Secure" Label="@LanguageService["cloud_secure"]" />
 			}
 
 			@if (ViewModel.NeedsAcceptUnsafeCertificate)
 			{
-				<MudCheckBox @bind-Checked="@ViewModel.AcceptInvalidCertificate" Label="@LanguageService["cloud_accept_invalid_certificate"]" />
+				<MudCheckBox @bind-Value="@ViewModel.AcceptInvalidCertificate" Label="@LanguageService["cloud_accept_invalid_certificate"]" />
 			}
 		</MudForm>
 

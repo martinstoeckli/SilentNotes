@@ -43,7 +43,7 @@ namespace SilentNotes.ViewModels
         /// Gets a list of child nodes. The list can be empty if no children exist for this node.
         /// The setter is only available because MudBlazor requires it to bind to this property.
         /// </summary>
-        public HashSet<ITreeItemViewModel> Children { get; set; }
+        public List<ITreeItemViewModel> Children { get; set; }
 
         /// <summary>
         /// Populates the <see cref="Children"/> list, if not already loaded.

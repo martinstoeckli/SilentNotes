@@ -213,8 +213,8 @@
 
 			@foreach (var tag in ViewModel.Tags)
 			{
-				<MudChip Text="@tag" OnClose="@((chip) => ViewModel.DeleteTagCommand.Execute(chip.Text))"
-						 Variant="Variant.Filled" Size="Size.Medium" Color="Color.Primary" Label="true" />
+				<MudChip T="string" Text="@tag" OnClose="@((chip) => ViewModel.DeleteTagCommand.Execute(chip.Text))"
+					Variant="Variant.Filled" Size="Size.Medium" Color="Color.Primary" Label="true" />
 			}
 		</div>
 	</div>
@@ -423,9 +423,10 @@
 		base.OnCloseMenuOrDialog();
 		bool result = false;
 
-		if (_overflowMenu.IsOpen)
+		if (_overflowMenu.Open)
 		{
-			_overflowMenu.CloseMenu();
+			// todo: test
+			_ = _overflowMenu.CloseMenuAsync();
 			result = true;
 		}
 		if (SearchToolbarOpen)
@@ -565,7 +566,7 @@
 		}
 	}
 
-	private Task<IEnumerable<string>> GetNewTagSuggestions(string value)
+	private Task<IEnumerable<string>> GetNewTagSuggestions(string value, CancellationToken token)
 	{
 		// If text is null or empty, show complete list
 		if (string.IsNullOrWhiteSpace(value))
