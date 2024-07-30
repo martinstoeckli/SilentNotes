@@ -24,16 +24,29 @@ namespace SilentNotes.WinUI
                 otherInstance.RedirectActivationToAsync(activatedEventArgs).AsTask().Wait();
                 System.Diagnostics.Process.GetCurrentProcess().Kill();
             }
-            AdjustWebviewLanguage();
+
+            // Workaround: On Windows we have to convince the WebView to use the user language (e.g. for auto correction).
+            string userLanguage = Windows.System.UserProfile.GlobalizationPreferences.Languages.FirstOrDefault();
+            AddAdditionalBrowserArguments("--lang", userLanguage);
+            AddAdditionalBrowserArguments("--disable-features", "msSmartScreenProtection");
+
             this.InitializeComponent();
         }
 
-        private static void AdjustWebviewLanguage()
+        /// <summary>
+        /// Adds a new variable to the WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS in the Environment.
+        /// </summary>
+        /// <param name="name">Name of the variable.</param>
+        /// <param name="value">Value of the variable.</param>
+        private static void AddAdditionalBrowserArguments(string name, string value)
         {
-            // Workaround: On Windows we have to convince the WebView to use the user language (e.g. for auto correction).
-            string userLanguage = Windows.System.UserProfile.GlobalizationPreferences.Languages.FirstOrDefault();
-            string environmentVariable = "--lang=" + userLanguage;
-            Environment.SetEnvironmentVariable("WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS", environmentVariable);
+            var arguments = new string[]
+            {
+                Environment.GetEnvironmentVariable("WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS"), // old arguments
+                name + "=" + value, // new argument
+            };
+            string combinedArguments = string.Join(" ", arguments.Where(part => !string.IsNullOrEmpty(part)));
+            Environment.SetEnvironmentVariable("WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS", combinedArguments);
         }
 
         protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();
