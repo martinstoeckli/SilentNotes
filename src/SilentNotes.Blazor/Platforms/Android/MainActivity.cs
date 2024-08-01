@@ -118,10 +118,6 @@ namespace SilentNotes
                     navigation.NavigateTo(message.BackRoute);
                     return true;
                 }
-
-                // todo: Prevent the app from closing until this issue is solved:
-                // https://github.com/dotnet/maui/issues/22819#issuecomment-2200668597
-                return true;
             }
             return base.DispatchKeyEvent(e);
         }
