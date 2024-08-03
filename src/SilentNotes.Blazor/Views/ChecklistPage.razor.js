@@ -21,8 +21,10 @@ export function initialize(dotnetPage, editorContainer, shoppingModeActive) {
 
 // Finalizes the prosemirror editor
 export function finalize() {
-    _editor?.off('selectionUpdate', onSelectionUpdate);
-    _editor?.off('update', onUpdate);
+    if (_editor) {
+        _editor.off('selectionUpdate', onSelectionUpdate);
+        _editor.off('update', onUpdate);
+    }
     _page = null;
     _editor = null;
 }
@@ -39,15 +41,16 @@ function onUpdate(editor) {
 // declared pre rendered as javascript and therefore would occupy memory twice.
 export function setNoteContent(text) {
     try {
-        _editor?.chain().setMeta('addToHistory', false).setContent(text).scrollToTop().run();
+        _editor.chain().setMeta('addToHistory', false).setContent(text).scrollToTop().run();
     }
     catch (ex) {
-        _editor?.setEditable(false);
+        _editor.setEditable(false);
     }
 }
 
 export function setEditable(editable) {
-    _editor?.setEditable(editable);
+    if (_editor)
+        _editor.setEditable(editable);
 }
 
 export function setShoppingModeActive(shoppingModeActive) {
@@ -77,9 +80,9 @@ function onActiveFormatStateChanged() {
 }
 
 function onNoteContentChanged() {
-    if (!_isBundlingNoteContentChanges) {
-        var noteContent = _editor?.getHTML();
-        _page?.invokeMethodAsync('SetNoteContent', noteContent);
+    if (!_isBundlingNoteContentChanges && _editor && _page) {
+        var noteContent = _editor.getHTML();
+        _page.invokeMethodAsync('SetNoteContent', noteContent);
     }
 }
 
@@ -96,11 +99,11 @@ function bundleNoteContentChanged(delegate) {
 }
 
 export function undo() {
-    _editor?.commands.undo();
+    _editor.commands.undo();
 }
 
 export function redo() {
-    _editor?.commands.redo();
+    _editor.commands.redo();
 }
 
 export function search(searchPattern) {
