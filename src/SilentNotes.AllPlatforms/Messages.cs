@@ -81,6 +81,13 @@ namespace SilentNotes
     }
 
     /// <summary>
+    /// Message to inform the current page that the startup synchronization has finished.
+    /// </summary>
+    public class SynchronizationAtStartupFinishedMessage
+    {
+    }
+
+    /// <summary>
     /// This message can be used to signal that a given note should be brought into view.
     /// </summary>
     internal class BringNoteIntoViewMessage

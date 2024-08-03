@@ -27,7 +27,7 @@ namespace SilentNotes.Platforms.Services
                 return;
 
             // Still running from startup?
-            if (IsBackgroundSynchronizationRunning)
+            if (IsStartupSynchronizationRunning)
                 return;
 
             IInternetStateService internetStateService = serviceProvider.GetService<IInternetStateService>();
@@ -59,7 +59,7 @@ namespace SilentNotes.Platforms.Services
         /// <inheritdoc/>
         public override void StopAutoSynchronization(IServiceProvider serviceProvider)
         {
-            IsBackgroundSynchronizationRunning = false;
+            IsStartupSynchronizationRunning = false;
         }
     }
 }

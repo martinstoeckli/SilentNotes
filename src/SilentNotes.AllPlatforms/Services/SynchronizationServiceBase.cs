@@ -20,7 +20,7 @@ namespace SilentNotes.Services
         /// <inheritdoc/>
         public async Task SynchronizeManually(IServiceProvider serviceProvider)
         {
-            if (IsBackgroundSynchronizationRunning)
+            if (IsStartupSynchronizationRunning)
                 return;
 
             // Ignore last fingerprint optimization, because it is triggered by the user
@@ -40,7 +40,7 @@ namespace SilentNotes.Services
         /// <inheritdoc/>
         public async Task SynchronizeManuallyChangeCloudStorage(IServiceProvider serviceProvider)
         {
-            if (IsBackgroundSynchronizationRunning)
+            if (IsStartupSynchronizationRunning)
                 return;
 
             // Always start a new story, ignore last fingerprint, because it is triggered by the user
@@ -73,7 +73,7 @@ namespace SilentNotes.Services
             if (IsWaitingForOAuthRedirect)
                 return;
 
-            IsBackgroundSynchronizationRunning = true;
+            IsStartupSynchronizationRunning = true;
             try
             {
                 ILanguageService languageService = serviceProvider.GetService<ILanguageService>();
@@ -121,7 +121,8 @@ namespace SilentNotes.Services
             }
             finally
             {
-                IsBackgroundSynchronizationRunning = false;
+                IsStartupSynchronizationRunning = false;
+                WeakReferenceMessenger.Default.Send<SynchronizationAtStartupFinishedMessage>();
             }
         }
 
@@ -137,11 +138,8 @@ namespace SilentNotes.Services
         /// <inheritdoc/>
         public bool IsWaitingForOAuthRedirect { get; set; }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether a synchronization is running, which was started
-        /// automatically at the start or the end of the application.
-        /// </summary>
-        protected bool IsBackgroundSynchronizationRunning { get; set; }
+        /// <inheritdoc/>
+        public bool IsStartupSynchronizationRunning { get; set; }
 
         /// <summary>
         /// Gets or sets a fingerprint of the last synchronization, which allows to detect whether

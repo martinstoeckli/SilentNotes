@@ -30,9 +30,9 @@ namespace SilentNotes.Platforms.Services
                 return Task.CompletedTask;
 
             // Still running from startup?
-            if (IsBackgroundSynchronizationRunning)
+            if (IsStartupSynchronizationRunning)
                 return Task.CompletedTask;
-            IsBackgroundSynchronizationRunning = true; // cannot be reset to false (no return to GUI thread), wait on stop() of next startup
+            IsStartupSynchronizationRunning = true; // cannot be reset to false (no return to GUI thread), wait on stop() of next startup
 
             IAppContextService appContext = serviceProvider.GetService<IAppContextService>();
             IInternetStateService internetStateService = serviceProvider.GetService<IInternetStateService>();
@@ -74,7 +74,7 @@ namespace SilentNotes.Platforms.Services
         /// <inheritdoc/>
         public override void StopAutoSynchronization(IServiceProvider serviceProvider)
         {
-            IsBackgroundSynchronizationRunning = false;
+            IsStartupSynchronizationRunning = false;
             IAppContextService appContext = serviceProvider.GetService<IAppContextService>();
             WorkManager workManager = WorkManager.GetInstance(appContext.Context);
             workManager.CancelAllWorkByTag(ListenableSynchronizationWorker.TAG);
