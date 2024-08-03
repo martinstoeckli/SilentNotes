@@ -40,6 +40,12 @@ namespace SilentNotes.Platforms
 
             // Check for arguments passed by the ActionSendActivity.
             ConsumeActionSendIntentParameter(activity.Intent);
+
+            // Prevent notes from being visible in list of recent apps and screenshots
+            ISettingsService settingsService = Ioc.Instance.GetService<ISettingsService>();
+            SettingsModel settings = settingsService.LoadSettingsOrDefault();
+            if (settings.PreventScreenshots)
+                Ioc.Instance.GetService<IEnvironmentService>().Screenshots.PreventScreenshots = true;
         }
 
         /// <inheritdoc/>
