@@ -38,7 +38,7 @@
 	}
 
 	.color-swatch {
-		height: 36px;
+		height: 44px;
 		margin-top: 4px;
 		margin-left: 6px;
 		padding: 6px;
@@ -81,7 +81,7 @@
 				@* Theme *@
 				<div><MudIcon Icon="@Icons.Material.Filled.LightMode" Color="Color.Secondary" /></div>
 				<div>
-					<MudSelect @bind-Value="ViewModel.SelectedThemeMode">
+					<MudSelect id="SelectedThemeMode" @bind-Value="ViewModel.SelectedThemeMode" Variant="Variant.Outlined">
 						<MudSelectItem Value="@("Auto")">@LanguageService["gui_theme_auto"]</MudSelectItem>
 						<MudSelectItem Value="@("Dark")">@LanguageService["gui_theme_dark"]</MudSelectItem>
 						<MudSelectItem Value="@("Light")">@LanguageService["gui_theme_light"]</MudSelectItem>
@@ -120,12 +120,13 @@
 				@* Color pickers *@
 				<div></div>
 				<div>
+					<label for="ColorForSolidThemeHex">@LanguageService["gui_theme_solid_color"]</label>
 					<MudStack Row="true" AlignItems="AlignItems.Center">
 						<MudSwitch @bind-Checked="@ViewModel.UseSolidColorTheme" Color="Color.Tertiary" UnCheckedColor="@GetSwitchUncheckedColor()" />
 
-						<MudColorPicker @ref="_clpSolidTheme" @bind-Text="@ViewModel.ColorForSolidThemeHex"
+						<MudColorPicker id="ColorForSolidThemeHex" @ref="_clpSolidTheme" @bind-Text="@ViewModel.ColorForSolidThemeHex"
 							DisableToolbar="true" DisableAlpha="true"
-							Label="@LanguageService["gui_theme_solid_color"]"
+							Variant="Variant.Outlined"
 							ColorPickerMode="ColorPickerMode.HEX"
 							AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
 
@@ -140,12 +141,13 @@
 
 				<div></div>
 				<div>
+					<label for="ColorForAllNotesInDarkModeHex">@LanguageService["gui_theme_color_all_dark"]</label>
 					<MudStack Row="true" AlignItems="AlignItems.Center">
 						<MudSwitch @bind-Checked="@ViewModel.UseColorForAllNotesInDarkMode" Color="Color.Tertiary" UnCheckedColor="@GetSwitchUncheckedColor()" />
 
-						<MudColorPicker @ref="_clpAllNotesInDarkMode" @bind-Text="@ViewModel.ColorForAllNotesInDarkModeHex"
+						<MudColorPicker id="ColorForAllNotesInDarkModeHex" @ref="_clpAllNotesInDarkMode" @bind-Text="@ViewModel.ColorForAllNotesInDarkModeHex"
 							DisableToolbar="true" DisableAlpha="true"
-							Label="@LanguageService["gui_theme_color_all_dark"]"
+							Variant="Variant.Outlined"
 							ColorPickerMode="ColorPickerMode.HEX"
 							AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
 
@@ -160,11 +162,12 @@
 
 				<div></div>
 				<div>
+					<label for="DefaultNoteColorHex">@LanguageService["gui_default_color"]</label>
 					<MudStack Row="true" AlignItems="AlignItems.Center">
-						<MudColorPicker @ref="_clpDefaultNoteColor" @bind-Text="ViewModel.DefaultNoteColorHex"
+						<MudColorPicker id="DefaultNoteColorHex" @ref="_clpDefaultNoteColor" @bind-Text="ViewModel.DefaultNoteColorHex"
 							DisableToolbar="true" DisableAlpha="true"
+							Variant="Variant.Outlined"
 							ColorPickerView="ColorPickerView.Palette"
-							Label="@LanguageService["gui_default_color"]"
 							AnchorOrigin="Origin.BottomLeft" TransformOrigin="Origin.TopLeft"
 							Palette="@ViewModel.NoteColorsHex.Select(color => new MudColor(color))"/>
 
@@ -186,22 +189,24 @@
 				@* Font size *@
 				<div><MudIcon Icon="@Icons.Material.Filled.FormatSize" Color="Color.Secondary" /></div>
 				<div>
-					<MudSlider @bind-Value="ViewModel.FontSizeStep"
-						Min="-3" Max="4" Step="1" Color="Color.Tertiary">@LanguageService["gui_font_size"]</MudSlider>
+					<label for="FontSizeStep">@LanguageService["gui_font_size"]</label>
+					<MudSlider id="FontSizeStep" @bind-Value="ViewModel.FontSizeStep"
+						Min="-3" Max="4" Step="1" Color="Color.Tertiary"></MudSlider>
 				</div>
 
 				@* Note height *@
 				<div><MudIcon Icon="@Icons.Material.Filled.Expand" Color="Color.Secondary" /></div>
 				<div>
-					<MudSlider @bind-Value="ViewModel.NoteMaxHeightStep"
-						Min="-4" Max="4" Step="1" Color="Color.Tertiary">@LanguageService["gui_note_max_size"]</MudSlider>
+					<label for="NoteMaxHeightStep">@LanguageService["gui_note_max_size"]</label>
+					<MudSlider id="NoteMaxHeightStep" @bind-Value="ViewModel.NoteMaxHeightStep"
+						Min="-4" Max="4" Step="1" Color="Color.Tertiary"></MudSlider>
 				</div>
 
 				@* Insert at top bottom *@
 				<div><MudIcon Icon="@Icons.Material.Filled.SwapVert" Color="Color.Secondary" /></div>
 				<div>
-					<MudSelect @bind-Value="ViewModel.SelectedNoteInsertionMode"
-						Label="@LanguageService["gui_note_insertion"]">
+					<label for="SelectedNoteInsertionMode">@LanguageService["gui_note_insertion"]</label>
+					<MudSelect id="SelectedNoteInsertionMode" @bind-Value="ViewModel.SelectedNoteInsertionMode" Variant="Variant.Outlined">
 						<MudSelectItem Value="@("AtTop")">@LanguageService["gui_note_insertion_top"]</MudSelectItem>
 						<MudSelectItem Value="@("AtBottom")">@LanguageService["gui_note_insertion_bottom"]</MudSelectItem>
 					</MudSelect>
@@ -219,8 +224,9 @@
 				{
 					<div><MudIcon Icon="@Icons.Material.Outlined.Timer" Color="Color.Secondary" /></div>
 					<div>
-						<MudSlider @bind-Value="ViewModel.KeepScreenOnDuration"
-							Min="1" Max="30" Step="1" Color="Color.Tertiary">@ViewModel.KeepScreenOnDurationTitle</MudSlider>
+						<label for="KeepScreenOnDurationTitle">@ViewModel.KeepScreenOnDurationTitle</label>
+						<MudSlider id="KeepScreenOnDurationTitle" @bind-Value="ViewModel.KeepScreenOnDuration"
+							Min="1" Max="30" Step="1" Color="Color.Tertiary"></MudSlider>
 					</div>
 				}
 			</div>
@@ -233,8 +239,8 @@
 				@* Synchronization mode *@
 				<div><MudIcon Icon="@Icons.Material.Filled.Sync" Color="Color.Secondary" /></div>
 				<div>
-					<MudSelect @bind-Value="ViewModel.SelectedAutoSyncMode"
-						Label="@LanguageService["sync_auto"]">
+					<label for="SelectedAutoSyncMode">@LanguageService["sync_auto"]</label>
+					<MudSelect id="SelectedAutoSyncMode" @bind-Value="ViewModel.SelectedAutoSyncMode" Variant="Variant.Outlined">
 						<MudSelectItem Value="@("Never")">@LanguageService["sync_auto_never"]</MudSelectItem>
 						<MudSelectItem Value="@("CostFreeInternetOnly")">@LanguageService["sync_auto_costfree"]</MudSelectItem>
 						<MudSelectItem Value="@("Always")">@LanguageService["sync_auto_always"]</MudSelectItem>
@@ -244,8 +250,8 @@
 				@* Online storage *@
 				<div><MudIcon Icon="@Icons.Material.Outlined.Cloud" Color="Color.Secondary" /></div>
 				<div>
+					<label>@LanguageService["cloud_service"]</label>
 					<MudPaper Elevation="1" Class="pa-4">
-						<MudText Typo="Typo.caption">@LanguageService["cloud_service"]</MudText>
 						<MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
 							@if (!ViewModel.ClearCloudSettingsDisabled)
 							{
@@ -276,8 +282,8 @@
 				@* Encryption algorithm *@
 				<div><MudIcon Icon="@Icons.Material.Outlined.Lock" Color="Color.Secondary" /></div>
 				<div>
-					<MudSelect @bind-Value="ViewModel.SelectedEncryptionAlgorithm"
-						Label="@LanguageService["encryption_algorithm"]">
+					<label for="SelectedEncryptionAlgorithm">@LanguageService["encryption_algorithm"]</label>
+					<MudSelect id="SelectedEncryptionAlgorithm" @bind-Value="ViewModel.SelectedEncryptionAlgorithm" Variant="Variant.Outlined">
 						@foreach (var algorithm in ViewModel.EncryptionAlgorithms)
 						{
 							<MudSelectItem Value="@algorithm.Value">@algorithm.Description</MudSelectItem>
