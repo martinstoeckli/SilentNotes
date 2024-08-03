@@ -155,38 +155,36 @@
 		<ul id="note-repository" class="note-list flex-column flex-sm-row">
 			@foreach (var note in ViewModel.FilteredNotes)
 			{
-				<li @key="note.Id" class="note-item" data-note="@note.Id">
-					<a href="@note.Route">
-						<div class="note-card mud-elevation-3 @note.LightOrDarkClass()" style="background-color:@note.BackgroundColorHex">
-							@if (note.IsLocked)
+				<li @key="note.Id" class="note-item" data-note="@note.Id" @onclick="() => Navigation.NavigateTo(note.Route)">
+					<div class="note-card mud-elevation-3 @note.LightOrDarkClass()" style="background-color:@note.BackgroundColorHex">
+						@if (note.IsLocked)
+						{
+							<div class="note-locked">@IconService.EmbedSvgLink(IconNames.LockOutline)</div>
+						}
+						else
+						{
+							@* prevent drag start with onmousedown:preventDefault *@
+							<div class="note-viewer over-view @note.CssClassNoteType" @onmousedown:preventDefault="true">@((MarkupString)note.GetShortenedUnlockedHtmlContent())</div>
+						}
+
+						@if (note.IsPinned)
+						{
+							<div class="pin">@IconService.EmbedSvgLink(IconNames.Pin, 22)</div>
+						}
+						<div class="note-handle note-handle-top @Css.BuildClass(new CssClassIf("bluish-highlighted", note == ViewModel.SelectedOrderNote))" @onmousedown="() => ViewModel.SelectOrderNote(note)" @onclick:stopPropagation="true">@IconService.EmbedSvgLink(IconNames.ArrowAll, 22)</div>
+						<div class="note-handle note-handle-bottom" @onclick="() => ViewModel.DeleteNoteCommand.Execute(note.Id)" @onclick:stopPropagation="true">@IconService.EmbedSvgLink(IconNames.Delete, 19)</div>
+						@if (ViewModel.IsAnySafeOpen && !note.IsLocked)
+						{
+							@if (note.IsInSafe)
 							{
-								<div class="note-locked">@IconService.EmbedSvgLink(IconNames.LockOutline)</div>
+								<div class="note-handle note-handle-inset reddish" @onclick="() => ViewModel.RemoveNoteFromSafe(note.Id)" @onclick:stopPropagation="true">@IconService.EmbedSvgLink(IconNames.Lock, 18)</div>
 							}
 							else
 							{
-								@* prevent drag start with onmousedown:preventDefault *@
-								<div class="note-viewer over-view @note.CssClassNoteType" @onmousedown:preventDefault="true">@((MarkupString)note.GetShortenedUnlockedHtmlContent())</div>
+								<div class="note-handle note-handle-inset greenish" @onclick="() => ViewModel.AddNoteToSafe(note.Id)" @onclick:stopPropagation="true">@IconService.EmbedSvgLink(IconNames.LockOpenVariant, 18)</div>
 							}
-
-							@if (note.IsPinned)
-							{
-								<div class="pin">@IconService.EmbedSvgLink(IconNames.Pin, 22)</div>
-							}
-							<div class="note-handle note-handle-top @Css.BuildClass(new CssClassIf("bluish-highlighted", note == ViewModel.SelectedOrderNote))" @onmousedown="() => ViewModel.SelectOrderNote(note)" @onmousedown:preventDefault="true" @onclick:preventDefault="true">@IconService.EmbedSvgLink(IconNames.ArrowAll, 22)</div>
-							<div class="note-handle note-handle-bottom" @onclick="() => ViewModel.DeleteNoteCommand.Execute(note.Id)" @onclick:preventDefault="true">@IconService.EmbedSvgLink(IconNames.Delete, 19)</div>
-							@if (ViewModel.IsAnySafeOpen && !note.IsLocked)
-							{
-								@if (note.IsInSafe)
-								{
-									<div class="note-handle note-handle-inset reddish" @onclick="() => ViewModel.RemoveNoteFromSafe(note.Id)" @onclick:preventDefault="true">@IconService.EmbedSvgLink(IconNames.Lock, 18)</div>
-								}
-								else
-								{
-									<div class="note-handle note-handle-inset greenish" @onclick="() => ViewModel.AddNoteToSafe(note.Id)" @onclick:preventDefault="true">@IconService.EmbedSvgLink(IconNames.LockOpenVariant, 18)</div>
-								}
-							}
-						</div>
-					</a>
+						}
+					</div>
 				</li>
 			}
 		</ul>
