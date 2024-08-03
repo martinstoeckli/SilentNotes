@@ -218,6 +218,7 @@ namespace SilentNotes.ViewModels
             {
                 // Reapply the original note
                 _unlockedContent = IsInSafe ? UnlockIfSafeOpen(Model.HtmlContent) : Model.HtmlContent;
+                _feedbackService.ShowToast("Empty notes won't be stored to safeguard against data loss");
             }
 
             if (Modifications.IsModified())

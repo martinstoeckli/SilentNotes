@@ -7,36 +7,45 @@ var _editor;
 export function initialize(dotnetPage, editorContainer, shoppingModeActive) {
     _page = dotnetPage;
     _editor = initializeEditor(editorContainer);
-    _editor.setEditable(false); // Set editable later when everything is ready.
 
-    _editor.on('selectionUpdate', function (editor) {
-        onActiveFormatStateChanged();
-    });
-    _editor.on('update', function (editor) {
-        onNoteContentChanged();
-    });
+    _editor.on('selectionUpdate', onSelectionUpdate);
+    _editor.on('update', onUpdate);
 
     document.addEventListener('custom-link-clicked', function () {
         _page.invokeMethodAsync('OpenLinkDialog');
     });
-
     return _editor;
+}
+
+// Finalizes the prosemirror editor
+export function finalize() {
+    _editor?.off('selectionUpdate', onSelectionUpdate);
+    _editor?.off('update', onUpdate);
+    _page = null;
+    _editor = null;
+}
+
+function onSelectionUpdate(editor) {
+    onNoteContentChanged();
+}
+
+function onUpdate(editor) {
+    onNoteContentChanged();
 }
 
 // By setting the content after loading the page, we can avoid that the content has to be
 // declared pre rendered as javascript and therefore would occupy memory twice.
 export function setNoteContent(text) {
     try {
-        _editor.chain().setMeta('addToHistory', false).setContent(text).scrollToTop().run();
+        _editor?.chain().setMeta('addToHistory', false).setContent(text).scrollToTop().run();
     }
     catch (ex) {
-        _editor.setEditable(false);
+        _editor?.setEditable(false);
     }
 }
 
 export function setEditable(editable) {
-    if (_editor)
-        _editor.setEditable(editable);
+    _editor?.setEditable(editable);
 }
 
 export function toggleFormatAndRefresh(formatName, formatParameter) {
@@ -62,16 +71,16 @@ function onActiveFormatStateChanged() {
 }
 
 function onNoteContentChanged() {
-    var noteContent = _editor.getHTML();
-    _page.invokeMethodAsync('SetNoteContent', noteContent);
+    var noteContent = _editor?.getHTML();
+    _page?.invokeMethodAsync('SetNoteContent', noteContent);
 }
 
 export function undo() {
-    _editor.commands.undo();
+    _editor?.commands.undo();
 }
 
 export function redo() {
-    _editor.commands.redo();
+    _editor?.commands.redo();
 }
 
 export function search(searchPattern) {

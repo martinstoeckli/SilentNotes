@@ -74,7 +74,7 @@ export function initializeEditor(editorElement: HTMLElement): any {
         }),
         ScrollTo,
       ],
-      editable: true,
+      editable: false,
     });
   } 
   catch ( e ) {
@@ -118,7 +118,7 @@ export function initializeEditor(editorElement: HTMLElement): any {
         }),
         ScrollTo,
       ],
-      editable: true,
+      editable: false,
     });
   } 
   catch ( e ) {

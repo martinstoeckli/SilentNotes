@@ -3,41 +3,51 @@
 var _page;
 var _editor;
 var _shoppingModeActive;
-var _ignoreNoteContentChanged;
+var _isBundlingNoteContentChanges;
 
 // Initializes the prosemirror editor
 export function initialize(dotnetPage, editorContainer, shoppingModeActive) {
     _page = dotnetPage;
     _editor = initializeChecklist(editorContainer);
-    _editor.setEditable(false); // Set editable later when everything is ready.
-    _ignoreNoteContentChanged = false;
+    _isBundlingNoteContentChanges = false;
 
-    _editor.on('selectionUpdate', function (editor) {
-        onActiveFormatStateChanged();
-    });
-    _editor.on('update', function (editor) {
-        onNoteContentChanged();
-    });
+    _editor.on('selectionUpdate', onSelectionUpdate);
+    _editor.on('update', onUpdate);
 
     _shoppingModeActive = shoppingModeActive;
     registerIsShoppingModeActive(function () { return _shoppingModeActive; });
     return _editor;
 }
 
+// Finalizes the prosemirror editor
+export function finalize() {
+    _editor?.off('selectionUpdate', onSelectionUpdate);
+    _editor?.off('update', onUpdate);
+    _page = null;
+    _editor = null;
+}
+
+function onSelectionUpdate(editor) {
+    onNoteContentChanged();
+}
+
+function onUpdate(editor) {
+    onNoteContentChanged();
+}
+
 // By setting the content after loading the page, we can avoid that the content has to be
 // declared pre rendered as javascript and therefore would occupy memory twice.
 export function setNoteContent(text) {
     try {
-        _editor.chain().setMeta('addToHistory', false).setContent(text).scrollToTop().run();
+        _editor?.chain().setMeta('addToHistory', false).setContent(text).scrollToTop().run();
     }
     catch (ex) {
-        _editor.setEditable(false);
+        _editor?.setEditable(false);
     }
 }
 
 export function setEditable(editable) {
-    if (_editor)
-        _editor.setEditable(editable);
+    _editor?.setEditable(editable);
 }
 
 export function setShoppingModeActive(shoppingModeActive) {
@@ -67,30 +77,30 @@ function onActiveFormatStateChanged() {
 }
 
 function onNoteContentChanged() {
-    if (!_ignoreNoteContentChanged) {
-        var noteContent = _editor.getHTML();
-        _page.invokeMethodAsync('SetNoteContent', noteContent);
+    if (!_isBundlingNoteContentChanges) {
+        var noteContent = _editor?.getHTML();
+        _page?.invokeMethodAsync('SetNoteContent', noteContent);
     }
 }
 
 /* Collects all calls to onNoteContentChanged() and bundles them to a single call. */
 function bundleNoteContentChanged(delegate) {
     try {
-        _ignoreNoteContentChanged = true;
+        _isBundlingNoteContentChanges = true;
         delegate();
     }
     finally {
-        _ignoreNoteContentChanged = false;
+        _isBundlingNoteContentChanges = false;
     }
     onNoteContentChanged();
 }
 
 export function undo() {
-    _editor.commands.undo();
+    _editor?.commands.undo();
 }
 
 export function redo() {
-    _editor.commands.redo();
+    _editor?.commands.redo();
 }
 
 export function search(searchPattern) {

@@ -399,7 +399,10 @@
 		await base.OnClosingPageAsync();
 		WeakReferenceMessenger.Default.Unregister<KeepScreenOnChangedMessage>(this);
 		if (_jsModule != null)
+		{
+			await _jsModule.InvokeVoidAsync("finalize");
 			await _jsModule.DisposeAsync();
+		}
 	}
 
 	private NoteViewModel ViewModel { get; set; }

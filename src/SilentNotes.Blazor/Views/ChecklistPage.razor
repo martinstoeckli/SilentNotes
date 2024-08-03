@@ -359,11 +359,14 @@ div.dark .detail-view.checklist .ProseMirror p::after { content: @(IconService.L
 
 	protected override async ValueTask OnClosingPageAsync()
 	{
-		await base.OnClosingPageAsync();
 		_allowNoteContentChanges = false;
+		await base.OnClosingPageAsync();
 		WeakReferenceMessenger.Default.Unregister<KeepScreenOnChangedMessage>(this);
 		if (_jsModule != null)
+		{
+			await _jsModule.InvokeVoidAsync("finalize");
 			await _jsModule.DisposeAsync();
+		}
 	}
 
 	private NoteViewModel ViewModel { get; set; }
