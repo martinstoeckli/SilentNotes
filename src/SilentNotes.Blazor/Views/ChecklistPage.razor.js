@@ -1,144 +1,178 @@
 ﻿import { initializeChecklist, registerIsShoppingModeActive, toggleFormat, isFormatActive, searchAndHighlight, selectNextWhileTyping, selectNext, selectPrevious, moveChecklist, sortChecklistPendingToTop, sortChecklistAlphabetical, setCheckStateForAllToTodo, setCheckStateForAllToDone, setCheckStateForAllToDisabled } from '../prose-mirror-bundle.js';
 
 var _page;
-var _editor;
-var _shoppingModeActive;
-var _isBundlingNoteContentChanges;
 
 // Initializes the prosemirror editor
 export function initialize(dotnetPage, editorContainer, shoppingModeActive) {
     _page = dotnetPage;
-    _editor = initializeChecklist(editorContainer);
-    _isBundlingNoteContentChanges = false;
+    _page.editor = initializeChecklist(editorContainer);
+    _page.isBundlingNoteContentChanges = false;
+    _page.shoppingModeActive = shoppingModeActive;
+     registerIsShoppingModeActive(function () { return _page.shoppingModeActive; });
 
-    _editor.on('selectionUpdate', onSelectionUpdate);
-    _editor.on('update', onUpdate);
-
-    _shoppingModeActive = shoppingModeActive;
-    registerIsShoppingModeActive(function () { return _shoppingModeActive; });
-    return _editor;
+    _page.editor.on('selectionUpdate', onSelectionUpdate);
+    _page.editor.on('update', onUpdate);
 }
 
 // Finalizes the prosemirror editor
 export function finalize() {
-    if (_editor) {
-        _editor.off('selectionUpdate', onSelectionUpdate);
-        _editor.off('update', onUpdate);
+    if (_page) {
+        _page.editor.off('selectionUpdate', onSelectionUpdate);
+        _page.editor.off('update', onUpdate);
     }
+    _page.editor = null;
     _page = null;
-    _editor = null;
 }
 
-function onSelectionUpdate(editor) {
-    onNoteContentChanged();
-}
-
-function onUpdate(editor) {
-    onNoteContentChanged();
+function IsInitialized() {
+    return _page && _page.editor;
 }
 
 // By setting the content after loading the page, we can avoid that the content has to be
 // declared pre rendered as javascript and therefore would occupy memory twice.
 export function setNoteContent(text) {
+    if (!IsInitialized()) return;
+
     try {
-        _editor.chain().setMeta('addToHistory', false).setContent(text).scrollToTop().run();
+        _page.editor.chain().setMeta('addToHistory', false).setContent(text).scrollToTop().run();
     }
     catch (ex) {
-        _editor.setEditable(false);
+        _page.editor.setEditable(false);
     }
 }
 
 export function setEditable(editable) {
-    if (_editor)
-        _editor.setEditable(editable);
+    if (!IsInitialized()) return;
+
+    _page.editor.setEditable(editable);
 }
 
 export function setShoppingModeActive(shoppingModeActive) {
-    _shoppingModeActive = shoppingModeActive;
+    if (!IsInitialized()) return;
+
+    _page.shoppingModeActive = shoppingModeActive;
 }
 
 export function toggleFormatAndRefresh(formatName, formatParameter) {
-    toggleFormat(_editor, formatName, formatParameter);
+    if (!IsInitialized()) return;
+
+    toggleFormat(_page.editor, formatName, formatParameter);
     onActiveFormatStateChanged();
 }
 
 function onActiveFormatStateChanged() {
+    if (!IsInitialized()) return;
+
     var states = [
-        isFormatActive(_editor, 'heading', { level: 1 }),
-        isFormatActive(_editor, 'heading', { level: 2 }),
-        isFormatActive(_editor, 'heading', { level: 3 }),
-        isFormatActive(_editor, 'bold'),
-        isFormatActive(_editor, 'italic'),
-        isFormatActive(_editor, 'underline'),
-        isFormatActive(_editor, 'strike'),
-        isFormatActive(_editor, 'codeblock'),
-        isFormatActive(_editor, 'blockquote'),
-        isFormatActive(_editor, 'bulletlist'),
-        isFormatActive(_editor, 'orderedlist')
+        isFormatActive(_page.editor, 'heading', { level: 1 }),
+        isFormatActive(_page.editor, 'heading', { level: 2 }),
+        isFormatActive(_page.editor, 'heading', { level: 3 }),
+        isFormatActive(_page.editor, 'bold'),
+        isFormatActive(_page.editor, 'italic'),
+        isFormatActive(_page.editor, 'underline'),
+        isFormatActive(_page.editor, 'strike'),
+        isFormatActive(_page.editor, 'codeblock'),
+        isFormatActive(_page.editor, 'blockquote'),
+        isFormatActive(_page.editor, 'bulletlist'),
+        isFormatActive(_page.editor, 'orderedlist')
     ];
     _page.invokeMethodAsync('RefreshActiveFormatState', states);
 }
 
-function onNoteContentChanged() {
-    if (!_isBundlingNoteContentChanges && _editor && _page) {
-        var noteContent = _editor.getHTML();
+function onSelectionUpdate(params) {
+    onNoteContentChanged(params.editor);
+}
+
+function onUpdate(params) {
+    onNoteContentChanged(params.editor);
+}
+
+function onNoteContentChanged(editor) {
+    if (!IsInitialized()) return;
+
+    if (!_page.isBundlingNoteContentChanges) {
+        var noteContent = editor.getHTML();
         _page.invokeMethodAsync('SetNoteContent', noteContent);
     }
 }
 
 /* Collects all calls to onNoteContentChanged() and bundles them to a single call. */
 function bundleNoteContentChanged(delegate) {
+    if (!IsInitialized()) return;
+
     try {
-        _isBundlingNoteContentChanges = true;
+        _page.isBundlingNoteContentChanges = true;
         delegate();
     }
     finally {
-        _isBundlingNoteContentChanges = false;
+        _page.isBundlingNoteContentChanges = false;
     }
-    onNoteContentChanged();
+    onNoteContentChanged(_page.editor);
 }
 
 export function undo() {
-    _editor.commands.undo();
+    if (!IsInitialized()) return;
+
+    _page.editor.commands.undo();
 }
 
 export function redo() {
-    _editor.commands.redo();
+    if (!IsInitialized()) return;
+
+    _page.editor.commands.redo();
 }
 
 export function search(searchPattern) {
-    searchAndHighlight(_editor, searchPattern);
-    selectNextWhileTyping(_editor);
+    if (!IsInitialized()) return;
+
+    searchAndHighlight(_page.editor, searchPattern);
+    selectNextWhileTyping(_page.editor);
 }
 
 export function findNext() {
-    selectNext(_editor);
+    if (!IsInitialized()) return;
+
+    selectNext(_page.editor);
 }
 
 export function findPrevious() {
-    selectPrevious(_editor);
+    if (!IsInitialized()) return;
+
+    selectPrevious(_page.editor);
 }
 
 export function moveChecklistItem(upwards, singleStep) {
-    moveChecklist(_editor, upwards, singleStep);
+    if (!IsInitialized()) return;
+
+    moveChecklist(_page.editor, upwards, singleStep);
 }
 
 export function sortPendingToTop() {
-    bundleNoteContentChanged(sortChecklistPendingToTop(_editor));
+    if (!IsInitialized()) return;
+
+    bundleNoteContentChanged(function () { sortChecklistPendingToTop(_page.editor); });
 }
 
 export function sortAlphabetical() {
-    bundleNoteContentChanged(sortChecklistAlphabetical(_editor));
+    if (!IsInitialized()) return;
+
+    bundleNoteContentChanged(function () { sortChecklistAlphabetical(_page.editor); });
 }
 
 export function setForAllToTodo() {
-    bundleNoteContentChanged(setCheckStateForAllToTodo(_editor));
+    if (!IsInitialized()) return;
+
+    bundleNoteContentChanged(function () { setCheckStateForAllToTodo(_page.editor); });
 }
 
 export function setForAllToDone() {
-    bundleNoteContentChanged(setCheckStateForAllToDone(_editor));
+    if (!IsInitialized()) return;
+
+    bundleNoteContentChanged(function () { setCheckStateForAllToDone(_page.editor); });
 }
 
 export function setForAllToDisabled() {
-    bundleNoteContentChanged(setCheckStateForAllToDisabled(_editor));
+    if (!IsInitialized()) return;
+
+    bundleNoteContentChanged(function () { setCheckStateForAllToDisabled(_page.editor); });
 }
