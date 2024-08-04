@@ -1,0 +1,7 @@
+SilentNotes version 8.0.2
+
+* Improved design of settings dialog, to respect scaled system font size.
+* Initialize the WebView2 with the system language for a helpful auto correction (Windows only).
+* Updated Maui to 8.0.71 and applied a workaround, so that closing the app with the back key is possible again (Android only).
+* Improved thread safety of JS communication with the ProseMirror editor.
+* Reactivated schreenshot protection on startup (Android only).

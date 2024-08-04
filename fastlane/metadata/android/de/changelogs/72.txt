@@ -1,0 +1,7 @@
+SilentNotes version 8.0.2
+
+* Design des Einstellungsdialogs verbessrt, um skalierte Systemschriftgrössen zu berücksichtigen.
+* Initialisiere das WebView2 mit der Systemsprache, um eine hilfreiche Autokorrektur zu erhalten (nur Windows).
+* Auf Maui 8.0.71 aktualisiert und einen Workaround hinzugefügt, so dass das Schliessen der App mit der zurück Taste wieder möglich ist (nur Android).
+* Threadsicherheit der JS Kommunikation mit dem ProseMirror Editor verbessert.
+* Screenshot protection beim Starten wieder reaktiviert (nur Android).
