@@ -223,22 +223,33 @@ namespace SilentNotes.ViewModels
 
             if (Modifications.IsModified())
             {
-                Model.RefreshModifiedAt();
-
-                if (IsUnlocked)
-                    Model.HtmlContent = Lock(_unlockedContent);
-                else
-                    Model.HtmlContent = XmlUtils.SanitizeXmlString(_unlockedContent);
-
+                // Usually the open note the same instance as the note in the repository, but if a
+                // synchronization happened in the meantime it can differ, or it could have been deleted.
+                // This situation is possible on Android, when the app was put to the background
+                // and restarted from there and Anroid did't restart the app completely.
                 _repositoryService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepository);
-
-                if (Modifications.IsPinnedChanged)
+                NoteModel repositoryNote = noteRepository.Notes.FindById(Model.Id);
+                if (repositoryNote != null)
                 {
-                    RepositionNoteBecausePinStateChanged(noteRepository);
-                }
+                    // If the repository note is newer, a synchronization happened and we don't
+                    // want to override the new content.
+                    bool repositoryIsNewer = repositoryNote.ModifiedAt > Model.ModifiedAt;
+                    if (!repositoryIsNewer)
+                    {
+                        Model.RefreshModifiedAt();
+                        if (IsUnlocked)
+                            Model.HtmlContent = Lock(_unlockedContent);
+                        else
+                            Model.HtmlContent = XmlUtils.SanitizeXmlString(_unlockedContent);
+                        Model.CloneTo(repositoryNote);
 
-                _repositoryService.TrySaveRepository(noteRepository);
-                Modifications.MemorizeCurrentState();
+                        if (Modifications.IsPinnedChanged)
+                            RepositionNoteBecausePinStateChanged(noteRepository);
+
+                        _repositoryService.TrySaveRepository(noteRepository);
+                        Modifications.MemorizeCurrentState();
+                    }
+                }
             }
 
             // Reset the KeepScreenOn. The OnClosingPage() is not called when pausing on Android,

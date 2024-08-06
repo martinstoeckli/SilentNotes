@@ -20,6 +20,10 @@ namespace SilentNotes.Models
     {
         /// <summary>The highest revision of the repository which can be handled by this application.</summary>
         public const int NewestSupportedRevision = 7;
+
+#if (DEBUG)
+        public readonly string InstanceId = Guid.NewGuid().ToString();
+#endif
 #if (RELEASE)
         public const string RepositoryFileName = "silentnotes_repository.silentnotes";
 #else

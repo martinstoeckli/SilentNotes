@@ -17,6 +17,10 @@ namespace SilentNotes.Services
     /// </summary>
     public abstract class RepositoryStorageServiceBase : IRepositoryStorageService
     {
+#if (DEBUG)
+        public readonly string InstanceId = Guid.NewGuid().ToString();
+#endif
+
         /// <summary>Gets the injected dependency to an xml file service.</summary>
         protected readonly IXmlFileService _xmlFileService;
 
