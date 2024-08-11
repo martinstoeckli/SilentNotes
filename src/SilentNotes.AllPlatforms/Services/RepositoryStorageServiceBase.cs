@@ -174,6 +174,26 @@ namespace SilentNotes.Services
             }
         }
 
+        /// <inheritdoc/>
+        public bool TryLoadRepositoryFromFile(byte[] fileContent, out NoteRepositoryModel repositoryModel)
+        {
+            try
+            {
+                using (Stream xmlStream = new MemoryStream(fileContent))
+                {
+                    XDocument xml = XDocument.Load(xmlStream, LoadOptions.None);
+                    _updater.Update(xml);
+                    repositoryModel = XmlUtils.DeserializeFromXmlDocument<NoteRepositoryModel>(xml);
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                repositoryModel = null;
+                return false;
+            }
+        }
+
         /// <summary>
         /// Sub classes should override this method to change the directory, where the config is stored.
         /// </summary>

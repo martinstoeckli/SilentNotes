@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.AspNetCore.Components;
+using SilentNotes.Models;
 using SilentNotes.Services;
 
 namespace SilentNotes.ViewModels
@@ -19,6 +20,9 @@ namespace SilentNotes.ViewModels
         private readonly IVersionService _versionService;
         private readonly INativeBrowserService _nativeBrowserService;
         private readonly IRepositoryStorageService _repositoryStorageService;
+        private readonly IFolderPickerService _folderPickerService;
+        private readonly IFilePickerService _filePickerService;
+        private readonly IFeedbackService _feedbackService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InfoViewModel"/> class.
@@ -26,12 +30,20 @@ namespace SilentNotes.ViewModels
         public InfoViewModel(
             IVersionService versionService,
             INativeBrowserService nativeBrowserService,
-            IRepositoryStorageService repositoryStorageService)
+            IRepositoryStorageService repositoryStorageService,
+            IFolderPickerService folderPickerService,
+            IFilePickerService filePickerService,
+            IFeedbackService feedbackService)
         {
             _versionService = versionService;
             _nativeBrowserService = nativeBrowserService;
             _repositoryStorageService = repositoryStorageService;
+            _folderPickerService = folderPickerService;
+            _filePickerService = filePickerService;
+            _feedbackService = feedbackService;
             OpenHomepageCommand = new RelayCommand(OpenHomepage);
+            BackupRepositoryCommand = new RelayCommand(BackupRepository);
+            RestoreRepositoryCommand = new RelayCommand(RestoreRepository);
         }
 
         /// <summary>
@@ -79,6 +91,49 @@ namespace SilentNotes.ViewModels
         private void OpenHomepage()
         {
             _nativeBrowserService.OpenWebsite("https://www.martinstoeckli.ch/silentnotes");
+        }
+
+        public ICommand BackupRepositoryCommand { get; private set; }
+
+        private async void BackupRepository()
+        {
+            if (await _folderPickerService.PickFolder())
+            {
+                byte[] repositoryContent = _repositoryStorageService.LoadRepositoryFile();
+                await _folderPickerService.TrySaveFileToPickedFolder(
+                    GetRepositoryFilenameWithDate(), repositoryContent);
+            }
+        }
+
+        public ICommand RestoreRepositoryCommand { get; private set; }
+
+        private async void RestoreRepository()
+        {
+            MessageBoxResult answer = await _feedbackService.ShowMessageAsync(
+                "This will override all existing notes with the notes from the backup! Are you really sure you want to continue?",
+                "Restore backup",
+                MessageBoxButtons.ContinueCancel,
+                true);
+            if (answer != MessageBoxResult.Continue)
+                return;
+
+            if (await _filePickerService.PickFile())
+            {
+                byte[] fileContent = await _filePickerService.ReadPickedFile();
+
+                if (_repositoryStorageService.TryLoadRepositoryFromFile(fileContent, out NoteRepositoryModel noteRepository))
+                    _repositoryStorageService.TrySaveRepository(noteRepository);
+                else
+                    await _feedbackService.ShowMessageAsync("Could not load a repository from the selected file.", null, MessageBoxButtons.Ok, false);
+            }
+        }
+
+        private string GetRepositoryFilenameWithDate()
+        {
+            string datePart = DateTime.Now.ToString("yyyyMMdd-HHmmss");
+            string fileNameWithoutExt = Path.GetFileNameWithoutExtension(NoteRepositoryModel.RepositoryFileName);
+            string fileExt = Path.GetExtension(NoteRepositoryModel.RepositoryFileName);
+            return string.Format("{0}_{1}{2}", fileNameWithoutExt, datePart, fileExt);
         }
     }
 }

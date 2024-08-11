@@ -42,6 +42,14 @@ namespace SilentNotes.Services
         byte[] LoadRepositoryFile();
 
         /// <summary>
+        /// Tries to load the content of a file as respoitory.
+        /// </summary>
+        /// <param name="fileContent">Content of a loaded file.</param>
+        /// <param name="repository">Receives the loaded repository, if the file contains a valid repository.</param>
+        /// <returns>Returns true if the content is a valid repository, otherwise false.</returns>
+        bool TryLoadRepositoryFromFile(byte[] fileContent, out NoteRepositoryModel repository);
+
+        /// <summary>
         /// Gets the location (directory) where the repository is stored.
         /// </summary>
         /// <returns>Location of the repository.</returns>
