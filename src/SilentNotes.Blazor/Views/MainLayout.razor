@@ -7,25 +7,72 @@
 @inject INavigationService NavigationService
 @inject IFeedbackService FeedbackService
 @inject INotificationService NotificationService
+@inject IVersionService VersionService
+@inject IClipboardService ClipboardService
 
 @implements IDisposable
 
 <style type="text/css">
 	@ThemeService.CssTheme
+
+	table.error {
+		border-collapse: collapse;
+		table-layout:fixed;
+	}
+	table.error td, table.error th {
+		border-top: 1px solid;
+		border-bottom: 1px solid;
+		padding: 6px;
+		word-wrap: break-word;
+	}
+	table.error button {
+		padding: 4px;
+		color: var(--mud-palette-primary-text);
+		background-color: var(--mud-palette-primary);
+	}
 </style>
 
 <MudThemeProvider @bind-IsDarkMode="ThemeService.IsDarkMode" Theme="@ThemeService.Theme" />
 <MudDialogProvider DisableBackdropClick="true" CloseOnEscapeKey="true"/>
 <MudSnackbarProvider />
 
-<MudLayout Class="@ThemeService.LightOrDarkClass">
-	@Body
-</MudLayout>
+<ErrorBoundary Context="exception">
+<ChildContent>
+	<MudLayout Class="@ThemeService.LightOrDarkClass">
+		@Body
+	</MudLayout>
 
 @if(FeedbackService.IsBusyIndicatorVisible)
 {
 	<MudProgressCircular id="progress" Indeterminate="true" Color="Color.Tertiary" Size="Size.Large" />
 }
+</ChildContent>
+<ErrorContent>
+	<div class="pa-6" style="max-width:640px">
+		<h1 class="h-colored mb-3">Sorry</h1>
+		<p>An unexpected error has occured.</p>
+		<table class="error mt-3" style="width:100%">
+			<tbody>
+			<tr>
+				<th style="width:auto">SilentNotes version</th>
+				<td style="width:auto">@VersionService.GetApplicationVersion()</td>
+				<td style="width:60px"></td>
+			</tr>
+			<tr>
+				<th style="width:auto">Error message</th>
+				<td style="width:auto">@GetExceptionMessages(exception)</td>
+				<td style="width:60px"><button type="button" @onclick="() => ClipboardService.SetTextAsync(GetExceptionMessages(exception))">Copy</button></td>
+			</tr>
+			<tr>
+				<th style="width:auto">Stack trace</th>
+				<td style="width:auto"><div style="max-height:5em; overflow:auto">@GetExceptionStacktrace(exception)</div></td>
+				<td style="width:60px"><button type="button" @onclick="() => ClipboardService.SetTextAsync(GetExceptionStacktrace(exception))">Copy</button></td>
+			</tr>
+			</tbody>
+		</table>
+	</div>
+</ErrorContent>
+</ErrorBoundary>
 
 @code {
 	protected override void OnInitialized()
@@ -50,6 +97,24 @@
 		{
 			WeakReferenceMessenger.Default.Send<MainLayoutReadyMessage>();
 		}
+	}
+
+	private static IEnumerable<Exception> EnumerateAggregateExceptions(Exception ex)
+	{
+		if (ex is AggregateException aggregateEx)
+			return aggregateEx.InnerExceptions;
+		else
+			return new Exception[] { ex };
+	}
+
+	private string GetExceptionMessages(Exception ex)
+	{
+		return string.Join("\n", EnumerateAggregateExceptions(ex).Select(ex => ex.Message));
+	}
+
+	private string GetExceptionStacktrace(Exception ex)
+	{
+		return string.Join("\n", EnumerateAggregateExceptions(ex).Select(ex => ex.StackTrace));
 	}
 
 	/// <inheritdoc/>
