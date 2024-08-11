@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using NUnit.Framework;
 using SilentNotes.Models;
+using SilentNotes.Workers;
 
 namespace SilentNotesTest.Models
 {
@@ -49,6 +50,35 @@ namespace SilentNotesTest.Models
             Assert.AreEqual(note1.Tags.Count, note2.Tags.Count);
             Assert.AreEqual(note1.Tags[0], note2.Tags[0]);
             Assert.AreEqual(note1.Tags[1], note2.Tags[1]);
+
+            // Serialized notes must be identical
+            string note1Xml = XmlUtils.SerializeToString(note1);
+            string note2Xml = XmlUtils.SerializeToString(note2);
+            Assert.AreEqual(note1Xml, note2Xml);
+        }
+
+        [Test]
+        public void CloneTo_OnSameInstanceKeepsNoteUntouched()
+        {
+            NoteModel note1 = new NoteModel
+            {
+                Id = Guid.NewGuid(),
+                NoteType = NoteType.Checklist,
+                HtmlContent = "<html>",
+                BackgroundColorHex = "#000000",
+                InRecyclingBin = true,
+                CreatedAt = new DateTime(2000, 10, 22, 18, 55, 30),
+                ModifiedAt = new DateTime(2001, 10, 22, 18, 55, 30),
+                MetaModifiedAt = new DateTime(2001, 10, 23, 18, 55, 30),
+                SafeId = new Guid("10000000000000000000000000000000"),
+                Tags = new List<string>() { "Aa", "Bb" },
+            };
+            string noteBeforeXml = XmlUtils.SerializeToString(note1);
+
+            note1.CloneTo(note1);
+            string noteAfterXml = XmlUtils.SerializeToString(note1);
+
+            Assert.AreEqual(noteBeforeXml, noteAfterXml);
         }
 
         [Test]

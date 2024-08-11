@@ -87,7 +87,8 @@ namespace SilentNotesTest.ViewModels
             byte[] safeKey = new byte[] { 88 };
             SettingsModel settingsModel = new SettingsModel();
             SearchableHtmlConverter searchableConverter = new SearchableHtmlConverter();
-            Mock<IRepositoryStorageService> repositoryService = new Mock<IRepositoryStorageService>();
+            NoteRepositoryModel repositoryModel = new NoteRepositoryModel();
+            Mock<IRepositoryStorageService> repositoryService = CommonMocksAndStubs.RepositoryStorageServiceMock(repositoryModel);
             Mock<ISettingsService> settingsService = new Mock<ISettingsService>();
             settingsService.
                 Setup(m => m.LoadSettingsOrDefault()).Returns(settingsModel);
@@ -101,6 +102,7 @@ namespace SilentNotesTest.ViewModels
                 new SafeModel { Id = Guid.NewGuid(), Key = safeKey },
             });
             NoteModel note = new NoteModel { Id = Guid.NewGuid(), HtmlContent = modelHtmlContent, SafeId = safes[0].Id };
+            repositoryModel.Notes.Add(note);
 
             NoteViewModel noteViewModel = new NoteViewModel(
                 note,
