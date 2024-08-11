@@ -216,11 +216,16 @@ namespace SilentNotes.Models
         /// <summary>
         /// Makes <paramref name="target"/> a deep copy of the safe.
         /// </summary>
+        /// <remarks>
+        /// If the instance is the same as the target, no copy is performed.
+        /// </remarks>
         /// <param name="target">Copy all properties to this note.</param>
         public void CloneTo(SafeModel target)
         {
             if (target == null)
                 throw new ArgumentNullException(nameof(target));
+            if (Object.ReferenceEquals(this, target))
+                return;
 
             target.Id = this.Id;
             target.SerializeableKey = this.SerializeableKey;

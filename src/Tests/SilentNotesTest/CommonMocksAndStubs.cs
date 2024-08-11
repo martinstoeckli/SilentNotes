@@ -146,6 +146,20 @@ namespace SilentNotesTest
         }
 
         /// <summary>
+        /// Creates an <see cref="IRepositoryStorageService"/> mock, which returns a given
+        /// <paramref name="repository"/>.
+        /// </summary>
+        /// <param name="repository">The repository to return when calling <see cref="IRepositoryStorageService.LoadRepositoryOrDefault(out NoteRepositoryModel)"/>.</param>
+        /// <returns>Mock for repository storage service.</returns>
+        public static Mock<IRepositoryStorageService> RepositoryStorageServiceMock(NoteRepositoryModel repository)
+        {
+            Mock<IRepositoryStorageService> result = new Mock<IRepositoryStorageService>();
+            result.
+                Setup(m => m.LoadRepositoryOrDefault(out repository));
+            return result;
+        }
+
+        /// <summary>
         /// Implementation of the <see cref="ICryptoRandomSource"/> and <see cref="ICryptoRandomService"/>
         /// interface, for usage in UnitTests. Uses an unsafe random generator, so the system's entropy
         /// is not drained.
