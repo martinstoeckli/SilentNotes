@@ -1,0 +1,4 @@
+SilentNotes version 8.0.4
+
+* Problem korrigiert, dass Schlagwörter nicht mehr gespeichert wurden.
+* Seite zur Anzeige von Fehlerinformationen implementiert, mit Möglichkeit zur Erstellung eines Backups.
