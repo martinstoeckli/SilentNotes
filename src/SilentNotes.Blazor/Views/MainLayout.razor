@@ -1,6 +1,7 @@
 ﻿@inherits LayoutComponentBase
 
 @using CommunityToolkit.Mvvm.Messaging
+@using SilentNotes.ViewModels
 @using SilentNotes.Services
 
 @inject IThemeService ThemeService
@@ -9,6 +10,8 @@
 @inject INotificationService NotificationService
 @inject IVersionService VersionService
 @inject IClipboardService ClipboardService
+@inject IRepositoryStorageService RepositoryStorageService
+@inject IFolderPickerService FolderPickerService
 
 @implements IDisposable
 
@@ -25,7 +28,7 @@
 		padding: 6px;
 		word-wrap: break-word;
 	}
-	table.error button {
+	.error-button {
 		padding: 4px;
 		color: var(--mud-palette-primary-text);
 		background-color: var(--mud-palette-primary);
@@ -51,7 +54,7 @@
 	<div class="pa-6" style="max-width:640px">
 		<h1 class="h-colored mb-3">Sorry</h1>
 		<p>An unexpected error has occured.</p>
-		<table class="error mt-3" style="width:100%">
+		<table class="error my-3" style="width:100%">
 			<tbody>
 			<tr>
 				<th style="width:auto">SilentNotes version</th>
@@ -61,15 +64,16 @@
 			<tr>
 				<th style="width:auto">Error message</th>
 				<td style="width:auto">@GetExceptionMessages(exception)</td>
-				<td style="width:60px"><button type="button" @onclick="() => ClipboardService.SetTextAsync(GetExceptionMessages(exception))">Copy</button></td>
+				<td style="width:60px"><button type="button" class="error-button" @onclick="() => ClipboardService.SetTextAsync(GetExceptionMessages(exception))">Copy</button></td>
 			</tr>
 			<tr>
 				<th style="width:auto">Stack trace</th>
 				<td style="width:auto"><div style="max-height:5em; overflow:auto">@GetExceptionStacktrace(exception)</div></td>
-				<td style="width:60px"><button type="button" @onclick="() => ClipboardService.SetTextAsync(GetExceptionStacktrace(exception))">Copy</button></td>
+				<td style="width:60px"><button type="button" class="error-button" @onclick="() => ClipboardService.SetTextAsync(GetExceptionStacktrace(exception))">Copy</button></td>
 			</tr>
 			</tbody>
 		</table>
+		<button type="button" class="error-button" @onclick="() => CreateBackup()">Create backup</button>
 	</div>
 </ErrorContent>
 </ErrorBoundary>
@@ -97,6 +101,12 @@
 		{
 			WeakReferenceMessenger.Default.Send<MainLayoutReadyMessage>();
 		}
+	}
+
+	private void CreateBackup()
+	{
+		InfoViewModel infoViewModel = new InfoViewModel(null, null, RepositoryStorageService, FolderPickerService, null, FeedbackService);
+		infoViewModel.BackupRepositoryCommand.Execute(this);
 	}
 
 	private static IEnumerable<Exception> EnumerateAggregateExceptions(Exception ex)

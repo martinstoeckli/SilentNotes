@@ -30,6 +30,13 @@ namespace SilentNotes.Models
         public const string RepositoryFileName = "silentnotes_repository_dev.silentnotes";
 #endif
 
+        /// <summary>
+        /// The invalid repository is a debuty repository, it shows that no valid repository could
+        /// have been loaded. The invalid repository is never saved to disk and can never overwrite
+        /// the original repository. It can be checked for equality with Object.ReferenceEquals().
+        /// </summary>
+        public static NoteRepositoryModel InvalidRepository = new NoteRepositoryModel();
+
         private Guid _id;
         private NoteListModel _notes;
         private List<Guid> _deletedNotes;

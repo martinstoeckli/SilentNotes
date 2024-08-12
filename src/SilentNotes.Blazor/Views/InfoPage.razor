@@ -12,6 +12,9 @@
 @inject IJSRuntime JSRuntime
 @inject INavigationService Navigation
 @inject IRepositoryStorageService RepositoryStorageService
+@inject IFolderPickerService FolderPickerService
+@inject IFilePickerService FilePickerService
+@inject IFeedbackService FeedbackService
 
 @* Main menu *@
 <MudAppBar Class="flex-none" Fixed="true" Dense="true" WrapContent="false">
@@ -58,6 +61,16 @@
 					@if (_supportCounter >= 5)
 					{
 						<div>@ViewModel.SupportInfos</div>
+						<MudStack Row="true" Justify="Justify.FlexEnd" Spacing="1" Class="mt-2">
+							<MudButton OnClick="@(() => ViewModel.BackupRepositoryCommand.Execute(null))"
+								Color="Color.Default" Variant="Variant.Filled">
+								Create backup
+							</MudButton>
+							<MudButton OnClick="@(() => ViewModel.RestoreRepositoryCommand.Execute(null))"
+								Color="Color.Error" Variant="Variant.Filled">
+								Restore backup
+							</MudButton>
+						</MudStack>
 					}
 				</MudItem>
 			</MudGrid>
@@ -70,7 +83,13 @@
 
 	protected override void OnInitialized()
 	{
-		ViewModel = new InfoViewModel(VersionService, NativeBrowserService, RepositoryStorageService);
+		ViewModel = new InfoViewModel(
+			VersionService,
+			NativeBrowserService,
+			RepositoryStorageService,
+			FolderPickerService,
+			FilePickerService,
+			FeedbackService);
 	}
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)

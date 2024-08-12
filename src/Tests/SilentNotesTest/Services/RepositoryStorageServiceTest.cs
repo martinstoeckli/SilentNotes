@@ -35,7 +35,7 @@ namespace SilentNotesTest.Services
         }
 
         [Test]
-        public void DoesNotOverwriteIvalidRepository()
+        public void LoadRepositoryOrDefault_DoesNotOverwriteIvalidRepository()
         {
             XDocument xml = new XDocument(new XElement("Invalid"));
             Mock<IXmlFileService> fileService = new Mock<IXmlFileService>();
@@ -51,7 +51,20 @@ namespace SilentNotesTest.Services
 
             // Loaded existing settings and did not store it
             Assert.AreEqual(RepositoryStorageLoadResult.InvalidRepository, result, "Please remove DEMO from Directory.Build.props and run again");
-            Assert.IsNull(repository);
+            Assert.AreSame(NoteRepositoryModel.InvalidRepository, repository);
+            fileService.Verify(m => m.TrySerializeAndSave(It.IsAny<string>(), It.IsAny<NoteRepositoryModel>()), Times.Never);
+        }
+
+        [Test]
+        public void TrySaveRepository_DoesNotOverwriteWithIvalidRepository()
+        {
+            Mock<IXmlFileService> fileService = new Mock<IXmlFileService>();
+
+            RepositoryStorageServiceBase service = new TestableService(fileService.Object);
+            bool res = service.TrySaveRepository(NoteRepositoryModel.InvalidRepository);
+
+            // Did not try to save the file.
+            Assert.IsFalse(res);
             fileService.Verify(m => m.TrySerializeAndSave(It.IsAny<string>(), It.IsAny<NoteRepositoryModel>()), Times.Never);
         }
 

@@ -90,7 +90,7 @@ namespace SilentNotes.Services
             catch (Exception)
             {
                 result = RepositoryStorageLoadResult.InvalidRepository;
-                repositoryModel = null;
+                repositoryModel = NoteRepositoryModel.InvalidRepository;
                 modelWasUpdated = false;
             }
 
@@ -140,6 +140,9 @@ namespace SilentNotes.Services
             return true;
 #endif
 
+            if (Object.ReferenceEquals(NoteRepositoryModel.InvalidRepository, repositoryModel))
+                return false;
+
             try
             {
                 string xmlFilePath = Path.Combine(GetLocation(), NoteRepositoryModel.RepositoryFileName);
@@ -171,6 +174,26 @@ namespace SilentNotes.Services
             catch (Exception)
             {
                 return null;
+            }
+        }
+
+        /// <inheritdoc/>
+        public bool TryLoadRepositoryFromFile(byte[] fileContent, out NoteRepositoryModel repositoryModel)
+        {
+            try
+            {
+                using (Stream xmlStream = new MemoryStream(fileContent))
+                {
+                    XDocument xml = XDocument.Load(xmlStream, LoadOptions.None);
+                    _updater.Update(xml);
+                    repositoryModel = XmlUtils.DeserializeFromXmlDocument<NoteRepositoryModel>(xml);
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                repositoryModel = null;
+                return false;
             }
         }
 
