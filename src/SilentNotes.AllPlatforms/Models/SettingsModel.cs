@@ -51,6 +51,7 @@ namespace SilentNotes.Models
             ColorForAllNotesInDarkModeHex = "#323232";
             KeepScreenUpDuration = 15;
             UseWallpaper = true;
+            RememberLastTagFilter = false;
         }
 
         /// <summary>
@@ -166,6 +167,13 @@ namespace SilentNotes.Models
         /// </summary>
         [XmlElement("start_with_tags_open")]
         public bool StartWithTagsOpen { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the last selected tag to filter the notes
+        /// should be remembered across startups.
+        /// </summary>
+        [XmlElement("remember_last_tag_filter")]
+        public bool RememberLastTagFilter { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether notes should be hidden in the overview, if they

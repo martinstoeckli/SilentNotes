@@ -106,6 +106,7 @@ namespace SilentNotes.ViewModels
                 settings.KeepScreenUpDuration.GetHashCode(),
                 settings.DefaultNoteInsertion.GetHashCode(),
                 settings.HideClosedSafeNotes.GetHashCode(),
+                settings.RememberLastTagFilter.GetHashCode(),
                 string.GetHashCode(settings.SelectedEncryptionAlgorithm),
                 settings.AutoSyncMode.GetHashCode(),
                 settings.PreventScreenshots.GetHashCode(),
@@ -306,6 +307,16 @@ namespace SilentNotes.ViewModels
         {
             get { return Model.StartWithTagsOpen; }
             set { SetProperty(Model.StartWithTagsOpen, value, (bool v) => Model.StartWithTagsOpen = v); }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the last selected tag to filter the notes
+        /// should be remembered across startups.
+        /// </summary>
+        public bool RememberLastTagFilter
+        {
+            get { return Model.RememberLastTagFilter; }
+            set { SetProperty(Model.RememberLastTagFilter, value, (bool v) => Model.RememberLastTagFilter = v); }
         }
 
         /// <summary>
