@@ -16,13 +16,18 @@ namespace SilentNotes.Services
         /// Loads the note repository from the local storage, or gets the already loaded cached
         /// repository.
         /// </summary>
-        /// <param name="repositoryModel">Retrieves the loaded repository, of null ini case of an error.</param>
+        /// <param name="repositoryModel">Retrieves the loaded repository, or <see cref="NoteRepositoryModel.InvalidRepository"/>
+        /// in case of an error.</param>
         /// <returns>Returns the result whether the repository could be loaded.</returns>
         RepositoryStorageLoadResult LoadRepositoryOrDefault(out NoteRepositoryModel repositoryModel);
 
         /// <summary>
         /// Stores the note repository to the local storage.
         /// </summary>
+        /// <remarks>
+        /// If <see cref="NoteRepositoryModel.InvalidRepository"/> is passed as parameter, nothing
+        /// is saved and the original repository cannot be overwritten.
+        /// </remarks>
         /// <param name="repositoryModel">The repository to store.</param>
         /// <returns>Returns true if the storage was successful, false otherwise.</returns>
         bool TrySaveRepository(NoteRepositoryModel repositoryModel);

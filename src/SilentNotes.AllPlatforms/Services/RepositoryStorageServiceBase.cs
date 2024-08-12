@@ -90,7 +90,7 @@ namespace SilentNotes.Services
             catch (Exception)
             {
                 result = RepositoryStorageLoadResult.InvalidRepository;
-                repositoryModel = null;
+                repositoryModel = NoteRepositoryModel.InvalidRepository;
                 modelWasUpdated = false;
             }
 
@@ -139,6 +139,9 @@ namespace SilentNotes.Services
 #if (DEBUG && FORCE_REPO_DEMO)
             return true;
 #endif
+
+            if (Object.ReferenceEquals(NoteRepositoryModel.InvalidRepository, repositoryModel))
+                return false;
 
             try
             {

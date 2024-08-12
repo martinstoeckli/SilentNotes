@@ -254,8 +254,6 @@
 	{
 		BackRoute = null; // Close the application when navigating back
 		RepositoryStorageLoadResult loadResult = RepositoryStorageService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepositoryModel);
-		if (loadResult == RepositoryStorageLoadResult.InvalidRepository)
-			throw new Exception("Invalid repository");
 
 		ViewModel = new NoteRepositoryViewModel(
 			noteRepositoryModel,
@@ -273,7 +271,9 @@
 
 		WeakReferenceMessenger.Default.Register<BringNoteIntoViewMessage>(
 			this, (recipient, message) => _pendingScrollIntoView = message);
-		base.OnInitialized();
+
+		if (loadResult == RepositoryStorageLoadResult.InvalidRepository)
+			throw new Exception("Invalid repository");
 	}
 
 	/// <inheritdoc/>
