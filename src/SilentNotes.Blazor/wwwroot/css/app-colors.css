@@ -65,6 +65,9 @@
 .theme-light #recycled-notes .note-card { background-color: #f5f5f5; }
 .theme-dark  #recycled-notes .note-card { background-color: #696969; }
 
+.theme-light .background-icon { fill: #dedede; }
+.theme-dark  .background-icon { fill: #424242; }
+
 /* independend of light and dark */
 
 .logo-gradient {

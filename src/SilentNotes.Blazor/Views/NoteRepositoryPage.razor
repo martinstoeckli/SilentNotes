@@ -77,28 +77,28 @@
 			<MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" />
 		</ActivatorContent>
 		<ChildContent><span class="menu-font">
-			<MudMenuItem OnAction="@(() => ViewModel.NewNoteCommand.Execute(null))" Icon="@IconService.GetSvgLink(IconNames.NoteTextOutline)">@LanguageService["note_create_new"]</MudMenuItem>
-			<MudMenuItem OnAction="@(() => ViewModel.NewChecklistCommand.Execute(null))" Icon="@IconService.GetSvgLink(IconNames.OrderBoolAscendingVariant)">@LanguageService["checklist_create_new"]</MudMenuItem>
-			<MudMenuItem OnAction="@(() => Navigation.NavigateTo(RouteNames.RecycleBin))" Icon="@IconService[IconNames.DeleteEmpty]">@LanguageService["show_recyclebin"]</MudMenuItem>
-			<MudMenuItem OnAction="@(() => Navigation.NavigateTo(RouteNames.Export))" Icon="@IconService[IconNames.Export]">@LanguageService["show_export"]</MudMenuItem>
+			<MudMenuItem OnClick="@(() => ViewModel.NewNoteCommand.Execute(null))" Icon="@IconService.GetSvgLink(IconNames.NoteTextOutline)">@LanguageService["note_create_new"]</MudMenuItem>
+			<MudMenuItem OnClick="@(() => ViewModel.NewChecklistCommand.Execute(null))" Icon="@IconService.GetSvgLink(IconNames.OrderBoolAscendingVariant)">@LanguageService["checklist_create_new"]</MudMenuItem>
+			<MudMenuItem OnClick="@(() => Navigation.NavigateTo(RouteNames.RecycleBin))" Icon="@IconService[IconNames.DeleteEmpty]">@LanguageService["show_recyclebin"]</MudMenuItem>
+			<MudMenuItem OnClick="@(() => Navigation.NavigateTo(RouteNames.Export))" Icon="@IconService[IconNames.Export]">@LanguageService["show_export"]</MudMenuItem>
 
 			<MudDivider />
 
 			@if (ViewModel.IsAnySafeOpen)
 			{
-				<MudMenuItem OnAction="@(() => ViewModel.CloseSafeCommand.Execute(null))" Icon="@IconService.GetSvgLink(IconNames.SafeSquareOutline)">@LanguageService["safe_close"]</MudMenuItem>
+				<MudMenuItem OnClick="@(() => ViewModel.CloseSafeCommand.Execute(null))" Icon="@IconService.GetSvgLink(IconNames.SafeSquareOutline)">@LanguageService["safe_close"]</MudMenuItem>
 			}
 			else
 			{
-				<MudMenuItem OnAction="@(() => Navigation.NavigateTo(RouteNames.OpenSafe))" Icon="@IconService.GetSvgLink(IconNames.SafeSquareOutline)">@LanguageService["safe_open"]</MudMenuItem>
+				<MudMenuItem OnClick="@(() => Navigation.NavigateTo(RouteNames.OpenSafe))" Icon="@IconService.GetSvgLink(IconNames.SafeSquareOutline)">@LanguageService["safe_open"]</MudMenuItem>
 			}
-			<MudMenuItem OnAction="@(() => Navigation.NavigateTo(RouteNames.ChangePassword))" Icon="@IconService[IconNames.LockReset]" Disabled="!ViewModel.SafeExists">@LanguageService["safe_change_password"]</MudMenuItem>
+			<MudMenuItem OnClick="@(() => Navigation.NavigateTo(RouteNames.ChangePassword))" Icon="@IconService[IconNames.LockReset]" Disabled="!ViewModel.SafeExists">@LanguageService["safe_change_password"]</MudMenuItem>
 
 			<MudDivider />
 
-			<MudMenuItem OnAction="@(() => Navigation.NavigateTo(RouteNames.TransferCodeHistory))" Icon="@IconService[IconNames.Key]">@LanguageService["show_transfer_code"]</MudMenuItem>
-			<MudMenuItem OnAction="@(() => Navigation.NavigateTo(RouteNames.Settings))" Icon="@IconService[IconNames.Settings]">@LanguageService["show_settings"]</MudMenuItem>
-			<MudMenuItem OnAction="@(() => Navigation.NavigateTo(RouteNames.Info))" ForceLoad="false" Icon="@Icons.Material.Filled.Info">@LanguageService["show_info"]</MudMenuItem>
+			<MudMenuItem OnClick="@(() => Navigation.NavigateTo(RouteNames.TransferCodeHistory))" Icon="@IconService[IconNames.Key]">@LanguageService["show_transfer_code"]</MudMenuItem>
+			<MudMenuItem OnClick="@(() => Navigation.NavigateTo(RouteNames.Settings))" Icon="@IconService[IconNames.Settings]">@LanguageService["show_settings"]</MudMenuItem>
+			<MudMenuItem OnClick="@(() => Navigation.NavigateTo(RouteNames.Info))" ForceLoad="false" Icon="@Icons.Material.Filled.Info">@LanguageService["show_info"]</MudMenuItem>
 		</span></ChildContent>
 	</MudMenu>
 </MudAppBar>
@@ -127,6 +127,7 @@
 		</MudDrawerHeader>
 		<MudDivider Class="my-2" />
 		<MudDrawerContainer Style="height: 100%; overflow: auto;">
+@* todo:
 			<MudTreeView id="tagTree"
 				Items="ViewModel.TagsRootNode.Children"
 				ServerData="TagTreeItemViewModel.LoadData"
@@ -145,6 +146,7 @@
 					</MudTreeViewItem>
 				</ItemTemplate>
 			</MudTreeView>
+			*@
 		</MudDrawerContainer>
 	</MudDrawer>
 </MudSwipeArea>
@@ -342,19 +344,22 @@
 		base.OnCloseMenuOrDialog();
 		bool result = false;
 
-		if (_overflowMenu.IsOpen)
+		if (_overflowMenu.Open)
 		{
-			_overflowMenu.CloseMenu();
+			// todo: test
+			_ = _overflowMenu.CloseMenuAsync();
 			result = true;
 		}
-		if (_fabMenu.IsOpen)
+		if (_fabMenu.Open)
 		{
-			_fabMenu.CloseMenu();
+			// todo: test
+			_ = _fabMenu.CloseMenuAsync();
 			result = true;
 		}
 
-		if (result)
-			StateHasChanged();
+		// todo: nicht mehr nötig?
+		// if (result)
+		// 	StateHasChanged();
 		return result;
 	}
 

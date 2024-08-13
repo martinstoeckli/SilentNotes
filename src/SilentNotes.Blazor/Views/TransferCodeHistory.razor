@@ -56,7 +56,7 @@
 				{
 					<MudExpansionPanels Class="mt-6">
 						<MudExpansionPanel Text="@LanguageService["transfer_code_show_history"]">
-							<MudList >
+							<MudList T="string">
 								@foreach (var historicalTransferCode in ViewModel.TransferCodeHistory)
 								{
 									<MudListItem Text="@historicalTransferCode" />
