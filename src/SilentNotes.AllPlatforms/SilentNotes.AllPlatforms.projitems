@@ -116,6 +116,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Stories\StoryStepResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ChangePasswordViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ITreeItemViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\MudTreeItemWrapper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Workers\ModificationDetector.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\SynchronizationStory\CloudStorageAccountViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\SynchronizationStory\CloudStorageChoiceViewModel.cs" />

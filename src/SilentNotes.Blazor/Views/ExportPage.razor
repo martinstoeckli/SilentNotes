@@ -32,8 +32,8 @@
 			<p class="my-4">@LanguageService["export_desc"]</p>
 
 			<MudForm>
-				<MudCheckBox @bind-Checked="@ViewModel.ExportUnprotectedNotes" Dense="true" Label="@LanguageService["export_unencrypted"]"></MudCheckBox>
-				<MudCheckBox @bind-Checked="@ViewModel.ExportProtectedNotes" Disabled="!ViewModel.HasExportableProtectedNotes" Dense="true" Label="@LanguageService["export_encrypted"]"></MudCheckBox>
+				<MudCheckBox @bind-Value="@ViewModel.ExportUnprotectedNotes" Dense="true" Label="@LanguageService["export_unencrypted"]"></MudCheckBox>
+				<MudCheckBox @bind-Value="@ViewModel.ExportProtectedNotes" Disabled="!ViewModel.HasExportableProtectedNotes" Dense="true" Label="@LanguageService["export_encrypted"]"></MudCheckBox>
 			</MudForm>
 
 			<MudStack Class="my-4" Row="true" Justify="Justify.FlexEnd" Spacing="1">

@@ -62,7 +62,7 @@
 			<MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" />
 		</ActivatorContent>
 		<ChildContent><span class="menu-font">
-			<MudMenuItem OnAction="@(() => ViewModel.TestNewLocalizationCommand.Execute(null))"
+			<MudMenuItem OnClick="@(() => ViewModel.TestNewLocalizationCommand.Execute(null))"
 				Icon="@IconService[IconNames.Earth]">@LanguageService["gui_localization_test"]</MudMenuItem>
 		</span></ChildContent>
 	</MudMenu>
@@ -133,7 +133,7 @@
 						<MudButton
 							Class="color-swatch inline-flex"
 							Style="@GetBackgroundColorStyle(ViewModel.ColorForSolidThemeHex)"
-							OnClick="@(() => _clpSolidTheme.Open())">
+								   OnClick="@(() => _clpSolidTheme.OpenAsync())">
 							<MudIcon Icon="@Icons.Material.Filled.ColorLens" Class="@ViewModel.GetDarkClass(ViewModel.ColorForSolidThemeHex)" />
 						</MudButton>
 					</MudStack>
@@ -154,7 +154,7 @@
 						<MudButton
 							Class="color-swatch inline-flex"
 							Style="@GetBackgroundColorStyle(ViewModel.ColorForAllNotesInDarkModeHex)"
-							OnClick="@(() => _clpAllNotesInDarkMode.Open())">
+								   OnClick="@(() => _clpAllNotesInDarkMode.OpenAsync())">
 							<MudIcon Icon="@Icons.Material.Filled.ColorLens" Class="@ViewModel.GetDarkClass(ViewModel.ColorForAllNotesInDarkModeHex)" />
 						</MudButton>
 					</MudStack>
@@ -174,7 +174,7 @@
 						<MudButton
 							Class="color-swatch inline-flex"
 							Style="@GetBackgroundColorStyle(ViewModel.DefaultNoteColorHex)"
-							OnClick="@(() => _clpDefaultNoteColor.Open())">
+								   OnClick="@(() => _clpDefaultNoteColor.OpenAsync())">
 							<MudIcon Icon="@Icons.Material.Filled.ColorLens" Class="@ViewModel.GetDarkClass(ViewModel.DefaultNoteColorHex)" />
 						</MudButton>
 					</MudStack>
@@ -351,14 +351,11 @@
 		base.OnCloseMenuOrDialog();
 		bool result = false;
 
-		if (_overflowMenu.IsOpen)
+		if (_overflowMenu.Open)
 		{
-			_overflowMenu.CloseMenu();
+			_ = _overflowMenu.CloseMenuAsync();
 			result = true;
 		}
-
-		if (result)
-			StateHasChanged();
 		return result;
 	}
 

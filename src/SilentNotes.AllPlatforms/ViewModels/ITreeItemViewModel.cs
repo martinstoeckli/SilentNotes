@@ -13,6 +13,10 @@ namespace SilentNotes.ViewModels
     /// </summary>
     public interface ITreeItemViewModel
     {
+#if (DEBUG)
+        string InstanceId { get; }
+#endif
+
         /// <summary>
         /// Gets the title of the tree node.
         /// The setter is only available because MudBlazor requires it to bind to this property.
@@ -43,13 +47,13 @@ namespace SilentNotes.ViewModels
         /// Gets a list of child nodes. The list can be empty if no children exist for this node.
         /// The setter is only available because MudBlazor requires it to bind to this property.
         /// </summary>
-        public HashSet<ITreeItemViewModel> Children { get; set; }
+        public List<ITreeItemViewModel> Children { get; set; }
 
         /// <summary>
         /// Populates the <see cref="Children"/> list, if not already loaded.
         /// </summary>
-        /// <returns>Task for async calls.</returns>
-        public Task LazyLoadChildren();
+        /// <returns>Returns true if childrens had to be loaded, false when they where already loaded.</returns>
+        public Task<bool> LazyLoadChildren();
     }
 
     /// <summary>
