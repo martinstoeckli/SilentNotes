@@ -30,20 +30,18 @@ namespace SilentNotesTest.ViewModels
             await rootNode.LazyLoadChildren();
 
             Assert.AreEqual(12, rootNode.Children.Count);
-
-            // todo: enable check for order as soon as MudBlazor replaces the HashSet with a ICollection, see: https://github.com/MudBlazor/MudBlazor/pull/4556
-            Assert.IsTrue(rootNode.Children.Any(child => "01Jan" == child.Title));
-            Assert.IsTrue(rootNode.Children.Any(child => "02Feb" == child.Title));
-            Assert.IsTrue(rootNode.Children.Any(child => "03Mar" == child.Title));
-            Assert.IsTrue(rootNode.Children.Any(child => "04Apr" == child.Title));
-            Assert.IsTrue(rootNode.Children.Any(child => "05May" == child.Title));
-            Assert.IsTrue(rootNode.Children.Any(child => "06Jun" == child.Title));
-            Assert.IsTrue(rootNode.Children.Any(child => "07Jul" == child.Title));
-            Assert.IsTrue(rootNode.Children.Any(child => "08Aug" == child.Title));
-            Assert.IsTrue(rootNode.Children.Any(child => "09Sep" == child.Title));
-            Assert.IsTrue(rootNode.Children.Any(child => "10Oct" == child.Title));
-            Assert.IsTrue(rootNode.Children.Any(child => "11Nov" == child.Title));
-            Assert.IsTrue(rootNode.Children.Any(child => "12Dec" == child.Title));
+            Assert.AreEqual("01Jan", rootNode.Children[0].Title);
+            Assert.AreEqual("02Feb", rootNode.Children[1].Title);
+            Assert.AreEqual("03Mar", rootNode.Children[2].Title);
+            Assert.AreEqual("04Apr", rootNode.Children[3].Title);
+            Assert.AreEqual("05May", rootNode.Children[4].Title);
+            Assert.AreEqual("06Jun", rootNode.Children[5].Title);
+            Assert.AreEqual("07Jul", rootNode.Children[6].Title);
+            Assert.AreEqual("08Aug", rootNode.Children[7].Title);
+            Assert.AreEqual("09Sep", rootNode.Children[8].Title);
+            Assert.AreEqual("10Oct", rootNode.Children[9].Title);
+            Assert.AreEqual("11Nov", rootNode.Children[10].Title);
+            Assert.AreEqual("12Dec", rootNode.Children[11].Title);
 
             // Jan just is in group with Feb
             var nodeJan = rootNode.Children.Where(node => node.Title == "01Jan").First();

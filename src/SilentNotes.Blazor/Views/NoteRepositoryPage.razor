@@ -127,27 +127,28 @@
 		</MudDrawerHeader>
 		<MudDivider Class="my-2" />
 		<MudDrawerContainer Style="height: 100%; overflow: auto;">
-@* todo:
-			<MudTreeView id="tagTree"
-				Items="ViewModel.TagsRootNode.Children"
-				ServerData="TagTreeItemViewModel.LoadData"
+			<MudTreeView T="ITreeItemViewModel" id="tagTree"
+				Items="@_tagsRootNode.Children"
+				ServerData="@LoadServerData"
 				Color="Color.Tertiary">
 				<ItemTemplate>
-					<MudTreeViewItem @bind-Expanded="@context.IsExpanded"
+					<MudTreeViewItem
 						Items="@context.Children"
-						Value="@context" Text="@context.Title"
-						OnClick="@(() => ViewModel.SelectTagNodeCommand.Execute(context))"
-						CanExpand="@context.CanExpand"
-						Activated="@context.IsSelected"
-						Icon="@GetTagIcon(context)" IconColor="@GetTagIconColor(context)">
+						Value="@context.Value"
+						Text="@context.Text"
+						OnClick="@(() => OnTagClicked(context))"
+						CanExpand="@context.Expandable"
+						@bind-Expanded="@context.Expanded"
+						Selected="@context.Selected"
+						Icon="@GetTagIcon(context)"
+						IconColor="@GetTagIconColor(context)">
 						<BodyContent Context="bodyContext">
-							<MudText Color="@GetTagIconColor(context)">@context.Title</MudText>
+							<MudText Color="@GetTagIconColor(context)">@context.Text</MudText>
 						</BodyContent>
 					</MudTreeViewItem>
 				</ItemTemplate>
 			</MudTreeView>
-			*@
-		</MudDrawerContainer>
+ 		</MudDrawerContainer>
 	</MudDrawer>
 </MudSwipeArea>
 
@@ -248,6 +249,7 @@
 	private MudIconButton _tagsButton;
 	private MudBaseButton _syncButton;
 	private BringNoteIntoViewMessage _pendingScrollIntoView;
+	private MudTreeItemWrapper _tagsRootNode;
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="NoteRepositoryPage"/> class.
@@ -270,6 +272,7 @@
 			RepositoryStorageService
 		);
 		await ViewModel.InitializeTagTree();
+		_tagsRootNode = new MudTreeItemWrapper(ViewModel.TagsRootNode, null);
 
 		WeakReferenceMessenger.Default.Register<BringNoteIntoViewMessage>(
 			this, (recipient, message) => _pendingScrollIntoView = message);
@@ -386,18 +389,35 @@
 		await ScrollManager.ScrollIntoViewAsync(selector, scrollBehavior);
 	}
 
-	private string GetTagIcon(ITreeItemViewModel tagTreeNode)
+	private string GetTagIcon(TreeItemData<ITreeItemViewModel> tagTreeNode)
 	{
-		return tagTreeNode.Parent == ViewModel.TagsRootNode
+		return ((MudTreeItemWrapper)tagTreeNode).Parent == _tagsRootNode
 			? IconService.GetSvgLink(IconNames.TagOutline)
 			: IconService.GetSvgLink(IconNames.TagPlusOutline, 22);
 	}
 
-	private Color GetTagIconColor(ITreeItemViewModel tagTreeNode)
+	private Color GetTagIconColor(TreeItemData<ITreeItemViewModel> tagTreeNode)
 	{
-		return ((TagTreeItemViewModel)tagTreeNode).IsSelected
+		return ((MudTreeItemWrapper)tagTreeNode).Selected
 			? Color.Tertiary
 			: Color.Default;
+	}
+
+	public async Task<IReadOnlyCollection<TreeItemData<ITreeItemViewModel>>> LoadServerData(ITreeItemViewModel node)
+	{
+		MudTreeItemWrapper nodeWrapper = _tagsRootNode.FindChildByValue(node, true);
+
+		// Workaround: Just returning a new list does not seem to update the view, so we add the
+		// items to the existing list and return this existing list.
+		await nodeWrapper.LazyLoadChildren();
+		return nodeWrapper.Children;
+	}
+
+	public void OnTagClicked(TreeItemData<ITreeItemViewModel> tagTreeNode)
+	{
+		MudTreeItemWrapper nodeWrapper = ((MudTreeItemWrapper)tagTreeNode);
+		ViewModel.SelectTagNodeCommand.Execute(nodeWrapper.Value);
+		nodeWrapper.MirrorChildren();
 	}
 
 	private string GetTagsTooltip()

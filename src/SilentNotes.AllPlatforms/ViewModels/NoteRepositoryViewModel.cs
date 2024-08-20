@@ -251,6 +251,7 @@ namespace SilentNotes.ViewModels
 
             set
             {
+                // Mark all child items as deselected
                 _selectedTagNode = value;
                 foreach (var node in TagsRootNode.EnumerateSiblingsRecursive(true))
                     node.IsSelected = false;

@@ -14,6 +14,10 @@ namespace SilentNotes.ViewModels
     /// </summary>
     public abstract class TreeItemViewModelBase<TModel>: ITreeItemViewModel
     {
+#if (DEBUG)
+        public string InstanceId { get; } = Guid.NewGuid().ToString();
+#endif
+
         protected bool _areChildrenLoaded;
 
         /// <summary>
@@ -28,7 +32,7 @@ namespace SilentNotes.ViewModels
             Parent = parent;
             CanExpand = true;
             IsExpanded = false;
-            Children = new HashSet<ITreeItemViewModel>();
+            Children = new List<ITreeItemViewModel>();
             Parent?.Children.Add(this);
         }
 
@@ -48,7 +52,7 @@ namespace SilentNotes.ViewModels
         public ITreeItemViewModel Parent { get; }
 
         /// <inheritdoc/>
-        public HashSet<ITreeItemViewModel> Children { get; set; }
+        public List<ITreeItemViewModel> Children { get; set; }
 
         /// <summary>
         /// Gets the wrapped model.
@@ -56,13 +60,15 @@ namespace SilentNotes.ViewModels
         public TModel Model { get; }
 
         /// <inheritdoc/>
-        public async Task LazyLoadChildren()
+        public async Task<bool> LazyLoadChildren()
         {
             if (!_areChildrenLoaded)
             {
                 _areChildrenLoaded = true;
                 await LoadChildren();
+                return true;
             }
+            return false;
         }
 
         /// <summary>
@@ -73,18 +79,6 @@ namespace SilentNotes.ViewModels
         protected virtual Task LoadChildren()
         {
             return Task.CompletedTask;
-        }
-
-        /// <summary>
-        /// Bind this function to <see cref="MudTreeView.ServerData"/> if the data should be loaded
-        /// on demand. It will call <see cref="LazyLoadChildren"/> to collect the expanded data.
-        /// </summary>
-        /// <param name="parentNode">The node to expand.</param>
-        /// <returns>A hash set of child nodes.</returns>
-        public static async Task<HashSet<ITreeItemViewModel>> LoadData(ITreeItemViewModel parentNode)
-        {
-            await parentNode.LazyLoadChildren();
-            return parentNode.Children;
         }
     }
 }
