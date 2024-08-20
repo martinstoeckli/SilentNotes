@@ -425,10 +425,10 @@
 	{
 		base.OnCloseMenuOrDialog();
 		bool result = false;
+		bool refreshNeeded = false;
 
 		if (_overflowMenu.Open)
 		{
-			// todo: test
 			_ = _overflowMenu.CloseMenuAsync();
 			result = true;
 		}
@@ -441,14 +441,16 @@
 		{
 			_colorPaletteOpen = false;
 			result = true;
+			refreshNeeded = true;
 		}
 		if (_linkState.IsDialogOpen)
 		{
 			_linkState.IsDialogOpen = false;
 			result = true;
+			refreshNeeded = true;
 		}
 
-		if (result)
+		if (refreshNeeded)
 			StateHasChanged();
 		return result;
 	}

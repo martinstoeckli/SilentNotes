@@ -349,20 +349,14 @@
 
 		if (_overflowMenu.Open)
 		{
-			// todo: test
 			_ = _overflowMenu.CloseMenuAsync();
 			result = true;
 		}
 		if (_fabMenu.Open)
 		{
-			// todo: test
 			_ = _fabMenu.CloseMenuAsync();
 			result = true;
 		}
-
-		// todo: nicht mehr nötig?
-		// if (result)
-		// 	StateHasChanged();
 		return result;
 	}
 

@@ -140,13 +140,9 @@
 
 		if (_overflowMenu.Open)
 		{
-			// todo: test
 			_ = _overflowMenu.CloseMenuAsync();
 			result = true;
 		}
-
-		if (result)
-			StateHasChanged();
 		return result;
 	}
 

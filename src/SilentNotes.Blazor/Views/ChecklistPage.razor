@@ -389,11 +389,11 @@ div.dark .detail-view.checklist .ProseMirror p::after { content: @(IconService.L
 	{
 		base.OnCloseMenuOrDialog();
 		bool result = false;
+		bool refreshNeeded = false;
 
 		if (_overflowMenu.Open)
 		{
-			// todo: test
-			_overflowMenu.CloseMenuAsync();
+			_ = _overflowMenu.CloseMenuAsync();
 			result = true;
 		}
 		if (SearchToolbarOpen)
@@ -405,9 +405,10 @@ div.dark .detail-view.checklist .ProseMirror p::after { content: @(IconService.L
 		{
 			_colorPaletteOpen = false;
 			result = true;
+			refreshNeeded = true;
 		}
 
-		if (result)
+		if (refreshNeeded)
 			StateHasChanged();
 		return result;
 	}
