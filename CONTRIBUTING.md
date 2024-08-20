@@ -14,7 +14,7 @@ If you found a bug, you can file an [issue](https://github.com/martinstoeckli/Si
 
 ## Localization
 
-You want to help by translating SilentNotes to your native language? We gladly accept translations, have a look at the files [here](src/Localization). You can make a pull request or send us an email, the address is available on SilentNotes [homepage](https://www.martinstoeckli.ch/silentnotes). Please consider following requirements before investing your time:
+You want to help by translating SilentNotes to your native language? We gladly accept translations, have a look at the files [here](src/SilentNotes.Blazor/Resources/Raw/Localization). You can make a pull request or send us an email, the address is available on SilentNotes [homepage](https://www.martinstoeckli.ch/silentnotes). Please consider following requirements before investing your time:
 
 - Every new version will need an updated version of the language resources, so we are looking for a long time engagement.
 - Publishing a new release will be delayed if there are pending translations, but we do our best to inform our volunteers at an early stage.
@@ -35,19 +35,19 @@ But you want to contribute and that's great, so have a look at following points:
 - If new language resources have been created, place the english text as placeholder in all language files.
 - All functionallity needs to be cross-platform.
 
-If the contribution affects the Android app, please test with the minimum version (currently 6.0) as well as with two other versions. It is a tedious work, but there are often unexpected differences in the WebView implementations.
+If the contribution affects the Android app, please test with the minimum version (currently 7.0) as well as with two other versions. It is a tedious work, but there are often unexpected differences in the WebView implementations.
 
 ## Building the application
 
 ### Building C# code
 
-Install a current version of VisualStudio and make sure the mobile development and the UWP package is selected. Make a rebuild of the whole application.
+Install a current version of VisualStudio and make sure the mobile development and the Maui package is selected. Make a rebuild of the whole application.
 
-You can build a side by side installation with the real SilentNotes version by altering the package name in the Android project properties (e.g. to `dev.martinstoeckli.silentnotes`) and in the UWP project options by clicking the `Package Manifest...` button and opening the `Packaging` tab.
+You can build a side by side installation with the real SilentNotes version by altering the ApplicationId name in the SilentNotes.csproj (e.g. to `dev.martinstoeckli.silentnotes`) and in the Windows project options by clicking the `Package Manifest...` button and opening the `Packaging` tab.
 
-In the `Directory.Build.props` file one can append the `ENV_DEVELOPMENT` constant as explained in the comments, so SilentNotes will read and write to an alternative repository and leaves the original repository intact.
+When compiling in Debug mode, SilentNotes will read and write to an alternative repository and leaves the original repository intact. In the `Directory.Build.props` file one can append some constants as explained in the comments, e.g. to set a fixed localization or to load the demo repository.
 
-For debugging the UWP application, one has to choose the `x64` platform instead of `Any CPU`, VisualStudio
+For debugging the Windows application, one has to choose the `x64` platform instead of `Any CPU`, VisualStudio
 often forgets about this setting after switching the "Startup Project".
 
 ### Building TypeScript code
