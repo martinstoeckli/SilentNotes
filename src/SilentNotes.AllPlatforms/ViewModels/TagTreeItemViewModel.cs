@@ -93,4 +93,25 @@ namespace SilentNotes.ViewModels
             _areChildrenLoaded = false;
         }
     }
+
+    /// <summary>
+    /// Special tag indicating that only notes without tags should be shown.
+    /// </summary>
+    public class NoTagTreeItemViewModel : TagTreeItemViewModel
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NoTagTreeItemViewModel"/> class.
+        /// </summary>
+        /// <param name="model">The localized text to display.</param>
+        public NoTagTreeItemViewModel(string model)
+            : base(model, null, null)
+        {
+            CanExpand = false;
+        }
+
+        protected override Task LoadChildren()
+        {
+            return Task.CompletedTask;
+        }
+    }
 }

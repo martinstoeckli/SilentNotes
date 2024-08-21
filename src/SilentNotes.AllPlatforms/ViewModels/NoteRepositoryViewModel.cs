@@ -81,7 +81,6 @@ namespace SilentNotes.ViewModels
             CloseSafeCommand = new RelayCommand(CloseSafe);
             SelectTagNodeCommand = new AsyncRelayCommand<ITreeItemViewModel>(SelectTagNode);
             ClearTagFilterCommand = new RelayCommand(ClearTagFilter);
-            ToggleNotesWithoutTagsFilterCommand = new RelayCommand(ToggleNotesWithoutTagsFilter);
 
             SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
             IsDrawerOpen = settings.StartWithTagsOpen;
@@ -107,10 +106,11 @@ namespace SilentNotes.ViewModels
             TagsRootNode.ResetChildren();
             await TagsRootNode.LazyLoadChildren();
 
-            SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
-            FilterNotesWithoutTags = settings.FilterNotesWithoutTags;
+            // Add special tags
+            TagsRootNode.Children.Add(new NoTagTreeItemViewModel("‹" + Language["filter_only_without_tags"] + "›"));
 
             // Try to reapply the selected tags
+            SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
             ITreeItemViewModel parent = TagsRootNode;
             ITreeItemViewModel child = null;
             foreach (string filterTag in settings.FilterTags)
@@ -195,8 +195,6 @@ namespace SilentNotes.ViewModels
 
         private async Task SelectTagNode(ITreeItemViewModel treeItem)
         {
-            FilterNotesWithoutTags = false;
-
             if (treeItem == SelectedTagNode)
                 SelectedTagNode = null; // Unselect node
             else
@@ -215,31 +213,8 @@ namespace SilentNotes.ViewModels
 
         private void ClearTagFilter()
         {
-            FilterNotesWithoutTags = false;
             SelectedTagNode = null;
             ApplyFilter();
-        }
-
-        /// <summary>
-        /// Gets the command which toggles the <see cref="FilterNotesWithoutTags"/> state.
-        /// </summary>
-        public ICommand ToggleNotesWithoutTagsFilterCommand { get; }
-
-        private void ToggleNotesWithoutTagsFilter()
-        {
-            FilterNotesWithoutTags = !FilterNotesWithoutTags;
-            SelectedTagNode = null;
-            ApplyFilter();
-        }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the special filtering for notes without tags
-        /// is active or not.
-        /// </summary>
-        public bool FilterNotesWithoutTags
-        {
-            get { return _settingsService.LoadSettingsOrDefault().FilterNotesWithoutTags; }
-            set { SetProperty(FilterNotesWithoutTags, value, (bool v) => _settingsService.LoadSettingsOrDefault().FilterNotesWithoutTags = v); }
         }
 
         /// <summary>
@@ -315,7 +290,9 @@ namespace SilentNotes.ViewModels
         {
             SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
             string normalizedFilter = SearchableHtmlConverter.NormalizeWhitespaces(settings.Filter);
-            var options = FilterNotesWithoutTags ? NoteFilter.FilterOptions.NotesWithoutTags : NoteFilter.FilterOptions.FilterByTagList;
+            var options = (SelectedTagNode is NoTagTreeItemViewModel)
+                ? NoteFilter.FilterOptions.NotesWithoutTags
+                : NoteFilter.FilterOptions.FilterByTagList;
             NoteFilter noteFilter = new NoteFilter(normalizedFilter, GetFilterTags(), options);
 
             FilteredNotes.Clear();
@@ -415,7 +392,7 @@ namespace SilentNotes.ViewModels
         /// </summary>
         public bool IsFilteredByTag
         {
-            get { return (SelectedTagNode != null) || FilterNotesWithoutTags; }
+            get { return (SelectedTagNode != null); }
         }
 
         /// <summary>

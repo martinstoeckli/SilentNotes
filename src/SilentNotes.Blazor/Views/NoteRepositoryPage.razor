@@ -116,11 +116,6 @@
 						Size="Size.Medium" Color="Color.Primary" Variant="Variant.Filled">
 						@LanguageService["reset"]
 					</MudButton>
-					<MudIconButton
-						OnClick="@(() => ViewModel.ToggleNotesWithoutTagsFilterCommand.Execute(null))"
-						Class="@Css.BuildClass(new CssClassIf("btn-toggled", ViewModel.FilterNotesWithoutTags), "ml-1")"
-						Icon="@IconService.GetSvgLink(IconNames.TagOff)"
-						Title="@LanguageService["filter_only_without_tags"]" />
 				</MudStack>
 			</MudStack>
 			<MudIconButton OnClick="() => ViewModel.IsDrawerOpen = false" Icon="@IconService.GetSvgLink(IconNames.Close)" Size="Size.Small" />
@@ -228,7 +223,7 @@
 		IconNames.OrderBoolAscendingVariant,
 		IconNames.Pin,
 		IconNames.TagMultiple,
-		IconNames.TagOff,
+		IconNames.TagOffOutline,
 		IconNames.TagOutline,
 		IconNames.TagPlusOutline,
 		IconNames.SafeSquareOutline,
@@ -385,6 +380,9 @@
 
 	private string GetTagIcon(TreeItemData<ITreeItemViewModel> tagTreeNode)
 	{
+		if (tagTreeNode.Value is NoTagTreeItemViewModel)
+			return IconService.GetSvgLink(IconNames.TagOffOutline);
+
 		return ((MudTreeItemWrapper)tagTreeNode).Parent == _tagsRootNode
 			? IconService.GetSvgLink(IconNames.TagOutline)
 			: IconService.GetSvgLink(IconNames.TagPlusOutline, 22);
@@ -416,9 +414,6 @@
 
 	private string GetTagsTooltip()
 	{
-		if (ViewModel.FilterNotesWithoutTags)
-			return LanguageService["filter_only_without_tags"];
-		else
-			return string.Join(", ", ViewModel.GetFilterTags());
+		return string.Join(", ", ViewModel.GetFilterTags());
 	}
 }

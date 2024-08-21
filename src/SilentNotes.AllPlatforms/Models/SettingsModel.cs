@@ -288,12 +288,6 @@ namespace SilentNotes.Models
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether only notes without tags should be shown.
-        /// </summary>
-        [XmlIgnore]
-        public bool FilterNotesWithoutTags { get; set; }
-
-        /// <summary>
         /// Gets or sets a list of stored startup notification triggers.
         /// </summary>
         [XmlArray("notification_triggers")]
