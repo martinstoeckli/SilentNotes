@@ -38,18 +38,11 @@
         <GenerateTestArtifacts>False</GenerateTestArtifacts>
         <GenerateTemporaryStoreCertificate>True</GenerateTemporaryStoreCertificate>
         <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
-        <Platforms>AnyCPU;x64;x86</Platforms>
+        <Platforms>x64;x86</Platforms>
     </PropertyGroup>
 
     <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows' and '$(RuntimeIdentifierOverride)' != ''">
         <RuntimeIdentifier>$(RuntimeIdentifierOverride)</RuntimeIdentifier>
-    </PropertyGroup>
-
-    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-android|AnyCPU'">
-      <AndroidLinkTool>r8</AndroidLinkTool>
-      <RuntimeIdentifiers>android-arm;android-arm64</RuntimeIdentifiers>
-      <RunAOTCompilation>False</RunAOTCompilation>
-      <PublishTrimmed>True</PublishTrimmed>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-android|x86'">
@@ -64,11 +57,6 @@
       <RuntimeIdentifiers>android-arm;android-arm64</RuntimeIdentifiers>
       <RunAOTCompilation>False</RunAOTCompilation>
       <PublishTrimmed>True</PublishTrimmed>
-    </PropertyGroup>
-
-    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-android|AnyCPU'">
-      <PublishTrimmed>True</PublishTrimmed>
-      <TrimMode>partial</TrimMode>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-android|x64'">

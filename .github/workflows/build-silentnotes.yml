@@ -66,9 +66,6 @@ jobs:
   ##############################################################################
   job_build_android:
     if: ${{ inputs.build-android }}
-    strategy:
-      matrix:
-        configuration: [Release]
   
     runs-on: windows-latest
 
@@ -109,9 +106,8 @@ jobs:
     - name: Restore NuGet packages
       run: dotnet restore
     - name: Build application
-      run: dotnet publish "${{ env.Project_Path }}" -c ${{ env.Configuration }} -f ${{ env.Target_Framework_Android }} -o ".\bin" -p:AndroidPackageFormats=apk -p:PublishTrimmed=true -p:AndroidKeyStore=True -p:AndroidSigningKeyStore=silentnotes.keystore -p:AndroidSigningKeyAlias=androidmartinstoeckli -p:AndroidSigningKeyPass=${{ env.KeystorePassword }} -p:AndroidSigningStorePass=${{ env.KeystorePassword }}
+      run: dotnet publish "${{ env.Project_Path }}" -c Release -f ${{ env.Target_Framework_Android }} -o ".\bin" -p:AndroidPackageFormats=apk -p:PublishTrimmed=true -p:AndroidKeyStore=True -p:AndroidSigningKeyStore=silentnotes.keystore -p:AndroidSigningKeyAlias=androidmartinstoeckli -p:AndroidSigningKeyPass=${{ env.KeystorePassword }} -p:AndroidSigningStorePass=${{ env.KeystorePassword }}
       env:
-        Configuration: ${{ matrix.configuration }}
         KeystorePassword: ${{ secrets.SILENTNOTESANDROIDKEYSTOREPASSWORD }}
         
     - name: Remove the keystore
@@ -139,7 +135,6 @@ jobs:
     if: ${{ inputs.build-android }}
     strategy:
       matrix:
-        configuration: [Release]
         platform: [x64]
   
     runs-on: windows-latest
@@ -181,9 +176,8 @@ jobs:
     - name: Restore NuGet packages
       run: dotnet restore
     - name: Build application
-      run: dotnet publish "${{ env.Project_Path }}" -c ${{ env.Configuration }} -f ${{ env.Target_Framework_Android }} -r android-${{ env.Platform }} -o ".\bin" -p:AndroidKeyStore=True -p:AndroidSigningKeyStore=silentnotes.keystore -p:AndroidSigningKeyAlias=androidmartinstoeckli -p:AndroidSigningKeyPass=${{ env.KeystorePassword }} -p:AndroidSigningStorePass=${{ env.KeystorePassword }}
+      run: dotnet publish "${{ env.Project_Path }}" -c Release -f ${{ env.Target_Framework_Android }} -r android-${{ env.Platform }} -o ".\bin" -p:AndroidKeyStore=True -p:AndroidSigningKeyStore=silentnotes.keystore -p:AndroidSigningKeyAlias=androidmartinstoeckli -p:AndroidSigningKeyPass=${{ env.KeystorePassword }} -p:AndroidSigningStorePass=${{ env.KeystorePassword }}
       env:
-        Configuration: ${{ matrix.configuration }}
         Platform: ${{ matrix.platform }}
         KeystorePassword: ${{ secrets.SILENTNOTESANDROIDKEYSTOREPASSWORD }}
         
