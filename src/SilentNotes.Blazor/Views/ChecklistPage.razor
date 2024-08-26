@@ -221,7 +221,7 @@ div.dark .detail-view.checklist .ProseMirror p::after { content: @(IconService.L
 		<MudCardContent Class="pa-0">
 			<MudColorPicker @bind-Text="ViewModel.BackgroundColorHex"
 							Class="rounded-t" PickerVariant="PickerVariant.Static" ColorPickerView="ColorPickerView.Palette"
-							DisableToolbar="true" DisableAlpha="true"
+							ShowToolbar="false" ShowAlpha="false"
 							Palette="@ViewModel.BackgroundColorsHex.Select(color => new MudColor(color))" />
 		</MudCardContent>
 		<MudCardActions Class="justify-end">

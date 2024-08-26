@@ -125,7 +125,7 @@
 						<MudSwitch @bind-Value="@ViewModel.UseSolidColorTheme" Color="Color.Tertiary" UnCheckedColor="@GetSwitchUncheckedColor()" />
 
 						<MudColorPicker id="ColorForSolidThemeHex" @ref="_clpSolidTheme" @bind-Text="@ViewModel.ColorForSolidThemeHex"
-							DisableToolbar="true" DisableAlpha="true"
+							ShowToolbar="false" ShowAlpha="false"
 							Variant="Variant.Outlined"
 							ColorPickerMode="ColorPickerMode.HEX"
 							AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
@@ -373,7 +373,7 @@
 	/// Workaround: Because the MudSwitch default color is barely visible in dark mode, another
 	/// color is set if the app runs in dark mode.
 	/// </summary>
-	/// <returns>The color to apply to the <see cref="MudSwitch{T}.UnCheckedColor"/> property.</returns>
+	/// <returns>The color to apply to the <see cref="MudSwitch{T}.UncheckedColor"/> property.</returns>
 	private MudBlazor.Color GetSwitchUncheckedColor()
 	{
 		if (ThemeService.IsDarkMode)
