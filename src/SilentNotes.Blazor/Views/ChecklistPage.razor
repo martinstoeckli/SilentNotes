@@ -41,14 +41,14 @@
 		font-size: @(ViewModel.GetNoteBaseFontSize(SettingsService, false))px !important;
 	}
 
-div .detail-view.checklist .ProseMirror p::before { content: @(IconService.LoadIconAsCssUrl(IconNames.CheckboxBlankOutline, new[] { new KeyValuePair<string, string>("fill", "#000000") })) }
-div .detail-view.checklist .ProseMirror p.done::before { content: @(IconService.LoadIconAsCssUrl(IconNames.CheckboxOutline, new[] { new KeyValuePair<string, string>("fill", "#000000") })) }
-div .detail-view.checklist .ProseMirror p.disabled::before { content: @(IconService.LoadIconAsCssUrl(IconNames.CheckboxBlankOutline, new[] { new KeyValuePair<string, string>("fill", "#000000") })) }
-div .detail-view.checklist .ProseMirror p::after { content: @(IconService.LoadIconAsCssUrl(IconNames.Delete, new[] { new KeyValuePair<string, string>("fill", "#000000") })) }
-div.dark .detail-view.checklist .ProseMirror p::before { content: @(IconService.LoadIconAsCssUrl(IconNames.CheckboxBlankOutline, new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") })) }
-div.dark .detail-view.checklist .ProseMirror p.done::before { content: @(IconService.LoadIconAsCssUrl(IconNames.CheckboxOutline, new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") })) }
-div.dark .detail-view.checklist .ProseMirror p.disabled::before { content: @(IconService.LoadIconAsCssUrl(IconNames.CheckboxBlankOutline, new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") })) }
-div.dark .detail-view.checklist .ProseMirror p::after { content: @(IconService.LoadIconAsCssUrl(IconNames.Delete, new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") })) }
+div.note-light .detail-view.checklist .ProseMirror p::before { content: @(IconService.LoadIconAsCssUrl(IconNames.CheckboxBlankOutline, new[] { new KeyValuePair<string, string>("fill", "#000000") })) }
+div.note-light .detail-view.checklist .ProseMirror p.done::before { content: @(IconService.LoadIconAsCssUrl(IconNames.CheckboxOutline, new[] { new KeyValuePair<string, string>("fill", "#000000") })) }
+div.note-light .detail-view.checklist .ProseMirror p.disabled::before { content: @(IconService.LoadIconAsCssUrl(IconNames.CheckboxBlankOutline, new[] { new KeyValuePair<string, string>("fill", "#000000") })) }
+div.note-light .detail-view.checklist .ProseMirror p::after { content: @(IconService.LoadIconAsCssUrl(IconNames.Delete, new[] { new KeyValuePair<string, string>("fill", "#000000") })) }
+div.note-dark .detail-view.checklist .ProseMirror p::before { content: @(IconService.LoadIconAsCssUrl(IconNames.CheckboxBlankOutline, new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") })) }
+div.note-dark .detail-view.checklist .ProseMirror p.done::before { content: @(IconService.LoadIconAsCssUrl(IconNames.CheckboxOutline, new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") })) }
+div.note-dark .detail-view.checklist .ProseMirror p.disabled::before { content: @(IconService.LoadIconAsCssUrl(IconNames.CheckboxBlankOutline, new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") })) }
+div.note-dark .detail-view.checklist .ProseMirror p::after { content: @(IconService.LoadIconAsCssUrl(IconNames.Delete, new[] { new KeyValuePair<string, string>("fill", "#FFFFFF") })) }
 
 </style>
 
