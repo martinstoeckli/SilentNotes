@@ -84,7 +84,7 @@ namespace SilentNotes.ViewModels
 
             SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
             IsDrawerOpen = settings.StartWithTagsOpen;
-            SettingsModifications = new ModificationDetector(() => IsDrawerOpen.GetHashCode());
+            SettingsModifications = new ModificationDetector(GetSettingsModificationFingerprint);
         }
 
         /// <summary>
@@ -96,6 +96,15 @@ namespace SilentNotes.ViewModels
         /// Gets a modification detector for the settings.
         /// </summary>
         private ModificationDetector SettingsModifications { get; }
+
+        private long? GetSettingsModificationFingerprint()
+        {
+            long result = IsDrawerOpen.GetHashCode();
+            SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
+            foreach (string filterTag in settings.FilterTags)
+                result = ModificationDetector.CombineWithStringHash(filterTag, result);
+            return result;
+        }
 
         /// <summary>
         /// Adds all root nodes to the tag tree.

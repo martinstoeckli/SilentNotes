@@ -280,7 +280,7 @@ namespace SilentNotes.Models
         /// <summary>
         /// Gets or sets a temporary list of selected tags which are used for filtering.
         /// </summary>
-        [XmlIgnore]
+        [XmlElement("filter_tags")]
         public List<string> FilterTags
         {
             get { return _filterTags ?? (_filterTags = new List<string>()); }
