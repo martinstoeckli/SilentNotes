@@ -26,6 +26,7 @@ namespace SilentNotes.ViewModels
         private readonly ICryptoRandomService _randomService;
         private readonly ISettingsService _settingsService;
         private readonly IRepositoryStorageService _repositoryService;
+        private readonly ISafeKeyService _keyService;
         private readonly string _navigationTargetRoute;
         private SecureString _password;
         private SecureString _passwordConfirmation;
@@ -43,6 +44,7 @@ namespace SilentNotes.ViewModels
             ICryptoRandomService randomService,
             ISettingsService settingsService,
             IRepositoryStorageService repositoryService,
+            ISafeKeyService safeKeyService,
             string navigationTargetRoute)
         {
             Language = languageService;
@@ -52,6 +54,7 @@ namespace SilentNotes.ViewModels
             _settingsService = settingsService;
             _repositoryService = repositoryService;
             _navigationTargetRoute = navigationTargetRoute;
+            _keyService = safeKeyService;
 
             _repositoryService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepository);
             Model = noteRepository;
@@ -121,7 +124,16 @@ namespace SilentNotes.ViewModels
         {
             SafeModel safe = new SafeModel();
             string algorithm = _settingsService.LoadSettingsOrDefault().SelectedEncryptionAlgorithm;
-            safe.GenerateNewKey(password, _randomService, algorithm);
+
+            // We generate a 256 bit key, this is required by all available symmetric encryption
+            // algorithms and is more than big enough even for future algorithms.
+            var key = _randomService.GetRandomBytes(32);
+            safe.SerializeableKey = SafeModel.EncryptKey(key, password, _randomService, algorithm);
+
+            // Double check that key can be decrypted
+            if (!_keyService.TryOpenSafe(safe, password))
+                throw new Exception("Safe could not be opened!");
+
             Model.Safes.Add(safe);
         }
 
@@ -130,8 +142,8 @@ namespace SilentNotes.ViewModels
             int result = 0;
             foreach (SafeModel safe in Model.Safes)
             {
-                safe.Close(); // Actually it shouldn't be possible to have an open safe at this time...
-                if (safe.TryOpen(password))
+                _keyService.CloseSafe(safe.Id); // Actually it shouldn't be possible to have an open safe at this time...
+                if (_keyService.TryOpenSafe(safe, password))
                     result++;
             }
             return result;
@@ -158,6 +170,7 @@ namespace SilentNotes.ViewModels
 
                 // Remove all safes
                 Model.Safes.Clear();
+                _keyService.CloseAllSafes();
 
                 // Continue with the create safe dialog.
                 OnStoringUnsavedData();

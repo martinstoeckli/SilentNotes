@@ -113,6 +113,11 @@ namespace SilentNotesTest
             return environmentService.Object;
         }
 
+        public static TestKeyService SafeKeyService()
+        {
+            return new TestKeyService();
+        }
+
         public static byte[] FilledByteArray(int length, byte fill)
         {
             byte[] result = new byte[length];
@@ -198,6 +203,23 @@ namespace SilentNotesTest
                 {
                     return FilledByteArray(numberOfBytes, _predictableOutput);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Extends the <see cref="ISafeKeyService"/> with new methods for testing.
+        /// </summary>
+        internal class TestKeyService : SafeKeyService
+        {
+            public TestKeyService AddKey(Guid safeId, byte[] key)
+            {
+                _safeKeys.Add(safeId, key);
+                return this;
+            }
+
+            public int Count
+            {
+                get { return _safeKeys.Count; }
             }
         }
     }

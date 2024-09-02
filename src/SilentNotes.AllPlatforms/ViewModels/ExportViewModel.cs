@@ -22,6 +22,7 @@ namespace SilentNotes.ViewModels
         private readonly IFeedbackService _feedbackService;
         private readonly IRepositoryStorageService _repositoryService;
         private readonly IFolderPickerService _folderPickerService;
+        private readonly ISafeKeyService _keyService;
         private readonly ICryptor _noteCryptor;
         private bool _exportUnprotectedNotes;
         private bool _exportProtectedNotes;
@@ -35,13 +36,15 @@ namespace SilentNotes.ViewModels
             IFeedbackService feedbackService,
             ICryptoRandomSource randomSource,
             IRepositoryStorageService repositoryService,
-            IFolderPickerService folderPickerService)
+            IFolderPickerService folderPickerService,
+            ISafeKeyService safeKeyService)
         {
             Language = languageService;
             _navigationService = navigationService;
             _feedbackService = feedbackService;
             _repositoryService = repositoryService;
             _folderPickerService = folderPickerService;
+            _keyService = safeKeyService;
             _noteCryptor = new Cryptor(NoteModel.CryptorPackageName, randomSource);
 
             OkCommand = new RelayCommand(Ok);
@@ -101,9 +104,9 @@ namespace SilentNotes.ViewModels
                 using (ZipArchive zipArchive = new ZipArchive(zipContent, ZipArchiveMode.Create))
                 {
                     List<string> allTags = repository.CollectActiveTags();
-                    foreach (NoteModel note in EnumerateNotesToExport(repository, ExportUnprotectedNotes, ExportProtectedNotes))
+                    foreach (NoteModel note in EnumerateNotesToExport(repository, _keyService, ExportUnprotectedNotes, ExportProtectedNotes))
                     {
-                        var noteViewModel = new NoteViewModelReadOnly(note, null, null, null, _noteCryptor, repository.Safes);
+                        var noteViewModel = new NoteViewModelReadOnly(note, null, null, null, _keyService, _noteCryptor, repository.Safes);
 
                         string filename = CreateFilenameForNote(note.Id);
                         string html = AddHtmlSkeleton(note.Id, noteViewModel.UnlockedHtmlContent);
@@ -122,7 +125,7 @@ namespace SilentNotes.ViewModels
         }
 
         internal static IEnumerable<NoteModel> EnumerateNotesToExport(
-            NoteRepositoryModel repository, bool exportUnprotectedNotes, bool exportProtectedNotes)
+            NoteRepositoryModel repository, ISafeKeyService keyService, bool exportUnprotectedNotes, bool exportProtectedNotes)
         {
             foreach (NoteModel note in repository.Notes)
             {
@@ -130,14 +133,14 @@ namespace SilentNotes.ViewModels
                 if (note.InRecyclingBin)
                     continue;
 
-                if (!note.SafeIdSpecified)
+                if (!note.SafeId.HasValue)
                 {
                     if (exportUnprotectedNotes)
                         yield return note; // Unprotected note
                 }
                 else
                 {
-                    if (exportProtectedNotes && repository.Safes.FindById(note.SafeId).IsOpen)
+                    if (exportProtectedNotes && keyService.IsSafeOpen(note.SafeId.Value))
                         yield return note; // Protected note
                 }
             }
@@ -200,7 +203,7 @@ namespace SilentNotes.ViewModels
             get
             {
                 _repositoryService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepository);
-                bool hasAtLeastOneOpenSafe = noteRepository.Safes.Any(safe => safe.IsOpen);
+                bool hasAtLeastOneOpenSafe = noteRepository.Safes.Any(safe => _keyService.IsSafeOpen(safe.Id));
                 return hasAtLeastOneOpenSafe;
             }
         }

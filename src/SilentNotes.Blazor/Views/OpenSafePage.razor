@@ -18,6 +18,7 @@
 @inject IRepositoryStorageService RepositoryService
 @inject IJSRuntime JSRuntime
 @inject INavigationService Navigation
+@inject ISafeKeyService SafeKeyService
 
 <style type="text/css">
 </style>
@@ -120,7 +121,7 @@
 	protected override void OnParametersSet()
 	{
 		IsPasswordVisible = false;
-		ViewModel = new OpenSafeViewModel(LanguageService, Navigation, FeedbackService, RandomService, SettingsService, RepositoryService, CryptoUtils.Base64StringToString(TargetRouteBase64));
+		ViewModel = new OpenSafeViewModel(LanguageService, Navigation, FeedbackService, RandomService, SettingsService, RepositoryService, SafeKeyService, CryptoUtils.Base64StringToString(TargetRouteBase64));
 		_secureStringConverter = new SecureStringConverter();
 	}
 

@@ -14,6 +14,7 @@
 @inject IFeedbackService FeedbackService
 @inject IJSRuntime JSRuntime
 @inject INavigationService Navigation
+@inject ISafeKeyService SafeKeyService
 
 <style type="text/css">
 	.mud-main-content {
@@ -99,7 +100,7 @@
 	{
 		RepositoryStorageService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepositoryModel);
 		ViewModel = new RecycleBinViewModel(
-			noteRepositoryModel, LanguageService, ThemeService, FeedbackService, SettingsService, RepositoryStorageService);
+			noteRepositoryModel, LanguageService, ThemeService, FeedbackService, SettingsService, SafeKeyService, RepositoryStorageService);
 	}
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)

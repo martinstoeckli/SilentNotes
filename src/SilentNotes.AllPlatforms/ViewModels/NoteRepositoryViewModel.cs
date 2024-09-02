@@ -32,6 +32,7 @@ namespace SilentNotes.ViewModels
         private readonly IThemeService _themeService;
         private readonly ISettingsService _settingsService;
         private readonly IEnvironmentService _environmentService;
+        private readonly ISafeKeyService _keyService;
         private readonly SearchableHtmlConverter _searchableTextConverter;
         private readonly ICryptor _noteCryptor;
         private readonly List<string> _filterTags;
@@ -52,7 +53,8 @@ namespace SilentNotes.ViewModels
             IEnvironmentService environmentService,
             ISynchronizationService synchronizationService,
             ICryptoRandomSource randomSource,
-            IRepositoryStorageService repositoryService)
+            IRepositoryStorageService repositoryService,
+            ISafeKeyService safeKeyService)
         {
             Language = languageService;
             _navigationService = navigationService;
@@ -62,6 +64,7 @@ namespace SilentNotes.ViewModels
             _environmentService = environmentService;
             _repositoryService = repositoryService;
             _synchronizationService = synchronizationService;
+            _keyService = safeKeyService;
             _noteCryptor = new Cryptor(NoteModel.CryptorPackageName, randomSource);
             _searchableTextConverter = new SearchableHtmlConverter();
             _filterTags = new List<string>();
@@ -354,6 +357,7 @@ namespace SilentNotes.ViewModels
                 _searchableTextConverter,
                 _themeService,
                 _settingsService,
+                _keyService,
                 _noteCryptor,
                 _model.Safes);
             NoteInsertionMode insertionMode = _settingsService.LoadSettingsOrDefault().DefaultNoteInsertion;
@@ -427,8 +431,7 @@ namespace SilentNotes.ViewModels
 
         private void CloseSafe()
         {
-            foreach (SafeModel safe in Model.Safes)
-                safe.Close();
+            _keyService.CloseAllSafes();
             _navigationService.NavigateReload();
         }
 
@@ -445,13 +448,13 @@ namespace SilentNotes.ViewModels
         /// </summary>
         public bool IsAnySafeOpen
         {
-            get { return Model.Safes.Any(safe => safe.IsOpen); }
+            get { return Model.Safes.Any(safe => _keyService.IsSafeOpen(safe.Id)); }
         }
 
         public void AddNoteToSafe(Guid noteId)
         {
             NoteViewModelReadOnly note = AllNotes.Find(item => item.Id == noteId);
-            SafeModel oldestOpenSafe = Model.Safes.FindOldestOpenSafe();
+            SafeModel oldestOpenSafe = Model.Safes.FindOldestOpenSafe(_keyService);
             if ((note != null) && (oldestOpenSafe != null))
             {
                 note.Model.SafeId = oldestOpenSafe.Id;
@@ -494,6 +497,7 @@ namespace SilentNotes.ViewModels
                         _searchableTextConverter,
                         _themeService,
                         _settingsService,
+                        _keyService,
                         _noteCryptor,
                         _model.Safes);
                     AllNotes.Add(noteViewModel);

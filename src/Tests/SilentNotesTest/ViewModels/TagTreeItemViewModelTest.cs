@@ -71,7 +71,7 @@ namespace SilentNotesTest.ViewModels
 
         private NoteViewModelReadOnly CreateNote(IEnumerable<string> tags)
         {
-            return new NoteViewModelReadOnly(new NoteModel { Tags = tags.ToList() }, null, null, null, null, null);
+            return new NoteViewModelReadOnly(new NoteModel { Tags = tags.ToList() }, null, null, null, CommonMocksAndStubs.SafeKeyService(), null, null);
         }
     }
 }

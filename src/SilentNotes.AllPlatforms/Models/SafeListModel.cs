@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using SilentNotes.Services;
 
 namespace SilentNotes.Models
 {
@@ -47,10 +48,10 @@ namespace SilentNotes.Models
         /// Searches for the oldest open safe.
         /// </summary>
         /// <returns>Returns the found safe, or null if no safes are open.</returns>
-        public SafeModel FindOldestOpenSafe()
+        public SafeModel FindOldestOpenSafe(ISafeKeyService keyService)
         {
             SafeModel result = null;
-            foreach (SafeModel openSafe in this.Where(item => item.IsOpen))
+            foreach (SafeModel openSafe in this.Where(item => keyService.IsSafeOpen(item.Id)))
             {
                 if (result == null)
                     result = openSafe;

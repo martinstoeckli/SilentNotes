@@ -25,6 +25,7 @@
 @inject ICloudStorageClientFactory CloudStorageClientFactory
 @inject ICryptoRandomService CryptoRandomSource
 @inject INavigationService Navigation
+@inject ISafeKeyService SafeKeyService
 
 <style type="text/css">
 	.mud-main-content { background-color: @ViewModel.BackgroundColorHex; }
@@ -341,6 +342,7 @@
 			RepositoryStorageService,
 			FeedbackService,
 			SettingsService,
+			SafeKeyService,
 			EnvironmentService,
 			NativeBrowserService,
 			cryptor,

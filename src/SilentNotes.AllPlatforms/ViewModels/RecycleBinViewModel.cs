@@ -24,6 +24,7 @@ namespace SilentNotes.ViewModels
         private readonly IFeedbackService _feedbackService;
         private readonly IThemeService _themeService;
         private readonly ISettingsService _settingsService;
+        private readonly ISafeKeyService _keyService;
         private NoteRepositoryModel _model;
 
         /// <summary>
@@ -35,12 +36,14 @@ namespace SilentNotes.ViewModels
             IThemeService themeService,
             IFeedbackService feedbackService,
             ISettingsService settingsService,
+            ISafeKeyService keyService,
             IRepositoryStorageService repositoryService)
         {
             _feedbackService = feedbackService;
             Language = languageService;
             _themeService = themeService;
             _settingsService = settingsService;
+            _keyService = keyService;
             _repositoryService = repositoryService;
             RecycledNotes = new List<NoteViewModelReadOnly>();
 
@@ -83,7 +86,7 @@ namespace SilentNotes.ViewModels
                     if (note.InRecyclingBin)
                     {
                         RecycledNotes.Add(new NoteViewModelReadOnly(
-                            note, null, _themeService, _settingsService, null, _model.Safes));
+                            note, null, _themeService, _settingsService, _keyService, null, _model.Safes));
                     }
                 }
             }

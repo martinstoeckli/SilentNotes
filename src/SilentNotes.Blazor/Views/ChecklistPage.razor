@@ -25,6 +25,7 @@
 @inject ICloudStorageClientFactory CloudStorageClientFactory
 @inject ICryptoRandomService CryptoRandomSource
 @inject INavigationService Navigation
+@inject ISafeKeyService SafeKeyService
 
 <style type="text/css">
 	.mud-main-content { background-color: @ViewModel.BackgroundColorHex; }
@@ -305,6 +306,7 @@ div.note-dark .detail-view.checklist .ProseMirror p::after { content: @(IconServ
 			RepositoryStorageService,
 			FeedbackService,
 			SettingsService,
+			SafeKeyService,
 			EnvironmentService,
 			NativeBrowserService,
 			cryptor,

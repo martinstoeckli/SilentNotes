@@ -21,7 +21,6 @@ namespace SilentNotesTest.Models
                 ModifiedAt = new DateTime(2001, 10, 22, 18, 55, 30),
                 MaintainedAt = new DateTime(2002, 10, 22, 18, 55, 30),
                 SerializeableKey = "sugus",
-                Key = new byte[] { 88 },
             };
             SafeModel note2 = note1.Clone();
 
@@ -30,7 +29,6 @@ namespace SilentNotesTest.Models
             Assert.AreEqual(note1.ModifiedAt, note2.ModifiedAt);
             Assert.AreEqual(note1.MaintainedAt, note2.MaintainedAt);
             Assert.AreEqual(note1.SerializeableKey, note2.SerializeableKey);
-            Assert.IsNull(note2.Key); // The unprotected key won't be cloned, the safe is closed.
         }
 
         [Test]
@@ -57,23 +55,6 @@ namespace SilentNotesTest.Models
             byte[] originalKey = new byte[] { 88, 99, 11 };
             Assert.IsTrue(res);
             Assert.IsTrue(originalKey.SequenceEqual(decryptedKey));
-        }
-
-        [Test]
-        public void ClosingTheSafeWillRemoveKeyFromMemory()
-        {
-            byte[] key = new byte[] { 88, 99, 11 };
-            SafeModel safe = new SafeModel
-            {
-                SerializeableKey = "sugus",
-                Key = key,
-            };
-
-            safe.Close();
-
-            bool hasUncleanedBytes = key.Any(item => item != 0);
-            Assert.IsNull(safe.Key);
-            Assert.IsFalse(hasUncleanedBytes);
         }
     }
 }

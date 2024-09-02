@@ -24,6 +24,7 @@
 @inject IScrollManager ScrollManager
 @inject IBrowserViewportService ViewportService
 @inject ISynchronizationService SynchronizationService
+@inject ISafeKeyService SafeKeyService
 
 <style type="text/css">
 	.mud-main-content {
@@ -264,7 +265,8 @@
 			EnvironmentService,
 			SynchronizationService,
 			CryptoRandomSource,
-			RepositoryStorageService
+			RepositoryStorageService,
+			SafeKeyService
 		);
 		await ViewModel.InitializeTagTree();
 		_tagsRootNode = new MudTreeItemWrapper(ViewModel.TagsRootNode, null);
