@@ -134,7 +134,7 @@ namespace SilentNotesTest.Workers
 
         private static NoteViewModelReadOnly CreateNoteViewModel(NoteModel model)
         {
-            return new NoteViewModelReadOnly(model, null, null, null, null, null);
+            return new NoteViewModelReadOnly(model, null, null, null, CommonMocksAndStubs.SafeKeyService(), null, null);
         }
     }
 }

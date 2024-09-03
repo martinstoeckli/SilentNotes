@@ -13,7 +13,7 @@ namespace SilentNotes.Models
     /// <summary>
     /// A safe can be used to encrypt one or more notes.
     /// </summary>
-    public class SafeModel : IDisposable
+    public class SafeModel
     {
         /// <summary>The package name used for encryption, see <see cref="CryptoHeader.PackageName"/></summary>
         public const string CryptorPackageName = "SilentSafe";
@@ -26,20 +26,6 @@ namespace SilentNotes.Models
         {
             CreatedAt = DateTime.UtcNow;
             ModifiedAt = CreatedAt;
-        }
-
-        /// <summary>
-        /// Finalizes an instance of the <see cref="SafeModel"/> class.
-        /// </summary>
-        ~SafeModel()
-        {
-            Dispose();
-        }
-
-        /// <inheritdoc/>
-        public void Dispose()
-        {
-            Close();
         }
 
         /// <summary>
@@ -96,46 +82,11 @@ namespace SilentNotes.Models
         public string SerializeableKey { get; set; }
 
         /// <summary>
-        /// Gets the key of the safe, which can be used to encrypt/decrypt data.
-        /// This key is only available if the safe is open, otherwise it is null.
-        /// </summary>
-        [XmlIgnore]
-        public byte[] Key { get; internal set; }
-
-        /// <summary>
-        /// Gets a value indicating whether the safe is open and its <see cref="Key"/> can be used
-        /// to encrypt/decrypt data.
-        /// </summary>
-        [XmlIgnore]
-        public bool IsOpen
-        {
-            get { return Key != null; }
-        }
-
-        /// <summary>
         /// Sets the <see cref="ModifiedAt"/> property to the current UTC time.
         /// </summary>
         public void RefreshModifiedAt()
         {
             ModifiedAt = DateTime.UtcNow;
-        }
-
-        /// <summary>
-        /// Tries to open the safe. The <see cref="SerializeableKey"/> will be decrypted and the
-        /// <see cref="Key"/> will be set.
-        /// </summary>
-        /// <param name="password">User password to open the safe.</param>
-        /// <returns>Returns true if the safe could be opened or was already open, otherwise false.</returns>
-        public bool TryOpen(SecureString password)
-        {
-            if (!IsOpen)
-            {
-                if (TryDecryptKey(SerializeableKey, password, out byte[] decryptedKey))
-                    Key = decryptedKey;
-                else
-                    Close();
-            }
-            return IsOpen;
         }
 
         /// <summary>
@@ -159,31 +110,6 @@ namespace SilentNotes.Models
                 key = null;
                 return false;
             }
-        }
-
-        /// <summary>
-        /// Closes the safe if it was open. The <see cref="Key"/> is removed from memory.
-        /// </summary>
-        public void Close()
-        {
-            CryptoUtils.CleanArray(Key);
-            Key = null;
-        }
-
-        /// <summary>
-        /// Generates a new <see cref="Key"/> for the safe.
-        /// </summary>
-        /// <param name="password">The user password to encrypt the key for serialization.</param>
-        /// <param name="randomSource">A cryptographically random source.</param>
-        /// <param name="encryptionAlgorithm">The encryption algorithm to encrypt the key.</param>
-        public void GenerateNewKey(SecureString password, ICryptoRandomSource randomSource, string encryptionAlgorithm)
-        {
-            Close();
-
-            // We generate a 256 bit key, this is required by all available symmetric encryption
-            // algorithms and is more than big enough even for future algorithms.
-            Key = randomSource.GetRandomBytes(32);
-            SerializeableKey = EncryptKey(Key, password, randomSource, encryptionAlgorithm);
         }
 
         /// <summary>
@@ -229,7 +155,6 @@ namespace SilentNotes.Models
 
             target.Id = this.Id;
             target.SerializeableKey = this.SerializeableKey;
-            target.Key = null; // A cloned safe is closed by default, but can be opened
             target.CreatedAt = this.CreatedAt;
             target.ModifiedAt = this.ModifiedAt;
             target.MaintainedAt = this.MaintainedAt;

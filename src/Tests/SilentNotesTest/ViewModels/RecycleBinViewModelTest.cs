@@ -98,12 +98,14 @@ namespace SilentNotesTest.ViewModels
             Assert.IsTrue(viewModel.Modifications.IsModified());
         }
 
-        private static RecycleBinViewModel CreateMockedRecycleBinViewModel(NoteRepositoryModel repository)
+        private static RecycleBinViewModel CreateMockedRecycleBinViewModel(NoteRepositoryModel repository, ISafeKeyService keyService = null)
         {
             SettingsModel settingsModel = new SettingsModel { DefaultNoteInsertion = NoteInsertionMode.AtTop };
             Mock<ISettingsService> settingsService = new Mock<ISettingsService>();
             settingsService.
                 Setup(m => m.LoadSettingsOrDefault()).Returns(settingsModel);
+            if (keyService == null)
+                keyService = CommonMocksAndStubs.SafeKeyService();
 
             return new RecycleBinViewModel(
                 repository,
@@ -111,6 +113,8 @@ namespace SilentNotesTest.ViewModels
                 new Mock<IThemeService>().Object,
                 CommonMocksAndStubs.FeedbackService(),
                 settingsService.Object,
+                keyService,
+                CommonMocksAndStubs.CryptoRandomService(),
                 null);
         }
 

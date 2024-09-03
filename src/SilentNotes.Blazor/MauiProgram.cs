@@ -96,6 +96,7 @@ public static class MauiProgram
         services.AddSingleton<ICloudStorageClientFactory>((serviceProvider) => new CloudStorageClientFactory());
         services.AddSingleton<IClipboardService>((serviceProvider) => new ClipboardService());
         services.AddSingleton<IInternetStateService>((serviceProvider) => new InternetStateService());
+        services.AddSingleton<ISafeKeyService>((serviceProvider) => new SafeKeyService());
 
         // Scoped services (some Blazor services like NavigationManager or IJSRuntime seem to be scoped)
         // Workaround: It seems that scoped services are recreated when gotten from Ioc, therefore

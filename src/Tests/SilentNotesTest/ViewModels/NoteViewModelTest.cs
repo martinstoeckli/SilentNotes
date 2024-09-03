@@ -35,6 +35,7 @@ namespace SilentNotesTest.ViewModels
             {
                 new SafeModel { Id = Guid.NewGuid() },
             });
+            var keyService = CommonMocksAndStubs.SafeKeyService();
             NoteModel note = new NoteModel { Id = Guid.NewGuid(), HtmlContent = "secret", SafeId = safes[0].Id };
 
             var noteViewModel = new NoteViewModelReadOnly(
@@ -42,6 +43,7 @@ namespace SilentNotesTest.ViewModels
                 searchableConverter,
                 new Mock<IThemeService>().Object,
                 settingsService.Object,
+                keyService,
                 cryptor.Object,
                 safes);
 
@@ -64,8 +66,10 @@ namespace SilentNotesTest.ViewModels
 
             SafeListModel safes = new SafeListModel(new[]
             {
-                new SafeModel { Id = Guid.NewGuid(), Key = safeKey },
+                new SafeModel { Id = Guid.NewGuid() },
             });
+            var keyService = CommonMocksAndStubs.SafeKeyService()
+                .AddKey(safes[0].Id, safeKey);
             NoteModel note = new NoteModel { Id = Guid.NewGuid(), HtmlContent = modelHtmlContent, SafeId = safes[0].Id };
 
             var noteViewModel = new NoteViewModelReadOnly(
@@ -73,6 +77,7 @@ namespace SilentNotesTest.ViewModels
                 searchableConverter,
                 new Mock<IThemeService>().Object,
                 settingsService.Object,
+                keyService,
                 cryptor.Object,
                 safes);
 
@@ -99,8 +104,10 @@ namespace SilentNotesTest.ViewModels
 
             SafeListModel safes = new SafeListModel(new[]
             {
-                new SafeModel { Id = Guid.NewGuid(), Key = safeKey },
+                new SafeModel { Id = Guid.NewGuid() },
             });
+            var keyService = CommonMocksAndStubs.SafeKeyService()
+                .AddKey(safes[0].Id, safeKey);
             NoteModel note = new NoteModel { Id = Guid.NewGuid(), HtmlContent = modelHtmlContent, SafeId = safes[0].Id };
             repositoryModel.Notes.Add(note);
 
@@ -113,6 +120,7 @@ namespace SilentNotesTest.ViewModels
                 repositoryService.Object,
                 new Mock<IFeedbackService>().Object,
                 settingsService.Object,
+                keyService,
                 new Mock<IEnvironmentService>().Object,
                 new Mock<INativeBrowserService>().Object,
                 cryptor.Object,
@@ -145,6 +153,7 @@ namespace SilentNotesTest.ViewModels
                 new Mock<IRepositoryStorageService>().Object,
                 new Mock<IFeedbackService>().Object,
                 new Mock<ISettingsService>().Object,
+                CommonMocksAndStubs.SafeKeyService(),
                 new Mock<IEnvironmentService>().Object,
                 new Mock<INativeBrowserService>().Object,
                 new Mock<ICryptor>().Object,
@@ -178,6 +187,7 @@ namespace SilentNotesTest.ViewModels
                 new Mock<IRepositoryStorageService>().Object,
                 new Mock<IFeedbackService>().Object,
                 new Mock<ISettingsService>().Object,
+                CommonMocksAndStubs.SafeKeyService(),
                 new Mock<IEnvironmentService>().Object,
                 new Mock<INativeBrowserService>().Object,
                 new Mock<ICryptor>().Object,
@@ -218,6 +228,7 @@ namespace SilentNotesTest.ViewModels
                 new Mock<IRepositoryStorageService>().Object,
                 new Mock<IFeedbackService>().Object,
                 new Mock<ISettingsService>().Object,
+                CommonMocksAndStubs.SafeKeyService(),
                 new Mock<IEnvironmentService>().Object,
                 new Mock<INativeBrowserService>().Object,
                 new Mock<ICryptor>().Object,
@@ -390,6 +401,7 @@ namespace SilentNotesTest.ViewModels
                 repositoryStorageService,
                 new Mock<IFeedbackService>().Object,
                 new Mock<ISettingsService>().Object,
+                CommonMocksAndStubs.SafeKeyService(),
                 new Mock<IEnvironmentService>().Object,
                 new Mock<INativeBrowserService>().Object,
                 new Mock<ICryptor>().Object,

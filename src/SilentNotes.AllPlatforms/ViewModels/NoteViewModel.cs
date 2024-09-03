@@ -47,12 +47,13 @@ namespace SilentNotes.ViewModels
             IRepositoryStorageService repositoryService,
             IFeedbackService feedbackService,
             ISettingsService settingsService,
+            ISafeKeyService keyService,
             IEnvironmentService environmentService,
             INativeBrowserService nativeBrowserService,
             ICryptor cryptor,
             SafeListModel safes,
             IList<string> allDistinctAndSortedTags)
-            : base(model, searchableTextConverter, themeService, settingsService, cryptor, safes)
+            : base(model, searchableTextConverter, themeService, settingsService, keyService, cryptor, safes)
         {
             Language = languageService;
             _navigationService = navigationService;

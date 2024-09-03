@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Moq;
 using NUnit.Framework;
+using SilentNotes.Crypto;
 using SilentNotes.Models;
 using SilentNotes.Services;
 using SilentNotes.ViewModels;
@@ -143,11 +144,13 @@ namespace SilentNotesTest.ViewModels
         {
             NoteRepositoryModel model = CreateTestRepository();
             Guid noteId = new Guid("22222222-2222-2222-2222-222222222222");
-            NoteModel note = model.Notes.FindById(noteId);
-            NoteRepositoryViewModel viewModel = CreateMockedNoteRepositoryViewModel(model);
 
-            model.Safes.Add(new SafeModel { Key = CommonMocksAndStubs.CryptoRandomService().GetRandomBytes(32) });
-            note.SafeId = model.Safes[0].Id;
+            byte[] key = CommonMocksAndStubs.CryptoRandomService().GetRandomBytes(32);
+            model.Safes.Add(new SafeModel());
+            var keyService = CommonMocksAndStubs.SafeKeyService()
+                .AddKey(model.Safes[0].Id, key); // safe must already be open
+
+            NoteRepositoryViewModel viewModel = CreateMockedNoteRepositoryViewModel(model, keyService);
             viewModel.Modifications.MemorizeCurrentState();
 
             Assert.IsFalse(viewModel.Modifications.IsModified());
@@ -161,10 +164,12 @@ namespace SilentNotesTest.ViewModels
             NoteRepositoryModel model = CreateTestRepository();
             Guid noteId = new Guid("22222222-2222-2222-2222-222222222222");
             NoteModel note = model.Notes.FindById(noteId);
-            NoteRepositoryViewModel viewModel = CreateMockedNoteRepositoryViewModel(model);
 
             model.Safes.Add(new SafeModel());
             note.SafeId = model.Safes[0].Id;
+            var keyService = CommonMocksAndStubs.SafeKeyService();
+
+            NoteRepositoryViewModel viewModel = CreateMockedNoteRepositoryViewModel(model, keyService);
             viewModel.Modifications.MemorizeCurrentState();
 
             Assert.IsFalse(viewModel.Modifications.IsModified());
@@ -185,12 +190,14 @@ namespace SilentNotesTest.ViewModels
             Assert.IsTrue(viewModel.Modifications.IsModified());
         }
 
-        private static NoteRepositoryViewModel CreateMockedNoteRepositoryViewModel(NoteRepositoryModel repository)
+        private static NoteRepositoryViewModel CreateMockedNoteRepositoryViewModel(NoteRepositoryModel repository, ISafeKeyService keyService = null)
         {
             SettingsModel settingsModel = new SettingsModel { DefaultNoteInsertion = NoteInsertionMode.AtTop };
             Mock<ISettingsService> settingsService = new Mock<ISettingsService>();
             settingsService.
                 Setup(m => m.LoadSettingsOrDefault()).Returns(settingsModel);
+            if (keyService == null)
+                keyService = CommonMocksAndStubs.SafeKeyService();
 
             return new NoteRepositoryViewModel(
                 repository,
@@ -202,7 +209,8 @@ namespace SilentNotesTest.ViewModels
                 CommonMocksAndStubs.EnvironmentService(),
                 new Mock<ISynchronizationService>().Object,
                 CommonMocksAndStubs.CryptoRandomService(),
-                null);
+                null,
+                keyService);
         }
 
         private static NoteRepositoryModel CreateTestRepository()

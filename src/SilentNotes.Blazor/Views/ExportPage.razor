@@ -14,6 +14,7 @@
 @inject IFolderPickerService FolderPickerService
 @inject IJSRuntime JSRuntime
 @inject INavigationService Navigation
+@inject ISafeKeyService SafeKeyService
 
 @* Main menu *@
 <MudAppBar Class="flex-none" Fixed="true" Dense="true" WrapContent="false">
@@ -49,7 +50,7 @@
 
 	protected override void OnInitialized()
 	{
-		ViewModel = new ExportViewModel(NavigationService, LanguageService, FeedbackService, CryptoRandomSource, RepositoryStorageService, FolderPickerService);
+		ViewModel = new ExportViewModel(NavigationService, LanguageService, FeedbackService, CryptoRandomSource, RepositoryStorageService, FolderPickerService, SafeKeyService);
 	}
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)

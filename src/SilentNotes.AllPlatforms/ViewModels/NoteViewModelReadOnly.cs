@@ -20,6 +20,7 @@ namespace SilentNotes.ViewModels
     {
         protected readonly IThemeService _themeService;
         protected readonly ISettingsService _settingsService;
+        protected readonly ISafeKeyService _keyService;
         private readonly ICryptor _cryptor;
         private readonly SafeListModel _safes;
         private SearchableHtmlConverter _searchableTextConverter;
@@ -34,12 +35,14 @@ namespace SilentNotes.ViewModels
             SearchableHtmlConverter searchableTextConverter,
             IThemeService themeService,
             ISettingsService settingsService,
+            ISafeKeyService safeKeyService,
             ICryptor cryptor,
             SafeListModel safes)
         {
             Model = model ?? NoteModel.NotFound;
             _themeService = themeService;
             _settingsService = settingsService;
+            _keyService = safeKeyService;
             _searchableTextConverter = searchableTextConverter;
             _cryptor = cryptor;
             _safes = safes;
@@ -195,7 +198,7 @@ namespace SilentNotes.ViewModels
         /// </summary>
         public bool IsLocked
         {
-            get { return IsInSafe && (UnlockedHtmlContent == null); }
+            get { return Model.SafeId.HasValue && !_keyService.IsSafeOpen(Model.SafeId.Value); }
         }
 
         /// <summary>
@@ -204,11 +207,10 @@ namespace SilentNotes.ViewModels
         /// <returns>Decrypted note content, or null if the safe is closed.</returns>
         protected string UnlockIfSafeOpen(string lockedContent)
         {
-            SafeModel safe = _safes.FindById(Model.SafeId);
-            if ((safe != null) && safe.IsOpen)
+            if (_keyService.TryGetKey(Model.SafeId, out byte[] safeKey))
             {
                 byte[] binaryContent = CryptoUtils.Base64StringToBytes(lockedContent);
-                byte[] unlockedContent = _cryptor.Decrypt(binaryContent, safe.Key);
+                byte[] unlockedContent = _cryptor.Decrypt(binaryContent, safeKey);
                 return CryptoUtils.BytesToString(unlockedContent);
             }
             return null;
@@ -231,10 +233,16 @@ namespace SilentNotes.ViewModels
         public string Lock(string unlockedContent)
         {
             string encryptionAlgorithm = _settingsService.LoadSettingsOrDefault().SelectedEncryptionAlgorithm;
-            SafeModel safe = _safes.FindById(Model.SafeId);
-            byte[] binaryContent = CryptoUtils.StringToBytes(unlockedContent);
-            byte[] lockedContent = _cryptor.Encrypt(binaryContent, safe.Key, encryptionAlgorithm, null);
-            return CryptoUtils.BytesToBase64String(lockedContent);
+            if (_keyService.TryGetKey(Model.SafeId, out byte[] key))
+            {
+                byte[] binaryContent = CryptoUtils.StringToBytes(unlockedContent);
+                byte[] lockedContent = _cryptor.Encrypt(binaryContent, key, encryptionAlgorithm, null);
+                return CryptoUtils.BytesToBase64String(lockedContent);
+            }
+            else
+            {
+                throw new Exception("Could not find key of the safe.");
+            }
         }
 
         /// <summary>

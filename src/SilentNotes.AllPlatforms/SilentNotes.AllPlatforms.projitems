@@ -65,6 +65,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\INavigationService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\INotificationService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\IRepositoryStorageService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\ISafeKeyService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\IScreenshots.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ISettingsService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ISvgIconService.cs" />
@@ -76,6 +77,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\NavigationService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\NotificationService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\RepositoryStorageServiceBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\SafeKeyService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ServiceFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\SettingsServiceBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\SvgIconService.cs" />

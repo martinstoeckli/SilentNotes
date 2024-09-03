@@ -14,8 +14,9 @@ namespace SilentNotesTest.ViewModels
         {
             NoteRepositoryModel repository = CreateTestRepository();
             repository.Notes[0].SafeId = repository.Safes[0].Id;
+            var keyService = CommonMocksAndStubs.SafeKeyService();
 
-            var notes = ExportViewModel.EnumerateNotesToExport(repository, true, false).ToList();
+            var notes = ExportViewModel.EnumerateNotesToExport(repository, keyService, true, false).ToList();
             Assert.AreEqual(2, notes.Count);
             Assert.AreSame(repository.Notes[1], notes[0]);
             Assert.AreSame(repository.Notes[2], notes[1]);
@@ -25,7 +26,8 @@ namespace SilentNotesTest.ViewModels
         public void EnumerateNotesToExport_DoesNotReturnProtectedNoteBecauseSafeIsClosed()
         {
             NoteRepositoryModel repository = CreateTestRepository();
-            var notes = ExportViewModel.EnumerateNotesToExport(repository, true, true).ToList();
+            var keyService = CommonMocksAndStubs.SafeKeyService();
+            var notes = ExportViewModel.EnumerateNotesToExport(repository, keyService, true, true).ToList();
             Assert.AreEqual(2, notes.Count);
             Assert.AreSame(repository.Notes[1], notes[0]);
             Assert.AreSame(repository.Notes[2], notes[1]);
@@ -35,8 +37,9 @@ namespace SilentNotesTest.ViewModels
         public void EnumerateNotesToExport_ReturnsProtectedNotesOnly()
         {
             NoteRepositoryModel repository = CreateTestRepository();
-            repository.Safes[0].Key = new byte[] { 88 };
-            var notes = ExportViewModel.EnumerateNotesToExport(repository, false, true).ToList();
+            var keyService = CommonMocksAndStubs.SafeKeyService()
+                .AddKey(repository.Safes[0].Id, new byte[] { 88 });
+            var notes = ExportViewModel.EnumerateNotesToExport(repository, keyService, false, true).ToList();
             Assert.AreEqual(1, notes.Count);
             Assert.AreSame(repository.Notes[0], notes[0]);
         }
