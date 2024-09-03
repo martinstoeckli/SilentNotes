@@ -1,0 +1,8 @@
+SilentNotes version 8.1.0
+
+* Flag "usesCleartextTraffic" hinzugefügt um HTTP Verbindungen zu lokalem WebDav Server zu erlauben (nur Android).
+* Baumansicht mit Schlagwörtern verbessert.
+* Option zum Erinnern des letzten Schlagworts wieder hinzugefügt.
+* Crash beim arbeiten mit offenem Tresor behoben.
+* Tresor wird nun automatisch geschlossen, 3 min nachdem die App verlassen wurde (nur Android)
+* Update zu Maui und MudBlazor 7.6.
