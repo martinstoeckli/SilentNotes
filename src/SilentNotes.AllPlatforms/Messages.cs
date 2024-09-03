@@ -88,6 +88,22 @@ namespace SilentNotes
     }
 
     /// <summary>
+    /// Messager to signal that the app resumed after pausing on mobile devices.
+    /// </summary>
+    public class AfterResumeMessage
+    {
+        /// <summary>
+        /// Gets or sets the time when app was going into pause mode.
+        /// </summary>
+        public DateTime LastPauseTime { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the safe was closed because of the pause timeout.
+        /// </summary>
+        public bool SafesClosed { get; set; }
+    }
+
+    /// <summary>
     /// This message can be used to signal that a given note should be brought into view.
     /// </summary>
     internal class BringNoteIntoViewMessage

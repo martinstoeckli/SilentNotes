@@ -114,6 +114,7 @@ namespace SilentNotesTest.ViewModels
                 CommonMocksAndStubs.FeedbackService(),
                 settingsService.Object,
                 keyService,
+                CommonMocksAndStubs.CryptoRandomService(),
                 null);
         }
 

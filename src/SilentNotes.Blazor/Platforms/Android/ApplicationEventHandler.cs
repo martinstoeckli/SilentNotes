@@ -24,6 +24,7 @@ namespace SilentNotes.Platforms
     {
         private string _actionSendParameter;
         private NoteModel _newNoteFromActionSend;
+        private DateTime? _lastPauseTime; // The (UTC) time the application was sent to the background the last time.
 
         internal void OnCreate(Activity activity)
         {
@@ -91,14 +92,38 @@ namespace SilentNotes.Platforms
 
             if (!string.IsNullOrEmpty(_actionSendParameter))
             {
+                // A text was shared with the app.
                 _newNoteFromActionSend = CreateNewNoteFromSendParameter(Ioc.Instance, _actionSendParameter);
                 _actionSendParameter = null; // create the note only once
             }
             else if (IsStartedByOAuthRedirectIndent(synchronizationService))
             {
+                // Coming back from an OAuth2 redirect.
                 var startStep = new HandleOAuthRedirectStep();
                 _ = startStep.RunStoryAndShowLastFeedback(synchronizationService.ManualSynchronization, Ioc.Instance, synchronizationService.ManualSynchronization.StoryMode);
             }
+            else
+            {
+                // Normal startup
+                if (_lastPauseTime.HasValue)
+                {
+                    bool safesClosed = CloseSafesWhenTimeoutReached();
+                    WeakReferenceMessenger.Default.Send(new AfterResumeMessage { LastPauseTime = _lastPauseTime.Value, SafesClosed = safesClosed });
+                }
+            }
+        }
+
+        private bool CloseSafesWhenTimeoutReached()
+        {
+            if (!_lastPauseTime.HasValue)
+                return false;
+
+            TimeSpan pausedFor = DateTime.UtcNow - _lastPauseTime.Value;
+            if (pausedFor < TimeSpan.FromMinutes(3))
+                return false;
+
+            ISafeKeyService keyService = Ioc.Instance.GetService<ISafeKeyService>();
+            return keyService.CloseAllSafes();
         }
 
         private NoteModel CreateNewNoteFromSendParameter(IServiceProvider serviceProvider, string actionSendParameter)
@@ -122,6 +147,7 @@ namespace SilentNotes.Platforms
         internal void OnPause(Activity activity)
         {
             System.Diagnostics.Debug.WriteLine("*** ApplicationEventHandler.OnPause() " + GetId(activity));
+            _lastPauseTime = DateTime.UtcNow;
             WeakReferenceMessenger.Default.Send(new StoreUnsavedDataMessage(MessageSender.ApplicationEventHandler));
         }
 

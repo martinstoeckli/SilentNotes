@@ -38,6 +38,8 @@ namespace SilentNotes.Views
                 this, (recipient, message) => InvokeAsync(StateHasChanged));
             WeakReferenceMessenger.Default.Register<BackButtonPressedMessage>(
                 this, (recipient, message) => TriggerCloseMenuOrDialog(message));
+            WeakReferenceMessenger.Default.Register<AfterResumeMessage>(
+                this, (recipient, message) => TriggerOnAfterResume(message));
         }
 
         /// <summary>
@@ -86,6 +88,7 @@ namespace SilentNotes.Views
             WeakReferenceMessenger.Default.Unregister<ClosePageMessage>(this);
             WeakReferenceMessenger.Default.Unregister<RedrawCurrentPageMessage>(this);
             WeakReferenceMessenger.Default.Unregister<BackButtonPressedMessage>(this);
+            WeakReferenceMessenger.Default.Unregister<AfterResumeMessage>(this);
 
             _keyboardShortcuts?.Dispose();
             OnClosingPage();
@@ -132,6 +135,23 @@ namespace SilentNotes.Views
         {
             Debug.WriteLine(string.Format("*** {0}.OnCloseMenuOrDialog {1}", GetType().Name, Id));
             return false;
+        }
+
+        private void TriggerOnAfterResume(AfterResumeMessage message)
+        {
+            OnAfterResume(message.LastPauseTime, message.SafesClosed);
+        }
+
+        /// <summary>
+        /// Method invoked when the application was resumed form the pause state (Android).
+        /// Some pages have to check whether the content has changed between, e.g. because of a
+        /// synchronization.
+        /// </summary>
+        /// <param name="lastPauseTime">UTC timestamp of the pause event.</param>
+        /// <param name="safesClosed">Is true when at least one safe was closed in the mean time.</param>
+        protected virtual void OnAfterResume(DateTime lastPauseTime, bool safesClosed)
+        {
+            Debug.WriteLine(string.Format("*** {0}.OnAfterResume {1}", GetType().Name, Id));
         }
 
         /// <summary>

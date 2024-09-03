@@ -327,6 +327,27 @@
 		FeedbackService.SetBusyIndicatorVisible(false, false);
 	}
 
+	/// <inheritdoc/>
+	protected override void OnAfterResume(DateTime lastPauseTime, bool safesClosed)
+	{
+		base.OnAfterResume(lastPauseTime, safesClosed);
+		bool reload = safesClosed;
+		if (!reload)
+		{
+			RepositoryStorageLoadResult loadResult = RepositoryStorageService.LoadRepositoryOrDefault(out NoteRepositoryModel newRepositoryModel);
+			reload = !object.ReferenceEquals(ViewModel.Model, newRepositoryModel);
+			if (!reload)
+			{
+				long oldFingerprint = ViewModel.Model.GetModificationFingerprint();
+				long newFingerprint = newRepositoryModel.GetModificationFingerprint();
+				reload = oldFingerprint != newFingerprint;
+			}
+		}
+
+		if (reload)
+			Navigation.NavigateReload();
+	}
+
 	/// <summary>
 	/// Gets or sets the datacontext of this view.
 	/// </summary>

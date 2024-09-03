@@ -198,7 +198,7 @@ namespace SilentNotes.ViewModels
         /// </summary>
         public bool IsLocked
         {
-            get { return IsInSafe && (UnlockedHtmlContent == null); }
+            get { return Model.SafeId.HasValue && !_keyService.IsSafeOpen(Model.SafeId.Value); }
         }
 
         /// <summary>

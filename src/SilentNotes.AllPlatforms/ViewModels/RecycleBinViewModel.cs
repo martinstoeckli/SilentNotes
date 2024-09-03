@@ -25,6 +25,7 @@ namespace SilentNotes.ViewModels
         private readonly IThemeService _themeService;
         private readonly ISettingsService _settingsService;
         private readonly ISafeKeyService _keyService;
+        private readonly ICryptor _noteCryptor;
         private NoteRepositoryModel _model;
 
         /// <summary>
@@ -37,6 +38,7 @@ namespace SilentNotes.ViewModels
             IFeedbackService feedbackService,
             ISettingsService settingsService,
             ISafeKeyService keyService,
+            ICryptoRandomSource randomSource,
             IRepositoryStorageService repositoryService)
         {
             _feedbackService = feedbackService;
@@ -45,6 +47,7 @@ namespace SilentNotes.ViewModels
             _settingsService = settingsService;
             _keyService = keyService;
             _repositoryService = repositoryService;
+            _noteCryptor = new Cryptor(NoteModel.CryptorPackageName, randomSource);
             RecycledNotes = new List<NoteViewModelReadOnly>();
 
             Model = model;
@@ -86,7 +89,7 @@ namespace SilentNotes.ViewModels
                     if (note.InRecyclingBin)
                     {
                         RecycledNotes.Add(new NoteViewModelReadOnly(
-                            note, null, _themeService, _settingsService, _keyService, null, _model.Safes));
+                            note, null, _themeService, _settingsService, _keyService, _noteCryptor, _model.Safes));
                     }
                 }
             }

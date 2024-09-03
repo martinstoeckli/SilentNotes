@@ -66,10 +66,12 @@ namespace SilentNotes.Services
         }
 
         /// <inheritdoc/>
-        public void CloseAllSafes()
+        public bool CloseAllSafes()
         {
+            bool result = _safeKeys.Count > 0;
             foreach (Guid key in _safeKeys.Keys)
                 CloseSafe(key);
+            return result;
         }
 
         /// <inheritdoc/>

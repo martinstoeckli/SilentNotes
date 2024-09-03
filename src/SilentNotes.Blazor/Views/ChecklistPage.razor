@@ -175,14 +175,7 @@ div.note-dark .detail-view.checklist .ProseMirror p::after { content: @(IconServ
 <MudMainContent class="@ViewModel.LightOrDarkClass()">
 	<div id="content" class="d-flex flex-column" style="height: 100%">
 		<div class="flex-1" style="overflow-y: auto">
-			@if (ViewModel.IsLocked)
-			{
-				<span class="note-locked"><svg width='128' height='128' viewBox='0 0 24 24'><use xlink:href="#svg-lock-outline" /></svg></span>
-			}
-			else
-			{
-				<div @ref="_editorContainer" id="myeditor" class="note-viewer detail-view @ViewModel.CssClassNoteType"></div>
-			}
+			<div @ref="_editorContainer" id="myeditor" class="note-viewer detail-view @ViewModel.CssClassNoteType"></div>
 		</div>
 
 		@* Tags *@
@@ -316,13 +309,13 @@ div.note-dark .detail-view.checklist .ProseMirror p::after { content: @(IconServ
 		if (ViewModel.Model == NoteModel.NotFound)
 			// Redirect to home if note was not found
 			NavigationService.NavigateTo(RouteNames.NoteRepository);
-		else if (ViewModel.IsLocked)
-			// Redirect to open safe if locked
-			NavigationService.NavigateTo(ViewModel.Route);
 	}
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
+		if ((ViewModel == null) || ViewModel.IsLocked || (ViewModel.Model == NoteModel.NotFound))
+			return;
+
 		if (firstRender)
 		{
 			try
@@ -371,6 +364,24 @@ div.note-dark .detail-view.checklist .ProseMirror p::after { content: @(IconServ
 		}
 	}
 
+	/// <inheritdoc/>
+	protected override void OnAfterResume(DateTime lastPauseTime, bool safesClosed)
+	{
+		base.OnAfterResume(lastPauseTime, safesClosed);
+		if ((ViewModel == null) || (ViewModel.Model == NoteModel.NotFound))
+			return;
+
+		if (ViewModel.IsLocked)
+		{
+			// Go to the safe open dialog
+			Navigation.NavigateTo(ViewModel.Route, true);
+		}
+		else
+		{
+			Navigation.NavigateReload();
+		}
+	}
+
 	private NoteViewModel ViewModel { get; set; }
 
 	/// <summary>
@@ -383,6 +394,9 @@ div.note-dark .detail-view.checklist .ProseMirror p::after { content: @(IconServ
 	protected override void OnStoringUnsavedData(StoreUnsavedDataMessage message)
 	{
 		base.OnStoringUnsavedData(message);
+		if ((ViewModel == null) || ViewModel.IsLocked || (ViewModel.Model == NoteModel.NotFound))
+			return;
+
 		ViewModel.OnStoringUnsavedData(message);
 	}
 

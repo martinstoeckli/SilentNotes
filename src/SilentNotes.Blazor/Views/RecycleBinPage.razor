@@ -15,6 +15,7 @@
 @inject IJSRuntime JSRuntime
 @inject INavigationService Navigation
 @inject ISafeKeyService SafeKeyService
+@inject ICryptoRandomService CryptoRandomSource
 
 <style type="text/css">
 	.mud-main-content {
@@ -100,7 +101,7 @@
 	{
 		RepositoryStorageService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepositoryModel);
 		ViewModel = new RecycleBinViewModel(
-			noteRepositoryModel, LanguageService, ThemeService, FeedbackService, SettingsService, SafeKeyService, RepositoryStorageService);
+			noteRepositoryModel, LanguageService, ThemeService, FeedbackService, SettingsService, SafeKeyService, CryptoRandomSource, RepositoryStorageService);
 	}
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -116,6 +117,27 @@
 	{
 		base.OnStoringUnsavedData(message);
 		ViewModel.OnStoringUnsavedData();
+	}
+
+	/// <inheritdoc/>
+	protected override void OnAfterResume(DateTime lastPauseTime, bool safesClosed)
+	{
+		base.OnAfterResume(lastPauseTime, safesClosed);
+		bool reload = safesClosed;
+		if (!reload)
+		{
+			RepositoryStorageLoadResult loadResult = RepositoryStorageService.LoadRepositoryOrDefault(out NoteRepositoryModel newRepositoryModel);
+			reload = !object.ReferenceEquals(ViewModel.Model, newRepositoryModel);
+			if (!reload)
+			{
+				long oldFingerprint = ViewModel.Model.GetModificationFingerprint();
+				long newFingerprint = newRepositoryModel.GetModificationFingerprint();
+				reload = oldFingerprint != newFingerprint;
+			}
+		}
+
+		if (reload)
+			Navigation.NavigateReload();
 	}
 
 	private RecycleBinViewModel ViewModel { get; set; }

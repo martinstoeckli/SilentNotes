@@ -45,8 +45,9 @@ namespace SilentNotes.Services
         bool IsSafeOpen(Guid safeId);
 
         /// <summary>
-        /// Cleans up and removes all keys. This should be used only when resetting the safes.
+        /// Cleans up and removes all keys.
         /// </summary>
-        void CloseAllSafes();
+        /// <returns>Returns true if there was at least one safe to close.</returns>
+        bool CloseAllSafes();
     }
 }
