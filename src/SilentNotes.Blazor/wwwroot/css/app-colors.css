@@ -76,7 +76,7 @@
 	background-image: linear-gradient(to bottom, var(--logo-background-light), var(--logo-background)); /* Chrome 26+, Firefox 16+, IE 10+, Opera 12.50+ */
 }
 
-.background-icon { color: var(--mud-palette-background-grey) }
+.background-icon { color: var(--mud-palette-background-grey); fill: var(--mud-palette-background-grey) }
 
 .secondary-app-bar { 
 	background-color: var(--theme-appbar-secondary);
