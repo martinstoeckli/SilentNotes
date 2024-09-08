@@ -1,12 +1,12 @@
-﻿using NUnit.Framework;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SilentNotes.Workers;
 
 namespace SilentNotesTest.Workers
 {
-    [TestFixture]
+    [TestClass]
     public class FloatingPointUtilsTest
     {
-        [Test]
+        [TestMethod]
         public void FormatInvariantIgnoresCurrentCulture()
         {
             double value = 8.88888888;

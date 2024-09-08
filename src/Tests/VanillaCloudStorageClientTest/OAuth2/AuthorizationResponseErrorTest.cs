@@ -1,12 +1,12 @@
-﻿using NUnit.Framework;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using VanillaCloudStorageClient.OAuth2;
 
 namespace VanillaCloudStorageClientTest.OAuth2
 {
-    [TestFixture]
+    [TestClass]
     public class AuthorizationResponseErrorTest
     {
-        [Test]
+        [TestMethod]
         public void ParsesAllErrorCodesCorrectly()
         {
             // see: https://tools.ietf.org/html/rfc6749#section-4.1.2.1
@@ -19,14 +19,14 @@ namespace VanillaCloudStorageClientTest.OAuth2
             Assert.AreEqual(AuthorizationResponseError.TemporarilyUnavailable, AuthorizationResponseErrorExtensions.StringToAuthorizationResponseError("temporarily_unavailable"));
         }
 
-        [Test]
+        [TestMethod]
         public void ParsesNullErrorCodeCorrectly()
         {
             Assert.IsNull(AuthorizationResponseErrorExtensions.StringToAuthorizationResponseError(null));
             Assert.IsNull(AuthorizationResponseErrorExtensions.StringToAuthorizationResponseError(string.Empty));
         }
 
-        [Test]
+        [TestMethod]
         public void ParsesUnknownErrorCodeCorrectly()
         {
             Assert.AreEqual(AuthorizationResponseError.Unknown, AuthorizationResponseErrorExtensions.StringToAuthorizationResponseError("a service should never return this error code"));

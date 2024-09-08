@@ -4,31 +4,31 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SilentNotes.Workers;
 
 namespace SilentNotesTest.Workers
 {
-    [TestFixture]
+    [TestClass]
     public class AtomicFileWriterTest
     {
         private const string _testFileName = "test.txt";
         private string _directoryPath;
 
-        [SetUp]
+        [TestInitialize]
         public void SetupTestDirectory()
         {
             _directoryPath = Path.Combine(Path.GetTempPath(), "unittest_" + Guid.NewGuid().ToString());
             Directory.CreateDirectory(_directoryPath);
         }
 
-        [TearDown]
+        [TestCleanup]
         public void RemoveTestDirectory()
         {
             Directory.Delete(_directoryPath, true);
         }
 
-        [Test]
+        [TestMethod]
         public void FileHasNewContentAfterSuccessfulStorage()
         {
             string filePath = GetTestFilePath();
@@ -39,12 +39,12 @@ namespace SilentNotesTest.Workers
 
             Assert.IsTrue(File.Exists(filePath));
             byte[] readContent = File.ReadAllBytes(filePath);
-            Assert.AreEqual(newContent, readContent);
+            CollectionAssert.AreEqual(newContent, readContent);
             Assert.IsFalse(TempFileExists());
             Assert.IsFalse(ReadyFileExists());
         }
 
-        [Test]
+        [TestMethod]
         public void ExistingFileCanBeOverwritten()
         {
             string filePath = GetTestFilePath();
@@ -57,10 +57,10 @@ namespace SilentNotesTest.Workers
             writer.Write(filePath, stream => stream.Write(newContent));
 
             byte[] readContent = File.ReadAllBytes(filePath);
-            Assert.AreEqual(newContent, readContent);
+            CollectionAssert.AreEqual(newContent, readContent);
         }
 
-        [Test]
+        [TestMethod]
         public void OriginalFileIsLeftIntactWhenWritingFails()
         {
             string filePath = GetTestFilePath();
@@ -79,11 +79,11 @@ namespace SilentNotesTest.Workers
             }
 
             byte[] readContent = File.ReadAllBytes(filePath);
-            Assert.AreEqual(oldContent, readContent);
+            CollectionAssert.AreEqual(oldContent, readContent);
             Assert.IsFalse(ReadyFileExists());
         }
 
-        [Test]
+        [TestMethod]
         public void NextStorageWorksAfterWritingFailed()
         {
             string filePath = GetTestFilePath();
@@ -103,11 +103,11 @@ namespace SilentNotesTest.Workers
             writer.Write(filePath, stream => stream.Write(newerContent));
 
             byte[] readContent = File.ReadAllBytes(filePath);
-            Assert.AreEqual(newerContent, readContent);
+            CollectionAssert.AreEqual(newerContent, readContent);
             Assert.IsFalse(ReadyFileExists());
         }
 
-        [Test]
+        [TestMethod]
         public void ReadyStateIsSetAfterReplacingFailed()
         {
             string filePath = GetTestFilePath();
@@ -124,10 +124,10 @@ namespace SilentNotesTest.Workers
 
             Assert.IsTrue(ReadyFileExists());
             byte[] readContent = File.ReadAllBytes(GetTempFilePath());
-            Assert.AreEqual(newContent, readContent);
+            CollectionAssert.AreEqual(newContent, readContent);
         }
 
-        [Test]
+        [TestMethod]
         public void OperationCanBeCompletedAfterReplacingFailed()
         {
             string filePath = GetTestFilePath();
@@ -146,12 +146,12 @@ namespace SilentNotesTest.Workers
             writer.CompletePendingWrite(filePath);
 
             byte[] readContent = File.ReadAllBytes(filePath);
-            Assert.AreEqual(newContent, readContent);
+            CollectionAssert.AreEqual(newContent, readContent);
             Assert.IsFalse(ReadyFileExists());
             Assert.IsFalse(TempFileExists());
         }
 
-        [Test]
+        [TestMethod]
         public void SubsequentWritingIsBlockedAfterReplacingFailed()
         {
             string filePath = GetTestFilePath();
@@ -168,17 +168,17 @@ namespace SilentNotesTest.Workers
 
             writer = new AtomicFileWriter();
             var newerContent = new byte[] { 99 };
-            Assert.Throws<UnfinishedAtomicFileWritingException>(() => writer.Write(filePath, stream => stream.Write(newerContent)));
+            Assert.ThrowsException<UnfinishedAtomicFileWritingException>(() => writer.Write(filePath, stream => stream.Write(newerContent)));
 
             // The ready state and the content of the first writing must still be intact, so it can
             // be completed later on.
             Assert.IsTrue(ReadyFileExists());
             Assert.IsTrue(TempFileExists());
             byte[] readContent = File.ReadAllBytes(GetTempFilePath());
-            Assert.AreEqual(newContent, readContent);
+            CollectionAssert.AreEqual(newContent, readContent);
         }
 
-        [Test]
+        [TestMethod]
         public void InvalidPendingFileDoesntOverwriteOriginal()
         {
             string filePath = GetTestFilePath();
@@ -190,12 +190,12 @@ namespace SilentNotesTest.Workers
             writer.Write(filePath, stream => stream.Write(newContent));
 
             byte[] readContent = File.ReadAllBytes(filePath);
-            Assert.AreEqual(oldContent, readContent);
+            CollectionAssert.AreEqual(oldContent, readContent);
             Assert.IsFalse(ReadyFileExists());
             Assert.IsFalse(TempFileExists());
         }
 
-        [Test]
+        [TestMethod]
         public void InvalidPendingFileDoesntBlock()
         {
             string filePath = GetTestFilePath();
@@ -208,7 +208,7 @@ namespace SilentNotesTest.Workers
             writer.Write(filePath, stream => stream.Write(newerContent));
 
             byte[] readContent = File.ReadAllBytes(filePath);
-            Assert.AreEqual(newerContent, readContent);
+            CollectionAssert.AreEqual(newerContent, readContent);
             Assert.IsFalse(ReadyFileExists());
             Assert.IsFalse(TempFileExists());
         }

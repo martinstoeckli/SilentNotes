@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Moq;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SilentNotes;
 using SilentNotes.Crypto;
 using SilentNotes.Models;
@@ -12,10 +12,10 @@ using SilentNotes.Workers;
 
 namespace SilentNotesTest.ViewModels
 {
-    [TestFixture]
+    [TestClass]
     public class NoteViewModelTest
     {
-        [Test]
+        [TestMethod]
         public void UsesNotFoundNote_WhenConstructorGetsNullModel()
         {
             NoteModel inexistingModel = null;
@@ -23,7 +23,7 @@ namespace SilentNotesTest.ViewModels
             Assert.AreSame(NoteModel.NotFound, viewModel.Model);
         }
 
-        [Test]
+        [TestMethod]
         public void DoesNotShowContentWhenSafeIsClosed()
         {
             SearchableHtmlConverter searchableConverter = new SearchableHtmlConverter();
@@ -51,7 +51,7 @@ namespace SilentNotesTest.ViewModels
             Assert.IsNull(noteViewModel.SearchableContent);
         }
 
-        [Test]
+        [TestMethod]
         public void ShowsUnlockedContentWhenSafeIsOpen()
         {
             string modelHtmlContent = "c2VjcmV0";
@@ -85,7 +85,7 @@ namespace SilentNotesTest.ViewModels
             Assert.AreEqual("not secret anymore", noteViewModel.SearchableContent);
         }
 
-        [Test]
+        [TestMethod]
         public void ModifiedNoteIsEncryptedAndStored()
         {
             string modelHtmlContent = "c2VjcmV0";
@@ -139,7 +139,7 @@ namespace SilentNotesTest.ViewModels
             repositoryService.Verify(m => m.TrySaveRepository(It.IsAny<NoteRepositoryModel>()), Times.Once);
         }
 
-        [Test]
+        [TestMethod]
         public void AddTag_IsCaseInsensitive()
         {
             NoteModel note = new NoteModel { Id = Guid.NewGuid(), HtmlContent = "secret" };
@@ -173,7 +173,7 @@ namespace SilentNotesTest.ViewModels
             Assert.AreEqual(2, noteViewModel.Tags.Count);
         }
 
-        [Test]
+        [TestMethod]
         public void AddTag_IsAlwaysSorted()
         {
             NoteModel note = new NoteModel { Id = Guid.NewGuid(), HtmlContent = "secret" };
@@ -214,7 +214,7 @@ namespace SilentNotesTest.ViewModels
             Assert.AreEqual("f", noteViewModel.Tags[8]);
         }
 
-        [Test]
+        [TestMethod]
         public void TagSuggestions_ExcludeTagsOfOwnNote()
         {
             NoteModel note = new NoteModel { Id = Guid.NewGuid() };
@@ -240,7 +240,7 @@ namespace SilentNotesTest.ViewModels
             Assert.AreEqual("bbb", suggestions[0]);
         }
 
-        [Test]
+        [TestMethod]
         public void TogglePinned_ChangesPinState()
         {
             NoteModel note = new NoteModel { Id = Guid.NewGuid() };
@@ -253,7 +253,7 @@ namespace SilentNotesTest.ViewModels
             Assert.IsFalse(note.IsPinned);
         }
 
-        [Test]
+        [TestMethod]
         public void TogglePinned_CalledTwice_DoesNotChangeNotePosition()
         {
             NoteRepositoryModel repository = CreateTestRepository();
@@ -268,7 +268,7 @@ namespace SilentNotesTest.ViewModels
             Assert.IsFalse(noteToBePinned.IsPinned);
         }
 
-        [Test]
+        [TestMethod]
         public void TogglePinned_CalledTwice_DoesNotStoreRepository()
         {
             NoteModel noteToBePinned = new NoteModel { Id = new Guid("11111111-1111-1111-1111-111111111111") };
@@ -282,7 +282,7 @@ namespace SilentNotesTest.ViewModels
             repositoryStorageService.Verify(m => m.TrySaveRepository(It.IsAny<NoteRepositoryModel>()), Times.Never);
         }
 
-        [Test]
+        [TestMethod]
         public void IsPinned_SetToTrue_MovesNotePositionToTop()
         {
             NoteRepositoryModel repository = CreateTestRepository();
@@ -296,7 +296,7 @@ namespace SilentNotesTest.ViewModels
             Assert.IsTrue(noteToBePinned.IsPinned);
         }
 
-        [Test]
+        [TestMethod]
         public void IsPinned_SetToFalse_MovesNotePositionPastLastPinned()
         {
             NoteRepositoryModel repository = CreateTestRepository();
@@ -312,7 +312,7 @@ namespace SilentNotesTest.ViewModels
             Assert.IsFalse(noteToBeUnpinned.IsPinned);
         }
 
-        [Test]
+        [TestMethod]
         public void IsPinned_SetToFalse_WorksWithAllNotesPinned()
         {
             NoteRepositoryModel repository = CreateTestRepository();
@@ -329,7 +329,7 @@ namespace SilentNotesTest.ViewModels
             Assert.IsFalse(noteToBeUnpinned.IsPinned);
         }
 
-        [Test]
+        [TestMethod]
         public void IsPinned_PositionChange_StoresPosition()
         {
             NoteRepositoryModel repository = CreateTestRepository();
@@ -345,7 +345,7 @@ namespace SilentNotesTest.ViewModels
             Assert.IsTrue(repository.OrderModifiedAt != original);
         }
 
-        [Test]
+        [TestMethod]
         public void IsPinned_NoPositionChange_NOTStoresPosition()
         {
             NoteRepositoryModel repository = CreateTestRepository();
@@ -361,7 +361,7 @@ namespace SilentNotesTest.ViewModels
             Assert.IsTrue(repository.OrderModifiedAt == original);
         }
 
-        [Test]
+        [TestMethod]
         public void IsPinned_SetToFalse_WorksWithOnlySingleNote()
         {
             NoteRepositoryModel repository = new NoteRepositoryModel { Id = new Guid("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa") };

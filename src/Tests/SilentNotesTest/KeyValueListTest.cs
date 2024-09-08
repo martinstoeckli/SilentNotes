@@ -1,4 +1,4 @@
-﻿using NUnit.Framework;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SilentNotes;
 using SilentNotes.Workers;
 using System;
@@ -7,10 +7,10 @@ using System.Xml.Serialization;
 
 namespace SilentNotesTest
 {
-    [TestFixture]
+    [TestClass]
     public class KeyValueListTest
     {
-        [Test]
+        [TestMethod]
         public void AddOrReplaceWorksAddsNewEntry()
         {
             KeyValueList<string, string> list = new KeyValueList<string, string>();
@@ -22,7 +22,7 @@ namespace SilentNotesTest
             Assert.AreEqual("once", list[0].Value);
         }
 
-        [Test]
+        [TestMethod]
         public void AddOrReplaceWorksReplacesEntry()
         {
             KeyValueList<string, string> list = new KeyValueList<string, string>();
@@ -34,7 +34,7 @@ namespace SilentNotesTest
             Assert.AreEqual("twice", list[0].Value);
         }
 
-        [Test]
+        [TestMethod]
         public void AddOrReplaceAcceptsNullValue()
         {
             KeyValueList<string, string> list = new KeyValueList<string, string>();
@@ -46,7 +46,7 @@ namespace SilentNotesTest
             Assert.IsNull(list[1].Key);
         }
 
-        [Test]
+        [TestMethod]
         public void GetterFindsCorrectValue()
         {
             KeyValueList<string, string> list = new KeyValueList<string, string>();
@@ -62,7 +62,7 @@ namespace SilentNotesTest
             Assert.IsNull(result);
         }
 
-        [Test]
+        [TestMethod]
         public void GetterReturnsDefaultValueForNonExistingItem()
         {
             KeyValueList<string, string> list = new KeyValueList<string, string>();
@@ -71,7 +71,7 @@ namespace SilentNotesTest
             Assert.IsNull(result);
         }
 
-        [Test]
+        [TestMethod]
         public void GetterAcceptsNull()
         {
             KeyValueList<string, string> list = new KeyValueList<string, string>();
@@ -85,7 +85,7 @@ namespace SilentNotesTest
             Assert.AreEqual("none", result);
         }
 
-        [Test]
+        [TestMethod]
         public void TryGetValueWorksCorrectly()
         {
             KeyValueList<string, string> list = new KeyValueList<string, string>();
@@ -102,7 +102,7 @@ namespace SilentNotesTest
             Assert.IsNull(value);
         }
 
-        [Test]
+        [TestMethod]
         public void TryGetKeyWorksCorrectly()
         {
             KeyValueList<string, string> list = new KeyValueList<string, string>();
@@ -119,7 +119,7 @@ namespace SilentNotesTest
             Assert.IsNull(key);
         }
 
-        [Test]
+        [TestMethod]
         public void ListRespectsEqualityComparer()
         {
             // case insensitive comparer
@@ -133,7 +133,7 @@ namespace SilentNotesTest
             Assert.AreEqual("one", result);
         }
 
-        [Test]
+        [TestMethod]
         public void IntIndexerReturnsValueInsteadOfPair()
         {
             KeyValueList<int, string> list = new KeyValueList<int, string>();
@@ -143,7 +143,7 @@ namespace SilentNotesTest
             Assert.AreEqual("once", result);
         }
 
-        [Test]
+        [TestMethod]
         public void IsEnumerable()
         {
             KeyValueList<string, string> list = new KeyValueList<string, string>();
@@ -167,7 +167,7 @@ namespace SilentNotesTest
             }
         }
 
-        [Test]
+        [TestMethod]
         public void GetByIndexReturnsPair()
         {
             KeyValueList<string, string> list = new KeyValueList<string, string>();
@@ -177,7 +177,7 @@ namespace SilentNotesTest
             Assert.AreEqual("one", pair.Key);
         }
 
-        [Test]
+        [TestMethod]
         public void RemoveByKeyRemovesAllMatchingItems()
         {
             KeyValueList<int, string> list = new KeyValueList<int, string>();
@@ -190,7 +190,7 @@ namespace SilentNotesTest
             Assert.AreEqual(2, list.GetByIndex(0).Key);
         }
 
-        [Test]
+        [TestMethod]
         public void CanSerialize()
         {
             ListContainer listContainer = new ListContainer();
@@ -205,7 +205,7 @@ namespace SilentNotesTest
             Assert.IsTrue(serializedList.Contains("<value>twice</value>"));
         }
 
-        [Test]
+        [TestMethod]
         public void CanDeserialize()
         {
             XDocument xml = XDocument.Parse(SerializedList);

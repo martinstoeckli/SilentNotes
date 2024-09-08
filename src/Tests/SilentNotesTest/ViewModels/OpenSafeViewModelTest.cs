@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Security;
 using Moq;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SilentNotes;
 using SilentNotes.Models;
 using SilentNotes.Services;
@@ -10,10 +10,10 @@ using VanillaCloudStorageClient;
 
 namespace SilentNotesTest.ViewModels
 {
-    [TestFixture]
+    [TestClass]
     public class OpenSafeViewModelTest
     {
-        [Test]
+        [TestMethod]
         public void ResetSafe_RemovesNotesAndSafes()
         {
             Guid note1Id = new Guid("10000000000000000000000000000000");
@@ -54,7 +54,7 @@ namespace SilentNotesTest.ViewModels
             navigationService.Verify(m => m.NavigateReload(), Times.Once);
         }
 
-        [Test]
+        [TestMethod]
         public void Ok_CreatesNewSafeAndMarksRepositoryAsModified()
         {
             Guid note1Id = new Guid("10000000000000000000000000000000");

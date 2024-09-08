@@ -1,13 +1,13 @@
 ﻿using System;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SilentNotes.Workers;
 
 namespace SilentNotesTest.Workers
 {
-    [TestFixture]
+    [TestClass]
     public class TimeAgoTest
     {
-        [Test]
+        [TestMethod]
         public void PrettyPrintStepsAtCorrectThresholds()
         {
             TimeAgo timeAgo = new TimeAgo(CreateTestLocalization());
@@ -32,7 +32,7 @@ namespace SilentNotesTest.Workers
             Assert.AreEqual("27 years", timeAgo.PrettyPrint(new DateTime(1984, 10, 01), new DateTime(2011, 10, 01)));
         }
 
-        [Test]
+        [TestMethod]
         public void PrettyPrintIgnoresTime()
         {
             TimeAgo timeAgo = new TimeAgo(CreateTestLocalization());
@@ -41,7 +41,7 @@ namespace SilentNotesTest.Workers
             Assert.AreEqual("yesterday", timeAgo.PrettyPrint(new DateTime(2011, 11, 11, 11, 11, 11), new DateTime(2011, 11, 12, 01, 01, 01)));
         }
 
-        [Test]
+        [TestMethod]
         public void PrettyPrintCalculatesCorrectWeeksAtLeapYear()
         {
             TimeAgo timeAgo = new TimeAgo(CreateTestLocalization());
@@ -51,7 +51,7 @@ namespace SilentNotesTest.Workers
             Assert.AreEqual("2 weeks", timeAgo.PrettyPrint(new DateTime(2000, 02, 10), new DateTime(2000, 03, 01)));
         }
 
-        [Test]
+        [TestMethod]
         public void AgeInYearsIgnoresTime()
         {
             TimeAgo timeAgo = new TimeAgo(CreateTestLocalization());
@@ -62,14 +62,14 @@ namespace SilentNotesTest.Workers
             Assert.AreEqual(1, timeAgo.AgeInYears(new DateTime(2011, 11, 11, 11, 11, 11), new DateTime(2012, 11, 11, 01, 01, 01)));
         }
 
-        [Test]
+        [TestMethod]
         public void AgeInYearsIsNeverNegative()
         {
             TimeAgo timeAgo = new TimeAgo(CreateTestLocalization());
             Assert.AreEqual(0, timeAgo.AgeInYears(new DateTime(2011, 11, 11), new DateTime(2011, 11, 08)));
         }
 
-        [Test]
+        [TestMethod]
         public void AgeInYearsReturnsCorrectNumberOfYears()
         {
             TimeAgo timeAgo = new TimeAgo(CreateTestLocalization());
@@ -80,7 +80,7 @@ namespace SilentNotesTest.Workers
             Assert.AreEqual(100, timeAgo.AgeInYears(new DateTime(1911, 11, 11), new DateTime(2011, 11, 11)));
         }
 
-        [Test]
+        [TestMethod]
         public void AgeInMonthsIgnoresTime()
         {
             TimeAgo timeAgo = new TimeAgo(CreateTestLocalization());
@@ -91,14 +91,14 @@ namespace SilentNotesTest.Workers
             Assert.AreEqual(1, timeAgo.AgeInMonths(new DateTime(2011, 11, 11, 11, 11, 11), new DateTime(2011, 12, 11, 01, 01, 01)));
         }
 
-        [Test]
+        [TestMethod]
         public void AgeInMonthsIsNeverNegative()
         {
             TimeAgo timeAgo = new TimeAgo(CreateTestLocalization());
             Assert.AreEqual(0, timeAgo.AgeInMonths(new DateTime(2011, 11, 11), new DateTime(2011, 10, 11)));
         }
 
-        [Test]
+        [TestMethod]
         public void AgeInMonthsReturnsCorrectNumberOfYears()
         {
             TimeAgo timeAgo = new TimeAgo(CreateTestLocalization());
@@ -109,7 +109,7 @@ namespace SilentNotesTest.Workers
             Assert.AreEqual(1200, timeAgo.AgeInMonths(new DateTime(1911, 11, 11), new DateTime(2011, 11, 11)));
         }
 
-        [Test]
+        [TestMethod]
         public void AgeInWeeksRoundsCorrectly()
         {
             TimeAgo timeAgo = new TimeAgo(CreateTestLocalization());
@@ -122,7 +122,7 @@ namespace SilentNotesTest.Workers
             Assert.AreEqual(2, timeAgo.AgeInWeeks(14.000001));
         }
 
-        [Test]
+        [TestMethod]
         public void AgeInMonthsHandlesIrregularMonths()
         {
             TimeAgo timeAgo = new TimeAgo(CreateTestLocalization());

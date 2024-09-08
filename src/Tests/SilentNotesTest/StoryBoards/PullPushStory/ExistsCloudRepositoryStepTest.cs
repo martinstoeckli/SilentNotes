@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Moq;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SilentNotes.Models;
 using SilentNotes.Services;
 using SilentNotes.Stories;
@@ -10,10 +10,10 @@ using VanillaCloudStorageClient;
 
 namespace SilentNotesTest.Stories.PullPushStory
 {
-    [TestFixture]
+    [TestClass]
     public class ExistsCloudRepositoryStepTest
     {
-        [Test]
+        [TestMethod]
         public async Task CorrectNextStepWhenCloudRepositoryExists()
         {
             SerializeableCloudStorageCredentials credentials = new SerializeableCloudStorageCredentials { CloudStorageId = CloudStorageClientFactory.CloudStorageIdDropbox };
@@ -46,10 +46,10 @@ namespace SilentNotesTest.Stories.PullPushStory
             settingsService.Verify(m => m.TrySaveSettingsToLocalDevice(It.Is<SettingsModel>(s => s.Credentials == credentials)), Times.Never);
 
             // Next step is called
-            Assert.IsInstanceOf<SilentNotes.Stories.PullPushStory.DownloadCloudRepositoryStep>(result.NextStep);
+            Assert.IsInstanceOfType<SilentNotes.Stories.PullPushStory.DownloadCloudRepositoryStep>(result.NextStep);
         }
 
-        [Test]
+        [TestMethod]
         public async Task QuitWhenMissingClientOrTransfercode()
         {
             SerializeableCloudStorageCredentials credentials = new SerializeableCloudStorageCredentials { CloudStorageId = CloudStorageClientFactory.CloudStorageIdDropbox };

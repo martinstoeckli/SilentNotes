@@ -3,15 +3,15 @@ using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 using System.Xml.Serialization;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SilentNotes.Workers;
 
 namespace SilentNotesTest.Workers
 {
-    [TestFixture]
+    [TestClass]
     public class XmlUtilsTest
     {
-        [Test]
+        [TestMethod]
         public void SerializeToStringUsesUtf16()
         {
             XmlSerializationTest testCandidate = new XmlSerializationTest
@@ -24,7 +24,7 @@ namespace SilentNotesTest.Workers
             Assert.IsTrue(result.Contains("utf-16"));
         }
 
-        [Test]
+        [TestMethod]
         public void CanSerializeDeserializeSanitizedXmlString()
         {
             // Build string with all valid letters
@@ -59,7 +59,7 @@ namespace SilentNotesTest.Workers
             Assert.AreEqual(allValidCharacters, result.TestElement);
         }
 
-        [Test]
+        [TestMethod]
         public void CanSerializeDeserializeXmlDocument()
         {
             // Serialize
@@ -79,7 +79,7 @@ namespace SilentNotesTest.Workers
             Assert.AreEqual("elem", deserializedCandidate.TestElement);
         }
 
-        [Test]
+        [TestMethod]
         public void FuzzyTestForSerializationDeserialization()
         {
             //return;
@@ -122,7 +122,7 @@ namespace SilentNotesTest.Workers
             }
         }
 
-        [Test]
+        [TestMethod]
         public void SanitizeValidXmlCharactersAcceptsEmojis()
         {
             string emojiCharacters = "🐢🐼👍🍒🥋💪⚕㊙🖐🏿";
@@ -130,7 +130,7 @@ namespace SilentNotesTest.Workers
             Assert.AreEqual(emojiCharacters, allValidCharacters);
         }
 
-        [Test]
+        [TestMethod]
         public void SanitizeValidXmlCharactersRemovesInvalidUtf8()
         {
             // A high surrogate character must be followed by low surrogate character.
@@ -151,7 +151,7 @@ namespace SilentNotesTest.Workers
             Assert.AreEqual("🖐🏿", after);
         }
 
-        [Test]
+        [TestMethod]
         public void CanDeserializeEmojis()
         {
             // Build string with all valid letters

@@ -1,12 +1,12 @@
-﻿using NUnit.Framework;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SilentNotes.Crypto;
 
 namespace SilentNotesTest.Crypto
 {
-    [TestFixture]
+    [TestClass]
     public class CryptoHeaderPackerTest
     {
-        [Test]
+        [TestMethod]
         public void PackingAndUnpackingResultsInOriginal()
         {
             CryptoHeader header = new CryptoHeader
@@ -28,13 +28,13 @@ namespace SilentNotesTest.Crypto
             Assert.AreEqual(header.AlgorithmName, unpackedHeader.AlgorithmName);
             Assert.AreEqual(header.KdfName, unpackedHeader.KdfName);
             Assert.AreEqual(header.Cost, unpackedHeader.Cost);
-            Assert.AreEqual(header.Nonce, unpackedHeader.Nonce);
-            Assert.AreEqual(header.Salt, unpackedHeader.Salt);
-            Assert.AreEqual(cipher, unpackedCipher);
+            CollectionAssert.AreEqual(header.Nonce, unpackedHeader.Nonce);
+            CollectionAssert.AreEqual(header.Salt, unpackedHeader.Salt);
+            CollectionAssert.AreEqual(cipher, unpackedCipher);
             Assert.AreEqual(header.Compression, unpackedHeader.Compression);
         }
 
-        [Test]
+        [TestMethod]
         public void PackingAndUnpackingWorksWithKeyOnly()
         {
             // If the encryption is started with a key instead of a password, there are not all parametes set.
@@ -57,13 +57,13 @@ namespace SilentNotesTest.Crypto
             Assert.AreEqual(header.AlgorithmName, unpackedHeader.AlgorithmName);
             Assert.AreEqual(header.KdfName, unpackedHeader.KdfName);
             Assert.AreEqual(header.Cost, unpackedHeader.Cost);
-            Assert.AreEqual(header.Nonce, unpackedHeader.Nonce);
-            Assert.AreEqual(header.Salt, unpackedHeader.Salt);
-            Assert.AreEqual(cipher, unpackedCipher);
+            CollectionAssert.AreEqual(header.Nonce, unpackedHeader.Nonce);
+            CollectionAssert.AreEqual(header.Salt, unpackedHeader.Salt);
+            CollectionAssert.AreEqual(cipher, unpackedCipher);
             Assert.AreEqual(header.Compression, unpackedHeader.Compression);
         }
 
-        [Test]
+        [TestMethod]
         public void HasMatchingHeaderRecognizesValidHeader()
         {
             byte[] array = CryptoUtils.StringToBytes("MyAppName v=8$");
@@ -85,7 +85,7 @@ namespace SilentNotesTest.Crypto
             Assert.IsFalse(CryptoHeaderPacker.HasMatchingHeader(array, "MyAppName", out _));
         }
 
-        [Test]
+        [TestMethod]
         public void HasMatchingHeaderRecognizesOldHeaderWithoutRevision()
         {
             byte[] array = CryptoUtils.StringToBytes("MyAppName$");
@@ -104,7 +104,7 @@ namespace SilentNotesTest.Crypto
             Assert.IsFalse(CryptoHeaderPacker.HasMatchingHeader(array, "MyAppName", out _));
         }
 
-        [Test]
+        [TestMethod]
         public void HasMatchingHeaderHandlesNullAndEmpty()
         {
             byte[] array = null;
@@ -114,7 +114,7 @@ namespace SilentNotesTest.Crypto
             Assert.IsFalse(CryptoHeaderPacker.HasMatchingHeader(array, "MyAppName", out _));
         }
 
-        [Test]
+        [TestMethod]
         public void EnsureBackwardsCompatibility()
         {
             // Ensure that a once stored packed header can always be unpacked even after changes in the liberary
@@ -126,9 +126,9 @@ namespace SilentNotesTest.Crypto
             Assert.AreEqual("Twofish", unpackedHeader.AlgorithmName);
             Assert.AreEqual("PBKDF2", unpackedHeader.KdfName);
             Assert.AreEqual("10", unpackedHeader.Cost);
-            Assert.AreEqual(CommonMocksAndStubs.FilledByteArray(8, 66), unpackedHeader.Nonce);
-            Assert.AreEqual(CommonMocksAndStubs.FilledByteArray(8, 77), unpackedHeader.Salt);
-            Assert.AreEqual(CommonMocksAndStubs.FilledByteArray(16, 88), unpackedCipher);
+            CollectionAssert.AreEqual(CommonMocksAndStubs.FilledByteArray(8, 66), unpackedHeader.Nonce);
+            CollectionAssert.AreEqual(CommonMocksAndStubs.FilledByteArray(8, 77), unpackedHeader.Salt);
+            CollectionAssert.AreEqual(CommonMocksAndStubs.FilledByteArray(16, 88), unpackedCipher);
         }
     }
 }

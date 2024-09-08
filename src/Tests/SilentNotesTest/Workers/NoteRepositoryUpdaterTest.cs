@@ -1,22 +1,22 @@
 ﻿using System;
 using System.Xml.Linq;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SilentNotes.Models;
 using SilentNotes.Workers;
 
 namespace SilentNotesTest.Workers
 {
-    [TestFixture]
+    [TestClass]
     public class NoteRepositoryUpdaterTest
     {
-        [Test]
+        [TestMethod]
         public void NewestSupportedVersionIsCorrect()
         {
             INoteRepositoryUpdater updater = new NoteRepositoryUpdater();
             Assert.AreEqual(NoteRepositoryModel.NewestSupportedRevision, updater.NewestSupportedRevision);
         }
 
-        [Test]
+        [TestMethod]
         public void IsTooNewForThisAppWorksCorrectly()
         {
             INoteRepositoryUpdater updater = new NoteRepositoryUpdater();
@@ -36,7 +36,7 @@ namespace SilentNotesTest.Workers
             Assert.IsTrue(updater.IsTooNewForThisApp(repositoryXml));
         }
 
-        [Test]
+        [TestMethod]
         public void Update_SetsNewestVersionNumber()
         {
             // Set revision too small
@@ -48,7 +48,7 @@ namespace SilentNotesTest.Workers
             Assert.AreEqual(NoteRepositoryModel.NewestSupportedRevision.ToString(), repositoryXml.Root.Attribute("revision").Value);
         }
 
-        [Test]
+        [TestMethod]
         public void UpdatesFrom1To2Correctly()
         {
             INoteRepositoryUpdater updater = new NoteRepositoryUpdater();

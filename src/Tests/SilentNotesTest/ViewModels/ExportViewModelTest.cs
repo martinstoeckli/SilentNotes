@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Linq;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SilentNotes.Models;
 using SilentNotes.ViewModels;
 
 namespace SilentNotesTest.ViewModels
 {
-    [TestFixture]
+    [TestClass]
     public class ExportViewModelTest
     {
-        [Test]
+        [TestMethod]
         public void EnumerateNotesToExport_ReturnsUnprotectedNotesOnly()
         {
             NoteRepositoryModel repository = CreateTestRepository();
@@ -22,7 +22,7 @@ namespace SilentNotesTest.ViewModels
             Assert.AreSame(repository.Notes[2], notes[1]);
         }
 
-        [Test]
+        [TestMethod]
         public void EnumerateNotesToExport_DoesNotReturnProtectedNoteBecauseSafeIsClosed()
         {
             NoteRepositoryModel repository = CreateTestRepository();
@@ -33,7 +33,7 @@ namespace SilentNotesTest.ViewModels
             Assert.AreSame(repository.Notes[2], notes[1]);
         }
 
-        [Test]
+        [TestMethod]
         public void EnumerateNotesToExport_ReturnsProtectedNotesOnly()
         {
             NoteRepositoryModel repository = CreateTestRepository();

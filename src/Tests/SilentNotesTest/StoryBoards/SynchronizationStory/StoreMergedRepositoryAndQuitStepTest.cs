@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Moq;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SilentNotes.Crypto.SymmetricEncryption;
 using SilentNotes.Models;
 using SilentNotes.Services;
@@ -10,10 +10,10 @@ using VanillaCloudStorageClient;
 
 namespace SilentNotesTest.Stories.SynchronizationStory
 {
-    [TestFixture]
+    [TestClass]
     public class StoreMergedRepositoryAndQuitStepTest
     {
-        [Test]
+        [TestMethod]
         public async Task DoNotStoreAnythingWhenRepositoriesAreSame()
         {
             NoteRepositoryModel repositoryModel = new NoteRepositoryModel();
@@ -48,10 +48,10 @@ namespace SilentNotesTest.Stories.SynchronizationStory
             cloudStorageClient.Verify(m => m.UploadFileAsync(It.IsAny<string>(), It.IsAny<byte[]>(), It.IsAny<CloudStorageCredentials>()), Times.Never);
 
             // Next step is called
-            Assert.IsInstanceOf<StopAndShowRepositoryStep>(result.NextStep);
+            Assert.IsInstanceOfType<StopAndShowRepositoryStep>(result.NextStep);
         }
 
-        [Test]
+        [TestMethod]
         public async Task StoreMergedRepositoryWhenDifferent()
         {
             const string transferCode = "abcdefgh";
@@ -92,7 +92,7 @@ namespace SilentNotesTest.Stories.SynchronizationStory
             cloudStorageClient.Verify(m => m.UploadFileAsync(It.IsAny<string>(), It.IsAny<byte[]>(), It.IsAny<CloudStorageCredentials>()), Times.Once);
 
             // Next step is called
-            Assert.IsInstanceOf<StopAndShowRepositoryStep>(result.NextStep);
+            Assert.IsInstanceOfType<StopAndShowRepositoryStep>(result.NextStep);
         }
 
         private static SettingsModel CreateSettingsModel(string transferCode)

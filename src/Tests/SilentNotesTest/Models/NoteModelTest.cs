@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SilentNotes.Models;
 using SilentNotes.Workers;
 
 namespace SilentNotesTest.Models
 {
-    [TestFixture]
+    [TestClass]
     public class NoteModelTest
     {
-        [Test]
+        [TestMethod]
         public void LazyGenerationOfId()
         {
             NoteModel model = new NoteModel();
@@ -20,7 +20,7 @@ namespace SilentNotesTest.Models
             Assert.AreEqual(id1, id2); // Id does not change when accessed repeatedly
         }
 
-        [Test]
+        [TestMethod]
         public void CloneCopiesAllProperties()
         {
             NoteModel note1 = new NoteModel
@@ -57,7 +57,7 @@ namespace SilentNotesTest.Models
             Assert.AreEqual(note1Xml, note2Xml);
         }
 
-        [Test]
+        [TestMethod]
         public void CloneTo_OnSameInstanceKeepsNoteUntouched()
         {
             NoteModel note1 = new NoteModel
@@ -81,7 +81,7 @@ namespace SilentNotesTest.Models
             Assert.AreEqual(noteBeforeXml, noteAfterXml);
         }
 
-        [Test]
+        [TestMethod]
         public void MetaModifiedAt_ReturnsNullIfNotNewerThanModifiedAt()
         {
             NoteModel note1 = new NoteModel { ModifiedAt = new DateTime(2020, 1, 1) };

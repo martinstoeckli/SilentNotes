@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Xml.Linq;
 using Moq;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SilentNotes.Models;
 using SilentNotes.Services;
 using SilentNotes.Workers;
 
 namespace SilentNotesTest.Services
 {
-    [TestFixture]
+    [TestClass]
     public class RepositoryStorageServiceTest
     {
-        [Test]
+        [TestMethod]
         public void LoadsSettingsReturnsStoredSettings()
         {
             NoteRepositoryModel storedSettings = new NoteRepositoryModel { Id = new Guid(), Revision = NoteRepositoryModel.NewestSupportedRevision };
@@ -34,7 +34,7 @@ namespace SilentNotesTest.Services
             fileService.Verify(m => m.TrySerializeAndSave(It.IsAny<string>(), It.IsAny<NoteRepositoryModel>()), Times.Never);
         }
 
-        [Test]
+        [TestMethod]
         public void LoadRepositoryOrDefault_DoesNotOverwriteIvalidRepository()
         {
             XDocument xml = new XDocument(new XElement("Invalid"));
@@ -55,7 +55,7 @@ namespace SilentNotesTest.Services
             fileService.Verify(m => m.TrySerializeAndSave(It.IsAny<string>(), It.IsAny<NoteRepositoryModel>()), Times.Never);
         }
 
-        [Test]
+        [TestMethod]
         public void TrySaveRepository_DoesNotOverwriteWithIvalidRepository()
         {
             Mock<IXmlFileService> fileService = new Mock<IXmlFileService>();
@@ -68,7 +68,7 @@ namespace SilentNotesTest.Services
             fileService.Verify(m => m.TrySerializeAndSave(It.IsAny<string>(), It.IsAny<NoteRepositoryModel>()), Times.Never);
         }
 
-        [Test]
+        [TestMethod]
         public void LoadSettingsCreatesDefaultIfNoFileFound()
         {
             Mock<IXmlFileService> fileService = new Mock<IXmlFileService>();
@@ -85,7 +85,7 @@ namespace SilentNotesTest.Services
             fileService.Verify(m => m.TrySerializeAndSave(It.IsAny<string>(), It.IsAny<NoteRepositoryModel>()), Times.Once);
         }
 
-        [Test]
+        [TestMethod]
         public void Version1ConfigWillBeUpdated()
         {
             XDocument xml = XDocument.Parse(Version1Repository);

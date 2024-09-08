@@ -1,14 +1,14 @@
 ﻿using System;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SilentNotes.Models;
 using SilentNotes.Services;
 
 namespace SilentNotesTest.Models
 {
-    [TestFixture]
+    [TestClass]
     public class SafeListModelTest
     {
-        [Test]
+        [TestMethod]
         public void FindOldestOpenSafeWorksCorrectly()
         {
             SafeListModel list = new SafeListModel();

@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Moq;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SilentNotes.Models;
 using SilentNotes.Services;
 using SilentNotes.Stories;
@@ -8,10 +8,10 @@ using SilentNotes.Stories.SynchronizationStory;
 
 namespace SilentNotesTest.Stories.SynchronizationStory
 {
-    [TestFixture]
+    [TestClass]
     public class StoreCloudRepositoryToDeviceAndQuitStepTest
     {
-        [Test]
+        [TestMethod]
         public async Task StoresRepositoryToDevice()
         {
             NoteRepositoryModel repositoryModel = new NoteRepositoryModel();
@@ -36,7 +36,7 @@ namespace SilentNotesTest.Stories.SynchronizationStory
             repositoryStorageService.Verify(m => m.TrySaveRepository(It.Is<NoteRepositoryModel>(r => r == repositoryModel)), Times.Once);
 
             // Next step is called
-            Assert.IsInstanceOf<StopAndShowRepositoryStep>(result.NextStep);
+            Assert.IsInstanceOfType<StopAndShowRepositoryStep>(result.NextStep);
         }
     }
 }

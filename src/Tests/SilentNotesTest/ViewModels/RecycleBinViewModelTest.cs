@@ -4,17 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Moq;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SilentNotes.Models;
 using SilentNotes.Services;
 using SilentNotes.ViewModels;
 
 namespace SilentNotesTest.ViewModels
 {
-    [TestFixture]
+    [TestClass]
     public class RecycleBinViewModelTest
     {
-        [Test]
+        [TestMethod]
         public void RestoreNote_RemovesFromRecycledNotes()
         {
             NoteRepositoryModel model = CreateTestRepository();
@@ -29,7 +29,7 @@ namespace SilentNotesTest.ViewModels
             Assert.IsFalse(model.Notes.Find(item => item.Id == idToRestore).InRecyclingBin);
         }
 
-        [Test]
+        [TestMethod]
         public void RestoreNote_MarksRepositoryAsModified()
         {
             NoteRepositoryModel model = CreateTestRepository();
@@ -41,7 +41,7 @@ namespace SilentNotesTest.ViewModels
             Assert.IsTrue(viewModel.Modifications.IsModified());
         }
 
-        [Test]
+        [TestMethod]
         public void EmptyRecycleBin_AddsAllToDeletedList()
         {
             NoteRepositoryModel model = CreateTestRepository();
@@ -57,7 +57,7 @@ namespace SilentNotesTest.ViewModels
             Assert.AreEqual(1, model.Notes.Count); // 1 note remains because it was not in recycle bin
         }
 
-        [Test]
+        [TestMethod]
         public void EmptyRecycleBin_MarksRepositoryAsModified()
         {
             NoteRepositoryModel model = CreateTestRepository();
@@ -68,7 +68,7 @@ namespace SilentNotesTest.ViewModels
             Assert.IsTrue(viewModel.Modifications.IsModified());
         }
 
-        [Test]
+        [TestMethod]
         public void DeleteNotePermanently_AddsToDeletedList()
         {
             NoteRepositoryModel model = CreateTestRepository();
@@ -86,7 +86,7 @@ namespace SilentNotesTest.ViewModels
             Assert.AreEqual(2, model.Notes.Count);
         }
 
-        [Test]
+        [TestMethod]
         public void DeleteNotePermanently_MarksRepositoryAsModified()
         {
             NoteRepositoryModel model = CreateTestRepository();

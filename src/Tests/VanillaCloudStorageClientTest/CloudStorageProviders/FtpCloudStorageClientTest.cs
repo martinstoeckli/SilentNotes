@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Moq;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using VanillaCloudStorageClient;
 using VanillaCloudStorageClient.CloudStorageProviders;
 
 #pragma warning disable CS0162 // Unreachable code detected
 namespace VanillaCloudStorageClientTest.CloudStorageProviders
 {
-    [TestFixture]
+    [TestClass]
     public class FtpCloudStorageClientTest
     {
         /// <summary>
@@ -27,8 +27,8 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
         private const string AuthorizationPassword = "ValidPassword";
         private const bool UseSecureSsl = false;
         private const bool AcceptInvalidCertificate = false;
-        [Test]
-        public void FileLifecycleWorks()
+        [TestMethod]
+        public async Task FileLifecycleWorks()
         {
             string fileName = "unittest.dat";
             byte[] fileContent = new byte[16];
@@ -41,7 +41,7 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
                 Mock<IFtpFakeResponse> fakeResponseMock = new Mock<IFtpFakeResponse>();
                 fakeResponse = fakeResponseMock.Object;
             }
-            Assert.DoesNotThrowAsync(() => UploadFileWorksAsync(fileName, fileContent, fakeResponse));
+            await UploadFileWorksAsync(fileName, fileContent, fakeResponse);
 
             // 2) Test listing
             if (!DoRealWebRequests)
@@ -86,7 +86,7 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
                 Mock<IFtpFakeResponse> fakeResponseMock = new Mock<IFtpFakeResponse>();
                 fakeResponse = fakeResponseMock.Object;
             }
-            Assert.DoesNotThrowAsync(() => DeleteFileWorksAsync(fileName, GetCredentials(), fakeResponse));
+            await DeleteFileWorksAsync(fileName, GetCredentials(), fakeResponse);
 
             // 6) Was really deleted?
             if (!DoRealWebRequests)
@@ -135,7 +135,7 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
             await client.DeleteFileAsync(fileName, credentials);
         }
 
-        [Test]
+        [TestMethod]
         [Ignore("Too many consecutive fails seems to block an FTP server.")]
         public void ThrowsWithInvalidUsername()
         {
@@ -145,11 +145,11 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
             {
                 var credentials = GetCredentials();
                 credentials.Username = "youdontknowme";
-                Assert.ThrowsAsync<AccessDeniedException>(() => DownloadFileWorksAsync("a.txt", credentials, null));
+                Assert.ThrowsExceptionAsync<AccessDeniedException>(() => DownloadFileWorksAsync("a.txt", credentials, null));
             }
         }
 
-        [Test]
+        [TestMethod]
         [Ignore("Too many consecutive fails seems to block an FTP server.")]
         public void ThrowsWithInvalidPassword()
         {
@@ -159,11 +159,11 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
             {
                 var credentials = GetCredentials();
                 credentials.UnprotectedPassword = "youdontknowme";
-                Assert.ThrowsAsync<AccessDeniedException>(() => DownloadFileWorksAsync("a.txt", credentials, null));
+                Assert.ThrowsExceptionAsync<AccessDeniedException>(() => DownloadFileWorksAsync("a.txt", credentials, null));
             }
         }
 
-        [Test]
+        [TestMethod]
         [Ignore("Too many consecutive fails seems to block an FTP server.")]
         public void ThrowsWithInvalidUrl()
         {
@@ -173,11 +173,11 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
             {
                 var credentials = GetCredentials();
                 string nonExistingFile = "nonexisting.non";
-                Assert.ThrowsAsync<ConnectionFailedException>(() => DownloadFileWorksAsync(nonExistingFile, credentials, null));
+                Assert.ThrowsExceptionAsync<ConnectionFailedException>(() => DownloadFileWorksAsync(nonExistingFile, credentials, null));
             }
         }
 
-        [Test]
+        [TestMethod]
         [Ignore("Too many consecutive fails seems to block an FTP server.")]
         public void ThrowsWithInvalidHost()
         {
@@ -188,7 +188,7 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
                 var credentials = GetCredentials();
                 credentials.Url = "ftp://sl287.web.hostpoint.c";
                 string nonExistingFile = "nonexisting.non";
-                Assert.ThrowsAsync<ConnectionFailedException>(() => DownloadFileWorksAsync(nonExistingFile, credentials, null));
+                Assert.ThrowsExceptionAsync<ConnectionFailedException>(() => DownloadFileWorksAsync(nonExistingFile, credentials, null));
             }
         }
 

@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SilentNotes.Models;
 using SilentNotes.Services;
 using SilentNotes.Stories;
@@ -9,10 +9,10 @@ using VanillaCloudStorageClient;
 
 namespace SilentNotesTest.Stories.SynchronizationStory
 {
-    [TestFixture]
+    [TestClass]
     public class IsCloudServiceSetStepTest
     {
-        [Test]
+        [TestMethod]
         public async ValueTask RunStep_GoesToShowFirstTimeDialog_WithoutCloudStorageClientSet()
         {
             var settingsModel = new SettingsModel();
@@ -25,11 +25,11 @@ namespace SilentNotesTest.Stories.SynchronizationStory
             var res = await new IsCloudServiceSetStep().RunStep(model, serviceCollection.BuildServiceProvider(), model.StoryMode);
 
             // Continue with correct next step to ask for missing credentials
-            Assert.IsInstanceOf<ShowFirstTimeDialogStep>(res.NextStep);
+            Assert.IsInstanceOfType<ShowFirstTimeDialogStep>(res.NextStep);
             Assert.IsNull(model.Credentials);
         }
 
-        [Test]
+        [TestMethod]
         public async ValueTask RunStep_GoesToExistsCloudRepository_WithCloudStorageClientSet()
         {
             var credentials = new SerializeableCloudStorageCredentials { CloudStorageId = CloudStorageClientFactory.CloudStorageIdWebdav };
@@ -43,7 +43,7 @@ namespace SilentNotesTest.Stories.SynchronizationStory
             var res = await new IsCloudServiceSetStep().RunStep(model, serviceCollection.BuildServiceProvider(), model.StoryMode);
 
             // Continue with correct next step with credentials set
-            Assert.IsInstanceOf<ExistsCloudRepositoryStep>(res.NextStep);
+            Assert.IsInstanceOfType<ExistsCloudRepositoryStep>(res.NextStep);
             Assert.AreEqual(credentials, model.Credentials);
         }
     }

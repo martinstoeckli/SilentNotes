@@ -1,13 +1,13 @@
 ﻿using System;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SilentNotes.Models;
 
 namespace SilentNotesTest.Models
 {
-    [TestFixture]
+    [TestClass]
     public class NoteListModelTest
     {
-        [Test]
+        [TestMethod]
         public void FindByIdReturnsCorrectElement()
         {
             Guid id1 = Guid.NewGuid();
@@ -20,7 +20,7 @@ namespace SilentNotesTest.Models
             Assert.AreEqual(id2, foundNote.Id);
         }
 
-        [Test]
+        [TestMethod]
         public void FindByIdReturnsNullIfNotFound()
         {
             Guid id1 = Guid.NewGuid();
@@ -31,7 +31,7 @@ namespace SilentNotesTest.Models
             Assert.IsNull(notes.FindById(id2));
         }
 
-        [Test]
+        [TestMethod]
         public void IndexOfByIdReturnsCorrectElement()
         {
             Guid id1 = Guid.NewGuid();
@@ -44,7 +44,7 @@ namespace SilentNotesTest.Models
             Assert.AreEqual(1, foundNote);
         }
 
-        [Test]
+        [TestMethod]
         public void IndexOfByIdReturnsMinusIfNotFound()
         {
             Guid id1 = Guid.NewGuid();
@@ -55,7 +55,7 @@ namespace SilentNotesTest.Models
             Assert.AreEqual(-1, notes.IndexOfById(id2));
         }
 
-        [Test]
+        [TestMethod]
         public void IndexToInsertNewNoteAppendsNote()
         {
             List<NoteModel> notes = new NoteListModel();
@@ -71,7 +71,7 @@ namespace SilentNotesTest.Models
             Assert.AreEqual(2, res);
         }
 
-        [Test]
+        [TestMethod]
         public void IndexToInsertNewNoteInsertsAfterPinned()
         {
             List<NoteModel> notes = new NoteListModel();

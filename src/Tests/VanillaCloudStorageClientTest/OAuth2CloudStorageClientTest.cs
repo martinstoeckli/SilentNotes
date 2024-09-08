@@ -2,31 +2,31 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Flurl.Http.Testing;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using VanillaCloudStorageClient;
 using VanillaCloudStorageClient.OAuth2;
 
 namespace VanillaCloudStorageClientTest
 {
-    [TestFixture]
+    [TestClass]
     public class OAuth2CloudStorageClientTest
     {
         private const string State = "7ysv8L9s4LB9CZpA";
         private HttpTest _httpTest;
 
-        [SetUp]
+        [TestInitialize]
         public void CreateHttpTest()
         {
             _httpTest = new HttpTest(); // Put flurl into test mode
         }
 
-        [TearDown]
+        [TestCleanup]
         public void DisposeHttpTest()
         {
             _httpTest.Dispose();
         }
 
-        [Test]
+        [TestMethod]
         public void BuildOAuth2AuthorizationRequestUrlWorks()
         {
             IOAuth2CloudStorageClient client = new TestClient(GetDropboxConfig());
@@ -34,7 +34,7 @@ namespace VanillaCloudStorageClientTest
             Assert.AreEqual("https://www.dropbox.com/oauth2/authorize?response_type=token&client_id=oaid&redirect_uri=com.example.myapp%3A%2F%2Foauth2redirect%2F&state=7ysv8L9s4LB9CZpA", url);
         }
 
-        [Test]
+        [TestMethod]
         public void FetchTokenCanInterpretGoogleResponse()
         {
             _httpTest.RespondWith(
@@ -56,17 +56,17 @@ namespace VanillaCloudStorageClientTest
             Assert.AreEqual("8/A1AAbbZZ9", token.RefreshToken);
         }
 
-        [Test]
+        [TestMethod]
         public void FetchTokenThrowsWithWrongState()
         {
             string redirectedUrl = "com.example.myapp://oauth2redirect/?state=IsWrongA&code=ABCDEF&scope=https://www.googleapis.com/auth/drive.appdata";
 
             // Fetch token
             IOAuth2CloudStorageClient client = new TestClient(GetGoogleConfig());
-            Assert.ThrowsAsync<CloudStorageException>(async () => await FetchTokenAsync(client, redirectedUrl));
+            Assert.ThrowsExceptionAsync<CloudStorageException>(async () => await FetchTokenAsync(client, redirectedUrl));
         }
 
-        [Test]
+        [TestMethod]
         public void FetchTokenReturnsNullForDeniedAccess()
         {
             string redirectedUrl = "com.example.myapp://oauth2redirect/?error=access_denied";
@@ -83,7 +83,7 @@ namespace VanillaCloudStorageClientTest
             return await client.FetchTokenAsync(redirectedUrl, State, null);
         }
 
-        [Test]
+        [TestMethod]
         public void RefreshTokenCanInterpretGoogleResponse()
         {
             _httpTest.RespondWith(
@@ -107,7 +107,7 @@ namespace VanillaCloudStorageClientTest
             Assert.AreEqual("8/A1AAbbZZ9", newToken.RefreshToken);
         }
 
-        [Test]
+        [TestMethod]
         public void RefreshToken_WhenRefreshTokenExpired_Throws()
         {
             _httpTest.RespondWith(
@@ -128,7 +128,7 @@ namespace VanillaCloudStorageClientTest
             };
 
             IOAuth2CloudStorageClient client = new TestClient(GetGoogleConfig());
-            Assert.ThrowsAsync<RefreshTokenExpiredException>(() => RefreshTokenAsync(client, oldToken));
+            Assert.ThrowsExceptionAsync<RefreshTokenExpiredException>(() => RefreshTokenAsync(client, oldToken));
         }
 
         private async Task<CloudStorageToken> RefreshTokenAsync(IOAuth2CloudStorageClient client, CloudStorageToken token)

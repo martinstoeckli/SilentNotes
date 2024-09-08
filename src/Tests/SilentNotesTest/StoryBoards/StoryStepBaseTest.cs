@@ -1,16 +1,16 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using MudBlazor;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SilentNotes.Services;
 using SilentNotes.Stories;
 
 namespace SilentNotesTest.Stories
 {
-    [TestFixture]
+    [TestClass]
     public class StoryStepBaseTest
     {
-        [Test]
+        [TestMethod]
         public async Task RunStory_CallsRunStep()
         {
             var nextStep = new TestStoryStep(null, null, null);
@@ -21,7 +21,7 @@ namespace SilentNotesTest.Stories
             Assert.AreEqual(1, nextStep.RunStepCount);
         }
 
-        [Test]
+        [TestMethod]
         public async Task RunStory_ShowsToast()
         {
             var feedbackService = new Mock<IFeedbackService>();
@@ -36,7 +36,7 @@ namespace SilentNotesTest.Stories
             feedbackService.Verify(m => m.ShowToast(It.IsAny<string>(), It.IsAny<Severity>()), Times.Once);
         }
 
-        [Test]
+        [TestMethod]
         public async Task RunStory_ShowsMessages()
         {
             var feedbackService = new Mock<IFeedbackService>();

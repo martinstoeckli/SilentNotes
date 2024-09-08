@@ -3,7 +3,7 @@ using System.Security;
 using System.Text;
 using System.Xml.Linq;
 using Moq;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SilentNotes.Crypto;
 using SilentNotes.Models;
 using SilentNotes.Services;
@@ -12,10 +12,10 @@ using VanillaCloudStorageClient;
 
 namespace SilentNotesTest.Services
 {
-    [TestFixture]
+    [TestClass]
     public class SettingsServiceTest
     {
-        [Test]
+        [TestMethod]
         public void LoadsSettingsReturnsStoredSettings()
         {
             SettingsModel storedSettings = new SettingsModel { TransferCode = "abcdefgh" };
@@ -35,7 +35,7 @@ namespace SilentNotesTest.Services
             fileService.Verify(m => m.TrySerializeAndSave(It.IsAny<string>(), It.IsAny<SettingsModel>()), Times.Never);
         }
 
-        [Test]
+        [TestMethod]
         public void LoadSettingsCreatesDefaultIfNoFileFound()
         {
             XDocument xml = null;
@@ -53,7 +53,7 @@ namespace SilentNotesTest.Services
             fileService.Verify(m => m.TrySerializeAndSave(It.IsAny<string>(), It.IsAny<SettingsModel>()), Times.Once);
         }
 
-        [Test]
+        [TestMethod]
         public void Version1ConfigWillBeUpdated()
         {
             XDocument xml = XDocument.Parse(Version1Settings);
@@ -102,7 +102,7 @@ namespace SilentNotesTest.Services
             fileService.Verify(m => m.TrySerializeAndSave(It.IsAny<string>(), It.IsAny<SettingsModel>()), Times.Once);
         }
 
-        [Test]
+        [TestMethod]
         public void Version2ConfigWillBeUpdated()
         {
             XDocument xml = XDocument.Parse(Version2Settings);

@@ -1,14 +1,14 @@
 using System;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using VanillaCloudStorageClient;
 using VanillaCloudStorageClient.OAuth2;
 
 namespace VanillaCloudStorageClientTest.OAuth2
 {
-    [TestFixture]
+    [TestClass]
     public class OAuth2UtilsTest
     {
-        [Test]
+        [TestMethod]
         public void BuildAuthorizationRequestUrlUsesAllParameters()
         {
             OAuth2Config config = new OAuth2Config
@@ -23,7 +23,7 @@ namespace VanillaCloudStorageClientTest.OAuth2
             Assert.AreEqual(@"https://example.com/authorize?response_type=token&client_id=fwser2sewr689f7&redirect_uri=com.example.myapp%3A%2F%2Foauth2redirect%2F&state=7ysv8L9s4LB9CZpA", url);
         }
 
-        [Test]
+        [TestMethod]
         public void BuildAuthorizationRequestUrlEscapesParameters()
         {
             OAuth2Config config = new OAuth2Config
@@ -40,7 +40,7 @@ namespace VanillaCloudStorageClientTest.OAuth2
             Assert.IsTrue(url.Contains("state=c%3Ac"));
         }
 
-        [Test]
+        [TestMethod]
         public void BuildAuthorizationRequestUrlThrowsWithMissingRedirectUrlForTokenFlow()
         {
             OAuth2Config config = new OAuth2Config
@@ -49,10 +49,10 @@ namespace VanillaCloudStorageClientTest.OAuth2
                 ClientId = "a",
                 RedirectUrl = null, // Must exist for token workflow
             };
-            Assert.Throws<InvalidParameterException>(() => OAuth2Utils.BuildAuthorizationRequestUrl(config, "state", null));
+            Assert.ThrowsException<InvalidParameterException>(() => OAuth2Utils.BuildAuthorizationRequestUrl(config, "state", null));
         }
 
-        [Test]
+        [TestMethod]
         public void BuildAuthorizationRequestUrlLeavesOutOptionalParameters()
         {
             OAuth2Config config = new OAuth2Config
@@ -69,7 +69,7 @@ namespace VanillaCloudStorageClientTest.OAuth2
             Assert.IsTrue(!url.Contains("token", StringComparison.InvariantCultureIgnoreCase));
         }
 
-        [Test]
+        [TestMethod]
         public void BuildAuthorizationRequestUrlUsesCodeVerifier()
         {
             OAuth2Config config = new OAuth2Config
@@ -87,7 +87,7 @@ namespace VanillaCloudStorageClientTest.OAuth2
             Assert.IsTrue(url.Contains("code_challenge_method=S256", StringComparison.InvariantCultureIgnoreCase));
         }
 
-        [Test]
+        [TestMethod]
         public void ParseRealWorldDropboxSuccessResponse()
         {
             string redirectUrl = "com.example.myapp://oauth2redirect/#access_token=vQGkdNzLZ9AAAAAAApZW8zLyjRRRRRcic2MqEx1A1AdyaPcLdbKKOLNg2I8z0we-&token_type=bearer&state=68D8kUO0ubb78C8k&uid=111111111&account_id=abcd%3AAADucBH8TWrbYMWUHlrWQ4TGdcyC55pzBKk";
@@ -100,7 +100,7 @@ namespace VanillaCloudStorageClientTest.OAuth2
             Assert.IsNull(response.Error);
         }
 
-        [Test]
+        [TestMethod]
         public void ParseRealWorldDropboxRejectResponse()
         {
             string redirectUrl = "com.example.myapp://oauth2redirect/#state=AJ7CQLlJEwNn2AVL&error_description=The+user+chose+not+to+give+your+app+access+to+their+Dropbox+account.&error=access_denied";
@@ -113,7 +113,7 @@ namespace VanillaCloudStorageClientTest.OAuth2
             Assert.AreEqual(AuthorizationResponseError.AccessDenied, response.Error);
         }
 
-        [Test]
+        [TestMethod]
         public void ParseRealWorldGoogleSuccessResponse()
         {
             string redirectUrl = "com.example.myapp:/oauth2redirect/?state=AJ7CQLlJEwNn2AVL&code=4/aQHgCtVfeTg--SEAyJ6pYHvcCtZZZZZckvGcT5OpPjNuEEEEcvUJzQSaAALzD_DSfenHwHXItOE2Ax55j25-bbY&scope=https://www.googleapis.com/auth/drive.appdata";
@@ -126,7 +126,7 @@ namespace VanillaCloudStorageClientTest.OAuth2
             Assert.IsNull(response.Error);
         }
 
-        [Test]
+        [TestMethod]
         public void ParseRealWorldGoogleRejectResponse()
         {
             string redirectUrl = "com.example.myapp:/oauth2redirect/?error=access_denied&state=AJ7CQLlJEwNn2AVL";

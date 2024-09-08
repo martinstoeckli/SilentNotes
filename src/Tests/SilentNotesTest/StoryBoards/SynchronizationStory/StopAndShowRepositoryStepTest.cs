@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Moq;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SilentNotes;
 using SilentNotes.Services;
 using SilentNotes.Stories;
@@ -8,10 +8,10 @@ using SilentNotes.Stories.SynchronizationStory;
 
 namespace SilentNotesTest.Stories.SynchronizationStory
 {
-    [TestFixture]
+    [TestClass]
     public class StopAndShowRepositoryStepTest
     {
-        [Test]
+        [TestMethod]
         public async ValueTask RunStep_NavigatesHome_WhenInUiMode()
         {
             var synchronizationService = new Mock<ISynchronizationService>();
@@ -30,7 +30,7 @@ namespace SilentNotesTest.Stories.SynchronizationStory
             synchronizationService.Verify(m => m.FinishedManualSynchronization(It.IsAny<IServiceProvider>()), Times.Once);
         }
 
-        [Test]
+        [TestMethod]
         public async ValueTask RunStep_DoesNotNavigate_WhenInSilentMode()
         {
             var synchronizationService = new Mock<ISynchronizationService>();

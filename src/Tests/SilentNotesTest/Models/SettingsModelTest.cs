@@ -1,19 +1,19 @@
-﻿using NUnit.Framework;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SilentNotes.Models;
 
 namespace SilentNotesTest.Models
 {
-    [TestFixture]
+    [TestClass]
     public class SettingsModelTest
     {
-        [Test]
+        [TestMethod]
         public void NewModelHasRevisionSet()
         {
             SettingsModel model = new SettingsModel();
             Assert.AreEqual(SettingsModel.NewestSupportedRevision, model.Revision);
         }
 
-        [Test]
+        [TestMethod]
         public void SettingTransferCodeAddsCurrentCodeToHistory()
         {
             SettingsModel model = new SettingsModel();
@@ -34,7 +34,7 @@ namespace SilentNotesTest.Models
             Assert.AreEqual("a", model.TransferCodeHistory[1]);
         }
 
-        [Test]
+        [TestMethod]
         public void SettingTransferCodeFromHistoryRemovesHistoryEntry()
         {
             SettingsModel model = new SettingsModel();

@@ -1,13 +1,13 @@
 ﻿using System.Drawing;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SilentNotes.Workers;
 
 namespace SilentNotesTest.Workers
 {
-    [TestFixture]
+    [TestClass]
     public class ColorExtensionsTest
     {
-        [Test]
+        [TestMethod]
         public void IsDarkWorksCorrectly()
         {
             Assert.IsTrue(Color.Black.IsDark());
@@ -22,7 +22,7 @@ namespace SilentNotesTest.Workers
             Assert.IsTrue(gray.IsDark());
         }
 
-        [Test]
+        [TestMethod]
         public void HexToColorFindsColor()
         {
             Assert.IsTrue(AreColorsEqual(Color.Red, ColorExtensions.HexToColor("#ff0000")));
@@ -30,7 +30,7 @@ namespace SilentNotesTest.Workers
             Assert.IsTrue(AreColorsEqual(Color.FromArgb(160, 176, 192), ColorExtensions.HexToColor("#a0b0c0")));
         }
 
-        [Test]
+        [TestMethod]
         public void HexToColorFindsColorWithAlpha()
         {
             Assert.IsTrue(AreColorsEqual(Color.Red, ColorExtensions.HexToColor("#ffff0000")));

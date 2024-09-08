@@ -4,7 +4,7 @@ using System.Linq;
 using System.Security;
 using System.Text;
 using System.Threading.Tasks;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SilentNotes.Crypto;
 using SilentNotes.Crypto.SymmetricEncryption;
 using SilentNotes.Models;
@@ -12,10 +12,10 @@ using SilentNotes.Services;
 
 namespace SilentNotesTest.Services
 {
-    [TestFixture]
+    [TestClass]
     public class SafeKeyServiceTest
     {
-        [Test]
+        [TestMethod]
         public void TryOpenSafe_CanOpenSafe()
         {
             SecureString pwd = CryptoUtils.StringToSecureString("mysecret");
@@ -33,7 +33,7 @@ namespace SilentNotesTest.Services
             Assert.IsTrue(key.SequenceEqual(safeKey));
         }
 
-        [Test]
+        [TestMethod]
         public void TryOpenSafe_DoesntOpenSafeWithWrongPassword()
         {
             SecureString pwd = CryptoUtils.StringToSecureString("mysecret");
@@ -52,7 +52,7 @@ namespace SilentNotesTest.Services
             Assert.IsNull(safeKey);
         }
 
-        [Test]
+        [TestMethod]
         public void CloseSafe_CleansKey()
         {
             byte[] key = new byte[] { 8, 9, 3 };
@@ -66,7 +66,7 @@ namespace SilentNotesTest.Services
             Assert.IsTrue(emptyKey.SequenceEqual(key));
         }
 
-        [Test]
+        [TestMethod]
         public void CloseAllSafes_RemovesKey()
         {
             byte[] key = new byte[] { 8, 9, 3 };

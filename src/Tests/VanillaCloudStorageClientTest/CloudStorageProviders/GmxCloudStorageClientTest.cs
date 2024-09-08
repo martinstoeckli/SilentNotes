@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Flurl.Http.Testing;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using VanillaCloudStorageClient;
 using VanillaCloudStorageClient.CloudStorageProviders;
 
@@ -9,10 +9,10 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
     /// <summary>
     /// Most functionallity is already tested by the <see cref="WebdavCloudStorageClient"/>.
     /// </summary>
-    [TestFixture]
+    [TestClass]
     public class GmxCloudStorageClientTest
     {
-        [Test]
+        [TestMethod]
         public void ChoosesCorrectUrlForGmxNetEmail()
         {
             // Put flurl into test mode
@@ -32,7 +32,7 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
             }
         }
 
-        [Test]
+        [TestMethod]
         public void ChoosesCorrectUrlForGmxComEmail()
         {
             // Put flurl into test mode

@@ -1,14 +1,14 @@
 ﻿using System;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SilentNotes;
 using SilentNotes.Workers;
 
 namespace SilentNotesTest
 {
-    [TestFixture]
+    [TestClass]
     public class UnmixableAlphabetTest
     {
-        [Test]
+        [TestMethod]
         public void IsOfCorrectAlphabetWorksCorrectly()
         {
             for (int i = 0; i < 512; i++)

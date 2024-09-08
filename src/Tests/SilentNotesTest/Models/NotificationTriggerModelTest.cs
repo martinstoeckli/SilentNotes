@@ -1,13 +1,13 @@
 ﻿using System;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SilentNotes.Models;
 
 namespace SilentNotesTest.Models
 {
-    [TestFixture]
+    [TestClass]
     public class NotificationTriggerModelTest
     {
-        [Test]
+        [TestMethod]
         public void IsDue_TriggersWhenExpired()
         {
             DateTime createdAt = new DateTime(2023, 05, 10);
@@ -18,7 +18,7 @@ namespace SilentNotesTest.Models
             Assert.IsTrue(model.IsDue(new DateTime(2023, 05, 21), queueTime));
         }
 
-        [Test]
+        [TestMethod]
         public void IsDue_RefusesWhenTooEarly()
         {
             DateTime createdAt = new DateTime(2023, 05, 10);
@@ -29,7 +29,7 @@ namespace SilentNotesTest.Models
             Assert.IsFalse(model.IsDue(new DateTime(2023, 05, 08), queueTime)); // even before createdAt
         }
 
-        [Test]
+        [TestMethod]
         public void IsDue_RefusesWhenAlreadyShown()
         {
             DateTime createdAt = new DateTime(2023, 05, 10);

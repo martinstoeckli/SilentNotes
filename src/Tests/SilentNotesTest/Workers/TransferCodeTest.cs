@@ -1,13 +1,13 @@
-﻿using NUnit.Framework;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SilentNotes;
 using SilentNotes.Workers;
 
 namespace SilentNotesTest.Workers
 {
-    [TestFixture]
+    [TestClass]
     public class TransferCodeTest
     {
-        [Test]
+        [TestMethod]
         public void TransferCodeIsOfCorrectLength()
         {
             for (int length = 0; length < 999; length++)
@@ -17,7 +17,7 @@ namespace SilentNotesTest.Workers
             }
         }
 
-        [Test]
+        [TestMethod]
         public void TransferCodeIsOfCorrectAlphabet()
         {
             for (int length = 0; length < 999; length++)
@@ -27,7 +27,7 @@ namespace SilentNotesTest.Workers
             }
         }
 
-        [Test]
+        [TestMethod]
         public void TrySanitizeUserInputAcceptsValidCodes()
         {
             string sanitizedCode;
@@ -41,7 +41,7 @@ namespace SilentNotesTest.Workers
             Assert.AreEqual("8AerUwv22345hkpM", sanitizedCode);
         }
 
-        [Test]
+        [TestMethod]
         public void TrySanitizeUserInputRejectsInvalidCodes()
         {
             // Invalid alphabet

@@ -1,13 +1,13 @@
-﻿using NUnit.Framework;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SilentNotes.Services;
 using SilentNotes.Workers;
 
 namespace SilentNotesTest.Workers
 {
-    [TestFixture]
+    [TestClass]
     public class CompressUtilsTest
     {
-        [Test]
+        [TestMethod]
         public void CompressReturnsData()
         {
             byte[] data = CommonMocksAndStubs.FilledByteArray(64, 88);
@@ -15,7 +15,7 @@ namespace SilentNotesTest.Workers
             Assert.IsTrue(compressedData.Length > 3);
         }
 
-        [Test]
+        [TestMethod]
         public void CompressHandlesNullData()
         {
             // Null data
@@ -30,10 +30,10 @@ namespace SilentNotesTest.Workers
             Assert.IsNotNull(compressedData);
             Assert.AreEqual(0, compressedData.Length);
             Assert.IsNotNull(decompressedData);
-            Assert.AreEqual(data, decompressedData);
+            CollectionAssert.AreEqual(data, decompressedData);
         }
 
-        [Test]
+        [TestMethod]
         public void CompressAndDecompressReturnsOriginalData()
         {
             ICryptoRandomService randomGenerator = CommonMocksAndStubs.CryptoRandomService();
@@ -44,7 +44,7 @@ namespace SilentNotesTest.Workers
                 byte[] compressedData = CompressUtils.Compress(data);
                 byte[] decompressedData = CompressUtils.Decompress(compressedData);
 
-                Assert.AreEqual(data, decompressedData);
+                CollectionAssert.AreEqual(data, decompressedData);
                 byteCount = byteCount * 2;
             }
         }

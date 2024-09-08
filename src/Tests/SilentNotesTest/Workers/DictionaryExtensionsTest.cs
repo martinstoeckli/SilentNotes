@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SilentNotes.Workers;
 
 namespace SilentNotesTest.Workers
 {
-    [TestFixture]
+    [TestClass]
     public class DictionaryExtensionsTest
     {
-        [Test]
+        [TestMethod]
         public void TryGetKey_FindsKeyOfExistingValue()
         {
             var dictionary = new Dictionary<int, int> { { 1, 11 }, { 2, 22 } };
@@ -20,7 +20,7 @@ namespace SilentNotesTest.Workers
             Assert.AreEqual(2, key);
         }
 
-        [Test]
+        [TestMethod]
         public void TryGetKey_DoesNotFindKeyOfNonExistingValue()
         {
             var dictionary = new Dictionary<int, int> { { 1, 11 }, { 2, 22 } };
@@ -29,7 +29,7 @@ namespace SilentNotesTest.Workers
             Assert.AreEqual(0, key); // default value
         }
 
-        [Test]
+        [TestMethod]
         public void TryGetKey_WorksWithNullValues()
         {
             var dictionary = new Dictionary<string, string> { { "1", "11" }, { "2", null } };
@@ -38,7 +38,7 @@ namespace SilentNotesTest.Workers
             Assert.AreEqual("2", key);
         }
 
-        [Test]
+        [TestMethod]
         public void TryGetKey_WorksWithComparer()
         {
             // Uses the case insensitive comparer

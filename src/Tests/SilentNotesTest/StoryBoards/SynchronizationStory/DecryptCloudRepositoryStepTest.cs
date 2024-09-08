@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Moq;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SilentNotes.Crypto;
 using SilentNotes.Crypto.SymmetricEncryption;
 using SilentNotes.Models;
@@ -13,10 +13,10 @@ using VanillaCloudStorageClient;
 
 namespace SilentNotesTest.Stories.SynchronizationStory
 {
-    [TestFixture]
+    [TestClass]
     public class DecryptCloudRepositoryStepTest
     {
-        [Test]
+        [TestMethod]
         public async Task SuccessfulFlowEndsInNextStep()
         {
             const string transferCode = "abcdefgh";
@@ -46,10 +46,10 @@ namespace SilentNotesTest.Stories.SynchronizationStory
             settingsService.Verify(m => m.TrySaveSettingsToLocalDevice(It.IsNotNull<SettingsModel>()), Times.Never);
 
             // Next step is called
-            Assert.IsInstanceOf<IsSameRepositoryStep>(result.NextStep);
+            Assert.IsInstanceOfType<IsSameRepositoryStep>(result.NextStep);
         }
 
-        [Test]
+        [TestMethod]
         public async Task TransfercodeOfHistoryWillBeReused()
         {
             const string transferCode = "abcdefgh";
@@ -81,10 +81,10 @@ namespace SilentNotesTest.Stories.SynchronizationStory
             settingsService.Verify(m => m.TrySaveSettingsToLocalDevice(It.IsNotNull<SettingsModel>()), Times.Once);
 
             // Next step is called
-            Assert.IsInstanceOf<IsSameRepositoryStep>(result.NextStep);
+            Assert.IsInstanceOfType<IsSameRepositoryStep>(result.NextStep);
         }
 
-        [Test]
+        [TestMethod]
         public async Task MissingOrWrongTransfercodeLeadsToInputDialog()
         {
             const string transferCode = "abcdefgh";
@@ -114,15 +114,15 @@ namespace SilentNotesTest.Stories.SynchronizationStory
             settingsService.Verify(m => m.TrySaveSettingsToLocalDevice(It.IsNotNull<SettingsModel>()), Times.Never);
 
             // Next step is called
-            Assert.IsInstanceOf<ShowTransferCodeStep>(result.NextStep);
+            Assert.IsInstanceOfType<ShowTransferCodeStep>(result.NextStep);
 
             // Run step with wrong transfer code
             settingsModel.TransferCode = "qqqqqqqq";
             result = await step.RunStep(model, serviceCollection.BuildServiceProvider(), model.StoryMode);
-            Assert.IsInstanceOf<ShowTransferCodeStep>(result.NextStep);
+            Assert.IsInstanceOfType<ShowTransferCodeStep>(result.NextStep);
         }
 
-        [Test]
+        [TestMethod]
         public async Task BusyIndicatorIsStopped()
         {
             const string transferCode = "abcdefgh";
@@ -157,7 +157,7 @@ namespace SilentNotesTest.Stories.SynchronizationStory
         }
 
 
-        [Test]
+        [TestMethod]
         public async Task InvalidRepositoryLeadsToErrorMessage()
         {
             const string transferCode = "abcdefgh";
@@ -191,7 +191,7 @@ namespace SilentNotesTest.Stories.SynchronizationStory
             settingsService.Verify(m => m.TrySaveSettingsToLocalDevice(It.IsNotNull<SettingsModel>()), Times.Never);
         }
 
-        [Test]
+        [TestMethod]
         public async Task RepositoryTooNewForApplicationLeadsToErrorMessage()
         {
             const string transferCode = "abcdefgh";
@@ -222,7 +222,7 @@ namespace SilentNotesTest.Stories.SynchronizationStory
             var result = await step.RunStep(model, serviceCollection.BuildServiceProvider(), model.StoryMode);
 
             Assert.IsNotNull(result.Error); // Error message shown
-            Assert.IsInstanceOf<SynchronizationStoryExceptions.UnsuportedRepositoryRevisionException>(result.Error);
+            Assert.IsInstanceOfType<SynchronizationStoryExceptions.UnsuportedRepositoryRevisionException>(result.Error);
             Assert.IsNull(result.NextStep); // no next step is called
         }
 

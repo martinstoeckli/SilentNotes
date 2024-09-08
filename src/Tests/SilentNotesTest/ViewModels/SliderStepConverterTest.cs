@@ -1,12 +1,12 @@
-﻿using NUnit.Framework;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SilentNotes.ViewModels;
 
 namespace SilentNotesTest.ViewModels
 {
-    [TestFixture]
+    [TestClass]
     public class SliderStepConverterTest
     {
-        [Test]
+        [TestMethod]
         public void SliderStepToModelFactor_CalculatesCorrectly()
         {
             SliderStepConverter converter = new SliderStepConverter(100, 10);
@@ -23,7 +23,7 @@ namespace SilentNotesTest.ViewModels
             Assert.AreEqual(80.0 / 100.0, factor);
         }
 
-        [Test]
+        [TestMethod]
         public void ModelFactorToSliderStep_CalculatesCorrectly()
         {
             SliderStepConverter converter = new SliderStepConverter(100, 10);
@@ -40,7 +40,7 @@ namespace SilentNotesTest.ViewModels
             Assert.AreEqual(-2, step);
         }
 
-        [Test]
+        [TestMethod]
         public void ModelFactorToSliderStep_RoundsToSteps()
         {
             SliderStepConverter converter = new SliderStepConverter(100, 10);
@@ -53,7 +53,7 @@ namespace SilentNotesTest.ViewModels
             Assert.AreEqual(1, step);
         }
 
-        [Test]
+        [TestMethod]
         public void ModelFactorToValue_CalculatesCorrectly()
         {
             SliderStepConverter converter = new SliderStepConverter(100, 10);
@@ -66,7 +66,7 @@ namespace SilentNotesTest.ViewModels
             Assert.AreEqual(100.0 * 0.9, value);
         }
 
-        [Test]
+        [TestMethod]
         public void ModelFactorToValueAsInt_RoundsCorrectly()
         {
             SliderStepConverter converter = new SliderStepConverter(100, 10);

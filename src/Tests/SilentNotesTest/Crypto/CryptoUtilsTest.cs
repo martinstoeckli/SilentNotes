@@ -1,14 +1,14 @@
 ﻿using System;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SilentNotes.Crypto;
 using SilentNotes.Services;
 
 namespace SilentNotesTest.Crypto
 {
-    [TestFixture]
+    [TestClass]
     public class CryptoUtilsTest
     {
-        [Test]
+        [TestMethod]
         public void GenerateRandomBase62StringGeneratesValidStrings()
         {
             ICryptoRandomService randomGenerator = CommonMocksAndStubs.CryptoRandomService();
@@ -22,7 +22,7 @@ namespace SilentNotesTest.Crypto
             }
         }
 
-        [Test]
+        [TestMethod]
         public void TruncateKeyReturnsOriginalIfNotLonger()
         {
             byte[] key = new byte[] { 3, 4, 5 };
@@ -38,14 +38,14 @@ namespace SilentNotesTest.Crypto
             Assert.IsNull(truncatedKey);
         }
 
-        [Test]
+        [TestMethod]
         public void TruncateKeyCutsIfLonger()
         {
             byte[] key = new byte[] { 3, 4, 5 };
             byte[] truncatedKey;
 
             truncatedKey = CryptoUtils.TruncateKey(key, 2);
-            Assert.AreEqual(new byte[] { 3, 4 }, truncatedKey);
+            CollectionAssert.AreEqual(new byte[] { 3, 4 }, truncatedKey);
         }
 
         private static bool IsInBase62Alphabet(string randomString)

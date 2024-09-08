@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Security;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SilentNotes.Crypto;
 using SilentNotes.Crypto.KeyDerivation;
 using SilentNotes.Crypto.SymmetricEncryption;
@@ -9,7 +9,7 @@ using SilentNotes.Services;
 
 namespace SilentNotesTest.Crypto
 {
-    [TestFixture]
+    [TestClass]
     public class CryptorTest
     {
         private void TestSymmetricEncryptionWithShortMessage(ISymmetricEncryptionAlgorithm encryptor)
@@ -21,7 +21,7 @@ namespace SilentNotesTest.Crypto
 
             byte[] binaryMessage = CryptoUtils.StringToBytes(message);
             byte[] cipher = encryptor.Encrypt(binaryMessage, key, nonce);
-            Assert.AreNotEqual(binaryMessage, cipher);
+            CollectionAssert.AreNotEqual(binaryMessage, cipher);
             string message2 = CryptoUtils.BytesToString(encryptor.Decrypt(cipher, key, nonce));
             Assert.AreEqual(message, message2);
         }
@@ -34,33 +34,33 @@ namespace SilentNotesTest.Crypto
             byte[] message = randomGenerator.GetRandomBytes(1523687);
 
             byte[] cipher = encryptor.Encrypt(message, key, nonce);
-            Assert.AreNotEqual(message, cipher);
+            CollectionAssert.AreNotEqual(message, cipher);
             byte[] message2 = encryptor.Decrypt(cipher, key, nonce);
-            Assert.AreEqual(message, message2);
+            CollectionAssert.AreEqual(message, message2);
         }
 
-        [Test]
+        [TestMethod]
         public void CryptoAesGcm()
         {
             TestSymmetricEncryptionWithShortMessage(new BouncyCastleAesGcm());
             TestSymmetricEncryptionWithLongMessage(new BouncyCastleAesGcm());
         }
 
-        [Test]
+        [TestMethod]
         public void CryptoTwofishGcm()
         {
             TestSymmetricEncryptionWithShortMessage(new BouncyCastleTwofishGcm());
             TestSymmetricEncryptionWithLongMessage(new BouncyCastleTwofishGcm());
         }
 
-        [Test]
+        [TestMethod]
         public void CryptoXChaCha20()
         {
             TestSymmetricEncryptionWithShortMessage(new BouncyCastleXChaCha20());
             TestSymmetricEncryptionWithLongMessage(new BouncyCastleXChaCha20());
         }
 
-        [Test]
+        [TestMethod]
         public void XChaCha20Poly1305CheckTestVector()
         {
             byte[] message = HexToBytes(@"4c616469657320616e642047656e746c656d656e206f662074686520636c617373206f66202739393a204966204920636f756c64206f6666657220796f75206f6e6c79206f6e652074697020666f7220746865206675747572652c2073756e73637265656e20776f756c642062652069742e");
@@ -73,7 +73,7 @@ namespace SilentNotesTest.Crypto
             Assert.IsTrue(expectedCipher.SequenceEqual(cipher));
         }
 
-        [Test]
+        [TestMethod]
         public void EnsureBackwardsCompatibilityLongTimeDecryptionOfAesGcm()
         {
             // Ensure that a once stored cipher can always be decrypted even after changes in the liberary
@@ -84,7 +84,7 @@ namespace SilentNotesTest.Crypto
             Assert.AreEqual("The brown fox jumps over the lazy 🐢🖐🏿 doc.", decryptedMessage);
         }
 
-        [Test]
+        [TestMethod]
         public void EnsureBackwardsCompatibilityLongTimeDecryptionOfTwofishGcm()
         {
             // Ensure that a once stored cipher can always be decrypted even after changes in the liberary
@@ -95,7 +95,7 @@ namespace SilentNotesTest.Crypto
             Assert.AreEqual("The brown fox jumps over the lazy 🐢🖐🏿 doc.", decryptedMessage);
         }
 
-        [Test]
+        [TestMethod]
         public void EnsureBackwardsCompatibilityLongTimeDecryptionOfXChaCha()
         {
             // Ensure that a once stored cipher can always be decrypted even after changes in the liberary
@@ -106,7 +106,7 @@ namespace SilentNotesTest.Crypto
             Assert.AreEqual("The brown fox jumps over the lazy 🐢🖐🏿 doc.", decryptedMessage);
         }
 
-        [Test]
+        [TestMethod]
         public void EnsureCompatibilityToLibsodiumXChaCha20()
         {
             // Ensure that a once stored cipher can always be decrypted even after changes in the liberary.
@@ -123,7 +123,7 @@ namespace SilentNotesTest.Crypto
             Assert.AreEqual("The brown fox jumps over the lazy 🐢🖐🏿 doc.", decryptedMessage);
         }
 
-        [Test]
+        [TestMethod]
         public void CryptoPbkdf2()
         {
             const int KeyLength = 42;
@@ -139,10 +139,10 @@ namespace SilentNotesTest.Crypto
 
             // Same parameters must result in the same output
             byte[] key2 = kdf.DeriveKeyFromPassword(password, KeyLength, salt, cost);
-            Assert.AreEqual(key, key2);
+            CollectionAssert.AreEqual(key, key2);
         }
 
-        [Test]
+        [TestMethod]
         public void CryptorWorksWithPassword()
         {
             ICryptoRandomService randomGenerator = CommonMocksAndStubs.CryptoRandomService();
@@ -153,10 +153,10 @@ namespace SilentNotesTest.Crypto
 
             byte[] cipher = encryptor.Encrypt(binaryMessage, password, KeyDerivationCostType.Low, BouncyCastleTwofishGcm.CryptoAlgorithmName);
             byte[] decryptedMessage = encryptor.Decrypt(cipher, password);
-            Assert.AreEqual(binaryMessage, decryptedMessage);
+            CollectionAssert.AreEqual(binaryMessage, decryptedMessage);
         }
 
-        [Test]
+        [TestMethod]
         public void CryptorWorksWithKey()
         {
             ICryptoRandomService randomGenerator = CommonMocksAndStubs.CryptoRandomService();
@@ -167,10 +167,10 @@ namespace SilentNotesTest.Crypto
 
             byte[] cipher = encryptor.Encrypt(binaryMessage, key, BouncyCastleTwofishGcm.CryptoAlgorithmName);
             byte[] decryptedMessage = encryptor.Decrypt(cipher, key);
-            Assert.AreEqual(binaryMessage, decryptedMessage);
+            CollectionAssert.AreEqual(binaryMessage, decryptedMessage);
         }
 
-        [Test]
+        [TestMethod]
         public void ObfuscationCanBeReversed()
         {
             SecureString obfuscationKey = CryptoUtils.StringToSecureString("A very strong passphrase...");
@@ -179,7 +179,7 @@ namespace SilentNotesTest.Crypto
 
             var obfuscatedMessage = CryptoUtils.Obfuscate(binaryMessage, obfuscationKey, randomGenerator);
             var deobfuscatedMessage = CryptoUtils.Deobfuscate(obfuscatedMessage, obfuscationKey);
-            Assert.AreEqual(binaryMessage, deobfuscatedMessage);
+            CollectionAssert.AreEqual(binaryMessage, deobfuscatedMessage);
 
             string plaintextMessage = "welcome home";
             string obfuscatedMessageText = CryptoUtils.Obfuscate(plaintextMessage, obfuscationKey, randomGenerator);
@@ -187,7 +187,7 @@ namespace SilentNotesTest.Crypto
             Assert.AreEqual(plaintextMessage, deobfuscatedMessageText);
         }
 
-        [Test]
+        [TestMethod]
         public void EnsureBackwardsCompatibilityDeobfuscation()
         {
             // Ensure that a once stored obfuscated text can always be deobfuscated even after changes in the liberary
@@ -197,7 +197,7 @@ namespace SilentNotesTest.Crypto
             Assert.AreEqual("The brown fox jumps over the lazy 🐢🖐🏿 doc.", deobfuscatedMessage);
         }
 
-        [Test]
+        [TestMethod]
         public void TestSymmetricEncryptionWithCompression()
         {
             ICryptoRandomService randomGenerator = CommonMocksAndStubs.CryptoRandomService(88);
@@ -213,10 +213,10 @@ namespace SilentNotesTest.Crypto
                 Pbkdf2.CryptoKdfName,
                 Cryptor.CompressionGzip);
             byte[] decryptedMessage = encryptor.Decrypt(cipher, password);
-            Assert.AreEqual(binaryMessage, decryptedMessage);
+            CollectionAssert.AreEqual(binaryMessage, decryptedMessage);
         }
 
-        [Test]
+        [TestMethod]
         public void TestSymmetricEncryptionOfEmptyStringWithCompression()
         {
             ICryptoRandomService randomGenerator = CommonMocksAndStubs.CryptoRandomService(88);
@@ -232,10 +232,10 @@ namespace SilentNotesTest.Crypto
                 Pbkdf2.CryptoKdfName,
                 Cryptor.CompressionGzip);
             byte[] decryptedMessage = encryptor.Decrypt(cipher, password);
-            Assert.AreEqual(binaryMessage, decryptedMessage);
+            CollectionAssert.AreEqual(binaryMessage, decryptedMessage);
         }
 
-        [Test]
+        [TestMethod]
         public void UnknownAlgorithmThrows()
         {
             ICryptoRandomService randomGenerator = CommonMocksAndStubs.CryptoRandomService();
@@ -243,7 +243,7 @@ namespace SilentNotesTest.Crypto
             byte[] binaryMessage = new byte[] { 88 };
             SecureString password = CryptoUtils.StringToSecureString("unittestpwd");
 
-            Assert.Throws<CryptoException>(delegate
+            Assert.ThrowsException<CryptoException>(delegate
             {
                 byte[] cipher = encryptor.Encrypt(
                     binaryMessage,
