@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Moq;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SilentNotes.Models;
 using SilentNotes.Services;
 
 namespace SilentNotesTest.Services
 {
-    [TestFixture]
+    [TestClass]
     public class NotificationServiceTest
     {
-        [Test]
+        [TestMethod]
         public async Task ShowNextNotification_ShowsMessageWhenDue()
         {
             // Prepare settings
@@ -39,7 +39,7 @@ namespace SilentNotesTest.Services
             feedbackService.Verify(m => m.ShowMessageAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<MessageBoxButtons>(), It.IsAny<bool>()), Times.Once);
         }
 
-        [Test]
+        [TestMethod]
         public async Task ShowNextNotification_IgnoresInvalidTriggers()
         {
             // Prepare settings

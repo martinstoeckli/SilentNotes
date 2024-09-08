@@ -1,13 +1,13 @@
 ﻿using System;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using VanillaCloudStorageClient;
 
 namespace VanillaCloudStorageClientTest
 {
-    [TestFixture]
+    [TestClass]
     public class CloudStorageTokenTest
     {
-        [Test]
+        [TestMethod]
         public void SetExpiryDateBySecondsWorks()
         {
             CloudStorageToken token = new CloudStorageToken();
@@ -18,7 +18,7 @@ namespace VanillaCloudStorageClientTest
             Assert.IsTrue(token.ExpiryDate < DateTime.UtcNow.AddSeconds(375));
         }
 
-        [Test]
+        [TestMethod]
         public void SetExpiryDateBySecondsWorksWithVeryShortPeriod()
         {
             CloudStorageToken token = new CloudStorageToken();
@@ -29,7 +29,7 @@ namespace VanillaCloudStorageClientTest
             Assert.IsTrue(token.ExpiryDate < DateTime.UtcNow.AddSeconds(8));
         }
 
-        [Test]
+        [TestMethod]
         public void SetExpiryDateBySecondsWorksWithNull()
         {
             CloudStorageToken token = new CloudStorageToken();
@@ -38,7 +38,7 @@ namespace VanillaCloudStorageClientTest
             Assert.IsNull(token.ExpiryDate);
         }
 
-        [Test]
+        [TestMethod]
         public void AreEqualWorksWithSameContent()
         {
             CloudStorageToken token = new CloudStorageToken
@@ -58,7 +58,7 @@ namespace VanillaCloudStorageClientTest
             Assert.IsTrue(token.AreEqualOrNull(null));
         }
 
-        [Test]
+        [TestMethod]
         public void AreEqualWorksWithNullDate()
         {
             CloudStorageToken token = new CloudStorageToken
@@ -81,7 +81,7 @@ namespace VanillaCloudStorageClientTest
             Assert.IsFalse(token.AreEqualOrNull(token2));
         }
 
-        [Test]
+        [TestMethod]
         public void NeedsRefreshReturnsTrueIfExpired()
         {
             CloudStorageToken token = new CloudStorageToken { RefreshToken = "notempty" };
@@ -89,7 +89,7 @@ namespace VanillaCloudStorageClientTest
             Assert.IsTrue(token.NeedsRefresh());
         }
 
-        [Test]
+        [TestMethod]
         public void NeedsRefreshReturnsFalseIfNotExpired()
         {
             CloudStorageToken token = new CloudStorageToken { RefreshToken = "notempty" };
@@ -97,14 +97,14 @@ namespace VanillaCloudStorageClientTest
             Assert.IsFalse(token.NeedsRefresh());
         }
 
-        [Test]
+        [TestMethod]
         public void NeedsRefreshReturnsTrueIfNoExpirationDate()
         {
             CloudStorageToken token = new CloudStorageToken { RefreshToken = "notempty" };
             Assert.IsTrue(token.NeedsRefresh());
         }
 
-        [Test]
+        [TestMethod]
         public void NeedsRefreshReturnsFalseForTokenFlow()
         {
             // The token flow has no refresh token

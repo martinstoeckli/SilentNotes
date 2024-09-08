@@ -1,12 +1,12 @@
-﻿using NUnit.Framework;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SilentNotes.Workers;
 
 namespace SilentNotesTest.Workers
 {
-    [TestFixture]
+    [TestClass]
     public class SearchableHtmlConverterTest
     {
-        [Test]
+        [TestMethod]
         public void TryConvertHtmlStripsTags()
         {
             string note = @"<h1>Hello Quillnote</h1><p>Das ist ein etwas längerer 🐢🐼👍🍒🥋💪⚕㊙🖐🏿 der sicher zu einem Zeilenumbruch führt. Natürlich gibt es dann auch extra Umbrüche, um zu testen wie diese aussehen. Der Text ist dermassen lang, dass er gar nicht ins Feld passt!!!</p><h3>begin</h3><pre class='ql-syntax' spellcheck='false'>Bla blah
@@ -17,7 +17,7 @@ namespace SilentNotesTest.Workers
             Assert.AreEqual(noteText, res);
         }
 
-        [Test]
+        [TestMethod]
         public void TryConvertHtmlCorrectlyGroupsDifferentWhitespaces()
         {
             string note = @"<p> Hello 	
@@ -31,7 +31,7 @@ namespace SilentNotesTest.Workers
             Assert.AreEqual(" Hello world ", res);
         }
 
-        [Test]
+        [TestMethod]
         public void TryConvertHtmlCorrectlyHandlesBr()
         {
             string note = @"<p>Hello</p><p><br></p><p>world</p>";
@@ -39,7 +39,7 @@ namespace SilentNotesTest.Workers
             Assert.AreEqual("Hello world", res);
         }
 
-        [Test]
+        [TestMethod]
         public void TryConvertHtmlCorrectlyHandlesEncodedHtml()
         {
             string note = @"<h1>H1</h1>
@@ -54,7 +54,7 @@ namespace SilentNotesTest.Workers
             Assert.AreEqual("H1 <html lang='en'> <head> </head> <body> </body> </html>", res);
         }
 
-        [Test]
+        [TestMethod]
         public void NormalizeWhitespacesLeavesTagsIntact()
         {
             string note = @"  Hello  <p> world  </p>  ";
@@ -62,7 +62,7 @@ namespace SilentNotesTest.Workers
             Assert.AreEqual(" Hello <p> world </p> ", res);
         }
 
-        [Test]
+        [TestMethod]
         public void NormalizeWhitespacesAcceptsNullAndSpace()
         {
             string res = SearchableHtmlConverter.NormalizeWhitespaces(null);

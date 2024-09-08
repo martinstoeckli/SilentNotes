@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SilentNotes.Services;
 using SilentNotes.Stories;
 using SilentNotes.Stories.SynchronizationStory;
@@ -10,10 +10,10 @@ using VanillaCloudStorageClient;
 
 namespace SilentNotesTest.Stories.SynchronizationStory
 {
-    [TestFixture]
+    [TestClass]
     public class DownloadCloudRepositoryStepTest
     {
-        [Test]
+        [TestMethod]
         public async Task SuccessfulFlowEndsInNextStep()
         {
             SerializeableCloudStorageCredentials credentialsFromSession = new SerializeableCloudStorageCredentials();
@@ -44,10 +44,10 @@ namespace SilentNotesTest.Stories.SynchronizationStory
             Assert.AreEqual(repository, model.BinaryCloudRepository);
 
             // Next step is called
-            Assert.IsInstanceOf<ExistsTransferCodeStep>(result.NextStep);
+            Assert.IsInstanceOfType<ExistsTransferCodeStep>(result.NextStep);
         }
 
-        [Test]
+        [TestMethod]
         public async Task ErrorMessageIsShownInCaseOfException()
         {
             SerializeableCloudStorageCredentials credentialsFromSession = new SerializeableCloudStorageCredentials();

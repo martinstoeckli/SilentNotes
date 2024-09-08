@@ -1,14 +1,14 @@
 ﻿using System;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SilentNotes.Crypto;
 using SilentNotes.Workers;
 
 namespace SilentNotesTest.Workers
 {
-    [TestFixture]
+    [TestClass]
     public class ByteArrayExtensionsTest
     {
-        [Test]
+        [TestMethod]
         public void ByteArrayContainsAtWorksCorrectlyAtStart()
         {
             byte[] haystack = new byte[] { 1, 2, 3, 4 };
@@ -28,7 +28,7 @@ namespace SilentNotesTest.Workers
             Assert.IsFalse(haystack.ContainsAt(needle, 0));
         }
 
-        [Test]
+        [TestMethod]
         public void ByteArrayContainsAtWorksCorrectly()
         {
             byte[] haystack = new byte[] { 1, 2, 3, 4 };
@@ -48,12 +48,12 @@ namespace SilentNotesTest.Workers
             Assert.IsFalse(haystack.ContainsAt(needle, 1));
         }
 
-        [Test]
+        [TestMethod]
         public void ByteArrayStartsWithHandlesNullAndEmpty()
         {
             byte[] haystack = null;
             byte[] needle = null;
-            Assert.Throws<ArgumentNullException>(delegate { ByteArrayExtensions.ContainsAt(haystack, needle, 0); });
+            Assert.ThrowsException<ArgumentNullException>(delegate { ByteArrayExtensions.ContainsAt(haystack, needle, 0); });
 
             // Works the same way as string.StartsWith
             bool expectedResult = string.Empty.StartsWith(string.Empty);
@@ -69,7 +69,7 @@ namespace SilentNotesTest.Workers
             Assert.IsTrue(expectedResult);
         }
 
-        [Test]
+        [TestMethod]
         public void ContainsDigitAtWorksCorrectly()
         {
             byte[] array = CryptoUtils.StringToBytes("1-2z3");

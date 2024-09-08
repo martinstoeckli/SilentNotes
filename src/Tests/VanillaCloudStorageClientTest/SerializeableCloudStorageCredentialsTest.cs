@@ -5,15 +5,15 @@ using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using VanillaCloudStorageClient;
 
 namespace VanillaCloudStorageClientTest
 {
-    [TestFixture]
+    [TestClass]
     public class SerializeableCloudStorageCredentialsTest
     {
-        [Test]
+        [TestMethod]
         public void EncryptBeforeSerializationProtectsAllNecessaryProperties()
         {
             SerializeableCloudStorageCredentials credentials = CreateExampleCredentials();
@@ -33,7 +33,7 @@ namespace VanillaCloudStorageClientTest
             Assert.AreNotEqual(credentials.UnprotectedPassword, credentials.SerializeablePassword);
         }
 
-        [Test]
+        [TestMethod]
         public void EncryptBeforeSerializationRespectsNullProperties()
         {
             var credentials = new SerializeableCloudStorageCredentials();
@@ -48,7 +48,7 @@ namespace VanillaCloudStorageClientTest
             Assert.IsNull(credentials.SerializeableUrl);
         }
 
-        [Test]
+        [TestMethod]
         public void DecryptAfterDesrializationCanReadAllPropertiesBack()
         {
             SerializeableCloudStorageCredentials credentials = CreateExampleCredentials();
@@ -70,7 +70,7 @@ namespace VanillaCloudStorageClientTest
             Assert.IsTrue(credentials.Secure);
         }
 
-        [Test]
+        [TestMethod]
         public void DecryptAfterDesrializationRespectsNullProperties()
         {
             var credentials = new SerializeableCloudStorageCredentials();
@@ -84,7 +84,7 @@ namespace VanillaCloudStorageClientTest
             Assert.IsFalse(credentials.Secure);
         }
 
-        [Test]
+        [TestMethod]
         public void SerializedXmlDoesNotContainPlaintextData()
         {
             SerializeableCloudStorageCredentials credentials = CreateExampleCredentials();
@@ -97,7 +97,7 @@ namespace VanillaCloudStorageClientTest
             Assert.IsFalse(xml.Contains("pwd"));
         }
 
-        [Test]
+        [TestMethod]
         public void SerializedXmlDoesNotContainNullProperties()
         {
             var credentials = new SerializeableCloudStorageCredentials();
@@ -112,7 +112,7 @@ namespace VanillaCloudStorageClientTest
             Assert.IsFalse(xml.Contains("<secure>"));
         }
 
-        [Test]
+        [TestMethod]
         public void SerializedXmlCanBeReadBack()
         {
             SerializeableCloudStorageCredentials credentials = CreateExampleCredentials();
@@ -125,7 +125,7 @@ namespace VanillaCloudStorageClientTest
             Assert.IsTrue(credentials.AreEqualOrNull(credentials2));
         }
 
-        [Test]
+        [TestMethod]
         public void SerializedJsonDoesNotContainPlaintextData()
         {
             SerializeableCloudStorageCredentials credentials = CreateExampleCredentials();
@@ -138,7 +138,7 @@ namespace VanillaCloudStorageClientTest
             Assert.IsFalse(json.Contains("pwd"));
         }
 
-        [Test]
+        [TestMethod]
         public void SerializedJsonDoesNotContainNullProperties()
         {
             var credentials = new SerializeableCloudStorageCredentials();
@@ -153,7 +153,7 @@ namespace VanillaCloudStorageClientTest
             Assert.IsFalse(json.Contains("secure"));
         }
 
-        [Test]
+        [TestMethod]
         public void SerializedJsonCanBeReadBack()
         {
             SerializeableCloudStorageCredentials credentials = CreateExampleCredentials();
@@ -166,7 +166,7 @@ namespace VanillaCloudStorageClientTest
             Assert.IsTrue(credentials.AreEqualOrNull(credentials2));
         }
 
-        [Test]
+        [TestMethod]
         public void SerializedDatacontractDoesNotContainPlaintextData()
         {
             SerializeableCloudStorageCredentials credentials = CreateExampleCredentials();
@@ -179,7 +179,7 @@ namespace VanillaCloudStorageClientTest
             Assert.IsFalse(xml.Contains("pwd"));
         }
 
-        [Test]
+        [TestMethod]
         public void SerializedDatacontractDoesNotContainNullProperties()
         {
             var credentials = new SerializeableCloudStorageCredentials();
@@ -194,7 +194,7 @@ namespace VanillaCloudStorageClientTest
             Assert.IsFalse(xml.Contains("<secure>"));
         }
 
-        [Test]
+        [TestMethod]
         public void SerializedDatacontractCanBeReadBack()
         {
             SerializeableCloudStorageCredentials credentials = CreateExampleCredentials();

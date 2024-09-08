@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SilentNotes.ViewModels;
 
 namespace SilentNotesTest.ViewModels
 {
-    [TestFixture]
+    [TestClass]
     public class TreeItemViewModelTest
     {
-        [Test]
+        [TestMethod]
         public void EnumerateAnchestorsRecursive_ListsAnchestorsInDecreasingOrder()
         {
             var rootNode = new TestViewModel("root", null);
@@ -27,7 +27,7 @@ namespace SilentNotesTest.ViewModels
             Assert.AreEqual(rootNode, anchestors[1]);
         }
 
-        [Test]
+        [TestMethod]
         public void EnumerateAnchestorsRecursive_ReturnsItself()
         {
             var rootNode = new TestViewModel("root", null);
@@ -40,7 +40,7 @@ namespace SilentNotesTest.ViewModels
             Assert.AreEqual(node1, anchestors[1]);
         }
 
-        [Test]
+        [TestMethod]
         public void EnumerateSiblingsRecursive_ListsAnchestorsInRecursiveOrder()
         {
             var rootNode = new TestViewModel("root", null);
@@ -59,7 +59,7 @@ namespace SilentNotesTest.ViewModels
             Assert.AreEqual(node2, siblings[4]);
         }
 
-        [Test]
+        [TestMethod]
         public void EnumerateSiblingsRecursive_ReturnsItself()
         {
             var rootNode = new TestViewModel("root", null);
@@ -72,7 +72,7 @@ namespace SilentNotesTest.ViewModels
             Assert.AreEqual(node1, siblings[1]);
         }
 
-        [Test]
+        [TestMethod]
         public void IsRoot_WorksCorrectly()
         {
             var rootNode = new TestViewModel("root", null);
@@ -84,7 +84,7 @@ namespace SilentNotesTest.ViewModels
             Assert.IsFalse(node11.IsRoot());
         }
 
-        [Test]
+        [TestMethod]
         public void IsLeaf_WorksCorrectly()
         {
             var rootNode = new TestViewModel("root", null);

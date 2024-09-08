@@ -6,13 +6,13 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Flurl.Http.Testing;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using VanillaCloudStorageClient;
 using VanillaCloudStorageClient.CloudStorageProviders;
 
 namespace VanillaCloudStorageClientTest.CloudStorageProviders
 {
-    [TestFixture]
+    [TestClass]
     public class WebdavCloudStorageClientTest
     {
         /// <summary>
@@ -30,29 +30,29 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
         private const string AuthorizationPassword = "passwordX";
         private HttpTest _httpTest;
 
-        [SetUp]
+        [TestInitialize]
         public void CreateHttpTest()
         {
             if (!DoRealWebRequests)
                 _httpTest = new HttpTest(); // Put flurl into test mode
         }
 
-        [TearDown]
+        [TestCleanup]
         public void DisposeHttpTest()
         {
             if (!DoRealWebRequests)
                 _httpTest.Dispose();
         }
 
-        [Test]
-        public void FileLifecycleWorks()
+        [TestMethod]
+        public async Task FileLifecycleWorks()
         {
             string fileName = "unittest.dat";
             byte[] fileContent = new byte[16];
             new Random().NextBytes(fileContent);
 
             // 1) Test upload
-            Assert.DoesNotThrowAsync(() => UploadFileWorksAsync(fileName, fileContent));
+            await UploadFileWorksAsync(fileName, fileContent);
 
             // 2) Test listing
             if (!DoRealWebRequests)
@@ -78,14 +78,14 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
                 _httpTest.RespondWith(() => httpContent);
             }
             Byte[] downloadedContent = Task.Run(async () => await DownloadFileWorksAsync(fileName)).Result;
-            Assert.AreEqual(fileContent, downloadedContent);
+            CollectionAssert.AreEqual(fileContent, downloadedContent);
 
             // 5) Test delete
             if (!DoRealWebRequests)
             {
                 _httpTest.RespondWith(() => new ByteArrayContent(new byte[0]));
             }
-            Assert.DoesNotThrowAsync(() => DeleteFileWorksAsync(fileName));
+            await DeleteFileWorksAsync(fileName);
 
             // 6) Was really deleted?
             if (!DoRealWebRequests)
@@ -129,7 +129,7 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
             return await client.ExistsFileAsync(filename, GetCredentials());
         }
 
-        [Test]
+        [TestMethod]
         public void ThrowsWithInvalidUsername()
         {
             if (!DoRealWebRequests)
@@ -137,10 +137,10 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
 
             CloudStorageCredentials credentials = GetCredentials();
             credentials.Username = "youdontknowme";
-            Assert.ThrowsAsync<AccessDeniedException>(() => DownloadFileWorksAsync("a.txt", credentials));
+            Assert.ThrowsExceptionAsync<AccessDeniedException>(() => DownloadFileWorksAsync("a.txt", credentials));
         }
 
-        [Test]
+        [TestMethod]
         public void ThrowsWithInvalidPath()
         {
             if (!DoRealWebRequests)
@@ -148,10 +148,10 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
 
             CloudStorageCredentials credentials = GetCredentials();
             credentials.Url = "https://www.example.com/youdontknowme";
-            Assert.ThrowsAsync<ConnectionFailedException>(() => DownloadFileWorksAsync("a.txt", credentials));
+            Assert.ThrowsExceptionAsync<ConnectionFailedException>(() => DownloadFileWorksAsync("a.txt", credentials));
         }
 
-        [Test]
+        [TestMethod]
         public void ParseGmxWebdavResponseCorrectly()
         {
             List<string> fileNames = WebdavCloudStorageClient.ParseWebdavResponseForFileNames(GetGxmResponse());
@@ -165,7 +165,7 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
             Assert.AreEqual("tinu space.data", fileNames[6]);
         }
 
-        [Test]
+        [TestMethod]
         public void ParseStratoWebdavResponseCorrectly()
         {
             List<string> fileNames = WebdavCloudStorageClient.ParseWebdavResponseForFileNames(GetStratoResponse());
@@ -175,7 +175,7 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
             Assert.AreEqual("Bearbeiten2.txt", fileNames[2]);
         }
 
-        [Test]
+        [TestMethod]
         public void ParseMailboxOrgWebdavResponseCorrectly()
         {
             List<string> fileNames = WebdavCloudStorageClient.ParseWebdavResponseForFileNames(GetMailboxOrgResponse());
@@ -183,7 +183,7 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
             Assert.AreEqual("unittest.dat", fileNames[0]);
         }
 
-        [Test]
+        [TestMethod]
         public void ParseKoofrNetResponseCorrectly()
         {
             List<string> fileNames = WebdavCloudStorageClient.ParseWebdavResponseForFileNames(GetKoofrNetResponse());

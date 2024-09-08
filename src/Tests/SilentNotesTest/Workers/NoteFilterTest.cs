@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SilentNotes.Workers;
 
 namespace SilentNotesTest.Workers
 {
-    [TestFixture]
+    [TestClass]
     public class NoteFilterTest
     {
-        [Test]
+        [TestMethod]
         public void ContainsTag_FindsTagCaseInsensitive()
         {
             NoteFilter filter = new NoteFilter(string.Empty, new[] { "mytag" }, NoteFilter.FilterOptions.FilterByTagList);
@@ -21,7 +21,7 @@ namespace SilentNotesTest.Workers
             Assert.IsFalse(filter.MatchTags(null));
         }
 
-        [Test]
+        [TestMethod]
         public void ContainsTag_FindsOnlyWhenAllTagsAreFound()
         {
             NoteFilter filter = new NoteFilter(string.Empty, new[] { "Jan", "Mar" }, NoteFilter.FilterOptions.FilterByTagList);
@@ -33,7 +33,7 @@ namespace SilentNotesTest.Workers
             Assert.IsFalse(filter.MatchTags(noteTagList));
         }
 
-        [Test]
+        [TestMethod]
         public void ContainsTag_AcceptsNullParameters()
         {
             NoteFilter filter = new NoteFilter(string.Empty, null, NoteFilter.FilterOptions.FilterByTagList);
@@ -41,7 +41,7 @@ namespace SilentNotesTest.Workers
             Assert.IsTrue(filter.MatchTags(null));
         }
 
-        [Test]
+        [TestMethod]
         public void ContainsTag_Applies_SpecialTagNotesWithoutTags()
         {
             NoteFilter filter = new NoteFilter(string.Empty, null, NoteFilter.FilterOptions.NotesWithoutTags);

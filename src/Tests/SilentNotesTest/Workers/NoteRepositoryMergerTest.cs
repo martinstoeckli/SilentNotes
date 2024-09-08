@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SilentNotes.Models;
 using SilentNotes.Workers;
 
 namespace SilentNotesTest.Workers
 {
-    [TestFixture]
+    [TestClass]
     public class NoteRepositoryMergerTest
     {
-        [Test]
+        [TestMethod]
         public void TakeNewNotesFromBoth()
         {
             NoteRepositoryModel repo1 = new NoteRepositoryModel();
@@ -25,7 +25,7 @@ namespace SilentNotesTest.Workers
             Assert.IsTrue(result.Notes.ContainsById(repo2.Notes[0].Id));
         }
 
-        [Test]
+        [TestMethod]
         public void UpdateNewerNotes()
         {
             NoteModel note1 = new NoteModel { HtmlContent = "11", ModifiedAt = new DateTime(2000, 01, 01) };
@@ -47,7 +47,7 @@ namespace SilentNotesTest.Workers
             Assert.AreEqual("22", result.Notes[1].HtmlContent);
         }
 
-        [Test]
+        [TestMethod]
         public void RemoveNotesDeletedOnTheClient()
         {
             NoteRepositoryModel serverRepo = new NoteRepositoryModel();
@@ -72,7 +72,7 @@ namespace SilentNotesTest.Workers
             Assert.IsTrue(result.DeletedNotes.Contains(note3.Id));
         }
 
-        [Test]
+        [TestMethod]
         public void RemoveNotesDeletedOnTheServer()
         {
             NoteRepositoryModel clientRepo = new NoteRepositoryModel();
@@ -89,7 +89,7 @@ namespace SilentNotesTest.Workers
             Assert.IsTrue(result.DeletedNotes.Contains(note.Id));
         }
 
-        [Test]
+        [TestMethod]
         public void NoDuplicatesOnDeletedNotes()
         {
             Guid note1Id = new Guid("10000000000000000000000000000000");
@@ -113,7 +113,7 @@ namespace SilentNotesTest.Workers
             Assert.IsTrue(result.DeletedNotes.Contains(note3Id));
         }
 
-        [Test]
+        [TestMethod]
         public void AlwaysCreateNewestRevision()
         {
             NoteRepositoryModel repo1 = new NoteRepositoryModel();
@@ -126,7 +126,7 @@ namespace SilentNotesTest.Workers
             Assert.AreEqual(NoteRepositoryModel.NewestSupportedRevision, result.Revision);
         }
 
-        [Test]
+        [TestMethod]
         public void UseOrderCorrectly()
         {
             NoteRepositoryModel clientRepo = new NoteRepositoryModel();
@@ -186,7 +186,7 @@ namespace SilentNotesTest.Workers
             Assert.AreEqual(note105.Id, result.Notes[7].Id);
         }
 
-        [Test]
+        [TestMethod]
         public void OuterJoinTakesNewNotesFromClient()
         {
             NoteRepositoryModel clientRepo = new NoteRepositoryModel();
@@ -209,7 +209,7 @@ namespace SilentNotesTest.Workers
             Assert.AreEqual(note103.Id, result.Notes[2].Id);
         }
 
-        [Test]
+        [TestMethod]
         public void OuterJoinTakesNewNotesFromServer()
         {
             NoteRepositoryModel clientRepo = new NoteRepositoryModel();
@@ -232,7 +232,7 @@ namespace SilentNotesTest.Workers
             Assert.AreEqual(note203.Id, result.Notes[2].Id);
         }
 
-        [Test]
+        [TestMethod]
         public void UseOrderCorrectlyIfNoNewNotes()
         {
             NoteRepositoryModel clientRepo = new NoteRepositoryModel();
@@ -257,7 +257,7 @@ namespace SilentNotesTest.Workers
             Assert.AreEqual(note104.Id, result.Notes[1].Id);
         }
 
-        [Test]
+        [TestMethod]
         public void MergeSafes()
         {
             Guid safe1Id = new Guid("10000000000000000000000000000000");
@@ -304,7 +304,7 @@ namespace SilentNotesTest.Workers
                 repo.Notes.Add(new NoteModel { SafeId = safeId });
         }
 
-        [Test]
+        [TestMethod]
         public void ChooseLastModifiedNoteWorksCorrectly()
         {
             NoteModel note1 = new NoteModel();
@@ -362,7 +362,7 @@ namespace SilentNotesTest.Workers
         /// pinned on the client and went to the top, it should stick there, even if the order of
         /// the remote repository has precedence.
         /// </summary>
-        [Test]
+        [TestMethod]
         public void KeepPinnedNotesToTheTop()
         {
             NoteRepositoryModel serverRepo = new NoteRepositoryModel();

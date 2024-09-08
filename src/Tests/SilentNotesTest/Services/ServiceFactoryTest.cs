@@ -1,13 +1,13 @@
 ﻿using System;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SilentNotes.Services;
 
 namespace SilentNotesTest.Services
 {
-    [TestFixture]
+    [TestClass]
     public class ServiceFactoryTest
     {
-        [Test]
+        [TestMethod]
         public void CreatesNewInstancesEachTimeIfNotSingleton()
         {
             var factory = new ServiceFactory<string, Candidate>(false); // not singleton services
@@ -19,7 +19,7 @@ namespace SilentNotesTest.Services
             Assert.AreNotSame(candidate1, candidate2);
         }
 
-        [Test]
+        [TestMethod]
         public void KeepsNewInstancesIfSingleton()
         {
             var factory = new ServiceFactory<string, Candidate>(true); // singleton services
@@ -31,7 +31,7 @@ namespace SilentNotesTest.Services
             Assert.AreSame(candidate1, candidate2);
         }
 
-        [Test]
+        [TestMethod]
         public void FindsCorrectId()
         {
             var factory = new ServiceFactory<string, Candidate>(true);
@@ -46,13 +46,13 @@ namespace SilentNotesTest.Services
             Assert.AreEqual(2, candidate2.Id);
         }
 
-        [Test]
+        [TestMethod]
         public void ThrowsForUnknownId()
         {
             var factory = new ServiceFactory<string, Candidate>(true);
             factory.Add("id1", () => new Candidate { Id = 1 });
 
-            Assert.Throws<ArgumentOutOfRangeException>(() => factory.GetByKey("id2"));
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => factory.GetByKey("id2"));
         }
 
         private class Candidate

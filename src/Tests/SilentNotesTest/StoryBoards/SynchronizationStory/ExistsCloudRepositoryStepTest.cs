@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Moq;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SilentNotes.Models;
 using SilentNotes.Services;
 using SilentNotes.Stories;
@@ -9,10 +9,10 @@ using VanillaCloudStorageClient;
 
 namespace SilentNotesTest.Stories.SynchronizationStory
 {
-    [TestFixture]
+    [TestClass]
     public class ExistsCloudRepositoryStepTest
     {
-        [Test]
+        [TestMethod]
         public async Task AccountIsStoredWhenDifferent()
         {
             SerializeableCloudStorageCredentials credentialsFromSession = new SerializeableCloudStorageCredentials { CloudStorageId = CloudStorageClientFactory.CloudStorageIdDropbox };
@@ -45,10 +45,10 @@ namespace SilentNotesTest.Stories.SynchronizationStory
             settingsService.Verify(m => m.TrySaveSettingsToLocalDevice(It.Is<SettingsModel>(s => s.Credentials == credentialsFromSession)), Times.Once);
 
             // Next step is called
-            Assert.IsInstanceOf<DownloadCloudRepositoryStep>(result.NextStep);
+            Assert.IsInstanceOfType<DownloadCloudRepositoryStep>(result.NextStep);
         }
 
-        [Test]
+        [TestMethod]
         public async Task CorrectNextStepWhenNoCloudRepositoryExists()
         {
             SerializeableCloudStorageCredentials credentials = new SerializeableCloudStorageCredentials { CloudStorageId = CloudStorageClientFactory.CloudStorageIdDropbox };
@@ -81,7 +81,7 @@ namespace SilentNotesTest.Stories.SynchronizationStory
             settingsService.Verify(m => m.TrySaveSettingsToLocalDevice(It.IsAny<SettingsModel>()), Times.Never);
 
             // Next step is called
-            Assert.IsInstanceOf<StoreLocalRepositoryToCloudAndQuitStep>(result.NextStep);
+            Assert.IsInstanceOfType<StoreLocalRepositoryToCloudAndQuitStep>(result.NextStep);
         }
     }
 }

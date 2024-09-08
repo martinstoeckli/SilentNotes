@@ -4,17 +4,17 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SilentNotes.Models;
 using SilentNotes.ViewModels;
 using SilentNotes.Workers;
 
 namespace SilentNotesTest.Workers
 {
-    [TestFixture]
+    [TestClass]
     public class NoteMoverTest
     {
-        [Test]
+        [TestMethod]
         public void GetNotePositions_MoveStepDownwards_RespectsGapsInFilter()
         {
             var allNotes = PrepareTestNotes();
@@ -28,7 +28,7 @@ namespace SilentNotesTest.Workers
             Assert.AreEqual(1, positions.NewFilteredNotesPos);
         }
 
-        [Test]
+        [TestMethod]
         public void GetNotePositions_MoveStepUpwards_RespectsGapsInFilter()
         {
             var allNotes = PrepareTestNotes();
@@ -42,7 +42,7 @@ namespace SilentNotesTest.Workers
             Assert.AreEqual(0, positions.NewFilteredNotesPos);
         }
 
-        [Test]
+        [TestMethod]
         public void GetNotePositions_MoveStepsUpwards_MovesToBeginOfVisibleList()
         {
             var allNotes = PrepareTestNotes();
@@ -59,7 +59,7 @@ namespace SilentNotesTest.Workers
             Assert.AreEqual(0, positions.NewFilteredNotesPos);
         }
 
-        [Test]
+        [TestMethod]
         public void GetNotePositions_MoveStepsDownwards_MovesToEndOfVisibleList()
         {
             var allNotes = PrepareTestNotes();
@@ -73,7 +73,7 @@ namespace SilentNotesTest.Workers
             Assert.AreEqual(filteredNotes.Count-1, positions.NewFilteredNotesPos);
         }
 
-        [Test]
+        [TestMethod]
         public void AdjustPinStatusAfterMoving_PinsNoteIfDraggedAboveLastPinnedNote()
         {
             // Note 2 was dragged above Note 3
@@ -87,7 +87,7 @@ namespace SilentNotesTest.Workers
             Assert.IsTrue(allNotes[2].IsPinned);
         }
 
-        [Test]
+        [TestMethod]
         public void AdjustPinStatusAfterMoving_UnpinsNoteIfDraggedBelowFirstUnpinnedNote()
         {
             // Note2 was dragged below Note1
@@ -100,7 +100,7 @@ namespace SilentNotesTest.Workers
             Assert.IsFalse(allNotes[2].IsPinned);
         }
 
-        [Test]
+        [TestMethod]
         public void AdjustPinStatusAfterMoving_DoesNotChangePinStateIfNotNecessary()
         {
             var allNotes = PrepareTestNotes();

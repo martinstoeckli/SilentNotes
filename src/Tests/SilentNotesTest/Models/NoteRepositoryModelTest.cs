@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SilentNotes.Models;
 
 namespace SilentNotesTest.Models
 {
-    [TestFixture]
+    [TestClass]
     public class NoteRepositoryModelTest
     {
-        [Test]
+        [TestMethod]
         public void GetModificationFingerprintDetectsEqualityForEqualRepositories()
         {
             NoteRepositoryModel model1 = CreateNoteRepositoryModel();
@@ -19,7 +19,7 @@ namespace SilentNotesTest.Models
             Assert.AreEqual(model1.GetModificationFingerprint(), model1.GetModificationFingerprint());
         }
 
-        [Test]
+        [TestMethod]
         public void GetModificationFingerprintDetectsOrderChanges()
         {
             NoteRepositoryModel model1 = CreateNoteRepositoryModel();
@@ -29,7 +29,7 @@ namespace SilentNotesTest.Models
             Assert.AreNotEqual(model1.GetModificationFingerprint(), model2.GetModificationFingerprint());
         }
 
-        [Test]
+        [TestMethod]
         public void GetModificationFingerprintDetectsRevisionUpdates()
         {
             NoteRepositoryModel model1 = CreateNoteRepositoryModel();
@@ -39,7 +39,7 @@ namespace SilentNotesTest.Models
             Assert.AreNotEqual(model1.GetModificationFingerprint(), model2.GetModificationFingerprint());
         }
 
-        [Test]
+        [TestMethod]
         public void GetModificationFingerprintDetectsNoteChanges()
         {
             NoteRepositoryModel model1 = CreateNoteRepositoryModel();
@@ -49,7 +49,7 @@ namespace SilentNotesTest.Models
             Assert.AreNotEqual(model1.GetModificationFingerprint(), model2.GetModificationFingerprint());
         }
 
-        [Test]
+        [TestMethod]
         public void GetModificationFingerprintDetectsDifferencesInDeletedNotes()
         {
             NoteRepositoryModel model1 = CreateNoteRepositoryModel();
@@ -60,7 +60,7 @@ namespace SilentNotesTest.Models
             Assert.AreNotEqual(model1.GetModificationFingerprint(), model2.GetModificationFingerprint());
         }
 
-        [Test]
+        [TestMethod]
         public void GetModificationFingerprint_ComparesMetaModifiedAtCorrectly()
         {
             NoteRepositoryModel model1 = CreateNoteRepositoryModel();
@@ -74,7 +74,7 @@ namespace SilentNotesTest.Models
             Assert.AreNotEqual(model1.GetModificationFingerprint(), model2.GetModificationFingerprint());
         }
 
-        [Test]
+        [TestMethod]
         public void GetModificationFingerprint_DetectsRecycleBinRestore()
         {
             NoteRepositoryModel model = CreateNoteRepositoryModel();
@@ -87,7 +87,7 @@ namespace SilentNotesTest.Models
             Assert.AreNotEqual(fingerprintBefore, fingerprintAfter);
         }
 
-        [Test]
+        [TestMethod]
         public void RemoveUnusedSafesWorksCorrectly()
         {
             Guid safe1Id = new Guid("10000000000000000000000000000000");
@@ -105,7 +105,7 @@ namespace SilentNotesTest.Models
             Assert.AreEqual(safe2Id, repository.Safes[0].Id);
         }
 
-        [Test]
+        [TestMethod]
         public void CollectActiveTags_IsDistinctAndSorted()
         {
             NoteRepositoryModel model = CreateNoteRepositoryModel();
@@ -120,7 +120,7 @@ namespace SilentNotesTest.Models
             Assert.AreEqual("OPQ", tags[3]);
         }
 
-        [Test]
+        [TestMethod]
         public void CollectActiveTags_IgnoresTagsFromRecyclebin()
         {
             NoteRepositoryModel model = CreateNoteRepositoryModel();

@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SilentNotes.Workers;
 
 namespace SilentNotesTest.Workers
 {
-    [TestFixture]
+    [TestClass]
     public class ModificationDetectorTest
     {
-        [Test]
+        [TestMethod]
         public void IsModified_DetectsChange()
         {
             var values = new long[] { 11, 88 };
@@ -22,7 +22,7 @@ namespace SilentNotesTest.Workers
             Assert.IsTrue(detector.IsModified());
         }
 
-        [Test]
+        [TestMethod]
         public void MemorizeCurrentState_ResetsFingerprint()
         {
             var values = new long[] { 11, 88 };
@@ -33,7 +33,7 @@ namespace SilentNotesTest.Workers
             Assert.IsFalse(detector.IsModified());
         }
 
-        [Test]
+        [TestMethod]
         public void CombineHashCodes_CalculatesSameCode_ForSameValues()
         {
             long hashCode1 = ModificationDetector.CombineHashCodes(new long[] { 11, 88, 99 });
@@ -41,7 +41,7 @@ namespace SilentNotesTest.Workers
             Assert.AreEqual(hashCode1, hashCode2);
         }
 
-        [Test]
+        [TestMethod]
         public void CombineHashCodes_CalculatesDifferentCodes_ForDifferentOrder()
         {
             long hashCode1 = ModificationDetector.CombineHashCodes(new long[] { 11, 88, 99 });
@@ -49,20 +49,20 @@ namespace SilentNotesTest.Workers
             Assert.AreNotEqual(hashCode1, hashCode2);
         }
 
-        [Test]
+        [TestMethod]
         public void CombineHashCodes_WorksWithEmptyList()
         {
             long hashCode1 = ModificationDetector.CombineHashCodes(new long[0]);
             Assert.AreEqual(0, hashCode1);
         }
 
-        [Test]
+        [TestMethod]
         public void CombineHashCodes_DoesNotOverflow()
         {
-            Assert.DoesNotThrow(() => ModificationDetector.CombineHashCodes(new long[] { long.MaxValue, long.MaxValue }));
+            ModificationDetector.CombineHashCodes(new long[] { long.MaxValue, long.MaxValue });
         }
 
-        [Test]
+        [TestMethod]
         public void CombineHashCodes_ChainingUsesOriginalHashCode()
         {
             long originalHashCode = ModificationDetector.CombineHashCodes(new long[] { 11, 88, 99 });
@@ -70,14 +70,14 @@ namespace SilentNotesTest.Workers
             Assert.AreNotEqual(originalHashCode, hashCode);
         }
 
-        [Test]
+        [TestMethod]
         public void CombineWithStringHash_UsesSha()
         {
             long hashCode = ModificationDetector.CombineWithStringHash("the lazy fox", 0);
             Assert.AreEqual(4208979722577018513, hashCode); // This hash is reproduceable
         }
 
-        [Test]
+        [TestMethod]
 
         public void CombineWithStringHash_WorksWithNull()
         {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Moq;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SilentNotes.Crypto;
 using SilentNotes.Models;
 using SilentNotes.Services;
@@ -10,10 +10,10 @@ using SilentNotes.ViewModels;
 
 namespace SilentNotesTest.ViewModels
 {
-    [TestFixture]
+    [TestClass]
     public class NoteRepositoryViewModelTest
     {
-        [Test]
+        [TestMethod]
         public void NewNote_MarksRepositoryAsModified()
         {
             NoteRepositoryModel model = CreateTestRepository();
@@ -23,7 +23,7 @@ namespace SilentNotesTest.ViewModels
             Assert.IsTrue(viewModel.Modifications.IsModified());
         }
 
-        [Test]
+        [TestMethod]
         public void NewNote_IsAddedAfterLastPinned()
         {
             NoteRepositoryModel model = CreateTestRepository();
@@ -39,7 +39,7 @@ namespace SilentNotesTest.ViewModels
             Assert.IsFalse(oldNotes.Contains(newNote));
         }
 
-        [Test]
+        [TestMethod]
         public void NewNote_IsAddedAsFirstIfNoOtherNotesExist()
         {
             NoteRepositoryModel model = new NoteRepositoryModel();
@@ -52,7 +52,7 @@ namespace SilentNotesTest.ViewModels
             Assert.IsFalse(model.Notes[0].IsPinned);
         }
 
-        [Test]
+        [TestMethod]
         public void NewNote_IsAddedAsLastIfAllNotesArePinned()
         {
             NoteRepositoryModel model = CreateTestRepository();
@@ -69,7 +69,7 @@ namespace SilentNotesTest.ViewModels
             Assert.IsFalse(oldNotes.Contains(newNote));
         }
 
-        [Test]
+        [TestMethod]
         public void NewNote_RecyclingStateIsIgnored()
         {
             NoteRepositoryModel model = CreateTestRepository();
@@ -85,7 +85,7 @@ namespace SilentNotesTest.ViewModels
             Assert.IsFalse(oldNotes.Contains(newNote));
         }
 
-        [Test]
+        [TestMethod]
         public void DeleteNote_MarksRepositoryAsModified()
         {
             NoteRepositoryModel model = CreateTestRepository();
@@ -97,7 +97,7 @@ namespace SilentNotesTest.ViewModels
             Assert.IsTrue(viewModel.Modifications.IsModified());
         }
 
-        [Test]
+        [TestMethod]
         public void DeleteNote_MarksNoteAsDeleted()
         {
             NoteRepositoryModel model = CreateTestRepository();
@@ -110,7 +110,7 @@ namespace SilentNotesTest.ViewModels
             Assert.AreEqual(true, deletedNote.InRecyclingBin);
         }
 
-        [Test]
+        [TestMethod]
         public void DeleteNote_RemovedFromFilteredList()
         {
             NoteRepositoryModel model = CreateTestRepository();
@@ -124,7 +124,7 @@ namespace SilentNotesTest.ViewModels
             Assert.IsFalse(viewModel.FilteredNotes.Contains(noteToDelete));
         }
 
-        [Test]
+        [TestMethod]
         public async Task DeleteNote_RemovedFromTagTree()
         {
             NoteRepositoryModel model = CreateTestRepository();
@@ -139,7 +139,7 @@ namespace SilentNotesTest.ViewModels
             Assert.IsFalse(viewModel.TagsRootNode.EnumerateSiblingsRecursive(false).Any(node => node.Title == "fox"));
         }
 
-        [Test]
+        [TestMethod]
         public void AddNoteToSafe_MarksRepositoryAsModified()
         {
             NoteRepositoryModel model = CreateTestRepository();
@@ -158,7 +158,7 @@ namespace SilentNotesTest.ViewModels
             Assert.IsTrue(viewModel.Modifications.IsModified());
         }
 
-        [Test]
+        [TestMethod]
         public void RemoveNoteFromSafe_MarksRepositoryAsModified()
         {
             NoteRepositoryModel model = CreateTestRepository();
@@ -178,7 +178,7 @@ namespace SilentNotesTest.ViewModels
             Assert.IsTrue(viewModel.Modifications.IsModified());
         }
 
-        [Test]
+        [TestMethod]
         public void MoveSelectedOrderNote_MarksRepositoryAsModified()
         {
             NoteRepositoryModel model = CreateTestRepository();

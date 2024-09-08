@@ -1,14 +1,14 @@
 ﻿using System.Security;
 using System.Text;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using VanillaCloudStorageClient;
 
 namespace VanillaCloudStorageClientTest
 {
-    [TestFixture]
+    [TestClass]
     public class SecureStringExtensionsTest
     {
-        [Test]
+        [TestMethod]
         public void CorrectlyConvertsStringToSecureString()
         {
             string candidate = "The brown fox jumps over the lazy 🐢🖐🏿 doc.";
@@ -25,7 +25,7 @@ namespace VanillaCloudStorageClientTest
             Assert.AreEqual(0, result.Length);
         }
 
-        [Test]
+        [TestMethod]
         public void CorrectlyConvertsSecureStringToString()
         {
             SecureString secureCandidate = new SecureString();
@@ -39,7 +39,7 @@ namespace VanillaCloudStorageClientTest
             Assert.IsNull(secureCandidate);
         }
 
-        [Test]
+        [TestMethod]
         public void AreEqualsWorksCorrectly()
         {
             SecureString candidate1 = SecureStringExtensions.StringToSecureString("lazy 🐢🖐🏿 doc.");
@@ -62,7 +62,7 @@ namespace VanillaCloudStorageClientTest
             Assert.IsTrue(SecureStringExtensions.AreEqual(candidate1, candidate2));
         }
 
-        [Test]
+        [TestMethod]
         public void CorrectlyConvertsUnicodeBytesToSecureString()
         {
             byte[] candidate = Encoding.Unicode.GetBytes("lazy 🐢🖐🏿 doc.");
@@ -75,7 +75,7 @@ namespace VanillaCloudStorageClientTest
             Assert.IsNull(result);
         }
 
-        [Test]
+        [TestMethod]
         public void CorrectlyConvertsSecureStringToUnicodeBytes()
         {
             string candidate = "lazy 🐢🖐🏿 doc.";
@@ -85,7 +85,7 @@ namespace VanillaCloudStorageClientTest
             Assert.AreEqual("lazy 🐢🖐🏿 doc.", Encoding.Unicode.GetString(bytes));
         }
 
-        [Test]
+        [TestMethod]
         public void CorrectlyConvertsUtf8BytesToSecureString()
         {
             byte[] candidate = Encoding.UTF8.GetBytes("lazy 🐢🖐🏿 doc.");
@@ -98,7 +98,7 @@ namespace VanillaCloudStorageClientTest
             Assert.IsNull(result);
         }
 
-        [Test]
+        [TestMethod]
         public void CorrectlyConvertsSecureStringToUtf8Bytes()
         {
             string candidate = "lazy 🐢🖐🏿 doc.";

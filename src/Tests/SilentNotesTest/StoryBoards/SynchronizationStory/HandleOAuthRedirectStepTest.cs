@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Moq;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SilentNotes.Models;
 using SilentNotes.Services;
 using SilentNotes.Stories;
@@ -9,10 +9,10 @@ using VanillaCloudStorageClient;
 
 namespace SilentNotesTest.Stories.SynchronizationStory
 {
-    [TestFixture]
+    [TestClass]
     public class HandleOAuthRedirectStepTest
     {
-        [Test]
+        [TestMethod]
         public async Task AccountIsStoredAfterGettingNewRefreshToken()
         {
             SerializeableCloudStorageCredentials credentialsFromSession = new SerializeableCloudStorageCredentials { CloudStorageId = CloudStorageClientFactory.CloudStorageIdOneDrive };
@@ -51,10 +51,10 @@ namespace SilentNotesTest.Stories.SynchronizationStory
             settingsService.Verify(m => m.TrySaveSettingsToLocalDevice(It.Is<SettingsModel>(s => s.Credentials.Token.RefreshToken == "rt")), Times.Once);
 
             // Next step is called
-            Assert.IsInstanceOf<ExistsCloudRepositoryStep>(result.NextStep);
+            Assert.IsInstanceOfType<ExistsCloudRepositoryStep>(result.NextStep);
         }
 
-        [Test]
+        [TestMethod]
         public async Task AbortStoryWithoutNewRefreshToken()
         {
             SerializeableCloudStorageCredentials credentialsFromSession = new SerializeableCloudStorageCredentials { CloudStorageId = CloudStorageClientFactory.CloudStorageIdOneDrive };
@@ -89,7 +89,7 @@ namespace SilentNotesTest.Stories.SynchronizationStory
             settingsService.Verify(m => m.TrySaveSettingsToLocalDevice(It.IsAny<SettingsModel>()), Times.Never);
 
             // Next step is end of story
-            Assert.IsInstanceOf<StopAndShowRepositoryStep>(result.NextStep);
+            Assert.IsInstanceOfType<StopAndShowRepositoryStep>(result.NextStep);
         }
     }
 }

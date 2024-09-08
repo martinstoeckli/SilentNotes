@@ -2,7 +2,7 @@
 using System.Net;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SilentNotes.Models;
 using SilentNotes.Services;
 using SilentNotes.Stories;
@@ -15,10 +15,10 @@ using VanillaCloudStorageClient;
 
 namespace SilentNotesTest.StoryBoards.PullPushStory
 {
-    [TestFixture]
+    [TestClass]
     public class StoreMergedRepositoryAndQuitStepTest
     {
-        [Test]
+        [TestMethod]
         public async Task RejectWhenCloudNoteDoesNotExist()
         {
             NoteRepositoryModel cloudRepositoryModel = new NoteRepositoryModel();
@@ -58,7 +58,7 @@ namespace SilentNotesTest.StoryBoards.PullPushStory
             Assert.AreEqual("pushpull_error_no_cloud_note", result.Toast);
         }
 
-        [Test]
+        [TestMethod]
         public async Task RejectWhenNotesAreEqual()
         {
             NoteModel noteModel = new NoteModel();
@@ -95,7 +95,7 @@ namespace SilentNotesTest.StoryBoards.PullPushStory
             Assert.AreEqual("pushpull_success", result.Toast);
         }
 
-        [Test]
+        [TestMethod]
         public async Task PullStoresCorrectData()
         {
             NoteModel cloudNoteModel = new NoteModel
@@ -147,7 +147,7 @@ namespace SilentNotesTest.StoryBoards.PullPushStory
             Assert.AreEqual("pushpull_success", result.Toast);
         }
 
-        [Test]
+        [TestMethod]
         public async Task PushStoresCorrectData()
         {
             NoteModel cloudNoteModel = new NoteModel

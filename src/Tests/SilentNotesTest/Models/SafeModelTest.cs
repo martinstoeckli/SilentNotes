@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Linq;
 using System.Security;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SilentNotes.Crypto;
 using SilentNotes.Crypto.SymmetricEncryption;
 using SilentNotes.Models;
 
 namespace SilentNotesTest.Models
 {
-    [TestFixture]
+    [TestClass]
     public class SafeModelTest
     {
-        [Test]
+        [TestMethod]
         public void CloneCopiesAllProperties()
         {
             SafeModel note1 = new SafeModel
@@ -31,7 +31,7 @@ namespace SilentNotesTest.Models
             Assert.AreEqual(note1.SerializeableKey, note2.SerializeableKey);
         }
 
-        [Test]
+        [TestMethod]
         public void EncryptedKeyCanBeDecrypted()
         {
             byte[] key = new byte[] { 88, 99, 11 };
@@ -45,7 +45,7 @@ namespace SilentNotesTest.Models
             Assert.IsTrue(key.SequenceEqual(decryptedKey));
         }
 
-        [Test]
+        [TestMethod]
         public void EnsureBackwardsCompatibilityDecryption()
         {
             string encryptedKey = "U2lsZW50U2FmZSB2PTIkYWVzX2djbSQ2ZXVQN3NSQ2dHQStadTJGeE80QkJRPT0kcGJrZGYyJEs0TjY5dmllRTBvaEg1UlVvVDUydGc9PSQxMDAwMCQkT1cFrC+EM9E5PlM4uPGUv0HsOQ==";

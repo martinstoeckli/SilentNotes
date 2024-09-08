@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Moq;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SilentNotes.Crypto.SymmetricEncryption;
 using SilentNotes.Models;
 using SilentNotes.Services;
@@ -10,10 +10,10 @@ using VanillaCloudStorageClient;
 
 namespace SilentNotesTest.Stories.SynchronizationStory
 {
-    [TestFixture]
+    [TestClass]
     public class StoreLocalRepositoryToCloudAndQuitStepTest
     {
-        [Test]
+        [TestMethod]
         public async Task GenerateAndStoreNewTransfercode()
         {
             SerializeableCloudStorageCredentials credentialsFromSession = new SerializeableCloudStorageCredentials();
@@ -56,10 +56,10 @@ namespace SilentNotesTest.Stories.SynchronizationStory
             Assert.AreEqual(1, settingsModel.NotificationTriggers.Count);
 
             // Next step is called
-            Assert.IsInstanceOf<StopAndShowRepositoryStep>(result.NextStep);
+            Assert.IsInstanceOfType<StopAndShowRepositoryStep>(result.NextStep);
         }
 
-        [Test]
+        [TestMethod]
         public async Task KeepExistingTransfercode()
         {
             SerializeableCloudStorageCredentials credentialsFromSession = new SerializeableCloudStorageCredentials();
@@ -95,7 +95,7 @@ namespace SilentNotesTest.Stories.SynchronizationStory
             settingsService.Verify(m => m.TrySaveSettingsToLocalDevice(It.IsAny<SettingsModel>()), Times.Never);
 
             // Next step is called
-            Assert.IsInstanceOf<StopAndShowRepositoryStep>(result.NextStep);
+            Assert.IsInstanceOfType<StopAndShowRepositoryStep>(result.NextStep);
         }
 
         private static SettingsModel CreateSettingsModel(string transferCode)

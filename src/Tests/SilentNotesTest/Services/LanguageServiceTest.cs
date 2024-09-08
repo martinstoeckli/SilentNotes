@@ -1,15 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SilentNotes.Services;
 
 namespace SilentNotesTest.Services
 {
-    [TestFixture]
+    [TestClass]
     public class LanguageServiceTest
     {
-        [Test]
+        [TestMethod]
         public void ReadFromStream_ReadsNormalResources()
         {
             List<string> resFile = new List<string>()
@@ -31,7 +31,7 @@ namespace SilentNotesTest.Services
             Assert.AreEqual("Information with space.", resDictionary["guiInfo"]);
         }
 
-        [Test]
+        [TestMethod]
         public void ReadFromStream_ReplaceNewlines()
         {
             List<string> resFile = new List<string>()
@@ -50,7 +50,7 @@ namespace SilentNotesTest.Services
             Assert.AreEqual("Close\r\nBut on two lines.", resDictionary["guiClose"]);
         }
 
-        [Test]
+        [TestMethod]
         public void ReadFromStream_SkipComments()
         {
             List<string> resFile = new List<string>()
@@ -72,7 +72,7 @@ namespace SilentNotesTest.Services
             Assert.AreEqual("Close", resDictionary["guiClose"]);
         }
 
-        [Test]
+        [TestMethod]
         public void ReadFromStream_IgnoresInvalidLines()
         {
             List<string> resFile = new List<string>()
@@ -96,7 +96,7 @@ namespace SilentNotesTest.Services
             Assert.AreEqual("Don't ignore this valid line.", resDictionary["888"]);
         }
 
-        [Test]
+        [TestMethod]
         public void TrySplitLine_HandlesDelimiterCorrectly()
         {
             List<string> resFile = new List<string>()

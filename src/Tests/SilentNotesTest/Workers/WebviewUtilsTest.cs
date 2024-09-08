@@ -1,27 +1,27 @@
 ﻿using System;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SilentNotes.Workers;
 
 namespace SilentNotesTest.Workers
 {
-    [TestFixture]
+    [TestClass]
     public class WebviewUtilsTest
     {
-        [Test]
+        [TestMethod]
         public void EscapeJavaScriptStringReturnsEmptyStringForNull()
         {
             Assert.AreEqual(string.Empty, WebviewUtils.EscapeJavaScriptString(null));
             Assert.AreEqual(string.Empty, WebviewUtils.EscapeJavaScriptString(string.Empty));
         }
 
-        [Test]
+        [TestMethod]
         public void IsExternalUrlWorksWithNullOrEmpty()
         {
             Assert.IsFalse(WebviewUtils.IsExternalUri(null));
             Assert.IsFalse(WebviewUtils.IsExternalUri(string.Empty));
         }
 
-        [Test]
+        [TestMethod]
         public void IsExternalUrlWorksWithKnownProtocols()
         {
             Assert.IsTrue(WebviewUtils.IsExternalUri("http://example.com"));
@@ -33,19 +33,19 @@ namespace SilentNotesTest.Workers
             Assert.IsTrue(WebviewUtils.IsExternalUri("tel:+41 00 000 000"));
         }
 
-        [Test]
+        [TestMethod]
         public void IsExternalUrlRejectsInvalidFormat()
         {
             Assert.IsFalse(WebviewUtils.IsExternalUri("https://"));
         }
 
-        [Test]
+        [TestMethod]
         public void IsExternalUrlWorksCaseInsensitive()
         {
             Assert.IsTrue(WebviewUtils.IsExternalUri("HttP://example.com/test"));
         }
 
-        [Test]
+        [TestMethod]
         public void IsExternalUrlRejectsWrongUrls()
         {
             Assert.IsFalse(WebviewUtils.IsExternalUri("webview://click#http"));

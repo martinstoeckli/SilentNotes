@@ -4,14 +4,14 @@ using System.Diagnostics;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Flurl.Http.Testing;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using VanillaCloudStorageClient;
 using VanillaCloudStorageClient.CloudStorageProviders;
 
 #pragma warning disable CS0162 // Unreachable code detected
 namespace VanillaCloudStorageClientTest.CloudStorageProviders
 {
-    [TestFixture]
+    [TestClass]
     public class OnedriveCloudStorageClientTest
     {
         /// <summary>
@@ -34,21 +34,21 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
         private const string CodeVerifier = "abcdefghijklmnopqrstuvwxyabcdefghijklmnopqrstuvwxy";
         private HttpTest _httpTest;
 
-        [SetUp]
+        [TestInitialize]
         public void CreateHttpTest()
         {
             if (!DoRealWebRequests)
                 _httpTest = new HttpTest(); // Put flurl into test mode
         }
 
-        [TearDown]
+        [TestCleanup]
         public void DisposeHttpTest()
         {
             if (!DoRealWebRequests)
                 _httpTest.Dispose();
         }
 
-        [Test]
+        [TestMethod]
         [Ignore("Opens the authorization page in the system browse, to get a real authorization-code")]
         public void ReallyDoOpenAuthorizationPageInBrowser()
         {
@@ -61,7 +61,7 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
             browserProcess.Start();
         }
 
-        [Test]
+        [TestMethod]
         [Ignore("Gets a real access-token")]
         public async Task ReallyDoFetchToken()
         {
@@ -76,7 +76,7 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
             Assert.IsNotNull(token.RefreshToken);
         }
 
-        [Test]
+        [TestMethod]
         [Ignore("Refreshes a real token")]
         public async Task ReallyDoRefreshToken()
         {
@@ -97,7 +97,7 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
             Assert.AreEqual(oldToken.RefreshToken, newToken.RefreshToken);
         }
 
-        [Test]
+        [TestMethod]
         public async Task FileLifecycleWorks()
         {
             string fileName = "unittest.dat";
@@ -110,7 +110,7 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
                 _httpTest.RespondWith(@"{ ""id"": ""fakeid"" }");
                 _httpTest.RespondWith(GetOneDriveUploadSession());
             }
-            Assert.DoesNotThrowAsync(() => UploadFileWorksAsync(fileName, fileContent));
+            await UploadFileWorksAsync(fileName, fileContent);
 
             // 2) Test listing
             if (!DoRealWebRequests)
@@ -132,14 +132,14 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
                 _httpTest.RespondWith(() => httpContent);
             }
             Byte[] downloadedContent = await DownloadFileWorksAsync(fileName);
-            Assert.AreEqual(fileContent, downloadedContent);
+            CollectionAssert.AreEqual(fileContent, downloadedContent);
 
             // 5) Test delete
             if (!DoRealWebRequests)
             {
                 _httpTest.RespondWith(() => new ByteArrayContent(new byte[0]));
             }
-            Assert.DoesNotThrowAsync(() => DeleteFileWorksAsync(fileName));
+            await DeleteFileWorksAsync(fileName);
 
             // 6) Was really deleted?
             if (!DoRealWebRequests)
