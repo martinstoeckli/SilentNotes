@@ -92,8 +92,7 @@ div.note-dark .detail-view.checklist .ProseMirror p::after { content: @(IconServ
 		</ActivatorContent>
 		<ChildContent><span class="menu-font">
 			<MudMenuItem OnClick="@(() => _jsModule.InvokeVoidAsync("sortPendingToTop"))"
-				Icon="@IconService.GetSvgLink(IconNames.SortBoolDescendingVariant)"
-				Disabled="ViewModel.ShoppingModeActive">@LanguageService["checklist_move_pending_to_top"]</MudMenuItem>
+				Icon="@IconService.GetSvgLink(IconNames.SortBoolDescendingVariant)">@LanguageService["checklist_move_pending_to_top"]</MudMenuItem>
 
 			<MudMenuItem OnClick="@(() => _jsModule.InvokeVoidAsync("sortAlphabetical"))"
 				Icon="@IconService.GetSvgLink(IconNames.SortAlphabeticalAscending)"
