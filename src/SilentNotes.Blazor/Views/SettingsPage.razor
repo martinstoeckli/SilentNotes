@@ -13,6 +13,7 @@
 @inject IEnvironmentService EnvironmentService
 @inject IThemeService ThemeService
 @inject IFeedbackService FeedbackService
+@inject IMessengerService MessengerService
 @inject IFilePickerService FilePickerService
 @inject ICloudStorageClientFactory CloudStorageClientFactory
 @inject ISynchronizationService SynchronizationService
@@ -320,7 +321,7 @@
 
 	protected override void OnInitialized()
 	{
-		ViewModel = new SettingsViewModel(SettingsService, LanguageService, EnvironmentService, SynchronizationService, ThemeService, FeedbackService, CloudStorageClientFactory, FilePickerService);
+		ViewModel = new SettingsViewModel(SettingsService, LanguageService, EnvironmentService, SynchronizationService, ThemeService, FeedbackService, MessengerService, CloudStorageClientFactory, FilePickerService);
 	}
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)

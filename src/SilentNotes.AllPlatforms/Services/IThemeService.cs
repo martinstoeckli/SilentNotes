@@ -33,6 +33,13 @@ namespace SilentNotes.Services
         string LightOrDarkClass { get; }
 
         /// <summary>
+        /// Gets a well known color from the active palette of the theme.
+        /// </summary>
+        /// <param name="color">Well known color.</param>
+        /// <returns>Hex encoded color, ready to be used in HTML/CSS.</returns>
+        string GetColorHex(ThemeColor color);
+
+        /// <summary>
         /// Gets a Css for a solid background or an attribute string like:
         /// <example>
         /// background-color: #121212;
@@ -58,5 +65,14 @@ namespace SilentNotes.Services
         /// <param name="wallpaperId">Id of the wallpaper to search for.</param>
         /// <returns>Found wallpaper index or index of default wallpaper.</returns>
         int FindWallpaperIndexOrDefault(string wallpaperId);
+    }
+
+    /// <summary>
+    /// Enumeration of available well known colors in a theme.
+    /// Add more colors when needed, currently they correspond to the properties of a Mud palette.
+    /// </summary>
+    public enum ThemeColor
+    {
+        AppbarBackground,
     }
 }

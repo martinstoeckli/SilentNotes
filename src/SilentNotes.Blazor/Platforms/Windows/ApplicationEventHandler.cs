@@ -4,7 +4,6 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System.Runtime.InteropServices;
-using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Maui.Platform;
 using Microsoft.UI.Xaml;
 using Microsoft.Windows.AppLifecycle;
@@ -19,7 +18,7 @@ namespace SilentNotes.Platforms
     /// Handles application lifecycle events for the Windows platform.
     /// Possible events are listed here: https://learn.microsoft.com/en-us/dotnet/maui/fundamentals/app-lifecycle
     /// </summary>
-    internal class ApplicationEventHandler : ApplicationEventHandlerBase
+    internal class ApplicationEventHandler
     {
         internal void OnWindowCreated(Microsoft.UI.Xaml.Window window)
         {
@@ -29,7 +28,8 @@ namespace SilentNotes.Platforms
         internal void OnClosed(Microsoft.UI.Xaml.Window window, WindowEventArgs args)
         {
             System.Diagnostics.Debug.WriteLine("*** ApplicationEventHandler.OnClosed()");
-            WeakReferenceMessenger.Default.Send(new StoreUnsavedDataMessage(MessageSender.ApplicationEventHandler));
+            var messenger = Ioc.Instance.GetService<IMessengerService>();
+            messenger.Send(new StoreUnsavedDataMessage(MessageSender.ApplicationEventHandler));
 
             // We need to wait for the end of the synchronization, otherwise the app exits before
             // the work is done.

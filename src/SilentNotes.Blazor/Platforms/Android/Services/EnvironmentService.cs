@@ -8,7 +8,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Android.Content.Res;
 using Android.Views;
-using CommunityToolkit.Mvvm.Messaging;
 using SilentNotes.Services;
 
 namespace SilentNotes.Platforms.Services
@@ -19,16 +18,19 @@ namespace SilentNotes.Platforms.Services
     internal class EnvironmentService : IEnvironmentService, IKeepScreenOn, IScreenshots
     {
         private readonly IAppContextService _appContext;
+        private readonly IMessengerService _messengerService;
         private CancellationTokenSource _cancellationTokenSource;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EnvironmentService"/> class.
         /// </summary>
         /// <param name="appContextService">A service which knows about the current main activity.</param>
-        public EnvironmentService(IAppContextService appContextService)
+        /// <param name="messengerService">The messenger service.</param>
+        public EnvironmentService(IAppContextService appContextService, IMessengerService messengerService)
         {
             Os = SilentNotes.Services.OperatingSystem.Android;
             _appContext = appContextService;
+            _messengerService = messengerService;
         }
 
         /// <inheritdoc/>
@@ -78,7 +80,7 @@ namespace SilentNotes.Platforms.Services
             _appContext.RootActivity.RunOnUiThread(() =>
             {
                 _appContext.RootActivity.Window.ClearFlags(WindowManagerFlags.KeepScreenOn); // must be called on UI thread
-                WeakReferenceMessenger.Default.Send(new KeepScreenOnChangedMessage());
+                _messengerService.Send(new KeepScreenOnChangedMessage());
             });
         }
 

@@ -5,7 +5,6 @@ using Android.Content;
 using Android.Content.PM;
 using Android.OS;
 using Android.Views;
-using CommunityToolkit.Mvvm.Messaging;
 using SilentNotes.Platforms;
 using SilentNotes.Services;
 using static Android.Views.ViewTreeObserver;
@@ -32,8 +31,9 @@ namespace SilentNotes
 
             // Delay closing of splash screen until app is ready:
             // https://developer.android.com/develop/ui/views/launch/splash-screen#suspend-drawing
-            WeakReferenceMessenger.Default.Register<MainLayoutReadyMessage>(
-                this, async (recipient, message) => await OnMainLayoutReady());
+            var messenger = Ioc.Instance.GetService<IMessengerService>();
+            messenger.Register<MainLayoutReadyMessage>(
+                this, (recipient, message) => OnMainLayoutReady());
             _contentView = FindViewById<Android.Views.View>(Android.Resource.Id.Content);
             _contentView.ViewTreeObserver.AddOnPreDrawListener(this);
 
@@ -75,11 +75,13 @@ namespace SilentNotes
             _applicationEventHandler.OnActivityResult(this, requestCode, resultCode, data);
         }
 
-        private Task OnMainLayoutReady()
+        private void OnMainLayoutReady()
         {
-            WeakReferenceMessenger.Default.Unregister<MainLayoutReadyMessage>(this); // This is a one time event.
+            var messenger = Ioc.Instance.GetService<IMessengerService>();
+            messenger.Unregister<MainLayoutReadyMessage>(this); // This is a one time event.
+
             _splashScreenCanBeClosed = true;
-            return Task.CompletedTask;
+            _applicationEventHandler.OnMainLayoutReady();
         }
 
         /// <summary>
@@ -106,7 +108,8 @@ namespace SilentNotes
             {
                 // Ask the page to close currently open menus and dialogs.
                 var message = new BackButtonPressedMessage { Handled = false };
-                WeakReferenceMessenger.Default.Send(message);
+                var messenger = Ioc.Instance.GetService<IMessengerService>();
+                messenger.Send(message);
                 if (message.Handled)
                     return true;
 

@@ -6,9 +6,9 @@
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
+using SilentNotes.Services;
 
 namespace SilentNotes.Views
 {
@@ -30,15 +30,16 @@ namespace SilentNotes.Views
         {
             Debug.WriteLine(string.Format("*** {0}.Create {1}", GetType().Name, Id));
 
-            WeakReferenceMessenger.Default.Register<StoreUnsavedDataMessage>(
+            var messenger = Ioc.Instance.GetService<IMessengerService>();
+            messenger.Register<StoreUnsavedDataMessage>(
                 this, (recipient, message) => OnStoringUnsavedData(message));
-            WeakReferenceMessenger.Default.Register<ClosePageMessage>(
+            messenger.Register<ClosePageMessage>(
                 this, async (recipient, message) => await TriggerOnClosingPageAsync());
-            WeakReferenceMessenger.Default.Register<RedrawCurrentPageMessage>(
+            messenger.Register<RedrawCurrentPageMessage>(
                 this, (recipient, message) => InvokeAsync(StateHasChanged));
-            WeakReferenceMessenger.Default.Register<BackButtonPressedMessage>(
+            messenger.Register<BackButtonPressedMessage>(
                 this, (recipient, message) => TriggerCloseMenuOrDialog(message));
-            WeakReferenceMessenger.Default.Register<AfterResumeMessage>(
+            messenger.Register<AfterResumeMessage>(
                 this, (recipient, message) => TriggerOnAfterResume(message));
         }
 
@@ -84,11 +85,12 @@ namespace SilentNotes.Views
             _closed = true;
 
             // Deconnect message listening
-            WeakReferenceMessenger.Default.Unregister<StoreUnsavedDataMessage>(this);
-            WeakReferenceMessenger.Default.Unregister<ClosePageMessage>(this);
-            WeakReferenceMessenger.Default.Unregister<RedrawCurrentPageMessage>(this);
-            WeakReferenceMessenger.Default.Unregister<BackButtonPressedMessage>(this);
-            WeakReferenceMessenger.Default.Unregister<AfterResumeMessage>(this);
+            var messenger = Ioc.Instance.GetService<IMessengerService>();
+            messenger.Unregister<StoreUnsavedDataMessage>(this);
+            messenger.Unregister<ClosePageMessage>(this);
+            messenger.Unregister<RedrawCurrentPageMessage>(this);
+            messenger.Unregister<BackButtonPressedMessage>(this);
+            messenger.Unregister<AfterResumeMessage>(this);
 
             _keyboardShortcuts?.Dispose();
             OnClosingPage();

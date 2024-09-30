@@ -4,9 +4,9 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System.Text;
-using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace SilentNotes.Services
 {
@@ -24,6 +24,7 @@ namespace SilentNotes.Services
         private const bool ForceLoadNever = false;
 
         private readonly NavigationManager _navigationManager;
+        private readonly IMessengerService _messengerService;
         private IDisposable _eventHandlerDisposable;
         private string _currentLocation;
 
@@ -32,10 +33,12 @@ namespace SilentNotes.Services
         /// </summary>
         /// <param name="navigationManager">The navigation manager to wrap.</param>
         /// <param name="startRoute">The route of the first shown page.</param>
-        public NavigationService(NavigationManager navigationManager, string startRoute)
+        /// <param name="messengerService">The messenger service.</param>
+        public NavigationService(NavigationManager navigationManager, string startRoute, IMessengerService messengerService)
         {
             System.Diagnostics.Debug.WriteLine("*** Scoped NavigationService create " + Id);
             _navigationManager = navigationManager;
+            _messengerService = messengerService;
             _eventHandlerDisposable = _navigationManager.RegisterLocationChangingHandler(LocationChangingHandler);
 
             // Initialize the start page in the browser history, because there is no navigation
@@ -93,8 +96,8 @@ namespace SilentNotes.Services
 
             if (!isSameRoute)
             {
-                WeakReferenceMessenger.Default.Send(new StoreUnsavedDataMessage(MessageSender.NavigationManager));
-                WeakReferenceMessenger.Default.Send(new ClosePageMessage());
+                _messengerService.Send(new StoreUnsavedDataMessage(MessageSender.NavigationManager));
+                _messengerService.Send(new ClosePageMessage());
             }
             return ValueTask.CompletedTask;
         }

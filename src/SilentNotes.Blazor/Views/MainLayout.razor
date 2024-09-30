@@ -1,6 +1,5 @@
 ﻿@inherits LayoutComponentBase
 
-@using CommunityToolkit.Mvvm.Messaging
 @using SilentNotes.ViewModels
 @using SilentNotes.Services
 
@@ -12,6 +11,8 @@
 @inject IClipboardService ClipboardService
 @inject IRepositoryStorageService RepositoryStorageService
 @inject IFolderPickerService FolderPickerService
+@inject IMessengerService MessengerService
+@inject ISynchronizationService SynchronizationService
 
 @implements IDisposable
 
@@ -83,9 +84,10 @@
 	protected override void OnInitialized()
 	{
 		// Give other services a way to redraw the GUI of the whole app.
-		WeakReferenceMessenger.Default.Register<RedrawMainPageMessage>(
+		MessengerService.Register<RedrawMainPageMessage>(
 			this, (recipient, message) => InvokeAsync(StateHasChanged));
 
+		// todo: stom
 		// Workaround: Scoped services are always correct when injected, but when adding them to
 		// Ioc as scoped services, it seems they get lost, and when demanded the next time the Ioc
 		// creates a new different service. Therefore we register them as we got them from injection.
@@ -96,14 +98,22 @@
 			.AddInjected<INotificationService>(NotificationService);
 	}
 
-	protected override void OnAfterRender(bool firstRender)
+	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
 		if (firstRender)
 		{
-			WeakReferenceMessenger.Default.Send<MainLayoutReadyMessage>();
+			MessengerService.Send(new MainLayoutReadyMessage());
+
+			await NotificationService.ShowNextNotification();
+
+			// Do not await the synchronization, so it runs in the background.
+			_ = SynchronizationService.AutoSynchronizeAtStartup(Ioc.Instance);
 		}
 	}
 
+	/// <summary>
+	/// Allows to create a backup, part of the error page
+	/// </summary>
 	private void CreateBackup()
 	{
 		InfoViewModel infoViewModel = new InfoViewModel(null, null, RepositoryStorageService, FolderPickerService, null, FeedbackService);
@@ -131,6 +141,6 @@
 	/// <inheritdoc/>
 	public void Dispose()
 	{
-		WeakReferenceMessenger.Default.Unregister<RedrawMainPageMessage>(this);
+		MessengerService.Unregister<RedrawMainPageMessage>(this);
 	}
 }

@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.Extensions.DependencyInjection;
 using SilentNotes.Crypto;
 using SilentNotes.Models;
 using SilentNotes.Services;
@@ -24,6 +24,7 @@ namespace SilentNotes.ViewModels
         private readonly IFeedbackService _feedbackService;
         private readonly IThemeService _themeService;
         private readonly ISettingsService _settingsService;
+        private readonly IMessengerService _messengerService;
         private readonly ISafeKeyService _keyService;
         private readonly ICryptor _noteCryptor;
         private NoteRepositoryModel _model;
@@ -31,6 +32,7 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Initializes a new instance of the <see cref="RecycleBinViewModel"/> class.
         /// </summary>
+        /// <param name="model">The model to wrap.</param>
         public RecycleBinViewModel(
             NoteRepositoryModel model,
             ILanguageService languageService,
@@ -39,7 +41,8 @@ namespace SilentNotes.ViewModels
             ISettingsService settingsService,
             ISafeKeyService keyService,
             ICryptoRandomSource randomSource,
-            IRepositoryStorageService repositoryService)
+            IRepositoryStorageService repositoryService,
+            IMessengerService messengerService)
         {
             _feedbackService = feedbackService;
             Language = languageService;
@@ -47,6 +50,7 @@ namespace SilentNotes.ViewModels
             _settingsService = settingsService;
             _keyService = keyService;
             _repositoryService = repositoryService;
+            _messengerService = messengerService;
             _noteCryptor = new Cryptor(NoteModel.CryptorPackageName, randomSource);
             RecycledNotes = new List<NoteViewModelReadOnly>();
 
@@ -129,7 +133,7 @@ namespace SilentNotes.ViewModels
                     Model.Notes.Remove(note);
                 }
             }
-            WeakReferenceMessenger.Default.Send<RedrawCurrentPageMessage>();
+            _messengerService.Send(new RedrawCurrentPageMessage());
         }
 
         /// <summary>

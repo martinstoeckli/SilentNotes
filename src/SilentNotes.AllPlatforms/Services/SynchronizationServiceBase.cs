@@ -3,7 +3,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-using CommunityToolkit.Mvvm.Messaging;
+using System;
 using Microsoft.Extensions.DependencyInjection;
 using SilentNotes.Models;
 using SilentNotes.Stories;
@@ -17,11 +17,25 @@ namespace SilentNotes.Services
     /// </summary>
     internal abstract class SynchronizationServiceBase : ISynchronizationService
     {
+        protected readonly ISynchronizationState _synchronizationState;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SynchronizationServiceBase"/> class.
+        /// </summary>
+        /// <param name="synchronizationState">A singleton storing the current state of the synchronization.</param>
+        public SynchronizationServiceBase(ISynchronizationState synchronizationState)
+        {
+            _synchronizationState = synchronizationState;
+        }
+
         /// <inheritdoc/>
         public async Task SynchronizeManually(IServiceProvider serviceProvider)
         {
-            if (IsStartupSynchronizationRunning)
+            if (!_synchronizationState.TryStartSynchronizationState(SynchronizationType.Manually))
                 return;
+            // todo: stom
+            //if (IsStartupSynchronizationRunning)
+            //    return;
 
             // Ignore last fingerprint optimization, because it is triggered by the user
             LastSynchronizationFingerprint = 0;
@@ -40,8 +54,11 @@ namespace SilentNotes.Services
         /// <inheritdoc/>
         public async Task SynchronizeManuallyChangeCloudStorage(IServiceProvider serviceProvider)
         {
-            if (IsStartupSynchronizationRunning)
+            if (!_synchronizationState.TryStartSynchronizationState(SynchronizationType.Manually))
                 return;
+            // todo: stom
+            //if (IsStartupSynchronizationRunning)
+            //    return;
 
             // Always start a new story, ignore last fingerprint, because it is triggered by the user
             LastSynchronizationFingerprint = 0;
@@ -57,9 +74,11 @@ namespace SilentNotes.Services
         /// <inheritdoc/>
         public void FinishedManualSynchronization(IServiceProvider serviceProvider)
         {
+            _synchronizationState.StopSynchronizationState();
             if (ManualSynchronization == null)
                 return;
-            ManualSynchronization = null;
+            // todo: stom
+            //ManualSynchronization = null;
 
             var repositoryStorageService = serviceProvider.GetService<IRepositoryStorageService>();
             if (repositoryStorageService.LoadRepositoryOrDefault(out NoteRepositoryModel repositoryModel) == RepositoryStorageLoadResult.SuccessfullyLoaded)
@@ -73,7 +92,10 @@ namespace SilentNotes.Services
             if (IsWaitingForOAuthRedirect)
                 return;
 
-            IsStartupSynchronizationRunning = true;
+            if (!_synchronizationState.TryStartSynchronizationState(SynchronizationType.AtStartup))
+                return;
+            // todo: stom
+            //IsStartupSynchronizationRunning = true;
             try
             {
                 ILanguageService languageService = serviceProvider.GetService<ILanguageService>();
@@ -121,8 +143,11 @@ namespace SilentNotes.Services
             }
             finally
             {
-                IsStartupSynchronizationRunning = false;
-                WeakReferenceMessenger.Default.Send<SynchronizationAtStartupFinishedMessage>();
+                _synchronizationState.StopSynchronizationState();
+                // todo: stom
+                //IsStartupSynchronizationRunning = false;
+                IMessengerService messenger = serviceProvider.GetService<IMessengerService>();
+                messenger.Send(new SynchronizationAtStartupFinishedMessage());
             }
         }
 

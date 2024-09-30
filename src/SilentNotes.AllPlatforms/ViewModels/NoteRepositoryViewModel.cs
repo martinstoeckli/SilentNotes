@@ -9,7 +9,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.Extensions.DependencyInjection;
 using MudBlazor;
 using SilentNotes.Crypto;
 using SilentNotes.Models;
@@ -33,6 +33,7 @@ namespace SilentNotes.ViewModels
         private readonly ISettingsService _settingsService;
         private readonly IEnvironmentService _environmentService;
         private readonly ISafeKeyService _keyService;
+        private readonly IMessengerService _messengerService;
         private readonly SearchableHtmlConverter _searchableTextConverter;
         private readonly ICryptor _noteCryptor;
         private readonly List<string> _filterTags;
@@ -54,7 +55,8 @@ namespace SilentNotes.ViewModels
             ISynchronizationService synchronizationService,
             ICryptoRandomSource randomSource,
             IRepositoryStorageService repositoryService,
-            ISafeKeyService safeKeyService)
+            ISafeKeyService safeKeyService,
+            IMessengerService messengerService)
         {
             Language = languageService;
             _navigationService = navigationService;
@@ -65,6 +67,7 @@ namespace SilentNotes.ViewModels
             _repositoryService = repositoryService;
             _synchronizationService = synchronizationService;
             _keyService = safeKeyService;
+            _messengerService = messengerService;
             _noteCryptor = new Cryptor(NoteModel.CryptorPackageName, randomSource);
             _searchableTextConverter = new SearchableHtmlConverter();
             _filterTags = new List<string>();
@@ -562,8 +565,7 @@ namespace SilentNotes.ViewModels
 
             NoteMover.AdjustPinStatusAfterMoving(AllNotes, notePositions.NewAllNotesPos);
             _model.RefreshOrderModifiedAt();
-
-            WeakReferenceMessenger.Default.Send(new BringNoteIntoViewMessage(SelectedOrderNote.Id, true));
+            _messengerService.Send(new BringNoteIntoViewMessage(SelectedOrderNote.Id, true));
         }
     }
 }

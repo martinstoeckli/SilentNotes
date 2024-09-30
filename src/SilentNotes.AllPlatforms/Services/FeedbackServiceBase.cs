@@ -5,7 +5,6 @@
 
 using System;
 using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
@@ -51,8 +50,9 @@ namespace SilentNotes.Services
             if (value != _isBusyIndicatorVisible)
             {
                 _isBusyIndicatorVisible = value;
-                if (refreshGui)
-                    WeakReferenceMessenger.Default.Send<RedrawMainPageMessage>();
+                // todo: stom
+                //if (refreshGui)
+                //    WeakReferenceMessenger.Default.Send(new RedrawMainPageMessage(), MessengerToken.Default);
             }
         }
 

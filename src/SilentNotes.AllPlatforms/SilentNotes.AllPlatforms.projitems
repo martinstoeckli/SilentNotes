@@ -61,6 +61,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\ILanguageService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ILanguageServiceResourceReader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ILanguageTestService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\IMessengerService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\INativeBrowserService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\INavigationService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\INotificationService.cs" />
@@ -70,6 +71,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\ISettingsService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ISvgIconService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ISynchronizationService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\ISynchronizationState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\IThemeService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\IVersionService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\IXmlFileService.cs" />
@@ -82,6 +84,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\SettingsServiceBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\SvgIconService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\SynchronizationServiceBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\SynchronizationState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ThemeService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\XmlFileService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SnKeyboardShortcuts.cs" />
