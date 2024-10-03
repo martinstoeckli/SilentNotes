@@ -21,6 +21,10 @@ namespace SilentNotes;
 
 public static class MauiProgram
 {
+    // Shared, even when a new service provider is created in shutdown thread on Android (messenger
+    // is not used in the shutdown thread).
+    private static ISynchronizationState _synchronizationState;
+
     /// <summary>
     /// Initializes the application and its IOC.
     /// </summary>
@@ -41,8 +45,6 @@ public static class MauiProgram
         // https://github.com/dotnet/maui/issues/22819
         AppContext.SetSwitch("BlazorWebView.AndroidFireAndForgetAsync", isEnabled: true);
 
-        var applicationEventHandler = new ApplicationEventHandler();
-
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
@@ -52,6 +54,7 @@ public static class MauiProgram
                 // Registered LifecycleEvents are triggered not only by the MainActivity. To avoid
                 // running them from other activities the MainActivity will trigger them directly.
 #elif WINDOWS
+                var applicationEventHandler = new ApplicationEventHandler();
                 events.AddWindows(lifeCycleBuilder => lifeCycleBuilder
                     .OnWindowCreated((window) => applicationEventHandler.OnWindowCreated(window))
                     .OnClosed((window, args) => applicationEventHandler.OnClosed(window, args)));
@@ -86,6 +89,10 @@ public static class MauiProgram
 
     internal static void RegisterSharedServices(IServiceCollection services)
     {
+        services.AddSingleton<ISynchronizationState>((serviceProvider) => _synchronizationState ?? (_synchronizationState = new SynchronizationState(
+            serviceProvider.GetService<IMessengerService>())));
+
+        services.AddSingleton<IMessengerService>((serviceProvider) => new MessengerService());
         services.AddSingleton<ISvgIconService>((serviceProvider) => new SvgIconService());
         services.AddSingleton<ILanguageService>((serviceProvider) => new LanguageService(new LanguageServiceResourceReader(), "SilentNotes", GetLanguageCode()));
         services.AddSingleton<INoteRepositoryUpdater>((serviceProvider) => new NoteRepositoryUpdater());
@@ -98,12 +105,13 @@ public static class MauiProgram
         services.AddSingleton<IInternetStateService>((serviceProvider) => new InternetStateService());
         services.AddSingleton<ISafeKeyService>((serviceProvider) => new SafeKeyService());
 
-        // Scoped services (some Blazor services like NavigationManager or IJSRuntime seem to be scoped)
+        // Scoped services (some Blazor services like NavigationManager or IJSRuntime are scoped)
         // Workaround: It seems that scoped services are recreated when gotten from Ioc, therefore
         // we have to add them dynamically in MainLayout.razor.
         services.AddScoped<INavigationService>((serviceProvider) => new NavigationService(
             serviceProvider.GetService<NavigationManager>(),
-            RouteNames.NoteRepository));
+            RouteNames.NoteRepository,
+            serviceProvider.GetService<IMessengerService>()));
         services.AddScoped<INotificationService>((serviceProvider) => new NotificationService(
             serviceProvider.GetService<IFeedbackService>(),
             serviceProvider.GetService<ILanguageService>(),
@@ -127,7 +135,8 @@ public static class MauiProgram
         services.AddSingleton<INativeBrowserService>((serviceProvider) => new NativeBrowserService());
         services.AddSingleton<IFolderPickerService>((serviceProvider) => new FolderPickerService());
         services.AddSingleton<IFilePickerService>((serviceProvider) => new FilePickerService());
-        services.AddSingleton<ISynchronizationService>((serviceProvider) => new SynchronizationService());
+        services.AddSingleton<ISynchronizationService>((serviceProvider) => new SynchronizationService(
+            serviceProvider.GetService<ISynchronizationState>()));
 
         services.AddScoped<IFeedbackService>((serviceProvider) => new FeedbackService(
             serviceProvider.GetService<ISnackbar>(),
@@ -144,7 +153,8 @@ public static class MauiProgram
             serviceProvider.GetService<ICryptoRandomService>()));
         services.AddSingleton<IXmlFileService>((serviceProvider) => new XmlFileService());
         services.AddSingleton<IEnvironmentService>((serviceProvider) => new EnvironmentService(
-            serviceProvider.GetService<IAppContextService>()));
+            serviceProvider.GetService<IAppContextService>(),
+            serviceProvider.GetService<IMessengerService>()));
         services.AddSingleton<IRepositoryStorageService>((serviceProvider) => new RepositoryStorageService(
             serviceProvider.GetService<IAppContextService>(),
             serviceProvider.GetService<IXmlFileService>(),
@@ -162,7 +172,8 @@ public static class MauiProgram
         services.AddSingleton<IFilePickerService>((serviceProvider) => new FilePickerService(
             serviceProvider.GetService<IAppContextService>(),
             serviceProvider.GetService<IActivityResultAwaiter>()));
-        services.AddSingleton<ISynchronizationService>((serviceProvider) => new SynchronizationService());
+        services.AddSingleton<ISynchronizationService>((serviceProvider) => new SynchronizationService(
+            serviceProvider.GetService<ISynchronizationState>()));
 
         services.AddScoped<IFeedbackService>((serviceProvider) => new FeedbackService(
             serviceProvider.GetService<IAppContextService>(),

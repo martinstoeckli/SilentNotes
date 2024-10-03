@@ -5,7 +5,6 @@
 
 using System;
 using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
@@ -16,10 +15,8 @@ namespace SilentNotes.Services
     /// </summary>
     internal abstract class FeedbackServiceBase : IFeedbackService
     {
-        //protected readonly IDialogService _dialogService;
         protected readonly ISnackbar _snackbar;
         protected readonly ILanguageService _languageService;
-        private bool _isBusyIndicatorVisible;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FeedbackServiceBase"/>.
@@ -30,30 +27,12 @@ namespace SilentNotes.Services
         {
             _snackbar = snackbar;
             _languageService = languageService;
-            _isBusyIndicatorVisible = false;
         }
 
         /// <inheritdoc/>
         public void ShowToast(string message, Severity severity = Severity.Normal)
         {
             _snackbar.Add(message, severity, config => { config.HideIcon = true; });
-        }
-
-        /// <inheritdoc/>
-        public bool IsBusyIndicatorVisible
-        {
-            get { return _isBusyIndicatorVisible; }
-        }
-
-        /// <inheritdoc/>
-        public void SetBusyIndicatorVisible(bool value, bool refreshGui)
-        {
-            if (value != _isBusyIndicatorVisible)
-            {
-                _isBusyIndicatorVisible = value;
-                if (refreshGui)
-                    WeakReferenceMessenger.Default.Send<RedrawMainPageMessage>();
-            }
         }
 
         /// <inheritdoc/>

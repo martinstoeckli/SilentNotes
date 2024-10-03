@@ -20,7 +20,7 @@ namespace SilentNotes.Platforms
     /// Handles application lifecycle events for the Android platform.
     /// Possible events are listed here: https://learn.microsoft.com/en-us/dotnet/maui/fundamentals/app-lifecycle
     /// </summary>
-    internal class ApplicationEventHandler : ApplicationEventHandlerBase
+    internal class ApplicationEventHandler
     {
         private string _actionSendParameter;
         private NoteModel _newNoteFromActionSend;
@@ -105,10 +105,12 @@ namespace SilentNotes.Platforms
             else
             {
                 // Normal startup
+                // Close safes if timeout is reached
                 if (_lastPauseTime.HasValue)
                 {
                     bool safesClosed = CloseSafesWhenTimeoutReached();
-                    WeakReferenceMessenger.Default.Send(new AfterResumeMessage { LastPauseTime = _lastPauseTime.Value, SafesClosed = safesClosed });
+                    var messenger = Ioc.Instance.GetService<IMessengerService>();
+                    messenger.Send(new AfterResumeMessage { LastPauseTime = _lastPauseTime.Value, SafesClosed = safesClosed });
                 }
             }
         }
@@ -129,16 +131,16 @@ namespace SilentNotes.Platforms
         private NoteModel CreateNewNoteFromSendParameter(IServiceProvider serviceProvider, string actionSendParameter)
         {
             var repositoryStorageService = serviceProvider.GetService<IRepositoryStorageService>();
-            var settingsService = serviceProvider.GetService<ISettingsService>();
+            SettingsModel settings = serviceProvider.GetService<ISettingsService>().LoadSettingsOrDefault();
             repositoryStorageService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepository);
 
             NoteModel note = new NoteModel
             {
-                BackgroundColorHex = settingsService.LoadSettingsOrDefault().DefaultNoteColorHex,
+                BackgroundColorHex = settings.DefaultNoteColorHex,
                 HtmlContent = _actionSendParameter,
             };
 
-            int insertionIndex = noteRepository.Notes.IndexToInsertNewNote(NoteInsertionMode.AtTop);
+            int insertionIndex = noteRepository.Notes.IndexToInsertNewNote(settings.DefaultNoteInsertion);
             noteRepository.Notes.Insert(insertionIndex, note);
             repositoryStorageService.TrySaveRepository(noteRepository);
             return note;
@@ -148,7 +150,8 @@ namespace SilentNotes.Platforms
         {
             System.Diagnostics.Debug.WriteLine("*** ApplicationEventHandler.OnPause() " + GetId(activity));
             _lastPauseTime = DateTime.UtcNow;
-            WeakReferenceMessenger.Default.Send(new StoreUnsavedDataMessage(MessageSender.ApplicationEventHandler));
+            var messenger = Ioc.Instance.GetService<IMessengerService>();
+            messenger.Send(new StoreUnsavedDataMessage(MessageSender.ApplicationEventHandler));
         }
 
         internal void OnStop(Activity activity)
@@ -161,7 +164,8 @@ namespace SilentNotes.Platforms
         internal void OnDestroy(Activity activity)
         {
             System.Diagnostics.Debug.WriteLine("*** ApplicationEventHandler.OnDestroy() " + GetId(activity));
-            WeakReferenceMessenger.Default.Send(new ClosePageMessage());
+            var messenger = Ioc.Instance.GetService<IMessengerService>();
+            messenger.Send(new ClosePageMessage());
             Ioc.Instance.GetService<IActivityResultAwaiter>().RedirectedOnDestroy();
         }
 
@@ -175,14 +179,14 @@ namespace SilentNotes.Platforms
             return synchronizationService.ManualSynchronization?.OauthRedirectUrl != null;
         }
 
-        protected override Task OnMainLayoutReady()
+        public void OnMainLayoutReady()
         {
             if (_newNoteFromActionSend != null)
             {
-                WeakReferenceMessenger.Default.Send(new BringNoteIntoViewMessage(_newNoteFromActionSend.Id, false));
+                var messenger = Ioc.Instance.GetService<IMessengerService>();
+                messenger.Send(new BringNoteIntoViewMessage(_newNoteFromActionSend.Id, false));
                 _newNoteFromActionSend = null;
             }
-            return base.OnMainLayoutReady();
         }
 
         private static string GetId(Activity activity)

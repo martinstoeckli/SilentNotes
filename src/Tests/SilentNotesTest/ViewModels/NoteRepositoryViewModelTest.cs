@@ -7,6 +7,8 @@ using SilentNotes.Crypto;
 using SilentNotes.Models;
 using SilentNotes.Services;
 using SilentNotes.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
+using SilentNotes;
 
 namespace SilentNotesTest.ViewModels
 {
@@ -210,7 +212,8 @@ namespace SilentNotesTest.ViewModels
                 new Mock<ISynchronizationService>().Object,
                 CommonMocksAndStubs.CryptoRandomService(),
                 null,
-                keyService);
+                keyService,
+                new Mock<IMessengerService>().Object);
         }
 
         private static NoteRepositoryModel CreateTestRepository()

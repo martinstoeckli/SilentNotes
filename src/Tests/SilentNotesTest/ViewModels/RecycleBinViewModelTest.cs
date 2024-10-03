@@ -8,6 +8,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SilentNotes.Models;
 using SilentNotes.Services;
 using SilentNotes.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace SilentNotesTest.ViewModels
 {
@@ -115,7 +116,8 @@ namespace SilentNotesTest.ViewModels
                 settingsService.Object,
                 keyService,
                 CommonMocksAndStubs.CryptoRandomService(),
-                null);
+                null,
+                new Mock<IMessengerService>().Object);
         }
 
         private static NoteRepositoryModel CreateTestRepository()

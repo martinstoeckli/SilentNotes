@@ -53,6 +53,22 @@ namespace SilentNotes.Services
                 { IconNames.CloseThick, "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M20 6.91L17.09 4L12 9.09L6.91 4L4 6.91L9.09 12L4 17.09L6.91 20L12 14.91L17.09 20L20 17.09L14.91 12L20 6.91Z' /></svg>" },
                 { IconNames.CloudDownload, "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M17,13L12,18L7,13H10V9H14V13M19.35,10.03C18.67,6.59 15.64,4 12,4C9.11,4 6.6,5.64 5.35,8.03C2.34,8.36 0,10.9 0,14A6,6 0 0,0 6,20H19A5,5 0 0,0 24,15C24,12.36 21.95,10.22 19.35,10.03Z' /></svg>" },
                 { IconNames.CloudSync, "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M12,4C15.64,4 18.67,6.59 19.35,10.04C21.95,10.22 24,12.36 24,15A5,5 0 0,1 19,20H6A6,6 0 0,1 0,14C0,10.91 2.34,8.36 5.35,8.04C6.6,5.64 9.11,4 12,4M7.5,9.69C6.06,11.5 6.2,14.06 7.82,15.68C8.66,16.5 9.81,17 11,17V18.86L13.83,16.04L11,13.21V15C10.34,15 9.7,14.74 9.23,14.27C8.39,13.43 8.26,12.11 8.92,11.12L7.5,9.69M9.17,8.97L10.62,10.42L12,11.79V10C12.66,10 13.3,10.26 13.77,10.73C14.61,11.57 14.74,12.89 14.08,13.88L15.5,15.31C16.94,13.5 16.8,10.94 15.18,9.32C14.34,8.5 13.19,8 12,8V6.14L9.17,8.97Z' /></svg>" },
+                { IconNames.CloudSyncAnimated,
+@"<svg width='24' height='24' viewBox='0 0 24 24'>
+  <path d='m 12,4 c 3.64,0 6.67,2.59 7.35,6.04 2.6,0.18 4.65,2.32 4.65,4.96 a 5,5 0 0 1 -5,5 H 6 A 6,6 0 0 1 0,14 C 0,10.91 2.34,8.36 5.35,8.04 6.6,5.64 9.11,4 12,4'/>
+  <path
+     style='fill:{0}'
+     d='M 7.5,9.69 C 6.06,11.5 6.2,14.06 7.82,15.68 8.66,16.5 9.81,17 11,17 v 1.86 L 13.83,16.04 11,13.21 V 15 C 10.34,15 9.7,14.74 9.23,14.27 8.39,13.43 8.26,12.11 8.92,11.12 L 7.5,9.69 M 9.17,8.97 10.62,10.42 12,11.79 V 10 c 0.66,0 1.3,0.26 1.77,0.73 0.84,0.84 0.97,2.16 0.31,3.15 l 1.42,1.43 C 16.94,13.5 16.8,10.94 15.18,9.32 14.34,8.5 13.19,8 12,8 V 6.14 Z'>
+    <animateTransform
+      attributeName='transform'
+      begin='0s'
+      dur='6s'
+      type='rotate'
+      from='360 11.5 12.5'
+      to='0 11.5 12.5'
+      repeatCount='indefinite' />
+  </path>
+</svg>" },
                 { IconNames.CloudUpload, "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M14,13V17H10V13H7L12,8L17,13M19.35,10.03C18.67,6.59 15.64,4 12,4C9.11,4 6.6,5.64 5.35,8.03C2.34,8.36 0,10.9 0,14A6,6 0 0,0 6,20H19A5,5 0 0,0 24,15C24,12.36 21.95,10.22 19.35,10.03Z' /></svg>" },
                 { IconNames.CodeBraces, "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M8,3A2,2 0 0,0 6,5V9A2,2 0 0,1 4,11H3V13H4A2,2 0 0,1 6,15V19A2,2 0 0,0 8,21H10V19H8V14A2,2 0 0,0 6,12A2,2 0 0,0 8,10V5H10V3M16,3A2,2 0 0,1 18,5V9A2,2 0 0,0 20,11H21V13H20A2,2 0 0,0 18,15V19A2,2 0 0,1 16,21H14V19H16V14A2,2 0 0,1 18,12A2,2 0 0,1 16,10V5H14V3H16Z' /></svg>" },
                 { IconNames.Delete, "<svg width='24' height='24' viewBox='0 0 24 24'><path d='M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z' /></svg>" },
@@ -105,6 +121,12 @@ namespace SilentNotes.Services
         public string this[string id]
         {
             get { return _svgResources[id]; }
+        }
+
+        /// <inheritdoc/>
+        public string GetFmt(string id, params object[] args)
+        {
+            return string.Format(_svgResources[id], args);
         }
 
         /// <inheritdoc/>
@@ -202,6 +224,7 @@ namespace SilentNotes.Services
         public const string CloseThick = "close-thick";
         public const string CloudDownload = "cloud-download";
         public const string CloudSync = "cloud-sync";
+        public const string CloudSyncAnimated = "cloud-sync-animated";
         public const string CloudUpload = "cloud-upload";
         public const string CodeBraces = "code-braces";
         public const string Delete = "delete";

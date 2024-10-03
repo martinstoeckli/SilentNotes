@@ -11,6 +11,7 @@ using AndroidX.Concurrent.Futures;
 using AndroidX.Work;
 using Google.Common.Util.Concurrent;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using SilentNotes.Models;
 using SilentNotes.Services;
 using SilentNotes.Workers;
@@ -22,6 +23,15 @@ namespace SilentNotes.Platforms.Services
     /// </summary>
     internal class SynchronizationService : SynchronizationServiceBase
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SynchronizationService"/> class.
+        /// </summary>
+        /// <param name="synchronizationState">A singleton storing the current state of the synchronization.</param>
+        public SynchronizationService(ISynchronizationState synchronizationState)
+            : base(synchronizationState)
+        {
+        }
+
         /// <inheritdoc/>
         public override Task AutoSynchronizeAtShutdown(IServiceProvider serviceProvider)
         {
@@ -30,9 +40,8 @@ namespace SilentNotes.Platforms.Services
                 return Task.CompletedTask;
 
             // Still running from startup?
-            if (IsStartupSynchronizationRunning)
+            if (!_synchronizationState.TryStartSynchronizationState(SynchronizationType.AtShutdown))
                 return Task.CompletedTask;
-            IsStartupSynchronizationRunning = true; // cannot be reset to false (no return to GUI thread), wait on stop() of next startup
 
             IAppContextService appContext = serviceProvider.GetService<IAppContextService>();
             IInternetStateService internetStateService = serviceProvider.GetService<IInternetStateService>();
@@ -74,10 +83,16 @@ namespace SilentNotes.Platforms.Services
         /// <inheritdoc/>
         public override void StopAutoSynchronization(IServiceProvider serviceProvider)
         {
-            IsStartupSynchronizationRunning = false;
-            IAppContextService appContext = serviceProvider.GetService<IAppContextService>();
-            WorkManager workManager = WorkManager.GetInstance(appContext.Context);
-            workManager.CancelAllWorkByTag(ListenableSynchronizationWorker.TAG);
+            try
+            {
+                IAppContextService appContext = serviceProvider.GetService<IAppContextService>();
+                WorkManager workManager = WorkManager.GetInstance(appContext.Context);
+                workManager.CancelAllWorkByTag(ListenableSynchronizationWorker.TAG);
+            }
+            finally
+            {
+                _synchronizationState.StopSynchronizationState();
+            }
         }
 
         /// <summary>
@@ -141,19 +156,27 @@ namespace SilentNotes.Platforms.Services
                 MauiProgram.RegisterSharedServices(services);
                 MauiProgram.RegisterPlatformServices(services);
                 ServiceProvider serviceProvider = services.BuildServiceProvider();
+                var synchronizationState = serviceProvider.GetService<ISynchronizationState>();
+                try
+                {
+                    IAppContextService appContextService = serviceProvider.GetService<IAppContextService>();
+                    appContextService.InitializeWithContextOnly(_appContext);
 
-                IAppContextService appContextService = serviceProvider.GetService<IAppContextService>();
-                appContextService.InitializeWithContextOnly(_appContext);
+                    var result = await RunSilent(
+                        serviceProvider.GetService<ISettingsService>(),
+                        serviceProvider.GetService<ILanguageService>(),
+                        serviceProvider.GetService<ICloudStorageClientFactory>(),
+                        serviceProvider.GetService<ICryptoRandomService>(),
+                        serviceProvider.GetService<IRepositoryStorageService>(),
+                        serviceProvider.GetService<INoteRepositoryUpdater>());
 
-                var result = await RunSilent(
-                    serviceProvider.GetService<ISettingsService>(),
-                    serviceProvider.GetService<ILanguageService>(),
-                    serviceProvider.GetService<ICloudStorageClientFactory>(),
-                    serviceProvider.GetService<ICryptoRandomService>(),
-                    serviceProvider.GetService<IRepositoryStorageService>(),
-                    serviceProvider.GetService<INoteRepositoryUpdater>());
-
-                System.Diagnostics.Debug.WriteLine("*** SynchronizationService.SynchronizeAtShutdown() end");
+                    if (!result.HasError)
+                        synchronizationState.UpdateLastFinishedSynchronization();
+                }
+                finally
+                {
+                    synchronizationState.StopSynchronizationState();
+                }
             }
         }
     }

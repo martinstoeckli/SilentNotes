@@ -19,6 +19,15 @@ namespace SilentNotes.Platforms.Services
     /// </summary>
     internal class SynchronizationService : SynchronizationServiceBase
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SynchronizationService"/> class.
+        /// </summary>
+        /// <param name="synchronizationState">A singleton storing the current state of the synchronization.</param>
+        public SynchronizationService(ISynchronizationState synchronizationState)
+            : base(synchronizationState)
+        {
+        }
+
         /// <inheritdoc/>
         public override async Task AutoSynchronizeAtShutdown(IServiceProvider serviceProvider)
         {
@@ -27,39 +36,47 @@ namespace SilentNotes.Platforms.Services
                 return;
 
             // Still running from startup?
-            if (IsStartupSynchronizationRunning)
+            if (!_synchronizationState.TryStartSynchronizationState(SynchronizationType.AtShutdown))
                 return;
 
-            IInternetStateService internetStateService = serviceProvider.GetService<IInternetStateService>();
-            ISettingsService settingsService = serviceProvider.GetService<ISettingsService>();
-            IRepositoryStorageService repositoryStorageService = serviceProvider.GetService<IRepositoryStorageService>();
+            try
+            {
+                IInternetStateService internetStateService = serviceProvider.GetService<IInternetStateService>();
+                ISettingsService settingsService = serviceProvider.GetService<ISettingsService>();
+                IRepositoryStorageService repositoryStorageService = serviceProvider.GetService<IRepositoryStorageService>();
 
-            if (!ShouldSynchronize(internetStateService, settingsService))
-                return;
+                if (!ShouldSynchronize(internetStateService, settingsService))
+                    return;
 
-            // If there are no modifications since the last synchronization, we can spare this step
-            repositoryStorageService.LoadRepositoryOrDefault(out NoteRepositoryModel localRepository);
-            long currentFingerprint = localRepository.GetModificationFingerprint();
-            if (currentFingerprint == LastSynchronizationFingerprint)
-                return;
+                // If there are no modifications since the last synchronization, we can spare this step
+                repositoryStorageService.LoadRepositoryOrDefault(out NoteRepositoryModel localRepository);
+                long currentFingerprint = localRepository.GetModificationFingerprint();
+                if (currentFingerprint == LastSynchronizationFingerprint)
+                    return;
 
-            System.Diagnostics.Debug.WriteLine("*** SynchronizationService.SynchronizeAtShutdown() start");
+                System.Diagnostics.Debug.WriteLine("*** SynchronizationService.SynchronizeAtShutdown() start");
 
-            var result = await RunSilent(
-                serviceProvider.GetService<ISettingsService>(),
-                serviceProvider.GetService<ILanguageService>(),
-                serviceProvider.GetService<ICloudStorageClientFactory>(),
-                serviceProvider.GetService<ICryptoRandomService>(),
-                serviceProvider.GetService<IRepositoryStorageService>(),
-                serviceProvider.GetService<INoteRepositoryUpdater>());
+                var result = await RunSilent(
+                    serviceProvider.GetService<ISettingsService>(),
+                    serviceProvider.GetService<ILanguageService>(),
+                    serviceProvider.GetService<ICloudStorageClientFactory>(),
+                    serviceProvider.GetService<ICryptoRandomService>(),
+                    serviceProvider.GetService<IRepositoryStorageService>(),
+                    serviceProvider.GetService<INoteRepositoryUpdater>());
 
-            System.Diagnostics.Debug.WriteLine("*** SynchronizationService.SynchronizeAtShutdown() end");
+                if (!result.HasError)
+                    _synchronizationState.UpdateLastFinishedSynchronization();
+            }
+            finally
+            {
+                _synchronizationState.StopSynchronizationState();
+            }
         }
 
         /// <inheritdoc/>
         public override void StopAutoSynchronization(IServiceProvider serviceProvider)
         {
-            IsStartupSynchronizationRunning = false;
+            _synchronizationState.StopSynchronizationState();
         }
     }
 }

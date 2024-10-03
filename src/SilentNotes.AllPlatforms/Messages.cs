@@ -80,11 +80,21 @@ namespace SilentNotes
     {
     }
 
-    /// <summary>
-    /// Message to inform the current page that the startup synchronization has finished.
-    /// </summary>
-    public class SynchronizationAtStartupFinishedMessage
+    public class SynchronizationIsRunningChangedMessage
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SynchronizationIsRunningChangedMessage"/> class.
+        /// </summary>
+        /// <param name="isRunning">Sets the <see cref="IsRunning"/> property.</param>
+        public SynchronizationIsRunningChangedMessage(bool isRunning)
+        {
+            IsRunning = isRunning;
+        }
+
+        /// <summary>
+        /// Gets the new state after the cange.
+        /// </summary>
+        public bool IsRunning { get; }
     }
 
     /// <summary>

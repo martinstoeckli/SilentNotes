@@ -41,6 +41,16 @@ namespace SilentNotes.Services
         string this[string id] { get; }
 
         /// <summary>
+        /// Gets the svg of an icon specified by <paramref name="id"/>, formatted with additional
+        /// arguments.
+        /// </summary>
+        /// <param name="id">Id of the vector graphic.</param>
+        /// <param name="args">Inserts those parameters into the svg string. Sime icons need
+        /// additional parameters like the fill color.</param>
+        /// <returns>A string containing the SVG vector graphic.</returns>
+        string GetFmt(string id, params object[] args);
+
+        /// <summary>
         /// Like <see cref="EmbedLinkableSvg(string)"/> it loads a given vector graphic icons, which
         /// can be defined in a hidden div container and linked to with <see cref="GetSvgLink(string, int)"/>.
         /// </summary>

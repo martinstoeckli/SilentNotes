@@ -48,12 +48,6 @@ namespace SilentNotes.Services
         Task AutoSynchronizeAtStartup(IServiceProvider serviceProvider);
 
         /// <summary>
-        /// Gets a value indicating whether a synchronization is running, which was started
-        /// automatically at the start or the end of the application.
-        /// </summary>
-        bool IsStartupSynchronizationRunning { get;}
-
-        /// <summary>
         /// Synchronize at applications shutdown time.
         /// </summary>
         /// <param name="serviceProvider">The service provider.</param>

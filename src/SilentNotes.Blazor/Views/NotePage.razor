@@ -2,7 +2,6 @@
 @inherits PageBase
 
 @using System.ComponentModel
-@using CommunityToolkit.Mvvm.Messaging
 @using MudBlazor.Utilities;
 @using SilentNotes.Crypto;
 @using SilentNotes.Models
@@ -26,6 +25,8 @@
 @inject ICryptoRandomService CryptoRandomSource
 @inject INavigationService Navigation
 @inject ISafeKeyService SafeKeyService
+@inject IMessengerService MessengerService
+@inject ISynchronizationState SynchronizationState
 
 <style type="text/css">
 	.mud-main-content { background-color: @ViewModel.BackgroundColorHex; }
@@ -46,6 +47,11 @@
 	<MudIconButton OnClick="@(() => Navigation.NavigateTo(BackRoute))" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" Edge="Edge.Start" />
 
 	<MudSpacer />
+
+	@if (SynchronizationState.IsSynchronizationRunning)
+	{
+		<MudIconButton Class="btn-toggled" Icon="@IconService.GetFmt(IconNames.CloudSyncAnimated, ThemeService.GetColorHex(ThemeColor.AppbarBackground))" Color="Color.Inherit" Title="@LanguageService["sync_notes"]" Edge="Edge.End" />
+	}
 
 	<MudIconButton OnClick="@(() => ToggleFormatState("bold"))"
 		Icon="@IconService.GetSvgLink(IconNames.FormatBold)" Color="Color.Inherit"
@@ -301,17 +307,16 @@
 	private LinkState _linkState;
 	private bool _allowNoteContentChanges;
 
-	/// <summary>
-	/// Initializes a new instance of the <see cref="NotePage"/> class.
-	/// </summary>
-	public NotePage()
+	protected override void OnInitialized()
 	{
 		_formatStates = new FormatToggleStates();
 		_linkState = new LinkState();
 		_allowNoteContentChanges = false;
 
-		WeakReferenceMessenger.Default.Register<KeepScreenOnChangedMessage>(
+		MessengerService.Register<KeepScreenOnChangedMessage>(
 			this, (recipient, message) => OnKeepScreenOnChanged());
+		MessengerService.Register<SynchronizationIsRunningChangedMessage>(
+			this, (recipient, message) => _ = OnSynchronizationIsRunningChanged(message));
 	}
 
 	protected override void OnParametersSet()
@@ -338,6 +343,7 @@
 			SafeKeyService,
 			EnvironmentService,
 			NativeBrowserService,
+			SynchronizationState,
 			cryptor,
 			noteRepository.Safes,
 			noteRepository.CollectActiveTags());
@@ -361,7 +367,7 @@
 				await _jsModule.InvokeVoidAsync("initialize", DotNetModule, _editorContainer, ViewModel.ShoppingModeActive);
 				string content = ViewModel.UnlockedHtmlContent;
 				await _jsModule.InvokeVoidAsync("setNoteContent", content);
-				await _jsModule.InvokeVoidAsync("setEditable", !ViewModel.ShoppingModeActive);
+				await _jsModule.InvokeVoidAsync("setEditable", !ViewModel.ShoppingModeActive && !SynchronizationState.IsSynchronizationRunning);
 				bool isNewNote = ViewModel.SearchableContent.Trim().Length == 0;
 				if (isNewNote)
 					await ToggleFormatState("heading", 1);
@@ -392,7 +398,8 @@
 	{
 		_allowNoteContentChanges = false;
 		await base.OnClosingPageAsync();
-		WeakReferenceMessenger.Default.Unregister<KeepScreenOnChangedMessage>(this);
+		MessengerService.Unregister<SynchronizationIsRunningChangedMessage>(this);
+		MessengerService.Unregister<KeepScreenOnChangedMessage>(this);
 		if (_jsModule != null)
 		{
 			await _jsModule.InvokeVoidAsync("finalize");
@@ -565,6 +572,13 @@
 	private void OnKeepScreenOnChanged()
 	{
 		ViewModel.KeepScreenOnActive = EnvironmentService.KeepScreenOn.IsActive;
+	}
+
+	private async Task OnSynchronizationIsRunningChanged(SynchronizationIsRunningChangedMessage message)
+	{
+		if (_jsModule != null)
+			await _jsModule.InvokeVoidAsync("setEditable", !ViewModel.ShoppingModeActive);
+		await InvokeAsync(StateHasChanged);
 	}
 
 	private static string MakeLinkSuggestion(string linkTitle)

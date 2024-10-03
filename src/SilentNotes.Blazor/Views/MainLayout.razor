@@ -1,6 +1,5 @@
 ﻿@inherits LayoutComponentBase
 
-@using CommunityToolkit.Mvvm.Messaging
 @using SilentNotes.ViewModels
 @using SilentNotes.Services
 
@@ -12,6 +11,9 @@
 @inject IClipboardService ClipboardService
 @inject IRepositoryStorageService RepositoryStorageService
 @inject IFolderPickerService FolderPickerService
+@inject IMessengerService MessengerService
+@inject ISynchronizationService SynchronizationService
+@inject ISynchronizationState SynchronizationState
 
 @implements IDisposable
 
@@ -45,11 +47,6 @@
 	<MudLayout Class="@ThemeService.LightOrDarkClass">
 		@Body
 	</MudLayout>
-
-@if(FeedbackService.IsBusyIndicatorVisible)
-{
-	<MudProgressCircular id="progress" Indeterminate="true" Color="Color.Tertiary" Size="Size.Large" />
-}
 </ChildContent>
 <ErrorContent>
 	<div class="pa-6" style="max-width:640px">
@@ -83,7 +80,7 @@
 	protected override void OnInitialized()
 	{
 		// Give other services a way to redraw the GUI of the whole app.
-		WeakReferenceMessenger.Default.Register<RedrawMainPageMessage>(
+		MessengerService.Register<RedrawMainPageMessage>(
 			this, (recipient, message) => InvokeAsync(StateHasChanged));
 
 		// Workaround: Scoped services are always correct when injected, but when adding them to
@@ -96,14 +93,29 @@
 			.AddInjected<INotificationService>(NotificationService);
 	}
 
-	protected override void OnAfterRender(bool firstRender)
+	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
 		if (firstRender)
 		{
-			WeakReferenceMessenger.Default.Send<MainLayoutReadyMessage>();
+			MessengerService.Send(new MainLayoutReadyMessage());
+
+			await NotificationService.ShowNextNotification();
+
+			// Pausing the synchronization allows to user to switch to another app, to copy and
+			// paste some content, without an interferring synchronization when switching back.
+			TimeSpan synchronizationPause = TimeSpan.FromMinutes(2);
+			if ((SynchronizationState.LastFinishedSynchronization == null) ||
+				(DateTime.UtcNow - SynchronizationState.LastFinishedSynchronization.Value > synchronizationPause))
+			{
+				// Do not await the synchronization, so it runs in the background.
+				_ = SynchronizationService.AutoSynchronizeAtStartup(Ioc.Instance);
+			}
 		}
 	}
 
+	/// <summary>
+	/// Allows to create a backup, part of the error page
+	/// </summary>
 	private void CreateBackup()
 	{
 		InfoViewModel infoViewModel = new InfoViewModel(null, null, RepositoryStorageService, FolderPickerService, null, FeedbackService);
@@ -131,6 +143,6 @@
 	/// <inheritdoc/>
 	public void Dispose()
 	{
-		WeakReferenceMessenger.Default.Unregister<RedrawMainPageMessage>(this);
+		MessengerService.Unregister<RedrawMainPageMessage>(this);
 	}
 }

@@ -49,7 +49,7 @@ namespace SilentNotes.ViewModels
         {
             Language = languageService;
             _navigationService = navigationService;
-            _feedbackService = feedbackService ?? throw new ArgumentNullException(nameof(feedbackService));
+            _feedbackService = feedbackService;
             _randomService = randomService;
             _settingsService = settingsService;
             _repositoryService = repositoryService;

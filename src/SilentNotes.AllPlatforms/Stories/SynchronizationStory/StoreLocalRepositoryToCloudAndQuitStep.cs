@@ -65,9 +65,6 @@ namespace SilentNotes.Stories.SynchronizationStory
             }
             catch (Exception ex)
             {
-                if (uiMode.HasFlag(StoryMode.BusyIndicator))
-                    serviceProvider.GetService<IFeedbackService>().SetBusyIndicatorVisible(false, true);
-
                 // Keep the current page open and show the error message
                 return ToResult(ex);
             }

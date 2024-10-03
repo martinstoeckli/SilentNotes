@@ -123,6 +123,7 @@ namespace SilentNotesTest.ViewModels
                 keyService,
                 new Mock<IEnvironmentService>().Object,
                 new Mock<INativeBrowserService>().Object,
+                new Mock<ISynchronizationState>().Object,
                 cryptor.Object,
                 safes,
                 new List<string>());
@@ -156,6 +157,7 @@ namespace SilentNotesTest.ViewModels
                 CommonMocksAndStubs.SafeKeyService(),
                 new Mock<IEnvironmentService>().Object,
                 new Mock<INativeBrowserService>().Object,
+                new Mock<ISynchronizationState>().Object,
                 new Mock<ICryptor>().Object,
                 new SafeListModel(),
                 new List<string>());
@@ -190,6 +192,7 @@ namespace SilentNotesTest.ViewModels
                 CommonMocksAndStubs.SafeKeyService(),
                 new Mock<IEnvironmentService>().Object,
                 new Mock<INativeBrowserService>().Object,
+                new Mock<ISynchronizationState>().Object,
                 new Mock<ICryptor>().Object,
                 new SafeListModel(),
                 new List<string>());
@@ -231,6 +234,7 @@ namespace SilentNotesTest.ViewModels
                 CommonMocksAndStubs.SafeKeyService(),
                 new Mock<IEnvironmentService>().Object,
                 new Mock<INativeBrowserService>().Object,
+                new Mock<ISynchronizationState>().Object,
                 new Mock<ICryptor>().Object,
                 new SafeListModel(),
                 new string[] { "aaa", "bbb" });
@@ -404,6 +408,7 @@ namespace SilentNotesTest.ViewModels
                 CommonMocksAndStubs.SafeKeyService(),
                 new Mock<IEnvironmentService>().Object,
                 new Mock<INativeBrowserService>().Object,
+                new Mock<ISynchronizationState>().Object,
                 new Mock<ICryptor>().Object,
                 new SafeListModel(),
                 new string[] { });

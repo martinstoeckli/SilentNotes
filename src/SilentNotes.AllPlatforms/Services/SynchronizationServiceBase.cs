@@ -3,7 +3,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-using CommunityToolkit.Mvvm.Messaging;
+using System;
 using Microsoft.Extensions.DependencyInjection;
 using SilentNotes.Models;
 using SilentNotes.Stories;
@@ -17,41 +17,69 @@ namespace SilentNotes.Services
     /// </summary>
     internal abstract class SynchronizationServiceBase : ISynchronizationService
     {
+        protected readonly ISynchronizationState _synchronizationState;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SynchronizationServiceBase"/> class.
+        /// </summary>
+        /// <param name="synchronizationState">A singleton storing the current state of the synchronization.</param>
+        public SynchronizationServiceBase(ISynchronizationState synchronizationState)
+        {
+            _synchronizationState = synchronizationState;
+        }
+
         /// <inheritdoc/>
         public async Task SynchronizeManually(IServiceProvider serviceProvider)
         {
-            if (IsStartupSynchronizationRunning)
+            if (!_synchronizationState.TryStartSynchronizationState(SynchronizationType.Manually))
                 return;
 
-            // Ignore last fingerprint optimization, because it is triggered by the user
-            LastSynchronizationFingerprint = 0;
-            ManualSynchronization = new SynchronizationStoryModel
+            try
             {
-                StoryMode = StoryMode.BusyIndicator | StoryMode.Toasts | StoryMode.Messages | StoryMode.Dialogs,
-            };
+                // Ignore last fingerprint optimization, because it is triggered by the user
+                LastSynchronizationFingerprint = 0;
+                ManualSynchronization = new SynchronizationStoryModel
+                {
+                    StoryMode = StoryMode.BusyIndicator | StoryMode.Toasts | StoryMode.Messages | StoryMode.Dialogs,
+                };
 
-            var feedbackService = serviceProvider.GetService<IFeedbackService>();
-            feedbackService.SetBusyIndicatorVisible(true, true);
-
-            var synchronizationStory = new IsCloudServiceSetStep();
-            await synchronizationStory.RunStoryAndShowLastFeedback(ManualSynchronization, serviceProvider, ManualSynchronization.StoryMode);
+                var synchronizationStory = new IsCloudServiceSetStep();
+                await synchronizationStory.RunStoryAndShowLastFeedback(ManualSynchronization, serviceProvider, ManualSynchronization.StoryMode);
+            }
+            finally
+            {
+                // Either the manually triggered sync finished or it shows a user dialog for input.
+                // In both cases we want to remove the visual "IsRunning" indicator, and from a
+                // user dialog no other synchronizations can be startet.
+                _synchronizationState.StopSynchronizationState();
+            }
         }
 
         /// <inheritdoc/>
         public async Task SynchronizeManuallyChangeCloudStorage(IServiceProvider serviceProvider)
         {
-            if (IsStartupSynchronizationRunning)
+            if (!_synchronizationState.TryStartSynchronizationState(SynchronizationType.Manually))
                 return;
 
-            // Always start a new story, ignore last fingerprint, because it is triggered by the user
-            LastSynchronizationFingerprint = 0;
-            ManualSynchronization = new SynchronizationStoryModel
+            try
             {
-                StoryMode = StoryMode.BusyIndicator | StoryMode.Toasts | StoryMode.Messages | StoryMode.Dialogs,
-            };
+                // Always start a new story, ignore last fingerprint, because it is triggered by the user
+                LastSynchronizationFingerprint = 0;
+                ManualSynchronization = new SynchronizationStoryModel
+                {
+                    StoryMode = StoryMode.BusyIndicator | StoryMode.Toasts | StoryMode.Messages | StoryMode.Dialogs,
+                };
 
-            var synchronizationStory = new ShowCloudStorageChoiceStep();
-            await synchronizationStory.RunStoryAndShowLastFeedback(ManualSynchronization, serviceProvider, ManualSynchronization.StoryMode);
+                var synchronizationStory = new ShowCloudStorageChoiceStep();
+                await synchronizationStory.RunStoryAndShowLastFeedback(ManualSynchronization, serviceProvider, ManualSynchronization.StoryMode);
+            }
+            finally
+            {
+                // Either the manually triggered sync finished or it shows a user dialog for input.
+                // In both cases we want to remove the visual "IsRunning" indicator, and from a
+                // user dialog no other synchronizations can be startet.
+                _synchronizationState.StopSynchronizationState();
+            }
         }
 
         /// <inheritdoc/>
@@ -60,6 +88,7 @@ namespace SilentNotes.Services
             if (ManualSynchronization == null)
                 return;
             ManualSynchronization = null;
+            _synchronizationState.UpdateLastFinishedSynchronization();
 
             var repositoryStorageService = serviceProvider.GetService<IRepositoryStorageService>();
             if (repositoryStorageService.LoadRepositoryOrDefault(out NoteRepositoryModel repositoryModel) == RepositoryStorageLoadResult.SuccessfullyLoaded)
@@ -73,7 +102,8 @@ namespace SilentNotes.Services
             if (IsWaitingForOAuthRedirect)
                 return;
 
-            IsStartupSynchronizationRunning = true;
+            if (!_synchronizationState.TryStartSynchronizationState(SynchronizationType.AtStartup))
+                return;
             try
             {
                 ILanguageService languageService = serviceProvider.GetService<ILanguageService>();
@@ -106,6 +136,7 @@ namespace SilentNotes.Services
                     repositoryStorageService.LoadRepositoryOrDefault(out localRepository);
                     long newFingerprint = localRepository.GetModificationFingerprint();
                     LastSynchronizationFingerprint = newFingerprint;
+                    _synchronizationState.UpdateLastFinishedSynchronization();
 
                     if (stepResult.HasFeedback)
                         await new IsCloudServiceSetStep().ShowFeedback(stepResult, serviceProvider, StoryMode.Toasts | StoryMode.Messages);
@@ -121,8 +152,7 @@ namespace SilentNotes.Services
             }
             finally
             {
-                IsStartupSynchronizationRunning = false;
-                WeakReferenceMessenger.Default.Send<SynchronizationAtStartupFinishedMessage>();
+                _synchronizationState.StopSynchronizationState();
             }
         }
 
@@ -137,9 +167,6 @@ namespace SilentNotes.Services
 
         /// <inheritdoc/>
         public bool IsWaitingForOAuthRedirect { get; set; }
-
-        /// <inheritdoc/>
-        public bool IsStartupSynchronizationRunning { get; set; }
 
         /// <summary>
         /// Gets or sets a fingerprint of the last synchronization, which allows to detect whether

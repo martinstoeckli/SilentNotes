@@ -5,8 +5,8 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.DependencyInjection;
 using SilentNotes.Crypto.SymmetricEncryption;
 using SilentNotes.Models;
 using SilentNotes.Services;
@@ -37,10 +37,14 @@ namespace SilentNotes.ViewModels
         private readonly ISynchronizationService _synchronizationService;
         private readonly IFeedbackService _feedbackService;
         private readonly IFilePickerService _filePickerService;
+        private readonly IMessengerService _messengerService;
         private readonly ICloudStorageClientFactory _cloudStorageClientFactory;
         private readonly SliderStepConverter _fontSizeConverter;
         private readonly SliderStepConverter _noteMaxHeightConverter;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SettingsViewModel"/> class.
+        /// </summary>
         public SettingsViewModel(
             ISettingsService settingsService,
             ILanguageService languageService,
@@ -48,6 +52,7 @@ namespace SilentNotes.ViewModels
             ISynchronizationService synchronizationService,
             IThemeService themeService,
             IFeedbackService feedbackService,
+            IMessengerService messengerService,
             ICloudStorageClientFactory cloudStorageClientFactory,
             IFilePickerService filePickerService)
         {
@@ -57,6 +62,7 @@ namespace SilentNotes.ViewModels
             _synchronizationService = synchronizationService;
             _themeService = themeService;
             _feedbackService = feedbackService;
+            _messengerService = messengerService;
             _cloudStorageClientFactory = cloudStorageClientFactory;
             _filePickerService = filePickerService;
             Model = _settingsService.LoadSettingsOrDefault();
@@ -248,7 +254,7 @@ namespace SilentNotes.ViewModels
             {
                 if (SetProperty(Model.ThemeMode.ToString(), value, (string v) => Model.ThemeMode = (ThemeMode)Enum.Parse(typeof(ThemeMode), value)))
                 {
-                    WeakReferenceMessenger.Default.Send<RedrawMainPageMessage>();
+                    _messengerService.Send(new RedrawMainPageMessage());
                 }
             }
         }
@@ -422,7 +428,7 @@ namespace SilentNotes.ViewModels
             {
                 SetProperty(Model.Credentials, null, (v) => Model.Credentials = v, nameof(AccountSummary));
                 OnPropertyChanged(nameof(ClearCloudSettingsDisabled));
-                WeakReferenceMessenger.Default.Send<RedrawCurrentPageMessage>();
+                _messengerService.Send(new RedrawCurrentPageMessage());
             }
         }
 
@@ -503,7 +509,7 @@ namespace SilentNotes.ViewModels
                 {
                     byte[] languageFile = await _filePickerService.ReadPickedFile();
                     (Language as ILanguageTestService).OverrideWithTestResourceFile(languageFile);
-                    WeakReferenceMessenger.Default.Send<RedrawCurrentPageMessage>();
+                    _messengerService.Send(new RedrawCurrentPageMessage());
                 }
             }
             catch (Exception)

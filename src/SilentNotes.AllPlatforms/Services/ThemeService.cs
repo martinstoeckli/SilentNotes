@@ -6,7 +6,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using CommunityToolkit.Mvvm.Messaging;
 using MudBlazor;
 using MudBlazor.Utilities;
 using SilentNotes.Models;
@@ -72,6 +71,12 @@ namespace SilentNotes.Services
         /// <inheritdoc/>
         public MudTheme Theme { get; set; }
 
+        /// <inheritdoc/>
+        public string GetColorHex(ThemeColor color)
+        {
+            return GetActiveThemeColor(color).ToString(MudColorOutputFormats.Hex);
+        }
+
         /// <summary>
         /// Gets a list of available color themes.
         /// </summary>
@@ -117,7 +122,10 @@ namespace SilentNotes.Services
                 {
                     int wallpaperIndex = FindWallpaperIndexOrDefault(settings.SelectedWallpaper);
                     if (wallpaperIndex >= 0)
-                        return string.Format("background-image: url(wallpapers/{0});", Wallpapers[wallpaperIndex].Image);
+                    {
+                        // Additionally to the wallpaper, set a dark background color to avoid flickering
+                        return string.Format("background-color: {0}; background-image: url(wallpapers/{1});", "#32333d", Wallpapers[wallpaperIndex].Image);
+                    }
                 }
                 return string.Empty;
             }
@@ -182,6 +190,32 @@ namespace SilentNotes.Services
                     },
                 },
             };
+        }
+
+        /// <summary>
+        /// Gets the active palette, depending on whether the dark or light theme is active.
+        /// </summary>
+        private Palette ActivePalette
+        {
+            get { return IsDarkMode ? Theme.PaletteDark : Theme.PaletteLight; }
+        }
+
+        /// <summary>
+        /// Gets the <paramref name="color"/> from the <see cref="ActivePalette"/>.
+        /// </summary>
+        /// <param name="color">The well known color.</param>
+        /// <returns>The MudColor of the active palette.</returns>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        private MudColor GetActiveThemeColor(ThemeColor color)
+        {
+            var palette = ActivePalette;
+            switch (color)
+            {
+                case ThemeColor.AppbarBackground:
+                    return palette.AppbarBackground;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(color));
+            }
         }
 
         private void FillColorThemes(List<ColorThemeModel> themes)

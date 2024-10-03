@@ -5,7 +5,6 @@
 
 @using System.ComponentModel
 @using System.Windows.Input;
-@using CommunityToolkit.Mvvm.Messaging
 @using MudBlazor.Services;
 @using SilentNotes.Models
 @using SilentNotes.ViewModels
@@ -22,9 +21,10 @@
 @inject IEnvironmentService EnvironmentService
 @inject ICryptoRandomService CryptoRandomSource
 @inject IScrollManager ScrollManager
-@inject IBrowserViewportService ViewportService
 @inject ISynchronizationService SynchronizationService
+@inject ISynchronizationState SynchronizationState
 @inject ISafeKeyService SafeKeyService
+@inject IMessengerService MessengerService
 
 <style type="text/css">
 	.mud-main-content {
@@ -70,7 +70,14 @@
 	</MudPaper>
 
 	@* Synchronization *@
-	<MudIconButton @ref="_syncButton" OnClick="@(() => ViewModel.SynchronizeCommand.Execute(null))" Icon="@IconService[IconNames.CloudSync]" Color="Color.Inherit" Title="@LanguageService["sync_notes"]" Edge="Edge.End" />
+	@if (SynchronizationState.IsSynchronizationRunning)
+	{
+		<MudIconButton @ref="_syncButton" Class="btn-toggled" Icon="@IconService.GetFmt(IconNames.CloudSyncAnimated, ThemeService.GetColorHex(ThemeColor.AppbarBackground))" Color="Color.Inherit" Title="@LanguageService["sync_notes"]" Edge="Edge.End" />
+	}
+	else
+	{
+		<MudIconButton @ref="_syncButton" OnClick="@(() => ViewModel.SynchronizeCommand.Execute(null))" Icon="@IconService[IconNames.CloudSync]" Color="Color.Inherit" Title="@LanguageService["sync_notes"]" Edge="Edge.End" />
+	}
 
 	@* Overflow menu *@
 	<MudMenu @ref="_overflowMenu" Dense="true" AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight">
@@ -266,13 +273,16 @@
 			SynchronizationService,
 			CryptoRandomSource,
 			RepositoryStorageService,
-			SafeKeyService
+			SafeKeyService,
+			MessengerService
 		);
 		await ViewModel.InitializeTagTree();
 		_tagsRootNode = new MudTreeItemWrapper(ViewModel.TagsRootNode, null);
 
-		WeakReferenceMessenger.Default.Register<BringNoteIntoViewMessage>(
+		MessengerService.Register<BringNoteIntoViewMessage>(
 			this, (recipient, message) => _pendingScrollIntoView = message);
+		MessengerService.Register<SynchronizationIsRunningChangedMessage>(
+			this, (recipient, message) => InvokeAsync(StateHasChanged));
 
 		if (loadResult == RepositoryStorageLoadResult.InvalidRepository)
 			throw new Exception("Invalid repository");
@@ -323,14 +333,16 @@
 	protected override void OnClosingPage()
 	{
 		base.OnClosingPage();
-		WeakReferenceMessenger.Default.Unregister<BringNoteIntoViewMessage>(this);
-		FeedbackService.SetBusyIndicatorVisible(false, false);
+		MessengerService.Unregister<SynchronizationIsRunningChangedMessage>(this);
+		MessengerService.Unregister<BringNoteIntoViewMessage>(this);
 	}
 
 	/// <inheritdoc/>
 	protected override void OnAfterResume(DateTime lastPauseTime, bool safesClosed)
 	{
 		base.OnAfterResume(lastPauseTime, safesClosed);
+
+		// Reload when either safes where closed or when the repository has changed
 		bool reload = safesClosed;
 		if (!reload)
 		{

@@ -16,6 +16,7 @@
 @inject INavigationService Navigation
 @inject ISafeKeyService SafeKeyService
 @inject ICryptoRandomService CryptoRandomSource
+@inject IMessengerService MessengerService
 
 <style type="text/css">
 	.mud-main-content {
@@ -101,7 +102,7 @@
 	{
 		RepositoryStorageService.LoadRepositoryOrDefault(out NoteRepositoryModel noteRepositoryModel);
 		ViewModel = new RecycleBinViewModel(
-			noteRepositoryModel, LanguageService, ThemeService, FeedbackService, SettingsService, SafeKeyService, CryptoRandomSource, RepositoryStorageService);
+			noteRepositoryModel, LanguageService, ThemeService, FeedbackService, SettingsService, SafeKeyService, CryptoRandomSource, RepositoryStorageService, MessengerService);
 	}
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)

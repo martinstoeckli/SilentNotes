@@ -9,7 +9,6 @@
 @inject ISvgIconService IconService
 @inject IJSRuntime JSRuntime
 @inject INavigationService Navigation
-@inject IFeedbackService FeedbackService
 @inject ISynchronizationService SynchronizationService
 
 @* Main menu *@
@@ -38,7 +37,6 @@
 			KeyboardShortcuts
 				.AddShortcut(new SnKeyboardShortcut(SnKey.Escape), () => Navigation.NavigateTo(BackRoute));
 			SynchronizationService.IsWaitingForOAuthRedirect = true;
-			FeedbackService.SetBusyIndicatorVisible(true, true);
 		}
 	}
 
@@ -46,6 +44,5 @@
 	{
 		base.OnClosingPage();
 		SynchronizationService.IsWaitingForOAuthRedirect = false;
-		FeedbackService.SetBusyIndicatorVisible(false, false);
 	}
 }

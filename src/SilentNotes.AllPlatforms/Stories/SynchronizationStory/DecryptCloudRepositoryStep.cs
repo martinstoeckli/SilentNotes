@@ -52,8 +52,6 @@ namespace SilentNotes.Stories.SynchronizationStory
                     if (existsUserEnteredTransferCode)
                     {
                         // Keep transfercode page open and show message
-                        if (uiMode.HasFlag(StoryMode.BusyIndicator))
-                            serviceProvider.GetService<IFeedbackService>().SetBusyIndicatorVisible(false, true);
                         return ToTask(ToResultEndOfStory(languageService["sync_error_transfercode"], null));
                     }
                     else
@@ -65,9 +63,6 @@ namespace SilentNotes.Stories.SynchronizationStory
             }
             catch (Exception ex)
             {
-                if (uiMode.HasFlag(StoryMode.BusyIndicator))
-                    serviceProvider.GetService<IFeedbackService>().SetBusyIndicatorVisible(false, true);
-
                 // Keep the current page open and show the error message
                 return ToTask(ToResult(ex));
             }

@@ -32,6 +32,7 @@ namespace SilentNotes.ViewModels
         private readonly IFeedbackService _feedbackService;
         private readonly IEnvironmentService _environmentService;
         private readonly INativeBrowserService _nativeBrowserService;
+        private readonly ISynchronizationState _synchronizationState;
         private readonly IList<string> _allDistinctAndSortedTags;
         private bool _isKeepScreenOnActive;
 
@@ -50,6 +51,7 @@ namespace SilentNotes.ViewModels
             ISafeKeyService keyService,
             IEnvironmentService environmentService,
             INativeBrowserService nativeBrowserService,
+            ISynchronizationState synchronizationState,
             ICryptor cryptor,
             SafeListModel safes,
             IList<string> allDistinctAndSortedTags)
@@ -61,6 +63,7 @@ namespace SilentNotes.ViewModels
             _feedbackService = feedbackService;
             _environmentService = environmentService;
             _nativeBrowserService = nativeBrowserService;
+            _synchronizationState = synchronizationState;
             _allDistinctAndSortedTags = allDistinctAndSortedTags;
 
             TogglePinnedCommand = new RelayCommand(TogglePinned);
@@ -337,7 +340,9 @@ namespace SilentNotes.ViewModels
             if (dialogResult != MessageBoxResult.Continue)
                 return;
 
-            _feedbackService.SetBusyIndicatorVisible(true, true);
+            if (!_synchronizationState.TryStartSynchronizationState(SynchronizationType.Manually))
+                return;
+
             try
             {
                 OnStoringUnsavedData(new StoreUnsavedDataMessage(MessageSender.ViewModel));
@@ -347,8 +352,7 @@ namespace SilentNotes.ViewModels
             }
             finally
             {
-                bool refreshNecessary = false; // No refresh, because navigation is ahead anyway
-                _feedbackService.SetBusyIndicatorVisible(false, refreshNecessary);
+                _synchronizationState.StopSynchronizationState();
             }
 
             // Refresh view
@@ -369,7 +373,9 @@ namespace SilentNotes.ViewModels
             if (dialogResult != MessageBoxResult.Continue)
                 return;
 
-            _feedbackService.SetBusyIndicatorVisible(true, true);
+            if (!_synchronizationState.TryStartSynchronizationState(SynchronizationType.Manually))
+                return;
+
             try
             {
                 OnStoringUnsavedData(new StoreUnsavedDataMessage(MessageSender.ViewModel));
@@ -379,7 +385,7 @@ namespace SilentNotes.ViewModels
             }
             finally
             {
-                _feedbackService.SetBusyIndicatorVisible(false, true);
+                _synchronizationState.StopSynchronizationState();
             }
         }
 
