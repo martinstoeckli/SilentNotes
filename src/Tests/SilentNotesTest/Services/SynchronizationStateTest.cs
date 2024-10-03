@@ -53,6 +53,7 @@ namespace SilentNotesTest.Services
         {
             SynchronizationState state = new SynchronizationState(null);
             state.TryStartSynchronizationState(SynchronizationType.AtStartup);
+            state.UpdateLastFinishedSynchronization();
             state.StopSynchronizationState();
             Assert.IsFalse(state.IsSynchronizationRunning);
             Assert.IsNotNull(state.LastFinishedSynchronization);
