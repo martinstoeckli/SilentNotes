@@ -39,10 +39,6 @@ namespace SilentNotes.Platforms.Services
             if (!_synchronizationState.TryStartSynchronizationState(SynchronizationType.AtShutdown))
                 return;
 
-            // todo:
-            //if (IsStartupSynchronizationRunning)
-            //    return;
-
             try
             {
                 IInternetStateService internetStateService = serviceProvider.GetService<IInternetStateService>();
@@ -67,18 +63,20 @@ namespace SilentNotes.Platforms.Services
                     serviceProvider.GetService<ICryptoRandomService>(),
                     serviceProvider.GetService<IRepositoryStorageService>(),
                     serviceProvider.GetService<INoteRepositoryUpdater>());
+
+                if (!result.HasError)
+                    _synchronizationState.UpdateLastFinishedSynchronization();
             }
             finally
             {
                 _synchronizationState.StopSynchronizationState();
             }
-            System.Diagnostics.Debug.WriteLine("*** SynchronizationService.SynchronizeAtShutdown() end");
         }
 
         /// <inheritdoc/>
         public override void StopAutoSynchronization(IServiceProvider serviceProvider)
         {
-            IsStartupSynchronizationRunning = false;
+            _synchronizationState.StopSynchronizationState();
         }
     }
 }

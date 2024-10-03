@@ -42,10 +42,6 @@ namespace SilentNotes.Platforms.Services
             // Still running from startup?
             if (!_synchronizationState.TryStartSynchronizationState(SynchronizationType.AtShutdown))
                 return Task.CompletedTask;
-            // todo: stom
-            //if (IsStartupSynchronizationRunning)
-            //    return Task.CompletedTask;
-            IsStartupSynchronizationRunning = true; // cannot be reset to false (no return to GUI thread), wait on stop() of next startup
 
             IAppContextService appContext = serviceProvider.GetService<IAppContextService>();
             IInternetStateService internetStateService = serviceProvider.GetService<IInternetStateService>();
@@ -87,11 +83,16 @@ namespace SilentNotes.Platforms.Services
         /// <inheritdoc/>
         public override void StopAutoSynchronization(IServiceProvider serviceProvider)
         {
-            // todo: stom
-            IsStartupSynchronizationRunning = false;
-            IAppContextService appContext = serviceProvider.GetService<IAppContextService>();
-            WorkManager workManager = WorkManager.GetInstance(appContext.Context);
-            workManager.CancelAllWorkByTag(ListenableSynchronizationWorker.TAG);
+            try
+            {
+                IAppContextService appContext = serviceProvider.GetService<IAppContextService>();
+                WorkManager workManager = WorkManager.GetInstance(appContext.Context);
+                workManager.CancelAllWorkByTag(ListenableSynchronizationWorker.TAG);
+            }
+            finally
+            {
+                _synchronizationState.StopSynchronizationState();
+            }
         }
 
         /// <summary>
@@ -155,6 +156,7 @@ namespace SilentNotes.Platforms.Services
                 MauiProgram.RegisterSharedServices(services);
                 MauiProgram.RegisterPlatformServices(services);
                 ServiceProvider serviceProvider = services.BuildServiceProvider();
+                var synchronizationState = serviceProvider.GetService<ISynchronizationState>();
                 try
                 {
                     IAppContextService appContextService = serviceProvider.GetService<IAppContextService>();
@@ -168,11 +170,11 @@ namespace SilentNotes.Platforms.Services
                         serviceProvider.GetService<IRepositoryStorageService>(),
                         serviceProvider.GetService<INoteRepositoryUpdater>());
 
-                    System.Diagnostics.Debug.WriteLine("*** SynchronizationService.SynchronizeAtShutdown() end");
+                    if (!result.HasError)
+                        synchronizationState.UpdateLastFinishedSynchronization();
                 }
                 finally
                 {
-                    var synchronizationState = serviceProvider.GetService<ISynchronizationState>();
                     synchronizationState.StopSynchronizationState();
                 }
             }

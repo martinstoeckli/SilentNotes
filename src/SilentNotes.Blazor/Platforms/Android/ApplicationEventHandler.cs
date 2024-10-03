@@ -105,6 +105,7 @@ namespace SilentNotes.Platforms
             else
             {
                 // Normal startup
+                // Close safes if timeout is reached
                 if (_lastPauseTime.HasValue)
                 {
                     bool safesClosed = CloseSafesWhenTimeoutReached();

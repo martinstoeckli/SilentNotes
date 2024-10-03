@@ -36,8 +36,16 @@ namespace SilentNotes.Services
         public DateTime? LastFinishedSynchronization { get; private set; }
 
         /// <inheritdoc/>
+        public void UpdateLastFinishedSynchronization()
+        {
+            System.Diagnostics.Debug.WriteLine("*** SynchronizationState.UpdateLastFinishedSynchronization()");
+            LastFinishedSynchronization = DateTime.UtcNow;
+        }
+
+        /// <inheritdoc/>
         public bool TryStartSynchronizationState(SynchronizationType syncType)
         {
+            System.Diagnostics.Debug.WriteLine("*** SynchronizationState.TryStartSynchronizationState()");
             lock (_lock)
             {
                 // Cannot start synchronization if another one is already running.
@@ -54,6 +62,7 @@ namespace SilentNotes.Services
         /// <inheritdoc/>
         public void StopSynchronizationState()
         {
+            System.Diagnostics.Debug.WriteLine("*** SynchronizationState.StopSynchronizationState()");
             lock (_lock)
             {
                 if (!IsSynchronizationRunning)
@@ -61,7 +70,6 @@ namespace SilentNotes.Services
 
                 bool shouldSendChangeMessage = ShouldSendChangedMessage(_currentSynchronizationType.Value);
                 _currentSynchronizationType = null;
-                LastFinishedSynchronization = DateTime.UtcNow;
                 if (shouldSendChangeMessage)
                     _messenger?.Send(new SynchronizationIsRunningChangedMessage(false));
             }

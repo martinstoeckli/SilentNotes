@@ -335,7 +335,6 @@
 		base.OnClosingPage();
 		MessengerService.Unregister<SynchronizationIsRunningChangedMessage>(this);
 		MessengerService.Unregister<BringNoteIntoViewMessage>(this);
-		FeedbackService.SetBusyIndicatorVisible(false, false);
 	}
 
 	/// <inheritdoc/>

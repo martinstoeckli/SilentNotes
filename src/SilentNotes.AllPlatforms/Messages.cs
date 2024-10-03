@@ -98,13 +98,6 @@ namespace SilentNotes
     }
 
     /// <summary>
-    /// Message to inform the current page that the startup synchronization has finished.
-    /// </summary>
-    public class SynchronizationAtStartupFinishedMessage
-    {
-    }
-
-    /// <summary>
     /// Messager to signal that the app resumed after pausing on mobile devices.
     /// </summary>
     public class AfterResumeMessage

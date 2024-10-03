@@ -23,7 +23,6 @@ namespace SilentNotes.ViewModels
         private readonly IServiceProvider _serviceProvider;
         private readonly ISynchronizationService _synchronizationService;
         private readonly CloudStorageCredentialsRequirements _credentialsRequirements;
-        private readonly IFeedbackService _feedbackService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CloudStorageAccountViewModel"/> class.
@@ -34,7 +33,6 @@ namespace SilentNotes.ViewModels
         {
             _serviceProvider = serviceProvider;
             _synchronizationService = serviceProvider.GetService<ISynchronizationService>();
-            _feedbackService = serviceProvider.GetRequiredService<IFeedbackService>();
 
             Model = model;
 
@@ -53,7 +51,6 @@ namespace SilentNotes.ViewModels
 
         private async void Ok()
         {
-            _feedbackService.SetBusyIndicatorVisible(true, true);
             SynchronizationStoryModel storyModel = _synchronizationService.ManualSynchronization;
             var nextStep = new ExistsCloudRepositoryStep();
             await nextStep.RunStoryAndShowLastFeedback(storyModel, _serviceProvider, storyModel.StoryMode);

@@ -13,6 +13,7 @@
 @inject IFolderPickerService FolderPickerService
 @inject IMessengerService MessengerService
 @inject ISynchronizationService SynchronizationService
+@inject ISynchronizationState SynchronizationState
 
 @implements IDisposable
 
@@ -46,11 +47,6 @@
 	<MudLayout Class="@ThemeService.LightOrDarkClass">
 		@Body
 	</MudLayout>
-
-@if(FeedbackService.IsBusyIndicatorVisible)
-{
-	<MudProgressCircular id="progress" Indeterminate="true" Color="Color.Tertiary" Size="Size.Large" />
-}
 </ChildContent>
 <ErrorContent>
 	<div class="pa-6" style="max-width:640px">
@@ -87,7 +83,6 @@
 		MessengerService.Register<RedrawMainPageMessage>(
 			this, (recipient, message) => InvokeAsync(StateHasChanged));
 
-		// todo: stom
 		// Workaround: Scoped services are always correct when injected, but when adding them to
 		// Ioc as scoped services, it seems they get lost, and when demanded the next time the Ioc
 		// creates a new different service. Therefore we register them as we got them from injection.
@@ -106,8 +101,15 @@
 
 			await NotificationService.ShowNextNotification();
 
-			// Do not await the synchronization, so it runs in the background.
-			_ = SynchronizationService.AutoSynchronizeAtStartup(Ioc.Instance);
+			// Pausing the synchronization allows to user to switch to another app, to copy and
+			// paste some content, without an interferring synchronization when switching back.
+			TimeSpan synchronizationPause = TimeSpan.FromMinutes(2);
+			if ((SynchronizationState.LastFinishedSynchronization == null) ||
+				(DateTime.UtcNow - SynchronizationState.LastFinishedSynchronization.Value > synchronizationPause))
+			{
+				// Do not await the synchronization, so it runs in the background.
+				_ = SynchronizationService.AutoSynchronizeAtStartup(Ioc.Instance);
+			}
 		}
 	}
 

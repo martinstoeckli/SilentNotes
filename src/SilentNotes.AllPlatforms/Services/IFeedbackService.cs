@@ -29,21 +29,6 @@ namespace SilentNotes.Services
         void ShowToast(string message, Severity severity = Severity.Normal);
 
         /// <summary>
-        /// Sets the <see cref="IsBusyIndicatorVisible"/> property and decides whether a redraw is
-        /// necessary.
-        /// </summary>
-        /// <param name="value">Visibility of the busy indicator.</param>
-        /// <param name="refreshGui">If true the changes are made visible in the Gui. While closing
-        /// a page there is no need to redraw the closing page, so we can pass false as optimization
-        /// to just set a new value.</param>
-        void SetBusyIndicatorVisible(bool value, bool refreshGui);
-
-        /// <summary>
-        /// Gets a value indicating whether the applications progress spinner is visible or not.
-        /// </summary>
-        bool IsBusyIndicatorVisible { get; }
-
-        /// <summary>
         /// Displays information to the user.
         /// </summary>
         /// <param name="message">The message to be shown to the user.</param>

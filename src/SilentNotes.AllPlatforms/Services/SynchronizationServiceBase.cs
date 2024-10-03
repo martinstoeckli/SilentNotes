@@ -33,22 +33,26 @@ namespace SilentNotes.Services
         {
             if (!_synchronizationState.TryStartSynchronizationState(SynchronizationType.Manually))
                 return;
-            // todo: stom
-            //if (IsStartupSynchronizationRunning)
-            //    return;
 
-            // Ignore last fingerprint optimization, because it is triggered by the user
-            LastSynchronizationFingerprint = 0;
-            ManualSynchronization = new SynchronizationStoryModel
+            try
             {
-                StoryMode = StoryMode.BusyIndicator | StoryMode.Toasts | StoryMode.Messages | StoryMode.Dialogs,
-            };
+                // Ignore last fingerprint optimization, because it is triggered by the user
+                LastSynchronizationFingerprint = 0;
+                ManualSynchronization = new SynchronizationStoryModel
+                {
+                    StoryMode = StoryMode.BusyIndicator | StoryMode.Toasts | StoryMode.Messages | StoryMode.Dialogs,
+                };
 
-            var feedbackService = serviceProvider.GetService<IFeedbackService>();
-            feedbackService.SetBusyIndicatorVisible(true, true);
-
-            var synchronizationStory = new IsCloudServiceSetStep();
-            await synchronizationStory.RunStoryAndShowLastFeedback(ManualSynchronization, serviceProvider, ManualSynchronization.StoryMode);
+                var synchronizationStory = new IsCloudServiceSetStep();
+                await synchronizationStory.RunStoryAndShowLastFeedback(ManualSynchronization, serviceProvider, ManualSynchronization.StoryMode);
+            }
+            finally
+            {
+                // Either the manually triggered sync finished or it shows a user dialog for input.
+                // In both cases we want to remove the visual "IsRunning" indicator, and from a
+                // user dialog no other synchronizations can be startet.
+                _synchronizationState.StopSynchronizationState();
+            }
         }
 
         /// <inheritdoc/>
@@ -56,29 +60,35 @@ namespace SilentNotes.Services
         {
             if (!_synchronizationState.TryStartSynchronizationState(SynchronizationType.Manually))
                 return;
-            // todo: stom
-            //if (IsStartupSynchronizationRunning)
-            //    return;
 
-            // Always start a new story, ignore last fingerprint, because it is triggered by the user
-            LastSynchronizationFingerprint = 0;
-            ManualSynchronization = new SynchronizationStoryModel
+            try
             {
-                StoryMode = StoryMode.BusyIndicator | StoryMode.Toasts | StoryMode.Messages | StoryMode.Dialogs,
-            };
+                // Always start a new story, ignore last fingerprint, because it is triggered by the user
+                LastSynchronizationFingerprint = 0;
+                ManualSynchronization = new SynchronizationStoryModel
+                {
+                    StoryMode = StoryMode.BusyIndicator | StoryMode.Toasts | StoryMode.Messages | StoryMode.Dialogs,
+                };
 
-            var synchronizationStory = new ShowCloudStorageChoiceStep();
-            await synchronizationStory.RunStoryAndShowLastFeedback(ManualSynchronization, serviceProvider, ManualSynchronization.StoryMode);
+                var synchronizationStory = new ShowCloudStorageChoiceStep();
+                await synchronizationStory.RunStoryAndShowLastFeedback(ManualSynchronization, serviceProvider, ManualSynchronization.StoryMode);
+            }
+            finally
+            {
+                // Either the manually triggered sync finished or it shows a user dialog for input.
+                // In both cases we want to remove the visual "IsRunning" indicator, and from a
+                // user dialog no other synchronizations can be startet.
+                _synchronizationState.StopSynchronizationState();
+            }
         }
 
         /// <inheritdoc/>
         public void FinishedManualSynchronization(IServiceProvider serviceProvider)
         {
-            _synchronizationState.StopSynchronizationState();
             if (ManualSynchronization == null)
                 return;
-            // todo: stom
-            //ManualSynchronization = null;
+            ManualSynchronization = null;
+            _synchronizationState.UpdateLastFinishedSynchronization();
 
             var repositoryStorageService = serviceProvider.GetService<IRepositoryStorageService>();
             if (repositoryStorageService.LoadRepositoryOrDefault(out NoteRepositoryModel repositoryModel) == RepositoryStorageLoadResult.SuccessfullyLoaded)
@@ -94,8 +104,6 @@ namespace SilentNotes.Services
 
             if (!_synchronizationState.TryStartSynchronizationState(SynchronizationType.AtStartup))
                 return;
-            // todo: stom
-            //IsStartupSynchronizationRunning = true;
             try
             {
                 ILanguageService languageService = serviceProvider.GetService<ILanguageService>();
@@ -128,6 +136,7 @@ namespace SilentNotes.Services
                     repositoryStorageService.LoadRepositoryOrDefault(out localRepository);
                     long newFingerprint = localRepository.GetModificationFingerprint();
                     LastSynchronizationFingerprint = newFingerprint;
+                    _synchronizationState.UpdateLastFinishedSynchronization();
 
                     if (stepResult.HasFeedback)
                         await new IsCloudServiceSetStep().ShowFeedback(stepResult, serviceProvider, StoryMode.Toasts | StoryMode.Messages);
@@ -144,10 +153,6 @@ namespace SilentNotes.Services
             finally
             {
                 _synchronizationState.StopSynchronizationState();
-                // todo: stom
-                //IsStartupSynchronizationRunning = false;
-                IMessengerService messenger = serviceProvider.GetService<IMessengerService>();
-                messenger.Send(new SynchronizationAtStartupFinishedMessage());
             }
         }
 
@@ -162,9 +167,6 @@ namespace SilentNotes.Services
 
         /// <inheritdoc/>
         public bool IsWaitingForOAuthRedirect { get; set; }
-
-        /// <inheritdoc/>
-        public bool IsStartupSynchronizationRunning { get; set; }
 
         /// <summary>
         /// Gets or sets a fingerprint of the last synchronization, which allows to detect whether

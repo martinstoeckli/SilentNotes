@@ -343,6 +343,7 @@
 			SafeKeyService,
 			EnvironmentService,
 			NativeBrowserService,
+			SynchronizationState,
 			cryptor,
 			noteRepository.Safes,
 			noteRepository.CollectActiveTags());
@@ -575,12 +576,9 @@
 
 	private async Task OnSynchronizationIsRunningChanged(SynchronizationIsRunningChangedMessage message)
 	{
-		// Synchronization has finished?
-		if (!message.IsRunning)
-		{
+		if (_jsModule != null)
 			await _jsModule.InvokeVoidAsync("setEditable", !ViewModel.ShoppingModeActive);
-			await InvokeAsync(StateHasChanged);
-		}
+		await InvokeAsync(StateHasChanged);
 	}
 
 	private static string MakeLinkSuggestion(string linkTitle)

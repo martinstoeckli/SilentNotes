@@ -123,41 +123,6 @@ namespace SilentNotesTest.Stories.SynchronizationStory
         }
 
         [TestMethod]
-        public async Task BusyIndicatorIsStopped()
-        {
-            const string transferCode = "abcdefgh";
-            var settingsModel = CreateSettingsModel(null); // no transfer code at all
-            byte[] encryptedRepository = CreateEncryptedRepository(transferCode);
-            var model = new SynchronizationStoryModel
-            {
-                StoryMode = StoryMode.BusyIndicator,
-                UserEnteredTransferCode = "wrong",
-                BinaryCloudRepository = encryptedRepository,
-            };
-
-            Mock<ISettingsService> settingsService = new Mock<ISettingsService>();
-            settingsService.
-                Setup(m => m.LoadSettingsOrDefault()).Returns(settingsModel);
-            Mock<IFeedbackService> feedbackService = new Mock<IFeedbackService>();
-
-            var serviceCollection = new ServiceCollection();
-            serviceCollection
-                .AddSingleton<ISettingsService>(settingsService.Object)
-                .AddSingleton<ILanguageService>(CommonMocksAndStubs.LanguageService())
-                .AddSingleton<INoteRepositoryUpdater>(new Mock<INoteRepositoryUpdater>().Object)
-                .AddSingleton<IFeedbackService>(feedbackService.Object);
-
-            // Run step
-            var step = new DecryptCloudRepositoryStep();
-
-            // If user entered wrong code, page should be kept open and busy indicator stopped
-            var result = await step.RunStep(model, serviceCollection.BuildServiceProvider(), model.StoryMode);
-            Assert.IsNull(result.NextStep);
-            feedbackService.Verify(m => m.SetBusyIndicatorVisible(It.Is<bool>(visible => visible == false), It.IsAny<bool>()), Times.Once);
-        }
-
-
-        [TestMethod]
         public async Task InvalidRepositoryLeadsToErrorMessage()
         {
             const string transferCode = "abcdefgh";

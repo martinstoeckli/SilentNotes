@@ -22,12 +22,6 @@ namespace SilentNotes.Stories.SynchronizationStory
         {
             System.Diagnostics.Debug.WriteLine("** " + nameof(StopAndShowRepositoryStep) + " " + uiMode.ToString());
 
-            if (uiMode.HasFlag(StoryMode.BusyIndicator))
-            {
-                var feedbackService = serviceProvider.GetService<IFeedbackService>();
-                feedbackService.SetBusyIndicatorVisible(false, true);
-            }
-
             if (uiMode.HasFlag(StoryMode.Dialogs))
             {
                 var synchronizationService = serviceProvider.GetService<ISynchronizationService>();

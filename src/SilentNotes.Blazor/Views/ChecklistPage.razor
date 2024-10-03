@@ -306,6 +306,7 @@ div.note-dark .detail-view.checklist .ProseMirror p::after { content: @(IconServ
 			SafeKeyService,
 			EnvironmentService,
 			NativeBrowserService,
+			SynchronizationState,
 			cryptor,
 			noteRepository.Safes,
 			noteRepository.CollectActiveTags());
@@ -441,12 +442,9 @@ div.note-dark .detail-view.checklist .ProseMirror p::after { content: @(IconServ
 
 	private async Task OnSynchronizationIsRunningChanged(SynchronizationIsRunningChangedMessage message)
 	{
-		// Synchronization has finished?
-		if (!message.IsRunning)
-		{
+		if (_jsModule != null)
 			await _jsModule.InvokeVoidAsync("setEditable", !ViewModel.ShoppingModeActive);
-			await InvokeAsync(StateHasChanged);
-		}
+		await InvokeAsync(StateHasChanged);
 	}
 
 	/// <summary>

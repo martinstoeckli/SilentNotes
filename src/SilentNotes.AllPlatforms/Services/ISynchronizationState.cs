@@ -29,6 +29,11 @@ namespace SilentNotes.Services
         DateTime? LastFinishedSynchronization { get; }
 
         /// <summary>
+        /// Sets the current timestamp to <see cref="LastFinishedSynchronization"/>.
+        /// </summary>
+        void UpdateLastFinishedSynchronization();
+
+        /// <summary>
         /// Sets <see cref="IsSynchronizationRunning"/>> to true, if there is not another
         /// synchronization alreday running.
         /// If <see cref="IsSynchronizationRunning"/> has changed, the <see cref="SynchronizationIsRunningChangedMessage"/>
@@ -43,9 +48,8 @@ namespace SilentNotes.Services
 
         /// <summary>
         /// Sets <see cref="IsSynchronizationRunning"/>> to false.
-        /// If <see cref="IsSynchronizationRunning"/> has changed, the <see cref="LastFinishedSynchronization"/>
-        /// is set and the <see cref="SynchronizationIsRunningChangedMessage"/> is broadcasted for
-        /// the types "startup" and "manually", but not for "shutdown".
+        /// If <see cref="IsSynchronizationRunning"/> has changed and the <see cref="SynchronizationIsRunningChangedMessage"/>
+        /// is broadcasted for the types "startup" and "manually", but not for "shutdown".
         /// </summary>
         /// <remarks>
         /// This method is thread safe.
