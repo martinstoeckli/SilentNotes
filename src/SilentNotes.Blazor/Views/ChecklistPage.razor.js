@@ -80,7 +80,7 @@ function onActiveFormatStateChanged() {
 }
 
 function onSelectionUpdate(params) {
-    onNoteContentChanged(params.editor);
+    onActiveFormatStateChanged();
 }
 
 function onUpdate(params) {
