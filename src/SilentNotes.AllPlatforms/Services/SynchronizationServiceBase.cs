@@ -210,6 +210,7 @@ namespace SilentNotes.Services
         /// This allows to execute the synchronization in an Android background service, which can
         /// stay alive a short time longer than the app itself.
         /// </remarks>
+        /// <returns>The story result, or null if the story didn't run to the end.</returns>
         protected static async Task<StoryStepResult<SynchronizationStoryModel>> RunSilent(
             ISettingsService settingsService,
             ILanguageService languageService,

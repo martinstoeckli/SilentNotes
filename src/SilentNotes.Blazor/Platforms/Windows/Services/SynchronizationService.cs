@@ -64,7 +64,7 @@ namespace SilentNotes.Platforms.Services
                     serviceProvider.GetService<IRepositoryStorageService>(),
                     serviceProvider.GetService<INoteRepositoryUpdater>());
 
-                if (!result.HasError)
+                if ((result != null) && (!result.HasError))
                     _synchronizationState.UpdateLastFinishedSynchronization();
             }
             finally
