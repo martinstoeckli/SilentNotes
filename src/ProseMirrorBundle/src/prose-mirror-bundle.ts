@@ -16,13 +16,13 @@ import Strike from '@tiptap/extension-strike'
 import Text from '@tiptap/extension-text'
 import TextStyle from '@tiptap/extension-text-style'
 import Underline from '@tiptap/extension-underline'
-import { Selection } from 'prosemirror-state'
 
 import { CustomHeading } from "./custom-heading-extension";
 import { CustomLink } from "./custom-link-extension";
 import { SearchNReplace } from './search-n-replace'
 import { CheckableParagraph, registerIsShoppingModeActive as checklistRegisterIsShoppingModeActive, moveChecklistUp, moveChecklistDown, sortPendingToTop, setCheckStateForAll, sortAlphabetical } from "./checkable-paragraph-extension";
 import { ScrollTo } from './scroll-to-extension'
+import { TabHandler } from './tab-handler-extension'
 
 /**
  * This method will be exported and can be called from the HTML document with the "prose_mirror_bundle"
@@ -73,6 +73,7 @@ export function initializeEditor(editorElement: HTMLElement): any {
           disableRegex: true,
         }),
         ScrollTo,
+        TabHandler,
       ],
       editable: false,
     });
