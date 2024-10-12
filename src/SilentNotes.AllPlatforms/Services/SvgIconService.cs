@@ -62,7 +62,7 @@ namespace SilentNotes.Services
     <animateTransform
       attributeName='transform'
       begin='0s'
-      dur='6s'
+      dur='3s'
       type='rotate'
       from='360 11.5 12.5'
       to='0 11.5 12.5'
