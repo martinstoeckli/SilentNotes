@@ -1,0 +1,7 @@
+SilentNotes version 8.2.0
+
+* Verbessertes Feedback wenn eine Synchronisation im Hintergrund am laufen ist.
+* Notizen sind nun readonly bis die Synchronisation beendet ist.
+* Pause von 2min für die automatische Synchronisation, um das Copy&Past von anderen Apps zu erleichtern.
+* Das drücken der Tab Taste verlässt nicht mehr den Editor.
+* Verschiedene UI Verbesserungen.
