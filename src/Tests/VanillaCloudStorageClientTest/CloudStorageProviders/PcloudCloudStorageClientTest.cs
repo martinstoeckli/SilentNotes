@@ -62,7 +62,8 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
         [Ignore("Gets a real access-token")]
         public async Task ReallyDoFetchToken()
         {
-            const string PCloudRedirectedUrl = "com.example.appname://oauth2redirect/?code=FEmjZmfGBXkZxjiiKbvywzFFOhQqjMMKTzFj6why&locationid=2&hostname=eapi.pcloud.com&state=8ysv8L9s4LB9CZpb";
+            // Replace this example url with the redirected url from the browser.
+            const string PCloudRedirectedUrl = "com.example.appname://oauth2redirect/?code=AAAAZmfGBXkZxjiiKbvywzFFFFQqjMMKTzFj6yyy&locationid=2&hostname=eapi.pcloud.com&state=8ysv8L9s4LB9CZp3";
             if (!DoRealWebRequests)
                 return;
 
