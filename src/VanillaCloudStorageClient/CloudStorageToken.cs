@@ -25,6 +25,9 @@ namespace VanillaCloudStorageClient
         /// the <see cref="RefreshToken"/> should be used to get a new access token. If an expiry
         /// date of another time zone is set, it will be converted to UTC automatically.
         /// </summary>
+        /// <remarks>Some services do not return a <see cref="RefreshToken"/>, in this case the
+        /// <see cref="AccessToken"/> usually does not expire and the expiry date can be null.
+        /// </remarks>
         public DateTime? ExpiryDate
         {
             get { return _expiryDate; }
@@ -42,6 +45,9 @@ namespace VanillaCloudStorageClient
         /// Gets or sets the refresh token, which can be used to get new access tokens after they
         /// expire.
         /// </summary>
+        /// <remarks>Some services do not return a refresh token, in this case the <see cref="AccessToken"/>
+        /// usually does not expire and the expiry date can be null.
+        /// </remarks>
         public string RefreshToken { get; set; }
     }
 
