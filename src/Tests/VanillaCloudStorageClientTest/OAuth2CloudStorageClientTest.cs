@@ -46,7 +46,7 @@ namespace VanillaCloudStorageClientTest
   ""token_type"": ""Bearer""
 }");
 
-            string redirectedUrl = "com.example.myapp://oauth2redirect/?state=7ysv8L9s4LB9CZpA&code=ABCDEF&scope=https://www.googleapis.com/auth/drive.appdata";
+            string redirectedUrl = string.Format("com.example.myapp://oauth2redirect/?state={0}&code=ABCDEF&scope=https://www.googleapis.com/auth/drive.appdata", State);
 
             // Fetch token
             IOAuth2CloudStorageClient client = new TestClient(GetGoogleConfig());
@@ -54,6 +54,28 @@ namespace VanillaCloudStorageClientTest
 
             Assert.AreEqual("aaaa.BBBBB-CDEF", token.AccessToken);
             Assert.AreEqual("8/A1AAbbZZ9", token.RefreshToken);
+        }
+
+        [TestMethod]
+        public void FetchTokenCanInterpretPcloudResponse()
+        {
+            _httpTest.RespondWith(
+@"{
+	""result"": 0,
+	""userid"": 1234567,
+	""locationid"": 2,
+	""token_type"": ""bearer"",
+	""access_token"": ""8emKS6entXtnIO3SZGBGBXkZcKOYG5q8YISk001aFMsEf0pESfy0""
+}");
+
+            string redirectedUrl = string.Format("com.example.myapp://oauth2redirect/?code=M.C888_SN1.2.U.aaaaaaaa-7777-95de-aaf6-d403a7a16cdf&state={0}", State);
+
+            // Fetch token
+            IOAuth2CloudStorageClient client = new TestClient(GetPcloudConfig());
+            CloudStorageToken token = Task.Run(async () => await FetchTokenAsync(client, redirectedUrl)).Result;
+
+            Assert.AreEqual("8emKS6entXtnIO3SZGBGBXkZcKOYG5q8YISk001aFMsEf0pESfy0", token.AccessToken);
+            Assert.IsNull(token.RefreshToken);
         }
 
         [TestMethod]
@@ -160,6 +182,20 @@ namespace VanillaCloudStorageClientTest
                 RedirectUrl = "com.example.myapp://oauth2redirect/",
                 Flow = AuthorizationFlow.Code,
                 Scope = "https://www.googleapis.com/auth/drive.appdata",
+                ClientSecretHandling = ClientSecretHandling.SendEmptyParam,
+            };
+        }
+
+        private OAuth2Config GetPcloudConfig()
+        {
+            return new OAuth2Config
+            {
+                AuthorizeServiceEndpoint = "https://my.pcloud.com/oauth2/authorize",
+                TokenServiceEndpoint = "https://api.pcloud.com/oauth2_token",
+                ClientId = "oaid",
+                RedirectUrl = "com.example.myapp://oauth2redirect/",
+                Flow = AuthorizationFlow.Code,
+                Scope = null,
                 ClientSecretHandling = ClientSecretHandling.SendEmptyParam,
             };
         }
