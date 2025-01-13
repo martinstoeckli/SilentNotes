@@ -138,5 +138,18 @@ namespace VanillaCloudStorageClientTest.OAuth2
             Assert.AreEqual("AJ7CQLlJEwNn2AVL", response.State);
             Assert.AreEqual(AuthorizationResponseError.AccessDenied, response.Error);
         }
+
+        [TestMethod]
+        public void ParseRealWorldPcloudSuccessResponse()
+        {
+            string redirectUrl = "ch.martinstoeckli.silentnotes://oauth2redirect/?code=pppjZr6M2XkZXPamQezxK9QeAAAV2QkQvH2xpSwV&locationid=2&hostname=eapi.pcloud.com&state=7ysv8L9s4LB9CZpA";
+            AuthorizationResponse response = OAuth2Utils.ParseAuthorizationResponseUrl(redirectUrl);
+
+            Assert.IsTrue(response.IsAccessGranted);
+            Assert.AreEqual("pppjZr6M2XkZXPamQezxK9QeAAAV2QkQvH2xpSwV", response.Code);
+            Assert.IsNull(response.Token);
+            Assert.AreEqual("7ysv8L9s4LB9CZpA", response.State);
+            Assert.IsNull(response.Error);
+        }
     }
 }

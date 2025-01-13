@@ -27,7 +27,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
         private const string FileLinkUrl = "https://{0}/getfilelink";
         private const string DeleteUrl = "https://{0}/deletefile";
         private const string ListUrl = "https://{0}/listfolder";
-        private const int APP_ROOT_FOLDER_ID = 0;
+        private const long APP_ROOT_FOLDER_ID = 0;
 
         private readonly string _clientSecret;
         private readonly string _dataCenterHost;
@@ -90,12 +90,15 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
                 HttpContent content = new ByteArrayContent(fileContent);
                 string requestUrl = string.Format(UploadUrl, _dataCenterHost);
 
-                await GetFlurl().Request(requestUrl)
+                string jsonResponse = await GetFlurl().Request(requestUrl)
                     .WithOAuthBearerToken(credentials.Token.AccessToken)
                     .SetQueryParam("folderid", APP_ROOT_FOLDER_ID)
                     .SetQueryParam("filename", filename)
                     .SetQueryParam("nopartial", 1)
-                    .PutAsync(content);
+                    .SetQueryParam("filtermeta", "fileid")
+                    .PutAsync(content)
+                    .ReceiveString();
+                ThrowIfErrorResponse(jsonResponse);
             }
             catch (Exception ex)
             {
@@ -122,6 +125,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
                     .SetQueryParam("fileid", fileId)
                     .GetAsync()
                     .ReceiveString();
+                ThrowIfErrorResponse(jsonResponse);
                 JsonFileLink fileLink = JsonSerializer.Deserialize<JsonFileLink>(jsonResponse);
 
                 // Use downloadlink to get the file
@@ -152,10 +156,13 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
                 string requestUrl = string.Format(DeleteUrl, _dataCenterHost);
 
                 // Get download link
-                await GetFlurl().Request(requestUrl)
+                string jsonResponse = await GetFlurl().Request(requestUrl)
                     .WithOAuthBearerToken(credentials.Token.AccessToken)
                     .SetQueryParam("fileid", fileId)
-                    .PostAsync();
+                    .SetQueryParam("filtermeta", "isdeleted")
+                    .PostAsync()
+                    .ReceiveString();
+                ThrowIfErrorResponse(jsonResponse);
             }
             catch (Exception ex)
             {
@@ -178,6 +185,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
                     .SetQueryParam("filtermeta", "name,isfolder")
                     .GetAsync()
                     .ReceiveString();
+                ThrowIfErrorResponse(jsonResponse);
 
                 JsonListFolder entries = JsonSerializer.Deserialize<JsonListFolder>(jsonResponse);
                 return entries.MetaData.Contents
@@ -217,6 +225,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
                     .SetQueryParam("filtermeta", "name,isfolder,fileid")
                     .GetAsync()
                     .ReceiveString();
+                ThrowIfErrorResponse(jsonResponse);
 
                 JsonListFolder entries = JsonSerializer.Deserialize<JsonListFolder>(jsonResponse);
                 return entries.MetaData.Contents
@@ -254,6 +263,49 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
                 default:
                     throw new InvalidParameterException(nameof(dataCenter));
             }
+        }
+
+        private static void ThrowIfErrorResponse(string jsonResponse)
+        {
+            Exception ex = ResponseToException(jsonResponse);
+            if (ex != null)
+                throw ex;
+        }
+
+        private static Exception ResponseToException(string jsonResponse)
+        {
+            try
+            {
+                JsonError error = JsonSerializer.Deserialize<JsonError>(jsonResponse);
+
+                // error.Result 0 = successful
+                // error.Result 6??? are are legitimate non-error answers
+                if ((error.Result != 0) && ((error.Result < 6000) || (error.Result >= 7000)))
+                {
+                    PcloudApiException apiException = new PcloudApiException(error.Result, error.Error);
+                    switch (apiException.Result)
+                    {
+                        case 2011: // Requested speed limit too low, see minspeed for minimum.
+                        case 2041: // Connection broken.
+                        case 5001: // Internal upload error.
+                        case 5002: // Internal error, no servers available. Try again later.
+                            return new ConnectionFailedException(apiException);
+                        case 1000: // Log in required.
+                        case 2000: // Log in failed.
+                        case 2003: // Access denied. You do not have permissions to preform this operation.
+                        case 2094: // Invalid 'access_token' provided.
+                        case 4000: // Too many login tries from this IP address.
+                            return new AccessDeniedException(apiException);
+                        default:
+                            return new CloudStorageException("Error", apiException);
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+            return null;
         }
 
         /// <summary>
@@ -296,6 +348,42 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
 
             [JsonPropertyName("hosts")]
             public List<string> Hosts { get; set; }
+        }
+
+        private class JsonError
+        {
+            [JsonPropertyName("result")]
+            public long Result { get; set; }
+
+            [JsonPropertyName("error")]
+            public string Error { get; set; }
+        }
+
+        /// <summary>
+        /// Exception describing an error feedback of the PCloud API.
+        /// </summary>
+        public class PcloudApiException : Exception
+        {
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PcloudApiException"/> class.
+            /// </summary>
+            /// <param name="result">Sets the <see cref="Result"/> property.</param>
+            /// <param name="error">Sets the <see cref="Error"/> property.</param>
+            public PcloudApiException(long result, string error)
+            {
+                Result = result;
+                Error = error;
+            }
+
+            /// <summary>
+            /// Gets the error code from the pCloud API request.
+            /// </summary>
+            public long Result { get; }
+
+            /// <summary>
+            /// Gets the error description from the pCloud API request.
+            /// </summary>
+            public string Error { get; }
         }
     }
 }
