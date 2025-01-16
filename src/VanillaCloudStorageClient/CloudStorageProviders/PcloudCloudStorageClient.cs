@@ -29,7 +29,6 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
         private const string ListUrl = "https://{0}/listfolder";
         private const long APP_ROOT_FOLDER_ID = 0;
 
-        private readonly string _clientSecret;
         private readonly string _dataCenterHost;
 
         /// <summary>
@@ -38,21 +37,17 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
         /// <param name="oauthClientId">Sets the <see cref="OAuth2Config.ClientId"/> property.</param>
         /// <param name="oauthRedirectUrl">Sets the <see cref="OAuth2Config.RedirectUrl"/> property.</param>
         /// <param name="dataCenter">The data center used by the pCloud user.</param>
-        /// <param name="clientSecret">The client secret from the pCloud portal. Currently
-        /// pCloud rewuires this client secret, so we have to provide it.</param>
-        public PcloudCloudStorageClient(string oauthClientId, string oauthRedirectUrl, DataCenter dataCenter, string clientSecret)
+        public PcloudCloudStorageClient(string oauthClientId, string oauthRedirectUrl, DataCenter dataCenter)
             : base(new OAuth2Config
             {
                 AuthorizeServiceEndpoint = AuthorizeUrl,
                 TokenServiceEndpoint = string.Format(TokenUrl, GetDataCenterHost(dataCenter)),
                 ClientId = oauthClientId,
                 RedirectUrl = oauthRedirectUrl,
-                Flow = AuthorizationFlow.Code,
+                Flow = AuthorizationFlow.Token, // Use the token-flow, because currently the provider requires the client_secret for the code-flow.
                 ClientSecretHandling = ClientSecretHandling.DoNotSend,
             })
         {
-            _clientSecret = clientSecret;
-
             // The host depends on the datacenter and will be inserted into the API urls
             _dataCenterHost = GetDataCenterHost(dataCenter);
         }
@@ -64,14 +59,6 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
         {
             Us,
             Europe,
-        }
-
-        /// <inheritdoc/>
-        public override string BuildAuthorizationRequestUrl(string state, string codeVerifier)
-        {
-            string url = base.BuildAuthorizationRequestUrl(state, codeVerifier);
-            url = url + "&client_secret=" + _clientSecret;
-            return url;
         }
 
         /// <inheritdoc/>

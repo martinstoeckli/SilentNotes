@@ -25,7 +25,6 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
         private const string ClientId = "GetIdFromPCloudPortal";
         private const string RedirectUrl = "com.example.myapp://oauth2redirect/";
         private const string PcloudAccessToken = "GetItWith:ReallyDoFetchToken";
-        private const string ClientSecret = "GetSecretFromPCloudPortal";
 
         private const string State = "7ysv8L9s4LB9CZpA";
         private const string CodeVerifier = null;
@@ -63,7 +62,7 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
         public async Task ReallyDoFetchToken()
         {
             // Replace this example url with the redirected url from the browser.
-            const string PCloudRedirectedUrl = "com.example.appname://oauth2redirect/?code=AAAAZmfGBXkZxjiiKbvywzFFFFQqjMMKTzFj6yyy&locationid=2&hostname=eapi.pcloud.com&state=8ysv8L9s4LB9CZp3";
+            const string PCloudRedirectedUrl = "com.example.appname://oauth2redirect/#access_token=AAAAZ6entXtnIO3SZWrKWXkZZZVpmF9MfiLgQRXlVlofDysumsdc&token_type=bearer&userid=8883432&locationid=2&hostname=eapi.pcloud.com&state=7ysv8L9s4LB9CZpA";
             if (!DoRealWebRequests)
                 return;
 
@@ -172,7 +171,7 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
 
         private ICloudStorageClient CreatePCloudStorageClient()
         {
-            return new PcloudCloudStorageClient(ClientId, RedirectUrl, PcloudCloudStorageClient.DataCenter.Europe, ClientSecret);
+            return new PcloudCloudStorageClient(ClientId, RedirectUrl, PcloudCloudStorageClient.DataCenter.Europe);
         }
 
         private string GetPCloudFileListResponse()
