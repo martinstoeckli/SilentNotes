@@ -488,8 +488,9 @@ namespace SilentNotes.ViewModels
                 }
                 else
                 {
+                    var cloudMetadata = _cloudStorageClientFactory.GetCloudStorageMetadata(Model.Credentials.CloudStorageId);
                     List<string> lines = new List<string>();
-                    lines.Add(Model.Credentials.CloudStorageId);
+                    lines.Add(cloudMetadata.Title);
                     lines.Add(WebUtility.HtmlEncode(Model.Credentials.Url));
                     return (MarkupString)string.Join("<br>", lines);
                 }
