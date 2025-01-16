@@ -23,11 +23,23 @@ namespace SilentNotes.Platforms
         internal void OnWindowCreated(Microsoft.UI.Xaml.Window window)
         {
             AdjustWindowSizeInDemoMode(window);
+            window.VisibilityChanged += OnVisibilityChanged;
+        }
+
+        private void OnVisibilityChanged(object sender, WindowVisibilityChangedEventArgs args)
+        {
+            if (args.Visible == false)
+            {
+                // Store unsaved data when window was minimized
+                var messenger = Ioc.Instance.GetService<IMessengerService>();
+                messenger.Send(new StoreUnsavedDataMessage(MessageSender.ApplicationEventHandler));
+            }
         }
 
         internal void OnClosed(Microsoft.UI.Xaml.Window window, WindowEventArgs args)
         {
             System.Diagnostics.Debug.WriteLine("*** ApplicationEventHandler.OnClosed()");
+            window.VisibilityChanged -= OnVisibilityChanged;
             var messenger = Ioc.Instance.GetService<IMessengerService>();
             messenger.Send(new StoreUnsavedDataMessage(MessageSender.ApplicationEventHandler));
 
