@@ -1,0 +1,5 @@
+SilentNotes version 8.3.0
+
+* Added online storage support for pCloud.com
+* Fixed access problem with OneDrive
+* Stores unsaved data when minimizing the application (Windows only)
