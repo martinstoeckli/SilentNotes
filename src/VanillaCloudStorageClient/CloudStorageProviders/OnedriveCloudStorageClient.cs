@@ -26,13 +26,13 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
     /// </summary>
     public class OnedriveCloudStorageClient : OAuth2CloudStorageClient, ICloudStorageClient, IOAuth2CloudStorageClient
     {
+        // The signature :/ starts or ends a section which contains non interpreted slashes of a file path
         private const string AuthorizeUrl = "https://login.microsoftonline.com/common/oauth2/v2.0/authorize";
         private const string TokenUrl = "https://login.microsoftonline.com/common/oauth2/v2.0/token";
-        private const string UploadUrl = "https://graph.microsoft.com/v1.0/me/drive/special/approot:/{0}:/createUploadSession";
-        private const string DownloadUrl = "https://graph.microsoft.com/v1.0/me/drive/special/approot:/{0}:/content";
-        private const string DeleteUrl = ExistsUrl;
-        private const string ListUrl = "https://graph.microsoft.com/v1.0/me/drive/special/approot/children";
-        private const string ExistsUrl = "https://graph.microsoft.com/v1.0/me/drive/special/approot:/{0}";
+        private const string UploadUrl = "https://graph.microsoft.com/v1.0/me/drive/items/{0}:/{1}:/createUploadSession";
+        private const string DownloadUrl = "https://graph.microsoft.com/v1.0/me/drive/items/{0}:/{1}:/content";
+        private const string DeleteUrl = "https://graph.microsoft.com/v1.0/me/drive/items/{0}:/{1}";
+        private const string ListUrl = "https://graph.microsoft.com/v1.0/me/drive/items/{0}/children";
         private const string AppRootUrl = "https://graph.microsoft.com/v1.0/me/drive/special/approot";
         private string _appRootId;
 
@@ -68,9 +68,8 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
 
             try
             {
-                await InitializeAppRootFolderAsync(credentials.Token.AccessToken);
-
-                string url = string.Format(UploadUrl, Url.Encode(filename));
+                string rootFolderId = await InitializeAppRootFolderAsync(credentials.Token.AccessToken);
+                string url = string.Format(UploadUrl, rootFolderId, Url.Encode(filename));
                 byte[] requestBytes = Encoding.UTF8.GetBytes("{ \"item\": { \"@microsoft.graph.conflictBehavior\": \"replace\" } }");
                 HttpContent sessionContent = new ByteArrayContent(requestBytes);
 
@@ -104,7 +103,8 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
 
             try
             {
-                string url = string.Format(DownloadUrl, Url.Encode(filename));
+                string rootFolderId = await InitializeAppRootFolderAsync(credentials.Token.AccessToken);
+                string url = string.Format(DownloadUrl, rootFolderId, Url.Encode(filename));
 
                 byte[] responseData = await GetFlurl().Request(url)
                     .WithOAuthBearerToken(credentials.Token.AccessToken)
@@ -125,7 +125,8 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
 
             try
             {
-                string url = string.Format(DeleteUrl, Url.Encode(filename));
+                string rootFolderId = await InitializeAppRootFolderAsync(credentials.Token.AccessToken);
+                string url = string.Format(DeleteUrl, rootFolderId, Url.Encode(filename));
 
                 await GetFlurl().Request(url)
                     .WithOAuthBearerToken(credentials.Token.AccessToken)
@@ -145,7 +146,8 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
             try
             {
                 List<string> result = new List<string>();
-                string url = ListUrl;
+                string rootFolderId = await InitializeAppRootFolderAsync(credentials.Token.AccessToken);
+                string url = string.Format(ListUrl, rootFolderId);
                 while (url != null)
                 {
                     string jsonResponse = await GetFlurl().Request(url)
@@ -162,33 +164,6 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
                     url = entries.NextLink;
                 }
                 return result;
-            }
-            catch (Exception ex)
-            {
-                throw ConvertToCloudStorageException(ex);
-            }
-        }
-
-        /// <inheritdoc/>
-        public override async Task<bool> ExistsFileAsync(string filename, CloudStorageCredentials credentials)
-        {
-            try
-            {
-                string url = string.Format(ExistsUrl, Url.Encode(filename));
-
-                await GetFlurl().Request(url)
-                    .WithOAuthBearerToken(credentials.Token.AccessToken)
-                    .SetQueryParam("$select", "name")
-                    .GetAsync()
-                    .ReceiveString();
-                return true;
-            }
-            catch (FlurlHttpException ex)
-            {
-                if (ex.GetHttpStatusCode() == HttpStatusCode.NotFound)
-                    return false;
-                else
-                    throw ConvertToCloudStorageException(ex);
             }
             catch (Exception ex)
             {
@@ -227,10 +202,11 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
         /// of the appRoot folder, will create this folder.
         /// </summary>
         /// <param name="accessToken">A valid OAuth2 access token.</param>
-        private async Task InitializeAppRootFolderAsync(string accessToken)
+        private async Task<string> InitializeAppRootFolderAsync(string accessToken)
         {
             if (string.IsNullOrEmpty(_appRootId))
                 _appRootId = await FindAppRootIdAsync(accessToken);
+            return _appRootId;
         }
 
         /// <summary>

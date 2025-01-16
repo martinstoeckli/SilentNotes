@@ -112,10 +112,13 @@ namespace VanillaCloudStorageClient
                     .ReceiveString();
 
                 JsonTokenExchangeResponse response = JsonSerializer.Deserialize<JsonTokenExchangeResponse>(jsonResponse);
+                string refreshToken = !string.IsNullOrEmpty(response.RefreshToken)
+                    ? response.RefreshToken // use the new refresh token
+                    : token.RefreshToken; // keep the existing refresh token
                 CloudStorageToken result = new CloudStorageToken
                 {
                     AccessToken = response.AccessToken,
-                    RefreshToken = token.RefreshToken // keep the refresh token
+                    RefreshToken = refreshToken
                 };
                 result.SetExpiryDateBySecondsFromNow(response.ExpiresIn);
                 return result;
