@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using SilentNotes.Crypto;
 using VanillaCloudStorageClient;
 using VanillaCloudStorageClient.CloudStorageProviders;
+using static VanillaCloudStorageClient.CloudStorageProviders.PcloudCloudStorageClient;
 
 namespace SilentNotes.Services
 {
@@ -24,6 +25,8 @@ namespace SilentNotes.Services
         public const string CloudStorageIdOneDrive = "onedrive";
         public const string CloudStorageIdNextcloudWebdav = "nextcloud-webdav";
         public const string CloudStorageIdMurena = "murena";
+        public const string CloudStorageIdPcloudUs = "pcloud-us";
+        public const string CloudStorageIdPCloudEurope = "pcloud-europe";
         public const string CloudStorageIdGmx = "gmx";
 
         private const string _obfuscationKey = "4ed05d88-0193-4b14-9b0b-6977825de265";
@@ -54,6 +57,14 @@ namespace SilentNotes.Services
                 "ch.martinstoeckli.silentnotes://oauth2redirect/"));
             Add(CloudStorageIdNextcloudWebdav, () => new WebdavCloudStorageClient(_useSocketsForPropFind));
             Add(CloudStorageIdMurena, () => new MurenaCloudStorageClient(_useSocketsForPropFind));
+            Add(CloudStorageIdPcloudUs, () => new PcloudCloudStorageClient(
+                DeobfuscateClientId("b2JmdXNjYXRpb24gdj0yJHhjaGFjaGEyMF9wb2x5MTMwNSRDTXVOem45cWx3MjJKQUxWTDJ1SVFrMnRJNlVHck9zdCRwYmtkZjIkdlJLWURvV3NkODlMQkc2Qmp6TmZZZz09JDE1MDAkJPgVfxVbBoOLp59ajJxzkWKz4mX61qG0nsaytQ=="),
+                "ch.martinstoeckli.silentnotes://oauth2redirect/",
+                DataCenter.Us));
+            Add(CloudStorageIdPCloudEurope, () => new PcloudCloudStorageClient(
+                DeobfuscateClientId("b2JmdXNjYXRpb24gdj0yJHhjaGFjaGEyMF9wb2x5MTMwNSRDTXVOem45cWx3MjJKQUxWTDJ1SVFrMnRJNlVHck9zdCRwYmtkZjIkdlJLWURvV3NkODlMQkc2Qmp6TmZZZz09JDE1MDAkJPgVfxVbBoOLp59ajJxzkWKz4mX61qG0nsaytQ=="),
+                "ch.martinstoeckli.silentnotes://oauth2redirect/",
+                DataCenter.Europe));
             Add(CloudStorageIdGmx, () => new GmxCloudStorageClient(_useSocketsForPropFind));
         }
 
@@ -67,6 +78,8 @@ namespace SilentNotes.Services
             yield return CloudStorageIdOneDrive;
             yield return CloudStorageIdNextcloudWebdav;
             yield return CloudStorageIdMurena;
+            yield return CloudStorageIdPCloudEurope;
+            yield return CloudStorageIdPcloudUs;
             yield return CloudStorageIdGmx;
         }
 
@@ -89,6 +102,10 @@ namespace SilentNotes.Services
                     return new CloudStorageMetadata { Title = "Nextcloud (WebDAV)", AssetImageName = "cloud_service_nextcloud.png" };
                 case CloudStorageIdMurena:
                     return new CloudStorageMetadata { Title = "murena", AssetImageName = "cloud_service_murena.png" };
+                case CloudStorageIdPCloudEurope:
+                    return new CloudStorageMetadata { Title = "pCloud (Europe)", AssetImageName = "cloud_service_pcloud.png" };
+                case CloudStorageIdPcloudUs:
+                    return new CloudStorageMetadata { Title = "pCloud (U.S.)", AssetImageName = "cloud_service_pcloud.png" };
                 case CloudStorageIdGmx:
                     return new CloudStorageMetadata { Title = "GMX", AssetImageName = "cloud_service_gmx.png" };
                 default:
@@ -104,6 +121,15 @@ namespace SilentNotes.Services
         private string DeobfuscateClientId(string obfuscatedClientId)
         {
             return CryptoUtils.Deobfuscate(obfuscatedClientId, SecureStringExtensions.StringToSecureString(_obfuscationKey));
+        }
+
+        /// <summary>
+        /// Not used, helper function to generate the obfuscated ids.
+        /// </summary>
+        private string ObfuscateClientId(string obfuscatedClientId)
+        {
+            string result = CryptoUtils.Obfuscate(obfuscatedClientId, SecureStringExtensions.StringToSecureString(_obfuscationKey), Ioc.Instance.GetService<ICryptoRandomService>());
+            return result;
         }
     }
 }
