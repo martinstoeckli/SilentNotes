@@ -107,21 +107,31 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
             // 1) Test upload
             if (!DoRealWebRequests)
             {
-                _httpTest.RespondWith(@"{ ""id"": ""fakeid"" }");
-                _httpTest.RespondWith(GetOneDriveUploadSession());
+                _httpTest
+                    .RespondWith(@"{ ""id"": ""fakeid"" }")
+                    .RespondWith(GetOneDriveUploadSession())
+                    .RespondWith(string.Empty);
             }
             await UploadFileWorksAsync(fileName, fileContent);
 
             // 2) Test listing
             if (!DoRealWebRequests)
             {
-                _httpTest.RespondWith(GetOnedriveFileListResponse());
+                _httpTest
+                    .RespondWith(@"{ ""id"": ""fakeid"" }")
+                    .RespondWith(GetOnedriveFileListResponse());
             }
             List<string> res = await ListFileNamesWorksAsync();
             Assert.IsTrue(res.Count >= 1);
             Assert.IsTrue(res.Contains("unittest.dat"));
 
             // 3) Test exists
+            if (!DoRealWebRequests)
+            {
+                _httpTest
+                    .RespondWith(@"{ ""id"": ""fakeid"" }")
+                    .RespondWith(GetOnedriveFileListResponse());
+            }
             bool exists = await FileExistsWorksAsync(fileName);
             Assert.IsTrue(exists);
 
@@ -129,7 +139,9 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
             if (!DoRealWebRequests)
             {
                 HttpContent httpContent = new ByteArrayContent(fileContent);
-                _httpTest.RespondWith(() => httpContent);
+                _httpTest
+                    .RespondWith(@"{ ""id"": ""fakeid"" }")
+                    .RespondWith(() => httpContent);
             }
             Byte[] downloadedContent = await DownloadFileWorksAsync(fileName);
             CollectionAssert.AreEqual(fileContent, downloadedContent);
@@ -137,15 +149,18 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
             // 5) Test delete
             if (!DoRealWebRequests)
             {
-                _httpTest.RespondWith(() => new ByteArrayContent(new byte[0]));
+                _httpTest
+                    .RespondWith(@"{ ""id"": ""fakeid"" }")
+                    .RespondWith(string.Empty);
             }
             await DeleteFileWorksAsync(fileName);
 
             // 6) Was really deleted?
             if (!DoRealWebRequests)
             {
-                HttpContent content = null;
-                _httpTest.RespondWith(() => content, 404);
+                _httpTest
+                    .RespondWith(@"{ ""id"": ""fakeid"" }")
+                    .RespondWith(GetEmptyOnedriveFileListResponse());
             }
             exists = await FileExistsWorksAsync(fileName);
             Assert.IsFalse(exists);
@@ -220,6 +235,16 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
         }
     }
 ]}";
+        }
+
+        private string GetEmptyOnedriveFileListResponse()
+        {
+            return
+@"{
+""@odata.context"": ""https://graph.microsoft.com/v1.0/$metadata#users('FAKEUSER')/drive/special('approot')/children(name,file)"",
+""@odata.count"": 0,
+""value"": []
+}";
         }
     }
 }
