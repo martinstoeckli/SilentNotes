@@ -253,7 +253,7 @@ jobs:
       run: dotnet publish -c Release -p:PublishProfile=${{ env.Profile }} -f ${{ env.Target_Framework_Windows }} -r ${{ env.RuntimeIdentifier }} -p:Platform=${{ env.Platform }} -p:AppxPackageSigningEnabled=true -p:PackageCertificateThumbprint="${{ secrets.SILENTNOTESPFXTHUMBPRINT }}"
       env:
         Platform: ${{ matrix.platform }}
-        RuntimeIdentifier: win-${{ matrix.platform }}
+        RuntimeIdentifier: win10-${{ matrix.platform }}
         Profile: MSIX-win10-${{ matrix.platform }}
         
     # Remove the pfx
