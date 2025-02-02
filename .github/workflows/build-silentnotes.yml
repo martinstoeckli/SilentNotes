@@ -277,9 +277,9 @@ jobs:
 
     # Upload artifacts
     - name: Upload build artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
-        name: silentnotes_windows_binaries
+        name: silentnotes_windows_bin-${{ matrix.runs-on }}
         path: .\windows
 
   ##############################################################################
@@ -298,10 +298,11 @@ jobs:
         fetch-depth: 0
 
     - name: Download msix files
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
-        name: silentnotes_windows_binaries
         path: downloaddirectory
+        pattern: silentnotes_windows_bin-*
+        merge-multiple: true
 
     - name: Collect msix files
       run: |
@@ -318,7 +319,7 @@ jobs:
       
     # Upload artifacts
     - name: Upload build artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: silentnotes_windows_binaries
         path: .\**\*.msixbundle
