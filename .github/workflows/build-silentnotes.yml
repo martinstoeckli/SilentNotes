@@ -238,6 +238,13 @@ jobs:
       with:
         dotnet-version: ${{ env.Dotnet_Version }}
 
+    # Log DotNet version for reproducable builds
+    - name: Log used DotNet versions 1
+      run: |
+        echo "DotNet version: ${{ env.Dotnet_Version }}"
+        dotnet --version
+        dotnet workload list
+
     # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
     - name: Setup MSBuild.exe
       uses: microsoft/setup-msbuild@v2
