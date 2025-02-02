@@ -93,6 +93,13 @@ jobs:
     - name: Install MAUI
       run: dotnet workload install maui-android --ignore-failed-sources
 
+    # Log DotNet version for reproducable builds
+    - name: Log used DotNet versions
+      run: |
+        echo "DotNet version: ${{ env.Dotnet_Version }}"
+        dotnet --version
+        dotnet workload list
+
     # Decode the base 64 encoded pfx and save the Signing_Certificate
     - name: Decode the keystore file
       run: |
@@ -163,6 +170,13 @@ jobs:
     - name: Install MAUI
       run: dotnet workload install maui-android --ignore-failed-sources
 
+    # Log DotNet version for reproducable builds
+    - name: Log used DotNet versions
+      run: |
+        echo "DotNet version: ${{ env.Dotnet_Version }}"
+        dotnet --version
+        dotnet workload list
+
     # Decode the base 64 encoded pfx and save the Signing_Certificate
     - name: Decode the keystore file
       run: |
@@ -231,10 +245,11 @@ jobs:
     - name: Install MAUI
       run: dotnet workload install maui-windows maui-android
 
-    # Log variables for reproducable builds
+    # Log DotNet version for reproducable builds
     - name: Log used DotNet versions
       run: |
         echo "DotNet version: ${{ env.Dotnet_Version }}"
+        dotnet --version
         dotnet workload list
       
     # Decode the base 64 encoded pfx and save the Signing_Certificate
