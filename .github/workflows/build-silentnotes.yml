@@ -234,16 +234,10 @@ jobs:
 
     # Install the .NET Core workload
     - name: Install .NET
+      id: id_setup_dotnet
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: ${{ env.Dotnet_Version }}
-
-    # Log DotNet version for reproducable builds
-    - name: Log used DotNet versions 1
-      run: |
-        echo "DotNet version: ${{ env.Dotnet_Version }}"
-        dotnet --version
-        dotnet workload list
 
     # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
     - name: Setup MSBuild.exe
@@ -255,7 +249,7 @@ jobs:
     # Log DotNet version for reproducable builds
     - name: Log used DotNet versions
       run: |
-        echo "DotNet version: ${{ env.Dotnet_Version }}"
+        echo "DotNet version: ${{ steps.id_setup_dotnet.outputs.dotnet-version }}"
         dotnet --version
         dotnet workload list
       
