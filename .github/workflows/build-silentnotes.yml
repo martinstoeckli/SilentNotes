@@ -219,7 +219,7 @@ jobs:
         fetch-depth: 0
 
     # Install the .NET Core workload
-    - name: Install .NET Core
+    - name: Install .NET
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: ${{ env.Dotnet_Version }}
@@ -231,6 +231,12 @@ jobs:
     - name: Install MAUI
       run: dotnet workload install maui-windows maui-android
 
+    # Log variables for reproducable builds
+    - name: Log used DotNet versions
+      run: |
+        echo "DotNet version: ${{ env.Dotnet_Version }}"
+        dotnet workload list
+      
     # Decode the base 64 encoded pfx and save the Signing_Certificate
     - name: Decode the pfx
       run: |
@@ -271,9 +277,9 @@ jobs:
 
     # Upload artifacts
     - name: Upload build artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
-        name: silentnotes_windows_binaries
+        name: silentnotes_windows_binaries-${{ matrix.runs-on }}
         path: .\windows
 
   ##############################################################################
@@ -292,10 +298,11 @@ jobs:
         fetch-depth: 0
 
     - name: Download msix files
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
-        name: silentnotes_windows_binaries
         path: downloaddirectory
+        pattern: silentnotes_windows_binaries-*
+        merge-multiple: true
 
     - name: Collect msix files
       run: |
@@ -312,7 +319,7 @@ jobs:
       
     # Upload artifacts
     - name: Upload build artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: silentnotes_windows_binaries
         path: .\**\*.msixbundle
