@@ -137,6 +137,17 @@ td { word-wrap: anywhere; } /* table should not exceed device width */
 	font: normal normal 1em "Segoe UI",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol" !important;
 }
 
+.note-viewer img {
+    display: block;
+    height: auto;
+    margin: 1.5rem 0;
+    max-width: 100%;
+
+    &.ProseMirror-selectednode {
+      outline: 3px solid;
+    }
+}
+
 .note-viewer ol {
 	margin: 0.5em 0 0.5em 0 !important;
 	padding: 0 !important;

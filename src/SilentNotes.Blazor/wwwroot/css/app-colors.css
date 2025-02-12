@@ -15,6 +15,16 @@
 
 .note-light .note-locked svg { fill: rgba(172, 172, 172, 0.5); }
 .note-dark .note-locked svg { fill: rgba(204, 204, 204, 0.4); }
+.note-light .note-viewer img {
+    &.ProseMirror-selectednode {
+      outline-color: rgba(172, 172, 172, 0.5);
+    }
+}
+.note-dark .note-viewer img {
+    &.ProseMirror-selectednode {
+      outline-color: rgba(204, 204, 204, 0.4);
+    }
+}
 
 .note-light .note-viewer h1 { color: rgba(70, 130, 180, 1) !important; }
 .note-light .note-viewer h2 { color: rgba(70, 130, 180, 0.85) !important; }

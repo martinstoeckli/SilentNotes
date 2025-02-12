@@ -54,52 +54,52 @@
 	}
 
 	<MudIconButton OnClick="@(() => ToggleFormatState("bold"))"
-		Icon="@IconService.GetSvgLink(IconNames.FormatBold)" Color="Color.Inherit"
-		Class="@Css.BuildClass(new CssClassIf(CssClasses.ButtonToggled, _formatStates.Bold))"
-		Title="@LanguageService["note_bold"]" Disabled="ViewModel.ShoppingModeActive" Edge="Edge.End"/>
+	Icon="@IconService.GetSvgLink(IconNames.FormatBold)" Color="Color.Inherit"
+	Class="@Css.BuildClass(new CssClassIf(CssClasses.ButtonToggled, _formatStates.Bold))"
+	Title="@LanguageService["note_bold"]" Disabled="ViewModel.ShoppingModeActive" Edge="Edge.End"/>
 
 	<MudIconButton OnClick="@(() => ToggleFormatState("italic"))"
-		Icon="@IconService.GetSvgLink(IconNames.FormatItalic)" Color="Color.Inherit"
-		Class="@Css.BuildClass(new CssClassIf(CssClasses.ButtonToggled, _formatStates.Italic))"
-		Title="@LanguageService["note_italic"]" Disabled="ViewModel.ShoppingModeActive" Edge="Edge.End"/>
+	Icon="@IconService.GetSvgLink(IconNames.FormatItalic)" Color="Color.Inherit"
+	Class="@Css.BuildClass(new CssClassIf(CssClasses.ButtonToggled, _formatStates.Italic))"
+	Title="@LanguageService["note_italic"]" Disabled="ViewModel.ShoppingModeActive" Edge="Edge.End"/>
 
 	<MudIconButton OnClick="@(() => ToggleFormatState("underline"))"
-		Icon="@IconService.GetSvgLink(IconNames.FormatUnderline)" Color="Color.Inherit"
-		Class="@Css.BuildClass(new CssClassIf(CssClasses.ButtonToggled, _formatStates.Underline), "d-none d-sm-flex")"
-		Title="@LanguageService["note_underline"]" Disabled="ViewModel.ShoppingModeActive" Edge="Edge.End"/>
+	Icon="@IconService.GetSvgLink(IconNames.FormatUnderline)" Color="Color.Inherit"
+	Class="@Css.BuildClass(new CssClassIf(CssClasses.ButtonToggled, _formatStates.Underline), "d-none d-sm-flex")"
+	Title="@LanguageService["note_underline"]" Disabled="ViewModel.ShoppingModeActive" Edge="Edge.End"/>
 
 	<MudIconButton OnClick="@(() => ToggleFormatState("strike"))"
-		Icon="@IconService.GetSvgLink(IconNames.FormatStrikethrough)" Color="Color.Inherit"
-		Class="@Css.BuildClass(new CssClassIf(CssClasses.ButtonToggled, _formatStates.Strike), "d-none d-sm-flex")"
-		Title="@LanguageService["note_strike"]" Disabled="ViewModel.ShoppingModeActive" Edge="Edge.End" />
+	Icon="@IconService.GetSvgLink(IconNames.FormatStrikethrough)" Color="Color.Inherit"
+	Class="@Css.BuildClass(new CssClassIf(CssClasses.ButtonToggled, _formatStates.Strike), "d-none d-sm-flex")"
+	Title="@LanguageService["note_strike"]" Disabled="ViewModel.ShoppingModeActive" Edge="Edge.End" />
 
 	<MudIconButton OnClick="@(() => ToggleFormatState("orderedlist"))"
-		Icon="@IconService.GetSvgLink(IconNames.FormatListNumbers)" Color="Color.Inherit"
-		Class="@Css.BuildClass(new CssClassIf(CssClasses.ButtonToggled, _formatStates.Orderedlist), "d-none d-sm-flex")"
-		Title="@LanguageService["note_list_ordered"]" Disabled="ViewModel.ShoppingModeActive" Edge="Edge.End" />
+	Icon="@IconService.GetSvgLink(IconNames.FormatListNumbers)" Color="Color.Inherit"
+	Class="@Css.BuildClass(new CssClassIf(CssClasses.ButtonToggled, _formatStates.Orderedlist), "d-none d-sm-flex")"
+	Title="@LanguageService["note_list_ordered"]" Disabled="ViewModel.ShoppingModeActive" Edge="Edge.End" />
 
 	<MudIconButton OnClick="@(() => ToggleFormatState("bulletlist"))"
-		Icon="@IconService.GetSvgLink(IconNames.FormatListBulleted)" Color="Color.Inherit"
-		Class="@Css.BuildClass(new CssClassIf(CssClasses.ButtonToggled, _formatStates.Bulletlist), "d-none d-sm-flex")"
-		Title="@LanguageService["note_list_unordered"]" Disabled="ViewModel.ShoppingModeActive" Edge="Edge.End" />
+	Icon="@IconService.GetSvgLink(IconNames.FormatListBulleted)" Color="Color.Inherit"
+	Class="@Css.BuildClass(new CssClassIf(CssClasses.ButtonToggled, _formatStates.Bulletlist), "d-none d-sm-flex")"
+	Title="@LanguageService["note_list_unordered"]" Disabled="ViewModel.ShoppingModeActive" Edge="Edge.End" />
 
 	<MudIconButton OnClick="@(() => _jsModule.InvokeVoidAsync("undo"))"
-		Icon="@Icons.Material.Filled.Undo" Color="Color.Inherit"
-		Title="@LanguageService["undo"]" Disabled="ViewModel.ShoppingModeActive" Edge="Edge.End"/>
+	Icon="@Icons.Material.Filled.Undo" Color="Color.Inherit"
+	Title="@LanguageService["undo"]" Disabled="ViewModel.ShoppingModeActive" Edge="Edge.End"/>
 
 	<MudIconButton OnClick="@(() => _jsModule.InvokeVoidAsync("redo"))"
-		Icon="@Icons.Material.Filled.Redo" Color="Color.Inherit"
-		Title="@LanguageService["redo"]" Disabled="ViewModel.ShoppingModeActive" Edge="Edge.End"/>
+	Icon="@Icons.Material.Filled.Redo" Color="Color.Inherit"
+	Title="@LanguageService["redo"]" Disabled="ViewModel.ShoppingModeActive" Edge="Edge.End"/>
 
 	<MudIconButton OnClick="@(() => ToggleShoppingMode())"
-		Icon="@IconService.GetSvgLink(IconNames.KeyboardOffOutline)" Color="Color.Inherit"
-		Class="@Css.BuildClass(new CssClassIf(CssClasses.ButtonToggled, ViewModel.ShoppingModeActive))"
-		Title="@LanguageService["note_shopping_mode"]" Edge="Edge.End" />
+	Icon="@IconService.GetSvgLink(IconNames.KeyboardOffOutline)" Color="Color.Inherit"
+	Class="@Css.BuildClass(new CssClassIf(CssClasses.ButtonToggled, ViewModel.ShoppingModeActive))"
+	Title="@LanguageService["note_shopping_mode"]" Edge="Edge.End" />
 
 	<MudIconButton OnClick="@(() => SearchToolbarOpen = !SearchToolbarOpen)"
-		Icon="@IconService.GetSvgLink(IconNames.Magnify)" Color="Color.Inherit"
-		Class="@Css.BuildClass(new CssClassIf(CssClasses.ButtonToggled, _searchToolbarOpen))"
-		Title="@LanguageService["search"]" Edge="Edge.End" />
+	Icon="@IconService.GetSvgLink(IconNames.Magnify)" Color="Color.Inherit"
+	Class="@Css.BuildClass(new CssClassIf(CssClasses.ButtonToggled, _searchToolbarOpen))"
+	Title="@LanguageService["search"]" Edge="Edge.End" />
 
 	@* Overflow menu *@
 	<MudMenu @ref="_overflowMenu" Dense="true" AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight">
@@ -107,90 +107,94 @@
 			<MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" />
 		</ActivatorContent>
 		<ChildContent><span class="menu-font">
-			<MudMenuItem OnClick="@(() => ToggleFormatState("heading", 1))"
+				<MudMenuItem OnClick="@(() => ToggleFormatState("heading", 1))"
 				Icon="@IconService.GetSvgLink(IconNames.FormatHeader1)"
 				Class="@Css.BuildClass(new CssClassIf(CssClasses.MenuToggled, _formatStates.Heading1))"
 				Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_header1"]</MudMenuItem>
 
-			<MudMenuItem OnClick="@(() => ToggleFormatState("heading", 2))"
+				<MudMenuItem OnClick="@(() => ToggleFormatState("heading", 2))"
 				Icon="@IconService.GetSvgLink(IconNames.FormatHeader2)"
 				Class="@Css.BuildClass(new CssClassIf(CssClasses.MenuToggled, _formatStates.Heading2))"
 				Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_header2"]</MudMenuItem>
 
-			<MudMenuItem OnClick="@(() => ToggleFormatState("heading", 3))"
+				<MudMenuItem OnClick="@(() => ToggleFormatState("heading", 3))"
 				Icon="@IconService.GetSvgLink(IconNames.FormatHeader3)"
 				Class="@Css.BuildClass(new CssClassIf(CssClasses.MenuToggled, _formatStates.Heading3))"
 				Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_header3"]</MudMenuItem>
 
-			<MudMenuItem OnClick="@(() => ToggleFormatState("underline"))"
+				<MudMenuItem OnClick="@(() => ToggleFormatState("underline"))"
 				Icon="@IconService.GetSvgLink(IconNames.FormatUnderline)"
 				Class="@Css.BuildClass(new CssClassIf(CssClasses.MenuToggled, _formatStates.Underline), "d-sm-none")"
 				Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_underline"]</MudMenuItem>
 
-			<MudMenuItem OnClick="@(() => ToggleFormatState("strike"))"
+				<MudMenuItem OnClick="@(() => ToggleFormatState("strike"))"
 				Icon="@IconService.GetSvgLink(IconNames.FormatStrikethrough)"
 				Class="@Css.BuildClass(new CssClassIf(CssClasses.MenuToggled, _formatStates.Strike), "d-sm-none")"
 				Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_strike"]</MudMenuItem>
 
-			<MudMenuItem OnClick="@(() => ToggleFormatState("orderedlist"))"
+				<MudMenuItem OnClick="@(() => ToggleFormatState("orderedlist"))"
 				Icon="@IconService.GetSvgLink(IconNames.FormatListNumbers)"
 				Class="@Css.BuildClass(new CssClassIf(CssClasses.MenuToggled, _formatStates.Orderedlist), "d-sm-none")"
 				Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_list_ordered"]</MudMenuItem>
 
-			<MudMenuItem OnClick="@(() => ToggleFormatState("bulletlist"))"
+				<MudMenuItem OnClick="@(() => ToggleFormatState("bulletlist"))"
 				Icon="@IconService.GetSvgLink(IconNames.FormatListBulleted)"
 				Class="@Css.BuildClass(new CssClassIf(CssClasses.MenuToggled, _formatStates.Bulletlist), "d-sm-none")"
 				Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_list_unordered"]</MudMenuItem>
 
-			<MudMenuItem OnClick="@(() => ToggleFormatState("codeblock"))"
+				<MudMenuItem OnClick="@(() => ToggleFormatState("codeblock"))"
 				Icon="@IconService.GetSvgLink(IconNames.CodeBraces)"
 				Class="@Css.BuildClass(new CssClassIf(CssClasses.MenuToggled, _formatStates.Codeblock))"
 				Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_code"]</MudMenuItem>
 
-			<MudMenuItem OnClick="@(() => ToggleFormatState("blockquote"))"
+				<MudMenuItem OnClick="@(() => ToggleFormatState("blockquote"))"
 				Icon="@IconService.GetSvgLink(IconNames.FormatQuoteClose)"
 				Class="@Css.BuildClass(new CssClassIf(CssClasses.MenuToggled, _formatStates.Blockquote))"
 				Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_quotation"]</MudMenuItem>
 
-			<MudMenuItem OnClick="@(() => OpenLinkDialog())"
+				<MudMenuItem OnClick="@(() => OpenLinkDialog())"
 				Icon="@IconService.GetSvgLink(IconNames.LinkVariant)"
 				Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_link"]</MudMenuItem>
 
-			<MudDivider/>
+				<MudMenuItem OnClick="@(() => InsertImage())"
+				Icon="@IconService.GetSvgLink(IconNames.Image)"
+				Disabled="ViewModel.ShoppingModeActive">Bild hinzufügen</MudMenuItem>
 
-			<MudMenuItem OnClick="@(() => _colorPaletteOpen = true)"
+				<MudDivider/>
+
+				<MudMenuItem OnClick="@(() => _colorPaletteOpen = true)"
 				Icon="@Icons.Material.Filled.ColorLens"
 				Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_colors"]</MudMenuItem>
 
-			@if (ViewModel.CanKeepScreenOn)
-			{
-				<MudMenuItem OnClick="@(() => ViewModel.KeepScreenOnCommand.Execute(null))"
+				@if (ViewModel.CanKeepScreenOn)
+				{
+					<MudMenuItem OnClick="@(() => ViewModel.KeepScreenOnCommand.Execute(null))"
 					Icon="@Icons.Material.Outlined.Timer"
 					Class="@Css.BuildClass(new CssClassIf(CssClasses.MenuToggled, ViewModel.KeepScreenOnActive))">@ViewModel.KeepScreenOnTitle</MudMenuItem>
-			}
+				}
 
-			<MudMenuItem OnClick="@(() => ViewModel.TogglePinnedCommand.Execute(null))"
+				<MudMenuItem OnClick="@(() => ViewModel.TogglePinnedCommand.Execute(null))"
 				Icon="@IconService.GetSvgLink(IconNames.Pin)"
 				Class="@Css.BuildClass(new CssClassIf(CssClasses.MenuToggled, ViewModel.IsPinned))"
 				Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_pin"]</MudMenuItem>
 
-			<MudMenuItem OnClick="@(() => ViewModel.ShowInfoCommand.Execute(null))"
+				<MudMenuItem OnClick="@(() => ViewModel.ShowInfoCommand.Execute(null))"
 				Icon="@Icons.Material.Filled.Info"
 				Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_show_info"]</MudMenuItem>
 
-			@if (ViewModel.ShowManualSynchronization)
-			{
-				<MudDivider />
+				@if (ViewModel.ShowManualSynchronization)
+				{
+					<MudDivider />
 
-				<MudMenuItem OnClick="@(() => ViewModel.PushNoteToOnlineStorageCommand.Execute(null))"
+					<MudMenuItem OnClick="@(() => ViewModel.PushNoteToOnlineStorageCommand.Execute(null))"
 					Icon="@IconService.GetSvgLink(IconNames.CloudUpload)"
 					Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_push_to_server"]</MudMenuItem>
 
-				<MudMenuItem OnClick="@(() => ViewModel.PullNoteFromOnlineStorageCommand.Execute(null))"
+					<MudMenuItem OnClick="@(() => ViewModel.PullNoteFromOnlineStorageCommand.Execute(null))"
 					Icon="@IconService.GetSvgLink(IconNames.CloudDownload)"
 					Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_pull_from_server"]</MudMenuItem>
-			}
-		</span></ChildContent>
+				}
+			</span></ChildContent>
 	</MudMenu>
 </MudAppBar>
 
@@ -205,16 +209,16 @@
 		<div id="tag-container" class="flex-none pa-2 mud-elevation-5">
 			<MudPaper Class="ml-1 pa-0" Style="float:right; width:45%; max-width:240px" Elevation="0">
 				<MudAutocomplete T="string" @ref="_tagAutocomplete" ValueChanged="NewTagChanged" SearchFunc="GetNewTagSuggestions"
-					Class="ma-0" Margin="Margin.Dense" Dense="true" Variant="Variant.Outlined"
-					ResetValueOnEmptyText="true" Disabled="@ViewModel.ShoppingModeActive"
-					Placeholder="@LanguageService["tag_add"]"
-					AnchorOrigin="Origin.TopCenter" TransformOrigin="Origin.BottomCenter" />
+				Class="ma-0" Margin="Margin.Dense" Dense="true" Variant="Variant.Outlined"
+				ResetValueOnEmptyText="true" Disabled="@ViewModel.ShoppingModeActive"
+				Placeholder="@LanguageService["tag_add"]"
+				AnchorOrigin="Origin.TopCenter" TransformOrigin="Origin.BottomCenter" />
 			</MudPaper>
 
 			@foreach (var tag in ViewModel.Tags)
 			{
 				<MudChip T="string" Text="@tag" OnClose="@((chip) => ViewModel.DeleteTagCommand.Execute(chip.Text))"
-					Variant="Variant.Filled" Size="Size.Medium" Color="Color.Primary" Label="true" />
+				Variant="Variant.Filled" Size="Size.Medium" Color="Color.Primary" Label="true" />
 			}
 		</div>
 	</div>
@@ -237,9 +241,9 @@
 	<MudCard>
 		<MudCardContent Class="pa-0">
 			<MudColorPicker @bind-Text="ViewModel.BackgroundColorHex"
-				Class="rounded-t" PickerVariant="PickerVariant.Static" ColorPickerView="ColorPickerView.Palette"
-				ShowToolbar="false" ShowAlpha="false"
-				Palette="@ViewModel.BackgroundColorsHex.Select(color => new MudColor(color))" />
+			Class="rounded-t" PickerVariant="PickerVariant.Static" ColorPickerView="ColorPickerView.Palette"
+			ShowToolbar="false" ShowAlpha="false"
+			Palette="@ViewModel.BackgroundColorsHex.Select(color => new MudColor(color))" />
 		</MudCardContent>
 		<MudCardActions Class="justify-end">
 			<MudButton OnClick="@(() => _colorPaletteOpen = false)" Color="Color.Primary" Variant="Variant.Text">@LanguageService["close"]</MudButton>
@@ -252,11 +256,11 @@
 	<MudCard Class="dialog">
 		<MudCardContent>
 			<MudTextField @bind-Value="_linkState.LinkTitle"
-				Label="Title" Immediate="true" Style="width:400px"></MudTextField>
+			Label="Title" Immediate="true" Style="width:400px"></MudTextField>
 			<MudTextField @bind-Value="_linkState.LinkUrl"
-				Label="Url" spellcheck="false"
-				AdornmentIcon="@IconService.GetSvgLink(IconNames.Delete)" AdornmentColor="Color.Secondary" OnAdornmentClick="@(() => _linkState.LinkUrl = null)" Adornment="Adornment.End"
-				Immediate="true" Style="width:400px"></MudTextField>
+			Label="Url" spellcheck="false"
+			AdornmentIcon="@IconService.GetSvgLink(IconNames.Delete)" AdornmentColor="Color.Secondary" OnAdornmentClick="@(() => _linkState.LinkUrl = null)" Adornment="Adornment.End"
+			Immediate="true" Style="width:400px"></MudTextField>
 		</MudCardContent>
 		<MudCardActions Class="justify-end gap-x-2">
 			<MudButton OnClick="@(() => _linkState.IsDialogOpen = false)" Variant="Variant.Text" Color="Color.Default">@LanguageService["cancel"]</MudButton>
@@ -280,6 +284,7 @@
 		IconNames.FormatListBulleted,
 		IconNames.CodeBraces,
 		IconNames.FormatQuoteClose,
+		IconNames.Image,
 		IconNames.LinkVariant,
 		IconNames.KeyboardOffOutline,
 		IconNames.Pin,
@@ -567,6 +572,13 @@
 				_linkState.OldLinkUrl, _linkState.LinkUrl, _linkState.OldLinkTitle, _linkState.LinkTitle);
 			_linkState.IsDialogOpen = false;
 		}
+	}
+
+	public async Task InsertImage()
+	{
+		// todo: Show image picker
+		string imagePath = @"applogo.svg";
+		await _jsModule.InvokeVoidAsync("insertImage", imagePath);
 	}
 
 	private void OnKeepScreenOnChanged()

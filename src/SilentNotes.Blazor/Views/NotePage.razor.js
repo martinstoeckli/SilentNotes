@@ -170,3 +170,7 @@ export function linkDialogOkPressed(oldLinkUrl, newLinkUrl, oldLinkTitle, newLin
     }
     commandChain.run();
 }
+
+export function insertImage(imagePath) {
+    _page.editor.chain().focus().setImage({ src: imagePath }).run();
+}
