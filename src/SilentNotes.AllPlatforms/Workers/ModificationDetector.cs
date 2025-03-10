@@ -78,8 +78,9 @@ namespace SilentNotes.Workers
         /// <summary>
         /// Calculates a hash code out of a string.
         /// </summary>
-        /// <remarks>The function guarantees that no integer overflow can happen. It uses SHA256
-        /// to calculate the hash, giving the string a better collision resistance of 4 long hashes.</remarks>
+        /// <remarks>The function guarantees that no integer overflow can happen. It gives the hash
+        /// a better collision resistance with the whole range of a long (instead of int).
+        /// Don't use it for cryptographic uses.</remarks>
         /// <param name="text">The text to hash.</param>
         /// <param name="withOldHashCode">Optional base hash code. If specified, the new hash is
         /// combined with the old hash value, making chaining possible.</param>
@@ -100,7 +101,35 @@ namespace SilentNotes.Workers
             for (int index = 0; index < 4; index++)
             {
                 Span<byte> bytes = textHashBytes.Slice(index * 8, 8);
-                hashCodes[index] =  BinaryPrimitives.ReadInt64BigEndian(bytes);
+                hashCodes[index] = BinaryPrimitives.ReadInt64BigEndian(bytes);
+            }
+            return CombineHashCodes(hashCodes, withOldHashCode);
+        }
+
+        /// <summary>
+        /// Calculates a hash code out of a Guid.
+        /// </summary>
+        /// <remarks>The function guarantees that no integer overflow can happen. It gives the hash
+        /// a better collision resistance with the whole range of a long (instead of int).
+        /// Don't use it for cryptographic uses.</remarks>
+        /// <param name="id">The Guid to hash.</param>
+        /// <param name="withOldHashCode">Optional base hash code. If specified, the new hash is
+        /// combined with the old hash value, making chaining possible.</param>
+        /// <returns>Hash code calculated from the Guid.</returns>
+        public static long CombineWithGuidHash(Guid id, long withOldHashCode = 0)
+        {
+            Span<byte> guidHashBytes;
+            using (var hash = SHA256.Create())
+            {
+                guidHashBytes = hash.ComputeHash(id.ToByteArray());
+            }
+
+            // Convert 32 byte hash into 4 long values.
+            long[] hashCodes = new long[4];
+            for (int index = 0; index < 4; index++)
+            {
+                Span<byte> bytes = guidHashBytes.Slice(index * 8, 8);
+                hashCodes[index] = BinaryPrimitives.ReadInt64BigEndian(bytes);
             }
             return CombineHashCodes(hashCodes, withOldHashCode);
         }

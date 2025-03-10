@@ -78,6 +78,14 @@ namespace SilentNotesTest.Workers
         }
 
         [TestMethod]
+        public void CombineWithGuidHash_ProducesDifferentHashes()
+        {
+            long hashCode1 = ModificationDetector.CombineWithGuidHash(new Guid("11111111-1111-1111-1111-111111111111"));
+            long hashCode2 = ModificationDetector.CombineWithGuidHash(new Guid("22222222-2222-2222-2222-222222222222"));
+            Assert.AreNotEqual(hashCode1, hashCode2);
+        }
+
+        [TestMethod]
 
         public void CombineWithStringHash_WorksWithNull()
         {
