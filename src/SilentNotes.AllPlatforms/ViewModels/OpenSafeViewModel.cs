@@ -164,6 +164,7 @@ namespace SilentNotes.ViewModels
                 List<NoteModel> protectedNotes = Model.Notes.Where(item => item.SafeId != null).ToList();
                 foreach (NoteModel protectedNote in protectedNotes)
                 {
+                    Model.DeletedAttachements.AddRange(protectedNote.Attachements);
                     Model.DeletedNotes.Add(protectedNote.Id);
                     Model.Notes.Remove(protectedNote);
                 }

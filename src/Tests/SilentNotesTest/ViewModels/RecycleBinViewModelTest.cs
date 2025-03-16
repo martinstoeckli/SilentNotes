@@ -59,6 +59,27 @@ namespace SilentNotesTest.ViewModels
         }
 
         [TestMethod]
+        public void EmptyRecycleBin_AddsAllToDeletedAttachementsList()
+        {
+            NoteRepositoryModel model = CreateTestRepository();
+            model.Notes[0].InRecyclingBin = true;
+            model.Notes[1].InRecyclingBin = true;
+            model.Notes[2].InRecyclingBin = false;
+            model.Notes[0].Attachements.Add(new Guid("40000000-0000-0000-0000-000000000004"));
+            model.Notes[1].Attachements.Add(new Guid("50000000-0000-0000-0000-000000000005"));
+            model.Notes[1].Attachements.Add(new Guid("60000000-0000-0000-0000-000000000006"));
+            model.Notes[2].Attachements.Add(new Guid("70000000-0000-0000-0000-000000000007"));
+            RecycleBinViewModel viewModel = CreateMockedRecycleBinViewModel(model);
+
+            viewModel.EmptyRecycleBinCommand.Execute(null);
+
+            Assert.IsTrue(model.DeletedAttachements.Contains(new Guid("40000000-0000-0000-0000-000000000004")));
+            Assert.IsTrue(model.DeletedAttachements.Contains(new Guid("50000000-0000-0000-0000-000000000005")));
+            Assert.IsTrue(model.DeletedAttachements.Contains(new Guid("60000000-0000-0000-0000-000000000006")));
+            Assert.IsFalse(model.DeletedAttachements.Contains(new Guid("70000000-0000-0000-0000-000000000007"))); // remains because it was not in recycle bin
+        }
+
+        [TestMethod]
         public void EmptyRecycleBin_MarksRepositoryAsModified()
         {
             NoteRepositoryModel model = CreateTestRepository();
@@ -85,6 +106,18 @@ namespace SilentNotesTest.ViewModels
             Assert.AreEqual(1, model.DeletedNotes.Count); // 1 note moved from recycle bin to deleted
             Assert.AreEqual(idToDelete, model.DeletedNotes[0]);
             Assert.AreEqual(2, model.Notes.Count);
+        }
+
+        [TestMethod]
+        public void DeleteNotePermanently_AddsToDeletedAttachementsList()
+        {
+            NoteRepositoryModel model = CreateTestRepository();
+            model.Notes[1].Attachements.Add(new Guid("44444444-4444-4444-4444-444444444444"));
+            RecycleBinViewModel viewModel = CreateMockedRecycleBinViewModel(model);
+
+            viewModel.DeleteNotePermanentlyCommand.Execute(model.Notes[1].Id);
+
+            Assert.IsTrue(model.DeletedAttachements.Contains(new Guid("44444444-4444-4444-4444-444444444444")));
         }
 
         [TestMethod]
