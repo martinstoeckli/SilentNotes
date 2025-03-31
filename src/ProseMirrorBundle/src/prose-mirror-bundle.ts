@@ -25,6 +25,7 @@ import { SearchNReplace } from './search-n-replace'
 import { CheckableParagraph, registerIsShoppingModeActive as checklistRegisterIsShoppingModeActive, moveChecklistUp, moveChecklistDown, sortPendingToTop, setCheckStateForAll, sortAlphabetical } from "./checkable-paragraph-extension";
 import { ScrollTo } from './scroll-to-extension'
 import { TabHandler } from './tab-handler-extension'
+import { ImageResizeHandler } from "./image-resize-handler-extension";
 
 /**
  * This method will be exported and can be called from the HTML document with the "prose_mirror_bundle"
@@ -59,9 +60,13 @@ export function initializeEditor(editorElement: HTMLElement): any {
           depth: 200,
         }),
         Image.configure({
-          inline: false,
-          allowBase64: false,
+          inline: true,
         }),
+        // Image.configure({
+        //   inline: false,
+        //   allowBase64: false,
+        // }),
+        ImageResizeHandler,
         Italic,
         CustomLink.configure({
           autolink: false,
