@@ -1,25 +1,32 @@
 import { Extension } from "@tiptap/core";
+import { Editor } from '@tiptap/core';
+import { Transaction } from 'prosemirror-state'
 
 /*
-Credits to:
-https://github.com/KID-1912/tiptap-extension-resizable
+Credits to: https://github.com/KID-1912/tiptap-extension-resizable
 */
 
-export const ImageResizeHandler = Extension.create({
+interface ResizeOptions {
+  types: string[]; // Defines to which elements the handler will be applied (default = ["image"])
+  layerStyle: {}; // Dictionary of all values to apply to the resizeable box
+  handlerStyle: {}; // Dictionary of all values to apply to the corner handles
+}
+
+const HandlerClass: string = "image-resize-handler";
+
+export const ImageResizeHandler = Extension.create<ResizeOptions>({
   name: "imageResizeHandler",
-  // priority: 1000,
-  addOptions() {
-    return {
-      types: ["image"],
-      handlerStyle: {
-        width: "8px",
-        height: "8px",
-        background: "#2a81ac",
-      },
-      layerStyle: {
-        border: "1px solid #2a81ac",
-      },
-    };
+
+  defaultOptions: {
+    types: ["image"],
+    layerStyle: {
+      border: "1px solid #2a81ac",
+    },
+    handlerStyle: {
+      width: "8px",
+      height: "8px",
+      background: "#2a81ac",
+    },
   },
 
   addStorage() {
@@ -51,126 +58,154 @@ export const ImageResizeHandler = Extension.create({
     const element = editor.options.element;
     element.style.position = "relative";
 
-    // 初始化 resizeLayer
+    // Initialize a hidden resize overlay
     const resizeLayer = document.createElement("div");
     resizeLayer.className = "resize-layer";
     resizeLayer.style.display = "none";
     resizeLayer.style.position = "absolute";
-    // 设置样式
     Object.entries(this.options.layerStyle).forEach(([key, value]) => {
       resizeLayer.style[key] = value;
     });
-    // 事件处理
-    resizeLayer.addEventListener("mousedown", (e) => {
-      e.preventDefault();
-      const resizeElement = this.storage.resizeElement;
-      const resizeNode = this.storage.resizeNode;
-      if (!resizeElement) return;
-      if (/bottom/.test(e.target.className)) {
-        let startX = e.screenX;
-        const dir = e.target.classList.contains("bottom-left") ? -1 : 1;
-        const mousemoveHandle = (e) => {
-          const width = resizeElement.clientWidth;
-          const distanceX = e.screenX - startX;
-          const total = width + dir * distanceX;
-          // resizeElement
-          resizeElement.style.width = total + "px";
-          resizeNode.attrs.width = total + "px";
-          // resizeLayer
-          const clientWidth = resizeElement.clientWidth;
-          const clientHeight = resizeElement.clientHeight;
-          const pos = getRelativePosition(resizeElement, element);
-          resizeLayer.style.top = pos.top + "px";
-          resizeLayer.style.left = pos.left + "px";
-          resizeLayer.style.width = clientWidth + "px";
-          resizeLayer.style.height = clientHeight + "px";
-          startX = e.screenX;
-        };
-        document.addEventListener("mousemove", mousemoveHandle);
-        document.addEventListener("mouseup", () => {
-          document.removeEventListener("mousemove", mousemoveHandle);
-        });
-      }
-    });
-    // 句柄
-    const handlers = ["top-left", "top-right", "bottom-left", "bottom-right"];
+
+    // Create the 4 corner handles
+    const handlerNames = ["top-left", "top-right", "bottom-left", "bottom-right"];
     const fragment = document.createDocumentFragment();
-    for (let name of handlers) {
-      const item = document.createElement("div");
-      item.className = `handler ${name}`;
-      item.style.position = "absolute";
+    for (let handlerName of handlerNames) {
+      const handle = document.createElement("div");
+      handle.className = HandlerClass + ' ' + handlerName;
+      handle.style.position = "absolute";
       Object.entries(this.options.handlerStyle).forEach(([key, value]) => {
-        item.style[key] = value;
+        handle.style[key] = value;
       });
-      const dir = name.split("-");
-      item.style[dir[0]] = parseInt(item.style.width) / -2 + "px";
-      item.style[dir[1]] = parseInt(item.style.height) / -2 + "px";
-      if (name === "bottom-left") item.style.cursor = "sw-resize";
-      if (name === "bottom-right") item.style.cursor = "se-resize";
-      fragment.appendChild(item);
+
+      const directions = handlerName.split("-");
+      const verticalDirection: string = directions[0]; // top or bottom
+      const horizontalDirection: string = directions[1]; // left or right
+      handle.style[verticalDirection] = -(parseInt(handle.style.height) / 2) + "px";
+      handle.style[horizontalDirection] = -(parseInt(handle.style.width) / 2) + "px";
+
+      if (handlerName === "bottom-left")
+        handle.style.cursor = "sw-resize";
+      if (handlerName === "bottom-right")
+        handle.style.cursor = "se-resize";
+      fragment.appendChild(handle);
     }
     resizeLayer.appendChild(fragment);
     editor.resizeLayer = resizeLayer;
     element.appendChild(resizeLayer);
+
+    // Add the mouse down listener
+    resizeLayer.addEventListener("mousedown", (event: MouseEvent) => {
+      event.preventDefault();
+      const resizeElement = this.storage.resizeElement;
+      const resizeNode = this.storage.resizeNode;
+      if (!resizeElement)
+        return;
+
+      const isBottomLeftHandle = event.target.classList.contains("bottom-left");
+      const isBottomRightHandle = event.target.classList.contains("bottom-right");
+      if (isBottomLeftHandle || isBottomRightHandle) {
+        let startX = event.screenX;
+        const dir = isBottomRightHandle ? 1 : -1;
+
+        // Add the mouse move listener on mouse down
+        const mouseMoveListener = (event: MouseEvent) => {
+          const width = resizeElement.clientWidth;
+          const distanceX = event.screenX - startX;
+          const newWidth = width + dir * distanceX;
+          // resizeElement
+          resizeElement.style.width = newWidth + "px";
+          resizeNode.attrs.width = newWidth + "px";
+          // resizeLayer
+          const pos: DOMRect = getRelativeRect(resizeElement, element);
+          resizeLayer.style.top = pos.top + "px";
+          resizeLayer.style.left = pos.left + "px";
+          resizeLayer.style.width = resizeElement.clientWidth + "px";
+          resizeLayer.style.height = resizeElement.clientHeight + "px";
+          startX = event.screenX;
+        };
+        document.addEventListener("mousemove", mouseMoveListener);
+
+        // Add the mouse up listener on mouse down
+        document.addEventListener("mouseup", () => {
+          // Remove the mouse move listener on mouse up
+          document.removeEventListener("mousemove", mouseMoveListener);
+        });
+      }
+    });
   },
 
-  onTransaction: throttle(function ({ editor }) {
-    const resizeLayer = editor.resizeLayer;
-    if (resizeLayer && resizeLayer.style.display === "block") {
-      const dom = this.storage.resizeElement;
-      const element = editor.options.element;
-      const pos = getRelativePosition(dom, element);
-      resizeLayer.style.top = pos.top + "px";
-      resizeLayer.style.left = pos.left + "px";
-      resizeLayer.style.width = dom.clientWidth + "px";
-      resizeLayer.style.height = dom.clientHeight + "px";
-    }
-  }, 240),
+  // onTransaction: throttle(function ({ editor }) {
+  //   const resizeLayer = editor.resizeLayer;
+  //   const isResizeLayerVisible = resizeLayer && resizeLayer.style.display === "block";
+  //   if (isResizeLayerVisible) {
+  //     const dom: Element = this.storage.resizeElement;
+  //     const element: Element = editor.options.element;
+  //     const pos = getRelativePosition(dom, element);
+  //     resizeLayer.style.top = pos.top + "px";
+  //     resizeLayer.style.left = pos.left + "px";
+  //     resizeLayer.style.width = dom.clientWidth + "px";
+  //     resizeLayer.style.height = dom.clientHeight + "px";
+  //   }
+  // }, 240),
 
   onSelectionUpdate: function ({ editor, transaction }) {
-    const element = editor.options.element;
     const node = transaction.curSelection.node;
     const resizeLayer = editor.resizeLayer;
-    //选中 resizable node 时
-    if (node && this.options.types.includes(node.type.name)) {
-      // resizeLayer位置大小
-      resizeLayer.style.display = "block";
+
+    const isTypeListedInOptions : boolean = node && this.options.types.includes(node.type.name);
+    if (isTypeListedInOptions) {
+      resizeLayer.style.display = "block"; // make visible
+      const element: Element = editor.options.element;
       let dom = editor.view.domAtPos(transaction.curSelection.from).node;
       dom = dom.querySelector(".ProseMirror-selectednode");
       this.storage.resizeElement = dom;
       this.storage.resizeNode = node;
-      const pos = getRelativePosition(dom, element);
+      const pos: DOMRect = getRelativeRect(dom, element);
       resizeLayer.style.top = pos.top + "px";
       resizeLayer.style.left = pos.left + "px";
-      resizeLayer.style.width = dom.clientWidth + "px";
-      resizeLayer.style.height = dom.clientHeight + "px";
-    } else {
-      resizeLayer.style.display = "none";
+      resizeLayer.style.width = pos.width + "px";
+      resizeLayer.style.height = pos.height + "px";
+    }
+    else {
+      resizeLayer.style.display = "none"; // make invisible
     }
   },
 });
 
-// 计算相对位置
-function getRelativePosition(element, ancestor) {
-  const elementRect = element.getBoundingClientRect();
-  const ancestorRect = ancestor.getBoundingClientRect();
-  const relativePosition = {
-    top: parseInt(elementRect.top - ancestorRect.top + ancestor.scrollTop),
-    left: parseInt(elementRect.left - ancestorRect.left + ancestor.scrollLeft),
-  };
-  return relativePosition;
+// Calculates the position of element relative to the ancestor, taking into account the scrolling
+// function getRelativePosition(element: Element, ancestor: Element) {
+//   const elementRect: DOMRect = element.getBoundingClientRect();
+//   const ancestorRect: DOMRect = ancestor.getBoundingClientRect();
+//   const relativePosition = {
+//     top: elementRect.top - ancestorRect.top + ancestor.scrollTop,
+//     left: elementRect.left - ancestorRect.left + ancestor.scrollLeft,
+//   };
+//   return relativePosition;
+// }
+
+function getRelativeRect(element: Element, ancestor: Element): DOMRect {
+  const elementRect: DOMRect = element.getBoundingClientRect();
+  const ancestorRect: DOMRect = ancestor.getBoundingClientRect();
+  const result = new DOMRect(
+    elementRect.x - ancestorRect.x + ancestor.scrollTop,
+    elementRect.y - ancestorRect.y + ancestor.scrollLeft,
+    element.clientWidth,
+    element.clientHeight
+  );
+  return result;
 }
 
-function throttle(fn: Function, delay: number) {
-  let isThr = false;
+function throttle(func: Function, delay: number) {
+  let isWaiting = false;
 
   return function (...args) {
-      if (!isThr) {
-          fn.apply(this, args);
-          isThr = true;
+      if (!isWaiting) {
+          func.apply(this, args);
+          isWaiting = true;
 
           setTimeout(() => {
-              isThr = false;
+              isWaiting = false;
           }, delay);
       }
   };

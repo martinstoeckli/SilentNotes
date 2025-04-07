@@ -7,7 +7,8 @@
     "url": "https://github.com/martinstoeckli/SilentNotes"
   },
   "scripts": {
-    "build": "esbuild src/prose-mirror-bundle.ts --bundle --minify --tsconfig-raw=true --format=esm --keep-names --tree-shaking=true --target=es2020,chrome67,edge18,firefox60,node12,safari11 --outfile=../SilentNotes.Blazor/wwwroot/prose-mirror-bundle.js"
+    "build": "esbuild src/prose-mirror-bundle.ts --bundle --minify --tsconfig-raw=true --format=esm --keep-names --tree-shaking=true --target=es2020,chrome67,edge18,firefox60,node12,safari11 --outfile=../SilentNotes.Blazor/wwwroot/prose-mirror-bundle.js",
+    "debug": "esbuild src/prose-mirror-bundle.ts --bundle --tsconfig-raw=true --format=esm --keep-names --tree-shaking=true --target=es2020,chrome67,edge18,firefox60,node12,safari11 --outfile=../SilentNotes.Blazor/wwwroot/prose-mirror-bundle.js"
   },
   "keywords": [],
   "author": "Martin Stoeckli",
