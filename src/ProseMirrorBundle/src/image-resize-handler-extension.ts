@@ -27,6 +27,7 @@ export const ImageResizeHandler = Extension.create<ResizeOptions>({
       height: "8px",
       background: "#2a81ac",
     },
+    minImageSize: 30,
   },
 
   addStorage() {
@@ -55,43 +56,12 @@ export const ImageResizeHandler = Extension.create<ResizeOptions>({
   },
 
   onCreate({ editor }) {
+    // Initialize a hidden resize overlay
+    const resizeLayer = createResizeLayer(this.options.layerStyle, this.options.handlerStyle);
+    editor.resizeLayer = resizeLayer;
+
     const element = editor.options.element;
     element.style.position = "relative";
-
-    // Initialize a hidden resize overlay
-    const resizeLayer = document.createElement("div");
-    resizeLayer.className = "resize-layer";
-    resizeLayer.style.display = "none";
-    resizeLayer.style.position = "absolute";
-    Object.entries(this.options.layerStyle).forEach(([key, value]) => {
-      resizeLayer.style[key] = value;
-    });
-
-    // Create the 4 corner handles
-    const handlerNames = ["top-left", "top-right", "bottom-left", "bottom-right"];
-    const fragment = document.createDocumentFragment();
-    for (let handlerName of handlerNames) {
-      const handle = document.createElement("div");
-      handle.className = HandlerClass + ' ' + handlerName;
-      handle.style.position = "absolute";
-      Object.entries(this.options.handlerStyle).forEach(([key, value]) => {
-        handle.style[key] = value;
-      });
-
-      const directions = handlerName.split("-");
-      const verticalDirection: string = directions[0]; // top or bottom
-      const horizontalDirection: string = directions[1]; // left or right
-      handle.style[verticalDirection] = -(parseInt(handle.style.height) / 2) + "px";
-      handle.style[horizontalDirection] = -(parseInt(handle.style.width) / 2) + "px";
-
-      if (handlerName === "bottom-left")
-        handle.style.cursor = "sw-resize";
-      if (handlerName === "bottom-right")
-        handle.style.cursor = "se-resize";
-      fragment.appendChild(handle);
-    }
-    resizeLayer.appendChild(fragment);
-    editor.resizeLayer = resizeLayer;
     element.appendChild(resizeLayer);
 
     // Add the mouse down listener
@@ -109,7 +79,7 @@ export const ImageResizeHandler = Extension.create<ResizeOptions>({
         const dir = isBottomRightHandle ? 1 : -1;
 
         // Add the mouse move listener on mouse down
-        const mouseMoveListener = (event: MouseEvent) => {
+        const mouseMoveListener = throttle((event: MouseEvent) => {
           const width = resizeElement.clientWidth;
           const distanceX = event.screenX - startX;
           const newWidth = width + dir * distanceX;
@@ -117,37 +87,25 @@ export const ImageResizeHandler = Extension.create<ResizeOptions>({
           resizeElement.style.width = newWidth + "px";
           resizeNode.attrs.width = newWidth + "px";
           // resizeLayer
-          const pos: DOMRect = getRelativeRect(resizeElement, element);
+          let pos: DOMRect = getRelativeRect(resizeElement, element);
+          pos = ensureMinImageSize(pos, this.options.minImageSize);
           resizeLayer.style.top = pos.top + "px";
           resizeLayer.style.left = pos.left + "px";
-          resizeLayer.style.width = resizeElement.clientWidth + "px";
-          resizeLayer.style.height = resizeElement.clientHeight + "px";
+          resizeLayer.style.width = pos.width + "px";
+          resizeLayer.style.height = pos.height + "px";
           startX = event.screenX;
-        };
+        });
         document.addEventListener("mousemove", mouseMoveListener);
 
         // Add the mouse up listener on mouse down
         document.addEventListener("mouseup", () => {
           // Remove the mouse move listener on mouse up
           document.removeEventListener("mousemove", mouseMoveListener);
+          document.removeEventListener("mouseup", mouseMoveListener);
         });
       }
     });
   },
-
-  // onTransaction: throttle(function ({ editor }) {
-  //   const resizeLayer = editor.resizeLayer;
-  //   const isResizeLayerVisible = resizeLayer && resizeLayer.style.display === "block";
-  //   if (isResizeLayerVisible) {
-  //     const dom: Element = this.storage.resizeElement;
-  //     const element: Element = editor.options.element;
-  //     const pos = getRelativePosition(dom, element);
-  //     resizeLayer.style.top = pos.top + "px";
-  //     resizeLayer.style.left = pos.left + "px";
-  //     resizeLayer.style.width = dom.clientWidth + "px";
-  //     resizeLayer.style.height = dom.clientHeight + "px";
-  //   }
-  // }, 240),
 
   onSelectionUpdate: function ({ editor, transaction }) {
     const node = transaction.curSelection.node;
@@ -171,18 +129,28 @@ export const ImageResizeHandler = Extension.create<ResizeOptions>({
       resizeLayer.style.display = "none"; // make invisible
     }
   },
+
+  // onTransaction: throttle(function ({ editor }) {
+  //   const resizeLayer = editor.resizeLayer;
+  //   const isResizeLayerVisible = resizeLayer && resizeLayer.style.display === "block";
+  //   if (isResizeLayerVisible) {
+  //     const resizeElement: Element = this.storage.resizeElement;
+  //     const element: Element = editor.options.element;
+  //     const pos: DOMRect = getRelativeRect(resizeElement, element);
+  //     resizeLayer.style.top = pos.top + "px";
+  //     resizeLayer.style.left = pos.left + "px";
+  //     resizeLayer.style.width = pos.width + "px";
+  //     resizeLayer.style.height = pos.height + "px";
+  //   }
+  // }, 240),
 });
 
-// Calculates the position of element relative to the ancestor, taking into account the scrolling
-// function getRelativePosition(element: Element, ancestor: Element) {
-//   const elementRect: DOMRect = element.getBoundingClientRect();
-//   const ancestorRect: DOMRect = ancestor.getBoundingClientRect();
-//   const relativePosition = {
-//     top: elementRect.top - ancestorRect.top + ancestor.scrollTop,
-//     left: elementRect.left - ancestorRect.left + ancestor.scrollLeft,
-//   };
-//   return relativePosition;
-// }
+// Applies a dictionary of style options (e.g. from a config) to a target html element.
+function applyStyleOptions(styleDictionary: any, targetElement: HTMLElement) {
+  Object.entries(styleDictionary).forEach(([key, value]) => {
+    targetElement.style[key] = value;
+  });
+}
 
 function getRelativeRect(element: Element, ancestor: Element): DOMRect {
   const elementRect: DOMRect = element.getBoundingClientRect();
@@ -196,17 +164,67 @@ function getRelativeRect(element: Element, ancestor: Element): DOMRect {
   return result;
 }
 
-function throttle(func: Function, delay: number) {
-  let isWaiting = false;
+// Enlarges a rect to a minimum size, keeping the aspect ratio of the rect.
+function ensureMinImageSize(rect: DOMRect, minSize: number): DOMRect {
+  if ((rect.width >= minSize) && (rect.height >= minSize))
+  {
+    return rect;
+  }
+  else
+  {
+    const stretchFactor = (rect.height < rect.width)
+      ? minSize / rect.height
+      : minSize / rect.width;
+    return new DOMRect(rect.x, rect.y, rect.width * stretchFactor, rect.height * stretchFactor);
+  }
+}
 
-  return function (...args) {
-      if (!isWaiting) {
-          func.apply(this, args);
-          isWaiting = true;
+// Throttles the given function, so the function is not called more than once per the given delay.
+// This can be used inside an event to avoid too many calls of the event handler function. The
+// throttling can be used for multiple functions, without interference.
+function throttle(func: Function, delayMs: number = 40) {
+  let lastExecutions = new WeakMap<Function, number>();
 
-          setTimeout(() => {
-              isWaiting = false;
-          }, delay);
-      }
+  return function (...args: any[]) {
+    const now = Date.now();
+    const lastExecution = lastExecutions.get(func) || 0;
+
+    if (now - lastExecution >= delayMs) {
+      lastExecutions.set(func, now);
+      func.apply(this, args);
+    }
   };
+}
+
+// Builds an overlay div with handles in each corner to resize an image.
+function createResizeLayer(layerStyleDictionary: any, handlerStyleDictionary: any) : HTMLElement {
+  const result = document.createElement("div");
+  result.className = "resize-layer";
+  result.style.display = "none";
+  result.style.position = "absolute";
+  applyStyleOptions(layerStyleDictionary, result);
+
+  // Create the 4 corner handles
+  const fragment = document.createDocumentFragment();
+  const handlerNames = ["top-left", "top-right", "bottom-left", "bottom-right"];
+  for (let handlerName of handlerNames) {
+    const handle = document.createElement("div");
+    handle.className = HandlerClass + ' ' + handlerName;
+    handle.style.position = "absolute";
+    applyStyleOptions(handlerStyleDictionary, handle);
+
+    const directions = handlerName.split("-");
+    const verticalDirection: string = directions[0]; // top or bottom
+    const horizontalDirection: string = directions[1]; // left or right
+    handle.style[verticalDirection] = -(parseInt(handle.style.height) / 2) + "px";
+    handle.style[horizontalDirection] = -(parseInt(handle.style.width) / 2) + "px";
+
+    if (handlerName === "bottom-left")
+      handle.style.cursor = "sw-resize";
+    if (handlerName === "bottom-right")
+      handle.style.cursor = "se-resize";
+    fragment.appendChild(handle);
+  }
+  result.appendChild(fragment);
+  return result;
 }
