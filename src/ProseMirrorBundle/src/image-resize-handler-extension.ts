@@ -1,15 +1,16 @@
 import { Extension } from "@tiptap/core";
 import { Editor } from '@tiptap/core';
-import { Transaction } from 'prosemirror-state'
+// import { Transaction } from 'prosemirror-state'
 
 /*
-Credits to: https://github.com/KID-1912/tiptap-extension-resizable
+Inspired by: https://github.com/KID-1912/tiptap-extension-resizable
 */
 
 interface ResizeOptions {
   types: string[]; // Defines to which elements the handler will be applied (default = ["image"])
   layerStyle: {}; // Dictionary of all values to apply to the resizeable box
   handlerStyle: {}; // Dictionary of all values to apply to the corner handles
+  minImageSize: number; // Minimum width or height for resizing (default = )
 }
 
 const HandlerClass: string = "image-resize-handler";
@@ -30,13 +31,6 @@ export const ImageResizeHandler = Extension.create<ResizeOptions>({
     minImageSize: 30,
   },
 
-  addStorage() {
-    return {
-      resizeElement: null,
-      resizeNode: null,
-    };
-  },
-
   addGlobalAttributes() {
     return [
       {
@@ -55,78 +49,77 @@ export const ImageResizeHandler = Extension.create<ResizeOptions>({
     ];
   },
 
+  // Event called when the extension is created.
   onCreate({ editor }) {
-    // Initialize a hidden resize overlay
-    const resizeLayer = createResizeLayer(this.options.layerStyle, this.options.handlerStyle);
-    editor.resizeLayer = resizeLayer;
-
+    editor.resizeHandlerStorage = {
+      resizeLayer: null,
+      resizeElement: null,
+      resizeNode: null,
+    }
     const element = editor.options.element;
     element.style.position = "relative";
-    element.appendChild(resizeLayer);
-
-    // Add the mouse down listener
-    resizeLayer.addEventListener("mousedown", (event: MouseEvent) => {
-      event.preventDefault();
-      const resizeElement = this.storage.resizeElement;
-      const resizeNode = this.storage.resizeNode;
-      if (!resizeElement)
-        return;
-
-      const isBottomLeftHandle = event.target.classList.contains("bottom-left");
-      const isBottomRightHandle = event.target.classList.contains("bottom-right");
-      if (isBottomLeftHandle || isBottomRightHandle) {
-        let startX = event.screenX;
-        const dir = isBottomRightHandle ? 1 : -1;
-
-        // Add the mouse move listener on mouse down
-        const mouseMoveListener = throttle((event: MouseEvent) => {
-          const width = resizeElement.clientWidth;
-          const distanceX = event.screenX - startX;
-          const newWidth = width + dir * distanceX;
-          // resizeElement
-          resizeElement.style.width = newWidth + "px";
-          resizeNode.attrs.width = newWidth + "px";
-          // resizeLayer
-          let pos: DOMRect = getRelativeRect(resizeElement, element);
-          pos = ensureMinImageSize(pos, this.options.minImageSize);
-          resizeLayer.style.top = pos.top + "px";
-          resizeLayer.style.left = pos.left + "px";
-          resizeLayer.style.width = pos.width + "px";
-          resizeLayer.style.height = pos.height + "px";
-          startX = event.screenX;
-        });
-        document.addEventListener("mousemove", mouseMoveListener);
-
-        // Add the mouse up listener on mouse down
-        document.addEventListener("mouseup", () => {
-          // Remove the mouse move listener on mouse up
-          document.removeEventListener("mousemove", mouseMoveListener);
-          document.removeEventListener("mouseup", mouseMoveListener);
-        });
-      }
-    });
   },
 
+  // Event called when the selection of the editor changed.
   onSelectionUpdate: function ({ editor, transaction }) {
     const node = transaction.curSelection.node;
-    const resizeLayer = editor.resizeLayer;
 
     const isTypeListedInOptions : boolean = node && this.options.types.includes(node.type.name);
-    if (isTypeListedInOptions) {
-      resizeLayer.style.display = "block"; // make visible
-      const element: Element = editor.options.element;
-      let dom = editor.view.domAtPos(transaction.curSelection.from).node;
-      dom = dom.querySelector(".ProseMirror-selectednode");
-      this.storage.resizeElement = dom;
-      this.storage.resizeNode = node;
-      const pos: DOMRect = getRelativeRect(dom, element);
-      resizeLayer.style.top = pos.top + "px";
-      resizeLayer.style.left = pos.left + "px";
-      resizeLayer.style.width = pos.width + "px";
-      resizeLayer.style.height = pos.height + "px";
+    if (!isTypeListedInOptions) {
+      // Unselected the image
+      hideResizeLayer(editor);
     }
     else {
-      resizeLayer.style.display = "none"; // make invisible
+      // Selected an image
+      hideResizeLayer(editor); // Remove layer from possible previous elements
+      const resizeLayer = createResizeLayer(this.options.layerStyle, this.options.handlerStyle);
+
+      // Add the mouse down listener
+      resizeLayer.addEventListener("mousedown", (event: MouseEvent) => {
+        event.preventDefault();
+
+        const resizeElement = editor.resizeHandlerStorage.resizeElement;
+        const resizeNode = editor.resizeHandlerStorage.resizeNode;
+        if (!resizeElement)
+          return;
+
+        const isBottomLeftHandle = event.target.classList.contains("bottom-left");
+        const isBottomRightHandle = event.target.classList.contains("bottom-right");
+        if (isBottomLeftHandle || isBottomRightHandle) {
+          let startX = event.screenX;
+          const dir = isBottomRightHandle ? 1 : -1;
+
+          // Add the mouse move listener on mouse down
+          const mouseMoveListener = throttle((event: MouseEvent) => {
+            const width = resizeElement.clientWidth;
+            const distanceX = event.screenX - startX;
+            const newWidth = width + dir * distanceX;
+            // resizeElement
+            resizeElement.style.width = newWidth + "px";
+            resizeNode.attrs.width = newWidth + "px";
+            // resizeLayer
+            let pos: DOMRect = getRelativeRect(resizeElement, editor.options.element);
+            pos = ensureMinImageSize(pos, this.options.minImageSize);
+            applyStylePosition(pos, editor.resizeHandlerStorage.resizeLayer);
+            startX = event.screenX;
+          });
+          document.addEventListener("mousemove", mouseMoveListener);
+
+          // Add the mouse up listener on mouse down
+          document.addEventListener("mouseup", () => {
+            // Remove the mouse move listener on mouse up
+            document.removeEventListener("mousemove", mouseMoveListener);
+            document.removeEventListener("mouseup", mouseMoveListener);
+          });
+        }
+      });
+
+      let dom = editor.view.domAtPos(transaction.curSelection.from).node;
+      dom = dom.querySelector(".ProseMirror-selectednode");
+      const pos: DOMRect = getRelativeRect(dom, editor.options.element);
+      applyStylePosition(pos, resizeLayer);
+
+      showResizeLayer(editor, resizeLayer, dom, node);
     }
   },
 
@@ -144,6 +137,40 @@ export const ImageResizeHandler = Extension.create<ResizeOptions>({
   //   }
   // }, 240),
 });
+
+// Adds the resize layer to the DOM
+function showResizeLayer(editor, resizeLayer: HTMLElement, resizeElement, resizeNode)
+{
+  const storage = editor.resizeHandlerStorage;
+  storage.resizeLayer = resizeLayer;
+  storage.resizeElement = resizeElement;
+  storage.resizeNode = resizeNode;
+  editor.options.element.appendChild(resizeLayer);
+}
+
+// Removes the resize layer from the DOM
+function hideResizeLayer(editor)
+{
+  const storage = editor.resizeHandlerStorage;
+  if (storage.resizeLayer)
+  {
+    editor.options.element.removeChild(storage.resizeLayer);
+    storage.resizeLayer = null;
+  }
+  storage.resizeElement = null;
+  storage.resizeNode = null;
+}
+
+// Applies the position given by the rect to a target html element.
+function applyStylePosition(rect: DOMRect, targetElement: HTMLElement) {
+  const posStyles = {
+    top: rect.top + "px",
+    left: rect.left + "px",
+    width: rect.width + "px",
+    height: rect.height + "px"
+  }
+  applyStyleOptions(posStyles, targetElement);
+}
 
 // Applies a dictionary of style options (e.g. from a config) to a target html element.
 function applyStyleOptions(styleDictionary: any, targetElement: HTMLElement) {
@@ -200,7 +227,8 @@ function throttle(func: Function, delayMs: number = 40) {
 function createResizeLayer(layerStyleDictionary: any, handlerStyleDictionary: any) : HTMLElement {
   const result = document.createElement("div");
   result.className = "resize-layer";
-  result.style.display = "none";
+  result.style.display = "block";
+  // result.style.display = "none";
   result.style.position = "absolute";
   applyStyleOptions(layerStyleDictionary, result);
 
