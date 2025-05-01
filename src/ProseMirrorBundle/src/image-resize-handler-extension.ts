@@ -1,5 +1,5 @@
 import { Extension } from "@tiptap/core";
-import { Editor } from '@tiptap/core';
+// import { Editor } from '@tiptap/core';
 // import { Transaction } from 'prosemirror-state'
 
 /*
@@ -40,8 +40,10 @@ export const ImageResizeHandler = Extension.create<ResizeOptions>({
             default: null,
             parseHTML: (element) => element.style.width,
             renderHTML: (attributes) => {
-              if (!attributes.width) return {};
-              return { style: `width: ${attributes.width}` };
+              if (!attributes.width)
+                return {};
+              else
+                return { style: `width: ${attributes.width}` };
             },
           },
         },
@@ -51,10 +53,10 @@ export const ImageResizeHandler = Extension.create<ResizeOptions>({
 
   // Event called when the extension is created.
   onCreate({ editor }) {
-    editor.resizeHandlerStorage = {
-      resizeLayer: null,
-      resizeElement: null,
-      resizeNode: null,
+    editor.imgResizeStorage = {
+      resizeLayer: HTMLDivElement = null,
+      imgElement: HTMLImageElement = null,
+      imgNode: Node = null,
     }
     const element = editor.options.element;
     element.style.position = "relative";
@@ -62,9 +64,9 @@ export const ImageResizeHandler = Extension.create<ResizeOptions>({
 
   // Event called when the selection of the editor changed.
   onSelectionUpdate: function ({ editor, transaction }) {
-    const node = transaction.curSelection.node;
+    const imgNode: Node = transaction.curSelection.node;
 
-    const isTypeListedInOptions : boolean = node && this.options.types.includes(node.type.name);
+    const isTypeListedInOptions : boolean = imgNode && this.options.types.includes(imgNode.type.name);
     if (!isTypeListedInOptions) {
       // Unselected the image
       hideResizeLayer(editor);
@@ -78,9 +80,7 @@ export const ImageResizeHandler = Extension.create<ResizeOptions>({
       resizeLayer.addEventListener("mousedown", (event: MouseEvent) => {
         event.preventDefault();
 
-        const resizeElement = editor.resizeHandlerStorage.resizeElement;
-        const resizeNode = editor.resizeHandlerStorage.resizeNode;
-        if (!resizeElement)
+        if (!editor.imgResizeStorage.imgElement)
           return;
 
         const isBottomLeftHandle = event.target.classList.contains("bottom-left");
@@ -91,16 +91,17 @@ export const ImageResizeHandler = Extension.create<ResizeOptions>({
 
           // Add the mouse move listener on mouse down
           const mouseMoveListener = throttle((event: MouseEvent) => {
-            const width = resizeElement.clientWidth;
+            const width = editor.imgResizeStorage.imgElement.clientWidth;
             const distanceX = event.screenX - startX;
             const newWidth = width + dir * distanceX;
-            // resizeElement
-            resizeElement.style.width = newWidth + "px";
-            resizeNode.attrs.width = newWidth + "px";
-            // resizeLayer
-            let pos: DOMRect = getRelativeRect(resizeElement, editor.options.element);
-            pos = ensureMinImageSize(pos, this.options.minImageSize);
-            applyStylePosition(pos, editor.resizeHandlerStorage.resizeLayer);
+            // Resize image
+            const imgBox: DOMRect = editor.imgResizeStorage.imgElement.getBoundingClientRect();
+            const newImgBox = resizeImgRect(imgBox, newWidth, this.options.minImageSize);
+            editor.imgResizeStorage.imgElement.style.width = newImgBox.width + "px";
+            editor.imgResizeStorage.imgNode.attrs.width = newImgBox.width + "px";
+            // Resize layer
+            let pos: DOMRect = getRelativeRect(editor.imgResizeStorage.imgElement, editor.options.element);
+            applyStylePosition(pos, editor.imgResizeStorage.resizeLayer);
             startX = event.screenX;
           });
           document.addEventListener("mousemove", mouseMoveListener);
@@ -114,12 +115,16 @@ export const ImageResizeHandler = Extension.create<ResizeOptions>({
         }
       });
 
-      let dom = editor.view.domAtPos(transaction.curSelection.from).node;
-      dom = dom.querySelector(".ProseMirror-selectednode");
-      const pos: DOMRect = getRelativeRect(dom, editor.options.element);
-      applyStylePosition(pos, resizeLayer);
+      const dom = editor.view.domAtPos(transaction.curSelection.from).node;
+      const imgElement: HTMLImageElement = dom.querySelector(".ProseMirror-selectednode");
 
-      showResizeLayer(editor, resizeLayer, dom, node);
+      // After an Undo, the image height will be 0, wait on the mousedown to select the image in this case
+      if (imgElement && imgElement.clientWidth > 0 && imgElement.clientHeight > 0)
+      {
+        const pos: DOMRect = getRelativeRect(imgElement, editor.options.element);
+        applyStylePosition(pos, resizeLayer);
+        showResizeLayer(editor, resizeLayer, imgElement, imgNode);
+      }
     }
   },
 
@@ -139,26 +144,26 @@ export const ImageResizeHandler = Extension.create<ResizeOptions>({
 });
 
 // Adds the resize layer to the DOM
-function showResizeLayer(editor, resizeLayer: HTMLElement, resizeElement, resizeNode)
+function showResizeLayer(editor, resizeLayer: HTMLDivElement, imgElement: HTMLImageElement, imgNode: Node)
 {
-  const storage = editor.resizeHandlerStorage;
+  const storage = editor.imgResizeStorage;
   storage.resizeLayer = resizeLayer;
-  storage.resizeElement = resizeElement;
-  storage.resizeNode = resizeNode;
+  storage.imgElement = imgElement;
+  storage.imgNode = imgNode;
   editor.options.element.appendChild(resizeLayer);
 }
 
 // Removes the resize layer from the DOM
 function hideResizeLayer(editor)
 {
-  const storage = editor.resizeHandlerStorage;
+  const storage = editor.imgResizeStorage;
   if (storage.resizeLayer)
   {
     editor.options.element.removeChild(storage.resizeLayer);
     storage.resizeLayer = null;
   }
-  storage.resizeElement = null;
-  storage.resizeNode = null;
+  storage.imgElement = null;
+  storage.imgNode = null;
 }
 
 // Applies the position given by the rect to a target html element.
@@ -191,19 +196,26 @@ function getRelativeRect(element: Element, ancestor: Element): DOMRect {
   return result;
 }
 
-// Enlarges a rect to a minimum size, keeping the aspect ratio of the rect.
-function ensureMinImageSize(rect: DOMRect, minSize: number): DOMRect {
-  if ((rect.width >= minSize) && (rect.height >= minSize))
+// Resizes the size box of an image, keeping the aspect ration and respecting a minimum size
+function resizeImgRect(imgRect: DOMRect, newWidth: number, minSize: number): DOMRect {
+  const isLandscape: boolean = imgRect.width >= imgRect.height;
+  let newHeight: number = 0;
+  if (isLandscape)
   {
-    return rect;
+    newHeight = imgRect.height / imgRect.width * newWidth;
+    if (newHeight < minSize)
+    {
+      newHeight = minSize;
+      newWidth = imgRect.width / imgRect.height * newHeight;
+    }
   }
   else
   {
-    const stretchFactor = (rect.height < rect.width)
-      ? minSize / rect.height
-      : minSize / rect.width;
-    return new DOMRect(rect.x, rect.y, rect.width * stretchFactor, rect.height * stretchFactor);
+    if (newWidth < minSize)
+      newWidth = minSize;
+    newHeight = imgRect.height / imgRect.width * newWidth;
   }
+  return new DOMRect(imgRect.x, imgRect.y, newWidth, newHeight);
 }
 
 // Throttles the given function, so the function is not called more than once per the given delay.
@@ -224,7 +236,7 @@ function throttle(func: Function, delayMs: number = 40) {
 }
 
 // Builds an overlay div with handles in each corner to resize an image.
-function createResizeLayer(layerStyleDictionary: any, handlerStyleDictionary: any) : HTMLElement {
+function createResizeLayer(layerStyleDictionary: any, handlerStyleDictionary: any) : HTMLDivElement {
   const result = document.createElement("div");
   result.className = "resize-layer";
   result.style.display = "block";
