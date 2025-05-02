@@ -53,9 +53,9 @@ export const ImageResizeHandler = Extension.create<ResizeOptions>({
   // Event called when the extension is created.
   onCreate({ editor }) {
     editor.imgResizeStorage = {
-      resizeLayer: HTMLDivElement = null,
-      imgElement: HTMLImageElement = null,
-      imgNode: Node = null,
+      resizeLayer: null,
+      imgElement: null,
+      imgNode: null,
     }
     const element = editor.options.element;
     element.style.position = "relative";
@@ -75,8 +75,8 @@ export const ImageResizeHandler = Extension.create<ResizeOptions>({
       hideResizeLayer(editor); // Remove layer from possible previous elements
       const resizeLayer = createResizeLayer(this.options.layerStyle, this.options.handlerStyle);
 
-      // Add the mouse down listener
-      resizeLayer.addEventListener("mousedown", (event: MouseEvent) => {
+      const mouseDownListener = (event: MouseEvent | TouchEvent) =>
+      {
         event.preventDefault();
 
         if (!editor.imgResizeStorage.imgElement)
@@ -85,13 +85,17 @@ export const ImageResizeHandler = Extension.create<ResizeOptions>({
         const isBottomLeftHandle = event.target.classList.contains("bottom-left");
         const isBottomRightHandle = event.target.classList.contains("bottom-right");
         if (isBottomLeftHandle || isBottomRightHandle) {
-          let startX = event.screenX;
+          const isTouch = "touches" in event;
+          let startX = isTouch ? event.touches[0].clientX : event.screenX;
           const dir = isBottomRightHandle ? 1 : -1;
 
           // Add the mouse move listener on mouse down
-          const mouseMoveListener = throttle((event: MouseEvent) => {
+          const mouseMoveListener = throttle((event: MouseEvent | TouchEvent) => {
+            event.preventDefault();
             const width = editor.imgResizeStorage.imgElement.clientWidth;
-            const distanceX = event.screenX - startX;
+            const isTouch = "touches" in event;
+            const currentX = isTouch ? event.touches[0].clientX : event.screenX;
+            const distanceX = currentX - startX;
             const newWidth = width + dir * distanceX;
             // Resize image
             const imgBox: DOMRect = editor.imgResizeStorage.imgElement.getBoundingClientRect();
@@ -101,21 +105,32 @@ export const ImageResizeHandler = Extension.create<ResizeOptions>({
             // Resize layer
             let pos: DOMRect = getRelativeRect(editor.imgResizeStorage.imgElement, editor.options.element);
             applyStylePosition(pos, editor.imgResizeStorage.resizeLayer);
-            startX = event.screenX;
+            startX = currentX;
           });
           document.addEventListener("mousemove", mouseMoveListener);
+          document.addEventListener("touchmove", mouseMoveListener);
 
           // Add the mouse up listener on mouse down
-          document.addEventListener("mouseup", () => {
+          const mouseUpListener = (event: MouseEvent | TouchEvent) => {
+            event.preventDefault();
             // Remove the mouse move listener on mouse up
             document.removeEventListener("mousemove", mouseMoveListener);
-            document.removeEventListener("mouseup", mouseMoveListener);
+            document.removeEventListener("touchmove", mouseMoveListener);
+            document.removeEventListener("mouseup", mouseUpListener);
+            document.removeEventListener("touchend", mouseUpListener);
             // Trigger the update event
             if (editor.imgResizeStorage.imgElement)
               editor.emit(ImageSizeUpdateEvent, { editor });
-          });
+          };
+          document.addEventListener("mouseup", mouseUpListener);
+          document.addEventListener("touchend", mouseUpListener);
         }
-      });
+      }
+
+
+      // Add the mouse down listener
+      resizeLayer.addEventListener("mousedown", mouseDownListener);
+      resizeLayer.addEventListener("touchstart", mouseDownListener);
 
       const dom = editor.view.domAtPos(transaction.curSelection.from).node;
       const imgElement: HTMLImageElement = dom.querySelector(".ProseMirror-selectednode");
