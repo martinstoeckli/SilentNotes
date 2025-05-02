@@ -1,6 +1,4 @@
-import { Extension } from "@tiptap/core";
-// import { Editor } from '@tiptap/core';
-// import { Transaction } from 'prosemirror-state'
+import { Extension, Editor } from "@tiptap/core";
 
 /*
 Inspired by: https://github.com/KID-1912/tiptap-extension-resizable
@@ -14,6 +12,7 @@ interface ResizeOptions {
 }
 
 const HandlerClass: string = "image-resize-handler";
+const ImageSizeUpdateEvent: string = "imageSizeUpdate";
 
 export const ImageResizeHandler = Extension.create<ResizeOptions>({
   name: "imageResizeHandler",
@@ -28,7 +27,7 @@ export const ImageResizeHandler = Extension.create<ResizeOptions>({
       height: "8px",
       background: "#2a81ac",
     },
-    minImageSize: 30,
+    minImageSize: 10,
   },
 
   addGlobalAttributes() {
@@ -111,6 +110,9 @@ export const ImageResizeHandler = Extension.create<ResizeOptions>({
             // Remove the mouse move listener on mouse up
             document.removeEventListener("mousemove", mouseMoveListener);
             document.removeEventListener("mouseup", mouseMoveListener);
+            // Trigger the update event
+            if (editor.imgResizeStorage.imgElement)
+              editor.emit(ImageSizeUpdateEvent, { editor });
           });
         }
       });
@@ -118,29 +120,18 @@ export const ImageResizeHandler = Extension.create<ResizeOptions>({
       const dom = editor.view.domAtPos(transaction.curSelection.from).node;
       const imgElement: HTMLImageElement = dom.querySelector(".ProseMirror-selectednode");
 
-      // After an Undo, the image height will be 0, wait on the mousedown to select the image in this case
-      if (imgElement && imgElement.clientWidth > 0 && imgElement.clientHeight > 0)
-      {
+      if (imgElement.clientWidth == 0 || imgElement.clientHeight == 0) {
+        // After an Undo the image height will be 0. Remove the selection, so that the next mouse
+        // click can select the image again.
+        editor.commands.selectParentNode();
+      }
+      else {
         const pos: DOMRect = getRelativeRect(imgElement, editor.options.element);
         applyStylePosition(pos, resizeLayer);
         showResizeLayer(editor, resizeLayer, imgElement, imgNode);
       }
     }
   },
-
-  // onTransaction: throttle(function ({ editor }) {
-  //   const resizeLayer = editor.resizeLayer;
-  //   const isResizeLayerVisible = resizeLayer && resizeLayer.style.display === "block";
-  //   if (isResizeLayerVisible) {
-  //     const resizeElement: Element = this.storage.resizeElement;
-  //     const element: Element = editor.options.element;
-  //     const pos: DOMRect = getRelativeRect(resizeElement, element);
-  //     resizeLayer.style.top = pos.top + "px";
-  //     resizeLayer.style.left = pos.left + "px";
-  //     resizeLayer.style.width = pos.width + "px";
-  //     resizeLayer.style.height = pos.height + "px";
-  //   }
-  // }, 240),
 });
 
 // Adds the resize layer to the DOM
