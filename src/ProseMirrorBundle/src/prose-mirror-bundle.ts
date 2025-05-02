@@ -62,10 +62,6 @@ export function initializeEditor(editorElement: HTMLElement): any {
         Image.configure({
           inline: true,
         }),
-        // Image.configure({
-        //   inline: false,
-        //   allowBase64: false,
-        // }),
         ImageResizeHandler,
         Italic,
         CustomLink.configure({

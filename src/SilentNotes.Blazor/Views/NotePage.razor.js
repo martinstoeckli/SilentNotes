@@ -9,6 +9,7 @@ export function initialize(dotnetPage, editorContainer, shoppingModeActive) {
 
     _page.editor.on('selectionUpdate', onSelectionUpdate);
     _page.editor.on('update', onUpdate);
+    _page.editor.on('imageSizeUpdate', onUpdate);
 
     document.addEventListener('custom-link-clicked', function () {
         _page.invokeMethodAsync('OpenLinkDialog');
@@ -20,6 +21,7 @@ export function finalize() {
     if (_page.editor) {
         _page.editor.off('selectionUpdate', onSelectionUpdate);
         _page.editor.off('update', onUpdate);
+        _page.editor.off('imageSizeUpdate', onUpdate);
     }
     _page.editor = null;
     _page = null;

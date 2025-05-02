@@ -11,8 +11,8 @@ interface ResizeOptions {
   minImageSize: number; // Minimum width or height for resizing (default = )
 }
 
-const HandlerClass: string = "image-resize-handler";
 const ImageSizeUpdateEvent: string = "imageSizeUpdate";
+const HandleClasses = ["top-left", "top-right", "bottom-left", "bottom-right"];
 
 export const ImageResizeHandler = Extension.create<ResizeOptions>({
   name: "imageResizeHandler",
@@ -23,8 +23,8 @@ export const ImageResizeHandler = Extension.create<ResizeOptions>({
       border: "1px solid #2a81ac",
     },
     handlerStyle: {
-      width: "8px",
-      height: "8px",
+      width: "10px",
+      height: "10px",
       background: "#2a81ac",
     },
     minImageSize: 10,
@@ -75,6 +75,7 @@ export const ImageResizeHandler = Extension.create<ResizeOptions>({
       hideResizeLayer(editor); // Remove layer from possible previous elements
       const resizeLayer = createResizeLayer(this.options.layerStyle, this.options.handlerStyle);
 
+      // Add the mouse down listener
       const mouseDownListener = (event: MouseEvent | TouchEvent) =>
       {
         event.preventDefault();
@@ -82,19 +83,24 @@ export const ImageResizeHandler = Extension.create<ResizeOptions>({
         if (!editor.imgResizeStorage.imgElement)
           return;
 
-        const isBottomLeftHandle = event.target.classList.contains("bottom-left");
-        const isBottomRightHandle = event.target.classList.contains("bottom-right");
-        if (isBottomLeftHandle || isBottomRightHandle) {
-          const isTouch = "touches" in event;
-          let startX = isTouch ? event.touches[0].clientX : event.screenX;
-          const dir = isBottomRightHandle ? 1 : -1;
+        const targetClasses = event.target.classList;
+        const isTopLeftHandle: boolean = targetClasses.contains(HandleClasses[0]);
+        const isTopRightHandle: boolean = targetClasses.contains(HandleClasses[1]);
+        const isBottomLeftHandle: boolean = targetClasses.contains(HandleClasses[2]);
+        const isBottomRightHandle: boolean = targetClasses.contains(HandleClasses[3]);
+        if (isTopRightHandle || isBottomLeftHandle || isBottomRightHandle) {
+          let startX = (event instanceof TouchEvent)
+            ? event.touches[0].clientX
+            : event.screenX;
+          const dir = (isTopRightHandle || isBottomRightHandle) ? 1 : -1;
 
           // Add the mouse move listener on mouse down
           const mouseMoveListener = throttle((event: MouseEvent | TouchEvent) => {
             event.preventDefault();
             const width = editor.imgResizeStorage.imgElement.clientWidth;
-            const isTouch = "touches" in event;
-            const currentX = isTouch ? event.touches[0].clientX : event.screenX;
+            const currentX = (event instanceof TouchEvent)
+              ? event.touches[0].clientX
+              : event.screenX;
             const distanceX = currentX - startX;
             const newWidth = width + dir * distanceX;
             // Resize image
@@ -126,9 +132,6 @@ export const ImageResizeHandler = Extension.create<ResizeOptions>({
           document.addEventListener("touchend", mouseUpListener);
         }
       }
-
-
-      // Add the mouse down listener
       resizeLayer.addEventListener("mousedown", mouseDownListener);
       resizeLayer.addEventListener("touchstart", mouseDownListener);
 
@@ -246,28 +249,26 @@ function createResizeLayer(layerStyleDictionary: any, handlerStyleDictionary: an
   const result = document.createElement("div");
   result.className = "resize-layer";
   result.style.display = "block";
-  // result.style.display = "none";
   result.style.position = "absolute";
   applyStyleOptions(layerStyleDictionary, result);
 
-  // Create the 4 corner handles
+  // Create the corner handles
   const fragment = document.createDocumentFragment();
-  const handlerNames = ["top-left", "top-right", "bottom-left", "bottom-right"];
-  for (let handlerName of handlerNames) {
+  for (let handleClass of HandleClasses) {
     const handle = document.createElement("div");
-    handle.className = HandlerClass + ' ' + handlerName;
+    handle.className = handleClass;
     handle.style.position = "absolute";
     applyStyleOptions(handlerStyleDictionary, handle);
 
-    const directions = handlerName.split("-");
+    const directions = handleClass.split("-");
     const verticalDirection: string = directions[0]; // top or bottom
     const horizontalDirection: string = directions[1]; // left or right
     handle.style[verticalDirection] = -(parseInt(handle.style.height) / 2) + "px";
     handle.style[horizontalDirection] = -(parseInt(handle.style.width) / 2) + "px";
 
-    if (handlerName === "bottom-left")
+    if ((handleClass === "bottom-left") || (handleClass === "top-right"))
       handle.style.cursor = "sw-resize";
-    if (handlerName === "bottom-right")
+    if (handleClass === "bottom-right")
       handle.style.cursor = "se-resize";
     fragment.appendChild(handle);
   }
