@@ -19,7 +19,7 @@
 @inject IThemeService ThemeService
 @inject IFeedbackService FeedbackService
 @inject INativeBrowserService NativeBrowserService
-@inject IFilePickerService FilePickerService
+@inject IImagePickerService ImagePickerService
 @inject IRepositoryStorageService RepositoryStorageService
 @inject ICloudStorageClientFactory CloudStorageClientFactory
 @inject ICryptoRandomService CryptoRandomSource
@@ -156,7 +156,7 @@
 				Icon="@IconService.GetSvgLink(IconNames.LinkVariant)"
 				Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_link"]</MudMenuItem>
 
-				<MudMenuItem OnClick="@(() => InsertImage())"
+				<MudMenuItem OnClick="@(() => ShowImageDialog())"
 				Icon="@IconService.GetSvgLink(IconNames.Image)"
 				Disabled="ViewModel.ShoppingModeActive">Bild hinzufügen</MudMenuItem>
 
@@ -574,11 +574,15 @@
 		}
 	}
 
-	public async Task InsertImage()
+	public async Task ShowImageDialog()
 	{
+		if (await ImagePickerService.PickImage())
+		{
+			
+		}
 		// todo: Show image picker
-		string imagePath = @"cloud_service_dropbox.png";
-		await _jsModule.InvokeVoidAsync("insertImage", imagePath);
+		// string imagePath = @"cloud_service_dropbox.png";
+		// await _jsModule.InvokeVoidAsync("insertImage", imagePath);
 	}
 
 	private void OnKeepScreenOnChanged()
