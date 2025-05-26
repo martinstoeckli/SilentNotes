@@ -13,9 +13,11 @@ using Android.Content;
 using Android.Graphics;
 using Android.OS;
 using Android.Provider;
+using AndroidX.Activity.Result;
 using AndroidX.Core.Content;
+using Microsoft.Maui.Graphics;
+using Microsoft.Maui.Graphics.Platform;
 using SilentNotes.Services;
-//using Uri = Android.Net.Uri;
 
 namespace SilentNotes.Platforms.Services
 {
@@ -26,6 +28,7 @@ namespace SilentNotes.Platforms.Services
     {
         private readonly IAppContextService _appContext;
         private readonly IActivityResultAwaiter _activityResultAwaiter;
+        private Android.Net.Uri _pickedUri;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ImagePickerService"/> class.
@@ -52,6 +55,7 @@ namespace SilentNotes.Platforms.Services
             if (pickIntent.ResolveActivity(_appContext.Context.PackageManager) != null)
                 availableIntents.Add(pickIntent);
 
+            // Create chooser intent which allows to choose the picker
             Intent chooserIntent = Intent.CreateChooser(availableIntents[0], string.Empty);
             availableIntents.RemoveAt(0);
             if (availableIntents.Count > 0)
@@ -62,11 +66,29 @@ namespace SilentNotes.Platforms.Services
 
             if (activityResult.ResultCode == Result.Ok)
             {
-                var pickedUri = activityResult.Data?.Data;
-
+                _pickedUri = activityResult.Data?.Data;
                 return true;
             }
-            return false;
+            else
+            {
+                _pickedUri = null;
+                return false;
+            }
+        }
+
+        /// <inheritdoc/>
+        public async Task<byte[]> ReadPickedImage()
+        {
+            if (_pickedUri == null)
+                throw new Exception("Pick an image first before it can be read.");
+
+            byte[] result = null;
+            using (Stream inStream = _appContext.Context.ContentResolver.OpenInputStream(_pickedUri))
+            {
+                Microsoft.Maui.Graphics.IImage platImg = Microsoft.Maui.Graphics.Platform.PlatformImage.FromStream(inStream);
+                result = await platImg.AsBytesAsync();
+            }
+            return result;
         }
     }
 }

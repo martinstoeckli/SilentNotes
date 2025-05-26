@@ -4,9 +4,7 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.IO;
 using System.Threading.Tasks;
 using SilentNotes.Services;
 using Windows.Storage.Pickers;
@@ -32,6 +30,22 @@ namespace SilentNotes.Platforms.Services
 
             _pickedFile = await filePicker.PickSingleFileAsync();
             return _pickedFile != null;
+        }
+
+        /// <inheritdoc/>
+        public async Task<byte[]> ReadPickedImage()
+        {
+            if (_pickedFile == null)
+                throw new Exception("Pick an image first before it can be read.");
+
+            byte[] result = null;
+            using (IInputStream inputStream = await _pickedFile.OpenSequentialReadAsync())
+            using (Stream stream = inputStream.AsStreamForRead())
+            {
+                Microsoft.Maui.Graphics.IImage platImg = Microsoft.Maui.Graphics.Platform.PlatformImage.FromStream(stream);
+                result = await platImg.AsBytesAsync();
+            }
+            return result;
         }
 
         private nint GetMainWindowHandle()

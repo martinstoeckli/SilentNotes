@@ -21,5 +21,12 @@ namespace SilentNotes.Services
         /// <returns>Returns true if the user picked an image, false if the pick dialog was
         /// canceled.</returns>
         Task<bool> PickImage();
+
+        /// <summary>
+        /// Tries to read a formerly picked image, call this method only after <see cref="PickImage"/>
+        /// returned true.
+        /// </summary>
+        /// <returns>Returns the content of the read image.</returns>
+        Task<byte[]> ReadPickedImage();
     }
 }

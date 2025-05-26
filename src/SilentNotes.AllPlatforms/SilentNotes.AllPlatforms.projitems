@@ -65,6 +65,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\INativeBrowserService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\INavigationService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\INotificationService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\IImagePickerService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\IRepositoryStorageService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ISafeKeyService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\IScreenshots.cs" />

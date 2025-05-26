@@ -578,7 +578,7 @@
 	{
 		if (await ImagePickerService.PickImage())
 		{
-			
+			byte[] imageContent = await ImagePickerService.ReadPickedImage();
 		}
 		// todo: Show image picker
 		// string imagePath = @"cloud_service_dropbox.png";
