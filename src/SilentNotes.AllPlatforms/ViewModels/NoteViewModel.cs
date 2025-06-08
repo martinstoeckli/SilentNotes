@@ -513,6 +513,14 @@ namespace SilentNotes.ViewModels
             set { SetProperty(ref _isKeepScreenOnActive, value); }
         }
 
+        public async Task StoreImage(byte[] image)
+        {
+            string loc = _repositoryService.GetLocation();
+            Guid attId = Guid.NewGuid();
+            string attPath = Path.Combine(loc, attId + ".silentnotes_att");
+            await File.WriteAllBytesAsync(attPath, image);
+        }
+
         private TimeAgo GetOrCreateTimeAgo()
         {
             if (_timeAgo == null)
