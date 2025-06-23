@@ -19,16 +19,17 @@ namespace SilentNotes.Workers
         /// </summary>
         /// <param name="imageContent">The content of the image, usually read from an image file.</param>
         /// <param name="maxWidthOrHeight">The width and height of the bounding box.</param>
-        /// <param name="allowedEncodings">List of encodings which are accepted, if this parameter
-        /// is null or empty, the original encoding of the image is kept.</param>
+        /// <param name="chooseBestEncoding">If true, the best encoding for the type of image
+        /// (photo style/vector style) is detected and used for the resulting imag. If false, the
+        /// original encoding is kept if possible, or if unknown JPEG is choosen..</param>
         /// <param name="quality">A value of the range 0-100, used for the compression. For encodings
         /// which accept a quality, this usually means that more quality results in a bigger file.
         /// A value of 100 means top quality.</param>
         /// <returns>An image container holding information about the downsized image.</returns>
-        public static ImageContainer Downsize(
+        public static ImageInfo Downsize(
             byte[] imageContent,
             int maxWidthOrHeight,
-            IEnumerable<ImageType> allowedEncodings,
+            bool chooseBestEncoding = true,
             int quality = 94)
         {
             using (MemoryStream originalStream = new MemoryStream(imageContent))
@@ -36,27 +37,36 @@ namespace SilentNotes.Workers
             using (var originalCodec = SKCodec.Create(originalData))
             using (var originalBitmap = SKBitmap.Decode(originalCodec))
             {
-                BitmapSize originalSize = new BitmapSize(originalBitmap.Width, originalBitmap.Height);
-                BitmapSize targetSize = ShrinkSizeKeepRatio(originalSize, maxWidthOrHeight);
+                BitmapDimension originalDimension = new BitmapDimension(originalBitmap.Width, originalBitmap.Height);
+                BitmapDimension targetDimension = ShrinkDimensionKeepingRatio(originalDimension, maxWidthOrHeight);
 
-                if (allowedEncodings == null)
-                    allowedEncodings = Array.Empty<ImageType>();
-                List<SKEncodedImageFormat> encodingsToTry = allowedEncodings
-                    .Select(item => ToEncodedImageFormat(item, originalCodec.EncodedFormat))
-                    .Distinct()
-                    .ToList();
-                if (encodingsToTry.Count == 0)
-                    encodingsToTry.Add(originalCodec.EncodedFormat);
+                List<SKEncodedImageFormat> encodingsToTry = new List<SKEncodedImageFormat>();
+                if (chooseBestEncoding)
+                {
+                    encodingsToTry.AddRange(new[]
+                    {
+                        ToEncodedImageFormat(ImageType.Jpeg),
+                        ToEncodedImageFormat(ImageType.Png)
+                    });
+                }
+                else
+                {
+                    bool isKnownEncoding = ToImageType(originalCodec.EncodedFormat).HasValue;
+                    if (isKnownEncoding)
+                        encodingsToTry.Add(originalCodec.EncodedFormat);
+                    else
+                        encodingsToTry.Add(ToEncodedImageFormat(ImageType.Jpeg));
+                }
 
-                using (SKBitmap resizedBitmap = originalBitmap.Resize(ToSKSize(targetSize), SKFilterQuality.High))
+                using (SKBitmap resizedBitmap = originalBitmap.Resize(ToSKSize(targetDimension), SKFilterQuality.High))
                 {
                     // Try out which encoding is best and return the image in this encoding.
-                    ImageContainer result = null;
+                    ImageInfo result = null;
                     foreach (SKEncodedImageFormat targetEncoding in encodingsToTry)
                     {
                         using (SKData resizedImageData = resizedBitmap.Encode(targetEncoding, quality))
                         {
-                            ImageContainer targetImage = new ImageContainer
+                            ImageInfo targetImage = new ImageInfo
                             {
                                 ImageType = ToImageType(targetEncoding).Value,
                                 ImageContent = resizedImageData.ToArray()
@@ -76,7 +86,7 @@ namespace SilentNotes.Workers
         /// <param name="size">The size of the bitmap.</param>
         /// <param name="maxWidthOrHeight">The size of the square bounding box.</param>
         /// <returns>Size which fits into the bounding box.</returns>
-        public static BitmapSize ShrinkSizeKeepRatio(BitmapSize size, int maxWidthOrHeight)
+        public static BitmapDimension ShrinkDimensionKeepingRatio(BitmapDimension size, int maxWidthOrHeight)
         {
             ArgumentNullException.ThrowIfNull(size);
 
@@ -87,12 +97,12 @@ namespace SilentNotes.Workers
             bool isLandscape = size.Width > size.Height;
             double ratio = (double)size.Width / (double)size.Height;
             if (isLandscape)
-                return new BitmapSize(maxWidthOrHeight, (int)(maxWidthOrHeight / ratio));
+                return new BitmapDimension(maxWidthOrHeight, (int)(maxWidthOrHeight / ratio));
             else
-                return new BitmapSize((int)(maxWidthOrHeight * ratio), maxWidthOrHeight);
+                return new BitmapDimension((int)(maxWidthOrHeight * ratio), maxWidthOrHeight);
         }
 
-        private static ImageContainer ChooseBetterEncoding(ImageContainer image1, ImageContainer image2)
+        private static ImageInfo ChooseBetterEncoding(ImageInfo image1, ImageInfo image2)
         {
             if ((image1 == null) || (image2 == null))
                 return image1 ?? image2;
@@ -107,24 +117,22 @@ namespace SilentNotes.Workers
             switch (imageType)
             {
                 case ImageType.Png:
-                    return 0.8; // This encoding is slightly preferred and can be 20% bigger in size
+                    return 0.8; // This encoding is slightly preferred and is allowed to be 20% bigger in size
                 default:
                     return 1.0;
             }
         }
 
-        private static SKEncodedImageFormat ToEncodedImageFormat(ImageType imageType, SKEncodedImageFormat originalImageFormat)
+        private static SKEncodedImageFormat ToEncodedImageFormat(ImageType imageType)
         {
             switch (imageType)
             {
-                case ImageType.KeepOriginal:
-                    return originalImageFormat;
                 case ImageType.Jpeg:
                     return SKEncodedImageFormat.Jpeg;
                 case ImageType.Png:
                     return SKEncodedImageFormat.Png;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(originalImageFormat));
+                    throw new ArgumentOutOfRangeException(nameof(imageType));
             }
         }
 
@@ -141,16 +149,16 @@ namespace SilentNotes.Workers
             }
         }
 
-        private static SKSizeI ToSKSize(BitmapSize size)
+        private static SKSizeI ToSKSize(BitmapDimension size)
         {
             return new SKSizeI(size.Width, size.Height);
         }
     }
 
     /// <summary>
-    /// The Image container holds information about a loaded image.
+    /// The <see cref="ImageInfo"/> holds information about a loaded image.
     /// </summary>
-    public class ImageContainer
+    public class ImageInfo
     {
         /// <summary>
         /// Gets or sets the type of the image, for bitmaps this is the encoding.
@@ -168,9 +176,6 @@ namespace SilentNotes.Workers
     /// </summary>
     public enum ImageType
     {
-        /// <summary>Special state indicating that the images original image type shoudl be kept.</summary>
-        KeepOriginal,
-
         /// <summary>The image is Jpeg encoded.</summary>
         Jpeg,
 
@@ -179,16 +184,16 @@ namespace SilentNotes.Workers
     }
 
     /// <summary>
-    /// The size of a bitmap image.
+    /// The size of a bitmap image in pixels.
     /// </summary>
-    public class BitmapSize
+    public class BitmapDimension
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="BitmapSize"/> class.
+        /// Initializes a new instance of the <see cref="BitmapDimension"/> class.
         /// </summary>
         /// <param name="width">Sets the <see cref="Width"/> property.</param>
         /// <param name="height">Sets the <see cref="Height"/> property.</param>
-        public BitmapSize(int width, int height)
+        public BitmapDimension(int width, int height)
         {
             Width = width;
             Height = height;
