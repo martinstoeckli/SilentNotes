@@ -184,7 +184,7 @@ namespace SilentNotes.Services
                 },
                 Typography = new Typography()
                 {
-                    Default = new Default()
+                    Default = new DefaultTypography()
                     {
                         FontSize = "14px",
                     },

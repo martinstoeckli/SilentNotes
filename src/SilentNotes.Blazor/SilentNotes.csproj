@@ -1,12 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
     <PropertyGroup>
-        <TargetFrameworks>net8.0-android</TargetFrameworks>
-        <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net8.0-windows10.0.19041.0</TargetFrameworks>
+        <TargetFrameworks>net9.0-android</TargetFrameworks>
+        <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net9.0-windows10.0.19041.0</TargetFrameworks>
 
         <OutputType>Exe</OutputType>
         <RootNamespace>SilentNotes</RootNamespace>
         <UseMaui>true</UseMaui>
+        <MauiEnableXamlCBindingWithSourceCompilation>true</MauiEnableXamlCBindingWithSourceCompilation>
         <SingleProject>true</SingleProject>
         <ImplicitUsings>enable</ImplicitUsings>
         <EnableDefaultCssItems>false</EnableDefaultCssItems>
@@ -93,19 +94,21 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="BouncyCastle.Cryptography" Version="2.4.0" />
-        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
-        <PackageReference Include="FluentFTP" Version="51.0.0" />
+        <PackageReference Include="BouncyCastle.Cryptography" Version="2.6.1" />
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+        <PackageReference Include="FluentFTP" Version="52.1.0" />
         <PackageReference Include="Flurl.Http" Version="4.0.2" />
-        <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.80" />
-        <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.80" />
-        <PackageReference Include="Microsoft.AspNetCore.Components.WebView.Maui" Version="8.0.80" />
-        <PackageReference Include="MudBlazor" Version="7.6.0" />
+        <PackageReference Include="Microsoft.Maui.Controls" Version="9.0.81" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebView.Maui" Version="9.0.81" />
+        <PackageReference Include="MudBlazor" Version="8.9.0" />
     </ItemGroup>
 
-    <ItemGroup Condition="'$(TargetFramework)' == 'net8.0-android'">
+    <ItemGroup Condition="'$(TargetFramework)' == 'net9.0-android'">
+      <PackageReference Include="Xamarin.AndroidX.DocumentFile">
+        <Version>1.1.0</Version>
+      </PackageReference>
       <PackageReference Include="Xamarin.AndroidX.Work.Runtime">
-        <Version>2.8.1</Version>
+        <Version>2.10.0.5</Version>
       </PackageReference>
     </ItemGroup>
 
