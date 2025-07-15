@@ -222,7 +222,7 @@ jobs:
     if: ${{ inputs.build-windows }}
     strategy:
       matrix:
-        platform: [x86,x64]
+        platform: [x64]
   
     runs-on: windows-latest
 
