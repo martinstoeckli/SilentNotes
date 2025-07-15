@@ -46,26 +46,28 @@
         <RuntimeIdentifier>$(RuntimeIdentifierOverride)</RuntimeIdentifier>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-android|x86'">
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-android|x86'">
       <AndroidLinkTool>r8</AndroidLinkTool>
       <RuntimeIdentifiers>android-arm;android-arm64</RuntimeIdentifiers>
       <RunAOTCompilation>False</RunAOTCompilation>
       <PublishTrimmed>True</PublishTrimmed>
+      <AndroidEnableMarshalMethods>true</AndroidEnableMarshalMethods>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-android|x64'">
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-android|x64'">
       <AndroidLinkTool>r8</AndroidLinkTool>
       <RuntimeIdentifiers>android-arm;android-arm64</RuntimeIdentifiers>
       <RunAOTCompilation>False</RunAOTCompilation>
       <PublishTrimmed>True</PublishTrimmed>
+      <AndroidEnableMarshalMethods>true</AndroidEnableMarshalMethods>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-android|x64'">
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net9.0-android|x64'">
       <PublishTrimmed>True</PublishTrimmed>
       <TrimMode>partial</TrimMode>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-android|x86'">
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net9.0-android|x86'">
       <PublishTrimmed>True</PublishTrimmed>
       <TrimMode>partial</TrimMode>
     </PropertyGroup>

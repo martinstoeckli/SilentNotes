@@ -19,9 +19,9 @@ on:
 
 env:
   Project_Path: src\SilentNotes.Blazor\SilentNotes.csproj
-  Dotnet_Version: 8.0.x
-  Target_Framework_Android: net8.0-android
-  Target_Framework_Windows: net8.0-windows10.0.19041.0
+  Dotnet_Version: 9.0.x
+  Target_Framework_Android: net9.0-android
+  Target_Framework_Windows: net9.0-windows10.0.19041.0
 
 jobs:
   ##############################################################################
