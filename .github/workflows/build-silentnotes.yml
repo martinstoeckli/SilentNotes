@@ -267,7 +267,7 @@ jobs:
 
     # Restore the application to populate the obj folder with RuntimeIdentifiers
     - name: Restore Dependencies
-      run: dotnet restore "${{ env.Project_Path }}"
+      run: dotnet restore "${{ env.Project_Path }}" -r ${{ env.RuntimeIdentifier }} 
       env:
         RuntimeIdentifier: win-${{ matrix.platform }}
 
@@ -277,7 +277,7 @@ jobs:
       run: dotnet publish -c Release -f ${{ env.Target_Framework_Windows }} -r ${{ env.RuntimeIdentifier }} -p:Platform=${{ env.Platform }} -p:AppxPackageSigningEnabled=true -p:PackageCertificateThumbprint="${{ secrets.SILENTNOTESPFXTHUMBPRINT }}"
       env:
         Platform: ${{ matrix.platform }}
-        RuntimeIdentifier: win10-${{ matrix.platform }}
+        RuntimeIdentifier: win-${{ matrix.platform }}
         Profile: MSIX-win10-${{ matrix.platform }}
         
     # Remove the pfx
