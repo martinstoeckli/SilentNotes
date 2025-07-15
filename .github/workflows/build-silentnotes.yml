@@ -267,7 +267,7 @@ jobs:
 
     # Restore the application to populate the obj folder with RuntimeIdentifiers
     - name: Restore Dependencies
-      run: dotnet restore "${{ env.Project_Path }}" -r ${{ env.RuntimeIdentifier }} 
+      run: dotnet restore "${{ env.Project_Path }}"
       env:
         RuntimeIdentifier: win-${{ matrix.platform }}
 
