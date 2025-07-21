@@ -19,6 +19,7 @@ on:
 
 env:
   Project_Path: src\SilentNotes.Blazor\SilentNotes.csproj
+  Project_Dir: src\SilentNotes.Blazor
   Dotnet_Version: 9.0.x
   Target_Framework_Android: net9.0-android
   Target_Framework_Windows: net9.0-windows10.0.19041.0
@@ -274,7 +275,7 @@ jobs:
     # Collect files for upload
     - name: Collect msix files
       run: |
-        $files = Get-ChildItem -Path "${{ env.Project_Path }}" -Filter SilentNotes*.msixbundle -Recurse -File
+        $files = Get-ChildItem -Path "${{ env.Project_Dir }}" -Filter SilentNotes*.msixbundle -Recurse -File
         New-Item -Path ".\windows" -ItemType "directory"
         Move-Item -Path $files[0].FullName -Destination ".\windows\silentnotes.msixbundle"
       env:
