@@ -1,5 +1,5 @@
 # Builds the binaries which can be uploaded to the Microsoft/Google store
-name: Build SilentNotes binaries
+name: Build SilentNotes test
 
 on:
   workflow_dispatch:
