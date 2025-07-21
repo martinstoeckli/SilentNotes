@@ -342,11 +342,11 @@ jobs:
         name: silentnotes_windows_binaries
         path: .\**\*.msixbundle
 
-    # Cleanup temporary artifacts
-    - name: Cleanup temporary build artifacts
-      uses: geekyeggo/delete-artifact@v5
-      with:
-          name: silentnotes_windows_binaries-*
+    # # Cleanup temporary artifacts
+    # - name: Cleanup temporary build artifacts
+    #   uses: geekyeggo/delete-artifact@v5
+    #   with:
+    #       name: silentnotes_windows_binaries-*
 
   ##############################################################################
   # Publish release on Github
