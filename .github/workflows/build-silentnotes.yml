@@ -19,6 +19,7 @@ on:
 
 env:
   Project_Path: src\SilentNotes.Blazor\SilentNotes.csproj
+  WinManifest_Path: src\SilentNotes.Blazor\Platforms\Windows\Package.appxmanifest
   Dotnet_Version: 9.0.x
   Target_Framework_Android: net9.0-android
   Target_Framework_Windows: net9.0-windows10.0.19041.0
@@ -219,6 +220,7 @@ jobs:
   # Windows
   ##############################################################################
   job_build_windows:
+    needs: [job_version]
     if: ${{ inputs.build-windows }}
     strategy:
       matrix:
@@ -232,16 +234,22 @@ jobs:
       with:
         fetch-depth: 0
 
+    - name: WinManifest adjust version
+      shell: pwsh
+      run: |
+          [xml]$manifestFile = Get-Content "$manifest-path"
+          $manifestFile.Package.Identity.Version = "$manifest-version"
+          $manifestFile.Save("$manifest-path")
+      env:
+        manifest-path: ${{ env.WinManifest_Path }}
+        manifest-version: "${{needs.job_version.outputs.formatted_version}}.0"
+
     # Install the .NET Core workload
     - name: Install .NET
       id: id_setup_dotnet
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: ${{ env.Dotnet_Version }}
-
-    # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
-    # - name: Setup MSBuild.exe
-    #   uses: microsoft/setup-msbuild@v2
 
     - name: Install MAUI
       run: |
