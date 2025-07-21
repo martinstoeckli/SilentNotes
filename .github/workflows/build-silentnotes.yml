@@ -18,7 +18,6 @@ on:
         description: Publish new release on GitHub
 
 env:
-  Project_Dir: src\SilentNotes.Blazor
   Project_Path: src\SilentNotes.Blazor\SilentNotes.csproj
   Dotnet_Version: 9.0.x
   Target_Framework_Android: net9.0-android
