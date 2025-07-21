@@ -1,5 +1,5 @@
 # Builds the binaries which can be uploaded to the Microsoft/Google store
-name: Build SilentNotes binaries
+name: Build SilentNotes
 
 on:
   workflow_dispatch:
@@ -239,14 +239,8 @@ jobs:
       with:
         dotnet-version: ${{ env.Dotnet_Version }}
 
-    # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
-    # - name: Setup MSBuild.exe
-    #   uses: microsoft/setup-msbuild@v2
-
     - name: Install MAUI
-      run: |
-        dotnet nuget locals all --clear
-        dotnet workload install maui-windows
+      run: dotnet workload install maui-windows
 
     # Log DotNet version for reproducable builds
     - name: Log used DotNet versions
@@ -267,18 +261,11 @@ jobs:
 
     # Restore the application to populate the obj folder with RuntimeIdentifiers
     - name: Restore Dependencies
-      run: dotnet restore "${{ env.Project_Path }}"
-      env:
-        RuntimeIdentifier: win-${{ matrix.platform }}
+      run: dotnet restore
 
     # Build application
-    # declare the -r parameter and also the -p:Platform paramter to mitigate error:  The platform 'AnyCPU' is not supported for Self Contained mode
     - name: Build application
-      run: dotnet publish -c Release -f ${{ env.Target_Framework_Windows }} -p:Platform=${{ env.Platform }} -p:RuntimeIdentifierOverride${{ env.RuntimeIdentifier }} -p:AppxPackageSigningEnabled=true -p:PackageCertificateThumbprint="${{ secrets.SILENTNOTESPFXTHUMBPRINT }}"
-      env:
-        Platform: ${{ matrix.platform }}
-        RuntimeIdentifier: win-${{ matrix.platform }}
-        Profile: MSIX-win10-${{ matrix.platform }}
+      run: dotnet publish "${{ env.Project_Path }}" -c Release -f ${{ env.Target_Framework_Windows }} -p:AppxBundle=Always -p:AppxBundlePlatforms="x86|x64" -p:AppxPackageSigningEnabled=true -p:PackageCertificateThumbprint="${{ secrets.SILENTNOTESPFXTHUMBPRINT }}"
         
     # Remove the pfx
     - name: Remove the pfx
@@ -287,9 +274,9 @@ jobs:
     # Collect files for upload
     - name: Collect msix files
       run: |
-        $files = Get-ChildItem -Path "${{ env.Project_Dir }}" -Filter SilentNotes*.msix -Recurse -File
+        $files = Get-ChildItem -Path "${{ env.Project_Path }}" -Filter SilentNotes*.msixbundle -Recurse -File
         New-Item -Path ".\windows" -ItemType "directory"
-        Move-Item -Path $files[0].FullName -Destination ".\windows\silentnotes_${{ env.Platform }}.msix"
+        Move-Item -Path $files[0].FullName -Destination ".\windows\silentnotes.msixbundle"
       env:
         Platform: ${{ matrix.platform }}
 
@@ -297,56 +284,8 @@ jobs:
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: silentnotes_windows_binaries-${{ matrix.platform }}
-        path: .\windows
-
-  ##############################################################################
-  # Windows packaging
-  # Package all msix to a single msixbundle for uploading to the Microsoft store
-  ##############################################################################
-  job_package:
-    needs: [job_version, job_build_windows]
-    if: ${{ inputs.build-windows }}
-    runs-on: windows-latest
-
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
-
-    - name: Download msix files
-      uses: actions/download-artifact@v4
-      with:
-        path: downloaddirectory
-        pattern: silentnotes_windows_binaries-*
-        merge-multiple: true
-
-    - name: Collect msix files
-      run: |
-        New-Item -Path ".\msixdirectory" -ItemType "directory"
-        Move-Item -Path .\downloaddirectory\*.msix -Destination .\msixdirectory
-
-    - name: Make msixbundle
-      id: bundler
-      uses: LanceMcCarthy/Action-MsixBundler@v1.0.0
-      with:
-        msix-folder: "msixdirectory"
-        msixbundle-filepath: "silentnotes.msixbundle"
-        msixbundle-version: "${{needs.job_version.outputs.formatted_version}}.0"
-      
-    # Upload artifacts
-    - name: Upload build artifacts
-      uses: actions/upload-artifact@v4
-      with:
         name: silentnotes_windows_binaries
-        path: .\**\*.msixbundle
-
-    # # Cleanup temporary artifacts
-    # - name: Cleanup temporary build artifacts
-    #   uses: geekyeggo/delete-artifact@v5
-    #   with:
-    #       name: silentnotes_windows_binaries-*
+        path: .\windows
 
   ##############################################################################
   # Publish release on Github
