@@ -237,12 +237,12 @@ jobs:
     - name: WinManifest adjust version
       shell: pwsh
       run: |
-          [xml]$manifestFile = Get-Content "$manifest-path"
-          $manifestFile.Package.Identity.Version = "$manifest-version"
-          $manifestFile.Save("$manifest-path")
+          [xml]$manifestFile = Get-Content "$ManifestPath"
+          $manifestFile.Package.Identity.Version = "$ManifestVersion"
+          $manifestFile.Save("$ManifestPath")
       env:
-        manifest-path: ${{ env.WinManifest_Path }}
-        manifest-version: "${{needs.job_version.outputs.formatted_version}}.0"
+        ManifestPath: ${{ env.WinManifest_Path }}
+        ManifestVersion: "${{needs.job_version.outputs.formatted_version}}.0"
 
     # Install the .NET Core workload
     - name: Install .NET
