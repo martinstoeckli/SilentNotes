@@ -276,8 +276,6 @@ jobs:
     # Restore the application to populate the obj folder with RuntimeIdentifiers
     - name: Restore Dependencies
       run: dotnet restore "${{ env.Project_Path }}"
-      env:
-        RuntimeIdentifier: win-${{ matrix.platform }}
 
     # Build application
     # declare the -r parameter and also the -p:Platform paramter to mitigate error:  The platform 'AnyCPU' is not supported for Self Contained mode
