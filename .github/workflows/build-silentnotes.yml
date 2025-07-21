@@ -221,9 +221,6 @@ jobs:
   ##############################################################################
   job_build_windows:
     if: ${{ inputs.build-windows }}
-    strategy:
-      matrix:
-        platform: [x86,x64]
   
     runs-on: windows-latest
 
@@ -272,21 +269,19 @@ jobs:
     - name: Remove the pfx
       run: Remove-Item -path SilentNotes.pfx
 
-    # Collect files for upload
-    - name: Collect msix files
-      run: |
-        $files = Get-ChildItem -Path "${{ env.Project_Dir }}" -Filter SilentNotes*.msixbundle -Recurse -File
-        New-Item -Path ".\windows" -ItemType "directory"
-        Move-Item -Path $files[0].FullName -Destination ".\windows\silentnotes.msixbundle"
-      env:
-        Platform: ${{ matrix.platform }}
+    # # Collect files for upload
+    # - name: Collect msix files
+    #   run: |
+    #     $files = Get-ChildItem -Path "${{ env.Project_Dir }}" -Filter SilentNotes*.msixbundle -Recurse -File
+    #     New-Item -Path ".\windows" -ItemType "directory"
+    #     Move-Item -Path $files[0].FullName -Destination ".\windows\silentnotes.msixbundle"
 
     # Upload artifacts
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
         name: silentnotes_windows_binaries
-        path: .\windows
+        path: src/**/*.msixbundle
 
   ##############################################################################
   # Publish release on Github
