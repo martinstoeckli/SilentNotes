@@ -224,7 +224,7 @@ jobs:
     if: ${{ inputs.build-windows }}
     strategy:
       matrix:
-        platform: [x86,x64]
+        platform: [x64]
   
     runs-on: windows-latest
 
@@ -234,7 +234,7 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: WinManifest adjust version
+    - name: Transfer csproj version to Package.appxmanifest
       shell: pwsh
       run: |
           [xml]$manifestFile = Get-Content $env:ManifestPath
