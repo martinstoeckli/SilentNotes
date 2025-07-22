@@ -46,6 +46,12 @@
         <RuntimeIdentifier>$(RuntimeIdentifierOverride)</RuntimeIdentifier>
     </PropertyGroup>
 
+    <PropertyGroup Condition="'$(TargetFramework)'=='net9.0-android'">
+      <PublishTrimmed>True</PublishTrimmed>
+      <TrimMode>full</TrimMode>
+      <EnableTrimAnalyzer>True</EnableTrimAnalyzer>
+    </PropertyGroup>
+
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-android|x86'">
       <AndroidLinkTool>r8</AndroidLinkTool>
       <RuntimeIdentifiers>android-arm;android-arm64</RuntimeIdentifiers>
