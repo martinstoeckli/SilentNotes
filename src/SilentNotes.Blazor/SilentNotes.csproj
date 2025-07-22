@@ -48,8 +48,7 @@
 
     <PropertyGroup Condition="'$(TargetFramework)'=='net9.0-android'">
       <PublishTrimmed>True</PublishTrimmed>
-      <TrimMode>partial</TrimMode>
-      <PublishTrimmed>True</PublishTrimmed>
+      <TrimMode>full</TrimMode>
       <EnableTrimAnalyzer>True</EnableTrimAnalyzer>
       <EnableUnsafeBinaryFormatterSerialization>False</EnableUnsafeBinaryFormatterSerialization>
     </PropertyGroup>
