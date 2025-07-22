@@ -50,7 +50,6 @@
       <PublishTrimmed>True</PublishTrimmed>
       <TrimMode>full</TrimMode>
       <EnableTrimAnalyzer>True</EnableTrimAnalyzer>
-      <EnableUnsafeBinaryFormatterSerialization>False</EnableUnsafeBinaryFormatterSerialization>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-android|x86'">
