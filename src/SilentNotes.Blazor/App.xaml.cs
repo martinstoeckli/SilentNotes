@@ -7,14 +7,12 @@ namespace SilentNotes
         public App(IServiceProvider serviceProvider)
         {
             InitializeComponent();
-            MainPage = new MainPage();
         }
 
         protected override Window CreateWindow(IActivationState activationState)
         {
-            Window window = base.CreateWindow(activationState);
-            window.Title = "SilentNotes";
-            return window;
+            var mainPage = new MainPage();
+            return new Window(mainPage) { Title = "SilentNotes" };
         }
     }
 }

@@ -19,9 +19,10 @@ on:
 
 env:
   Project_Path: src\SilentNotes.Blazor\SilentNotes.csproj
-  Dotnet_Version: 8.0.x
-  Target_Framework_Android: net8.0-android
-  Target_Framework_Windows: net8.0-windows10.0.19041.0
+  WinManifest_Path: src\SilentNotes.Blazor\Platforms\Windows\Package.appxmanifest
+  Dotnet_Version: 9.0.x
+  Target_Framework_Android: net9.0-android
+  Target_Framework_Windows: net9.0-windows10.0.19041.0
 
 jobs:
   ##############################################################################
@@ -219,10 +220,11 @@ jobs:
   # Windows
   ##############################################################################
   job_build_windows:
+    needs: [job_version]
     if: ${{ inputs.build-windows }}
     strategy:
       matrix:
-        platform: [x86,x64]
+        platform: [x64,x86]
   
     runs-on: windows-latest
 
@@ -232,6 +234,16 @@ jobs:
       with:
         fetch-depth: 0
 
+    - name: Transfer csproj version to Package.appxmanifest
+      shell: pwsh
+      run: |
+          [xml]$manifestFile = Get-Content $env:ManifestPath
+          $manifestFile.Package.Identity.Version = $env:ManifestVersion
+          $manifestFile.Save($env:ManifestPath)
+      env:
+        ManifestPath: ${{ env.WinManifest_Path }}
+        ManifestVersion: "${{needs.job_version.outputs.formatted_version}}.0"
+
     # Install the .NET Core workload
     - name: Install .NET
       id: id_setup_dotnet
@@ -239,12 +251,10 @@ jobs:
       with:
         dotnet-version: ${{ env.Dotnet_Version }}
 
-    # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
-    - name: Setup MSBuild.exe
-      uses: microsoft/setup-msbuild@v2
-
     - name: Install MAUI
-      run: dotnet workload install maui-windows maui-android
+      run: |
+        dotnet nuget locals all --clear
+        dotnet workload install maui-windows
 
     # Log DotNet version for reproducable builds
     - name: Log used DotNet versions
@@ -265,17 +275,15 @@ jobs:
 
     # Restore the application to populate the obj folder with RuntimeIdentifiers
     - name: Restore Dependencies
-      run: dotnet restore "${{ env.Project_Path }}" -r ${{ env.RuntimeIdentifier }} 
-      env:
-        RuntimeIdentifier: win-${{ matrix.platform }}
+      run: dotnet restore "${{ env.Project_Path }}"
 
     # Build application
     # declare the -r parameter and also the -p:Platform paramter to mitigate error:  The platform 'AnyCPU' is not supported for Self Contained mode
     - name: Build application
-      run: dotnet publish -c Release -p:PublishProfile=${{ env.Profile }} -f ${{ env.Target_Framework_Windows }} -r ${{ env.RuntimeIdentifier }} -p:Platform=${{ env.Platform }} -p:AppxPackageSigningEnabled=true -p:PackageCertificateThumbprint="${{ secrets.SILENTNOTESPFXTHUMBPRINT }}"
+      run: dotnet publish "${{ env.Project_Path }}" -c Release -f ${{ env.Target_Framework_Windows }} -p:Platform=${{ env.Platform }} -p:RuntimeIdentifierOverride${{ env.RuntimeIdentifier }} -p:AppxPackageSigningEnabled=true -p:PackageCertificateThumbprint="${{ secrets.SILENTNOTESPFXTHUMBPRINT }}"
       env:
         Platform: ${{ matrix.platform }}
-        RuntimeIdentifier: win10-${{ matrix.platform }}
+        RuntimeIdentifier: win-${{ matrix.platform }}
         Profile: MSIX-win10-${{ matrix.platform }}
         
     # Remove the pfx
@@ -285,7 +293,7 @@ jobs:
     # Collect files for upload
     - name: Collect msix files
       run: |
-        $files = Get-ChildItem -Path "${{ env.Project_Dir }}" -Filter SilentNotes*.msix -Recurse -File
+        $files = Get-ChildItem -Path "" -Filter SilentNotes*.msix -Recurse -File
         New-Item -Path ".\windows" -ItemType "directory"
         Move-Item -Path $files[0].FullName -Destination ".\windows\silentnotes_${{ env.Platform }}.msix"
       env:

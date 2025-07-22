@@ -40,10 +40,10 @@ public static class MauiProgram
     /// </remarks>
     public static MauiApp CreateMauiApp()
     {
-        // Workaround: Fixes the restart problem on Android when closing the app with the back
+        // Workaround: Not necessary anymore since Maui .NET 9.
+        // Fixes the restart problem on Android when closing the app with the back
         // button, possible since Maui 8.0.60.
-        // https://github.com/dotnet/maui/issues/22819
-        AppContext.SetSwitch("BlazorWebView.AndroidFireAndForgetAsync", isEnabled: true);
+        // AppContext.SetSwitch("BlazorWebView.AndroidFireAndForgetAsync", isEnabled: true);
 
         var builder = MauiApp.CreateBuilder();
         builder

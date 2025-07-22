@@ -76,7 +76,7 @@ namespace SilentNotes.Models
         }
 
         /// <summary>
-        /// Gets or sets the serializable <see cref="Key"/>.
+        /// Gets or sets the serializable key.
         /// </summary>
         [XmlElement("key")]
         public string SerializeableKey { get; set; }

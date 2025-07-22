@@ -32,10 +32,9 @@ td { word-wrap: anywhere; } /* table should not exceed device width */
 }
 
 .secondary-app-bar {
-	right: 0;
-	left: auto !important; /* overwrite calculated left, not adapting to browser width */
+	z-index: calc(var(--mud-zindex-appbar) - 1) !important; /* Force it behind the appbar */
 	margin: 0;
-	padding: 48px 24px 0 4px;
+	padding: 24px 24px 0 4px;
 }
 
 .fab-position {
@@ -140,44 +139,23 @@ td { word-wrap: anywhere; } /* table should not exceed device width */
 .note-viewer ol {
 	margin: 0.5em 0 0.5em 0 !important;
 	padding: 0 !important;
-	font: normal normal 1em "Segoe UI",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol" !important;
-	list-style: none;
-	counter-reset: sn-counter;
 }
 .note-viewer ol > li {
 	margin-left: 1.8em !important;
 	padding: 0 !important;
-	counter-increment: sn-counter;
-}
-.note-viewer ol > li::before {
-	display: inline-block;
-	margin: 0 0 0 -1.8em !important;
-	padding: 0 0.3em 0 0 !important;
-	width: 1.8em !important;
-	content: counter(sn-counter) ".";
-	text-align: right !important;
-	vertical-align: top;
 }
 
 .note-viewer ul {
 	margin: 0.5em 0 0.5em 0 !important;
 	padding: 0 !important;
-	font: normal normal 1em "Segoe UI",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol" !important;
-	/* list-style-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='-32 -32 64 64' fill='blue' ><circle r='16' /></svg>"); */
+	list-style-type: disc;
 }
 .note-viewer ul > li {
 	margin-left: 1.8em !important;
 	padding: 0 !important;
 }
-.note-viewer ul > li::before {
-	display: inline-block;
-	margin: 0 0 0 -1.8em !important;
-	padding: 0 0.3em 0 0 !important;
-	width: 1.8em !important;
-	white-space: nowrap;
-	content: '•';
-	text-align: right !important;
-	vertical-align: top;
+.note-viewer ul > li::marker {
+	font-size: 0.8em;
 }
 .note-viewer li>p:first-child {
     display: inline;
