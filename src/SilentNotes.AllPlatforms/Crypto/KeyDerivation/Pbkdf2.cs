@@ -39,7 +39,7 @@ namespace SilentNotes.Crypto.KeyDerivation
             byte[] binaryPassword = SecureStringExtensions.SecureStringToBytes(password, Encoding.UTF8);
             try
             {
-                Rfc2898DeriveBytes kdf = new Rfc2898DeriveBytes(binaryPassword, salt, cost);
+                Rfc2898DeriveBytes kdf = new Rfc2898DeriveBytes(binaryPassword, salt, cost, HashAlgorithmName.SHA1);
                 byte[] result = kdf.GetBytes(expectedKeySizeBytes);
                 return result;
             }
