@@ -16,6 +16,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Crypto\CryptoUtils.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Crypto\ICryptor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Crypto\ICryptoRandomSource.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Crypto\KeyDerivation\BouncyCastleArgon2.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Crypto\KeyDerivation\IKeyDerivationFunction.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Crypto\KeyDerivation\KeyDerivationCostType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Crypto\KeyDerivation\KeyDerivationFactory.cs" />

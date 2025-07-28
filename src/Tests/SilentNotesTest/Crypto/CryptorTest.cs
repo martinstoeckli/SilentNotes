@@ -143,6 +143,25 @@ namespace SilentNotesTest.Crypto
         }
 
         [TestMethod]
+        public void CryptoArgon2()
+        {
+            const int KeyLength = 42;
+            IKeyDerivationFunction kdf = new BouncyCastleArgon2();
+
+            ICryptoRandomService randomGenerator = CommonMocksAndStubs.CryptoRandomService();
+            byte[] salt = randomGenerator.GetRandomBytes(kdf.ExpectedSaltSizeBytes);
+            int cost = kdf.RecommendedCost(KeyDerivationCostType.Low);
+
+            SecureString password = CryptoUtils.StringToSecureString("Das ist kein gutes Passwort");
+            byte[] key = kdf.DeriveKeyFromPassword(password, KeyLength, salt, cost);
+            Assert.AreEqual(KeyLength, key.Length);
+
+            // Same parameters must result in the same output
+            byte[] key2 = kdf.DeriveKeyFromPassword(password, KeyLength, salt, cost);
+            CollectionAssert.AreEqual(key, key2);
+        }
+
+        [TestMethod]
         public void CryptorWorksWithPassword()
         {
             ICryptoRandomService randomGenerator = CommonMocksAndStubs.CryptoRandomService();
