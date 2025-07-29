@@ -177,9 +177,7 @@ jobs:
         KeystoreGpgPassword: ${{ secrets.SILENTNOTESANDROIDKEYSTOREGPGPASSWORD }}
 
     - name: Restore NuGet packages
-      run: dotnet restore -r ${{ env.Platform }} /p:Configuration=Release
-      env:
-        Platform: ${{ matrix.platform }}
+      run: dotnet restore
 
     # Build application
     # The keystore location seems to be relative to the csproj file, so we placed it in the same directory and pass only the filename
