@@ -23,7 +23,7 @@
 
         <!-- Versions -->
         <ApplicationDisplayVersion>8.4.0</ApplicationDisplayVersion>
-        <ApplicationVersion>84</ApplicationVersion>
+        <ApplicationVersion>85</ApplicationVersion>
 
         <!-- Workaround: for https://github.com/dotnet/maui/issues/12859 -->
         <Version>$(ApplicationDisplayVersion)</Version>
