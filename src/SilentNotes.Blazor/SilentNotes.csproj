@@ -23,7 +23,7 @@
 
         <!-- Versions -->
         <ApplicationDisplayVersion>8.4.0</ApplicationDisplayVersion>
-        <ApplicationVersion>86</ApplicationVersion>
+        <ApplicationVersion>87</ApplicationVersion>
 
         <!-- Workaround: for https://github.com/dotnet/maui/issues/12859 -->
         <Version>$(ApplicationDisplayVersion)</Version>
@@ -56,7 +56,7 @@
 
     <!-- Release Android all -->
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)'=='Release|net9.0-android'">
-      <RuntimeIdentifiers>android-arm64;android-arm;android-x64</RuntimeIdentifiers>
+      <RuntimeIdentifiers>android-arm;android-arm64;android-x64</RuntimeIdentifiers>
     </PropertyGroup>
 
     <!-- Debug Android runs in x64 emulator only -->
@@ -65,12 +65,12 @@
     </PropertyGroup>
 
     <!-- Workaround: Android to avoid build message NU1101: Unable to find package Microsoft.NETCore.App.Runtime.linux-bionic-arm -->
-    <Target Name="_RemoveLinuxFrameworkReferences" AfterTargets="ProcessFrameworkReferences">
+    <!-- <Target Name="_RemoveLinuxFrameworkReferences" AfterTargets="ProcessFrameworkReferences">
       <ItemGroup>
         <_ProblematicRIDs Include="linux-bionic-arm;linux-bionic-arm64;linux-bionic-x86;linux-bionic-arm64" />
         <PackageDownload Remove="Microsoft.NETCore.App.Runtime.%(_ProblematicRIDs.Identity)" />
       </ItemGroup>
-    </Target>
+    </Target> -->
   
     <ItemGroup>
         <!-- App Icon -->
