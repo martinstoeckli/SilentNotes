@@ -54,24 +54,24 @@
       <AndroidEnableMarshalMethods>true</AndroidEnableMarshalMethods>
     </PropertyGroup>
 
-    <!-- All release -->
+    <!-- Release Android all -->
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)'=='Release|net9.0-android'">
       <AndroidLinkTool>r8</AndroidLinkTool>
       <RuntimeIdentifiers>android-arm;android-arm64;android-x64</RuntimeIdentifiers>
     </PropertyGroup>
 
-    <!-- Debug runs in x64 emulator only -->
+    <!-- Debug Android runs in x64 emulator only -->
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net9.0-android|x64'">
       <RuntimeIdentifiers>android-x64</RuntimeIdentifiers>
     </PropertyGroup>
 
-	<!-- Workaround to avoid build message NU1101: Unable to find package Microsoft.NETCore.App.Runtime.linux-bionic-arm -->
-	<Target Name="_RemoveLinuxFrameworkReferences" AfterTargets="ProcessFrameworkReferences">
-		<ItemGroup>
-			<_ProblematicRIDs Include="linux-bionic-arm;linux-bionic-arm64;linux-bionic-x86;linux-bionic-arm64" />
-			<PackageDownload Remove="Microsoft.NETCore.App.Runtime.%(_ProblematicRIDs.Identity)" />
-		</ItemGroup>
-	</Target>
+    <!-- Workaround: Android to avoid build message NU1101: Unable to find package Microsoft.NETCore.App.Runtime.linux-bionic-arm -->
+    <Target Condition="'$(TargetFramework)'=='net9.0-android'" Name="_RemoveLinuxFrameworkReferences" AfterTargets="ProcessFrameworkReferences">
+      <ItemGroup>
+        <_ProblematicRIDs Include="linux-bionic-arm;linux-bionic-arm64;linux-bionic-x86;linux-bionic-arm64" />
+        <PackageDownload Remove="Microsoft.NETCore.App.Runtime.%(_ProblematicRIDs.Identity)" />
+      </ItemGroup>
+    </Target>
   
     <ItemGroup>
         <!-- App Icon -->
