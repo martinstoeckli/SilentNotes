@@ -59,19 +59,6 @@
       <AndroidLinkTool>r8</AndroidLinkTool>
     </PropertyGroup>
 
-    <!-- Workaround: for each build platform in the yml build script, a definition is required -->
-    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-android|arm'">
-      <RuntimeIdentifiers>android-arm</RuntimeIdentifiers>
-    </PropertyGroup>
-
-    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-android|arm64'">
-      <RuntimeIdentifiers>android-arm64</RuntimeIdentifiers>
-    </PropertyGroup>
-
-    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-android|x64'">
-      <RuntimeIdentifiers>android-x64</RuntimeIdentifiers>
-    </PropertyGroup>
-
     <!-- Debug runs in x64 emulator only -->
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net9.0-android|x64'">
       <RuntimeIdentifiers>android-x64</RuntimeIdentifiers>
