@@ -181,7 +181,9 @@ jobs:
       run: dotnet restore
 
     - name: Build application
-      run: dotnet publish "${{ env.Project_Path }}" -c Release -f ${{ env.Target_Framework_Android }} -r ${{ env.Platform }} -o ".\bin" -p:AndroidPackageFormats=apk -p:AndroidKeyStore=True -p:AndroidSigningKeyStore=silentnotes.keystore -p:AndroidSigningKeyAlias=androidmartinstoeckli -p:AndroidSigningKeyPass=${{ env.KeystorePassword }} -p:AndroidSigningStorePass=${{ env.KeystorePassword }}
+      run: |
+        dotnet publish --list-runtimes
+        dotnet publish "${{ env.Project_Path }}" -c Release -f ${{ env.Target_Framework_Android }} -r ${{ env.Platform }} --self-contained true -o ".\bin" -p:AndroidPackageFormats=apk -p:AndroidKeyStore=True -p:AndroidSigningKeyStore=silentnotes.keystore -p:AndroidSigningKeyAlias=androidmartinstoeckli -p:AndroidSigningKeyPass=${{ env.KeystorePassword }} -p:AndroidSigningStorePass=${{ env.KeystorePassword }}
       env:
         KeystorePassword: ${{ secrets.SILENTNOTESANDROIDKEYSTOREPASSWORD }}
         Platform: ${{ matrix.platform }}
