@@ -46,17 +46,18 @@
         <RuntimeIdentifier>$(RuntimeIdentifierOverride)</RuntimeIdentifier>
     </PropertyGroup>
 
+    <!-- Android all -->
     <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
       <PublishTrimmed>True</PublishTrimmed>
       <TrimMode>partial</TrimMode>
       <EnableTrimAnalyzer>True</EnableTrimAnalyzer>
       <RunAOTCompilation>False</RunAOTCompilation>
-      <AndroidEnableMarshalMethods>true</AndroidEnableMarshalMethods>
     </PropertyGroup>
 
     <!-- Release Android all -->
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)'=='Release|net9.0-android'">
       <RuntimeIdentifiers>android-arm;android-arm64;android-x64</RuntimeIdentifiers>
+      <AndroidLinkTool>r8</AndroidLinkTool>
     </PropertyGroup>
 
     <!-- Debug Android runs in x64 emulator only -->
@@ -64,14 +65,6 @@
       <RuntimeIdentifiers>android-x64</RuntimeIdentifiers>
     </PropertyGroup>
 
-    <!-- Workaround: Android to avoid build message NU1101: Unable to find package Microsoft.NETCore.App.Runtime.linux-bionic-arm -->
-    <!-- <Target Name="_RemoveLinuxFrameworkReferences" AfterTargets="ProcessFrameworkReferences">
-      <ItemGroup>
-        <_ProblematicRIDs Include="linux-bionic-arm;linux-bionic-arm64;linux-bionic-x86;linux-bionic-arm64" />
-        <PackageDownload Remove="Microsoft.NETCore.App.Runtime.%(_ProblematicRIDs.Identity)" />
-      </ItemGroup>
-    </Target> -->
-  
     <ItemGroup>
         <!-- App Icon -->
         <MauiIcon Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'" Include="Resources\AppIcon\appiconfg.svg" BaseSize="55,55" />
