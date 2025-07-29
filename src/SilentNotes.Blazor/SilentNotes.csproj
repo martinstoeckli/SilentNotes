@@ -47,8 +47,9 @@
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(TargetFramework)'=='net9.0-android'">
-      <PublishTrimmed>True</PublishTrimmed>
+      <PublishTrimmed>False</PublishTrimmed>
       <TrimMode>partial</TrimMode>
+      <AndroidLinkTool>r8</AndroidLinkTool>
       <EnableTrimAnalyzer>True</EnableTrimAnalyzer>
       <RunAOTCompilation>False</RunAOTCompilation>
       <AndroidEnableMarshalMethods>true</AndroidEnableMarshalMethods>
