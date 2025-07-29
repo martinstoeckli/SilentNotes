@@ -278,7 +278,7 @@ jobs:
   # Publish release on Github
   ##############################################################################
   job_publish_release:
-    needs: [job_version, job_build_android, job_build_android_additional_platform]
+    needs: [job_version, job_build_android]
     if: ${{ inputs.publish-release }}
 
     runs-on: windows-latest
