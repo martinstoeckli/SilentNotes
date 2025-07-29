@@ -66,7 +66,7 @@
     </PropertyGroup>
 
     <!-- Workaround: Android to avoid build message NU1101: Unable to find package Microsoft.NETCore.App.Runtime.linux-bionic-arm -->
-    <Target Condition="'$(TargetFramework)'=='net9.0-android'" Name="_RemoveLinuxFrameworkReferences" AfterTargets="ProcessFrameworkReferences">
+    <Target Name="_RemoveLinuxFrameworkReferences" AfterTargets="ProcessFrameworkReferences">
       <ItemGroup>
         <_ProblematicRIDs Include="linux-bionic-arm;linux-bionic-arm64;linux-bionic-x86;linux-bionic-arm64" />
         <PackageDownload Remove="Microsoft.NETCore.App.Runtime.%(_ProblematicRIDs.Identity)" />
