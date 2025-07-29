@@ -39,7 +39,7 @@
         <GenerateTestArtifacts>False</GenerateTestArtifacts>
         <GenerateTemporaryStoreCertificate>True</GenerateTemporaryStoreCertificate>
         <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
-        <Platforms>x64;x86</Platforms>
+        <Platforms>x64</Platforms>
     </PropertyGroup>
 
     <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows' and '$(RuntimeIdentifierOverride)' != ''">
@@ -50,32 +50,18 @@
       <PublishTrimmed>True</PublishTrimmed>
       <TrimMode>partial</TrimMode>
       <EnableTrimAnalyzer>True</EnableTrimAnalyzer>
-    </PropertyGroup>
-
-    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-android|x86'">
-      <AndroidLinkTool>r8</AndroidLinkTool>
-      <RuntimeIdentifiers>android-arm;android-arm64</RuntimeIdentifiers>
       <RunAOTCompilation>False</RunAOTCompilation>
-      <PublishTrimmed>True</PublishTrimmed>
       <AndroidEnableMarshalMethods>true</AndroidEnableMarshalMethods>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-android|x64'">
+      <RuntimeIdentifiers>android-arm;android-arm64;android-x64</RuntimeIdentifiers>
       <AndroidLinkTool>r8</AndroidLinkTool>
-      <RuntimeIdentifiers>android-arm;android-arm64</RuntimeIdentifiers>
-      <RunAOTCompilation>False</RunAOTCompilation>
-      <PublishTrimmed>True</PublishTrimmed>
-      <AndroidEnableMarshalMethods>true</AndroidEnableMarshalMethods>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net9.0-android|x64'">
-      <PublishTrimmed>True</PublishTrimmed>
-      <TrimMode>partial</TrimMode>
-    </PropertyGroup>
-
-    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net9.0-android|x86'">
-      <PublishTrimmed>True</PublishTrimmed>
-      <TrimMode>partial</TrimMode>
+	  <!-- Emulator only -->
+      <RuntimeIdentifiers>android-x64</RuntimeIdentifiers>
     </PropertyGroup>
 
     <ItemGroup>
