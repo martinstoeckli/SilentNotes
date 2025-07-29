@@ -23,7 +23,7 @@
 
         <!-- Versions -->
         <ApplicationDisplayVersion>8.4.0</ApplicationDisplayVersion>
-        <ApplicationVersion>83</ApplicationVersion>
+        <ApplicationVersion>87</ApplicationVersion>
 
         <!-- Workaround: for https://github.com/dotnet/maui/issues/12859 -->
         <Version>$(ApplicationDisplayVersion)</Version>
@@ -46,21 +46,22 @@
         <RuntimeIdentifier>$(RuntimeIdentifierOverride)</RuntimeIdentifier>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(TargetFramework)'=='net9.0-android'">
+    <!-- Android all -->
+    <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
       <PublishTrimmed>True</PublishTrimmed>
       <TrimMode>partial</TrimMode>
       <EnableTrimAnalyzer>True</EnableTrimAnalyzer>
       <RunAOTCompilation>False</RunAOTCompilation>
-      <AndroidEnableMarshalMethods>true</AndroidEnableMarshalMethods>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-android|x64'">
+    <!-- Release Android all -->
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)'=='Release|net9.0-android'">
       <RuntimeIdentifiers>android-arm;android-arm64;android-x64</RuntimeIdentifiers>
       <AndroidLinkTool>r8</AndroidLinkTool>
     </PropertyGroup>
 
+    <!-- Debug Android runs in x64 emulator only -->
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net9.0-android|x64'">
-	  <!-- Emulator only -->
       <RuntimeIdentifiers>android-x64</RuntimeIdentifiers>
     </PropertyGroup>
 

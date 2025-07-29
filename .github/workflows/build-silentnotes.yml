@@ -62,8 +62,8 @@ jobs:
       run: echo "version=${{ steps.integer_version.outputs.info }}" >> $Env:GITHUB_OUTPUT
 
   ##############################################################################
-  # Android multi platform apk (armeabi-v7;arm64-v8a)
-  # Platforms are taken from the csproj, to build one apk with multiple platforms
+  # Android apk builds (android-arm;android-arm64;android-x64)
+  # Platforms are defined in the *.csproj
   ##############################################################################
   job_build_android:
     if: ${{ inputs.build-android }}
@@ -85,16 +85,10 @@ jobs:
       with:
         dotnet-version: ${{ env.Dotnet_Version }}
 
-    #- name: Install Java
-    #  uses: actions/setup-java@v2
-    #  with:
-    #    distribution: 'microsoft'
-    #    java-version: '11'
-
     - name: Install MAUI
       run: dotnet workload install maui-android --ignore-failed-sources
 
-    # Log DotNet version for reproducable builds
+    # Log DotNet version for reproducible builds
     - name: Log used DotNet versions
       run: |
         echo "DotNet version: ${{ env.Dotnet_Version }}"
@@ -109,10 +103,11 @@ jobs:
       env:
         KeystoreGpgPassword: ${{ secrets.SILENTNOTESANDROIDKEYSTOREGPGPASSWORD }}
 
-    # Build application
-    # The keystore location seems to be relative to the csproj file, so we placed it in the same directory and pass only the filename
     - name: Restore NuGet packages
       run: dotnet restore
+
+    # Build application
+    # The keystore location seems to be relative to the csproj file, so we placed it in the same directory and pass only the filename
     - name: Build application
       run: dotnet publish "${{ env.Project_Path }}" -c Release -f ${{ env.Target_Framework_Android }} -o ".\bin" -p:AndroidPackageFormats=apk -p:AndroidKeyStore=True -p:AndroidSigningKeyStore=silentnotes.keystore -p:AndroidSigningKeyAlias=androidmartinstoeckli -p:AndroidSigningKeyPass=${{ env.KeystorePassword }} -p:AndroidSigningStorePass=${{ env.KeystorePassword }}
       env:
@@ -127,13 +122,13 @@ jobs:
       run: |
         $apks = Get-ChildItem -Path .\bin\* -Filter *Signed.apk -Recurse -File
         New-Item -Path ".\artifacts" -ItemType "directory"
-        Move-Item -Path $apks[0].FullName -Destination ".\artifacts\silentnotes_arm.apk"
+        Move-Item -Path $apks[0].FullName -Destination ".\artifacts\silentnotes.apk"
 
     # Upload artifacts
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: silentnotes_android_arm_binaries
+        name: silentnotes-apk
         path: .\artifacts
 
   ##############################################################################
