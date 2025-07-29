@@ -65,6 +65,14 @@
       <RuntimeIdentifiers>android-x64</RuntimeIdentifiers>
     </PropertyGroup>
 
+	<!-- Workaround to avoid build message NU1101: Unable to find package Microsoft.NETCore.App.Runtime.linux-bionic-arm -->
+	<Target Name="_RemoveLinuxFrameworkReferences" AfterTargets="ProcessFrameworkReferences">
+		<ItemGroup>
+			<_ProblematicRIDs Include="linux-bionic-arm;linux-bionic-arm64;linux-bionic-x86;linux-bionic-arm64" />
+			<PackageDownload Remove="Microsoft.NETCore.App.Runtime.%(_ProblematicRIDs.Identity)" />
+		</ItemGroup>
+	</Target>
+  
     <ItemGroup>
         <!-- App Icon -->
         <MauiIcon Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'" Include="Resources\AppIcon\appiconfg.svg" BaseSize="55,55" />
