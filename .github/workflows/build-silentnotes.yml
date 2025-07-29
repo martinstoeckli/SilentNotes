@@ -65,8 +65,7 @@ jobs:
   # Android multi platform bundle for the play store.
   ##############################################################################
   job_build_android_bundle:
-    if: ${{ inputs.build-windows }}
-    #todo
+    if: ${{ inputs.build-android }}
   
     runs-on: windows-latest
 
@@ -88,7 +87,7 @@ jobs:
     - name: Install MAUI
       run: dotnet workload install maui-android --ignore-failed-sources
 
-    # Log DotNet version for reproducable builds
+    # Log DotNet version for reproducible builds
     - name: Log used DotNet versions
       run: |
         echo "DotNet version: ${{ env.Dotnet_Version }}"
@@ -128,7 +127,7 @@ jobs:
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: silentnotes_android_aab
+        name: silentnotes_android_bundle
         path: .\artifacts
 
   ##############################################################################
@@ -159,9 +158,9 @@ jobs:
         dotnet-version: ${{ env.Dotnet_Version }}
 
     - name: Install MAUI
-      run: dotnet workload install maui --ignore-failed-sources
+      run: dotnet workload install maui-android --ignore-failed-sources
 
-    # Log DotNet version for reproducable builds
+    # Log DotNet version for reproducible builds
     - name: Log used DotNet versions
       run: |
         echo "DotNet version: ${{ env.Dotnet_Version }}"
@@ -204,7 +203,7 @@ jobs:
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: silentnotes_android_apks
+        name: silentnotes-${{ matrix.platform }}
         path: .\artifacts
 
   ##############################################################################
