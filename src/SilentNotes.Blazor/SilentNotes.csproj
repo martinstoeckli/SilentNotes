@@ -23,7 +23,7 @@
 
         <!-- Versions -->
         <ApplicationDisplayVersion>8.4.0</ApplicationDisplayVersion>
-        <ApplicationVersion>83</ApplicationVersion>
+        <ApplicationVersion>84</ApplicationVersion>
 
         <!-- Workaround: for https://github.com/dotnet/maui/issues/12859 -->
         <Version>$(ApplicationDisplayVersion)</Version>
@@ -56,7 +56,6 @@
 
     <!-- Release Android all -->
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)'=='Release|net9.0-android'">
-      <AndroidLinkTool>r8</AndroidLinkTool>
       <RuntimeIdentifiers>android-arm;android-arm64;android-x64</RuntimeIdentifiers>
     </PropertyGroup>
 
