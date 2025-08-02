@@ -1,0 +1,6 @@
+SilentNotes version 8.4.0
+
+* Targeting Android API 35.
+* Upgrade auf .NET 9.0 mit Trimming.
+* Erlaubnis "NEARBY_WIFI_DEVICES" hinzugefügt, um HTTP Verbindungen zu WebDav Server in einem LAN zu ermöglichen für API 36 (nur Android).
+* Upgrade der NuGet packages.

@@ -218,7 +218,7 @@ jobs:
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: silentnotes_windows_binaries-${{ matrix.platform }}
+        name: silentnotes_windows_${{ matrix.platform }}
         path: .\windows
 
   ##############################################################################
@@ -240,7 +240,7 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         path: downloaddirectory
-        pattern: silentnotes_windows_binaries-*
+        pattern: silentnotes_windows_*
         merge-multiple: true
 
     - name: Collect msix files
@@ -260,14 +260,14 @@ jobs:
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: silentnotes_windows_binaries
+        name: silentnotes_windows
         path: .\**\*.msixbundle
 
     # Cleanup temporary artifacts
     - name: Cleanup temporary build artifacts
       uses: geekyeggo/delete-artifact@v5
       with:
-          name: silentnotes_windows_binaries-*
+          name: silentnotes_windows_*
 
   ##############################################################################
   # Publish release on Github
