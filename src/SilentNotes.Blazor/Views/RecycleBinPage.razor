@@ -49,11 +49,11 @@
 
 @* Main menu *@
 <MudAppBar Class="flex-none" Fixed="true" Dense="true" WrapContent="false">
-	<MudIconButton OnClick="@(() => Navigation.NavigateTo(BackRoute))" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" Edge="Edge.Start" />
+	<MudIconButton OnClick="@(() => Navigation.NavigateTo(BackRoute))" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" title="@LanguageService["back"]" Edge="Edge.Start" />
 
 	<MudSpacer />
 
-	<MudIconButton OnClick="@(() => ViewModel.EmptyRecycleBinCommand.Execute(null))" Icon="@IconService[IconNames.DeleteForever]" Color="Color.Inherit" Title="@LanguageService["empty_recyclebin"]" />
+	<MudIconButton OnClick="@(() => ViewModel.EmptyRecycleBinCommand.Execute(null))" Icon="@IconService[IconNames.DeleteForever]" Color="Color.Inherit" title="@LanguageService["empty_recyclebin"]" />
 </MudAppBar>
 
 @* body *@

@@ -56,40 +56,40 @@ div.note-dark .detail-view.checklist .ProseMirror p::after { content: @(IconServ
 
 @* Main menu *@
 <MudAppBar Class="flex-none" Fixed="true" Dense="true" WrapContent="false">
-	<MudIconButton OnClick="@(() => Navigation.NavigateTo(BackRoute))" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" Edge="Edge.Start" />
+	<MudIconButton OnClick="@(() => Navigation.NavigateTo(BackRoute))" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" title="@LanguageService["back"]" Edge="Edge.Start" />
 
 	<MudSpacer />
 
 	@if (SynchronizationState.IsSynchronizationRunning)
 	{
-		<MudIconButton Class="btn-toggled" Icon="@IconService.GetFmt(IconNames.CloudSyncAnimated, ThemeService.GetColorHex(ThemeColor.AppbarBackground))" Color="Color.Inherit" Title="@LanguageService["sync_notes"]" Edge="Edge.End" />
+		<MudIconButton Class="btn-toggled" Icon="@IconService.GetFmt(IconNames.CloudSyncAnimated, ThemeService.GetColorHex(ThemeColor.AppbarBackground))" Color="Color.Inherit" title="@LanguageService["sync_notes"]" Edge="Edge.End" />
 	}
 
 	<MudIconButton OnClick="@(() => MoveChecklistItem(true, false))"
 		Icon="@IconService.GetSvgLink(IconNames.ArrowCollapseUp)" Color="Color.Inherit"
-		Title="@LanguageService["checklist_move_to_top"]" Disabled="ViewModel.ShoppingModeActive" Edge="Edge.End"/>
+		title="@LanguageService["checklist_move_to_top"]" Disabled="ViewModel.ShoppingModeActive" Edge="Edge.End"/>
 
 	<MudIconButton OnClick="@(() => MoveChecklistItem(true, true))"
 		Icon="@IconService.GetSvgLink(IconNames.ArrowUp)" Color="Color.Inherit"
-		Title="@LanguageService["checklist_move_up"]" Disabled="ViewModel.ShoppingModeActive" Edge="Edge.End"/>
+		title="@LanguageService["checklist_move_up"]" Disabled="ViewModel.ShoppingModeActive" Edge="Edge.End"/>
 
 	<MudIconButton OnClick="@(() => MoveChecklistItem(false, true))"
 		Icon="@IconService.GetSvgLink(IconNames.ArrowDown)" Color="Color.Inherit"
-		Title="@LanguageService["checklist_move_down"]" Disabled="ViewModel.ShoppingModeActive" Edge="Edge.End" />
+		title="@LanguageService["checklist_move_down"]" Disabled="ViewModel.ShoppingModeActive" Edge="Edge.End" />
 
 	<MudIconButton OnClick="@(() => MoveChecklistItem(false, false))"
 		Icon="@IconService.GetSvgLink(IconNames.ArrowCollapseDown)" Color="Color.Inherit"
-		Title="@LanguageService["checklist_move_to_bottom"]" Disabled="ViewModel.ShoppingModeActive" Edge="Edge.End" />
+		title="@LanguageService["checklist_move_to_bottom"]" Disabled="ViewModel.ShoppingModeActive" Edge="Edge.End" />
 
 	<MudIconButton OnClick="@(() => ToggleShoppingMode())"
 		Icon="@IconService.GetSvgLink(IconNames.KeyboardOffOutline)" Color="Color.Inherit"
 		Class="@Css.BuildClass(new CssClassIf(CssClasses.ButtonToggled, ViewModel.ShoppingModeActive))"
-		Title="@LanguageService["note_shopping_mode"]" Edge="Edge.End" />
+		title="@LanguageService["note_shopping_mode"]" Edge="Edge.End" />
 
 	<MudIconButton OnClick="@(() => SearchToolbarOpen = !SearchToolbarOpen)"
 		Icon="@IconService.GetSvgLink(IconNames.Magnify)" Color="Color.Inherit"
 		Class="@Css.BuildClass(new CssClassIf(CssClasses.ButtonToggled, _searchToolbarOpen))"
-		Title="@LanguageService["search"]" Edge="Edge.End" />
+		title="@LanguageService["search"]" Edge="Edge.End" />
 
 	@* Overflow menu *@
 	<MudMenu @ref="_overflowMenu" Dense="true" AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight">

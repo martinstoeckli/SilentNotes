@@ -190,7 +190,7 @@ namespace SilentNotes.Services
                 }
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 repositoryModel = null;
                 return false;

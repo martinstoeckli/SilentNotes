@@ -24,7 +24,7 @@
 
 @* Main menu *@
 <MudAppBar Class="flex-none" Fixed="true" Dense="true" WrapContent="false">
-	<MudIconButton OnClick="@(() => Navigation.NavigateTo(BackRoute))" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" Title="@LanguageService["back"]" Edge="Edge.Start" />
+	<MudIconButton OnClick="@(() => Navigation.NavigateTo(BackRoute))" Icon="@IconService[IconNames.ArrowLeft]" Color="Color.Inherit" Class="mr-5" title="@LanguageService["back"]" Edge="Edge.Start" />
 </MudAppBar>
 
 @* watermark image *@
@@ -46,7 +46,7 @@
 
 				<div Class="d-flex justify-center">
 					<MudPaper Class="code px-4 py-2 rounded" Elevation="2">
-						<MudElement>@ViewModel.TransferCodeFmt</MudElement><MudIconButton Class="ml-3" OnClick="@(() => ViewModel.CopyTransferCodeCommand.Execute(null))" Icon="@Icons.Material.Filled.ContentCopy" Color="Color.Inherit" Title="@LanguageService["copy"]"/>
+						<MudElement>@ViewModel.TransferCodeFmt</MudElement><MudIconButton Class="ml-3" OnClick="@(() => ViewModel.CopyTransferCodeCommand.Execute(null))" Icon="@Icons.Material.Filled.ContentCopy" Color="Color.Inherit" title="@LanguageService["copy"]"/>
 					</MudPaper>
 				</div>
 
