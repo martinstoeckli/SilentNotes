@@ -1,0 +1,24 @@
+﻿@page "/"
+
+@inject MainViewModel ViewModel
+
+<style type="text/css">
+	h1 { font-size: 18pt; }
+	.result { font-size: 12pt; }
+</style>
+
+<p>Use this application to find a cost factor which is high enough, but does not slow down the
+app on weaker (mobile) devices.</p>
+
+<h1>PBKDF2 performance test</h1>
+
+<p>Compile in Release mode when measuring performance on real devices. For the note safe we are
+aiming for <em>∼500 ms</em> on a middle range mobile phone.</p>
+
+<label for="pbkdf2CostFactor">Cost factor</label>
+<input id="pbkdf2CostFactor" type="number" @bind=ViewModel.Pbkdf2CostFactor min="1" max="100000" />
+
+<button @onclick="@(() => ViewModel.MeasurePbkdf2Command.Execute(null))">Measure time</button>
+<div class="result"><span>@ViewModel.Pbkdf2Time</span> <span margin="0 0 0 0.8em">ms</span></div>
+
+

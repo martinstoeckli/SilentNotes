@@ -1,0 +1,35 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36408.4
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KdfPerformanceTest", "KdfPerformanceTest.csproj", "{5AC40B5B-5388-491D-A871-312299CBA74A}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "SilentNotes.AllPlatforms", "..\..\SilentNotes.AllPlatforms\SilentNotes.AllPlatforms.shproj", "{BBFA534E-69FD-4B31-B596-01D7317460D5}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "VanillaCloudStorageClient", "..\..\VanillaCloudStorageClient\VanillaCloudStorageClient.shproj", "{206E934E-A44E-4ED1-97F0-1FFFE0718E5E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5AC40B5B-5388-491D-A871-312299CBA74A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5AC40B5B-5388-491D-A871-312299CBA74A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5AC40B5B-5388-491D-A871-312299CBA74A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5AC40B5B-5388-491D-A871-312299CBA74A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CD14CA4A-79E3-4FF4-8D6B-62093AA0BA14}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		..\..\VanillaCloudStorageClient\VanillaCloudStorageClient.projitems*{206e934e-a44e-4ed1-97f0-1fffe0718e5e}*SharedItemsImports = 13
+		..\..\SilentNotes.AllPlatforms\SilentNotes.AllPlatforms.projitems*{5ac40b5b-5388-491d-a871-312299cba74a}*SharedItemsImports = 5
+		..\..\VanillaCloudStorageClient\VanillaCloudStorageClient.projitems*{5ac40b5b-5388-491d-a871-312299cba74a}*SharedItemsImports = 5
+		..\..\SilentNotes.AllPlatforms\SilentNotes.AllPlatforms.projitems*{bbfa534e-69fd-4b31-b596-01d7317460d5}*SharedItemsImports = 13
+	EndGlobalSection
+EndGlobal
