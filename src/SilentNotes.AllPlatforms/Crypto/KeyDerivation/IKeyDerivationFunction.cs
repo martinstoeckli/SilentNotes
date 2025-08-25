@@ -29,7 +29,7 @@ namespace SilentNotes.Crypto.KeyDerivation
         /// <param name="cost">The cost factor which controls the necessary time for the
         /// calculation (the longer the more safe from brute-forcing).</param>
         /// <returns>Key for decryption.</returns>
-        byte[] DeriveKeyFromPassword(SecureString password, int expectedKeySizeBytes, byte[] salt, int cost);
+        byte[] DeriveKeyFromPassword(SecureString password, int expectedKeySizeBytes, byte[] salt, string cost);
 
         /// <summary>
         /// Gets the size of the salt in bytes, which is expected by the implementing key
@@ -43,6 +43,6 @@ namespace SilentNotes.Crypto.KeyDerivation
         /// </summary>
         /// <param name="costType">The cost type.</param>
         /// <returns>The recommended cost factor.</returns>
-        int RecommendedCost(KeyDerivationCostType costType);
+        string RecommendedCost(KeyDerivationCostType costType);
     }
 }

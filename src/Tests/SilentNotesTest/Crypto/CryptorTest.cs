@@ -131,7 +131,26 @@ namespace SilentNotesTest.Crypto
 
             ICryptoRandomService randomGenerator = CommonMocksAndStubs.CryptoRandomService();
             byte[] salt = randomGenerator.GetRandomBytes(kdf.ExpectedSaltSizeBytes);
-            int cost = kdf.RecommendedCost(KeyDerivationCostType.Low);
+            string cost = kdf.RecommendedCost(KeyDerivationCostType.Low);
+
+            SecureString password = CryptoUtils.StringToSecureString("Das ist kein gutes Passwort");
+            byte[] key = kdf.DeriveKeyFromPassword(password, KeyLength, salt, cost);
+            Assert.AreEqual(KeyLength, key.Length);
+
+            // Same parameters must result in the same output
+            byte[] key2 = kdf.DeriveKeyFromPassword(password, KeyLength, salt, cost);
+            CollectionAssert.AreEqual(key, key2);
+        }
+
+        [TestMethod]
+        public void CryptoArgon2()
+        {
+            const int KeyLength = 42;
+            IKeyDerivationFunction kdf = new BouncyCastleArgon2();
+
+            ICryptoRandomService randomGenerator = CommonMocksAndStubs.CryptoRandomService();
+            byte[] salt = randomGenerator.GetRandomBytes(kdf.ExpectedSaltSizeBytes);
+            string cost = kdf.RecommendedCost(KeyDerivationCostType.Low);
 
             SecureString password = CryptoUtils.StringToSecureString("Das ist kein gutes Passwort");
             byte[] key = kdf.DeriveKeyFromPassword(password, KeyLength, salt, cost);
@@ -190,7 +209,7 @@ namespace SilentNotesTest.Crypto
         [TestMethod]
         public void EnsureBackwardsCompatibilityDeobfuscation()
         {
-            // Ensure that a once stored obfuscated text can always be deobfuscated even after changes in the liberary
+            // Ensure that a once stored obfuscated text can always be deobfuscated even after changes in the library
             SecureString obfuscationKey = CryptoUtils.StringToSecureString("A very strong passphrase...");
             string obfuscatedMessage = "b2JmdXNjYXRpb24kdHdvZmlzaF9nY20kU1pmWWpzWWV6MUZ0S0xqZWhHM1FCUT09JHBia2RmMiR0emVXNU9PTWNucEkxaHhWbkt2Y0Z3PT0kMTAwMCQh9UPVY34fufBoywrqb0JjKU/BMqnTABoXfaTsmEudBRVMpMb+Yx+GZIBjNbrWpqMSmWMgiIwfNBlixP0vi7ohAiv9";
             string deobfuscatedMessage = CryptoUtils.Deobfuscate(obfuscatedMessage, obfuscationKey);

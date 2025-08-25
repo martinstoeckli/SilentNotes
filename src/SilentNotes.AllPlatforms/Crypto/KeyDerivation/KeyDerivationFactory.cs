@@ -24,6 +24,8 @@ namespace SilentNotes.Crypto.KeyDerivation
                 // Add other algorithms if necessary
                 case Pbkdf2.CryptoKdfName:
                     return new Pbkdf2();
+                case BouncyCastleArgon2.CryptoKdfName:
+                    return new BouncyCastleArgon2();
                 default:
                     throw new CryptoException(string.Format("Unknown key derivation function '{0}'", kdfName));
             }
