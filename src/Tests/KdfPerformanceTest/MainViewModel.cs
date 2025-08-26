@@ -16,21 +16,25 @@ namespace KdfTest
     {
         private const int ProfilingRounds = 5;
         private readonly Pbkdf2 _pbkdf2;
+        private readonly BouncyCastleArgon2 _argon2;
         private readonly Random _nonCryptoRandom;
 
         public MainViewModel()
         {
-            MeasurePbkdf2Command = new RelayCommand(MeasurePbkdf2);
             _pbkdf2 = new Pbkdf2();
+            _argon2 = new BouncyCastleArgon2();
             _nonCryptoRandom = new Random();
 
+            MeasurePbkdf2Command = new RelayCommand(MeasurePbkdf2);
+            MeasureArgon2Command = new RelayCommand(MeasureArgon2);
             Pbkdf2CostFactor = _pbkdf2.RecommendedCost(KeyDerivationCostType.High);
+            Argon2CostFactor = _argon2.RecommendedCost(KeyDerivationCostType.High);
         }
 
         /// <summary>
         /// Gets of sets the cost factor for PBKDF2
         /// </summary>
-        public int Pbkdf2CostFactor { get; set; }
+        public string Pbkdf2CostFactor { get; set; }
 
         /// <summary>
         /// Gets the measured time for PBKDF2
@@ -44,7 +48,7 @@ namespace KdfTest
             var password = CryptoUtils.StringToSecureString("The fox jumps over the lazy dog.");
             var expectedKeySize = new BouncyCastleXChaCha20().ExpectedKeySize;
             var salt = GetNonCryptoRandomBytes(_pbkdf2.ExpectedSaltSizeBytes);
-            int cost = Pbkdf2CostFactor;
+            string cost = Pbkdf2CostFactor;
 
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -56,6 +60,37 @@ namespace KdfTest
 
             int measuredTime = (int)stopwatch.ElapsedMilliseconds / ProfilingRounds;
             Pbkdf2Time = measuredTime;
+        }
+
+        /// <summary>
+        /// Gets of sets the cost factor for Argon2
+        /// </summary>
+        public string Argon2CostFactor { get; set; }
+
+        /// <summary>
+        /// Gets the measured time for Argon2
+        /// </summary>
+        public int Argon2Time { get; private set; }
+
+        public ICommand MeasureArgon2Command { get; }
+
+        private void MeasureArgon2()
+        {
+            var password = CryptoUtils.StringToSecureString("The fox jumps over the lazy dog.");
+            var expectedKeySize = new BouncyCastleXChaCha20().ExpectedKeySize;
+            var salt = GetNonCryptoRandomBytes(_argon2.ExpectedSaltSizeBytes);
+            string cost = Argon2CostFactor;
+
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            for (int index = 0; index < ProfilingRounds; index++)
+            {
+                _argon2.DeriveKeyFromPassword(password, expectedKeySize, salt, cost);
+            }
+            stopwatch.Stop();
+
+            int measuredTime = (int)stopwatch.ElapsedMilliseconds / ProfilingRounds;
+            Argon2Time = measuredTime;
         }
 
         private byte[] GetNonCryptoRandomBytes(int numberOfBytes)

@@ -74,16 +74,17 @@ namespace SilentNotes.Crypto.KeyDerivation
                 case KeyDerivationCostType.Low:
                     result = new Argon2Cost
                     {
-                        MemoryKib = 1024,
-                        Iterations = 2,
+                        MemoryKib = 1000,
+                        Iterations = 1,
                         Parallelism = 1,
                     };
                     break;
                 case KeyDerivationCostType.High:
+                    // measured 650ms on a mid-range mobile device in 2023
                     result = new Argon2Cost
                     {
-                        MemoryKib = 64000,
-                        Iterations = 3,
+                        MemoryKib = 20000,
+                        Iterations = 2,
                         Parallelism = 1,
                     };
                     break;
