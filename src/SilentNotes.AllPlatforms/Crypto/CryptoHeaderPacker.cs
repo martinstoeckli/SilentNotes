@@ -30,6 +30,8 @@ namespace SilentNotes.Crypto
                 throw new ArgumentNullException("header");
             if (cipher == null)
                 throw new ArgumentNullException("cipher");
+            if (!string.IsNullOrEmpty(header.Cost) && header.Cost.Contains(Separator))
+                throw new ArgumentException("The cost parameter must not contain a separator character.");
 
             StringBuilder sb = new StringBuilder();
             sb.Append(header.PackageName + RevisionSeparator + CryptoHeader.NewestSupportedRevision);

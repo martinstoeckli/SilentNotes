@@ -4,6 +4,7 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
+using System.Globalization;
 using System.Security;
 using System.Security.Cryptography;
 using System.Text;
@@ -29,17 +30,19 @@ namespace SilentNotes.Crypto.KeyDerivation
         }
 
         /// <inheritdoc />
-        public byte[] DeriveKeyFromPassword(SecureString password, int expectedKeySizeBytes, byte[] salt, int cost)
+        public byte[] DeriveKeyFromPassword(SecureString password, int expectedKeySizeBytes, byte[] salt, string cost)
         {
             if ((password == null) || (password.Length == 0))
                 throw new CryptoException("The password cannot be empty.");
-            if (cost < 1)
+            if (!int.TryParse(cost, NumberStyles.None, CultureInfo.InvariantCulture, out int iterations))
+                throw new CryptoException("The cost parameter has an invalid format.");
+            if (iterations < 1)
                 throw new CryptoException("The cost factor is too small.");
 
             byte[] binaryPassword = SecureStringExtensions.SecureStringToBytes(password, Encoding.UTF8);
             try
             {
-                Rfc2898DeriveBytes kdf = new Rfc2898DeriveBytes(binaryPassword, salt, cost, HashAlgorithmName.SHA1);
+                Rfc2898DeriveBytes kdf = new Rfc2898DeriveBytes(binaryPassword, salt, iterations, HashAlgorithmName.SHA1);
                 byte[] result = kdf.GetBytes(expectedKeySizeBytes);
                 return result;
             }
@@ -56,16 +59,16 @@ namespace SilentNotes.Crypto.KeyDerivation
         }
 
         /// <inheritdoc />
-        public int RecommendedCost(KeyDerivationCostType costType)
+        public string RecommendedCost(KeyDerivationCostType costType)
         {
             switch (costType)
             {
                 case KeyDerivationCostType.Low:
-                    return 1500;
+                    return "1500";
                 case KeyDerivationCostType.High:
-                    return 20000; // measured 600ms on a mid-range mobile device in 2023
+                    return "20000"; // measured 600ms on a mid-range mobile device in 2023
                 default:
-                    throw new ArgumentOutOfRangeException("costType");
+                    throw new ArgumentOutOfRangeException(nameof(costType));
             }
         }
     }

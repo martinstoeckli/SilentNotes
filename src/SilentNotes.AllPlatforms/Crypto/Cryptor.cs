@@ -64,8 +64,7 @@ namespace SilentNotes.Crypto
             header.Nonce = _randomSource.GetRandomBytes(encryptor.ExpectedNonceSize);
             header.KdfName = kdf.Name;
             header.Salt = _randomSource.GetRandomBytes(kdf.ExpectedSaltSizeBytes);
-            int cost = kdf.RecommendedCost(costType);
-            header.Cost = cost.ToString();
+            header.Cost = kdf.RecommendedCost(costType);
             header.Compression = compression;
 
             try
@@ -73,7 +72,7 @@ namespace SilentNotes.Crypto
                 if (string.Equals(CompressionGzip, header.Compression, StringComparison.InvariantCultureIgnoreCase))
                     message = CompressUtils.Compress(message);
 
-                byte[] key = kdf.DeriveKeyFromPassword(password, encryptor.ExpectedKeySize, header.Salt, cost);
+                byte[] key = kdf.DeriveKeyFromPassword(password, encryptor.ExpectedKeySize, header.Salt, header.Cost);
                 byte[] cipher = encryptor.Encrypt(message, key, header.Nonce);
                 return CryptoHeaderPacker.PackHeaderAndCypher(header, cipher);
             }
@@ -137,8 +136,7 @@ namespace SilentNotes.Crypto
 
             try
             {
-                int cost = int.Parse(header.Cost);
-                byte[] key = kdf.DeriveKeyFromPassword(password, decryptor.ExpectedKeySize, header.Salt, cost);
+                byte[] key = kdf.DeriveKeyFromPassword(password, decryptor.ExpectedKeySize, header.Salt, header.Cost);
                 byte[] message = decryptor.Decrypt(cipher, key, header.Nonce);
 
                 if (string.Equals(CompressionGzip, header.Compression, StringComparison.InvariantCultureIgnoreCase))

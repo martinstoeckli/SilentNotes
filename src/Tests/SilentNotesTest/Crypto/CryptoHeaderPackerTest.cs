@@ -64,6 +64,24 @@ namespace SilentNotesTest.Crypto
         }
 
         [TestMethod]
+        public void CostParamterMustNotContainSeparator()
+        {
+            CryptoHeader header = new CryptoHeader
+            {
+                PackageName = "MyAppName",
+                AlgorithmName = "Twofish",
+                KdfName = "PBKDF2",
+                Cost = "10$88",
+                Nonce = CommonMocksAndStubs.FilledByteArray(8, 66),
+                Salt = CommonMocksAndStubs.FilledByteArray(8, 77),
+                Compression = "gzip",
+            };
+            byte[] cipher = CommonMocksAndStubs.FilledByteArray(16, 88);
+
+            Assert.Throws<ArgumentException>(() => CryptoHeaderPacker.PackHeaderAndCypher(header, cipher));
+        }
+
+        [TestMethod]
         public void HasMatchingHeaderRecognizesValidHeader()
         {
             byte[] array = CryptoUtils.StringToBytes("MyAppName v=8$");

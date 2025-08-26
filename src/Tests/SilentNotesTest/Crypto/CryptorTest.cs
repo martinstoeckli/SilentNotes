@@ -107,6 +107,43 @@ namespace SilentNotesTest.Crypto
         }
 
         [TestMethod]
+        public void EnsureBackwardsCompatibilityLongTimeDecryptionOfPbkdf2()
+        {
+            const int KeyLength = 42;
+
+            // Ensure that a once stored kdf can always be reproduced even after changes in the liberary
+            IKeyDerivationFunction kdf = new Pbkdf2();
+            SecureString password = CryptoUtils.StringToSecureString("The fox jumps");
+            ICryptoRandomService randomGenerator = CommonMocksAndStubs.CryptoRandomService(88); // Fixed nonce
+            byte[] salt = randomGenerator.GetRandomBytes(kdf.ExpectedSaltSizeBytes);
+            int cost = 100;
+            byte[] kdfBytes = kdf.DeriveKeyFromPassword(password, KeyLength, salt, cost.ToString());
+            string kdfText = CryptoUtils.BytesToBase64String(kdfBytes);
+            Assert.AreEqual("3zaJwPYv0SIG2nVWghO556T1MlAzFDhWYrfGRmXE3iQv0ZmC3UrAJSd7", kdfText);
+        }
+
+        [TestMethod]
+        public void EnsureBackwardsCompatibilityLongTimeDecryptionOfArgon2()
+        {
+            const int KeyLength = 42;
+
+            // Ensure that a once stored kdf can always be reproduced even after changes in the liberary
+            IKeyDerivationFunction kdf = new BouncyCastleArgon2();
+            SecureString password = CryptoUtils.StringToSecureString("The fox jumps");
+            ICryptoRandomService randomGenerator = CommonMocksAndStubs.CryptoRandomService(88); // Fixed nonce
+            byte[] salt = randomGenerator.GetRandomBytes(kdf.ExpectedSaltSizeBytes);
+            var cost = new Argon2Cost
+            {
+                MemoryKib = 1000,
+                Iterations = 1,
+                Parallelism = 1,
+            };
+            byte[] kdfBytes = kdf.DeriveKeyFromPassword(password, KeyLength, salt, cost.Format());
+            string kdfText = CryptoUtils.BytesToBase64String(kdfBytes);
+            Assert.AreEqual("PalgR+kJyUk2ASW7rAYn5O85OrW2C9u51YpVWAB9CtYt7dY8tHPOg0aG", kdfText);
+        }
+
+        [TestMethod]
         public void EnsureCompatibilityToLibsodiumXChaCha20()
         {
             // Ensure that a once stored cipher can always be decrypted even after changes in the liberary.
@@ -131,7 +168,26 @@ namespace SilentNotesTest.Crypto
 
             ICryptoRandomService randomGenerator = CommonMocksAndStubs.CryptoRandomService();
             byte[] salt = randomGenerator.GetRandomBytes(kdf.ExpectedSaltSizeBytes);
-            int cost = kdf.RecommendedCost(KeyDerivationCostType.Low);
+            string cost = kdf.RecommendedCost(KeyDerivationCostType.Low);
+
+            SecureString password = CryptoUtils.StringToSecureString("Das ist kein gutes Passwort");
+            byte[] key = kdf.DeriveKeyFromPassword(password, KeyLength, salt, cost);
+            Assert.AreEqual(KeyLength, key.Length);
+
+            // Same parameters must result in the same output
+            byte[] key2 = kdf.DeriveKeyFromPassword(password, KeyLength, salt, cost);
+            CollectionAssert.AreEqual(key, key2);
+        }
+
+        [TestMethod]
+        public void CryptoArgon2()
+        {
+            const int KeyLength = 42;
+            IKeyDerivationFunction kdf = new BouncyCastleArgon2();
+
+            ICryptoRandomService randomGenerator = CommonMocksAndStubs.CryptoRandomService();
+            byte[] salt = randomGenerator.GetRandomBytes(kdf.ExpectedSaltSizeBytes);
+            string cost = kdf.RecommendedCost(KeyDerivationCostType.Low);
 
             SecureString password = CryptoUtils.StringToSecureString("Das ist kein gutes Passwort");
             byte[] key = kdf.DeriveKeyFromPassword(password, KeyLength, salt, cost);
@@ -190,7 +246,7 @@ namespace SilentNotesTest.Crypto
         [TestMethod]
         public void EnsureBackwardsCompatibilityDeobfuscation()
         {
-            // Ensure that a once stored obfuscated text can always be deobfuscated even after changes in the liberary
+            // Ensure that a once stored obfuscated text can always be deobfuscated even after changes in the library
             SecureString obfuscationKey = CryptoUtils.StringToSecureString("A very strong passphrase...");
             string obfuscatedMessage = "b2JmdXNjYXRpb24kdHdvZmlzaF9nY20kU1pmWWpzWWV6MUZ0S0xqZWhHM1FCUT09JHBia2RmMiR0emVXNU9PTWNucEkxaHhWbkt2Y0Z3PT0kMTAwMCQh9UPVY34fufBoywrqb0JjKU/BMqnTABoXfaTsmEudBRVMpMb+Yx+GZIBjNbrWpqMSmWMgiIwfNBlixP0vi7ohAiv9";
             string deobfuscatedMessage = CryptoUtils.Deobfuscate(obfuscatedMessage, obfuscationKey);
