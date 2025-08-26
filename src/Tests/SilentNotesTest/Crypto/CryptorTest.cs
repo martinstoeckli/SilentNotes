@@ -107,6 +107,43 @@ namespace SilentNotesTest.Crypto
         }
 
         [TestMethod]
+        public void EnsureBackwardsCompatibilityLongTimeDecryptionOfPbkdf2()
+        {
+            const int KeyLength = 42;
+
+            // Ensure that a once stored kdf can always be reproduced even after changes in the liberary
+            IKeyDerivationFunction kdf = new Pbkdf2();
+            SecureString password = CryptoUtils.StringToSecureString("The fox jumps");
+            ICryptoRandomService randomGenerator = CommonMocksAndStubs.CryptoRandomService(88); // Fixed nonce
+            byte[] salt = randomGenerator.GetRandomBytes(kdf.ExpectedSaltSizeBytes);
+            int cost = 100;
+            byte[] kdfBytes = kdf.DeriveKeyFromPassword(password, KeyLength, salt, cost.ToString());
+            string kdfText = CryptoUtils.BytesToBase64String(kdfBytes);
+            Assert.AreEqual("3zaJwPYv0SIG2nVWghO556T1MlAzFDhWYrfGRmXE3iQv0ZmC3UrAJSd7", kdfText);
+        }
+
+        [TestMethod]
+        public void EnsureBackwardsCompatibilityLongTimeDecryptionOfArgon2()
+        {
+            const int KeyLength = 42;
+
+            // Ensure that a once stored kdf can always be reproduced even after changes in the liberary
+            IKeyDerivationFunction kdf = new BouncyCastleArgon2();
+            SecureString password = CryptoUtils.StringToSecureString("The fox jumps");
+            ICryptoRandomService randomGenerator = CommonMocksAndStubs.CryptoRandomService(88); // Fixed nonce
+            byte[] salt = randomGenerator.GetRandomBytes(kdf.ExpectedSaltSizeBytes);
+            var cost = new Argon2Cost
+            {
+                MemoryKib = 1000,
+                Iterations = 1,
+                Parallelism = 1,
+            };
+            byte[] kdfBytes = kdf.DeriveKeyFromPassword(password, KeyLength, salt, cost.Format());
+            string kdfText = CryptoUtils.BytesToBase64String(kdfBytes);
+            Assert.AreEqual("PalgR+kJyUk2ASW7rAYn5O85OrW2C9u51YpVWAB9CtYt7dY8tHPOg0aG", kdfText);
+        }
+
+        [TestMethod]
         public void EnsureCompatibilityToLibsodiumXChaCha20()
         {
             // Ensure that a once stored cipher can always be decrypted even after changes in the liberary.
