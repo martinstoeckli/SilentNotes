@@ -175,6 +175,8 @@ encryption_algo_twofishgcm = Twofish256-GCM
 security_prevent_screenshots = Prevent creation of screenshots
 
 gui = Внешний вид
+gui_font_family = Font family
+gui_font_family-default = Default
 gui_font_size = Размер шрифта (меньше ‹ обычный › больше)
 gui_note_max_size = Максимальная высота заметки (меньше ‹ обычная › больше)
 gui_texture = Тема

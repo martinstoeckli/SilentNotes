@@ -37,6 +37,7 @@
 	}
 	.note-viewer {
 		font-size: @(ViewModel.GetNoteBaseFontSize(SettingsService, true))px !important;
+		font-family: @(ViewModel.GetNoteFontFamily(SettingsService));
 	}
 	.filter-input .mud-svg-icon {
 		fill: var(--mud-palette-appbar-background);

@@ -175,6 +175,8 @@ encryption_algo_twofishgcm = Twofish256-GCM
 security_prevent_screenshots = 防止截屏
 
 gui = 用户界面
+gui_font_family = Font family
+gui_font_family-default = Default
 gui_font_size = 字体大小 (更小 ‹ 常规 › 更大)
 gui_note_max_size = 最大笔记高度 (更小 ‹ 常规 › 更大)
 gui_texture = 主题

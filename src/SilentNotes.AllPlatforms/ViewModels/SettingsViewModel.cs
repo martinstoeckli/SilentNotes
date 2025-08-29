@@ -41,6 +41,7 @@ namespace SilentNotes.ViewModels
         private readonly ICloudStorageClientFactory _cloudStorageClientFactory;
         private readonly SliderStepConverter _fontSizeConverter;
         private readonly SliderStepConverter _noteMaxHeightConverter;
+        private string _defaultFontFamilyLabel;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SettingsViewModel"/> class.
@@ -53,6 +54,7 @@ namespace SilentNotes.ViewModels
             IThemeService themeService,
             IFeedbackService feedbackService,
             IMessengerService messengerService,
+            IFontService fontService,
             ICloudStorageClientFactory cloudStorageClientFactory,
             IFilePickerService filePickerService)
         {
@@ -70,6 +72,10 @@ namespace SilentNotes.ViewModels
 
             _fontSizeConverter = new SliderStepConverter(ReferenceFontSize, 1.0);
             _noteMaxHeightConverter = new SliderStepConverter(ReferenceNoteMaxSize, 20.0);
+
+            _defaultFontFamilyLabel = "‹" + Language["gui_font_family-default"] + "›";
+            FontFamilies = fontService.ListFontFamilies();
+            FontFamilies.Insert(0, _defaultFontFamilyLabel);
 
             EncryptionAlgorithms = new List<DropdownItemViewModel>();
             FillAlgorithmList(EncryptionAlgorithms);
@@ -99,6 +105,7 @@ namespace SilentNotes.ViewModels
             return ModificationDetector.CombineHashCodes(new long[]
             {
                 settings.Revision.GetHashCode(),
+                string.GetHashCode(settings.FontFamily),
                 settings.FontScale.GetHashCode(),
                 string.GetHashCode(settings.SelectedWallpaper),
                 settings.UseWallpaper.GetHashCode(),
@@ -141,6 +148,26 @@ namespace SilentNotes.ViewModels
             algorithms.Add(new DropdownItemViewModel { Value = BouncyCastleXChaCha20.CryptoAlgorithmName, Description = Language["encryption_algo_xchacha20"] });
             algorithms.Add(new DropdownItemViewModel { Value = BouncyCastleAesGcm.CryptoAlgorithmName, Description = Language["encryption_algo_aesgcm"] });
             algorithms.Add(new DropdownItemViewModel { Value = BouncyCastleTwofishGcm.CryptoAlgorithmName, Description = Language["encryption_algo_twofishgcm"] });
+        }
+
+        /// <summary>
+        /// Gets a list of all available font family names.
+        /// </summary>
+        public List<string> FontFamilies { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the 
+        /// </summary>
+        public string SelectedFontFamily
+        {
+            get { return Model.FontFamily ?? _defaultFontFamilyLabel; }
+
+            set
+            {
+                if (value == _defaultFontFamilyLabel)
+                    value = null;
+                SetProperty(SelectedFontFamily, value, (v) => Model.FontFamily = v);
+            }
         }
 
         /// <summary>

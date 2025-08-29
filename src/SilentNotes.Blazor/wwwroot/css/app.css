@@ -118,22 +118,30 @@ td { word-wrap: anywhere; } /* table should not exceed device width */
 
 /* Text formatting */
 
+.note-viewer {
+	font-family: "Segoe UI",Arial,sans-serif;
+	font-style: normal;
+	font-weight: normal;
+}
 .note-viewer h1 {
 	margin: 0.7em 0 0.3em 0 !important;
-	font: normal bold 1.35em "Segoe UI",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol" !important;
+	font-weight: bold;
+	font-size: 1.35em;
 }
 .note-viewer h2 {
 	margin: 0.8em 0 0.2em 0 !important;
-	font: normal bold 1.2em "Segoe UI",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol" !important;
+	font-weight: bold;
+	font-size: 1.2em;
 }
 .note-viewer h3 {
 	margin: 0.8em 0 0.2em 0 !important;
-	font: normal bold 1.1em "Segoe UI",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol" !important;
+	font-weight: bold;
+	font-size: 1.1em;
 }
 
 .note-viewer p {
 	margin: 0 0 0.2em 0 !important;
-	font: normal normal 1em "Segoe UI",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol" !important;
+	font-size: 1em;
 }
 
 .note-viewer ol {
@@ -172,7 +180,7 @@ td { word-wrap: anywhere; } /* table should not exceed device width */
 .note-viewer blockquote {
 	margin: 0.5em 0 0.5em 0 !important;
 	padding: 0 0 0 1em !important;
-	font: normal normal 1em "Segoe UI",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol" !important;
+	font-size: 1em;
 	border-left: 3px solid rgba(128, 128, 128, 0.4) !important;
 }
 .note-viewer.dark blockquote {

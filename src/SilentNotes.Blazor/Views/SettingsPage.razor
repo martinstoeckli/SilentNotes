@@ -15,6 +15,7 @@
 @inject IFeedbackService FeedbackService
 @inject IMessengerService MessengerService
 @inject IFilePickerService FilePickerService
+@inject IFontService FontService
 @inject ICloudStorageClientFactory CloudStorageClientFactory
 @inject ISynchronizationService SynchronizationService
 @inject IJSRuntime JSRuntime
@@ -187,8 +188,20 @@
 
 			<div class="css-grid">
 
-				@* Font size *@
+				@* Font family *@
 				<div><MudIcon Icon="@Icons.Material.Filled.FormatSize" Color="Color.Secondary" /></div>
+				<div>
+					<label for="FontSizeStep">@LanguageService["gui_font_family"]</label>
+					<MudSelect id="SelectedFontFamily" @bind-Value="ViewModel.SelectedFontFamily" Variant="Variant.Outlined">
+						@foreach (var fontFamily in ViewModel.FontFamilies)
+						{
+							<MudSelectItem Value="@fontFamily">@fontFamily</MudSelectItem>
+						}
+					</MudSelect>
+				</div>
+
+				@* Font size *@
+				<div></div>
 				<div>
 					<label for="FontSizeStep">@LanguageService["gui_font_size"]</label>
 					<MudSlider id="FontSizeStep" @bind-Value="ViewModel.FontSizeStep"
@@ -321,7 +334,7 @@
 
 	protected override void OnInitialized()
 	{
-		ViewModel = new SettingsViewModel(SettingsService, LanguageService, EnvironmentService, SynchronizationService, ThemeService, FeedbackService, MessengerService, CloudStorageClientFactory, FilePickerService);
+		ViewModel = new SettingsViewModel(SettingsService, LanguageService, EnvironmentService, SynchronizationService, ThemeService, FeedbackService, MessengerService, FontService, CloudStorageClientFactory, FilePickerService);
 	}
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)

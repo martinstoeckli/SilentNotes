@@ -68,6 +68,12 @@ namespace SilentNotes.Models
         public SerializeableCloudStorageCredentials Credentials { get; set; }
 
         /// <summary>
+        /// Gets or sets the name of the font family for the notes.
+        /// </summary>
+        [XmlElement("font-family")]
+        public string FontFamily { get; set; }
+
+        /// <summary>
         /// Gets or sets a factor to enlarge or reduce the font size of the notes.
         /// </summary>
         [XmlElement("font-scale")]
