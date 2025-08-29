@@ -57,6 +57,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\IFeedbackService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\IFilePickerService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\IFolderPickerService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\IFontService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\IInternetStateService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\IKeepScreenOn.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ILanguageCodeProvider.cs" />

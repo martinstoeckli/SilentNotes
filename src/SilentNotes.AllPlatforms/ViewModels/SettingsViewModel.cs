@@ -53,6 +53,7 @@ namespace SilentNotes.ViewModels
             IThemeService themeService,
             IFeedbackService feedbackService,
             IMessengerService messengerService,
+            IFontService fontService,
             ICloudStorageClientFactory cloudStorageClientFactory,
             IFilePickerService filePickerService)
         {
@@ -70,6 +71,9 @@ namespace SilentNotes.ViewModels
 
             _fontSizeConverter = new SliderStepConverter(ReferenceFontSize, 1.0);
             _noteMaxHeightConverter = new SliderStepConverter(ReferenceNoteMaxSize, 20.0);
+
+            FontFamilies = fontService.ListFontFamilies();
+            FontFamilies.Insert(0, string.Empty);
 
             EncryptionAlgorithms = new List<DropdownItemViewModel>();
             FillAlgorithmList(EncryptionAlgorithms);
@@ -99,6 +103,7 @@ namespace SilentNotes.ViewModels
             return ModificationDetector.CombineHashCodes(new long[]
             {
                 settings.Revision.GetHashCode(),
+                settings.FontFamily.GetHashCode(),
                 settings.FontScale.GetHashCode(),
                 string.GetHashCode(settings.SelectedWallpaper),
                 settings.UseWallpaper.GetHashCode(),
@@ -141,6 +146,20 @@ namespace SilentNotes.ViewModels
             algorithms.Add(new DropdownItemViewModel { Value = BouncyCastleXChaCha20.CryptoAlgorithmName, Description = Language["encryption_algo_xchacha20"] });
             algorithms.Add(new DropdownItemViewModel { Value = BouncyCastleAesGcm.CryptoAlgorithmName, Description = Language["encryption_algo_aesgcm"] });
             algorithms.Add(new DropdownItemViewModel { Value = BouncyCastleTwofishGcm.CryptoAlgorithmName, Description = Language["encryption_algo_twofishgcm"] });
+        }
+
+        /// <summary>
+        /// Gets a list of all available font family names.
+        /// </summary>
+        public List<string> FontFamilies { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the 
+        /// </summary>
+        public string SelectedFontFamily
+        {
+            get => Model.FontFamily;
+            set => SetProperty(SelectedFontFamily, value, (v) => Model.FontFamily = v);
         }
 
         /// <summary>

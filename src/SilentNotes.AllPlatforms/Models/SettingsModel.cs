@@ -41,6 +41,7 @@ namespace SilentNotes.Models
         {
             Revision = NewestSupportedRevision;
             AutoSyncMode = AutoSynchronizationMode.CostFreeInternetOnly;
+            FontFamily = string.Empty;
             FontScale = 1.0;
             UseSolidColorTheme = false;
             ColorForSolidTheme = "#3e3e3e";
@@ -66,6 +67,12 @@ namespace SilentNotes.Models
         /// </summary>
         [XmlElement("cloud_storage_credentials")]
         public SerializeableCloudStorageCredentials Credentials { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name of the font family for the notes.
+        /// </summary>
+        [XmlElement("font-family")]
+        public string FontFamily { get; set; }
 
         /// <summary>
         /// Gets or sets a factor to enlarge or reduce the font size of the notes.
