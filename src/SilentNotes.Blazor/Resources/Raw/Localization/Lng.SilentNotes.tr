@@ -175,6 +175,8 @@ encryption_algo_twofishgcm = Twofish256-GCM
 security_prevent_screenshots = Ekran görüntüsü alınmasını engelle
 
 gui = Arayüz
+gui_font_family = Font family
+gui_font_family-default = Default
 gui_font_size = Yazı tipi boyutu (küçük ‹ orta › büyük)
 gui_note_max_size = Maksimum not uzunluğu (kısa ‹ orta › uzun)
 gui_texture = Tema

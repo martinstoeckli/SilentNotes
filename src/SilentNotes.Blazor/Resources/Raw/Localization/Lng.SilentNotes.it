@@ -175,6 +175,8 @@ encryption_algo_twofishgcm = Twofish256-GCM
 security_prevent_screenshots = Previeni la creazione delle schermate
 
 gui = Interfaccia Utente
+gui_font_family = Font family
+gui_font_family-default = Default
 gui_font_size = Dimensioni del carattere (più piccolo ‹ normale › più grande)
 gui_note_max_size = Altezza massima dell'appunto (più piccolo ‹ normale › più grande)
 gui_texture = Tema

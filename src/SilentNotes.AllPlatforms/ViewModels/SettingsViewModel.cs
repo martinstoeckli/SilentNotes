@@ -41,6 +41,7 @@ namespace SilentNotes.ViewModels
         private readonly ICloudStorageClientFactory _cloudStorageClientFactory;
         private readonly SliderStepConverter _fontSizeConverter;
         private readonly SliderStepConverter _noteMaxHeightConverter;
+        private string _defaultFontFamilyLabel;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SettingsViewModel"/> class.
@@ -72,8 +73,9 @@ namespace SilentNotes.ViewModels
             _fontSizeConverter = new SliderStepConverter(ReferenceFontSize, 1.0);
             _noteMaxHeightConverter = new SliderStepConverter(ReferenceNoteMaxSize, 20.0);
 
+            _defaultFontFamilyLabel = "‹" + Language["gui_font_family-default"] + "›";
             FontFamilies = fontService.ListFontFamilies();
-            FontFamilies.Insert(0, string.Empty);
+            FontFamilies.Insert(0, _defaultFontFamilyLabel);
 
             EncryptionAlgorithms = new List<DropdownItemViewModel>();
             FillAlgorithmList(EncryptionAlgorithms);
@@ -103,7 +105,7 @@ namespace SilentNotes.ViewModels
             return ModificationDetector.CombineHashCodes(new long[]
             {
                 settings.Revision.GetHashCode(),
-                settings.FontFamily.GetHashCode(),
+                string.GetHashCode(settings.FontFamily),
                 settings.FontScale.GetHashCode(),
                 string.GetHashCode(settings.SelectedWallpaper),
                 settings.UseWallpaper.GetHashCode(),
@@ -158,8 +160,14 @@ namespace SilentNotes.ViewModels
         /// </summary>
         public string SelectedFontFamily
         {
-            get => Model.FontFamily;
-            set => SetProperty(SelectedFontFamily, value, (v) => Model.FontFamily = v);
+            get { return Model.FontFamily ?? _defaultFontFamilyLabel; }
+
+            set
+            {
+                if (value == _defaultFontFamilyLabel)
+                    value = null;
+                SetProperty(SelectedFontFamily, value, (v) => Model.FontFamily = v);
+            }
         }
 
         /// <summary>

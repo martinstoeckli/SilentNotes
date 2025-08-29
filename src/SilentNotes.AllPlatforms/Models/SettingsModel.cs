@@ -41,7 +41,6 @@ namespace SilentNotes.Models
         {
             Revision = NewestSupportedRevision;
             AutoSyncMode = AutoSynchronizationMode.CostFreeInternetOnly;
-            FontFamily = string.Empty;
             FontScale = 1.0;
             UseSolidColorTheme = false;
             ColorForSolidTheme = "#3e3e3e";

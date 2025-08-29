@@ -191,7 +191,7 @@
 				@* Font family *@
 				<div><MudIcon Icon="@Icons.Material.Filled.FormatSize" Color="Color.Secondary" /></div>
 				<div>
-					<label for="FontSizeStep">Font family</label>
+					<label for="FontSizeStep">@LanguageService["gui_font_family"]</label>
 					<MudSelect id="SelectedFontFamily" @bind-Value="ViewModel.SelectedFontFamily" Variant="Variant.Outlined">
 						@foreach (var fontFamily in ViewModel.FontFamilies)
 						{
