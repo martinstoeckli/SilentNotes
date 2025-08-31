@@ -1,5 +1,5 @@
 import { Editor, Predicate, findParentNodeClosestToPos, NodeWithPos } from '@tiptap/core';
-import Paragraph, { ParagraphOptions } from '@tiptap/extension-paragraph'
+import Paragraph from '@tiptap/extension-paragraph'
 import { Plugin, PluginKey, TextSelection } from 'prosemirror-state'
 import { NodeType, Node, ResolvedPos } from 'prosemirror-model'
 

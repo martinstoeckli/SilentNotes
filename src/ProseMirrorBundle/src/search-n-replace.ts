@@ -40,9 +40,6 @@ interface Result {
 }
 
 interface SearchOptions {
-  searchTerm: string;
-  replaceTerm: string;
-  results: Result[];
   searchResultClass: string;
   caseSensitive: boolean;
   disableRegex: boolean;
@@ -162,36 +159,38 @@ const selectPrevious = (results: Result[], { state }: any) => {
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export const SearchNReplace = Extension.create<SearchOptions>({
-  name: 'search',
+  name: 'snr-Search',
 
-  defaultOptions: {
-    searchTerm: '',
-    replaceTerm: '',
-    results: [],
-    searchResultClass: 'search-result',
-    caseSensitive: false,
-    disableRegex: false,
+  addOptions() {
+    return {
+      searchResultClass: 'search-result',
+      caseSensitive: false,
+      disableRegex: false,
+    }
   },
 
   addCommands() {
-    return {
-      setSearchTerm: (searchTerm: string) => ({ state, dispatch }) => {
-        this.options.searchTerm = searchTerm
-        this.options.results = []
+    const thisExtension = this
 
-        dispatch(state.tr)
+    return {
+      setSearchTerm: (searchTerm: string) => () => {
+        const editor: any = thisExtension.editor;
+        editor['snr-SearchResult'] = [];
+        editor['snr-SearchTerm'] = searchTerm;
         return false
       },
       
       selectNext: (canKeepPos: boolean, continueAtBegin: boolean) => ({ state, dispatch }) => {
-        const { results } = this.options
+        const editor: any = thisExtension.editor;
+        const results = editor['snr-SearchResult']
         selectNext(canKeepPos, continueAtBegin, results, { state })
         dispatch(state.tr)
         return false
       },
 
       selectPrevious: () => ({ state, dispatch }) => {
-        const { results } = this.options
+        const editor: any = thisExtension.editor;
+        const results = editor['snr-SearchResult']
         selectPrevious(results, { state })
         dispatch(state.tr)
         return false
@@ -200,32 +199,34 @@ export const SearchNReplace = Extension.create<SearchOptions>({
   },
 
   addProseMirrorPlugins() {
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
-    const extensionThis = this
+    const thisExtension = this
 
     return [
       new Plugin({
-        key: new PluginKey('search'),
+        key: new PluginKey('snr-Search'),
         state: {
           init() {
             return DecorationSet.empty
           },
-          apply({ doc, docChanged }) {
-            const {
-              searchTerm, searchResultClass, disableRegex, caseSensitive,
-            } = extensionThis.options
+          apply(tr) {
+            const { searchResultClass, disableRegex, caseSensitive } = thisExtension.options
+            const editor: any = thisExtension.editor;
+            const searchTerm = editor['snr-SearchTerm'];
 
-//            if (docChanged || searchTerm) {
             if (searchTerm) {
-              const { decorationsToReturn, results } = processSearches(doc, regex(searchTerm, disableRegex, caseSensitive), searchResultClass)
-              extensionThis.options.results = results
+              const { decorationsToReturn, results } = processSearches(
+                tr.doc,
+                regex(searchTerm, disableRegex, caseSensitive),
+                searchResultClass)
+
+              editor['snr-SearchResult'] = results;
               return decorationsToReturn
             }
             return DecorationSet.empty
           },
         },
         props: {
-          decorations(state) {
+          decorations(state: EditorState) {
             return this.getState(state)
           },
         },
