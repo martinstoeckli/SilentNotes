@@ -100,6 +100,9 @@ export_unencrypted = Экспорт незащищенных заметок
 export_encrypted = Экспорт расшифрованных заметок из сейфа
 export_success = Заметки успешно экспортированы.
 export_error = Не удалось экспортировать заметки.
+backup_create = Create backup
+backup_restore = Restore backup
+backup_restore_confirmation = Restoring a backup will delete all current notes and load the notes from the backup! When a synchronization with the online storage occurs later, the newer version of each note will be adopted.\nAre you sure you want to continue?
 
 show_transfer_code = Показать код передачи
 transfer_not_existing = Код передачи будет доступен после первой синхронизации.

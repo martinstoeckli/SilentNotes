@@ -23,7 +23,7 @@ created_at = Created {0}
 error_loading_repository = Could not read the notes. The application was stopped, to avoid further damage of already existing notes.
 recover_repository = Recover note repository to directory
 welcome_note = <h1>Welcome 💛</h1><p>SilentNotes respects your privacy. It doesn't collect personal data, runs free of ads and is open source.</p>
-welcome_note_2 = <h1>Ordering notes</h1><p>Drag the double-arrow icon on a note to change the order.</p>
+welcome_note_2 = <h1>Ordering notes</h1><p>Tap the double-arrow icon on a note to change the order.</p>
 welcome_note_3 = <h1>Password protection</h1><p>Open the safe and use the lock icon to protect a note.</p>
 welcome_note_tag = Security
 
@@ -100,6 +100,9 @@ export_unencrypted = Export unprotected notes
 export_encrypted = Export decrypted notes from the safe
 export_success = Successfully exported notes.
 export_error = Could not export the notes.
+backup_create = Create backup
+backup_restore = Restore backup
+backup_restore_confirmation = Restoring a backup will delete all current notes and load the notes from the backup! When a synchronization with the online storage occurs later, the newer version of each note will be adopted.\nAre you sure you want to continue?
 
 show_transfer_code = Show transfer code
 transfer_not_existing = The transfer code will be available after the first synchronization.

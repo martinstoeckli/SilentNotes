@@ -100,6 +100,9 @@ export_unencrypted = 导出不受保护的笔记
 export_encrypted = 从保险箱导出解密的笔记
 export_success = 成功导出笔记。
 export_error = 无法导出笔记。
+backup_create = Create backup
+backup_restore = Restore backup
+backup_restore_confirmation = Restoring a backup will delete all current notes and load the notes from the backup! When a synchronization with the online storage occurs later, the newer version of each note will be adopted.\nAre you sure you want to continue?
 
 show_transfer_code = 展示转移码
 transfer_not_existing = 转移码将在第一次同步后可用。

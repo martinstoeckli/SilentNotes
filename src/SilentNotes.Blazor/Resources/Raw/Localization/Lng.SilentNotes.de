@@ -23,7 +23,7 @@ created_at = Erstellt {0}
 error_loading_repository = Die Notizen konnten nicht gelesen werden. Die Anwendung wurde gestoppt um bereits existierende Notizen nicht weiter zu beschädigen.
 recover_repository = Sichere Notizenrepository in Verzeichnis
 welcome_note = <h1>Willkommen 💛</h1><p>SilentNotes respektiert Ihre Privatsphäre, es sammelt keine Benutzerdaten, verzichtet auf Werbung und ist Open Source.
-welcome_note_2 = <h1>Notizen ordnen</h1><p>Ziehen Sie das Doppelpfeil-Icon einer Notiz um die Reihenfolge zu ändern.</p>
+welcome_note_2 = <h1>Notizen ordnen</h1><p>Tippen Sie auf das Doppelpfeil-Icon einer Notiz um die Reihenfolge zu ändern.</p>
 welcome_note_3 = <h1>Passwortschutz</h1><p>Öffnen Sie den Tresor und benützen Sie das Schloss-Icon um eine Notiz zu schützen.</p>
 welcome_note_tag = Sicherheit
 
@@ -100,6 +100,9 @@ export_unencrypted = Exportiere ungeschützte Notizen
 export_encrypted = Exportiere entschlüsselte Notizen aus dem Tresor
 export_success = Notizen wurden erfolgreich exportiert.
 export_error = Konnte die Notizen nicht exportieren.
+backup_create = Backup erstellen
+backup_restore = Backup wiederherstellen
+backup_restore_confirmation = Durch das Wiederherstellen eines Backups werden alle jetzigen Notizen gelöscht und die Notizen aus der Sicherung geladen! Wenn später eine Synchronisierung mit dem Online-Speicher stattfindet, wird die neuere Version jeder Notiz übernommen.\nSind Sie sicher dass Sie weiterfahren wollen?
 
 show_transfer_code = Transfercode anzeigen
 transfer_not_existing = Der Transfercode ist erst verfügbar nach der ersten Synchronisation.

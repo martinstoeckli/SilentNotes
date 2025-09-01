@@ -100,6 +100,9 @@ export_unencrypted = Korunmayan notları dışa aktar
 export_encrypted = Kasada korunan notları dışa aktar
 export_success = Notlar başarıyla dışa aktarıldı.
 export_error = Dışa aktarım başarısız.
+backup_create = Create backup
+backup_restore = Restore backup
+backup_restore_confirmation = Restoring a backup will delete all current notes and load the notes from the backup! When a synchronization with the online storage occurs later, the newer version of each note will be adopted.\nAre you sure you want to continue?
 
 show_transfer_code = Aktarım kodunu göster
 transfer_not_existing = Aktarım kodu ilk eşitlemeden sonra kullanılabilir olacaktır.

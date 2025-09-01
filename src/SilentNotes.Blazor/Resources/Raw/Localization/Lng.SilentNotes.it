@@ -100,6 +100,9 @@ export_unencrypted = Esporta gli appunti non protetti
 export_encrypted = Esporta gli appunti non più protetti dalla cassaforte
 export_success = Gli appunti sono stati esportati correttamente.
 export_error = Impossibile esportare gli appunti.
+backup_create = Create backup
+backup_restore = Restore backup
+backup_restore_confirmation = Restoring a backup will delete all current notes and load the notes from the backup! When a synchronization with the online storage occurs later, the newer version of each note will be adopted.\nAre you sure you want to continue?
 
 show_transfer_code = Visualizza codice di trasferimento
 transfer_not_existing = Il codice di trasferimento sarà disponibile dopo la prima sincronizzazione.
