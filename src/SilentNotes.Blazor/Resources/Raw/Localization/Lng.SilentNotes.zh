@@ -23,7 +23,7 @@ created_at = 创建于 {0}
 error_loading_repository = 无法阅读笔记。 应用程序已停止以避免进一步损坏现有笔记。
 recover_repository = 将笔记存储库恢复到目录
 welcome_note = <h1>欢迎 💛</h1><p>SilentNotes 尊重您的隐私。它不收集个人数据，无广告并且是开源的。</p>
-welcome_note_2 = <h1>笔记排序</h1><p>拖动笔记上的双箭头图标以更改顺序。</p>
+welcome_note_2 = <h1>笔记排序</h1><p>点击笔记上的双箭头图标以更改顺序。</p>
 welcome_note_3 = <h1>密码保护</h1><p>打开保险箱并使用锁图标来保护笔记。</p>
 welcome_note_tag = 安全
 
