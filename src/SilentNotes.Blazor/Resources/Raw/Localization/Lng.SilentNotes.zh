@@ -23,7 +23,7 @@ created_at = 创建于 {0}
 error_loading_repository = 无法阅读笔记。 应用程序已停止以避免进一步损坏现有笔记。
 recover_repository = 将笔记存储库恢复到目录
 welcome_note = <h1>欢迎 💛</h1><p>SilentNotes 尊重您的隐私。它不收集个人数据，无广告并且是开源的。</p>
-welcome_note_2 = <h1>笔记排序</h1><p>拖动笔记上的双箭头图标以更改顺序。</p>
+welcome_note_2 = <h1>笔记排序</h1><p>点击笔记上的双箭头图标以更改顺序。</p>
 welcome_note_3 = <h1>密码保护</h1><p>打开保险箱并使用锁图标来保护笔记。</p>
 welcome_note_tag = 安全
 
@@ -100,9 +100,9 @@ export_unencrypted = 导出不受保护的笔记
 export_encrypted = 从保险箱导出解密的笔记
 export_success = 成功导出笔记。
 export_error = 无法导出笔记。
-backup_create = Create backup
-backup_restore = Restore backup
-backup_restore_confirmation = Restoring a backup will delete all current notes and load the notes from the backup! When a synchronization with the online storage occurs later, the newer version of each note will be adopted.\nAre you sure you want to continue?
+backup_create = 创建备份
+backup_restore = 恢复备份
+backup_restore_confirmation = 恢复备份将删除所有当前笔记并加载备份中的笔记！以后与在线存储同步时，将采用每个笔记的最新版本。\n您确定继续吗？
 
 show_transfer_code = 展示转移码
 transfer_not_existing = 转移码将在第一次同步后可用。
@@ -178,8 +178,8 @@ encryption_algo_twofishgcm = Twofish256-GCM
 security_prevent_screenshots = 防止截屏
 
 gui = 用户界面
-gui_font_family = Font family
-gui_font_family-default = Default
+gui_font_family = 字体
+gui_font_family-default = 默认
 gui_font_size = 字体大小 (更小 ‹ 常规 › 更大)
 gui_note_max_size = 最大笔记高度 (更小 ‹ 常规 › 更大)
 gui_texture = 主题
