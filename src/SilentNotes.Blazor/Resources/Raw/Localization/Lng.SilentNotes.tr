@@ -23,7 +23,7 @@ created_at = {0} tarihinde oluşturuldu
 error_loading_repository = Notlar açılamadı. Mevcut notların zarar görmemesi için uygulama durduruldu.
 recover_repository = Dosya deposundaki notları dizine yükle
 welcome_note = <h1>Merhaba 💛</h1><p>Gizliliğinize değer veriyoruz. SilentNotes kişisel verilerinizi toplamaz ve reklamsız çalışır. Kaynak kodu herkese açıktır.</p>
-welcome_note_2 = <h1>Notları sıralama</h1><p>Notun üstündeki çapraz ok düğmesine basılı tutarak notların sırasını değiştirebilirsiniz.</p>
+welcome_note_2 = <h1>Notları sıralama</h1><p>Notun üstündeki çapraz ok düğmesine dokunarak notların sırasını değiştirebilirsiniz.</p>
 welcome_note_3 = <h1>Şifre ile koruma</h1><p>Notlarınızı korumak için kasa özelliğini açın ve notlarınızı kilitleyin.</p>
 welcome_note_tag = Dijital güvenlik
 
@@ -100,9 +100,9 @@ export_unencrypted = Korunmayan notları dışa aktar
 export_encrypted = Kasada korunan notları dışa aktar
 export_success = Notlar başarıyla dışa aktarıldı.
 export_error = Dışa aktarım başarısız.
-backup_create = Create backup
-backup_restore = Restore backup
-backup_restore_confirmation = Restoring a backup will delete all current notes and load the notes from the backup! When a synchronization with the online storage occurs later, the newer version of each note will be adopted.\nAre you sure you want to continue?
+backup_create = Yedekleme oluştur
+backup_restore = Yedeklemeyi geri yükle
+backup_restore_confirmation = Yedeklemeyi geri yüklerseniz mevcut tüm notlarınız silinir ve yerlerine yedeklemedeki notlar yüklenir! Daha sonra çevrimiçi depo ile bir eşitleme gerçekleştiğinde her notun en yeni sürümü kullanılacaktır.\nDevam etmek istediğinizden emin misiniz?
 
 show_transfer_code = Aktarım kodunu göster
 transfer_not_existing = Aktarım kodu ilk eşitlemeden sonra kullanılabilir olacaktır.
@@ -178,8 +178,8 @@ encryption_algo_twofishgcm = Twofish256-GCM
 security_prevent_screenshots = Ekran görüntüsü alınmasını engelle
 
 gui = Arayüz
-gui_font_family = Font family
-gui_font_family-default = Default
+gui_font_family = Yazı tipi ailesi
+gui_font_family-default = Varsayılan
 gui_font_size = Yazı tipi boyutu (küçük ‹ orta › büyük)
 gui_note_max_size = Maksimum not uzunluğu (kısa ‹ orta › uzun)
 gui_texture = Tema
