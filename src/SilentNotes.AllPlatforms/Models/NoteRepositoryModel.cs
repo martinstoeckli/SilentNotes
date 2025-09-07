@@ -29,6 +29,7 @@ namespace SilentNotes.Models
 #else
         public const string RepositoryFileName = "silentnotes_repository_dev.silentnotes";
 #endif
+        public const string BackupFileMask = "silentnotes_*.slnbackup";
 
         /// <summary>
         /// The invalid repository is a debuty repository, it shows that no valid repository could

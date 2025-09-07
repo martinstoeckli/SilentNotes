@@ -34,11 +34,11 @@
 		<ActivatorContent>
 			<MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" />
 		</ActivatorContent>
-		<ChildContent><span class="menu-font">
+		<ChildContent>
 			<MudMenuItem OnClick="@(() => ViewModel.ResetSafeCommand.Execute(_overflowMenu))"
 				Icon="@IconService.GetSvgLink(IconNames.SafeSquareOutline)" IconColor="Color.Error"
 				Disabled="!ViewModel.SafeExists">@LanguageService["safe_reset"]</MudMenuItem>
-		</span></ChildContent>
+		</ChildContent>
 	</MudMenu>
 </MudAppBar>
 

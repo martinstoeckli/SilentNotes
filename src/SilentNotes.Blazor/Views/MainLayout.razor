@@ -2,6 +2,7 @@
 
 @using SilentNotes.ViewModels
 @using SilentNotes.Services
+@using SilentNotes.Workers
 
 @inject IThemeService ThemeService
 @inject INavigationService NavigationService
@@ -116,10 +117,9 @@
 	/// <summary>
 	/// Allows to create a backup, part of the error page
 	/// </summary>
-	private void CreateBackup()
+	private async Task CreateBackup()
 	{
-		InfoViewModel infoViewModel = new InfoViewModel(null, null, RepositoryStorageService, FolderPickerService, null, FeedbackService);
-		infoViewModel.BackupRepositoryCommand.Execute(this);
+		await BackupUtils.CreateBackup(FolderPickerService, RepositoryStorageService);
 	}
 
 	private static IEnumerable<Exception> EnumerateAggregateExceptions(Exception ex)

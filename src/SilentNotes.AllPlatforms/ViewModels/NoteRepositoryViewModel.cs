@@ -34,6 +34,8 @@ namespace SilentNotes.ViewModels
         private readonly IEnvironmentService _environmentService;
         private readonly ISafeKeyService _keyService;
         private readonly IMessengerService _messengerService;
+        private readonly IFolderPickerService _folderPickerService;
+        private readonly IFilePickerService _filePickerService;
         private readonly SearchableHtmlConverter _searchableTextConverter;
         private readonly ICryptor _noteCryptor;
         private readonly List<string> _filterTags;
@@ -52,6 +54,8 @@ namespace SilentNotes.ViewModels
             IThemeService themeService,
             ISettingsService settingsService,
             IEnvironmentService environmentService,
+            IFolderPickerService folderPickerService,
+            IFilePickerService filePickerService,
             ISynchronizationService synchronizationService,
             ICryptoRandomSource randomSource,
             IRepositoryStorageService repositoryService,
@@ -64,6 +68,8 @@ namespace SilentNotes.ViewModels
             _themeService = themeService;
             _settingsService = settingsService;
             _environmentService = environmentService;
+            _folderPickerService = folderPickerService;
+            _filePickerService = filePickerService;
             _repositoryService = repositoryService;
             _synchronizationService = synchronizationService;
             _keyService = safeKeyService;
@@ -87,6 +93,8 @@ namespace SilentNotes.ViewModels
             CloseSafeCommand = new RelayCommand(CloseSafe);
             SelectTagNodeCommand = new AsyncRelayCommand<ITreeItemViewModel>(SelectTagNode);
             ClearTagFilterCommand = new RelayCommand(ClearTagFilter);
+            CreateBackupCommand = new AsyncRelayCommand(CreateBackup);
+            RestoreBackupCommand = new AsyncRelayCommand(RestoreBackup);
 
             SettingsModel settings = _settingsService?.LoadSettingsOrDefault();
             IsDrawerOpen = settings.StartWithTagsOpen;
@@ -219,6 +227,34 @@ namespace SilentNotes.ViewModels
                 await SelectedTagNode.Expand();
 
             ApplyFilter();
+        }
+
+        /// <summary>
+        /// Gets the command to create and save a backup.
+        /// </summary>
+        public ICommand CreateBackupCommand { get; }
+
+        private async Task CreateBackup()
+        {
+            await BackupUtils.CreateBackup(_folderPickerService, _repositoryService);
+        }
+
+        /// <summary>
+        /// Gets a command to restore a saved backup.
+        /// </summary>
+        public ICommand RestoreBackupCommand { get; }
+
+        private async Task RestoreBackup()
+        {
+            MessageBoxResult result = await _feedbackService.ShowMessageAsync(Language["backup_restore_confirmation"], "⚠️ " + Language["backup_restore"], MessageBoxButtons.ContinueCancel, true);
+            if (result == MessageBoxResult.Continue)
+            {
+                bool success = await BackupUtils.TryRestoreBackup(_filePickerService, _repositoryService);
+                if (success)
+                    _navigationService.NavigateReload();
+                else
+                    await _feedbackService.ShowMessageAsync("The selected file cannot be loaded, it doesn't seem to be a valid SilentNotes backup.", Language["backup_restore"], MessageBoxButtons.Ok, false);
+            }
         }
 
         /// <summary>
