@@ -19,6 +19,8 @@
 @inject IThemeService ThemeService
 @inject IRepositoryStorageService RepositoryStorageService
 @inject IEnvironmentService EnvironmentService
+@inject IFolderPickerService FolderPickerService
+@inject IFilePickerService FilePickerService
 @inject ICryptoRandomService CryptoRandomSource
 @inject IScrollManager ScrollManager
 @inject ISynchronizationService SynchronizationService
@@ -85,12 +87,17 @@
 		<ActivatorContent>
 			<MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" />
 		</ActivatorContent>
-		<ChildContent><span class="menu-font">
+		<ChildContent>
 			<MudMenuItem OnClick="@(() => ViewModel.NewNoteCommand.Execute(null))" Icon="@IconService.GetSvgLink(IconNames.NoteTextOutline)">@LanguageService["note_create_new"]</MudMenuItem>
 			<MudMenuItem OnClick="@(() => ViewModel.NewChecklistCommand.Execute(null))" Icon="@IconService.GetSvgLink(IconNames.OrderBoolAscendingVariant)">@LanguageService["checklist_create_new"]</MudMenuItem>
 			<MudMenuItem OnClick="@(() => Navigation.NavigateTo(RouteNames.RecycleBin))" Icon="@IconService[IconNames.DeleteEmpty]">@LanguageService["show_recyclebin"]</MudMenuItem>
-			<MudMenuItem OnClick="@(() => Navigation.NavigateTo(RouteNames.Export))" Icon="@IconService[IconNames.Export]">@LanguageService["show_export"]</MudMenuItem>
 
+			<MudMenu Label="@LanguageService["show_export"]">
+				<MudMenuItem OnClick="@(() => Navigation.NavigateTo(RouteNames.Export))" Icon="@IconService[IconNames.Export]">@LanguageService["show_export"]</MudMenuItem>
+				<MudDivider />
+				<MudMenuItem OnClick="@(() => ViewModel.CreateBackupCommand.Execute(null))" Icon="@IconService[IconNames.Save]">@LanguageService["backup_create"]</MudMenuItem>
+				<MudMenuItem OnClick="@(() => ViewModel.RestoreBackupCommand.Execute(null))" Icon="@IconService[IconNames.Alert]" IconColor="Color.Error">@LanguageService["backup_restore"]</MudMenuItem>
+			</MudMenu>
 			<MudDivider />
 
 			@if (ViewModel.IsAnySafeOpen)
@@ -108,7 +115,7 @@
 			<MudMenuItem OnClick="@(() => Navigation.NavigateTo(RouteNames.TransferCodeHistory))" Icon="@IconService[IconNames.Key]">@LanguageService["show_transfer_code"]</MudMenuItem>
 			<MudMenuItem OnClick="@(() => Navigation.NavigateTo(RouteNames.Settings))" Icon="@IconService[IconNames.Settings]">@LanguageService["show_settings"]</MudMenuItem>
 			<MudMenuItem OnClick="@(() => Navigation.NavigateTo(RouteNames.Info))" ForceLoad="false" Icon="@Icons.Material.Filled.Info">@LanguageService["show_info"]</MudMenuItem>
-		</span></ChildContent>
+		</ChildContent>
 	</MudMenu>
 </MudAppBar>
 
@@ -271,6 +278,8 @@
 			ThemeService,
 			SettingsService,
 			EnvironmentService,
+			FolderPickerService,
+			FilePickerService,
 			SynchronizationService,
 			CryptoRandomSource,
 			RepositoryStorageService,

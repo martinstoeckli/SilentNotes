@@ -209,6 +209,8 @@ namespace SilentNotesTest.ViewModels
                 new Mock<IThemeService>().Object,
                 settingsService.Object,
                 CommonMocksAndStubs.EnvironmentService(),
+                new Mock<IFolderPickerService>().Object,
+                new Mock<IFilePickerService>().Object,
                 new Mock<ISynchronizationService>().Object,
                 CommonMocksAndStubs.CryptoRandomService(),
                 null,

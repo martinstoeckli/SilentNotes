@@ -62,5 +62,67 @@ namespace SilentNotes.Workers
             }
             return result;
         }
+
+        /// <summary>
+        /// Creates a zip archive from a list of files.
+        /// Be aware that this function does not support sub directories.
+        /// </summary>
+        /// <param name="entries">List of files, containing the filename and the file content.</param>
+        /// <returns>The content of the zip archive.</returns>
+        public static byte[] CreateZipArchive(IEnumerable<CompressEntry> entries)
+        {
+            byte[] result;
+            using (MemoryStream outputStream = new MemoryStream())
+            {
+                using (var zipArchive = new ZipArchive(outputStream, ZipArchiveMode.Create, true))
+                {
+                    foreach (CompressEntry inputEntry in entries)
+                    {
+                        var archiveEntry = zipArchive.CreateEntry(inputEntry.Name);
+                        using (Stream entryOutputStream = archiveEntry.Open())
+                        {
+                            entryOutputStream.Write(inputEntry.Data);
+                        }
+                    }
+                }
+                result = outputStream.ToArray();
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Opens a zip archive and returns a list of files.
+        /// </summary>
+        /// <param name="zipContent">The content of a zip archive.</param>
+        /// <returns>List of files, containing the filename and the file content.</returns>
+        public static List<CompressEntry> OpenZipArchive(byte[] zipContent)
+        {
+            var result = new List<CompressEntry>();
+            using (MemoryStream inputArchiveStream = new MemoryStream(zipContent))
+            using (ZipArchive zipArchive = new ZipArchive(inputArchiveStream, ZipArchiveMode.Read))
+            {
+                foreach (var archiveEntry in zipArchive.Entries)
+                {
+                    using (var entryInputStream = archiveEntry.Open())
+                    using (var buffer = new MemoryStream())
+                    {
+                        entryInputStream.CopyTo(buffer);
+                        result.Add(new CompressEntry
+                        {
+                            Name = archiveEntry.Name,
+                            Data = buffer.ToArray()
+                        });
+                    }
+                }
+            }
+            return result;
+        }
+
+        public class CompressEntry
+        {
+            public string Name { get; set; }
+
+            public byte[] Data { get; set; }
+        }
     }
 }

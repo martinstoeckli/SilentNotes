@@ -268,13 +268,7 @@ div.ProseMirror:focus {
 	word-wrap: anywhere; /* text must not exceed device width */
 	overflow-x: hidden;
 }
-.menu-font {
-	font-size: 14px;
-}
-.menu-font .mud-typography-body2 {
-	font-size: 1em; /* instead of 0.875em */
-}
-
+.mud-menu-list>.mud-divider { margin: 2px 0; }
 .mud-button { text-transform: none; }
 .mud-switch { margin-right: 0; }
 .mud-button-filled-default { /* shadow appeared too strong */

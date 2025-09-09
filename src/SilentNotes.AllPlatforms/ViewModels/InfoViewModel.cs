@@ -20,7 +20,6 @@ namespace SilentNotes.ViewModels
         private readonly IVersionService _versionService;
         private readonly INativeBrowserService _nativeBrowserService;
         private readonly IRepositoryStorageService _repositoryStorageService;
-        private readonly IFolderPickerService _folderPickerService;
         private readonly IFilePickerService _filePickerService;
         private readonly IFeedbackService _feedbackService;
 
@@ -31,14 +30,12 @@ namespace SilentNotes.ViewModels
             IVersionService versionService,
             INativeBrowserService nativeBrowserService,
             IRepositoryStorageService repositoryStorageService,
-            IFolderPickerService folderPickerService,
             IFilePickerService filePickerService,
             IFeedbackService feedbackService)
         {
             _versionService = versionService;
             _nativeBrowserService = nativeBrowserService;
             _repositoryStorageService = repositoryStorageService;
-            _folderPickerService = folderPickerService;
             _filePickerService = filePickerService;
             _feedbackService = feedbackService;
             OpenHomepageCommand = new RelayCommand(OpenHomepage);
@@ -97,18 +94,14 @@ namespace SilentNotes.ViewModels
 
         private async void BackupRepository()
         {
-            if (await _folderPickerService.PickFolder())
-            {
-                byte[] repositoryContent = _repositoryStorageService.LoadRepositoryFile();
-                await _folderPickerService.TrySaveFileToPickedFolder(
-                    GetRepositoryFilenameWithDate(), repositoryContent);
-            }
+            await _feedbackService.ShowMessageAsync("This function is deprecated, use the backup functions on the overview page instead.", null, MessageBoxButtons.Ok, false);
         }
 
         public ICommand RestoreRepositoryCommand { get; private set; }
 
         private async void RestoreRepository()
         {
+            // This function is deprecated, use the backup functions on the overview page instead.
             MessageBoxResult answer = await _feedbackService.ShowMessageAsync(
                 "This will override all existing notes with the notes from the backup! Are you really sure you want to continue?",
                 "Restore backup",

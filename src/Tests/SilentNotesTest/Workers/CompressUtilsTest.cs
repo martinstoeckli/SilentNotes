@@ -48,5 +48,39 @@ namespace SilentNotesTest.Workers
                 byteCount = byteCount * 2;
             }
         }
+
+        [TestMethod]
+        public void CreateZipArchive_CanBeReadBack()
+        {
+            ICryptoRandomService randomGenerator = CommonMocksAndStubs.CryptoRandomService();
+            var file0 = new CompressUtils.CompressEntry { Name = "FileName1", Data = randomGenerator.GetRandomBytes(8) };
+            var file1 = new CompressUtils.CompressEntry { Name = "FileName2 with blanks and 🐧", Data = randomGenerator.GetRandomBytes(64) };
+
+            byte[] zipArchiveContent = CompressUtils.CreateZipArchive(new[] { file0, file1 });
+            var zipArchiveEntries = CompressUtils.OpenZipArchive(zipArchiveContent);
+
+            Assert.AreEqual(2, zipArchiveEntries.Count);
+            Assert.AreEqual(file0.Name, zipArchiveEntries[0].Name);
+            Assert.IsTrue(Enumerable.SequenceEqual(file0.Data, zipArchiveEntries[0].Data));
+            Assert.AreEqual(file1.Name, zipArchiveEntries[1].Name);
+            Assert.IsTrue(Enumerable.SequenceEqual(file1.Data, zipArchiveEntries[1].Data));
+        }
+
+        [TestMethod]
+        public void CreateZipArchive_WorksWithNullBytes()
+        {
+            ICryptoRandomService randomGenerator = CommonMocksAndStubs.CryptoRandomService();
+            var file0 = new CompressUtils.CompressEntry { Name = "a", Data = new byte[0] }; // content with zero length, empty
+            var file1 = new CompressUtils.CompressEntry { Name = "b", Data = new byte[] { 0, 55, 0 } }; // content with 0-bytes
+
+            byte[] zipArchiveContent = CompressUtils.CreateZipArchive(new[] { file0, file1 });
+            var zipArchiveEntries = CompressUtils.OpenZipArchive(zipArchiveContent);
+
+            Assert.AreEqual(2, zipArchiveEntries.Count);
+            Assert.AreEqual(file0.Name, zipArchiveEntries[0].Name);
+            Assert.IsTrue(Enumerable.SequenceEqual(file0.Data, zipArchiveEntries[0].Data));
+            Assert.AreEqual(file1.Name, zipArchiveEntries[1].Name);
+            Assert.IsTrue(Enumerable.SequenceEqual(file1.Data, zipArchiveEntries[1].Data));
+        }
     }
 }
