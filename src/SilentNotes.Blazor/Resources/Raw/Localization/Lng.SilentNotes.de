@@ -103,7 +103,7 @@ export_error = Konnte die Notizen nicht exportieren.
 backup_create = Backup erstellen
 backup_restore = Backup wiederherstellen
 backup_restore_confirmation = Durch das Wiederherstellen eines Backups werden alle jetzigen Notizen gelöscht und die Notizen aus der Sicherung geladen! Wenn später eine Synchronisierung mit dem Online-Speicher stattfindet, wird die neuere Version jeder Notiz übernommen.\nSind Sie sicher dass Sie weiterfahren wollen?
-backup_restore_error Die ausgewählte Datei kann nicht geladen werden. Es ist entweder keine gültige SilentNotes Backup Datei oder sie enthält keine Notizen.
+backup_restore_error = Die ausgewählte Datei kann nicht geladen werden. Es ist entweder keine gültige SilentNotes Backup Datei oder sie enthält keine Notizen.
 
 show_transfer_code = Transfercode anzeigen
 transfer_not_existing = Der Transfercode ist erst verfügbar nach der ersten Synchronisation.

@@ -103,7 +103,7 @@ export_error = Nepodařilo se vyexportovat poznámky.
 backup_create = Create backup
 backup_restore = Restore backup
 backup_restore_confirmation = Restoring a backup will delete all current notes and load the notes from the backup! When a synchronization with the online storage occurs later, the newer version of each note will be adopted.\nAre you sure you want to continue?
-backup_restore_error The selected file cannot be loaded. It is either not a valid SilentNotes backup file or it contains no notes.
+backup_restore_error = The selected file cannot be loaded. It is either not a valid SilentNotes backup file or it contains no notes.
 
 show_transfer_code = Zobrazit přenosový kód
 transfer_not_existing = Přenosový kód bude k dispozici po první synchronizaci.

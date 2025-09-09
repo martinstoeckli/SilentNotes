@@ -103,7 +103,7 @@ export_error = 无法导出笔记。
 backup_create = 创建备份
 backup_restore = 恢复备份
 backup_restore_confirmation = 恢复备份将删除所有当前笔记并加载备份中的笔记！以后与在线存储同步时，将采用每个笔记的最新版本。\n您确定继续吗？
-backup_restore_error The selected file cannot be loaded. It is either not a valid SilentNotes backup file or it contains no notes.
+backup_restore_error = The selected file cannot be loaded. It is either not a valid SilentNotes backup file or it contains no notes.
 
 show_transfer_code = 展示转移码
 transfer_not_existing = 转移码将在第一次同步后可用。
