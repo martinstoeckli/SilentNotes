@@ -253,7 +253,7 @@ namespace SilentNotes.ViewModels
                 if (success)
                     _navigationService.NavigateReload();
                 else
-                    await _feedbackService.ShowMessageAsync("The selected file cannot be loaded, it doesn't seem to be a valid SilentNotes backup.", Language["backup_restore"], MessageBoxButtons.Ok, false);
+                    await _feedbackService.ShowMessageAsync(Language["backup_restore_error"], Language["backup_restore"], MessageBoxButtons.Ok, false);
             }
         }
 

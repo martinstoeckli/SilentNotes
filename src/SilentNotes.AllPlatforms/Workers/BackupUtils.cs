@@ -25,19 +25,31 @@ namespace SilentNotes.Workers
             if (await folderPickerService.PickFolder())
             {
                 // Create a zip file, so that in future, attachements can be added as well.
-                var repositoryEntry = new CompressUtils.CompressEntry();
-                repositoryEntry.Name = NoteRepositoryModel.RepositoryFileName;
-                repositoryEntry.Data = repositoryService.LoadRepositoryFile();
+                var repositoryEntry = new CompressUtils.CompressEntry
+                {
+                    Name = NoteRepositoryModel.RepositoryFileName,
+                    Data = repositoryService.LoadRepositoryFile()
+                };
 
                 byte[] zipArchiveContent = CompressUtils.CreateZipArchive(new[] { repositoryEntry });
                 await folderPickerService.TrySaveFileToPickedFolder(
-                    GetBackupFileName(), zipArchiveContent);
+                    CreateBackupFileName(), zipArchiveContent);
             }
+        }
+
+        private static string CreateBackupFileName()
+        {
+            string datePart = DateTime.Now.ToString("yyyyMMdd-HHmmss");
+            return NoteRepositoryModel.BackupFileMask.Replace("*", datePart);
         }
 
         /// <summary>
         /// Lets the user pick a backup file and loads this backup as the current repository.
         /// </summary>
+        /// <remarks>
+        /// For safety reasons, repositories with no notes are rejected. This should rule out any
+        /// valid xml file which isn't a valid repository.
+        /// </remarks>
         /// <param name="filePickerService">Service which can let the user pick a backup file.</param>
         /// <param name="repositoryService">Service which can store the repository.</param>
         /// <returns>Returns false if the selected backup file was invalid, returns true if the
@@ -52,25 +64,22 @@ namespace SilentNotes.Workers
                     var repositoryEntries = CompressUtils.OpenZipArchive(fileContent);
                     var repositoryEntry = repositoryEntries.Find(item => NoteRepositoryModel.RepositoryFileName.Equals(item.Name, StringComparison.InvariantCultureIgnoreCase));
 
-                    if (repositoryEntry != null &&
-                        repositoryService.TryLoadRepositoryFromFile(repositoryEntry.Data, out NoteRepositoryModel noteRepository))
+                    if ((repositoryService.TryLoadRepositoryFromFile(repositoryEntry.Data, out NoteRepositoryModel noteRepository)) &&
+                        (noteRepository.Notes.Count > 0))
                     {
                         repositoryService.TrySaveRepository(noteRepository);
                         return true;
                     }
                 }
                 catch (Exception)
-                {
+                { // returns false
                 }
                 return false;
             }
-            return true;
-        }
-
-        private static string GetBackupFileName()
-        {
-            string datePart = DateTime.Now.ToString("yyyyMMdd-HHmmss");
-            return NoteRepositoryModel.BackupFileMask.Replace("*", datePart);
+            else
+            {
+                return true; // User canceled file selection, this is no error
+            }
         }
     }
 }

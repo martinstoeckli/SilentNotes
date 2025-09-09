@@ -65,7 +65,7 @@ namespace SilentNotes.Workers
 
         /// <summary>
         /// Creates a zip archive from a list of files.
-        /// This function does not support sub directories!
+        /// Be aware that this function does not support sub directories.
         /// </summary>
         /// <param name="entries">List of files, containing the filename and the file content.</param>
         /// <returns>The content of the zip archive.</returns>
