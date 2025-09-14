@@ -103,7 +103,7 @@ export_error = A jegyzeteket nem sikerült exportálni.
 backup_create = Biztonsági mentés létrehozása
 backup_restore = Biztonsági mentés visszaállítása
 backup_restore_confirmation = A biztonsági mentés visszaállítása törli az összes jelenlegi jegyzetet, és betölti a mentésből! Ha később online szinkronizáció történik, a jegyzetek újabb verziója kerül beállításra.\nBiztosan folytatni szeretné?
-backup_restore_error = The selected file cannot be loaded. It is either not a valid SilentNotes backup file or it contains no notes.
+backup_restore_error = A kiválasztott fájlt nem lehet betölteni. Vagy nem szabályos SilentNotes biztonsági mentés, vagy nem tartalmaz jegyzeteket.
 
 show_transfer_code = Transzferkód megjelenítése
 transfer_not_existing = A transzferkód az első szinkronizáció után lesz elérhető.
