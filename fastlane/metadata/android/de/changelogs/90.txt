@@ -1,0 +1,5 @@
+SilentNotes version 8.5.0
+
+* Erstellen und wiederherstellen von Backups.
+* Benutzerdefinierte Schriftart für Notizen.
+* Update TipTap editor von 2.8 zu 3.3 mit Abhängigkeiten.
