@@ -1,15 +1,15 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Moq;
+﻿using System.Xml.Linq;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using SilentNotes.Crypto;
+using SilentNotes.Crypto.KeyDerivation;
 using SilentNotes.Crypto.SymmetricEncryption;
 using SilentNotes.Models;
 using SilentNotes.Services;
 using SilentNotes.Stories;
 using SilentNotes.Stories.SynchronizationStory;
 using SilentNotes.Workers;
-using System.Xml.Linq;
-using VanillaCloudStorageClient;
 
 namespace SilentNotesTest.Stories.SynchronizationStory
 {
@@ -205,7 +205,7 @@ namespace SilentNotesTest.Stories.SynchronizationStory
                 repository = new NoteRepositoryModel();
             byte[] serializedRepository = XmlUtils.SerializeToXmlBytes(repository);
             ICryptor encryptor = new Cryptor("SilentNotes", CommonMocksAndStubs.CryptoRandomService());
-            return encryptor.Encrypt(serializedRepository, CryptoUtils.StringToSecureString(password), SilentNotes.Crypto.KeyDerivation.KeyDerivationCostType.Low, BouncyCastleTwofishGcm.CryptoAlgorithmName);
+            return encryptor.Encrypt(serializedRepository, CryptoUtils.StringToSecureString(password), SilentNotes.Crypto.KeyDerivation.KeyDerivationCostType.Low, BouncyCastleTwofishGcm.CryptoAlgorithmName, Pbkdf2.CryptoKdfName);
         }
     }
 }

@@ -173,9 +173,7 @@ pushpull_error_no_cloud_note = Questo appunto non esiste nella memorizzazione on
 security = Sicurezza
 encryption = Codifica
 encryption_algorithm = Modalità di codifica
-encryption_algo_xchacha20 = XChaCha20-Poly1305 [consigliata]
-encryption_algo_aesgcm = AES256-GCM
-encryption_algo_twofishgcm = Twofish256-GCM
+encryption_algorithm_recommended = consigliata
 security_prevent_screenshots = Previeni la creazione delle schermate
 
 gui = Interfaccia Utente

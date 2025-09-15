@@ -3,6 +3,7 @@ using System.Linq;
 using System.Security;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SilentNotes.Crypto;
+using SilentNotes.Crypto.KeyDerivation;
 using SilentNotes.Crypto.SymmetricEncryption;
 using SilentNotes.Models;
 
@@ -38,7 +39,7 @@ namespace SilentNotesTest.Models
             SecureString password = CryptoUtils.StringToSecureString("testpassword");
             ICryptoRandomSource randomSource = CommonMocksAndStubs.CryptoRandomService();
 
-            string encryptedKey = SafeModel.EncryptKey(key, password, randomSource, BouncyCastleAesGcm.CryptoAlgorithmName);
+            string encryptedKey = SafeModel.EncryptKey(key, password, randomSource, BouncyCastleAesGcm.CryptoAlgorithmName, Pbkdf2.CryptoKdfName);
             bool res = SafeModel.TryDecryptKey(encryptedKey, password, out byte[] decryptedKey);
 
             Assert.IsTrue(res);

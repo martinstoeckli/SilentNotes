@@ -173,9 +173,7 @@ pushpull_error_no_cloud_note = Bu not çevrimiçi depoda bulunamadı. Lütfen b�
 security = Dijital güvenlik
 encryption = Şifreleme
 encryption_algorithm = Şifreleme tipi
-encryption_algo_xchacha20 = XChaCha20-Poly1305 [önerilen]
-encryption_algo_aesgcm = AES256-GCM
-encryption_algo_twofishgcm = Twofish256-GCM
+encryption_algorithm_recommended = önerilen
 security_prevent_screenshots = Ekran görüntüsü alınmasını engelle
 
 gui = Arayüz

@@ -82,7 +82,7 @@ namespace SilentNotes.Services
                 {
                     result = RepositoryStorageLoadResult.CreatedNewEmptyRepository;
                     repositoryModel = new NoteRepositoryModel();
-                    repositoryModel.Revision = NoteRepositoryModel.NewestSupportedRevision;
+                    repositoryModel.Revision = NoteRepositoryModel.CurrentSavingRevision;
                     AddWelcomeNote(repositoryModel);
                     modelWasUpdated = true;
                 }

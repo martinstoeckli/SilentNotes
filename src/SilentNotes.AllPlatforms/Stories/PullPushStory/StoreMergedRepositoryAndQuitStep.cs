@@ -79,7 +79,7 @@ namespace SilentNotes.Stories.PullPushStory
                     localNote.CloneTo(cloudNote); // this can possibly move the note to the recycling bin or reverse
                     AddSafeToOtherRepositoryIfMissing(localRepository, cloudRepository, localNote.SafeId);
                     byte[] encryptedRepository = EncryptRepository(
-                        cloudRepository, settings.TransferCode, cryptoRandomService, settings.SelectedEncryptionAlgorithm);
+                        cloudRepository, settings.TransferCode, cryptoRandomService, settings.SelectedEncryptionAlgorithm, settings.SelectedKdfAlgorithm);
 
                     ICloudStorageClient cloudStorageClient = cloudStorageClientFactory.GetByKey(credentials.CloudStorageId);
                     await cloudStorageClient.UploadFileAsync(NoteRepositoryModel.RepositoryFileName, encryptedRepository, credentials);

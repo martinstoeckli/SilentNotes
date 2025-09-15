@@ -173,9 +173,7 @@ pushpull_error_no_cloud_note = This note does not exist on the online-storage, p
 security = Security
 encryption = Encryption
 encryption_algorithm = Encryption mode
-encryption_algo_xchacha20 = XChaCha20-Poly1305 [recommended]
-encryption_algo_aesgcm = AES256-GCM
-encryption_algo_twofishgcm = Twofish256-GCM
+encryption_algorithm_recommended = recommended
 security_prevent_screenshots = Prevent creation of screenshots
 
 gui = User interface

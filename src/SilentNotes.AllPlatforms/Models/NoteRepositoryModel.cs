@@ -13,13 +13,27 @@ namespace SilentNotes.Models
 {
     /// <summary>
     /// Serializeable model of a note repository.
-    /// Whenever changes to this model are done, take care of the <see cref="NewestSupportedRevision"/> constant.
     /// </summary>
+    /// <remarks>
+    /// Whenever changes to this model are done, take care of the <see cref="NoteRepositoryModel.NewestSupportedRevision"/>
+    /// and <see cref="NoteRepositoryModel.CurrentSavingRevision"/> constants.
+    /// </remarks>
     [XmlRoot(ElementName = "silentnotes")]
     public class NoteRepositoryModel
     {
-        /// <summary>The highest revision of the repository which can be handled by this application.</summary>
-        public const int NewestSupportedRevision = 7;
+        /// <summary>The current revision which is used to store a repository. This revision is
+        /// increased whenever deserialization of the model becomes incompatible with previous
+        /// versions.</summary>
+        public const int CurrentSavingRevision = 7; // Todo: Set to 8 as soon as Argon2 becomes the default algorithm.
+
+        /// <summary>The highest revision of the repository which can be handled by this application.
+        /// This revision can be higher than <see cref="CurrentSavingRevision"/>, so we can make
+        /// the app ready for a new feature, but delay the introduction to a later version. Multiple
+        /// installations across platforms will then already be ready for this feature.</summary>
+        /// <remarks>
+        /// - Version 8 is reserved for the future Argon2 implementation.
+        /// </remarks>
+        public const int NewestSupportedRevision = 8;
 
 #if (DEBUG)
         public readonly string InstanceId = Guid.NewGuid().ToString();

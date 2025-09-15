@@ -14,13 +14,6 @@ namespace SilentNotes.Workers
     public interface INoteRepositoryUpdater
     {
         /// <summary>
-        /// Gets the newest repository version which is supported by this installation of the app.
-        /// The version will be increased, whenever the repository becomes incompatible, and
-        /// therefore older apps would damage the repository.
-        /// </summary>
-        int NewestSupportedRevision { get; }
-
-        /// <summary>
         /// Checks whether a repository was stored with a newer incompatible version of the app.
         /// In this case, we should refuse to work with the repository to avoid damaging future
         /// features.

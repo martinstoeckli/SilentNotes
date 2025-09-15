@@ -173,9 +173,7 @@ pushpull_error_no_cloud_note = 在线存储中不存在此笔记，请先将所�
 security = 安全
 encryption = 加密
 encryption_algorithm = 加密模式
-encryption_algo_xchacha20 = XChaCha20-Poly1305 [推荐]
-encryption_algo_aesgcm = AES256-GCM
-encryption_algo_twofishgcm = Twofish256-GCM
+encryption_algorithm_recommended = 推荐
 security_prevent_screenshots = 防止截屏
 
 gui = 用户界面

@@ -14,10 +14,25 @@ namespace SilentNotes.Workers
     /// </summary>
     public class NoteRepositoryUpdater : INoteRepositoryUpdater
     {
-        /// <inheritdoc/>
-        public int NewestSupportedRevision
+        private readonly int _newestSupportedRevision;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NoteRepositoryUpdater"/> class.
+        /// </summary>
+        public NoteRepositoryUpdater()
+            : this(NoteRepositoryModel.NewestSupportedRevision)
         {
-            get { return NoteRepositoryModel.NewestSupportedRevision; }
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NoteRepositoryUpdater"/> class.
+        /// For testing purposes only.
+        /// </summary>
+        /// <param name="newestSupportedRevision">Replaces the <see cref="NoteRepositoryModel.NewestSupportedRevision"/>
+        /// for testing.</param>
+        internal NoteRepositoryUpdater(int newestSupportedRevision)
+        {
+            _newestSupportedRevision = newestSupportedRevision;
         }
 
         /// <inheritdoc/>
@@ -26,7 +41,7 @@ namespace SilentNotes.Workers
             XElement root = repository.Root;
             XAttribute revisionAttribute = root.Attribute("revision");
             int repositoryRevision = int.Parse(revisionAttribute.Value);
-            return repositoryRevision > NewestSupportedRevision;
+            return repositoryRevision > _newestSupportedRevision;
         }
 
         /// <inheritdoc/>
@@ -42,9 +57,9 @@ namespace SilentNotes.Workers
                 UpdateRepositoryFrom1To2(root);
             }
 
-            bool updated = oldRevision < NoteRepositoryModel.NewestSupportedRevision;
+            bool updated = oldRevision < NoteRepositoryModel.CurrentSavingRevision;
             if (updated)
-                root.SetAttributeValue("revision", NoteRepositoryModel.NewestSupportedRevision);
+                root.SetAttributeValue("revision", NoteRepositoryModel.CurrentSavingRevision);
             return updated;
         }
 

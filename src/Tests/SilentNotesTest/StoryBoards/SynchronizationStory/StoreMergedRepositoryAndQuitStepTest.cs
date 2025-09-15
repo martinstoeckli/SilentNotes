@@ -17,7 +17,7 @@ namespace SilentNotesTest.Stories.SynchronizationStory
         public async Task DoNotStoreAnythingWhenRepositoriesAreSame()
         {
             NoteRepositoryModel repositoryModel = new NoteRepositoryModel();
-            repositoryModel.Revision = NoteRepositoryModel.NewestSupportedRevision;
+            repositoryModel.Revision = NoteRepositoryModel.CurrentSavingRevision;
             var model = new SynchronizationStoryModel
             {
                 StoryMode = StoryMode.Silent,

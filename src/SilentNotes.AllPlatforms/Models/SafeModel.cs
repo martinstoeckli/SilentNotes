@@ -119,12 +119,13 @@ namespace SilentNotes.Models
         /// <param name="password">The user password to encrypt the key with.</param>
         /// <param name="randomSource">A cryptographically random source.</param>
         /// <param name="encryptionAlgorithm">The encryption algorithm to encrypt the key.</param>
+        /// <param name="kdfAlgorithm">The kdf algorithm to generate the key to encrypt the key.</param>
         /// <returns>Returns the encrypted serializeable key.</returns>
-        public static string EncryptKey(byte[] key, SecureString password, ICryptoRandomSource randomSource, string encryptionAlgorithm)
+        public static string EncryptKey(byte[] key, SecureString password, ICryptoRandomSource randomSource, string encryptionAlgorithm, string kdfAlgorithm)
         {
             ICryptor encryptor = new Cryptor(CryptorPackageName, randomSource);
             byte[] encryptedKey = encryptor.Encrypt(
-                key, password, Crypto.KeyDerivation.KeyDerivationCostType.High, encryptionAlgorithm);
+                key, password, Crypto.KeyDerivation.KeyDerivationCostType.High, encryptionAlgorithm, kdfAlgorithm);
             return CryptoUtils.BytesToBase64String(encryptedKey);
         }
 

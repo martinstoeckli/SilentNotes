@@ -173,9 +173,7 @@ pushpull_error_no_cloud_note = Эта заметка отсутствует в �
 security = Security
 encryption = Шифрование
 encryption_algorithm = Режим шифрования
-encryption_algo_xchacha20 = XChaCha20-Poly1305 [рекомендовано]
-encryption_algo_aesgcm = AES256-GCM
-encryption_algo_twofishgcm = Twofish256-GCM
+encryption_algorithm_recommended = рекомендовано
 security_prevent_screenshots = Prevent creation of screenshots
 
 gui = Внешний вид

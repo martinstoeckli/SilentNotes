@@ -7,6 +7,7 @@ using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
+using SilentNotes.Crypto.KeyDerivation;
 using SilentNotes.Crypto.SymmetricEncryption;
 using SilentNotes.Models;
 using SilentNotes.Services;
@@ -78,7 +79,8 @@ namespace SilentNotes.ViewModels
             FontFamilies.Insert(0, _defaultFontFamilyLabel);
 
             EncryptionAlgorithms = new List<DropdownItemViewModel>();
-            FillAlgorithmList(EncryptionAlgorithms);
+            KdfAlgorithms = new List<DropdownItemViewModel>();
+            FillAlgorithmList(EncryptionAlgorithms, KdfAlgorithms);
 
             // Initialize commands
             ChangeCloudSettingsCommand = new RelayCommand(ChangeCloudSettings);
@@ -121,6 +123,7 @@ namespace SilentNotes.ViewModels
                 settings.HideClosedSafeNotes.GetHashCode(),
                 settings.RememberLastTagFilter.GetHashCode(),
                 string.GetHashCode(settings.SelectedEncryptionAlgorithm),
+                string.GetHashCode(settings.SelectedKdfAlgorithm),
                 settings.AutoSyncMode.GetHashCode(),
                 settings.PreventScreenshots.GetHashCode(),
                 (settings.Credentials == null).GetHashCode(),
@@ -143,11 +146,16 @@ namespace SilentNotes.ViewModels
         /// Initializes the list of available cloud storage services.
         /// </summary>
         /// <param name="algorithms">List to fill.</param>
-        private void FillAlgorithmList(List<DropdownItemViewModel> algorithms)
+        private void FillAlgorithmList(List<DropdownItemViewModel> algorithms, List<DropdownItemViewModel> kdfAlgorithms)
         {
-            algorithms.Add(new DropdownItemViewModel { Value = BouncyCastleXChaCha20.CryptoAlgorithmName, Description = Language["encryption_algo_xchacha20"] });
-            algorithms.Add(new DropdownItemViewModel { Value = BouncyCastleAesGcm.CryptoAlgorithmName, Description = Language["encryption_algo_aesgcm"] });
-            algorithms.Add(new DropdownItemViewModel { Value = BouncyCastleTwofishGcm.CryptoAlgorithmName, Description = Language["encryption_algo_twofishgcm"] });
+            string recommended = string.Format(" [{0}]", Language["encryption_algorithm_recommended"]);
+
+            algorithms.Add(new DropdownItemViewModel { Value = BouncyCastleXChaCha20.CryptoAlgorithmName, Description = "XChaCha20-Poly1305" + recommended });
+            algorithms.Add(new DropdownItemViewModel { Value = BouncyCastleAesGcm.CryptoAlgorithmName, Description = "AES-256-GCM" });
+            algorithms.Add(new DropdownItemViewModel { Value = BouncyCastleTwofishGcm.CryptoAlgorithmName, Description = "Twofish-256-GCM" });
+
+            kdfAlgorithms.Add(new DropdownItemViewModel { Value = BouncyCastleArgon2.CryptoKdfName, Description = "Argon2id" + recommended });
+            kdfAlgorithms.Add(new DropdownItemViewModel { Value = Pbkdf2.CryptoKdfName, Description = "PBKDF2" });
         }
 
         /// <summary>
@@ -398,6 +406,29 @@ namespace SilentNotes.ViewModels
             }
 
             set { SetProperty(Model.SelectedEncryptionAlgorithm, value, (string v) => Model.SelectedEncryptionAlgorithm = v); }
+        }
+
+        /// <summary>
+        /// Gets a list of all available kdf algorithms.
+        /// </summary>
+        public List<DropdownItemViewModel> KdfAlgorithms {  get; private set; }
+
+        /// <summary>
+        /// Gets or sets the encryption algorithm selected by the user.
+        /// </summary>
+        public string SelectedKdfAlgorithm
+        {
+            get
+            {
+                DropdownItemViewModel result = KdfAlgorithms.Find(item => item.Value == Model.SelectedKdfAlgorithm);
+
+                // Search for the default algorithm, if no matching algorithm could be found.
+                if (result == null)
+                    result = KdfAlgorithms.Find(item => item.Value == SettingsModel.GetDefaultKdfAlgorithmName());
+                return result.Value;
+            }
+
+            set { SetProperty(Model.SelectedKdfAlgorithm, value, (string v) => Model.SelectedKdfAlgorithm = v); }
         }
 
         /// <summary>

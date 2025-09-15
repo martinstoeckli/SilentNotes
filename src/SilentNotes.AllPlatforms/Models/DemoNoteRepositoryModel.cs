@@ -21,7 +21,7 @@ namespace SilentNotes.Models
         /// </summary>
         public DemoNoteRepositoryModel()
         {
-            Revision = NewestSupportedRevision;
+            Revision = CurrentSavingRevision;
             Id = new Guid("093b917a-f69f-4dd3-91b7-ad175fe0a4c1");
             OrderModifiedAt = DateTime.Parse("2018-12-18T13:25:20.8042714Z");
 
