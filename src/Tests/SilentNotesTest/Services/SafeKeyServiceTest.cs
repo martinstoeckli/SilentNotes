@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SilentNotes.Crypto;
+using SilentNotes.Crypto.KeyDerivation;
 using SilentNotes.Crypto.SymmetricEncryption;
 using SilentNotes.Models;
 using SilentNotes.Services;
@@ -23,7 +24,7 @@ namespace SilentNotesTest.Services
 
             var safe = new SafeModel();
             var key = randomService.GetRandomBytes(32);
-            safe.SerializeableKey = SafeModel.EncryptKey(key, pwd, randomService, BouncyCastleAesGcm.CryptoAlgorithmName);
+            safe.SerializeableKey = SafeModel.EncryptKey(key, pwd, randomService, BouncyCastleAesGcm.CryptoAlgorithmName, Pbkdf2.CryptoKdfName);
 
             ISafeKeyService service = new SafeKeyService();
             bool res = service.TryOpenSafe(safe, pwd);
@@ -41,7 +42,7 @@ namespace SilentNotesTest.Services
 
             var safe = new SafeModel();
             var key = randomService.GetRandomBytes(32);
-            safe.SerializeableKey = SafeModel.EncryptKey(key, pwd, randomService, BouncyCastleAesGcm.CryptoAlgorithmName);
+            safe.SerializeableKey = SafeModel.EncryptKey(key, pwd, randomService, BouncyCastleAesGcm.CryptoAlgorithmName, Pbkdf2.CryptoKdfName);
 
             SecureString wrongPwd = CryptoUtils.StringToSecureString("invalid");
             ISafeKeyService service = new SafeKeyService();

@@ -42,7 +42,7 @@ namespace SilentNotes.Crypto
             SecureString password,
             KeyDerivationCostType costType, 
             string encryptorName,
-            string kdfName = Pbkdf2.CryptoKdfName,
+            string kdfName,
             string compression = null)
         {
             if (message == null)

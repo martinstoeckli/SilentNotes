@@ -8,6 +8,7 @@ using System.Runtime.CompilerServices;
 using System.Security;
 using System.Text;
 using SilentNotes.Crypto.KeyDerivation;
+using SilentNotes.Crypto.SymmetricEncryption;
 using VanillaCloudStorageClient;
 
 namespace SilentNotes.Crypto
@@ -170,7 +171,8 @@ namespace SilentNotes.Crypto
                 plainMessage,
                 obfuscationKey,
                 KeyDerivationCostType.Low,
-                "xchacha20_poly1305");
+                BouncyCastleXChaCha20.CryptoAlgorithmName,
+                Pbkdf2.CryptoKdfName);
         }
 
         /// <summary>

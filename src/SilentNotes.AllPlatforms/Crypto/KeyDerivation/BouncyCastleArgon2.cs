@@ -33,9 +33,13 @@ namespace SilentNotes.Crypto.KeyDerivation
             if (!Argon2Cost.TryParse(cost, out Argon2Cost costParameters))
                 throw new CryptoException("Invalid cost parameter.");
 
-            if (costParameters.MemoryKib < 1)
+            if (expectedKeySizeBytes < 16) // LibSodium CRYPTO_PWHASH_BYTES_MIN
+                throw new CryptoException("The key size is too small.");
+            if (salt.Length  != 16) // LibSodium CRYPTO_PWHASH_SALTBYTES
+                throw new CryptoException("The salt size must be 16 bytes.");
+            if (costParameters.MemoryKib < 8) // LibSodium CRYPTO_PWHASH_MEMLIMIT_MIN
                 throw new CryptoException("The memory cost factor is too small.");
-            if (costParameters.Iterations < 1)
+            if (costParameters.Iterations < 1) // LibSodium CRYPTO_PWHASH_OPSLIMIT_MIN
                 throw new CryptoException("The iteration cost factor is too small.");
             if (costParameters.Parallelism < 1)
                 throw new CryptoException("The parallelism cost factor is too small.");

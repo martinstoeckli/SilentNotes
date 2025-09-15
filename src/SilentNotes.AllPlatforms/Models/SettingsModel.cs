@@ -5,6 +5,7 @@
 
 using System.Collections.Generic;
 using System.Xml.Serialization;
+using SilentNotes.Crypto.KeyDerivation;
 using SilentNotes.Crypto.SymmetricEncryption;
 using VanillaCloudStorageClient;
 
@@ -28,6 +29,7 @@ namespace SilentNotes.Models
         public const string StartDefaultNoteColorHex = "#fbf4c1";
 
         private string _selectedEncryptionAlgorithm;
+        private string _selectedKdfAlgorithm;
         private string _transferCode;
         private List<string> _noteColorsHex;
         private List<string> _transferCodeHistory;
@@ -189,7 +191,7 @@ namespace SilentNotes.Models
         public bool HideClosedSafeNotes { get; set; }
 
         /// <summary>
-        /// Gets or sets the default encryption algorithm, used to encrypt the repository
+        /// Gets or sets the selected encryption algorithm, used to encrypt the repository
         /// before sending it to the cloud.
         /// </summary>
         [XmlElement("selected_encryption_algorithm")]
@@ -203,6 +205,23 @@ namespace SilentNotes.Models
             }
 
             set { _selectedEncryptionAlgorithm = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the selected kdf algorithm, used to generate the key for the safe.
+        /// Todo: Serialize it as soon as Argon2 becomes the default algorithm.
+        /// </summary>
+        [XmlIgnore]
+        public string SelectedKdfAlgorithm
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(_selectedKdfAlgorithm))
+                    _selectedKdfAlgorithm = GetDefaultKdfAlgorithmName();
+                return _selectedKdfAlgorithm;
+            }
+
+            set { _selectedKdfAlgorithm = value; }
         }
 
         /// <summary>
@@ -259,6 +278,16 @@ namespace SilentNotes.Models
         public static string GetDefaultEncryptionAlgorithmName()
         {
             return BouncyCastleXChaCha20.CryptoAlgorithmName;
+        }
+
+        /// <summary>
+        /// Gets the name of the algorithm to use, if the selected algorithm is not yet stored.
+        /// </summary>
+        /// <returns>The name of the default kdf algorithm.</returns>
+        public static string GetDefaultKdfAlgorithmName()
+        {
+            // Todo: Replace it as soon as Argon2 becomes the default algorithm.
+            return Pbkdf2.CryptoKdfName;
         }
 
         /// <summary>

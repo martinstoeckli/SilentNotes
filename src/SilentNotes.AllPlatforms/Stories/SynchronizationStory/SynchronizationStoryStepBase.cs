@@ -50,7 +50,7 @@ namespace SilentNotes.Stories.SynchronizationStory
             }
         }
 
-        internal static byte[] EncryptRepository(NoteRepositoryModel repository, string transferCode, ICryptoRandomService randomService, string encryptionAlgorithm)
+        internal static byte[] EncryptRepository(NoteRepositoryModel repository, string transferCode, ICryptoRandomService randomService, string encryptionAlgorithm, string kdfAlgorithm)
         {
             byte[] binaryRepository = XmlUtils.SerializeToXmlBytes(repository);
             ICryptor encryptor = new Cryptor("SilentNotes", randomService);
@@ -62,7 +62,7 @@ namespace SilentNotes.Stories.SynchronizationStory
                 CryptoUtils.StringToSecureString(transferCode),
                 KeyDerivationCostType.Low,
                 encryptionAlgorithm,
-                Pbkdf2.CryptoKdfName,
+                kdfAlgorithm,
                 Cryptor.CompressionGzip);
         }
     }

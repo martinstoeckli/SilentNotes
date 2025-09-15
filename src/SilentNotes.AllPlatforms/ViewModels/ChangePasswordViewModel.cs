@@ -80,10 +80,11 @@ namespace SilentNotes.ViewModels
 
             // Change the encrypted key of each safe which could have been opened with the password.
             string algorithm = _settingsService.LoadSettingsOrDefault().SelectedEncryptionAlgorithm;
+            string kdfAlgorithm = _settingsService.LoadSettingsOrDefault().SelectedKdfAlgorithm;
             foreach (SafeInfo safeInfo in matchingSafes)
             {
                 // No need to open or close the safe, just replace the encrypted key.
-                safeInfo.Safe.SerializeableKey = SafeModel.EncryptKey(safeInfo.Key, Password, _randomService, algorithm);
+                safeInfo.Safe.SerializeableKey = SafeModel.EncryptKey(safeInfo.Key, Password, _randomService, algorithm, kdfAlgorithm);
                 safeInfo.Safe.RefreshModifiedAt();
             }
 

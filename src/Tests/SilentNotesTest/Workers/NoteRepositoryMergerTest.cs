@@ -123,7 +123,7 @@ namespace SilentNotesTest.Workers
 
             NoteRepositoryMerger merger = new NoteRepositoryMerger();
             NoteRepositoryModel result = merger.Merge(repo1, repo2);
-            Assert.AreEqual(NoteRepositoryModel.NewestSupportedRevision, result.Revision);
+            Assert.AreEqual(NoteRepositoryModel.CurrentSavingRevision, result.Revision);
         }
 
         [TestMethod]

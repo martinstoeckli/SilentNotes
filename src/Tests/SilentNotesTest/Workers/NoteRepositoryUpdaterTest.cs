@@ -10,28 +10,23 @@ namespace SilentNotesTest.Workers
     public class NoteRepositoryUpdaterTest
     {
         [TestMethod]
-        public void NewestSupportedVersionIsCorrect()
-        {
-            INoteRepositoryUpdater updater = new NoteRepositoryUpdater();
-            Assert.AreEqual(NoteRepositoryModel.NewestSupportedRevision, updater.NewestSupportedRevision);
-        }
-
-        [TestMethod]
         public void IsTooNewForThisAppWorksCorrectly()
         {
             INoteRepositoryUpdater updater = new NoteRepositoryUpdater();
-            int supportedVersion = updater.NewestSupportedRevision;
             NoteRepositoryModel repository = new NoteRepositoryModel();
 
-            repository.Revision = supportedVersion - 1;
+            // Accept lower revisions
+            repository.Revision = NoteRepositoryModel.NewestSupportedRevision - 1;
             XDocument repositoryXml = XmlUtils.SerializeToXmlDocument(repository);
             Assert.IsFalse(updater.IsTooNewForThisApp(repositoryXml));
 
-            repository.Revision = supportedVersion;
+            // Accept equal revisions
+            repository.Revision = NoteRepositoryModel.NewestSupportedRevision;
             repositoryXml = XmlUtils.SerializeToXmlDocument(repository);
             Assert.IsFalse(updater.IsTooNewForThisApp(repositoryXml));
 
-            repository.Revision = supportedVersion + 1;
+            // Reject higher revisions
+            repository.Revision = NoteRepositoryModel.NewestSupportedRevision + 1;
             repositoryXml = XmlUtils.SerializeToXmlDocument(repository);
             Assert.IsTrue(updater.IsTooNewForThisApp(repositoryXml));
         }
@@ -40,12 +35,16 @@ namespace SilentNotesTest.Workers
         public void Update_SetsNewestVersionNumber()
         {
             // Set revision too small
-            NoteRepositoryModel repository = new NoteRepositoryModel { Revision = NoteRepositoryModel.NewestSupportedRevision - 1 };
+            NoteRepositoryModel repository = new NoteRepositoryModel { Revision = NoteRepositoryModel.CurrentSavingRevision - 1 };
             XDocument repositoryXml = XmlUtils.SerializeToXmlDocument(repository);
 
-            INoteRepositoryUpdater updater = new NoteRepositoryUpdater();
+            int newestSupportedRevision = NoteRepositoryModel.CurrentSavingRevision + 1;
+            INoteRepositoryUpdater updater = new NoteRepositoryUpdater(newestSupportedRevision);
             Assert.IsTrue(updater.Update(repositoryXml));
-            Assert.AreEqual(NoteRepositoryModel.NewestSupportedRevision.ToString(), repositoryXml.Root.Attribute("revision").Value);
+            Assert.AreEqual(NoteRepositoryModel.CurrentSavingRevision.ToString(), repositoryXml.Root.Attribute("revision").Value);
+
+            // Update does not use newest supported revision if higher than current saving revision.
+            Assert.AreNotEqual(newestSupportedRevision.ToString(), repositoryXml.Root.Attribute("revision").Value);
         }
 
         [TestMethod]
@@ -75,7 +74,7 @@ namespace SilentNotesTest.Workers
             Assert.AreEqual(1, repository.DeletedNotes.Count);
             Assert.AreEqual(new Guid("fae40c63-d850-4b78-a8bd-609893d2983b"), repository.DeletedNotes[0]);
 
-            Assert.AreEqual(NoteRepositoryModel.NewestSupportedRevision, repository.Revision);
+            Assert.AreEqual(NoteRepositoryModel.CurrentSavingRevision, repository.Revision);
         }
 
         private const string Version1Repository =

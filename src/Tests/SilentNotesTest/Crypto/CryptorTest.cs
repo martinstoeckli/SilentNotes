@@ -161,6 +161,32 @@ namespace SilentNotesTest.Crypto
         }
 
         [TestMethod]
+        public void EnsureCompatibilityToLibsodiumArgon2()
+        {
+            // Code for LibSodium:
+            // Span<byte> key = stackalloc byte[32];
+            // CryptoPasswordHashArgon.DeriveKey(key, binaryPassword, salt, 2, 1000 * 1024);
+            // kdfText = Convert.ToBase64String(key1);
+
+            // Ensure that a once stored kdf can always be reproduced even after changes in the liberary
+            IKeyDerivationFunction kdf = new BouncyCastleArgon2();
+            SecureString password = CryptoUtils.StringToSecureString("The brown fox jumps over the lazy 🐢🖐🏿 dog.");
+            ICryptoRandomService randomGenerator = CommonMocksAndStubs.CryptoRandomService(8); // Fixed nonce
+            byte[] salt = randomGenerator.GetRandomBytes(16);
+            var cost = new Argon2Cost
+            {
+                MemoryKib = 1000,
+                Iterations = 2,
+                Parallelism = 1,
+            };
+            byte[] kdfBytes = kdf.DeriveKeyFromPassword(password, 32, salt, cost.Format());
+            string kdfText = CryptoUtils.BytesToBase64String(kdfBytes);
+
+            // Compare against kdf created with LibSodium
+            Assert.AreEqual("oXFlS2LgiWets5UH0qfCy7rlPv86y6BmZjVu4zXAbRM=", kdfText);
+        }
+
+        [TestMethod]
         public void CryptoPbkdf2()
         {
             const int KeyLength = 42;
@@ -207,7 +233,7 @@ namespace SilentNotesTest.Crypto
             byte[] binaryMessage = CryptoUtils.StringToBytes(message);
             SecureString password = CryptoUtils.StringToSecureString("Der schnelle Uhu fliegt über den faulen Hund.");
 
-            byte[] cipher = encryptor.Encrypt(binaryMessage, password, KeyDerivationCostType.Low, BouncyCastleTwofishGcm.CryptoAlgorithmName);
+            byte[] cipher = encryptor.Encrypt(binaryMessage, password, KeyDerivationCostType.Low, BouncyCastleTwofishGcm.CryptoAlgorithmName, Pbkdf2.CryptoKdfName);
             byte[] decryptedMessage = encryptor.Decrypt(cipher, password);
             CollectionAssert.AreEqual(binaryMessage, decryptedMessage);
         }
@@ -305,7 +331,18 @@ namespace SilentNotesTest.Crypto
                     binaryMessage,
                     password,
                     KeyDerivationCostType.Low,
-                    "InvalidAlgorithmName");
+                    "InvalidAlgorithmName",
+                    Pbkdf2.CryptoKdfName);
+            });
+
+            Assert.ThrowsException<CryptoException>(delegate
+            {
+                byte[] cipher = encryptor.Encrypt(
+                    binaryMessage,
+                    password,
+                    KeyDerivationCostType.Low,
+                    BouncyCastleXChaCha20.CryptoAlgorithmName,
+                    "InvalidKdfName");
             });
         }
 

@@ -124,11 +124,12 @@ namespace SilentNotes.ViewModels
         {
             SafeModel safe = new SafeModel();
             string algorithm = _settingsService.LoadSettingsOrDefault().SelectedEncryptionAlgorithm;
+            string kdfAlgorithm = _settingsService.LoadSettingsOrDefault().SelectedKdfAlgorithm;
 
             // We generate a 256 bit key, this is required by all available symmetric encryption
             // algorithms and is more than big enough even for future algorithms.
             var key = _randomService.GetRandomBytes(32);
-            safe.SerializeableKey = SafeModel.EncryptKey(key, password, _randomService, algorithm);
+            safe.SerializeableKey = SafeModel.EncryptKey(key, password, _randomService, algorithm, kdfAlgorithm);
 
             // Double check that key can be decrypted
             if (!_keyService.TryOpenSafe(safe, password))

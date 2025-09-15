@@ -102,7 +102,7 @@ namespace SilentNotesTest.Services
 
             Assert.AreEqual(RepositoryStorageLoadResult.SuccessfullyLoaded, result);
             Assert.IsNotNull(repository);
-            Assert.AreEqual(NoteRepositoryModel.NewestSupportedRevision, repository.Revision);
+            Assert.AreEqual(NoteRepositoryModel.CurrentSavingRevision, repository.Revision);
             fileService.Verify(m => m.TrySerializeAndSave(It.IsAny<string>(), It.IsAny<NoteRepositoryModel>()), Times.Once);
         }
 

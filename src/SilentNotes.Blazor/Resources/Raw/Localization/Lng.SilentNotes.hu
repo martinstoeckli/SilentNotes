@@ -173,9 +173,7 @@ pushpull_error_no_cloud_note = Ez a jegyzet nem létezik az online tárhelyen, k
 security = Biztonság
 encryption = Titkosítás
 encryption_algorithm = Titkosítási mód
-encryption_algo_xchacha20 = XChaCha20-Poly1305 [ajánlott]
-encryption_algo_aesgcm = AES256-GCM
-encryption_algo_twofishgcm = Twofish256-GCM
+encryption_algorithm_recommended = ajánlott
 security_prevent_screenshots = Képernyőképek készítésének megakadályozása
 
 gui = Felhasználói felület
