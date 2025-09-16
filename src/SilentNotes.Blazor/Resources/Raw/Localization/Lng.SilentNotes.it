@@ -103,7 +103,7 @@ export_error = Impossibile esportare gli appunti.
 backup_create = Crea una copia
 backup_restore = Ripristina la copia
 backup_restore_confirmation = Ripristinando una copia verranno eliminati tutti gli appunti presenti e caricati gli appunti dalla copia! Successivamente, quando si verifica una sincronizzazione con la memorizzazione online, verrà adottata la nuova versione di ciascun appunto.\nSei sicuro di voler continuare?
-backup_restore_error = The selected file cannot be loaded. It is either not a valid SilentNotes backup file or it contains no notes.
+backup_restore_error = Il file selezionato non può essere aperto. Si tratta di un file di copia di SilentNotes non valido oppure non contiene appunti.
 
 show_transfer_code = Visualizza codice di trasferimento
 transfer_not_existing = Il codice di trasferimento sarà disponibile dopo la prima sincronizzazione.
