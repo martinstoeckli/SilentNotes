@@ -35,6 +35,10 @@ namespace SilentNotesTest.Models
                 MetaModifiedAt = new DateTime(2001, 10, 23, 18, 55, 30),
                 SafeId = new Guid("10000000000000000000000000000000"),
                 Tags = new List<string>() { "Aa", "Bb" },
+                Attachements = new List<Guid>(new Guid[] {
+                    new Guid("20000000000000000000000000000000"),
+                    new Guid("30000000000000000000000000000000"),
+                })
             };
             NoteModel note2 = note1.Clone();
 
@@ -50,11 +54,51 @@ namespace SilentNotesTest.Models
             Assert.AreEqual(note1.Tags.Count, note2.Tags.Count);
             Assert.AreEqual(note1.Tags[0], note2.Tags[0]);
             Assert.AreEqual(note1.Tags[1], note2.Tags[1]);
+            Assert.AreEqual(note1.Attachements.Count, note2.Attachements.Count);
+            Assert.AreEqual(note1.Attachements[0], note2.Attachements[0]);
+            Assert.AreEqual(note1.Attachements[1], note2.Attachements[1]);
 
             // Serialized notes must be identical
             string note1Xml = XmlUtils.SerializeToString(note1);
             string note2Xml = XmlUtils.SerializeToString(note2);
             Assert.AreEqual(note1Xml, note2Xml);
+        }
+
+        [TestMethod]
+        public void Clone_CreatesIndependendCopy()
+        {
+            NoteModel note1 = new NoteModel
+            {
+                Id = Guid.NewGuid(),
+                NoteType = NoteType.Checklist,
+                HtmlContent = "<html>",
+                BackgroundColorHex = "#000000",
+                InRecyclingBin = true,
+                CreatedAt = new DateTime(2000, 10, 22, 18, 55, 30),
+                ModifiedAt = new DateTime(2001, 10, 22, 18, 55, 30),
+                MetaModifiedAt = new DateTime(2001, 10, 23, 18, 55, 30),
+                SafeId = new Guid("10000000000000000000000000000000"),
+                Tags = new List<string>() { "Aa", "Bb" },
+                Attachements = new List<Guid>(new Guid[] {
+                    new Guid("20000000000000000000000000000000"),
+                    new Guid("30000000000000000000000000000000"),
+                })
+            };
+            NoteModel note2 = note1.Clone();
+
+            // Changes on original note should not be reflected in clone
+            note1.Id = Guid.NewGuid();
+            note1.Tags[0] = "different";
+            note1.Tags.RemoveAt(1);
+            note1.Attachements[0] = new Guid("40000000000000000000000000000000");
+            note1.Attachements.RemoveAt(1);
+
+            Assert.AreEqual(2, note2.Tags.Count);
+            Assert.AreEqual("Aa", note2.Tags[0]);
+            Assert.AreEqual("Bb", note2.Tags[1]);
+            Assert.AreEqual(2, note2.Attachements.Count);
+            Assert.AreEqual(new Guid("20000000000000000000000000000000"), note2.Attachements[0]);
+            Assert.AreEqual(new Guid("30000000000000000000000000000000"), note2.Attachements[1]);
         }
 
         [TestMethod]
@@ -72,6 +116,10 @@ namespace SilentNotesTest.Models
                 MetaModifiedAt = new DateTime(2001, 10, 23, 18, 55, 30),
                 SafeId = new Guid("10000000000000000000000000000000"),
                 Tags = new List<string>() { "Aa", "Bb" },
+                Attachements = new List<Guid>(new Guid[] {
+                    new Guid("20000000000000000000000000000000"),
+                    new Guid("30000000000000000000000000000000"),
+                }),
             };
             string noteBeforeXml = XmlUtils.SerializeToString(note1);
 

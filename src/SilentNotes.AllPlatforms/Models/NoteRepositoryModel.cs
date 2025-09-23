@@ -55,6 +55,7 @@ namespace SilentNotes.Models
         private Guid _id;
         private NoteListModel _notes;
         private List<Guid> _deletedNotes;
+        private List<Guid> _deletedAttachements;
         private SafeListModel _safes;
 
         /// <summary>
@@ -115,6 +116,17 @@ namespace SilentNotes.Models
         {
             get { return _deletedNotes ?? (_deletedNotes = new List<Guid>()); }
             set { _deletedNotes = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets a list of ids of deleted notes.
+        /// </summary>
+        [XmlArray("deleted_attachements")]
+        [XmlArrayItem("deleted_attachement")]
+        public List<Guid> DeletedAttachements
+        {
+            get { return _deletedAttachements ?? (_deletedAttachements = new List<Guid>()); }
+            set { _deletedAttachements = value; }
         }
 
         /// <summary>
@@ -180,6 +192,10 @@ namespace SilentNotes.Models
             foreach (Guid deletedNote in DeletedNotes)
             {
                 hashCodes.Add(deletedNote.GetHashCode());
+            }
+            foreach (Guid deletedAttachement in DeletedAttachements)
+            {
+                hashCodes.Add(deletedAttachement.GetHashCode());
             }
             foreach (SafeModel safe in Safes)
             {

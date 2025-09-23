@@ -7,6 +7,7 @@ import CodeBlock from '@tiptap/extension-code-block'
 import Document from '@tiptap/extension-document'
 import HardBreak from '@tiptap/extension-hard-break'
 import History from '@tiptap/extension-history'
+import Image from '@tiptap/extension-image'
 import Italic from '@tiptap/extension-italic'
 import Paragraph from '@tiptap/extension-paragraph'
 import Strike from '@tiptap/extension-strike'
@@ -21,6 +22,7 @@ import { SearchNReplace } from './search-n-replace'
 import { CheckableParagraph, registerIsShoppingModeActive as checklistRegisterIsShoppingModeActive, moveChecklistUp, moveChecklistDown, sortPendingToTop, setCheckStateForAll, sortAlphabetical } from "./checkable-paragraph-extension";
 import { ScrollTo } from './scroll-to-extension'
 import { TabHandler } from './tab-handler-extension'
+import { ImageResizeHandler } from "./image-resize-handler-extension";
 
 /**
  * This method will be exported and can be called from the HTML document with the "prose_mirror_bundle"
@@ -53,6 +55,10 @@ export function initializeEditor(editorElement: HTMLElement): any {
         History.configure({
           depth: 200,
         }),        
+        Image.configure({
+          inline: true,
+        }),
+        ImageResizeHandler,
         Italic,
         CustomLink.configure({
           autolink: false,

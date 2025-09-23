@@ -20,6 +20,7 @@
 @inject IFeedbackService FeedbackService
 @inject INativeBrowserService NativeBrowserService
 @inject IFilePickerService FilePickerService
+@inject IImagePickerService ImagePickerService
 @inject IRepositoryStorageService RepositoryStorageService
 @inject ICloudStorageClientFactory CloudStorageClientFactory
 @inject ICryptoRandomService CryptoRandomSource
@@ -157,7 +158,10 @@
 				Icon="@IconService.GetSvgLink(IconNames.LinkVariant)"
 				Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_link"]</MudMenuItem>
 
-			<MudDivider/>
+			<MudMenuItem OnClick="@(() => ShowImageDialog())"
+				Icon="@IconService.GetSvgLink(IconNames.Image)"
+				Disabled="ViewModel.ShoppingModeActive">Bild hinzufügen</MudMenuItem>
+			<MudDivider />
 
 			<MudMenuItem OnClick="@(() => _colorPaletteOpen = true)"
 				Icon="@Icons.Material.Filled.ColorLens"
@@ -281,6 +285,7 @@
 		IconNames.FormatListBulleted,
 		IconNames.CodeBraces,
 		IconNames.FormatQuoteClose,
+		IconNames.Image,
 		IconNames.LinkVariant,
 		IconNames.KeyboardOffOutline,
 		IconNames.Pin,
@@ -568,6 +573,18 @@
 				_linkState.OldLinkUrl, _linkState.LinkUrl, _linkState.OldLinkTitle, _linkState.LinkTitle);
 			_linkState.IsDialogOpen = false;
 		}
+	}
+
+	public async Task ShowImageDialog()
+	{
+		// if (await ImagePickerService.PickImage())
+		// {
+		// 	byte[] imageContent = await ImagePickerService.ReadPickedImage();
+		// 	await ViewModel.StoreImage(imageContent);
+		// }
+		// todo: Show image picker
+		string imagePath = @"cloud_service_dropbox.png";
+		await _jsModule.InvokeVoidAsync("insertImage", imagePath);
 	}
 
 	private void OnKeepScreenOnChanged()

@@ -30,6 +30,7 @@ namespace SilentNotes.Models
         private Guid _id;
         private string _htmlContent;
         private DateTime? _metaModifiedAt;
+        private List<Guid> _attachements;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NoteModel"/> class.
@@ -63,6 +64,8 @@ namespace SilentNotes.Models
             target.HtmlContent = this.HtmlContent;
             target.Tags.Clear();
             target.Tags.AddRange(this.Tags);
+            target.Attachements.Clear();
+            target.Attachements.AddRange(this.Attachements);
             target.BackgroundColorHex = this.BackgroundColorHex;
             target.InRecyclingBin = this.InRecyclingBin;
             target.CreatedAt = this.CreatedAt;
@@ -111,6 +114,21 @@ namespace SilentNotes.Models
         [XmlArray("tags")]
         [XmlArrayItem("tag")]
         public List<string> Tags { get; set; }
+
+        public bool TagsSpecified { get { return Tags != null && Tags.Count > 0; } } // Serialize only when not empty
+
+        /// <summary>
+        /// Gets or sets a list of ids of attachements, which belong to this note.
+        /// </summary>
+        [XmlArray("attachements")]
+        [XmlArrayItem("attachement")]
+        public List<Guid> Attachements
+        {
+            get { return _attachements ?? (_attachements = new List<Guid>()); }
+            set { _attachements = value; }
+        }
+
+        public bool AttachementsSpecified { get { return _attachements != null && _attachements.Count > 0; } } // Serialize only when not empty
 
         /// <summary>
         /// Gets or sets the background color of the note as hex string, e.g. #ff0000
