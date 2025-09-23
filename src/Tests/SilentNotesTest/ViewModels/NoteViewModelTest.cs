@@ -384,6 +384,36 @@ namespace SilentNotesTest.ViewModels
             Assert.AreSame(noteToBeUnpinned, repository.Notes[0]); // Now on last position
         }
 
+        [TestMethod]
+        public void ModificationDetector_ChecksIsPinnedAgainsInitialState()
+        {
+            NoteModel noteModel = new NoteModel { IsPinned = false };
+            NoteViewModel noteViewModel = CreateMockedNoteViewModel(noteModel);
+
+            // User can switch IsPinned back and forth which is no modification.
+            noteViewModel.IsPinned = true;
+            noteViewModel.IsPinned = false;
+            Assert.IsFalse(noteViewModel.Modifications.IsModified());
+
+            noteViewModel.IsPinned = true;
+            Assert.IsTrue(noteViewModel.Modifications.IsModified());
+        }
+
+        [TestMethod]
+        public void ModificationDetector_ChecksAttachementsAgainsInitialState()
+        {
+            NoteModel noteModel = new NoteModel();
+            NoteViewModel noteViewModel = CreateMockedNoteViewModel(noteModel);
+
+            // User can add and immediately remove attachement which is no modification.
+            noteViewModel.Attachements.Add(new Guid("11111111-1111-1111-1111-111111111111"));
+            noteViewModel.Attachements.Remove(new Guid("11111111-1111-1111-1111-111111111111"));
+            Assert.IsFalse(noteViewModel.Modifications.IsModified());
+
+            noteViewModel.Attachements.Add(new Guid("11111111-1111-1111-1111-111111111111"));
+            Assert.IsTrue(noteViewModel.Modifications.IsModified());
+        }
+
         private static NoteViewModel CreateMockedNoteViewModel(NoteModel note)
         {
             Mock<IRepositoryStorageService> repositoryStorageService = new Mock<IRepositoryStorageService>();

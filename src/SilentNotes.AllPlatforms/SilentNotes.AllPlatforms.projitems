@@ -59,6 +59,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\IFilePickerService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\IFolderPickerService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\IFontService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\IImagePickerService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\IInternetStateService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\IKeepScreenOn.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ILanguageCodeProvider.cs" />
@@ -128,6 +129,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ITreeItemViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Views\MudTreeItemWrapper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Workers\BackupUtils.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Workers\ImageUtils.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Workers\ModificationDetector.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\SynchronizationStory\CloudStorageAccountViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\SynchronizationStory\CloudStorageChoiceViewModel.cs" />

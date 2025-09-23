@@ -79,7 +79,10 @@ namespace SilentNotes.ViewModels
             PushNoteToOnlineStorageCommand = new AsyncRelayCommand(PushNoteToOnlineStorage);
             PullNoteFromOnlineStorageCommand = new AsyncRelayCommand(PullNoteFromOnlineStorage);
 
-            Modifications = new NoteModificationDetector(() => GetModificationFingerprint(this), () => IsPinned);
+            Modifications = new NoteModificationDetector(() =>
+                GetModificationFingerprint(this),
+                () => IsPinned,
+                () => Model.Attachements);
             Modifications.MemorizeCurrentState();
             KeepScreenOnActive = false; // is always canceled when closing
         }
@@ -89,7 +92,7 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Gets a modification detector for the note.
         /// </summary>
-        private NoteModificationDetector Modifications { get; }
+        internal NoteModificationDetector Modifications { get; }
 
         /// <summary>
         /// Gets a fingerprint of all properties which can be modified on this page. Getting the
@@ -109,6 +112,8 @@ namespace SilentNotes.ViewModels
                 string.GetHashCode(noteViewModel.BackgroundColorHex),
                 noteViewModel.IsPinned.GetHashCode(),
                 noteViewModel.ShoppingModeActive.GetHashCode(),
+                ModificationDetector.CombineHashCodes(
+                    noteViewModel.Attachements.Select(attachement => ModificationDetector.CombineWithGuidHash(attachement))),
             });
 
             foreach (var tag in noteViewModel.Tags)
@@ -184,6 +189,14 @@ namespace SilentNotes.ViewModels
         public IEnumerable<string> TagSuggestions
         {
             get { return _allDistinctAndSortedTags.Where(tag => !Tags.Contains(tag, StringComparer.InvariantCultureIgnoreCase)); }
+        }
+
+        /// <summary>
+        /// Gets a list of ids of attachements, which belong to this note.
+        /// </summary>
+        public List<Guid> Attachements
+        {
+            get { return Model.Attachements; }
         }
 
         /// <inheritdoc/>
@@ -517,6 +530,15 @@ namespace SilentNotes.ViewModels
             set { SetProperty(ref _isKeepScreenOnActive, value); }
         }
 
+        public async Task StoreImage(byte[] image)
+        {
+            // todo: stom
+            string loc = _repositoryService.GetLocation();
+            Guid attId = Guid.NewGuid();
+            string attPath = Path.Combine(loc, attId + ".silentnotes_att");
+            await File.WriteAllBytesAsync(attPath, image);
+        }
+
         private TimeAgo GetOrCreateTimeAgo()
         {
             if (_timeAgo == null)
@@ -538,26 +560,60 @@ namespace SilentNotes.ViewModels
         /// <summary>
         /// Extends the <see cref="ModificationDetector"/> with specifics of the note page.
         /// </summary>
-        private class NoteModificationDetector : ModificationDetector
+        internal class NoteModificationDetector : ModificationDetector
         {
             private readonly Func<bool> _isPinnedProvider;
+            private readonly Func<IList<Guid>> _attachementsProvider;
             private bool _originalIsPinned;
+            private List<Guid> _originalAttachements;
 
-            public NoteModificationDetector(Func<long?> fingerPrintProvider, Func<bool> isPinnedProvider)
+            public NoteModificationDetector(Func<long?> fingerPrintProvider, Func<bool> isPinnedProvider, Func<List<Guid>> attachementsProvider)
                 : base(fingerPrintProvider, false)
             {
                 _isPinnedProvider = isPinnedProvider;
+                _originalAttachements = new List<Guid>();
+                _attachementsProvider = attachementsProvider;
+                _originalAttachements.Clear();
             }
 
             public override void MemorizeCurrentState()
             {
                 base.MemorizeCurrentState();
                 _originalIsPinned = _isPinnedProvider();
+                _originalAttachements.Clear();
+                var attachements = _attachementsProvider();
+                if (attachements != null)
+                    _originalAttachements.AddRange(attachements);
             }
 
             public bool IsPinnedChanged
             {
                 get { return _originalIsPinned != _isPinnedProvider(); }
+            }
+
+            /// <summary>
+            /// Detects changes of the attachement list and orders them into deleted and added
+            /// attachements.
+            /// </summary>
+            /// <param name="addedAttachements">Retrieves newly added attachements.</param>
+            /// <param name="deletedAttachements">Retireves deleted attachements.</param>
+            /// <returns>Returns true if there where changes to the attachement list, otherwise false.</returns>
+            public bool AreAttachementsChanged(out List<Guid> addedAttachements, out List<Guid> deletedAttachements)
+            {
+                addedAttachements = new List<Guid>();
+                deletedAttachements= new List<Guid>();
+
+                IList<Guid> currentAttachements = _attachementsProvider();
+                if (currentAttachements == null)
+                {
+                    deletedAttachements.AddRange(_originalAttachements);
+                }
+                else
+                {
+                    addedAttachements.AddRange(currentAttachements.Where(item => !_originalAttachements.Contains(item)));
+                    deletedAttachements.AddRange(_originalAttachements.Where(item => !currentAttachements.Contains(item)));
+                }
+                return (addedAttachements.Count > 0) || (deletedAttachements.Count > 0);
             }
         }
     }

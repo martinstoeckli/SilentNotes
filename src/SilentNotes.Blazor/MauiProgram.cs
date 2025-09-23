@@ -136,6 +136,7 @@ public static class MauiProgram
         services.AddSingleton<INativeBrowserService>((serviceProvider) => new NativeBrowserService());
         services.AddSingleton<IFolderPickerService>((serviceProvider) => new FolderPickerService());
         services.AddSingleton<IFilePickerService>((serviceProvider) => new FilePickerService());
+        services.AddSingleton<IImagePickerService>((serviceProvider) => new ImagePickerService());
         services.AddSingleton<ISynchronizationService>((serviceProvider) => new SynchronizationService(
             serviceProvider.GetService<ISynchronizationState>()));
         services.AddSingleton<ISharingService>((serviceProvider) => new SharingService());
@@ -172,6 +173,9 @@ public static class MauiProgram
             serviceProvider.GetService<IAppContextService>(),
             serviceProvider.GetService<IActivityResultAwaiter>()));
         services.AddSingleton<IFilePickerService>((serviceProvider) => new FilePickerService(
+            serviceProvider.GetService<IAppContextService>(),
+            serviceProvider.GetService<IActivityResultAwaiter>()));
+        services.AddSingleton<IImagePickerService>((serviceProvider) => new ImagePickerService(
             serviceProvider.GetService<IAppContextService>(),
             serviceProvider.GetService<IActivityResultAwaiter>()));
         services.AddSingleton<ISynchronizationService>((serviceProvider) => new SynchronizationService(
