@@ -15,6 +15,8 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "VanillaCloudStorageClient",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SilentNotes", "src\SilentNotes.Blazor\SilentNotes.csproj", "{559C827A-A958-4CC4-A3B6-81419F4DECF2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SilentNotes.Pwa", "src\SilentNotes.Pwa\SilentNotes.Pwa.csproj", "{65987760-FCE0-446E-B933-118A48E46ADA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,18 @@ Global
 		{559C827A-A958-4CC4-A3B6-81419F4DECF2}.Release|x86.ActiveCfg = Release|x86
 		{559C827A-A958-4CC4-A3B6-81419F4DECF2}.Release|x86.Build.0 = Release|x86
 		{559C827A-A958-4CC4-A3B6-81419F4DECF2}.Release|x86.Deploy.0 = Release|x86
+		{65987760-FCE0-446E-B933-118A48E46ADA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{65987760-FCE0-446E-B933-118A48E46ADA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{65987760-FCE0-446E-B933-118A48E46ADA}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{65987760-FCE0-446E-B933-118A48E46ADA}.Debug|x64.Build.0 = Debug|Any CPU
+		{65987760-FCE0-446E-B933-118A48E46ADA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{65987760-FCE0-446E-B933-118A48E46ADA}.Debug|x86.Build.0 = Debug|Any CPU
+		{65987760-FCE0-446E-B933-118A48E46ADA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{65987760-FCE0-446E-B933-118A48E46ADA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{65987760-FCE0-446E-B933-118A48E46ADA}.Release|x64.ActiveCfg = Release|Any CPU
+		{65987760-FCE0-446E-B933-118A48E46ADA}.Release|x64.Build.0 = Release|Any CPU
+		{65987760-FCE0-446E-B933-118A48E46ADA}.Release|x86.ActiveCfg = Release|Any CPU
+		{65987760-FCE0-446E-B933-118A48E46ADA}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
