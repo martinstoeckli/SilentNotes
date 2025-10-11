@@ -18,12 +18,23 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="BouncyCastle.Cryptography" Version="2.6.1" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageReference Include="FluentFTP" Version="52.1.0" />
+    <PackageReference Include="Flurl.Http" Version="4.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.9" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="9.0.9" PrivateAssets="all" />
+    <PackageReference Include="MudBlazor" Version="8.12.0" />
+    <PackageReference Include="SkiaSharp" Version="3.119.0" />
+    <PackageReference Include="TG.Blazor.IndexedDB" Version="1.5.0-preview" />
   </ItemGroup>
 
   <ItemGroup>
     <ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js" />
   </ItemGroup>
+
+  <Import Project="..\SilentNotes.AllPlatforms\SilentNotes.AllPlatforms.projitems" Label="Shared" />
+
+  <Import Project="..\VanillaCloudStorageClient\VanillaCloudStorageClient.projitems" Label="Shared" />
 
 </Project>

@@ -85,6 +85,8 @@ Global
 		src\SilentNotes.AllPlatforms\SilentNotes.AllPlatforms.projitems*{559c827a-a958-4cc4-a3b6-81419f4decf2}*SharedItemsImports = 5
 		src\VanillaCloudStorageClient\VanillaCloudStorageClient.projitems*{559c827a-a958-4cc4-a3b6-81419f4decf2}*SharedItemsImports = 5
 		src\VanillaCloudStorageClient\VanillaCloudStorageClient.projitems*{60c23796-058a-4c76-8d59-b023a47630fd}*SharedItemsImports = 5
+		src\SilentNotes.AllPlatforms\SilentNotes.AllPlatforms.projitems*{65987760-fce0-446e-b933-118a48e46ada}*SharedItemsImports = 5
+		src\VanillaCloudStorageClient\VanillaCloudStorageClient.projitems*{65987760-fce0-446e-b933-118a48e46ada}*SharedItemsImports = 5
 		src\SilentNotes.AllPlatforms\SilentNotes.AllPlatforms.projitems*{7f3acbd0-d2e8-494e-8597-540ee89b78ed}*SharedItemsImports = 5
 		src\VanillaCloudStorageClient\VanillaCloudStorageClient.projitems*{7f3acbd0-d2e8-494e-8597-540ee89b78ed}*SharedItemsImports = 5
 		src\SilentNotes.AllPlatforms\SilentNotes.AllPlatforms.projitems*{bbfa534e-69fd-4b31-b596-01d7317460d5}*SharedItemsImports = 13
