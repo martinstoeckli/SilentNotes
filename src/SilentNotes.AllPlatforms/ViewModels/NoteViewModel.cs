@@ -28,6 +28,7 @@ namespace SilentNotes.ViewModels
     {
         private static TimeAgo _timeAgo;
         private readonly INavigationService _navigationService;
+        private readonly ISharingService _sharingService;
         private readonly IRepositoryStorageService _repositoryService;
         private readonly IFeedbackService _feedbackService;
         private readonly IEnvironmentService _environmentService;
@@ -51,6 +52,7 @@ namespace SilentNotes.ViewModels
             ISafeKeyService keyService,
             IEnvironmentService environmentService,
             INativeBrowserService nativeBrowserService,
+            ISharingService sharingService,
             ISynchronizationState synchronizationState,
             ICryptor cryptor,
             SafeListModel safes,
@@ -63,6 +65,7 @@ namespace SilentNotes.ViewModels
             _feedbackService = feedbackService;
             _environmentService = environmentService;
             _nativeBrowserService = nativeBrowserService;
+            _sharingService = sharingService;
             _synchronizationState = synchronizationState;
             _allDistinctAndSortedTags = allDistinctAndSortedTags;
 
@@ -70,6 +73,7 @@ namespace SilentNotes.ViewModels
             ShowInfoCommand = new RelayCommand(ShowInfo);
             KeepScreenOnCommand = new RelayCommand(KeepScreenOn);
             OpenLinkCommand = new RelayCommand<string>(OpenLink);
+            ShareNoteCommand = new RelayCommand<string>(ShareNote);
             AddTagCommand = new RelayCommand<string>(AddTag);
             DeleteTagCommand = new RelayCommand<string>(DeleteTag);
             PushNoteToOnlineStorageCommand = new AsyncRelayCommand(PushNoteToOnlineStorage);
@@ -453,6 +457,20 @@ namespace SilentNotes.ViewModels
         {
             if (WebviewUtils.IsExternalUri(link))
                 _nativeBrowserService.OpenWebsite(link);
+        }
+
+        /// <summary>
+        /// Gets the command to open the selected link.
+        /// </summary>
+        public ICommand ShareNoteCommand { get; private set; }
+
+        private void ShareNote(string plainText)
+        {
+            // The conversion to plainText is done in JS, because there we have the TipTap node
+            // tree available. Directly converting html to plain text, without parsing it do a dom
+            // first, cannot be done reliably.
+            if (!IsEmptyContent(_unlockedContent))
+                _sharingService.ShareHtmlText(_unlockedContent, plainText);
         }
 
         /// <summary>

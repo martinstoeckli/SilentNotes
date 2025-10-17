@@ -27,6 +27,7 @@
 @inject ISafeKeyService SafeKeyService
 @inject IMessengerService MessengerService
 @inject ISynchronizationState SynchronizationState
+@inject ISharingService SharingService
 
 <style type="text/css">
 	.mud-main-content { background-color: @ViewModel.BackgroundColorHex; }
@@ -159,6 +160,10 @@
 
 			<MudDivider/>
 
+			<MudMenuItem OnClick="@(() => ShareNote())"
+				Icon="@IconService.GetSvgLink(IconNames.Share)"
+				Disabled="ViewModel.ShoppingModeActive">Share note</MudMenuItem>
+
 			<MudMenuItem OnClick="@(() => _colorPaletteOpen = true)"
 				Icon="@Icons.Material.Filled.ColorLens"
 				Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_colors"]</MudMenuItem>
@@ -288,6 +293,7 @@
 		IconNames.Close,
 		IconNames.Delete,
 		IconNames.TagOutline,
+		IconNames.Share,
 		IconNames.CloudUpload,
 		IconNames.CloudDownload,
 	});
@@ -344,6 +350,7 @@
 			SafeKeyService,
 			EnvironmentService,
 			NativeBrowserService,
+			SharingService,
 			SynchronizationState,
 			cryptor,
 			noteRepository.Safes,
@@ -537,6 +544,12 @@
 	private async Task ToggleFormatState(string formatName, int formatParameter = 0)
 	{
 		await _jsModule.InvokeVoidAsync("toggleFormatAndRefresh", formatName, formatParameter);
+	}
+
+	private async Task ShareNote()
+	{
+		string plainText = await _jsModule.InvokeAsync<string>("getAsPlainText");
+		ViewModel.ShareNoteCommand.Execute(plainText);
 	}
 
 	[JSInvokable("OpenLinkDialog")]

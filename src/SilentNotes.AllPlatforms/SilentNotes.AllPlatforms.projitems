@@ -72,6 +72,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\ISafeKeyService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\IScreenshots.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ISettingsService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\ISharingService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ISvgIconService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ISynchronizationService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ISynchronizationState.cs" />

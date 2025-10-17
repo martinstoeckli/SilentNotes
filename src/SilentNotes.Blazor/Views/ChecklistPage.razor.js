@@ -1,4 +1,4 @@
-﻿import { initializeChecklist, registerIsShoppingModeActive, toggleFormat, isFormatActive, searchAndHighlight, selectNextWhileTyping, selectNext, selectPrevious, moveChecklist, sortChecklistPendingToTop, sortChecklistAlphabetical, setCheckStateForAllToTodo, setCheckStateForAllToDone, setCheckStateForAllToDisabled } from '../prose-mirror-bundle.js';
+﻿import { initializeChecklist, registerIsShoppingModeActive, toggleFormat, isFormatActive, searchAndHighlight, selectNextWhileTyping, selectNext, selectPrevious, moveChecklist, sortChecklistPendingToTop, sortChecklistAlphabetical, setCheckStateForAllToTodo, setCheckStateForAllToDone, setCheckStateForAllToDisabled, exportAsPlainText } from '../prose-mirror-bundle.js';
 
 var _page;
 
@@ -39,6 +39,10 @@ export function setNoteContent(text) {
     catch (ex) {
         _page.editor.setEditable(false);
     }
+}
+
+export function getAsPlainText() {
+    return exportAsPlainText(_page.editor);
 }
 
 export function setEditable(editable) {
