@@ -14,9 +14,9 @@ namespace SilentNotes.Platforms.Services
     internal class SharingService : ISharingService
     {
         /// <inheritdoc/>
-        public async Task ShareHtmlText(string htmlText, string plainText)
+        public async Task ShareHtmlText(string htmlText, string plainText, string subject)
         {
-            string subject = Uri.EscapeDataString("Note from SilentNotes");
+            subject = Uri.EscapeDataString(subject);
 
             // Some email clients will strip away leading spaces, thus removing the indentation.
             plainText = ReplaceLeadingSpaces(plainText);

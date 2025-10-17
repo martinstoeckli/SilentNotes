@@ -10,6 +10,7 @@ undo = Undo
 redo = Redo
 copy = Copy
 reset = Reset
+share = Share
 
 today = today
 yesterday = yesterday
@@ -57,6 +58,7 @@ feedback_note_to_recycle = The note has been moved to the recycle bin and can be
 note_pin = Pin note
 note_open_link = Open link
 note_show_info = Note information
+note_share_subject = Note from SilentNotes
 
 checklist_create_new = Create new checklist
 checklist_move_to_top = Move to top

@@ -95,3 +95,40 @@ class ListHierarchyItem {
       this.listItemIndex = 0;
   }
 }
+
+/*
+ * Converts the HTML content of a SilentNotes specific checklist to plain text.
+ * @param {Editor} editor - A TipTap editor instance.
+ * @returns Plain text to be used in a text editor or for sending in an e-mail.
+ */
+export function exportChecklistAsPlainText(editor: Editor): string {
+  const _separator = '\n';
+
+  const options = {
+    blockSeparator: _separator,
+    textSerializers: getTextSerializersFromSchema(editor.schema),
+  };
+
+  // Add or replace the text serializer for paragraphs, because the content of list items is always
+  // enclosed in a paragraph.
+  options.textSerializers['paragraph'] = (params) => {
+    // params contains: node, pos, parent, index, range
+    const { node, parent } = params
+    let result: string = invokeDefaultSerialization(node, options);
+
+    switch (node.attrs.htmlElementClass) {
+      case 'done':
+        result = '🗹 ' + result;
+        break;
+      case 'disabled':
+        result = '— ' + result;
+        break;
+      default:
+        result = '☐ ' + result;
+        break;
+    }
+    return result;
+  }
+
+  return editor.getText(options);
+}

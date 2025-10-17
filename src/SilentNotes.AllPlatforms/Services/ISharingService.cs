@@ -17,7 +17,8 @@ namespace SilentNotes.Services
         /// </summary>
         /// <param name="htmlText">The note content.</param>
         /// <param name="plainText">The note content formatted as plain text.</param>
+        /// <param name="subject">The subject/title for sending per email.</param>
         /// <returns>Task for async calls.</returns>
-        Task ShareHtmlText(string htmlText, string plainText);
+        Task ShareHtmlText(string htmlText, string plainText, string subject);
     }
 }

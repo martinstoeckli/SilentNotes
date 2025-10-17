@@ -28,11 +28,11 @@ namespace SilentNotes.Platforms.Services
         }
 
         /// <inheritdoc/>
-        public Task ShareHtmlText(string htmlText, string plainText)
+        public Task ShareHtmlText(string htmlText, string plainText, string subject)
         {
             Intent shareIntent = new Intent(Intent.ActionSend);
             shareIntent.SetType("text/html");
-            shareIntent.PutExtra(Intent.ExtraSubject, "Note from SilentNotes");
+            shareIntent.PutExtra(Intent.ExtraSubject, subject);
             shareIntent.PutExtra(Intent.ExtraText, plainText);
             shareIntent.PutExtra(Intent.ExtraHtmlText, htmlText);
 

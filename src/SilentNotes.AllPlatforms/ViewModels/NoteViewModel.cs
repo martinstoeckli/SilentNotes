@@ -470,7 +470,7 @@ namespace SilentNotes.ViewModels
             // tree available. Directly converting html to plain text, without parsing it do a dom
             // first, cannot be done reliably.
             if (!IsEmptyContent(_unlockedContent))
-                _sharingService.ShareHtmlText(_unlockedContent, plainText);
+                _sharingService.ShareHtmlText(_unlockedContent, plainText, Language["note_share_subject"]);
         }
 
         /// <summary>

@@ -162,7 +162,7 @@
 
 			<MudMenuItem OnClick="@(() => ShareNote())"
 				Icon="@IconService.GetSvgLink(IconNames.Share)"
-				Disabled="ViewModel.ShoppingModeActive">Share note</MudMenuItem>
+				Disabled="ViewModel.ShoppingModeActive">@LanguageService["share"]</MudMenuItem>
 
 			<MudMenuItem OnClick="@(() => _colorPaletteOpen = true)"
 				Icon="@Icons.Material.Filled.ColorLens"

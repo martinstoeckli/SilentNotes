@@ -10,6 +10,7 @@ undo = Rückgängig
 redo = Wiederherstellen
 copy = Kopieren
 reset = Zurücksetzen
+share = Teilen
 
 today = heute
 yesterday = gestern
@@ -57,6 +58,7 @@ feedback_note_to_recycle = Die Notiz ist in den Papierkorb verschoben worden und
 note_pin = Notiz anheften
 note_open_link = Link öffnen
 note_show_info = Notizinformationen
+note_share_subject = Notiz von SilentNotes
 
 checklist_create_new = Neue Checkliste erstellen
 checklist_move_to_top = Schiebe ganz nach oben

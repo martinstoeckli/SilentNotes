@@ -135,7 +135,7 @@ div.note-dark .detail-view.checklist .ProseMirror p::after { content: @(IconServ
 
 			<MudMenuItem OnClick="@(() => ShareNote())"
 				Icon="@IconService.GetSvgLink(IconNames.Share)"
-				Disabled="ViewModel.ShoppingModeActive">Share note</MudMenuItem>
+				Disabled="ViewModel.ShoppingModeActive">@LanguageService["share"]</MudMenuItem>
 
 			<MudMenuItem OnClick="@(() => _jsModule.InvokeVoidAsync("undo"))"
 				Icon="@IconService.GetSvgLink(IconNames.Undo)"
