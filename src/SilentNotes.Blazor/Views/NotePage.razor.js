@@ -1,4 +1,4 @@
-import { initializeEditor, toggleFormat, isFormatActive, searchAndHighlight, selectNextWhileTyping, selectNext, selectPrevious, selectWordAtCurrentPosition } from '../prose-mirror-bundle.js';
+import { initializeEditor, toggleFormat, isFormatActive, searchAndHighlight, selectNextWhileTyping, selectNext, selectPrevious, selectWordAtCurrentPosition, exportAsPlainText } from '../prose-mirror-bundle.js';
 
 var _page;
 
@@ -40,6 +40,10 @@ export function setNoteContent(text) {
     catch (ex) {
         _page.editor.setEditable(false);
     }
+}
+
+export function getAsPlainText() {
+    return exportAsPlainText(_page.editor);
 }
 
 export function setEditable(editable) {

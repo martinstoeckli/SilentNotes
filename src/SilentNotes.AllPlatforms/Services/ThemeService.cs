@@ -188,6 +188,10 @@ namespace SilentNotes.Services
                     {
                         FontSize = "14px",
                     },
+                    Body2 = new Body2Typography()
+                    {
+                        FontSize = ".925rem", // instead of .875rem
+                    }
                 },
             };
         }

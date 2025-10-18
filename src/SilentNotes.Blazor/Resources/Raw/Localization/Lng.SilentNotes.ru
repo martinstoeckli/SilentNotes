@@ -10,6 +10,7 @@ undo = Undo
 redo = Redo
 copy = Copy
 reset = Reset
+share = Share
 
 today = сегодня
 yesterday = вчера
@@ -57,6 +58,7 @@ feedback_note_to_recycle = Заметка перемещена в корзину
 note_pin = Закрепить заметку
 note_open_link = Открыть ссылку
 note_show_info = Информация о заметке
+note_share_subject = Note from SilentNotes
 
 checklist_create_new = Создать новый чек-лист
 checklist_move_to_top = Переместить в начало

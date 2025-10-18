@@ -138,6 +138,7 @@ public static class MauiProgram
         services.AddSingleton<IFilePickerService>((serviceProvider) => new FilePickerService());
         services.AddSingleton<ISynchronizationService>((serviceProvider) => new SynchronizationService(
             serviceProvider.GetService<ISynchronizationState>()));
+        services.AddSingleton<ISharingService>((serviceProvider) => new SharingService());
 
         services.AddScoped<IFeedbackService>((serviceProvider) => new FeedbackService(
             serviceProvider.GetService<ISnackbar>(),
@@ -175,6 +176,8 @@ public static class MauiProgram
             serviceProvider.GetService<IActivityResultAwaiter>()));
         services.AddSingleton<ISynchronizationService>((serviceProvider) => new SynchronizationService(
             serviceProvider.GetService<ISynchronizationState>()));
+        services.AddSingleton<ISharingService>((serviceProvider) => new SharingService(
+            serviceProvider.GetService<IAppContextService>()));
 
         services.AddScoped<IFeedbackService>((serviceProvider) => new FeedbackService(
             serviceProvider.GetService<IAppContextService>(),

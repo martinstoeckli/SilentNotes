@@ -27,6 +27,7 @@
 @inject ISafeKeyService SafeKeyService
 @inject IMessengerService MessengerService
 @inject ISynchronizationState SynchronizationState
+@inject ISharingService SharingService
 
 <style type="text/css">
 	.mud-main-content { background-color: @ViewModel.BackgroundColorHex; }
@@ -92,7 +93,7 @@ div.note-dark .detail-view.checklist .ProseMirror p::after { content: @(IconServ
 		title="@LanguageService["search"]" Edge="Edge.End" />
 
 	@* Overflow menu *@
-	<MudMenu @ref="_overflowMenu" Dense="true" AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight">
+	<MudMenu @ref="_overflowMenu" Dense="true" AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight" MaxHeight="520">
 		<ActivatorContent>
 			<MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" />
 		</ActivatorContent>
@@ -131,6 +132,10 @@ div.note-dark .detail-view.checklist .ProseMirror p::after { content: @(IconServ
 				Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_header2"]</MudMenuItem>
 
 			<MudDivider />
+
+			<MudMenuItem OnClick="@(() => ShareNote())"
+				Icon="@IconService.GetSvgLink(IconNames.Share)"
+				Disabled="ViewModel.ShoppingModeActive">@LanguageService["share"]</MudMenuItem>
 
 			<MudMenuItem OnClick="@(() => _jsModule.InvokeVoidAsync("undo"))"
 				Icon="@IconService.GetSvgLink(IconNames.Undo)"
@@ -247,6 +252,7 @@ div.note-dark .detail-view.checklist .ProseMirror p::after { content: @(IconServ
 		IconNames.Magnify,
 		IconNames.Pin,
 		IconNames.Redo,
+		IconNames.Share,
 		IconNames.TagOutline,
 		IconNames.SortAlphabeticalAscending,
 		IconNames.SortBoolDescendingVariant,
@@ -306,6 +312,7 @@ div.note-dark .detail-view.checklist .ProseMirror p::after { content: @(IconServ
 			SafeKeyService,
 			EnvironmentService,
 			NativeBrowserService,
+			SharingService,
 			SynchronizationState,
 			cryptor,
 			noteRepository.Safes,
@@ -506,6 +513,12 @@ div.note-dark .detail-view.checklist .ProseMirror p::after { content: @(IconServ
 	private async Task ToggleFormatState(string formatName, int formatParameter = 0)
 	{
 		await _jsModule.InvokeVoidAsync("toggleFormatAndRefresh", formatName, formatParameter);
+	}
+
+	private async Task ShareNote()
+	{
+		string plainText = await _jsModule.InvokeAsync<string>("getAsPlainText");
+		ViewModel.ShareNoteCommand.Execute(plainText);
 	}
 
 	/// <summary>
