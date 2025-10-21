@@ -225,6 +225,29 @@ namespace SilentNotesTest.Crypto
         }
 
         [TestMethod]
+        public void NeedsRehashDetectsHigherCostPbkdf2()
+        {
+            // cost is currently "25000"
+            IKeyDerivationFunction kdf = new Pbkdf2();
+            Assert.IsTrue(kdf.NeedsRehashForHighCost("10000"));
+            Assert.IsFalse(kdf.NeedsRehashForHighCost("10000000"));
+            Assert.ThrowsExactly<CryptoException>(() => kdf.NeedsRehashForHighCost("invalid"));
+        }
+
+        [TestMethod]
+        public void NeedsRehashDetectsHigherCostArgon2()
+        {
+            // cost is currently "m=23000,t=2,p=1"
+            IKeyDerivationFunction kdf = new BouncyCastleArgon2();
+            string uu = kdf.RecommendedCost(KeyDerivationCostType.High);
+            Assert.IsTrue(kdf.NeedsRehashForHighCost("m=20000,t=2,p=1"));
+            Assert.IsTrue(kdf.NeedsRehashForHighCost("m=23000,t=1,p=1"));
+            Assert.IsFalse(kdf.NeedsRehashForHighCost("m=2300000,t=1,p=1"));
+            Assert.IsFalse(kdf.NeedsRehashForHighCost("m=20000,t=100,p=1"));
+            Assert.ThrowsExactly<CryptoException>(() => kdf.NeedsRehashForHighCost("invalid"));
+        }
+
+        [TestMethod]
         public void CryptorWorksWithPassword()
         {
             ICryptoRandomService randomGenerator = CommonMocksAndStubs.CryptoRandomService();

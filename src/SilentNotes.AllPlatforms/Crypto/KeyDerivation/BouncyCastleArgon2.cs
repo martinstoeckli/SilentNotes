@@ -20,6 +20,13 @@ namespace SilentNotes.Crypto.KeyDerivation
         /// <summary>The name of the Argon2 key derivation function.</summary>
         public const string CryptoKdfName = "argon2id";
 
+        /// <summary>
+        /// Measured ~750ms on a mid-range mobile device of 2023. This value will be increased over
+        /// time, to adapt for future hardware.
+        /// </summary>
+        private const int HighCostMemoryKib = 23000;
+        private const int HighCostIterations = 2;
+
         private const int SaltSizeBytes = 16; // 128 bits
 
         /// <inheritdoc />
@@ -70,6 +77,7 @@ namespace SilentNotes.Crypto.KeyDerivation
 
         public int ExpectedSaltSizeBytes => SaltSizeBytes;
 
+        /// <inheritdoc/>
         public string RecommendedCost(KeyDerivationCostType costType)
         {
             Argon2Cost result;
@@ -84,11 +92,10 @@ namespace SilentNotes.Crypto.KeyDerivation
                     };
                     break;
                 case KeyDerivationCostType.High:
-                    // measured 650ms on a mid-range mobile device in 2023
                     result = new Argon2Cost
                     {
-                        MemoryKib = 20000,
-                        Iterations = 2,
+                        MemoryKib = HighCostMemoryKib,
+                        Iterations = HighCostIterations,
                         Parallelism = 1,
                     };
                     break;
@@ -96,6 +103,14 @@ namespace SilentNotes.Crypto.KeyDerivation
                     throw new ArgumentOutOfRangeException(nameof(costType));
             }
             return result.Format();
+        }
+
+        /// <inheritdoc/>
+        public bool NeedsRehashForHighCost(string cost)
+        {
+            if (!Argon2Cost.TryParse(cost, out Argon2Cost costParameters))
+                throw new CryptoException("Invalid cost parameter.");
+            return (HighCostMemoryKib * HighCostIterations) > (costParameters.MemoryKib * costParameters.Iterations);
         }
     }
 }

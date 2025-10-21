@@ -44,5 +44,14 @@ namespace SilentNotes.Crypto.KeyDerivation
         /// <param name="costType">The cost type.</param>
         /// <returns>The recommended cost factor.</returns>
         string RecommendedCost(KeyDerivationCostType costType);
+
+        /// <summary>
+        /// Checks whether the cost of the hashing should be adapted to new and faster hardware.
+        /// Call this function only to compare <see cref="KeyDerivationCostType.High"/> costs.
+        /// </summary>
+        /// <param name="cost">The current cost paramter.</param>
+        /// <returns>Returns true if the recommended cost factor is higher than the <paramref name="cost"/>,
+        /// otherwise false.</returns>
+        bool NeedsRehashForHighCost(string cost);
     }
 }
