@@ -143,7 +143,7 @@ namespace SilentNotes.Stories.SynchronizationStory
         {
             try
             {
-                decryptedRepository = decryptor.Decrypt(binaryCloudRepository, CryptoUtils.StringToSecureString(transferCode));
+                decryptedRepository = decryptor.Decrypt(binaryCloudRepository, CryptoUtils.StringToSecureString(transferCode), out _);
                 return true;
             }
             catch (CryptoExceptionInvalidCipherFormat)

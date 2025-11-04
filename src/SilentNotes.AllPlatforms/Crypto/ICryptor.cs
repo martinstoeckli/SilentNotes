@@ -70,11 +70,13 @@ namespace SilentNotes.Crypto
         /// <param name="packedCipher">The cipher containing a header with the necessary parameters
         /// for decryption.</param>
         /// <param name="password">The password which was used for encryption.</param>
+        /// <param name="needsReEncryption">Receives a value indicating, whether the cipher should
+        /// be reencrypted with updated parameters, to adapt to more powerfull hardware.</param>
         /// <exception cref="CryptoExceptionInvalidCipherFormat">Thrown if it doesn't contain a valid header.</exception>
         /// <exception cref="CryptoUnsupportedRevisionException">Thrown if it was packed with a future incompatible version.</exception>
         /// <exception cref="CryptoDecryptionException">Thrown if there was an error decrypting the cipher.</exception>
         /// <returns>The plain text message.</returns>
-        byte[] Decrypt(byte[] packedCipher, SecureString password);
+        byte[] Decrypt(byte[] packedCipher, SecureString password, out bool needsReEncryption);
 
         /// <summary>
         /// Decrypts a cipher, which was encrypted with <see cref="Encrypt(byte[], byte[], string, string)"/>.

@@ -41,6 +41,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Models\NotificationTriggerModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\SafeListModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\SafeModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\SafeOpenResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\SettingsModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\ThemeMode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\WallpaperModel.cs" />

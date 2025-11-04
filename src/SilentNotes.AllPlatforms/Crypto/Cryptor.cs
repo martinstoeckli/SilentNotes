@@ -122,7 +122,7 @@ namespace SilentNotes.Crypto
         }
 
         /// <inheritdoc/>
-        public byte[] Decrypt(byte[] packedCipher, SecureString password)
+        public byte[] Decrypt(byte[] packedCipher, SecureString password, out bool needsReEncryption)
         {
             if (packedCipher == null)
                 throw new ArgumentNullException("packedCipher");
@@ -133,6 +133,7 @@ namespace SilentNotes.Crypto
 
             ISymmetricEncryptionAlgorithm decryptor = new SymmetricEncryptionAlgorithmFactory().CreateAlgorithm(header.AlgorithmName);
             IKeyDerivationFunction kdf = new KeyDerivationFactory().CreateKdf(header.KdfName);
+            needsReEncryption = kdf.NeedsRehashForHighCost(header.Cost);
 
             try
             {

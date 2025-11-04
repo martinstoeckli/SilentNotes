@@ -94,18 +94,20 @@ namespace SilentNotes.ViewModels
             if (HasPasswordError || HasPasswordConfirmationError)
                 return;
 
-            int openedSafes = 0;
+            int openedSafeCount = 0;
             if (SafeExists)
             {
-                openedSafes = TryOpenSafes(Password);
+                List<SafeOpenResult> openedSafes = TryOpenSafes(Password);
+                openedSafeCount = openedSafes.Count;
+                ReEncryptSafesIfNecessary(openedSafes, Password);
             }
             else
             {
                 CreateNewSafe(Password);
-                openedSafes++;
+                openedSafeCount++;
             }
 
-            if (openedSafes == 0)
+            if (openedSafeCount == 0)
             {
                 HasPasswordError = true;
                 PasswordErrorText = Language.LoadText("password_wrong_error");
@@ -117,6 +119,23 @@ namespace SilentNotes.ViewModels
             else
             {
                 _navigationService.NavigateTo(_navigationTargetRoute);
+            }
+        }
+
+        private void ReEncryptSafesIfNecessary(List<SafeOpenResult> openedSafes, SecureString password)
+        {
+            var safesNeedingReEncryption = openedSafes.Where(item => item.NeedsReEncryption).ToArray();
+            if (safesNeedingReEncryption.Length > 0)
+            {
+                string algorithm = _settingsService.LoadSettingsOrDefault().SelectedEncryptionAlgorithm;
+                string kdfAlgorithm = _settingsService.LoadSettingsOrDefault().SelectedKdfAlgorithm;
+
+                foreach (var safeNeedingReEncryption in safesNeedingReEncryption)
+                {
+                    // No need to open or close the safe, just replace the encrypted key.
+                    safeNeedingReEncryption.Safe.SerializeableKey = SafeModel.EncryptKey(safeNeedingReEncryption.Key, password, _randomService, algorithm, kdfAlgorithm);
+                    safeNeedingReEncryption.Safe.RefreshModifiedAt();
+                }
             }
         }
 
@@ -132,20 +151,23 @@ namespace SilentNotes.ViewModels
             safe.SerializeableKey = SafeModel.EncryptKey(key, password, _randomService, algorithm, kdfAlgorithm);
 
             // Double check that key can be decrypted
-            if (!_keyService.TryOpenSafe(safe, password))
+            if (!_keyService.TryOpenSafe(safe, password, out _))
                 throw new Exception("Safe could not be opened!");
 
             Model.Safes.Add(safe);
         }
 
-        private int TryOpenSafes(SecureString password)
+        private List<SafeOpenResult> TryOpenSafes(SecureString password)
         {
-            int result = 0;
+            var result = new List<SafeOpenResult>();
             foreach (SafeModel safe in Model.Safes)
             {
                 _keyService.CloseSafe(safe.Id); // Actually it shouldn't be possible to have an open safe at this time...
-                if (_keyService.TryOpenSafe(safe, password))
-                    result++;
+                if (_keyService.TryOpenSafe(safe, password, out bool needsReEncryption))
+                {
+                    _keyService.TryGetKey(safe.Id, out byte[] key); // Doesn't copy the key in memory
+                    result.Add(new SafeOpenResult(safe, key, needsReEncryption));
+                }
             }
             return result;
         }

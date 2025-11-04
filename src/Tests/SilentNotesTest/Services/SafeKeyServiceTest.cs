@@ -27,11 +27,12 @@ namespace SilentNotesTest.Services
             safe.SerializeableKey = SafeModel.EncryptKey(key, pwd, randomService, BouncyCastleAesGcm.CryptoAlgorithmName, Pbkdf2.CryptoKdfName);
 
             ISafeKeyService service = new SafeKeyService();
-            bool res = service.TryOpenSafe(safe, pwd);
+            bool res = service.TryOpenSafe(safe, pwd, out bool needsReEncryption);
 
             Assert.IsTrue(res);
             service.TryGetKey(safe.Id, out byte[] safeKey);
             Assert.IsTrue(key.SequenceEqual(safeKey));
+            Assert.IsFalse(needsReEncryption);
         }
 
         [TestMethod]
@@ -46,7 +47,7 @@ namespace SilentNotesTest.Services
 
             SecureString wrongPwd = CryptoUtils.StringToSecureString("invalid");
             ISafeKeyService service = new SafeKeyService();
-            bool res = service.TryOpenSafe(safe, wrongPwd);
+            bool res = service.TryOpenSafe(safe, wrongPwd, out _);
 
             Assert.IsFalse(res);
             Assert.IsFalse(service.TryGetKey(safe.Id, out byte[] safeKey));
