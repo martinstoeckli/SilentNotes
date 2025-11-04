@@ -178,7 +178,7 @@ namespace SilentNotesTest.Services
                     // Deobfuscate old password
                     ICryptor decryptor = new Cryptor("snps", null);
                     byte[] binaryCipher = CryptoUtils.Base64StringToBytes(oldPasswortElement.Value);
-                    byte[] unprotectedBinaryPassword = decryptor.Decrypt(binaryCipher, snpsk);
+                    byte[] unprotectedBinaryPassword = decryptor.Decrypt(binaryCipher, snpsk, out _);
 
                     // Protect with new data protection service and add to XML
                     string protectedPassword = _dataProtectionService.Protect(unprotectedBinaryPassword);

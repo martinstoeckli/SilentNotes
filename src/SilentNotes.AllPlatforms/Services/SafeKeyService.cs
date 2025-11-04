@@ -27,11 +27,12 @@ namespace SilentNotes.Services
         }
 
         /// <inheritdoc/>
-        public bool TryOpenSafe(SafeModel safe, SecureString password)
+        public bool TryOpenSafe(SafeModel safe, SecureString password, out bool needsReEncryption)
         {
+            needsReEncryption = false;
             if (!_safeKeys.ContainsKey(safe.Id))
             {
-                if (SafeModel.TryDecryptKey(safe.SerializeableKey, password, out byte[] decryptedKey))
+                if (SafeModel.TryDecryptKey(safe.SerializeableKey, password, out byte[] decryptedKey, out needsReEncryption))
                     _safeKeys.Add(safe.Id, decryptedKey);
             }
             return IsSafeOpen(safe.Id);

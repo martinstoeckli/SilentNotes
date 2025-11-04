@@ -40,10 +40,11 @@ namespace SilentNotesTest.Models
             ICryptoRandomSource randomSource = CommonMocksAndStubs.CryptoRandomService();
 
             string encryptedKey = SafeModel.EncryptKey(key, password, randomSource, BouncyCastleAesGcm.CryptoAlgorithmName, Pbkdf2.CryptoKdfName);
-            bool res = SafeModel.TryDecryptKey(encryptedKey, password, out byte[] decryptedKey);
+            bool res = SafeModel.TryDecryptKey(encryptedKey, password, out byte[] decryptedKey, out bool needsReEncryption);
 
             Assert.IsTrue(res);
             Assert.IsTrue(key.SequenceEqual(decryptedKey));
+            Assert.IsFalse(needsReEncryption);
         }
 
         [TestMethod]
@@ -51,7 +52,7 @@ namespace SilentNotesTest.Models
         {
             string encryptedKey = "U2lsZW50U2FmZSB2PTIkYWVzX2djbSQ2ZXVQN3NSQ2dHQStadTJGeE80QkJRPT0kcGJrZGYyJEs0TjY5dmllRTBvaEg1UlVvVDUydGc9PSQxMDAwMCQkT1cFrC+EM9E5PlM4uPGUv0HsOQ==";
             SecureString password = CryptoUtils.StringToSecureString("testpassword");
-            bool res = SafeModel.TryDecryptKey(encryptedKey, password, out byte[] decryptedKey);
+            bool res = SafeModel.TryDecryptKey(encryptedKey, password, out byte[] decryptedKey, out _);
 
             byte[] originalKey = new byte[] { 88, 99, 11 };
             Assert.IsTrue(res);

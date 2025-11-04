@@ -71,7 +71,7 @@ namespace SilentNotes.ViewModels
 
         private void Ok()
         {
-            List<SafeInfo> matchingSafes = TryPasswordOnSafes(OldPassword);
+            List<SafeOpenResult> matchingSafes = TryPasswordOnSafes(OldPassword);
             HasOldPasswordError = matchingSafes.Count == 0;
             HasPasswordError = !ValidatePassword(Password);
             HasPasswordConfirmationError = !ValidatePasswordConfirmation(Password, PasswordConfirmation);
@@ -81,11 +81,11 @@ namespace SilentNotes.ViewModels
             // Change the encrypted key of each safe which could have been opened with the password.
             string algorithm = _settingsService.LoadSettingsOrDefault().SelectedEncryptionAlgorithm;
             string kdfAlgorithm = _settingsService.LoadSettingsOrDefault().SelectedKdfAlgorithm;
-            foreach (SafeInfo safeInfo in matchingSafes)
+            foreach (SafeOpenResult matchingSafe in matchingSafes)
             {
                 // No need to open or close the safe, just replace the encrypted key.
-                safeInfo.Safe.SerializeableKey = SafeModel.EncryptKey(safeInfo.Key, Password, _randomService, algorithm, kdfAlgorithm);
-                safeInfo.Safe.RefreshModifiedAt();
+                matchingSafe.Safe.SerializeableKey = SafeModel.EncryptKey(matchingSafe.Key, Password, _randomService, algorithm, kdfAlgorithm);
+                matchingSafe.Safe.RefreshModifiedAt();
             }
 
             _navigationService.NavigateTo(RouteNames.NoteRepository);
@@ -157,14 +157,14 @@ namespace SilentNotes.ViewModels
         /// </summary>
         /// <param name="password">Password to test with.</param>
         /// <returns>List of safes where the password matches.</returns>
-        private List<SafeInfo> TryPasswordOnSafes(SecureString password)
+        private List<SafeOpenResult> TryPasswordOnSafes(SecureString password)
         {
-            List<SafeInfo> result = new List<SafeInfo>();
+            List<SafeOpenResult> result = new List<SafeOpenResult>();
             foreach (SafeModel safe in Model.Safes)
             {
-                if (SafeModel.TryDecryptKey(safe.SerializeableKey, password, out byte[] key))
+                if (SafeModel.TryDecryptKey(safe.SerializeableKey, password, out byte[] key, out bool needsReEncryption))
                 {
-                    result.Add(new SafeInfo { Safe = safe, Key = key });
+                    result.Add(new SafeOpenResult(safe, key, needsReEncryption));
                 }
             }
             return result;
@@ -184,12 +184,5 @@ namespace SilentNotes.ViewModels
         /// Gets the wrapped model.
         /// </summary>
         internal NoteRepositoryModel Model { get; private set; }
-
-        private class SafeInfo
-        {
-            public SafeModel Safe { get; set; }
-
-            public byte[] Key { get; set; }
-        }
     }
 }

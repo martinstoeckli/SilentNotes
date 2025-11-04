@@ -200,7 +200,7 @@ namespace SilentNotes.Crypto
         public static byte[] Deobfuscate(byte[] obfuscatedMessage, SecureString obfuscationKey)
         {
             ICryptor encryptor = new Cryptor(CryptorObfuscationPackageName, null);
-            return encryptor.Decrypt(obfuscatedMessage, obfuscationKey);
+            return encryptor.Decrypt(obfuscatedMessage, obfuscationKey, out _);
         }
 
         /// <summary>

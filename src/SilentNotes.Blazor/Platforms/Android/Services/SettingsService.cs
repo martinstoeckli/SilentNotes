@@ -52,7 +52,7 @@ namespace SilentNotes.Platforms.Services
                 // Deobfuscate old password
                 ICryptor decryptor = new Cryptor("snps", null);
                 byte[] binaryCipher = CryptoUtils.Base64StringToBytes(oldPasswortElement.Value);
-                byte[] unprotectedBinaryPassword = decryptor.Decrypt(binaryCipher, CryptoUtils.StringToSecureString(snpsk));
+                byte[] unprotectedBinaryPassword = decryptor.Decrypt(binaryCipher, CryptoUtils.StringToSecureString(snpsk), out _);
 
                 // Protect with new data protection service and add to XML
                 char[] unprotectedChars = Encoding.UTF8.GetChars(unprotectedBinaryPassword);

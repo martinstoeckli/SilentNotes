@@ -19,9 +19,11 @@ namespace SilentNotes.Services
         /// </summary>
         /// <param name="safe">The safew to open.</param>
         /// <param name="password">The password to try.</param>
+        /// <param name="needsReEncryption">Receives a value indicating, whether the cipher should
+        /// be reencrypted with updated parameters, to adapt to more powerfull hardware.</param>
         /// <returns>Returns true if the safe could have been opened or if it was already open,
         /// otherwise false.</returns>
-        bool TryOpenSafe(SafeModel safe, SecureString password);
+        bool TryOpenSafe(SafeModel safe, SecureString password, out bool needsReEncryption);
 
         /// <summary>
         /// Tries to get the key of a given safe.

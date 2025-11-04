@@ -80,7 +80,7 @@ namespace SilentNotesTest.Crypto
             string base64Cipher = "dW5pdHRlc3QkYWVzX2djbSQ0NG04QXBFU1ptcXhnYll2OE5wcWl3PT0kcGJrZGYyJGgwSDdxSGZnVFlXNzBKS3lEb0JLeFE9PSQxMDAwJJsMDjdYEYXYmcqTOFRbge6iVfWo/iny4nrIOMVuoqYak6xB/MAe53G5H3AyxiTi8OENJbi9tzZStpe3p3nlDB7l+J8=";
             byte[] cipher = CryptoUtils.Base64StringToBytes(base64Cipher);
             ICryptor decryptor = new Cryptor("unittest", null);
-            string decryptedMessage = CryptoUtils.BytesToString(decryptor.Decrypt(cipher, CryptoUtils.StringToSecureString("brownie")));
+            string decryptedMessage = CryptoUtils.BytesToString(decryptor.Decrypt(cipher, CryptoUtils.StringToSecureString("brownie"), out _));
             Assert.AreEqual("The brown fox jumps over the lazy 🐢🖐🏿 doc.", decryptedMessage);
         }
 
@@ -91,7 +91,7 @@ namespace SilentNotesTest.Crypto
             string base64Cipher = "dW5pdHRlc3QkdHdvZmlzaF9nY20kZHhMWFh4K0UrZ2MzWHdWc01rWUFxQT09JHBia2RmMiRma1BCWTdDWXp1OG5YUlJtYk9DUlp3PT0kMTAwMCRRc0ETSqDekQuBgKJ5x4Mvy02OHsivm0uJ9KchKdpGk+pmbF4Kq/EDbx9Uw54uEZUQLnK70dNKSEVtb1GyUOX1mitr";
             byte[] cipher = CryptoUtils.Base64StringToBytes(base64Cipher);
             ICryptor decryptor = new Cryptor("unittest", null);
-            string decryptedMessage = CryptoUtils.BytesToString(decryptor.Decrypt(cipher, CryptoUtils.StringToSecureString("brownie")));
+            string decryptedMessage = CryptoUtils.BytesToString(decryptor.Decrypt(cipher, CryptoUtils.StringToSecureString("brownie"), out _));
             Assert.AreEqual("The brown fox jumps over the lazy 🐢🖐🏿 doc.", decryptedMessage);
         }
 
@@ -102,7 +102,7 @@ namespace SilentNotesTest.Crypto
             string base64Cipher = "dW5pdHRlc3Qgdj0yJHhjaGFjaGEyMF9wb2x5MTMwNSRsT0FJVW5wZXEyL0g3Ti96UkdCSktqaW9MdmFTUWk5eCRwYmtkZjIkdmN0dmpXVmx1NEhGbGhqbTV0SGlWQT09JDEwMDAwJCTcCqQglE3Xmfe0lg9AOhzxJXOuj7wEj+kgaSnKlZgnMyQwpQCwa9W57jnz1RhrwUuLh0X3PJpPbf7lR07Le7TFRZc8";
             byte[] cipher = CryptoUtils.Base64StringToBytes(base64Cipher);
             ICryptor decryptor = new Cryptor("unittest", null);
-            string decryptedMessage = CryptoUtils.BytesToString(decryptor.Decrypt(cipher, CryptoUtils.StringToSecureString("brownie")));
+            string decryptedMessage = CryptoUtils.BytesToString(decryptor.Decrypt(cipher, CryptoUtils.StringToSecureString("brownie"), out _));
             Assert.AreEqual("The brown fox jumps over the lazy 🐢🖐🏿 doc.", decryptedMessage);
         }
 
@@ -225,6 +225,29 @@ namespace SilentNotesTest.Crypto
         }
 
         [TestMethod]
+        public void NeedsRehashDetectsHigherCostPbkdf2()
+        {
+            // cost is currently "25000"
+            IKeyDerivationFunction kdf = new Pbkdf2();
+            Assert.IsTrue(kdf.NeedsRehashForHighCost("10000"));
+            Assert.IsFalse(kdf.NeedsRehashForHighCost("10000000"));
+            Assert.ThrowsExactly<CryptoException>(() => kdf.NeedsRehashForHighCost("invalid"));
+        }
+
+        [TestMethod]
+        public void NeedsRehashDetectsHigherCostArgon2()
+        {
+            // cost is currently "m=23000,t=2,p=1"
+            IKeyDerivationFunction kdf = new BouncyCastleArgon2();
+            string uu = kdf.RecommendedCost(KeyDerivationCostType.High);
+            Assert.IsTrue(kdf.NeedsRehashForHighCost("m=20000,t=2,p=1"));
+            Assert.IsTrue(kdf.NeedsRehashForHighCost("m=23000,t=1,p=1"));
+            Assert.IsFalse(kdf.NeedsRehashForHighCost("m=2300000,t=1,p=1"));
+            Assert.IsFalse(kdf.NeedsRehashForHighCost("m=20000,t=100,p=1"));
+            Assert.ThrowsExactly<CryptoException>(() => kdf.NeedsRehashForHighCost("invalid"));
+        }
+
+        [TestMethod]
         public void CryptorWorksWithPassword()
         {
             ICryptoRandomService randomGenerator = CommonMocksAndStubs.CryptoRandomService();
@@ -234,7 +257,7 @@ namespace SilentNotesTest.Crypto
             SecureString password = CryptoUtils.StringToSecureString("Der schnelle Uhu fliegt über den faulen Hund.");
 
             byte[] cipher = encryptor.Encrypt(binaryMessage, password, KeyDerivationCostType.Low, BouncyCastleTwofishGcm.CryptoAlgorithmName, Pbkdf2.CryptoKdfName);
-            byte[] decryptedMessage = encryptor.Decrypt(cipher, password);
+            byte[] decryptedMessage = encryptor.Decrypt(cipher, password, out _);
             CollectionAssert.AreEqual(binaryMessage, decryptedMessage);
         }
 
@@ -294,7 +317,7 @@ namespace SilentNotesTest.Crypto
                 BouncyCastleTwofishGcm.CryptoAlgorithmName,
                 Pbkdf2.CryptoKdfName,
                 Cryptor.CompressionGzip);
-            byte[] decryptedMessage = encryptor.Decrypt(cipher, password);
+            byte[] decryptedMessage = encryptor.Decrypt(cipher, password, out _);
             CollectionAssert.AreEqual(binaryMessage, decryptedMessage);
         }
 
@@ -313,7 +336,7 @@ namespace SilentNotesTest.Crypto
                 BouncyCastleTwofishGcm.CryptoAlgorithmName,
                 Pbkdf2.CryptoKdfName,
                 Cryptor.CompressionGzip);
-            byte[] decryptedMessage = encryptor.Decrypt(cipher, password);
+            byte[] decryptedMessage = encryptor.Decrypt(cipher, password, out _);
             CollectionAssert.AreEqual(binaryMessage, decryptedMessage);
         }
 

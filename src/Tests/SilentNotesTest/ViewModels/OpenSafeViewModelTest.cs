@@ -7,6 +7,9 @@ using SilentNotes.Models;
 using SilentNotes.Services;
 using SilentNotes.ViewModels;
 using VanillaCloudStorageClient;
+using SilentNotes.Crypto;
+using SilentNotes.Crypto.SymmetricEncryption;
+using SilentNotes.Crypto.KeyDerivation;
 
 namespace SilentNotesTest.ViewModels
 {
@@ -77,6 +80,50 @@ namespace SilentNotesTest.ViewModels
             Assert.IsTrue(viewModel.Modifications.IsModified());
             Assert.AreEqual(1, keyService.Count);
             navigationService.Verify(m => m.NavigateTo(It.Is<string>(r => r == RouteNames.NoteRepository), It.IsAny<bool>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void Ok_ReEncryptsSafesIfNecessary()
+        {
+            byte[] originalDataKeyBeforeRencryption = new byte[] { 88, 99, 11 };
+            string keyNeedingReEncryption = "U2lsZW50U2FmZSB2PTIkYWVzX2djbSQ2ZXVQN3NSQ2dHQStadTJGeE80QkJRPT0kcGJrZGYyJEs0TjY5dmllRTBvaEg1UlVvVDUydGc9PSQxMDAwMCQkT1cFrC+EM9E5PlM4uPGUv0HsOQ==";
+            SecureString password = CryptoUtils.StringToSecureString("testpassword");
+            Guid safeAId = new Guid("A0000000000000000000000000000000");
+            Guid safeBId = new Guid("B0000000000000000000000000000000");
+
+            ICryptoRandomService randomSource = CommonMocksAndStubs.CryptoRandomService(8);
+            var xChaCha20 = new BouncyCastleXChaCha20();
+            var argon2 = new BouncyCastleArgon2();
+            DateTime longTimeAgo = new DateTime(1800, 08, 22);
+
+            NoteRepositoryModel repository = new NoteRepositoryModel();
+            string keyNoNeedingReEncryption = SafeModel.EncryptKey(randomSource.GetRandomBytes(xChaCha20.ExpectedKeySize), password, randomSource, xChaCha20.Name, argon2.Name);
+            var safeNeedingReEncryption = new SafeModel { Id = safeAId, ModifiedAt = longTimeAgo, SerializeableKey = keyNeedingReEncryption };
+            var safeNotNeedingReEncryption = new SafeModel { Id = safeBId, ModifiedAt = longTimeAgo, SerializeableKey = keyNoNeedingReEncryption };
+            repository.Safes.AddRange([safeNeedingReEncryption, safeNotNeedingReEncryption]);
+
+            ISafeKeyService keyService = new SafeKeyService();
+            Mock<INavigationService> navigationService = new Mock<INavigationService>();
+            Mock<IRepositoryStorageService> repositoryStorageService = new Mock<IRepositoryStorageService>();
+            repositoryStorageService.
+                Setup(m => m.LoadRepositoryOrDefault(out repository));
+
+            OpenSafeViewModel viewModel = CreateMockedOpenSafeViewModel(
+                repositoryStorageService.Object, keyService, navigationService.Object);
+            viewModel.Password = password;
+            viewModel.PasswordConfirmation = password;
+
+            viewModel.OkCommand.Execute(null);
+
+            Assert.IsTrue(safeNeedingReEncryption.ModifiedAt > longTimeAgo); // Safe should be modified
+            Assert.AreEqual(longTimeAgo, safeNotNeedingReEncryption.ModifiedAt); // Safe should not be modified
+            Assert.IsTrue(viewModel.Modifications.IsModified()); // ViewModel should be marked as modified, to be stored later
+
+            ISafeKeyService verifyKeyService = new SafeKeyService();
+            verifyKeyService.TryOpenSafe(safeNeedingReEncryption, password, out bool needsReEncryption);
+            verifyKeyService.TryGetKey(safeNeedingReEncryption.Id, out byte[] reEncryptedDataKey);
+            Assert.IsFalse(needsReEncryption); // shouldn't need reencryption anymore
+            Assert.IsTrue(Enumerable.SequenceEqual(originalDataKeyBeforeRencryption, reEncryptedDataKey)); // The original data is preserved
         }
 
         private static OpenSafeViewModel CreateMockedOpenSafeViewModel(

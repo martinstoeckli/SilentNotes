@@ -21,6 +21,12 @@ namespace SilentNotes.Crypto.KeyDerivation
         /// <summary>The name of the PBKDF2 key derivation function.</summary>
         public const string CryptoKdfName = "pbkdf2";
 
+        /// <summary>
+        /// Measured ~750ms on a mid-range mobile device of 2023. This value will be increased over
+        /// time, to adapt for future hardware.
+        /// </summary>
+        private const int HighCostIterations = 25000;
+
         private const int SaltSizeBytes = 16; // 128 bits
 
         /// <inheritdoc />
@@ -66,10 +72,18 @@ namespace SilentNotes.Crypto.KeyDerivation
                 case KeyDerivationCostType.Low:
                     return "1500";
                 case KeyDerivationCostType.High:
-                    return "20000"; // measured 600ms on a mid-range mobile device in 2023
+                    return HighCostIterations.ToString();
                 default:
                     throw new ArgumentOutOfRangeException(nameof(costType));
             }
+        }
+
+        /// <inheritdoc/>
+        public bool NeedsRehashForHighCost(string cost)
+        {
+            if (!int.TryParse(cost, NumberStyles.None, CultureInfo.InvariantCulture, out int iterations))
+                throw new CryptoException("The cost parameter has an invalid format.");
+            return HighCostIterations > iterations;
         }
     }
 }

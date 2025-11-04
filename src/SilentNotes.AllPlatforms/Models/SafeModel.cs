@@ -95,19 +95,22 @@ namespace SilentNotes.Models
         /// <param name="serializeableKey">Serializeable key to decrypt.</param>
         /// <param name="password">User password to decrypt the key.</param>
         /// <param name="key">Retrieves the decrypted key if the decryption was successful.</param>
+        /// <param name="needsReEncryption">Receives a value indicating, whether the cipher should
+        /// be reencrypted with updated parameters, to adapt to more powerfull hardware.</param>
         /// <returns>Returns true if the decryption was successful, otherwise false.</returns>
-        public static bool TryDecryptKey(string serializeableKey, SecureString password, out byte[] key)
+        public static bool TryDecryptKey(string serializeableKey, SecureString password, out byte[] key, out bool needsReEncryption)
         {
             try
             {
                 byte[] encryptedKey = CryptoUtils.Base64StringToBytes(serializeableKey);
                 ICryptor encryptor = new Cryptor(CryptorPackageName, null);
-                key = encryptor.Decrypt(encryptedKey, password);
+                key = encryptor.Decrypt(encryptedKey, password, out needsReEncryption);
                 return true;
             }
             catch (Exception)
             {
                 key = null;
+                needsReEncryption = false;
                 return false;
             }
         }
