@@ -105,7 +105,7 @@ export_error = Dışa aktarım başarısız.
 backup_create = Yedekleme oluştur
 backup_restore = Yedeklemeyi geri yükle
 backup_restore_confirmation = Yedeklemeyi geri yüklerseniz mevcut tüm notlarınız silinir ve yerlerine yedeklemedeki notlar yüklenir! Daha sonra çevrimiçi depo ile bir eşitleme gerçekleştiğinde her notun en yeni sürümü kullanılacaktır.\nDevam etmek istediğinizden emin misiniz?
-backup_restore_error = The selected file cannot be loaded. It is either not a valid SilentNotes backup file or it contains no notes.
+backup_restore_error = Seçilen dosya yüklenemiyor. Dosya geçerli bir SilentNotes yedekleme dosyası değil veya hiçbir not içermiyor.
 
 show_transfer_code = Aktarım kodunu göster
 transfer_not_existing = Aktarım kodu ilk eşitlemeden sonra kullanılabilir olacaktır.
