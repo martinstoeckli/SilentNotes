@@ -1,0 +1,5 @@
+SilentNotes version 8.6.0
+
+* Implemented function to share a note with other apps.
+* Switched to Argon2id as the new default KDF algorithm.
+* Increased cost factor for KDFs.
