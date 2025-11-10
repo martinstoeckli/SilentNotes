@@ -10,7 +10,7 @@ undo = Visszavonás
 redo = Újra
 copy = Másolás
 reset = Visszaállítás
-share = Share
+share = Megosztás
 
 today = ma
 yesterday = tegnap
@@ -58,7 +58,7 @@ feedback_note_to_recycle = A jegyzet a kukába került, és onnan visszaállíth
 note_pin = Jegyzet rögzítése
 note_open_link = Hivatkozás megnyitása
 note_show_info = Információk a jegyzetről
-note_share_subject = Note from SilentNotes
+note_share_subject = Jegyzet a SilentNotes alkalmazásból
 
 checklist_create_new = Új ellenőrzőlista létrehozása
 checklist_move_to_top = Mozgatás legfelülre
