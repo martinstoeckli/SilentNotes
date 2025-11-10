@@ -312,8 +312,7 @@
 					</MudSelect>
 				</div>
 				<div></div>
-				@* Todo: Make visible as soon as Argon2 becomes the default algorithm. *@
-				<div hidden>
+				<div>
 					<MudSelect id="SelectedKdfAlgorithm" @bind-Value="ViewModel.SelectedKdfAlgorithm" Variant="Variant.Outlined">
 						@foreach (var algorithm in ViewModel.KdfAlgorithms)
 						{

@@ -209,9 +209,7 @@ namespace SilentNotes.Models
 
         /// <summary>
         /// Gets or sets the selected kdf algorithm, used to generate the key for the safe.
-        /// Todo: Serialize it as soon as Argon2 becomes the default algorithm.
         /// </summary>
-        [XmlIgnore]
         public string SelectedKdfAlgorithm
         {
             get
@@ -286,8 +284,7 @@ namespace SilentNotes.Models
         /// <returns>The name of the default kdf algorithm.</returns>
         public static string GetDefaultKdfAlgorithmName()
         {
-            // Todo: Replace it as soon as Argon2 becomes the default algorithm.
-            return Pbkdf2.CryptoKdfName;
+            return BouncyCastleArgon2.CryptoKdfName;
         }
 
         /// <summary>

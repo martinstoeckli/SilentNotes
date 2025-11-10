@@ -24,7 +24,7 @@ namespace SilentNotes.Models
         /// <summary>The current revision which is used to store a repository. This revision is
         /// increased whenever deserialization of the model becomes incompatible with previous
         /// versions.</summary>
-        public const int CurrentSavingRevision = 7; // Todo: Set to 8 as soon as Argon2 becomes the default algorithm.
+        public const int CurrentSavingRevision = 8;
 
         /// <summary>The highest revision of the repository which can be handled by this application.
         /// This revision can be higher than <see cref="CurrentSavingRevision"/>, so we can make
