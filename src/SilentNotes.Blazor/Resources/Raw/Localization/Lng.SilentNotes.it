@@ -10,7 +10,7 @@ undo = Annulla
 redo = Ripristina
 copy = Copia
 reset = Azzera
-share = Share
+share = Condividi
 
 today = oggi
 yesterday = ieri
@@ -58,7 +58,7 @@ feedback_note_to_recycle = L'appunto è stato spostato nel Cestino e può essere
 note_pin = Appunto in evidenza
 note_open_link = Apri collegamenti
 note_show_info = Informazioni sull'appunto
-note_share_subject = Note from SilentNotes
+note_share_subject = Appunto da SilentNotes
 
 checklist_create_new = Crea una nuova lista di controllo
 checklist_move_to_top = Sposta in cima
