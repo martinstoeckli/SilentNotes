@@ -10,7 +10,7 @@ undo = 撤销
 redo = 重做
 copy = 复制
 reset = 重置
-share = Share
+share = 分享
 
 today = 今天
 yesterday = 昨天
@@ -58,7 +58,7 @@ feedback_note_to_recycle = 笔记已移至回收站，可以从那里恢复。
 note_pin = 置顶笔记
 note_open_link = 打开链接
 note_show_info = 笔记信息
-note_share_subject = Note from SilentNotes
+note_share_subject = 来自 SilentNotes 的笔记
 
 checklist_create_new = 创建清单
 checklist_move_to_top = 移动至顶部
