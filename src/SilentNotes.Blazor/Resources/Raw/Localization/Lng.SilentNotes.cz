@@ -10,7 +10,7 @@ undo = Vrátit
 redo = Opakovat
 copy = Zkopírovat
 reset = Reset
-share = Share
+share = Sdílet
 
 today = dnes
 yesterday = včera
@@ -58,7 +58,7 @@ feedback_note_to_recycle = Poznámka byla přesunuta do koše, odkud ji lze obno
 note_pin = Připnout poznámku
 note_open_link = Otevřít odkaz
 note_show_info = Informace o poznámce
-note_share_subject = Note from SilentNotes
+note_share_subject = Poznámka od SilentNotes
 
 checklist_create_new = Vytvořit zaškrtávací seznam
 checklist_move_to_top = Přesunout na začátek
