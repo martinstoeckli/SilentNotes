@@ -10,7 +10,7 @@ undo = Geri al
 redo = Yeniden yaz
 copy = Kopyala
 reset = Sıfırla
-share = Share
+share = Paylaş
 
 today = Bugün
 yesterday = Dün
@@ -58,7 +58,7 @@ feedback_note_to_recycle = Not geri dönüşüm kutusuna taşındı.
 note_pin = Notu sabitle
 note_open_link = Bağlantıyı aç
 note_show_info = Not bilgileri
-note_share_subject = Note from SilentNotes
+note_share_subject = SilentNotes üzerinden paylaşıldı
 
 checklist_create_new = Liste oluştur
 checklist_move_to_top = En üste taşı
