@@ -250,7 +250,7 @@ jobs:
 
     - name: Make msixbundle
       id: bundler
-      uses: LanceMcCarthy/Action-MsixBundler@v1.0.0
+      uses: LanceMcCarthy/Action-MsixBundler@v3
       with:
         msix-folder: "msixdirectory"
         msixbundle-filepath: "silentnotes.msixbundle"
