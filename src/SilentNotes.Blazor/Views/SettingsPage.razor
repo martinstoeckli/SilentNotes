@@ -148,7 +148,7 @@
 						<MudSwitch @bind-Value="@ViewModel.UseColorForAllNotesInDarkMode" Color="Color.Tertiary" UnCheckedColor="@GetSwitchUncheckedColor()" />
 
 						<MudColorPicker id="ColorForAllNotesInDarkModeHex" @ref="_clpAllNotesInDarkMode" @bind-Text="@ViewModel.ColorForAllNotesInDarkModeHex"
-							DisableToolbar="true" DisableAlpha="true"
+							ShowToolbar="false" ShowAlpha="false"
 							Variant="Variant.Outlined"
 							ColorPickerMode="ColorPickerMode.HEX"
 							AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
@@ -167,7 +167,7 @@
 					<label for="DefaultNoteColorHex">@LanguageService["gui_default_color"]</label>
 					<MudStack Row="true" AlignItems="AlignItems.Center">
 						<MudColorPicker id="DefaultNoteColorHex" @ref="_clpDefaultNoteColor" @bind-Text="ViewModel.DefaultNoteColorHex"
-							DisableToolbar="true" DisableAlpha="true"
+							ShowToolbar="false" ShowAlpha="false"
 							Variant="Variant.Outlined"
 							ColorPickerView="ColorPickerView.Palette"
 							AnchorOrigin="Origin.BottomLeft" TransformOrigin="Origin.TopLeft"
