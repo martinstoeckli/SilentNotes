@@ -20,9 +20,9 @@ on:
 env:
   Project_Path: src\SilentNotes.Blazor\SilentNotes.csproj
   WinManifest_Path: src\SilentNotes.Blazor\Platforms\Windows\Package.appxmanifest
-  Dotnet_Version: 9.0.x
-  Target_Framework_Android: net9.0-android
-  Target_Framework_Windows: net9.0-windows10.0.19041.0
+  Dotnet_Version: 10.0.x
+  Target_Framework_Android: net10.0-android
+  Target_Framework_Windows: net10.0-windows10.0.19041.0
 
 jobs:
   ##############################################################################
