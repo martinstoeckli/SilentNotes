@@ -169,7 +169,7 @@ jobs:
     - name: Install MAUI
       run: |
         dotnet nuget locals all --clear
-        dotnet workload install maui
+        dotnet workload install maui-windows
 
     # Log DotNet version for reproducable builds
     - name: Log used DotNet versions
