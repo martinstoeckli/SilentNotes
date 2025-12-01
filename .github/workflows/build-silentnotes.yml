@@ -75,13 +75,13 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         fetch-depth: 0
 
     # Install the .NET Core workload
     - name: Install .NET Core
-      uses: actions/setup-dotnet@v3
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: ${{ env.Dotnet_Version }}
 
@@ -145,7 +145,7 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         fetch-depth: 0
 
@@ -162,14 +162,14 @@ jobs:
     # Install the .NET Core workload
     - name: Install .NET
       id: id_setup_dotnet
-      uses: actions/setup-dotnet@v3
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: ${{ env.Dotnet_Version }}
 
     - name: Install MAUI
       run: |
         dotnet nuget locals all --clear
-        dotnet workload install maui-windows
+        dotnet workload install maui
 
     # Log DotNet version for reproducable builds
     - name: Log used DotNet versions
