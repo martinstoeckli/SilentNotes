@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SilentNotes.Models;
 using SilentNotes.Workers;
 using static SilentNotes.Workers.AtomicFileWriter;
 
@@ -15,19 +16,25 @@ namespace SilentNotesTest.Workers
         [TestMethod]
         public void TestReadFromJexFile()
         {
-            using (var jexFileStream = new FileStream(@"D:\Downloads\joplin.jex", FileMode.Open))
+            List<JexFileEntry> jexFileEntries;
+            bool success;
+            using (var testDataStream = File.OpenRead(@"TestResources\joplintest.jex"))
             {
                 var jexImporter = new JexImporterExporter();
-                bool success = jexImporter.TryReadFromJexFile(jexFileStream, out var jexFileEntries);
-                Assert.IsTrue(success);
+                success = jexImporter.TryReadFromJexFile(testDataStream, out jexFileEntries);
             }
+            Assert.IsTrue(success);
+            Assert.AreEqual(9, jexFileEntries.Count);
+            Assert.AreEqual(4, jexFileEntries.Count(item => item.ModelType == JexModelType.Note));
+            Assert.AreEqual(2, jexFileEntries.Count(item => item.ModelType == JexModelType.Tag));
+            Assert.AreEqual(3, jexFileEntries.Count(item => item.ModelType == JexModelType.NoteTag));
         }
 
         [TestMethod]
         public void TryReadFromArchiveEntry_ReadsValidInput()
         {
             var jexImporter = new JexImporterExporter();
-            JexImporterExporter.JexFileEntry jexFileEntry;
+            JexFileEntry jexFileEntry;
             Assert.IsTrue(jexImporter.TryReadFromArchiveEntry(ValidNote, out jexFileEntry)); // pass only metadata
             Assert.AreEqual("Willkommen!\non line 2", jexFileEntry.Content);
         }
@@ -56,7 +63,7 @@ namespace SilentNotesTest.Workers
         public void TryReadFromArchiveEntry_HandlesEmptyMetadata()
         {
             var jexImporter = new JexImporterExporter();
-            JexImporterExporter.JexFileEntry jexFileEntry;
+            JexFileEntry jexFileEntry;
             Assert.IsFalse(jexImporter.TryReadFromArchiveEntry("", out jexFileEntry));
             Assert.IsFalse(jexImporter.TryReadFromArchiveEntry("", out jexFileEntry));
             Assert.IsFalse(jexImporter.TryReadFromArchiveEntry("\n\n", out jexFileEntry));
@@ -66,9 +73,30 @@ namespace SilentNotesTest.Workers
         public void TryReadFromArchiveEntry_HandlesInvalidMetadata()
         {
             var jexImporter = new JexImporterExporter();
-            JexImporterExporter.JexFileEntry jexFileEntry;
+            JexFileEntry jexFileEntry;
             Assert.IsFalse(jexImporter.TryReadFromArchiveEntry("id\nparent_id: 5d127c4376bb4b0ca496824216affdcc", out jexFileEntry)); // key without delimiter
             Assert.IsFalse(jexImporter.TryReadFromArchiveEntry("is_shared: 0", out jexFileEntry)); // missing mandatory keys
+        }
+
+        [TestMethod]
+        public void CreateRepositoryFromJexFiles_WorksWithValidEntries()
+        {
+            List<JexFileEntry> jexFileEntries;
+            using (var testDataStream = File.OpenRead(@"TestResources\joplintest.jex"))
+            {
+                new JexImporterExporter().TryReadFromJexFile(testDataStream, out jexFileEntries);
+            }
+
+            var jexImporter = new JexImporterExporter();
+            NoteRepositoryModel repository = jexImporter.CreateRepositoryFromJexFiles(jexFileEntries);
+
+            Assert.IsNotNull(repository);
+            Assert.AreEqual(4, repository.Notes.Count);
+
+            var note1 = repository.Notes.FindById(new Guid("4c85ba38aea8400982b74e53f37e27db"));
+            Assert.IsNotNull(note1);
+            Assert.AreEqual(new DateTime(2025, 12, 07, 09, 32, 16, 750, DateTimeKind.Utc), note1.CreatedAt);
+            Assert.AreEqual(new DateTime(2025, 12, 08, 09, 22, 25, 756, DateTimeKind.Utc), note1.ModifiedAt);
         }
 
         const string ValidNote = "Willkommen!\non line 2\n\n" + ValidNoteMetadata;

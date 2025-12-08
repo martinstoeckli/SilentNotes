@@ -5,11 +5,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Formats.Tar;
-using System.IO;
 using System.Text;
+using Markdig;
 using SilentNotes.Models;
-using static SilentNotes.Workers.CompressUtils;
 
 namespace SilentNotes.Workers
 {
@@ -18,39 +18,36 @@ namespace SilentNotes.Workers
     /// </summary>
     public class JexImporterExporter
     {
-        private enum ModelType
+        /// <summary>
+        /// Generates a SilentNotes repository from previously loaded JexFileEntry objects, loaded
+        /// with <see cref="TryReadFromJexFile(Stream, out List{JexFileEntry})"/>.
+        /// </summary>
+        /// <param name="jexFileEntries">The already loaded JexFileEntry objects.</param>
+        /// <returns>A repository containing the imported notes.</returns>
+        public NoteRepositoryModel CreateRepositoryFromJexFiles(List<JexFileEntry> jexFileEntries)
         {
-            Note = 1,
-            Folder = 2,
-            Setting = 3,
-            Resource = 4,
-            Tag = 5,
-            NoteTag = 6,
-            Search = 7,
-            Alarm = 8,
-            MasterKey = 9,
-            ItemChange = 10,
-            NoteResource = 11,
-            ResourceLocalState = 12,
-            Revision = 13,
-            Migration = 14,
-            SmartFilter = 15,
-            Command = 16,
-        }
+            var result = new NoteRepositoryModel();
 
-        public bool TryReadRepositoryFromJexFile(Stream jexFileStream, out NoteRepositoryModel repository)
-        {
-            List<JexFileEntry> jexFileEntries;
-            if (TryReadFromJexFile(jexFileStream, out jexFileEntries))
+            // Extract tags
+            Dictionary<Guid, string> tags = jexFileEntries
+                .Where(item => item.ModelType == JexModelType.Tag)
+                .ToDictionary(item => item.Id, item => item.Content);
+
+            // Extract relations between notes and tags
+
+            // Create notes
+            var noteEntries = jexFileEntries.Where(item => item.ModelType == JexModelType.Note);
+            foreach (var noteEntry in noteEntries)
             {
-                repository = new NoteRepositoryModel();
-                return true;
+                NoteModel noteModel = new NoteModel();
+                noteModel.Id = noteEntry.Id;
+                noteModel.HtmlContent = Markdown.ToHtml(noteEntry.Content);
+                noteModel.CreatedAt = ExtractDateFromMetadata(noteEntry.MetaData, "created_time", null);
+                noteModel.ModifiedAt = ExtractDateFromMetadata(noteEntry.MetaData, "updated_time", null);
+                result.Notes.Add(noteModel);
             }
-            else
-            {
-                repository = null;
-                return false;
-            }
+
+            return result;
         }
 
         /// <summary>
@@ -84,10 +81,11 @@ namespace SilentNotes.Workers
 
                         if (TryReadFromArchiveEntry(content, out JexFileEntry jexFileEntry))
                         {
-                            string metaDataType = jexFileEntry.MetaData["type_"];
-                            switch (ToModelType(metaDataType))
+                            switch (jexFileEntry.ModelType)
                             {
-                                case ModelType.Note:
+                                case JexModelType.Note:
+                                case JexModelType.Tag:
+                                case JexModelType.NoteTag:
                                     jexFileEntries.Add(jexFileEntry);
                                     break;
                                 default:
@@ -179,38 +177,87 @@ namespace SilentNotes.Workers
             }
         }
 
-        private static ModelType ToModelType(string modelTypeFromMetadata)
+        private static DateTime ExtractDateFromMetadata(Dictionary<string, string> metaData, string key, DateTime? defaultDate = null)
         {
-            int modelTypeNumber = int.Parse(modelTypeFromMetadata);
-            return (ModelType)modelTypeNumber;
+            // Jex files store dates as ISO UTC string: 2025-12-07T09:32:16.690Z
+            if (metaData.TryGetValue(key, out string dateText) &&
+                DateTime.TryParse(dateText, null, System.Globalization.DateTimeStyles.RoundtripKind, out DateTime result))
+            {
+                return result;
+            }
+
+            return defaultDate.HasValue ? defaultDate.Value : DateTime.UtcNow;
+        }
+    }
+
+    /// <summary>
+    /// Describes a single file in the jex archive, which describes a single note.
+    /// </summary>
+    [DebuggerDisplay("{Id} {ModelType}")]
+    public class JexFileEntry
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="JexFileEntry"/> class.
+        /// </summary>
+        /// <param name="content">Sets the <see cref="Content"/> property.</param>
+        /// <param name="metaData">Sets the <see cref="MetaData"/> property.</param>
+        public JexFileEntry(string content, Dictionary<string, string> metaData)
+        {
+            Content = content;
+            MetaData = metaData;
+            Id = Guid.Parse(MetaData["id"]);
+            ModelType = ToModelType(MetaData["type_"]);
         }
 
         /// <summary>
-        /// Describes a single file in the jex archive, which describes a single note.
+        /// Gets the content of the item, e.g. the markdown of a note. Some items types like
+        /// TYPE_NOTE_TAG do not have a content, so this property will be null.
         /// </summary>
-        public class JexFileEntry
+        public string Content { get; }
+
+        /// <summary>
+        /// Gets a dictionary of metadata information.
+        /// </summary>
+        public Dictionary<string, string> MetaData { get; }
+
+        /// <summary>
+        /// Gets the id of the item.
+        /// </summary>
+        public Guid Id { get; }
+
+        /// <summary>
+        /// Gets the model type of the item.
+        /// </summary>
+        public JexModelType ModelType { get; }
+
+        private static JexModelType ToModelType(string modelTypeFromMetadata)
         {
-            /// <summary>
-            /// Initializes a new instance of the <see cref="JexFileEntry"/> class.
-            /// </summary>
-            /// <param name="content">Sets the <see cref="Content"/> property.</param>
-            /// <param name="metaData">Sets the <see cref="MetaData"/> property.</param>
-            public JexFileEntry(string content, Dictionary<string, string> metaData)
-            {
-                Content = content;
-                MetaData = metaData;
-            }
-
-            /// <summary>
-            /// Gets the content of the item, e.g. the markdown of a note. Some items types like
-            /// TYPE_NOTE_TAG do not have a content, so this property will be null.
-            /// </summary>
-            public string Content { get; }
-
-            /// <summary>
-            /// Gets a dictionary of metadata information.
-            /// </summary>
-            public Dictionary<string, string> MetaData { get; }
+            int modelTypeNumber = int.Parse(modelTypeFromMetadata);
+            return (JexModelType)modelTypeNumber;
         }
+    }
+
+    /// <summary>
+    /// Enumeration of al possible model types, mirroring the source code of Joplin.
+    /// See: https://github.com/laurent22/joplin/blob/8018f1269adc7ffabdecea8e81ab57c2a4da5307/packages/lib/BaseModel.ts
+    /// </summary>
+    public enum JexModelType
+    {
+        Note = 1,
+        Folder = 2,
+        Setting = 3,
+        Resource = 4,
+        Tag = 5,
+        NoteTag = 6,
+        Search = 7,
+        Alarm = 8,
+        MasterKey = 9,
+        ItemChange = 10,
+        NoteResource = 11,
+        ResourceLocalState = 12,
+        Revision = 13,
+        Migration = 14,
+        SmartFilter = 15,
+        Command = 16,
     }
 }
