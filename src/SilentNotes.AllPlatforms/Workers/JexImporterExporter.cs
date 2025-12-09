@@ -34,6 +34,11 @@ namespace SilentNotes.Workers
                 .ToDictionary(item => item.Id, item => item.Content);
 
             // Extract relations between notes and tags
+            List<NoteIdTagIdPair> noteToTag = jexFileEntries
+                .Where(item => item.ModelType == JexModelType.NoteTag)
+                .Select(item => new NoteIdTagIdPair(Guid.Parse(item.MetaData["note_id"]), Guid.Parse(item.MetaData["tag_id"])))
+                .ToList();
+            noteToTag.RemoveAll(item => !tags.ContainsKey(item.TagId)); // Missing tags should not render import impossible
 
             // Create notes
             var noteEntries = jexFileEntries.Where(item => item.ModelType == JexModelType.Note);
@@ -44,6 +49,10 @@ namespace SilentNotes.Workers
                 noteModel.HtmlContent = Markdown.ToHtml(noteEntry.Content);
                 noteModel.CreatedAt = ExtractDateFromMetadata(noteEntry.MetaData, "created_time", null);
                 noteModel.ModifiedAt = ExtractDateFromMetadata(noteEntry.MetaData, "updated_time", null);
+
+                // Add tags
+                var noteTags = noteToTag.Where(item => item.NoteId == noteModel.Id).Select(item => tags[item.TagId]);
+                noteModel.Tags.AddRange(noteTags);
                 result.Notes.Add(noteModel);
             }
 
@@ -77,9 +86,9 @@ namespace SilentNotes.Workers
                     using (MemoryStream ms = new MemoryStream())
                     {
                         jexArchiveEntry.DataStream.CopyTo(ms);
-                        string content = Encoding.UTF8.GetString(ms.ToArray());
+                        string archiveEntryContent = Encoding.UTF8.GetString(ms.ToArray());
 
-                        if (TryReadFromArchiveEntry(content, out JexFileEntry jexFileEntry))
+                        if (TryReadFromArchiveEntry(archiveEntryContent, out JexFileEntry jexFileEntry))
                         {
                             switch (jexFileEntry.ModelType)
                             {
@@ -114,6 +123,7 @@ namespace SilentNotes.Workers
         /// <returns>Returns true if the content could be read, false if the content is invalid.</returns>
         internal bool TryReadFromArchiveEntry(string archiveEntryContent, out JexFileEntry jexFileEntry)
         {
+            const string LineDelimiter = "\n";
             const string contentMetaDelimiter = "\n\n";
             if (archiveEntryContent.Contains('\r'))
                 archiveEntryContent = archiveEntryContent.Replace("\r", "");
@@ -129,6 +139,17 @@ namespace SilentNotes.Workers
                 string contentPart = foundDelimiter
                     ? archiveEntryContent.Substring(0, delimiterPos)
                     : null; // There is no content, only a meta part
+
+                // Strip the title (first two lines)
+                if (contentPart != null)
+                {
+                    for (int times = 0; times < 2; times++)
+                    {
+                        int titleDelimiterPos = contentPart.IndexOf(LineDelimiter);
+                        if (titleDelimiterPos >= 0)
+                            contentPart = contentPart.Remove(0, titleDelimiterPos + 1);
+                    }
+                }
 
                 jexFileEntry = new JexFileEntry(contentPart, metaData);
                 return true;
@@ -187,6 +208,19 @@ namespace SilentNotes.Workers
             }
 
             return defaultDate.HasValue ? defaultDate.Value : DateTime.UtcNow;
+        }
+
+        private class NoteIdTagIdPair
+        {
+            public NoteIdTagIdPair(Guid noteId, Guid tagId)
+            {
+                NoteId = noteId;
+                TagId = tagId;
+            }
+
+            public Guid NoteId { get; }
+
+            public Guid TagId { get; }
         }
     }
 

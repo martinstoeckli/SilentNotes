@@ -14,7 +14,7 @@ namespace SilentNotesTest.Workers
     public class JexImporterExporterTest
     {
         [TestMethod]
-        public void TestReadFromJexFile()
+        public void TryReadFromJexFile_FromRealFile()
         {
             List<JexFileEntry> jexFileEntries;
             bool success;
@@ -28,6 +28,11 @@ namespace SilentNotesTest.Workers
             Assert.AreEqual(4, jexFileEntries.Count(item => item.ModelType == JexModelType.Note));
             Assert.AreEqual(2, jexFileEntries.Count(item => item.ModelType == JexModelType.Tag));
             Assert.AreEqual(3, jexFileEntries.Count(item => item.ModelType == JexModelType.NoteTag));
+
+            JexFileEntry note = jexFileEntries.Find(item => item.Id == Guid.Parse("51d5d24af4f242258d859f6056997791"));
+            Assert.IsNotNull(note);
+            Assert.IsTrue(note.Content.StartsWith("\n## Tables"));
+            Assert.IsTrue(note.Content.EndsWith("Beer\n"));
         }
 
         [TestMethod]
@@ -35,8 +40,8 @@ namespace SilentNotesTest.Workers
         {
             var jexImporter = new JexImporterExporter();
             JexFileEntry jexFileEntry;
-            Assert.IsTrue(jexImporter.TryReadFromArchiveEntry(ValidNote, out jexFileEntry)); // pass only metadata
-            Assert.AreEqual("Willkommen!\non line 2", jexFileEntry.Content);
+            Assert.IsTrue(jexImporter.TryReadFromArchiveEntry("1. Welcome note!\n\n# First header!\n\n" + ValidNoteMetadata, out jexFileEntry)); // pass only metadata
+            Assert.AreEqual("# First header!", jexFileEntry.Content);
         }
 
         [TestMethod]
@@ -46,6 +51,16 @@ namespace SilentNotesTest.Workers
             Assert.IsTrue(jexImporter.TryReadFromArchiveEntry(ValidNoteMetadata, out var jexFileEntry)); // pass only metadata
             Assert.IsNull(jexFileEntry.Content);
             Assert.IsTrue(jexFileEntry.MetaData.Count > 0);
+        }
+
+        [TestMethod]
+        public void TryReadFromArchiveEntry_ReadsInputWitEmptyTitle()
+        {
+            var jexImporter = new JexImporterExporter();
+            const string inputWithEmptyTitle = "\n\nFirst line\nsecond line\n\n" + ValidNoteMetadata;
+            Assert.IsTrue(jexImporter.TryReadFromArchiveEntry(inputWithEmptyTitle, out var jexFileEntry)); // pass only metadata
+            Assert.AreEqual("First line\nsecond line", jexFileEntry.Content);
+            Assert.AreEqual(Guid.Parse("51d5d24af4f242258d859f6056997791"), jexFileEntry.Id);
         }
 
         [TestMethod]
@@ -60,7 +75,7 @@ namespace SilentNotesTest.Workers
         }
 
         [TestMethod]
-        public void TryReadFromArchiveEntry_HandlesEmptyMetadata()
+        public void TryReadFromArchiveEntry_RejectsEmptyMetadata()
         {
             var jexImporter = new JexImporterExporter();
             JexFileEntry jexFileEntry;
@@ -70,7 +85,7 @@ namespace SilentNotesTest.Workers
         }
 
         [TestMethod]
-        public void TryReadFromArchiveEntry_HandlesInvalidMetadata()
+        public void TryReadFromArchiveEntry_RejectsInvalidMetadata()
         {
             var jexImporter = new JexImporterExporter();
             JexFileEntry jexFileEntry;
@@ -81,25 +96,112 @@ namespace SilentNotesTest.Workers
         [TestMethod]
         public void CreateRepositoryFromJexFiles_WorksWithValidEntries()
         {
-            List<JexFileEntry> jexFileEntries;
-            using (var testDataStream = File.OpenRead(@"TestResources\joplintest.jex"))
-            {
-                new JexImporterExporter().TryReadFromJexFile(testDataStream, out jexFileEntries);
-            }
-
+            var testData = CreateTestData();
             var jexImporter = new JexImporterExporter();
-            NoteRepositoryModel repository = jexImporter.CreateRepositoryFromJexFiles(jexFileEntries);
+            NoteRepositoryModel repository = jexImporter.CreateRepositoryFromJexFiles(testData);
 
             Assert.IsNotNull(repository);
-            Assert.AreEqual(4, repository.Notes.Count);
+            Assert.AreEqual(3, repository.Notes.Count);
 
             var note1 = repository.Notes.FindById(new Guid("4c85ba38aea8400982b74e53f37e27db"));
             Assert.IsNotNull(note1);
             Assert.AreEqual(new DateTime(2025, 12, 07, 09, 32, 16, 750, DateTimeKind.Utc), note1.CreatedAt);
             Assert.AreEqual(new DateTime(2025, 12, 08, 09, 22, 25, 756, DateTimeKind.Utc), note1.ModifiedAt);
+            Assert.AreEqual(1, note1.Tags.Count);
+            Assert.AreEqual("caramel", note1.Tags[0]);
+            Assert.AreEqual("<h1>First header!</h1>\n", note1.HtmlContent);
+
+            var note2 = repository.Notes.FindById(new Guid("51d5d24af4f242258d859f6056997791"));
+            Assert.IsNotNull(note2);
+            Assert.AreEqual(2, note2.Tags.Count);
+            Assert.AreEqual("candy", note2.Tags[0]);
+            Assert.AreEqual("caramel", note2.Tags[1]);
+            Assert.AreEqual("<h2>Tables</h2>\n<p>Are available:</p>\n", note2.HtmlContent);
+
+            var note3 = repository.Notes.FindById(new Guid("b47f3cd7b1c943ba85085033e6b830b1"));
+            Assert.IsNotNull(note3);
+            Assert.AreEqual(0, note3.Tags.Count);
+            Assert.AreEqual("<p>Without title</p>\n", note3.HtmlContent);
         }
 
-        const string ValidNote = "Willkommen!\non line 2\n\n" + ValidNoteMetadata;
+        /// <summary>
+        /// Creates a list of jex file entries without reading a real jex file.
+        /// </summary>
+        /// <returns>List of jex file entries, representing the content of a jex file.</returns>
+        private static List<JexFileEntry> CreateTestData()
+        {
+            // notes
+            JexFileEntry note1 = new JexFileEntry("# First header!", new Dictionary<string, string>
+            {
+                { "id", "4c85ba38aea8400982b74e53f37e27db" },
+                { "created_time", "2025-12-07T09:32:16.750Z" },
+                { "updated_time", "2025-12-08T09:22:25.756Z" },
+                { "type_", "1" },
+            });
+
+            JexFileEntry note2 = new JexFileEntry("## Tables\n\nAre available:", new Dictionary<string, string>
+            {
+                { "id", "51d5d24af4f242258d859f6056997791" },
+                { "created_time", "2025-12-07T09:32:16.690Z" },
+                { "updated_time", "2025-12-08T09:07:34.345Z" },
+                { "type_", "1" },
+            });
+
+            JexFileEntry note3 = new JexFileEntry("\n\nWithout title", new Dictionary<string, string>
+            {
+                { "id", "b47f3cd7b1c943ba85085033e6b830b1" },
+                { "created_time", "2025-12-09T13:26:03.829Z" },
+                { "updated_time", "2025-12-09T13:26:30.684Z" },
+                { "type_", "1" },
+            });
+
+            // tags
+            JexFileEntry tag1 = new JexFileEntry("caramel", new Dictionary<string, string>
+            {
+                { "id", "3d35b54999694a26b9a441838689b17a" },
+                { "type_", "5" },
+            });
+
+            JexFileEntry tag2 = new JexFileEntry("candy", new Dictionary<string, string>
+            {
+                { "id", "98191efc65484f67ac3b125db71fba27" },
+                { "type_", "5" },
+            });
+
+            // note-tag relations
+            JexFileEntry relation1 = new JexFileEntry(null, new Dictionary<string, string>
+            {
+                { "id", "dea62cc1266741b1bd4bc9b01863bdee" },
+                { "note_id", "51d5d24af4f242258d859f6056997791" },
+                { "tag_id", "98191efc65484f67ac3b125db71fba27" },
+                { "type_", "6" },
+            });
+
+            JexFileEntry relation2 = new JexFileEntry(null, new Dictionary<string, string>
+            {
+                { "id", "3a9311fda94142da9cb8eb8ccc92b8a8" },
+                { "note_id", "4c85ba38aea8400982b74e53f37e27db" },
+                { "tag_id", "3d35b54999694a26b9a441838689b17a" },
+                { "type_", "6" },
+            });
+
+            JexFileEntry relation3 = new JexFileEntry(null, new Dictionary<string, string>
+            {
+                { "id", "80ea0526a28e4ed3ae0a0be4f3948ee7" },
+                { "note_id", "51d5d24af4f242258d859f6056997791" },
+                { "tag_id", "3d35b54999694a26b9a441838689b17a" },
+                { "type_", "6" },
+            });
+
+            // folder
+            JexFileEntry folder1 = new JexFileEntry("Welcome!", new Dictionary<string, string>
+            {
+                { "id", "5d127c4376bb4b0ca496824216affdcc" },
+                { "type_", "2" },
+            });
+
+            return new List<JexFileEntry>() { note1, note2, note3, tag1, tag2, relation1, relation2, relation3, folder1 };
+        }
 
         const string ValidNoteMetadata = @"id: 51d5d24af4f242258d859f6056997791
 parent_id: 5d127c4376bb4b0ca496824216affdcc
