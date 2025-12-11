@@ -18,15 +18,21 @@ namespace SilentNotes.Workers
     /// </summary>
     public class JexImporterExporter
     {
+        internal const int IdDistanceJex = 1; // Unique distance to generate relative guids between ids of Joplin and SilentNotes
+
         /// <summary>
-        /// Generates a SilentNotes repository from previously loaded JexFileEntry objects, loaded
-        /// with <see cref="TryReadFromJexFile(Stream, out List{JexFileEntry})"/>.
+        /// Generates a list of SilentNotes notes, from previously loaded JexFileEntry objects,
+        /// loaded with <see cref="TryReadFromJexFile(Stream, out List{JexFileEntry})"/>.
         /// </summary>
+        /// <remarks>
+        /// The ids of the new created notes are relative to the original notes, so they can be
+        /// recognized later as the same note, <see cref="RelativeGuid"/>.
+        /// </remarks>
         /// <param name="jexFileEntries">The already loaded JexFileEntry objects.</param>
         /// <returns>A repository containing the imported notes.</returns>
-        public NoteRepositoryModel CreateRepositoryFromJexFiles(List<JexFileEntry> jexFileEntries)
+        public NoteListModel CreateRepositoryFromJexFiles(List<JexFileEntry> jexFileEntries)
         {
-            var result = new NoteRepositoryModel();
+            var result = new NoteListModel();
 
             // Extract tags
             Dictionary<Guid, string> tags = jexFileEntries
@@ -45,17 +51,37 @@ namespace SilentNotes.Workers
             foreach (var noteEntry in noteEntries)
             {
                 NoteModel noteModel = new NoteModel();
-                noteModel.Id = noteEntry.Id;
+                noteModel.Id = RelativeGuid.CreateRelativeGuid(noteEntry.Id, IdDistanceJex);
                 noteModel.HtmlContent = Markdown.ToHtml(noteEntry.Content);
                 noteModel.CreatedAt = ExtractDateFromMetadata(noteEntry.MetaData, "created_time", null);
                 noteModel.ModifiedAt = ExtractDateFromMetadata(noteEntry.MetaData, "updated_time", null);
 
                 // Add tags
-                var noteTags = noteToTag.Where(item => item.NoteId == noteModel.Id).Select(item => tags[item.TagId]);
+                var noteTags = noteToTag.Where(item => item.NoteId == noteEntry.Id).Select(item => tags[item.TagId]);
                 noteModel.Tags.AddRange(noteTags);
-                result.Notes.Add(noteModel);
+                result.Add(noteModel);
             }
+            return result;
+        }
 
+        /// <summary>
+        /// Generates JexFileEntry objects from a list of SilentNotes notes.
+        /// </summary>
+        /// <remarks>
+        /// If the notes where formerly imported from a JexFile, the ids of the new generated
+        /// JexFileEntry will differ from the original ids, so that they do not overwrite the
+        /// original note in Joplin. They are relative though and can be recognized as equal, see
+        /// <see cref="RelativeGuid"/>.
+        /// </remarks>
+        /// <param name="notes">A list of notes to export.</param>
+        /// <returns>List of jex file entries, including notes and tags.</returns>
+        public List<JexFileEntry> CreateJexFilesFromRepository(IEnumerable<NoteModel> notes)
+        {
+            var result = new List<JexFileEntry>();
+
+            var tagToNote = new Dictionary<string, Guid>();
+
+            
             return result;
         }
 

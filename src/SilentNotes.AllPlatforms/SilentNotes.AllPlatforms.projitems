@@ -165,6 +165,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Workers\NoteMover.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Workers\NoteRepositoryMerger.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Workers\NoteRepositoryUpdater.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Workers\RelativeGuid.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Workers\SearchableHtmlConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Workers\TimeAgo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Workers\TransferCode.cs" />

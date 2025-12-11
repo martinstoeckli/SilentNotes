@@ -98,12 +98,11 @@ namespace SilentNotesTest.Workers
         {
             var testData = CreateTestData();
             var jexImporter = new JexImporterExporter();
-            NoteRepositoryModel repository = jexImporter.CreateRepositoryFromJexFiles(testData);
+            var notes = jexImporter.CreateRepositoryFromJexFiles(testData);
 
-            Assert.IsNotNull(repository);
-            Assert.AreEqual(3, repository.Notes.Count);
+            Assert.AreEqual(3, notes.Count);
 
-            var note1 = repository.Notes.FindById(new Guid("4c85ba38aea8400982b74e53f37e27db"));
+            var note1 = notes.FindById(ToJexId(new Guid("4c85ba38aea8400982b74e53f37e27db")));
             Assert.IsNotNull(note1);
             Assert.AreEqual(new DateTime(2025, 12, 07, 09, 32, 16, 750, DateTimeKind.Utc), note1.CreatedAt);
             Assert.AreEqual(new DateTime(2025, 12, 08, 09, 22, 25, 756, DateTimeKind.Utc), note1.ModifiedAt);
@@ -111,17 +110,22 @@ namespace SilentNotesTest.Workers
             Assert.AreEqual("caramel", note1.Tags[0]);
             Assert.AreEqual("<h1>First header!</h1>\n", note1.HtmlContent);
 
-            var note2 = repository.Notes.FindById(new Guid("51d5d24af4f242258d859f6056997791"));
+            var note2 = notes.FindById(ToJexId(new Guid("51d5d24af4f242258d859f6056997791")));
             Assert.IsNotNull(note2);
             Assert.AreEqual(2, note2.Tags.Count);
             Assert.AreEqual("candy", note2.Tags[0]);
             Assert.AreEqual("caramel", note2.Tags[1]);
             Assert.AreEqual("<h2>Tables</h2>\n<p>Are available:</p>\n", note2.HtmlContent);
 
-            var note3 = repository.Notes.FindById(new Guid("b47f3cd7b1c943ba85085033e6b830b1"));
+            var note3 = notes.FindById(ToJexId(new Guid("b47f3cd7b1c943ba85085033e6b830b1")));
             Assert.IsNotNull(note3);
             Assert.AreEqual(0, note3.Tags.Count);
             Assert.AreEqual("<p>Without title</p>\n", note3.HtmlContent);
+        }
+
+        private static Guid ToJexId(Guid id)
+        {
+            return RelativeGuid.CreateRelativeGuid(id, JexImporterExporter.IdDistanceJex);
         }
 
         /// <summary>
