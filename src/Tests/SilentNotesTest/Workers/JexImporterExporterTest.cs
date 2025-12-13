@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using SilentNotes.Models;
 using SilentNotes.Workers;
-using static SilentNotes.Workers.AtomicFileWriter;
 
 namespace SilentNotesTest.Workers
 {
@@ -20,7 +20,7 @@ namespace SilentNotesTest.Workers
             bool success;
             using (var testDataStream = File.OpenRead(@"TestResources\joplintest.jex"))
             {
-                var jexImporter = new JexImporterExporter();
+                var jexImporter = new JexImporterExporter(CreateMarkdownConverterMock());
                 success = jexImporter.TryReadFromJexFile(testDataStream, out jexFileEntries);
             }
             Assert.IsTrue(success);
@@ -38,7 +38,7 @@ namespace SilentNotesTest.Workers
         [TestMethod]
         public void TryReadFromArchiveEntry_ReadsValidInput()
         {
-            var jexImporter = new JexImporterExporter();
+            var jexImporter = new JexImporterExporter(CreateMarkdownConverterMock());
             JexFileEntry jexFileEntry;
             Assert.IsTrue(jexImporter.TryReadFromArchiveEntry("1. Welcome note!\n\n# First header!\n\n" + ValidNoteMetadata, out jexFileEntry)); // pass only metadata
             Assert.AreEqual("# First header!", jexFileEntry.Content);
@@ -47,7 +47,7 @@ namespace SilentNotesTest.Workers
         [TestMethod]
         public void TryReadFromArchiveEntry_ReadsEmptyContent()
         {
-            var jexImporter = new JexImporterExporter();
+            var jexImporter = new JexImporterExporter(CreateMarkdownConverterMock());
             Assert.IsTrue(jexImporter.TryReadFromArchiveEntry(ValidNoteMetadata, out var jexFileEntry)); // pass only metadata
             Assert.IsNull(jexFileEntry.Content);
             Assert.IsTrue(jexFileEntry.MetaData.Count > 0);
@@ -56,7 +56,7 @@ namespace SilentNotesTest.Workers
         [TestMethod]
         public void TryReadFromArchiveEntry_ReadsInputWitEmptyTitle()
         {
-            var jexImporter = new JexImporterExporter();
+            var jexImporter = new JexImporterExporter(CreateMarkdownConverterMock());
             const string inputWithEmptyTitle = "\n\nFirst line\nsecond line\n\n" + ValidNoteMetadata;
             Assert.IsTrue(jexImporter.TryReadFromArchiveEntry(inputWithEmptyTitle, out var jexFileEntry)); // pass only metadata
             Assert.AreEqual("First line\nsecond line", jexFileEntry.Content);
@@ -66,7 +66,7 @@ namespace SilentNotesTest.Workers
         [TestMethod]
         public void TryReadFromArchiveEntry_ReadsValidMetadata()
         {
-            var jexImporter = new JexImporterExporter();
+            var jexImporter = new JexImporterExporter(CreateMarkdownConverterMock());
             Assert.IsTrue(jexImporter.TryReadFromArchiveEntry(ValidNoteMetadata, out var jexFileEntry));
             Assert.AreEqual(29, jexFileEntry.MetaData.Count);
             Assert.AreEqual("5d127c4376bb4b0ca496824216affdcc", jexFileEntry.MetaData["parent_id"]);
@@ -77,7 +77,7 @@ namespace SilentNotesTest.Workers
         [TestMethod]
         public void TryReadFromArchiveEntry_RejectsEmptyMetadata()
         {
-            var jexImporter = new JexImporterExporter();
+            var jexImporter = new JexImporterExporter(CreateMarkdownConverterMock());
             JexFileEntry jexFileEntry;
             Assert.IsFalse(jexImporter.TryReadFromArchiveEntry("", out jexFileEntry));
             Assert.IsFalse(jexImporter.TryReadFromArchiveEntry("", out jexFileEntry));
@@ -87,7 +87,7 @@ namespace SilentNotesTest.Workers
         [TestMethod]
         public void TryReadFromArchiveEntry_RejectsInvalidMetadata()
         {
-            var jexImporter = new JexImporterExporter();
+            var jexImporter = new JexImporterExporter(CreateMarkdownConverterMock());
             JexFileEntry jexFileEntry;
             Assert.IsFalse(jexImporter.TryReadFromArchiveEntry("id\nparent_id: 5d127c4376bb4b0ca496824216affdcc", out jexFileEntry)); // key without delimiter
             Assert.IsFalse(jexImporter.TryReadFromArchiveEntry("is_shared: 0", out jexFileEntry)); // missing mandatory keys
@@ -97,7 +97,7 @@ namespace SilentNotesTest.Workers
         public void CreateRepositoryFromJexFiles_WorksWithValidEntries()
         {
             var testData = CreateTestData();
-            var jexImporter = new JexImporterExporter();
+            var jexImporter = new JexImporterExporter(CreateMarkdownConverterMock());
             var notes = jexImporter.CreateRepositoryFromJexFiles(testData);
 
             Assert.AreEqual(3, notes.Count);
@@ -108,24 +108,73 @@ namespace SilentNotesTest.Workers
             Assert.AreEqual(new DateTime(2025, 12, 08, 09, 22, 25, 756, DateTimeKind.Utc), note1.ModifiedAt);
             Assert.AreEqual(1, note1.Tags.Count);
             Assert.AreEqual("caramel", note1.Tags[0]);
-            Assert.AreEqual("<h1>First header!</h1>\n", note1.HtmlContent);
+            Assert.AreEqual("<b>html</b>", note1.HtmlContent);
 
             var note2 = notes.FindById(ToJexId(new Guid("51d5d24af4f242258d859f6056997791")));
             Assert.IsNotNull(note2);
             Assert.AreEqual(2, note2.Tags.Count);
             Assert.AreEqual("candy", note2.Tags[0]);
             Assert.AreEqual("caramel", note2.Tags[1]);
-            Assert.AreEqual("<h2>Tables</h2>\n<p>Are available:</p>\n", note2.HtmlContent);
+            Assert.AreEqual("<b>html</b>", note2.HtmlContent);
 
             var note3 = notes.FindById(ToJexId(new Guid("b47f3cd7b1c943ba85085033e6b830b1")));
             Assert.IsNotNull(note3);
             Assert.AreEqual(0, note3.Tags.Count);
-            Assert.AreEqual("<p>Without title</p>\n", note3.HtmlContent);
+            Assert.AreEqual("<b>html</b>", note3.HtmlContent);
+        }
+
+        [TestMethod]
+        public void CreateJexFilesFromRepository_WorksWithValidEntries()
+        {
+            var testData = CreateTestData();
+            var jexImporter = new JexImporterExporter(CreateMarkdownConverterMock());
+            List<NoteModel> testNotes = jexImporter.CreateRepositoryFromJexFiles(testData);
+
+            Guid repositoryId = Guid.NewGuid();
+            List<JexFileEntry> jexFileEntries = jexImporter.CreateJexFilesFromRepository(repositoryId, testNotes);
+
+            // Test number of entries by type
+            Assert.AreEqual(1, jexFileEntries.Count(item => item.ModelType == JexModelType.Folder));
+            Assert.AreEqual(3, jexFileEntries.Count(item => item.ModelType == JexModelType.Note));
+            Assert.AreEqual(2, jexFileEntries.Count(item => item.ModelType == JexModelType.Tag));
+            Assert.AreEqual(3, jexFileEntries.Count(item => item.ModelType == JexModelType.NoteTag));
+
+            var originalNote1 = testData[0];
+            var newNote1 = jexFileEntries.Find(item =>
+                item.ModelType == JexModelType.Note && item.Id == ToJexId(originalNote1.Id));
+            Assert.IsNotNull(newNote1);
+            Assert.AreEqual(originalNote1.MetaData["created_time"], newNote1.MetaData["created_time"]);
+            Assert.AreEqual(originalNote1.MetaData["updated_time"], newNote1.MetaData["updated_time"]);
+            Assert.AreEqual(originalNote1.MetaData["type_"], newNote1.MetaData["type_"]);
+            Assert.AreEqual(repositoryId.ToString("N"), newNote1.MetaData["parent_id"]);
+            Assert.AreEqual("_markdown_", newNote1.Content);
+
+            var originalTag1 = testData[3];
+            var newTag1 = jexFileEntries.Find(item =>
+                item.ModelType == JexModelType.Tag && item.Content == "caramel");
+            Assert.IsNotNull(newTag1);
+            Assert.AreEqual("36286186ec287b0a0957e9c44cf77db5", newTag1.MetaData["id"]); // Tag ids are predictable
+            Assert.AreEqual(originalTag1.MetaData["type_"], newTag1.MetaData["type_"]);
+
+            var originalRelation3 = testData[7];
+            var newRelation1 = jexFileEntries.Find(item =>
+                item.ModelType == JexModelType.NoteTag &&
+                item.MetaData["note_id"] == newNote1.MetaData["id"] &&
+                item.MetaData["tag_id"] == newTag1.MetaData["id"]);
+            Assert.IsNotNull(newRelation1);
         }
 
         private static Guid ToJexId(Guid id)
         {
             return RelativeGuid.CreateRelativeGuid(id, JexImporterExporter.IdDistanceJex);
+        }
+
+        private static IMarkdownConverter CreateMarkdownConverterMock()
+        {
+            var result = new Mock<IMarkdownConverter>();
+            result.Setup(m => m.HtmlToMarkdown(It.IsAny<string>())).Returns("_markdown_");
+            result.Setup(m => m.MarkdownToHtml(It.IsAny<string>())).Returns("<b>html</b>");
+            return result.Object;
         }
 
         /// <summary>

@@ -52,6 +52,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\FeedbackServiceBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\IClipboardService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ICloudStorageClientFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Workers\IMarkdownConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ICryptoRandomService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\IDataProtectionService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\IEnvironmentService.cs" />

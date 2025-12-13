@@ -7,8 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Formats.Tar;
+using System.Security.Cryptography;
 using System.Text;
-using Markdig;
 using SilentNotes.Models;
 
 namespace SilentNotes.Workers
@@ -19,6 +19,17 @@ namespace SilentNotes.Workers
     public class JexImporterExporter
     {
         internal const int IdDistanceJex = 1; // Unique distance to generate relative guids between ids of Joplin and SilentNotes
+        private IMarkdownConverter _markdownConverter;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="JexImporterExporter"/> class.
+        /// </summary>
+        /// <param name="markdownConverter">The Markdown converter which can convert between
+        /// Markdown and HTML.</param>
+        public JexImporterExporter(IMarkdownConverter markdownConverter)
+        {
+            _markdownConverter = markdownConverter;
+        }
 
         /// <summary>
         /// Generates a list of SilentNotes notes, from previously loaded JexFileEntry objects,
@@ -52,7 +63,7 @@ namespace SilentNotes.Workers
             {
                 NoteModel noteModel = new NoteModel();
                 noteModel.Id = RelativeGuid.CreateRelativeGuid(noteEntry.Id, IdDistanceJex);
-                noteModel.HtmlContent = Markdown.ToHtml(noteEntry.Content);
+                noteModel.HtmlContent = _markdownConverter.MarkdownToHtml(noteEntry.Content);
                 noteModel.CreatedAt = ExtractDateFromMetadata(noteEntry.MetaData, "created_time", null);
                 noteModel.ModifiedAt = ExtractDateFromMetadata(noteEntry.MetaData, "updated_time", null);
 
@@ -73,15 +84,67 @@ namespace SilentNotes.Workers
         /// original note in Joplin. They are relative though and can be recognized as equal, see
         /// <see cref="RelativeGuid"/>.
         /// </remarks>
+        /// <param name="repositoryId">The id of the repository is used to generate a folder.</param>
         /// <param name="notes">A list of notes to export.</param>
         /// <returns>List of jex file entries, including notes and tags.</returns>
-        public List<JexFileEntry> CreateJexFilesFromRepository(IEnumerable<NoteModel> notes)
+        public List<JexFileEntry> CreateJexFilesFromRepository(Guid repositoryId, IEnumerable<NoteModel> notes)
         {
             var result = new List<JexFileEntry>();
+            string nowUtcDate = FormatUtcIso(DateTime.UtcNow);
+            Dictionary<string, Guid> tagToId = notes
+                .SelectMany(note => note.Tags)
+                .Distinct(StringComparer.InvariantCultureIgnoreCase)
+                .ToDictionary(tag => tag, tag => CreateReproducibleTagId(tag));
 
-            var tagToNote = new Dictionary<string, Guid>();
+            // Add folder
+            result.Add(new JexFileEntry("SilentNotes", new Dictionary<string, string>
+            {
+                { "id", FormatId(repositoryId) },
+                { "created_time", nowUtcDate },
+                { "updated_time", nowUtcDate },
+                { "type_", JexModelType.Folder.ValueAsText() },
+            }));
 
-            
+            // Generate tags
+            foreach (var tagIdPair in tagToId)
+            {
+                result.Add(new JexFileEntry(tagIdPair.Key, new Dictionary<string, string>
+                {
+                    { "id", FormatId(tagIdPair.Value) },
+                    { "created_time", nowUtcDate },
+                    { "updated_time", nowUtcDate },
+                    { "type_", JexModelType.Tag.ValueAsText() },
+                }));
+            }
+
+            // Generate notes
+            foreach (var note in notes)
+            {
+                string noteContent = _markdownConverter.HtmlToMarkdown(note.HtmlContent);
+                result.Add(new JexFileEntry(noteContent, new Dictionary<string, string>
+                {
+                    { "id", FormatId(note.Id) },
+                    { "parent_id", FormatId(repositoryId) },
+                    { "created_time", FormatUtcIso(note.CreatedAt) },
+                    { "updated_time", FormatUtcIso(note.ModifiedAt) },
+                    { "type_", JexModelType.Note.ValueAsText() },
+                }));
+
+                // Generate relations between notes and tags.
+                foreach (var tag in note.Tags)
+                {
+                    result.Add(new JexFileEntry(noteContent, new Dictionary<string, string>
+                    {
+                        { "id", FormatId(Guid.NewGuid()) },
+                        { "note_id", FormatId(note.Id) },
+                        { "tag_id", FormatId(tagToId[tag]) },
+                        { "created_time", FormatUtcIso(note.CreatedAt) },
+                        { "updated_time", FormatUtcIso(note.ModifiedAt) },
+                        { "type_", JexModelType.NoteTag.ValueAsText() },
+                    }));
+                }
+            }
+
             return result;
         }
 
@@ -236,6 +299,22 @@ namespace SilentNotes.Workers
             return defaultDate.HasValue ? defaultDate.Value : DateTime.UtcNow;
         }
 
+        private static Guid CreateReproducibleTagId(string tag)
+        {
+            byte[] tagHash128bit = MD5.HashData(Encoding.UTF8.GetBytes(tag.ToLower()));
+            return new Guid(tagHash128bit);
+        }
+
+        private static string FormatId(Guid id)
+        {
+            return id.ToString("N");
+        }
+
+        private static string FormatUtcIso(DateTime timeStamp)
+        {
+            return timeStamp.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fffK"); 
+        }
+
         private class NoteIdTagIdPair
         {
             public NoteIdTagIdPair(Guid noteId, Guid tagId)
@@ -319,5 +398,13 @@ namespace SilentNotes.Workers
         Migration = 14,
         SmartFilter = 15,
         Command = 16,
+    }
+
+    public static class JexModelTypeExtensions
+    {
+        public static string ValueAsText(this JexModelType modelType)
+        {
+            return ((int)modelType).ToString(); 
+        }
     }
 }
