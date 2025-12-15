@@ -36,6 +36,19 @@ namespace SilentNotesTest.Workers
         }
 
         [TestMethod]
+        [Ignore]
+        public void WriteToJexFile_ToRealFile()
+        {
+            var testData = CreateTestData();
+            var jexImporter = new JexImporterExporter(CreateMarkdownConverterMock());
+
+            using (var outputStream = new FileStream(@"D:\SilentNotes_unittest.jex", FileMode.Create))
+            {
+                jexImporter.WriteToJexFile(testData, outputStream);
+            }
+        }
+
+        [TestMethod]
         public void TryReadFromArchiveEntry_ReadsValidInput()
         {
             var jexImporter = new JexImporterExporter(CreateMarkdownConverterMock());
@@ -98,7 +111,7 @@ namespace SilentNotesTest.Workers
         {
             var testData = CreateTestData();
             var jexImporter = new JexImporterExporter(CreateMarkdownConverterMock());
-            var notes = jexImporter.CreateRepositoryFromJexFiles(testData);
+            var notes = jexImporter.CreateRepositoryFromJexFileEntries(testData);
 
             Assert.AreEqual(3, notes.Count);
 
@@ -128,10 +141,10 @@ namespace SilentNotesTest.Workers
         {
             var testData = CreateTestData();
             var jexImporter = new JexImporterExporter(CreateMarkdownConverterMock());
-            List<NoteModel> testNotes = jexImporter.CreateRepositoryFromJexFiles(testData);
+            List<NoteModel> testNotes = jexImporter.CreateRepositoryFromJexFileEntries(testData);
 
             Guid repositoryId = Guid.NewGuid();
-            List<JexFileEntry> jexFileEntries = jexImporter.CreateJexFilesFromRepository(repositoryId, testNotes);
+            List<JexFileEntry> jexFileEntries = jexImporter.CreateJexFileEntriesFromRepository(repositoryId, testNotes);
 
             // Test number of entries by type
             Assert.AreEqual(1, jexFileEntries.Count(item => item.ModelType == JexModelType.Folder));
@@ -212,12 +225,16 @@ namespace SilentNotesTest.Workers
             JexFileEntry tag1 = new JexFileEntry("caramel", new Dictionary<string, string>
             {
                 { "id", "3d35b54999694a26b9a441838689b17a" },
+                { "created_time", "2025-12-08T09:01:09.810Z" },
+                { "updated_time", "2025-12-08T09:01:09.810Z" },
                 { "type_", "5" },
             });
 
             JexFileEntry tag2 = new JexFileEntry("candy", new Dictionary<string, string>
             {
                 { "id", "98191efc65484f67ac3b125db71fba27" },
+                { "created_time", "2025-12-08T09:12:19.622Z" },
+                { "updated_time", "2025-12-08T09:12:19.622Z" },
                 { "type_", "5" },
             });
 

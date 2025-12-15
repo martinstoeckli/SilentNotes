@@ -14,11 +14,12 @@ using SilentNotes.Models;
 namespace SilentNotes.Workers
 {
     /// <summary>
-    /// Imports and exports notes in the Joplin (*.jex) file format.
+    /// Imports and exports notes from SilentNotes to the Joplin (*.jex) file format and reverse.
     /// </summary>
     public class JexImporterExporter
     {
         internal const int IdDistanceJex = 1; // Unique distance to generate relative guids between ids of Joplin and SilentNotes
+        private const string LineDelimiter = "\n";
         private IMarkdownConverter _markdownConverter;
 
         /// <summary>
@@ -32,51 +33,7 @@ namespace SilentNotes.Workers
         }
 
         /// <summary>
-        /// Generates a list of SilentNotes notes, from previously loaded JexFileEntry objects,
-        /// loaded with <see cref="TryReadFromJexFile(Stream, out List{JexFileEntry})"/>.
-        /// </summary>
-        /// <remarks>
-        /// The ids of the new created notes are relative to the original notes, so they can be
-        /// recognized later as the same note, <see cref="RelativeGuid"/>.
-        /// </remarks>
-        /// <param name="jexFileEntries">The already loaded JexFileEntry objects.</param>
-        /// <returns>A repository containing the imported notes.</returns>
-        public NoteListModel CreateRepositoryFromJexFiles(List<JexFileEntry> jexFileEntries)
-        {
-            var result = new NoteListModel();
-
-            // Extract tags
-            Dictionary<Guid, string> tags = jexFileEntries
-                .Where(item => item.ModelType == JexModelType.Tag)
-                .ToDictionary(item => item.Id, item => item.Content);
-
-            // Extract relations between notes and tags
-            List<NoteIdTagIdPair> noteToTag = jexFileEntries
-                .Where(item => item.ModelType == JexModelType.NoteTag)
-                .Select(item => new NoteIdTagIdPair(Guid.Parse(item.MetaData["note_id"]), Guid.Parse(item.MetaData["tag_id"])))
-                .ToList();
-            noteToTag.RemoveAll(item => !tags.ContainsKey(item.TagId)); // Missing tags should not render import impossible
-
-            // Create notes
-            var noteEntries = jexFileEntries.Where(item => item.ModelType == JexModelType.Note);
-            foreach (var noteEntry in noteEntries)
-            {
-                NoteModel noteModel = new NoteModel();
-                noteModel.Id = RelativeGuid.CreateRelativeGuid(noteEntry.Id, IdDistanceJex);
-                noteModel.HtmlContent = _markdownConverter.MarkdownToHtml(noteEntry.Content);
-                noteModel.CreatedAt = ExtractDateFromMetadata(noteEntry.MetaData, "created_time", null);
-                noteModel.ModifiedAt = ExtractDateFromMetadata(noteEntry.MetaData, "updated_time", null);
-
-                // Add tags
-                var noteTags = noteToTag.Where(item => item.NoteId == noteEntry.Id).Select(item => tags[item.TagId]);
-                noteModel.Tags.AddRange(noteTags);
-                result.Add(noteModel);
-            }
-            return result;
-        }
-
-        /// <summary>
-        /// Generates JexFileEntry objects from a list of SilentNotes notes.
+        /// Generates JexFileEntry objects from a list of SilentNotes notes, to export its notes.
         /// </summary>
         /// <remarks>
         /// If the notes where formerly imported from a JexFile, the ids of the new generated
@@ -87,7 +44,7 @@ namespace SilentNotes.Workers
         /// <param name="repositoryId">The id of the repository is used to generate a folder.</param>
         /// <param name="notes">A list of notes to export.</param>
         /// <returns>List of jex file entries, including notes and tags.</returns>
-        public List<JexFileEntry> CreateJexFilesFromRepository(Guid repositoryId, IEnumerable<NoteModel> notes)
+        public List<JexFileEntry> CreateJexFileEntriesFromRepository(Guid repositoryId, IEnumerable<NoteModel> notes)
         {
             var result = new List<JexFileEntry>();
             string nowUtcDate = FormatUtcIso(DateTime.UtcNow);
@@ -149,7 +106,59 @@ namespace SilentNotes.Workers
         }
 
         /// <summary>
-        /// Tries to read a JEX archive file.
+        /// Creates a Jex file archive, from formerly loaded JexFileEntry objects, loaded with
+        /// <see cref="CreateJexFileEntriesFromRepository(Guid, IEnumerable{NoteModel})"/>, to export
+        /// them.
+        /// </summary>
+        /// <param name="jexFileEntries">A list of entries to write.</param>
+        /// <param name="jexFileStream">The open stream of a JEX archive file.</param>
+        /// <returns>Task for async calling.</returns>
+        public void WriteToJexFile(List<JexFileEntry> jexFileEntries, Stream jexFileStream)
+        {
+            using (TarWriter tarWriter = new TarWriter(jexFileStream))
+            {
+                //StringBuilder lines = new StringBuilder();
+                foreach (JexFileEntry jexFileEntry in jexFileEntries)
+                {
+                    using (MemoryStream ms = new MemoryStream())
+                    {
+                        using (StreamWriter writer = new StreamWriter(ms, new UTF8Encoding(false), leaveOpen: true))
+                        {
+                            writer.NewLine = LineDelimiter;
+
+                            if (jexFileEntry.ModelType == JexModelType.Note)
+                            {
+                                writer.WriteLine(); // No title available
+                                writer.WriteLine(); // Empty line separates title and content
+                            }
+
+                            if (!string.IsNullOrEmpty(jexFileEntry.Content))
+                            {
+                                writer.Write(jexFileEntry.Content);
+                                writer.WriteLine();
+                                writer.WriteLine(); // Empty line separates content and metadata
+                            }
+
+                            // Add metadata
+                            foreach (var metaDataItem in jexFileEntry.MetaData)
+                            {
+                                writer.WriteLine("{0}: {1}", metaDataItem.Key, metaDataItem.Value);
+                            }
+                        }
+
+                        // Create tar archive entry
+                        string fileName = FormatId(jexFileEntry.Id) + ".md";
+                        TarEntry jexArchiveEntry = new UstarTarEntry(TarEntryType.RegularFile, fileName);
+                        jexArchiveEntry.DataStream = ms;
+                        jexArchiveEntry.DataStream.Position = 0;
+                        tarWriter.WriteEntry(jexArchiveEntry);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Tries to read a JEX archive file, to import its notes.
         /// </summary>
         /// <param name="jexFileStream">The open stream of a JEX archive file.</param>
         /// <param name="jexFileEntries">Retrieves a list of entries, one for each contained note
@@ -162,37 +171,39 @@ namespace SilentNotes.Workers
 
             try
             {
-                TarReader tarReader = new TarReader(jexFileStream);
-                TarEntry jexArchiveEntry;
-                while ((jexArchiveEntry = tarReader.GetNextEntry()) != null)
+                using (TarReader tarReader = new TarReader(jexFileStream))
                 {
-                    // Curently resource files like png images are ignored
-                    bool isMdFile = string.Equals(".md", Path.GetExtension(jexArchiveEntry.Name), StringComparison.InvariantCultureIgnoreCase);
-                    bool isEmptyDataStream = jexArchiveEntry.DataStream == null;
-                    if (!isMdFile || isEmptyDataStream)
-                        continue;
-
-                    using (MemoryStream ms = new MemoryStream())
+                    TarEntry jexArchiveEntry;
+                    while ((jexArchiveEntry = tarReader.GetNextEntry()) != null)
                     {
-                        jexArchiveEntry.DataStream.CopyTo(ms);
-                        string archiveEntryContent = Encoding.UTF8.GetString(ms.ToArray());
+                        // Curently resource files like png images are ignored
+                        bool isMdFile = string.Equals(".md", Path.GetExtension(jexArchiveEntry.Name), StringComparison.InvariantCultureIgnoreCase);
+                        bool isEmptyDataStream = jexArchiveEntry.DataStream == null;
+                        if (!isMdFile || isEmptyDataStream)
+                            continue;
 
-                        if (TryReadFromArchiveEntry(archiveEntryContent, out JexFileEntry jexFileEntry))
+                        using (MemoryStream ms = new MemoryStream())
                         {
-                            switch (jexFileEntry.ModelType)
+                            jexArchiveEntry.DataStream.CopyTo(ms);
+                            string archiveEntryContent = Encoding.UTF8.GetString(ms.ToArray());
+
+                            if (TryReadFromArchiveEntry(archiveEntryContent, out JexFileEntry jexFileEntry))
                             {
-                                case JexModelType.Note:
-                                case JexModelType.Tag:
-                                case JexModelType.NoteTag:
-                                    jexFileEntries.Add(jexFileEntry);
-                                    break;
-                                default:
-                                    break;
+                                switch (jexFileEntry.ModelType)
+                                {
+                                    case JexModelType.Note:
+                                    case JexModelType.Tag:
+                                    case JexModelType.NoteTag:
+                                        jexFileEntries.Add(jexFileEntry);
+                                        break;
+                                    default:
+                                        break;
+                                }
                             }
-                        }
-                        else
-                        {
-                            return false;
+                            else
+                            {
+                                return false;
+                            }
                         }
                     }
                 }
@@ -205,6 +216,50 @@ namespace SilentNotes.Workers
         }
 
         /// <summary>
+        /// Generates a list of SilentNotes notes, from formerly loaded JexFileEntry objects,
+        /// loaded with <see cref="TryReadFromJexFile(Stream, out List{JexFileEntry})"/>.
+        /// </summary>
+        /// <remarks>
+        /// The ids of the new created notes are relative to the original notes, so they can be
+        /// recognized later as the same note, <see cref="RelativeGuid"/>.
+        /// </remarks>
+        /// <param name="jexFileEntries">The already loaded JexFileEntry objects.</param>
+        /// <returns>A repository containing the imported notes.</returns>
+        public NoteListModel CreateRepositoryFromJexFileEntries(List<JexFileEntry> jexFileEntries)
+        {
+            var result = new NoteListModel();
+
+            // Extract tags
+            Dictionary<Guid, string> tags = jexFileEntries
+                .Where(item => item.ModelType == JexModelType.Tag)
+                .ToDictionary(item => item.Id, item => item.Content);
+
+            // Extract relations between notes and tags
+            List<NoteIdTagIdPair> noteToTag = jexFileEntries
+                .Where(item => item.ModelType == JexModelType.NoteTag)
+                .Select(item => new NoteIdTagIdPair(Guid.Parse(item.MetaData["note_id"]), Guid.Parse(item.MetaData["tag_id"])))
+                .ToList();
+            noteToTag.RemoveAll(item => !tags.ContainsKey(item.TagId)); // Missing tags should not render import impossible
+
+            // Create notes
+            var noteEntries = jexFileEntries.Where(item => item.ModelType == JexModelType.Note);
+            foreach (var noteEntry in noteEntries)
+            {
+                NoteModel noteModel = new NoteModel();
+                noteModel.Id = RelativeGuid.CreateRelativeGuid(noteEntry.Id, IdDistanceJex);
+                noteModel.HtmlContent = _markdownConverter.MarkdownToHtml(noteEntry.Content);
+                noteModel.CreatedAt = ExtractDateFromMetadata(noteEntry.MetaData, "created_time", null);
+                noteModel.ModifiedAt = ExtractDateFromMetadata(noteEntry.MetaData, "updated_time", null);
+
+                // Add tags
+                var noteTags = noteToTag.Where(item => item.NoteId == noteEntry.Id).Select(item => tags[item.TagId]);
+                noteModel.Tags.AddRange(noteTags);
+                result.Add(noteModel);
+            }
+            return result;
+        }
+
+        /// <summary>
         /// Tries to read a single file from a JEX archive.
         /// </summary>
         /// <param name="archiveEntryContent">The content of a single file from a JEX archive.</param>
@@ -212,7 +267,6 @@ namespace SilentNotes.Workers
         /// <returns>Returns true if the content could be read, false if the content is invalid.</returns>
         internal bool TryReadFromArchiveEntry(string archiveEntryContent, out JexFileEntry jexFileEntry)
         {
-            const string LineDelimiter = "\n";
             const string contentMetaDelimiter = "\n\n";
             if (archiveEntryContent.Contains('\r'))
                 archiveEntryContent = archiveEntryContent.Replace("\r", "");
@@ -258,7 +312,6 @@ namespace SilentNotes.Workers
         /// <returns>Returns true if the metadata could be read, false if the metadata is invalid.</returns>
         private bool TryReadMetadata(string metaDataContent, out Dictionary<string, string> metaData)
         {
-            const string LineDelimiter = "\n";
             const string KeyValueDelimiter = ":";
             metaData = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
             try
