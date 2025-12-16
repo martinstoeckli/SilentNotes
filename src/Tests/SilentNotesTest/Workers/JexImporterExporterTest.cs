@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using SilentNotes;
 using SilentNotes.Models;
 using SilentNotes.Workers;
 
@@ -107,11 +108,11 @@ namespace SilentNotesTest.Workers
         }
 
         [TestMethod]
-        public void CreateRepositoryFromJexFiles_WorksWithValidEntries()
+        public async Task CreateRepositoryFromJexFiles_WorksWithValidEntries()
         {
             var testData = CreateTestData();
             var jexImporter = new JexImporterExporter(CreateMarkdownConverterMock());
-            var notes = jexImporter.CreateRepositoryFromJexFileEntries(testData);
+            var notes = await jexImporter.CreateRepositoryFromJexFileEntries(testData);
 
             Assert.AreEqual(3, notes.Count);
 
@@ -137,14 +138,14 @@ namespace SilentNotesTest.Workers
         }
 
         [TestMethod]
-        public void CreateJexFilesFromRepository_WorksWithValidEntries()
+        public async Task CreateJexFilesFromRepository_WorksWithValidEntries()
         {
             var testData = CreateTestData();
             var jexImporter = new JexImporterExporter(CreateMarkdownConverterMock());
-            List<NoteModel> testNotes = jexImporter.CreateRepositoryFromJexFileEntries(testData);
+            List<NoteModel> testNotes = await jexImporter.CreateRepositoryFromJexFileEntries(testData);
 
             Guid repositoryId = Guid.NewGuid();
-            List<JexFileEntry> jexFileEntries = jexImporter.CreateJexFileEntriesFromRepository(repositoryId, testNotes);
+            List<JexFileEntry> jexFileEntries = await jexImporter.CreateJexFileEntriesFromRepository(repositoryId, testNotes);
 
             // Test number of entries by type
             Assert.AreEqual(1, jexFileEntries.Count(item => item.ModelType == JexModelType.Folder));
@@ -185,8 +186,8 @@ namespace SilentNotesTest.Workers
         private static IMarkdownConverter CreateMarkdownConverterMock()
         {
             var result = new Mock<IMarkdownConverter>();
-            result.Setup(m => m.HtmlToMarkdown(It.IsAny<string>())).Returns("_markdown_");
-            result.Setup(m => m.MarkdownToHtml(It.IsAny<string>())).Returns("<b>html</b>");
+            result.Setup(m => m.HtmlToMarkdown(It.IsAny<string>())).ReturnsAsync("_markdown_");
+            result.Setup(m => m.MarkdownToHtml(It.IsAny<string>())).ReturnsAsync("<b>html</b>");
             return result.Object;
         }
 

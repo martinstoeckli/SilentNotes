@@ -13,6 +13,7 @@ using CommunityToolkit.Mvvm.Input;
 using SilentNotes.Crypto;
 using SilentNotes.Models;
 using SilentNotes.Services;
+using SilentNotes.Workers;
 
 namespace SilentNotes.ViewModels
 {
@@ -23,6 +24,7 @@ namespace SilentNotes.ViewModels
         private readonly IRepositoryStorageService _repositoryService;
         private readonly IFolderPickerService _folderPickerService;
         private readonly ISafeKeyService _keyService;
+        private readonly IMarkdownConverter _markdownConverter;
         private readonly ICryptor _noteCryptor;
         private bool _exportUnprotectedNotes;
         private bool _exportProtectedNotes;
@@ -37,7 +39,8 @@ namespace SilentNotes.ViewModels
             ICryptoRandomSource randomSource,
             IRepositoryStorageService repositoryService,
             IFolderPickerService folderPickerService,
-            ISafeKeyService safeKeyService)
+            ISafeKeyService safeKeyService,
+            IMarkdownConverter markdownConverter)
         {
             Language = languageService;
             _navigationService = navigationService;
@@ -45,13 +48,20 @@ namespace SilentNotes.ViewModels
             _repositoryService = repositoryService;
             _folderPickerService = folderPickerService;
             _keyService = safeKeyService;
+            _markdownConverter = markdownConverter;
             _noteCryptor = new Cryptor(NoteModel.CryptorPackageName, randomSource);
 
+            ExportFormat = "html";
             OkCommand = new RelayCommand(Ok);
             ExportUnprotectedNotes = true;
         }
 
         private ILanguageService Language { get; }
+
+        /// <summary>
+        /// Gets or sets the output type.
+        /// </summary>
+        public string ExportFormat { get; set; }
 
         /// <summary>
         /// Gets the command to create the service.
@@ -65,9 +75,22 @@ namespace SilentNotes.ViewModels
                 bool success;
                 try
                 {
-                    byte[] zipContent = CreateZipArchive();
-                    success = await _folderPickerService.TrySaveFileToPickedFolder(
-                        CreateFilename(), zipContent);
+                    switch (ExportFormat)
+                    {
+                        case "html":
+                            byte[] zipContent = CreateHtmlZipArchive();
+                            success = await _folderPickerService.TrySaveFileToPickedFolder(
+                                CreateFilename(".zip"), zipContent);
+                            break;
+                        case "jex":
+                            byte[] jexContent = await CreateJexArchive();
+                            success = await _folderPickerService.TrySaveFileToPickedFolder(
+                                CreateFilename(".jex"), jexContent);
+                            break;
+                        default:
+                            success = false;
+                            break;
+                    }
                 }
                 catch (Exception)
                 {
@@ -94,7 +117,7 @@ namespace SilentNotes.ViewModels
             get { return !ExportUnprotectedNotes && !ExportProtectedNotes; }
         }
 
-        public byte[] CreateZipArchive()
+        public byte[] CreateHtmlZipArchive()
         {
             _repositoryService.LoadRepositoryOrDefault(out NoteRepositoryModel repository);
 
@@ -120,6 +143,22 @@ namespace SilentNotes.ViewModels
                     }
                 }
                 result = zipContent.ToArray();
+            }
+            return result;
+        }
+
+        public async Task<byte[]> CreateJexArchive()
+        {
+            _repositoryService.LoadRepositoryOrDefault(out NoteRepositoryModel repository);
+
+            byte[] result;
+            using (MemoryStream archiveContent = new MemoryStream())
+            {
+                var exporter = new JexImporterExporter(_markdownConverter);
+                var notes = EnumerateNotesToExport(repository, _keyService, ExportUnprotectedNotes, ExportProtectedNotes);
+                var jexFileEntries = await exporter.CreateJexFileEntriesFromRepository(repository.Id, notes);
+                exporter.WriteToJexFile(jexFileEntries, archiveContent);
+                result = archiveContent.ToArray();
             }
             return result;
         }
@@ -208,10 +247,27 @@ namespace SilentNotes.ViewModels
             }
         }
 
-        private string CreateFilename()
+        /// <summary>
+        /// Creates a filename containing a timestamp.
+        /// </summary>
+        /// <param name="extension">The file extension to use.</param>
+        /// <returns>Time based filename.</returns>
+        private string CreateFilename(string extension)
         {
             string dateTimePart = DateTime.Now.ToString("yyyyMMdd_HHmm");
-            return string.Format("silentnotes_export_{0}.zip", dateTimePart);
+            return string.Format("silentnotes_export_{0}.{1}", dateTimePart, extension.TrimStart('.'));
+        }
+
+        /// <inhritdoc/>
+        public string MarkdownToHtml(string markdown)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inhritdoc/>
+        public string HtmlToMarkdown(string html)
+        {
+            return "sugus";
         }
     }
 }

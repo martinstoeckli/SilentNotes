@@ -33,6 +33,14 @@
 			<p class="my-4">@LanguageService["export_desc"]</p>
 
 			<MudForm>
+				<div class="mb-4">
+					<label for="ExportFormat">Export format</label>
+					<MudSelect id="ExportFormat" @bind-Value="ViewModel.ExportFormat" Variant="Variant.Outlined">
+						<MudSelectItem Value="@("html")">HTML</MudSelectItem>
+						<MudSelectItem Value="@("jex")">Joplin (*.jex)</MudSelectItem>
+					</MudSelect>
+				</div>
+
 				<MudCheckBox @bind-Value="@ViewModel.ExportUnprotectedNotes" Dense="true" Label="@LanguageService["export_unencrypted"]"></MudCheckBox>
 				<MudCheckBox @bind-Value="@ViewModel.ExportProtectedNotes" Disabled="!ViewModel.HasExportableProtectedNotes" Dense="true" Label="@LanguageService["export_encrypted"]"></MudCheckBox>
 			</MudForm>
@@ -47,21 +55,36 @@
 
 @code {
 	private MudBaseButton _okButton;
+	private IJSObjectReference _jsModule;
+	private RelayMarkdownConverter _markdownConverter;
 
 	protected override void OnInitialized()
 	{
-		ViewModel = new ExportViewModel(NavigationService, LanguageService, FeedbackService, CryptoRandomSource, RepositoryStorageService, FolderPickerService, SafeKeyService);
+		// We delegate the conversion between HTML and Markdown to the Tiptap editor.
+		_markdownConverter = new RelayMarkdownConverter(
+			(html) => _jsModule.InvokeAsync<string>("convertHtmlToMarkdown", html),
+			(markdown) => throw new NotImplementedException() // Not needed for export
+		);
+		ViewModel = new ExportViewModel(NavigationService, LanguageService, FeedbackService, CryptoRandomSource, RepositoryStorageService, FolderPickerService, SafeKeyService, _markdownConverter);
 	}
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
 		if (firstRender)
 		{
+			_jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./Views/ExportPage.razor.js");
+
 			await KeyboardShortcuts.InitializeAsync(JSRuntime);
 			KeyboardShortcuts
 				.AddShortcut(new SnKeyboardShortcut(SnKey.Escape), () => Navigation.NavigateTo(BackRoute))
 				.AddShortcut(new SnKeyboardShortcut(SnKey.Enter), async () => await SnKeyboardShortcuts.SimulateClickAsync(_okButton));
 		}
+	}
+
+	private async Task<string> ConvertHtmlToMarkdown(string html)
+	{
+		string markdown = await _jsModule.InvokeAsync<string>("convertHtmlToMarkdown", html);
+		return markdown;
 	}
 
 	private ExportViewModel ViewModel { get; set; }

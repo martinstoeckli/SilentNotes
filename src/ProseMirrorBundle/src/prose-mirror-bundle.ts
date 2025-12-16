@@ -22,6 +22,7 @@ import { CheckableParagraph, registerIsShoppingModeActive as checklistRegisterIs
 import { ScrollTo } from './scroll-to-extension'
 import { TabHandler } from './tab-handler-extension'
 export { exportAsPlainText, exportChecklistAsPlainText } from './tiptap-plain-text-exporter'
+export { TiptapMarkdownConverter } from './tiptap-markdown-converter'
 
 /**
  * This method will be exported and can be called from the HTML document with the "prose_mirror_bundle"

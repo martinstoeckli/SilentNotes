@@ -36,6 +36,7 @@
     "@tiptap/extension-text": "^3.3.0",
     "@tiptap/extension-text-style": "^3.3.0",
     "@tiptap/extension-underline": "^3.3.0",
+    "@tiptap/markdown": "^3.13.0",
     "esbuild": "^0.25.9",
     "prosemirror-commands": "^1.6.0",
     "prosemirror-keymap": "^1.2.2",

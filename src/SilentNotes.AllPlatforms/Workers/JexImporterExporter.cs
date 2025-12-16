@@ -44,7 +44,7 @@ namespace SilentNotes.Workers
         /// <param name="repositoryId">The id of the repository is used to generate a folder.</param>
         /// <param name="notes">A list of notes to export.</param>
         /// <returns>List of jex file entries, including notes and tags.</returns>
-        public List<JexFileEntry> CreateJexFileEntriesFromRepository(Guid repositoryId, IEnumerable<NoteModel> notes)
+        public async Task<List<JexFileEntry>> CreateJexFileEntriesFromRepository(Guid repositoryId, IEnumerable<NoteModel> notes)
         {
             var result = new List<JexFileEntry>();
             string nowUtcDate = FormatUtcIso(DateTime.UtcNow);
@@ -77,7 +77,7 @@ namespace SilentNotes.Workers
             // Generate notes
             foreach (var note in notes)
             {
-                string noteContent = _markdownConverter.HtmlToMarkdown(note.HtmlContent);
+                string noteContent = await _markdownConverter.HtmlToMarkdown(note.HtmlContent);
                 result.Add(new JexFileEntry(noteContent, new Dictionary<string, string>
                 {
                     { "id", FormatId(note.Id) },
@@ -140,9 +140,13 @@ namespace SilentNotes.Workers
                             }
 
                             // Add metadata
+                            bool isFirstMetadata = true;
                             foreach (var metaDataItem in jexFileEntry.MetaData)
                             {
-                                writer.WriteLine("{0}: {1}", metaDataItem.Key, metaDataItem.Value);
+                                if (!isFirstMetadata)
+                                    writer.WriteLine();
+                                isFirstMetadata = false;
+                                writer.Write("{0}: {1}", metaDataItem.Key, metaDataItem.Value);
                             }
                         }
 
@@ -225,7 +229,7 @@ namespace SilentNotes.Workers
         /// </remarks>
         /// <param name="jexFileEntries">The already loaded JexFileEntry objects.</param>
         /// <returns>A repository containing the imported notes.</returns>
-        public NoteListModel CreateRepositoryFromJexFileEntries(List<JexFileEntry> jexFileEntries)
+        public async Task<NoteListModel> CreateRepositoryFromJexFileEntries(List<JexFileEntry> jexFileEntries)
         {
             var result = new NoteListModel();
 
@@ -247,7 +251,7 @@ namespace SilentNotes.Workers
             {
                 NoteModel noteModel = new NoteModel();
                 noteModel.Id = RelativeGuid.CreateRelativeGuid(noteEntry.Id, IdDistanceJex);
-                noteModel.HtmlContent = _markdownConverter.MarkdownToHtml(noteEntry.Content);
+                noteModel.HtmlContent = await _markdownConverter.MarkdownToHtml(noteEntry.Content);
                 noteModel.CreatedAt = ExtractDateFromMetadata(noteEntry.MetaData, "created_time", null);
                 noteModel.ModifiedAt = ExtractDateFromMetadata(noteEntry.MetaData, "updated_time", null);
 
