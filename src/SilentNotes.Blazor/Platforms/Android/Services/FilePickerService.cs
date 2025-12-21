@@ -35,7 +35,7 @@ namespace SilentNotes.Platforms.Services
         }
 
         /// <inheritdoc/>
-        public async Task<bool> PickFile()
+        public async Task<bool> PickFile(IEnumerable<string> extensions = null)
         {
             Intent filePickerIntent = new Intent(Intent.ActionOpenDocument);
             filePickerIntent.AddFlags(ActivityFlags.GrantReadUriPermission);

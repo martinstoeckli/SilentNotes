@@ -20,9 +20,11 @@ namespace SilentNotes.Services
         /// <summary>
         /// Lets the user pick a file for reading/writing with a system dialog.
         /// </summary>
+        /// <param name="extensions">An optional list of file extensions. The extenstions should
+        /// include the point separator e.g. ".txt"</param>
         /// <returns>Returns true if the user picked a file, false if the pick dialog was
         /// canceled.</returns>
-        Task<bool> PickFile();
+        Task<bool> PickFile(IEnumerable<string> extensions = null);
 
         /// <summary>
         /// Tries to read a formerly picked file, call this method only after <see cref="PickFile"/>

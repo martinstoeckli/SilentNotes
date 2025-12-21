@@ -28,6 +28,7 @@
     "@tiptap/extension-hard-break": "^3.3.0",
     "@tiptap/extension-heading": "^3.3.0",
     "@tiptap/extension-history": "^3.3.0",
+    "@tiptap/extension-horizontal-rule": "^3.14.0",
     "@tiptap/extension-italic": "^3.3.0",
     "@tiptap/extension-link": "^3.3.0",
     "@tiptap/extension-list": "^3.3.0",

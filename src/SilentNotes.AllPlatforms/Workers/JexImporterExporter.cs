@@ -117,7 +117,6 @@ namespace SilentNotes.Workers
         {
             using (TarWriter tarWriter = new TarWriter(jexFileStream))
             {
-                //StringBuilder lines = new StringBuilder();
                 foreach (JexFileEntry jexFileEntry in jexFileEntries)
                 {
                     using (MemoryStream ms = new MemoryStream())
@@ -246,7 +245,7 @@ namespace SilentNotes.Workers
             noteToTag.RemoveAll(item => !tags.ContainsKey(item.TagId)); // Missing tags should not render import impossible
 
             // Create notes
-            var noteEntries = jexFileEntries.Where(item => item.ModelType == JexModelType.Note);
+            var noteEntries = jexFileEntries.Where(item => (item.ModelType == JexModelType.Note) && (!item.IsEncrypted));
             foreach (var noteEntry in noteEntries)
             {
                 NoteModel noteModel = new NoteModel();
@@ -425,6 +424,11 @@ namespace SilentNotes.Workers
         /// Gets the model type of the item.
         /// </summary>
         public JexModelType ModelType { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether the note is encrypted.
+        /// </summary>
+        public bool IsEncrypted => MetaData.TryGetValue("encryption_applied", out string value) && (value != "0");
 
         private static JexModelType ToModelType(string modelTypeFromMetadata)
         {

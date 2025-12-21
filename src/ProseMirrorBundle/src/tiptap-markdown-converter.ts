@@ -7,6 +7,7 @@ import CodeBlock from '@tiptap/extension-code-block'
 import Document from '@tiptap/extension-document'
 import HardBreak from '@tiptap/extension-hard-break'
 import Heading from '@tiptap/extension-heading'
+import HorizontalRule from '@tiptap/extension-horizontal-rule'
 import Italic from '@tiptap/extension-italic'
 import Paragraph from '@tiptap/extension-paragraph'
 import Strike from '@tiptap/extension-strike'
@@ -33,7 +34,9 @@ export class TiptapMarkdownConverter {
 
   public convertMarkdownToHtml(markdownContent: string): string {
     let editor: Editor = this.getOrCreateEditor();
-    return "todo";
+    editor.commands.setContent(markdownContent, { contentType: 'markdown' })
+    let result = editor.getHTML();
+    return result;
   }
 
   /*
@@ -53,6 +56,7 @@ export class TiptapMarkdownConverter {
           Heading.configure({
             levels: [1, 2, 3],
           }),
+          HorizontalRule,
           Italic,
           ListItem,
           Markdown.configure({

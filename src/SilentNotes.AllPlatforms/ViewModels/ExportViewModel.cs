@@ -257,17 +257,5 @@ namespace SilentNotes.ViewModels
             string dateTimePart = DateTime.Now.ToString("yyyyMMdd_HHmm");
             return string.Format("silentnotes_export_{0}.{1}", dateTimePart, extension.TrimStart('.'));
         }
-
-        /// <inhritdoc/>
-        public string MarkdownToHtml(string markdown)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inhritdoc/>
-        public string HtmlToMarkdown(string html)
-        {
-            return "sugus";
-        }
     }
 }

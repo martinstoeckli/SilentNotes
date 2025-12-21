@@ -1,4 +1,4 @@
-import { initializeEditor, toggleFormat, isFormatActive, searchAndHighlight, selectNextWhileTyping, selectNext, selectPrevious, selectWordAtCurrentPosition, exportAsPlainText } from '../prose-mirror-bundle.js';
+import { initializeEditor, toggleFormat, isFormatActive, searchAndHighlight, selectNextWhileTyping, selectNext, selectPrevious, selectWordAtCurrentPosition, exportAsPlainText, insertHorizontalRule } from '../prose-mirror-bundle.js';
 
 var _page;
 
@@ -57,6 +57,12 @@ export function toggleFormatAndRefresh(formatName, formatParameter) {
 
     toggleFormat(_page.editor, formatName, formatParameter);
     onActiveFormatStateChanged();
+}
+
+export function callInsertHorizontalRule() {
+    if (!IsInitialized()) return;
+
+    insertHorizontalRule(_page.editor);
 }
 
 function onActiveFormatStateChanged() {

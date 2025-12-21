@@ -99,7 +99,6 @@
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
         <PackageReference Include="FluentFTP" Version="53.0.2" />
         <PackageReference Include="Flurl.Http" Version="4.0.2" />
-        <PackageReference Include="Markdig" Version="0.44.0" />
         <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
         <PackageReference Include="Microsoft.AspNetCore.Components.WebView.Maui" Version="$(MauiVersion)" />
         <PackageReference Include="MudBlazor" Version="8.15.0" />
