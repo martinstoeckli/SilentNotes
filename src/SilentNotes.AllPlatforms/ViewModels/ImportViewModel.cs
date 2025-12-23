@@ -120,14 +120,14 @@ namespace SilentNotes.ViewModels
                 if (importer.TryReadFromJexFile(archiveContent, out List<JexFileEntry> jexFileEntries))
                 {
                     NoteListModel importNotes = await importer.CreateRepositoryFromJexFileEntries(jexFileEntries);
-                    await LoadNotesFromImportedNoteList(repository, importNotes, strategy);
+                    LoadNotesFromImportedNoteList(repository, importNotes, strategy);
                     return true;
                 }
             }
             return false;
         }
 
-        internal static async Task LoadNotesFromImportedNoteList(NoteRepositoryModel repository, NoteListModel importNotes, ImportStrategy strategy)
+        internal static void LoadNotesFromImportedNoteList(NoteRepositoryModel repository, NoteListModel importNotes, ImportStrategy strategy)
         {
             foreach (NoteModel importNote in importNotes)
             {
@@ -138,7 +138,7 @@ namespace SilentNotes.ViewModels
 
                 // The modification date should be the most recent, so a synchronization
                 // won't the imported note afterwards.
-                importNote.RefreshMetaModifiedAt();
+                importNote.RefreshModifiedAt();
 
                 // todo: handle DeletedNotes list
                 // repository.DeletedNotes
