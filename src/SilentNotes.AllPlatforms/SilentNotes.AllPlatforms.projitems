@@ -32,11 +32,13 @@
     <Compile Include="$(MSBuildThisFileDirectory)Messages.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\AutoSynchronizationMode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\ColorThemeModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\DeletedNoteListModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\DemoNoteRepositoryModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\ImportStrategy.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\NoteInsertionMode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\NoteListModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\NoteModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\DeletedNoteModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\NoteRepositoryModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\NoteType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\NotificationTriggerModel.cs" />

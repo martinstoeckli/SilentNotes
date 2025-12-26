@@ -83,7 +83,7 @@ namespace SilentNotesTest.ViewModels
 
             Assert.AreEqual(1, viewModel.RecycledNotes.Count); // one note is still in recycle bin
             Assert.AreEqual(1, model.DeletedNotes.Count); // 1 note moved from recycle bin to deleted
-            Assert.AreEqual(idToDelete, model.DeletedNotes[0]);
+            Assert.AreEqual(idToDelete, model.DeletedNotes[0].Id);
             Assert.AreEqual(2, model.Notes.Count);
         }
 

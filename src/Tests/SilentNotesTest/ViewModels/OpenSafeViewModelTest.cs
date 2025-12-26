@@ -46,7 +46,7 @@ namespace SilentNotesTest.ViewModels
             Assert.AreEqual(1, repository.Notes.Count);
             Assert.AreEqual(note2Id, repository.Notes[0].Id);
             Assert.AreEqual(1, repository.DeletedNotes.Count);
-            Assert.AreEqual(note1Id, repository.DeletedNotes[0]);
+            Assert.AreEqual(note1Id, repository.DeletedNotes[0].Id);
 
             // Safes are removed
             Assert.AreEqual(0, repository.Safes.Count);

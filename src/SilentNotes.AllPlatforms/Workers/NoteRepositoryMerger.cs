@@ -28,8 +28,7 @@ namespace SilentNotes.Workers
             if (remoteRepository == null)
                 throw new ArgumentNullException(nameof(remoteRepository));
 
-            List<Guid> deletedNotes = BuildMergedListOfDeletedNotes(localRepository, remoteRepository);
-            deletedNotes.Sort(); // to allow binary search
+            var deletedNotes = BuildMergedListOfDeletedNotes(localRepository, remoteRepository);
             NoteListModel localLivingNotes = BuildListOfLivingNotes(localRepository, deletedNotes);
             NoteListModel remoteLivingNotes = BuildListOfLivingNotes(remoteRepository, deletedNotes);
 
@@ -60,27 +59,42 @@ namespace SilentNotes.Workers
         /// <summary>
         /// Builds a list with all notes which should be marked as deleted in the new repository.
         /// </summary>
+        /// <remarks>The elements of the resulting list are clones, which can be safely used
+        /// independend of their repositories. The list is sorted by Id to allow binary searches.</remarks>
         /// <param name="localRepository">The repository stored on the device.</param>
         /// <param name="remoteRepository">The repository loaded from the cloud storage.</param>
-        /// <returns>A list with ids of all deleted notes.</returns>
-        private List<Guid> BuildMergedListOfDeletedNotes(NoteRepositoryModel localRepository, NoteRepositoryModel remoteRepository)
+        /// <returns>A sorted list with ids of all deleted notes.</returns>
+        private DeletedNoteListModel BuildMergedListOfDeletedNotes(NoteRepositoryModel localRepository, NoteRepositoryModel remoteRepository)
         {
-            List<Guid> result = new List<Guid>();
+            var result = new DeletedNoteListModel();
 
             // Add ids from remote repository
-            result.AddRange(remoteRepository.DeletedNotes);
+            result.AddRange(remoteRepository.DeletedNotes.Select(item => item.Clone()));
 
             // Add note ids from the local repository whose notes exist in the remote repository.
-            // As long as they are not part of the remote repository, they existed only locally,
-            // where deleted, and we can forget about them.
-            foreach (Guid locallyDeletedNoteId in localRepository.DeletedNotes)
+            // If they are not part of the remote repository, they existed only locally, were
+            // deleted, and we can forget about them.
+            foreach (var locallyDeletedNote in localRepository.DeletedNotes)
             {
-                bool noteStillExistsInRemoteRepo = remoteRepository.Notes.ContainsById(locallyDeletedNoteId);
-                if (noteStillExistsInRemoteRepo && !result.Contains(locallyDeletedNoteId))
+                bool noteExistsInRemoteRepo = remoteRepository.Notes.ContainsById(locallyDeletedNote.Id);
+                if (!noteExistsInRemoteRepo)
+                    continue;
+
+                DeletedNoteModel resultNote = result.FindById(locallyDeletedNote.Id);
+                if (resultNote != null)
                 {
-                    result.Add(locallyDeletedNoteId);
+                    // Take the more current deletion date
+                    if (locallyDeletedNote.DeletedAt > resultNote.DeletedAt)
+                        resultNote.DeletedAt = locallyDeletedNote.DeletedAt;
+                }
+                else
+                {
+                    result.Add(locallyDeletedNote.Clone());
                 }
             }
+
+            var comparer = new DeletedNoteModelIdComparer();
+            result.Sort(comparer);
             return result;
         }
 
@@ -90,13 +104,20 @@ namespace SilentNotes.Workers
         /// <param name="repository">The repository to get the notes from.</param>
         /// <param name="deletedNotes">Sorted list of guids of deleted notes.</param>
         /// <returns>A list of non-deleted notes.</returns>
-        private NoteListModel BuildListOfLivingNotes(NoteRepositoryModel repository, List<Guid> deletedNotes)
+        private NoteListModel BuildListOfLivingNotes(NoteRepositoryModel repository, List<DeletedNoteModel> deletedNotes)
         {
             NoteListModel result = new NoteListModel();
+            var comparer = new DeletedNoteModelIdComparer();
+            var searchCriteria = new DeletedNoteModel();
+
             foreach (NoteModel note in repository.Notes)
             {
-                bool containedInDeletedNotes = deletedNotes.BinarySearch(note.Id) >= 0;
-                if (!containedInDeletedNotes)
+                searchCriteria.Id = note.Id;
+                int deletedNoteIndex = deletedNotes.BinarySearch(searchCriteria, comparer);
+
+                // Add note if not in list of deleted notes, or if the note was re-imported and its
+                // creation date is newer than the deletion date.
+                if ((deletedNoteIndex < 0) || (note.CreatedAt > deletedNotes[deletedNoteIndex].DeletedAt))
                     result.Add(note);
             }
             return result;

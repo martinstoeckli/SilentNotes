@@ -72,7 +72,7 @@ namespace SilentNotesTest.Workers
             Assert.IsTrue(noteContent.Contains("&lt;field&gt;"));
 
             Assert.AreEqual(1, repository.DeletedNotes.Count);
-            Assert.AreEqual(new Guid("fae40c63-d850-4b78-a8bd-609893d2983b"), repository.DeletedNotes[0]);
+            Assert.AreEqual(new Guid("fae40c63-d850-4b78-a8bd-609893d2983b"), repository.DeletedNotes[0].Id);
 
             Assert.AreEqual(NoteRepositoryModel.CurrentSavingRevision, repository.Revision);
         }
