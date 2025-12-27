@@ -158,6 +158,10 @@
 				Icon="@IconService.GetSvgLink(IconNames.LinkVariant)"
 				Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_link"]</MudMenuItem>
 
+			<MudMenuItem OnClick="@(() => InsertHorizontalRule())"
+				Icon="@IconService.GetSvgLink(IconNames.Minus)"
+				Disabled="ViewModel.ShoppingModeActive">@LanguageService["note_horizontal_rule"]</MudMenuItem>
+
 			<MudDivider/>
 
 			<MudMenuItem OnClick="@(() => ShareNote())"
@@ -290,6 +294,7 @@
 		IconNames.KeyboardOffOutline,
 		IconNames.Pin,
 		IconNames.Magnify,
+		IconNames.Minus,
 		IconNames.Close,
 		IconNames.Delete,
 		IconNames.TagOutline,
@@ -544,6 +549,15 @@
 	private async Task ToggleFormatState(string formatName, int formatParameter = 0)
 	{
 		await _jsModule.InvokeVoidAsync("toggleFormatAndRefresh", formatName, formatParameter);
+	}
+
+	/// <summary>
+	/// Inserts a horizontal rule.
+	/// </summary>
+	/// <returns>Task for async call.</returns>
+	private async Task InsertHorizontalRule()
+	{
+		await _jsModule.InvokeVoidAsync("callInsertHorizontalRule");
 	}
 
 	private async Task ShareNote()

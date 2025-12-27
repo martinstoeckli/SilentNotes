@@ -23,6 +23,7 @@
 .note-light .note-viewer pre { background-color: rgba(128, 128, 128, 0.2) !important; color: black !important; }
 .note-light .note-viewer a { color: rgba(70, 130, 180, 0.80) !important; }
 .note-light .note-viewer a:hover { color: rgba(70, 130, 180, 0.80) !important; }
+.note-light hr { border-top: 1px solid rgba(172, 172, 172, 0.5); }
 .note-dark .note-viewer h1 { color: rgba(173, 216, 230, 1) !important; }
 .note-dark .note-viewer h2 { color: rgba(173, 216, 230, 0.94) !important; }
 .note-dark .note-viewer h3 { color: rgba(173, 216, 230, 0.88) !important; }
@@ -30,6 +31,7 @@
 .note-dark .note-viewer pre { background-color: rgba(211, 211, 211, 0.3) !important; color: white !important; }
 .note-dark .note-viewer a { color: rgba(173, 216, 230, 0.90) !important; }
 .note-dark .note-viewer a:hover { color: rgba(173, 216, 230, 0.90) !important; }
+.note-dark hr { border-top: 1px solid rgba(204, 204, 204, 0.5); }
 
 .note-handle.greenish { background-color: rgba(145, 238, 145, 0.9); fill: #2aac2a; }
 .note-handle.reddish { background-color: rgba(238, 145, 145, 0.9); fill: #de2121; }

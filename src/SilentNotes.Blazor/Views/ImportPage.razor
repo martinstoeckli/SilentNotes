@@ -1,4 +1,4 @@
-﻿@attribute [Route(RouteNames.Export)]
+﻿@attribute [Route(RouteNames.Import)]
 @inherits PageBase
 
 @using SilentNotes.Models
@@ -10,11 +10,9 @@
 @inject IFeedbackService FeedbackService
 @inject ISvgIconService IconService
 @inject IRepositoryStorageService RepositoryStorageService
-@inject ICryptoRandomService CryptoRandomSource
-@inject IFolderPickerService FolderPickerService
+@inject IFilePickerService FilePickerService
 @inject IJSRuntime JSRuntime
 @inject INavigationService Navigation
-@inject ISafeKeyService SafeKeyService
 
 @* Main menu *@
 <MudAppBar Class="flex-none" Fixed="true" Dense="true" WrapContent="false">
@@ -22,32 +20,35 @@
 </MudAppBar>
 
 @* watermark image *@
-<MudIcon Class="background-icon" Icon="@IconService[IconNames.Export]" Style="@($"right:-30px; top:-100px;")" />
+<MudIcon Class="background-icon" Icon="@IconService[IconNames.Import]" Style="@($"right:-30px; top:-100px;")" />
 
 @* body *@
 <MudMainContent>
 	<MudContainer Class="ms-0" MaxWidth="MaxWidth.Medium">
 		<div id="content" class="py-3">
-			<h1 class="h-colored">@LanguageService["show_export"]</h1>
+			<h1 class="h-colored">@LanguageService["show_import"]</h1>
 
-			<p class="my-4">@(string.Format(LanguageService["export_desc"], LanguageService["backup_create"]))</p>
+			<p class="my-4">@(string.Format(LanguageService["import_desc"], LanguageService["backup_restore"]))</p>
 
 			<MudForm>
 				<div class="mb-4">
-					<label for="ExportFormat">@LanguageService["export_format"]</label>
-					<MudSelect id="ExportFormat" @bind-Value="ViewModel.ExportFormat" Variant="Variant.Outlined">
-						<MudSelectItem Value="@("html")">HTML</MudSelectItem>
+					<label for="ImportFormat">@LanguageService["import_format"]</label>
+					<MudSelect id="ImportFormat" @bind-Value="ViewModel.ImportFormat" Variant="Variant.Outlined">
 						<MudSelectItem Value="@("jex")">Joplin (*.jex)</MudSelectItem>
 					</MudSelect>
 				</div>
-
-				<MudCheckBox @bind-Value="@ViewModel.ExportUnprotectedNotes" Dense="true" Label="@LanguageService["export_unencrypted"]"></MudCheckBox>
-				<MudCheckBox @bind-Value="@ViewModel.ExportProtectedNotes" Disabled="!ViewModel.HasExportableProtectedNotes" Dense="true" Label="@LanguageService["export_encrypted"]"></MudCheckBox>
+				<div class="mb-4">
+					<label for="ImportStrategy">@LanguageService["import_strategy_desc"]</label>
+					<MudSelect id="ImportStrategy" @bind-Value="ViewModel.Strategy" Variant="Variant.Outlined">
+						<MudSelectItem Value="@(ImportStrategy.IgnoreExisting)">@LanguageService["import_strategy_ignore"]</MudSelectItem>
+						<MudSelectItem Value="@(ImportStrategy.OverwriteExisting)">@LanguageService["import_strategy_overwrite"]</MudSelectItem>
+					</MudSelect>
+				</div>
 			</MudForm>
 
 			<MudStack Class="my-4" Row="true" Justify="Justify.FlexEnd" Spacing="1">
 				<MudButton OnClick="@(() => Navigation.NavigateTo(BackRoute))" Color="Color.Default" Variant="Variant.Filled">@LanguageService["cancel"]</MudButton>
-				<MudButton @ref="_okButton" OnClick="@(() => ViewModel.OkCommand.Execute(null))" Disabled="ViewModel.OkCommandDisabled" Color="Color.Primary" Variant="Variant.Filled">@LanguageService["ok"]</MudButton>
+				<MudButton @ref="_okButton" OnClick="@(() => ViewModel.OkCommand.Execute(null))" Color="Color.Primary" Variant="Variant.Filled">@LanguageService["ok"]</MudButton>
 			</MudStack>
 		</div>
 	</MudContainer>
@@ -62,17 +63,17 @@
 	{
 		// We delegate the conversion between HTML and Markdown to the Tiptap editor.
 		_markdownConverter = new RelayMarkdownConverter(
-			(html) => ConvertHtmlToMarkdown(html),
-			(markdown) => throw new NotImplementedException() // Not needed for export
+			(html) => throw new NotImplementedException(), // Not needed for import
+			(markdown) => ConvertMarkdownToHtml(markdown)
 		);
-		ViewModel = new ExportViewModel(NavigationService, LanguageService, FeedbackService, CryptoRandomSource, RepositoryStorageService, FolderPickerService, SafeKeyService, _markdownConverter);
+		ViewModel = new ImportViewModel(NavigationService, LanguageService, FeedbackService, RepositoryStorageService, FilePickerService, _markdownConverter);
 	}
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
 		if (firstRender)
 		{
-			_jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./Views/ExportPage.razor.js");
+			_jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./Views/ImportPage.razor.js");
 
 			await KeyboardShortcuts.InitializeAsync(JSRuntime);
 			KeyboardShortcuts
@@ -81,10 +82,10 @@
 		}
 	}
 
-	private ValueTask<string> ConvertHtmlToMarkdown(string html)
+	private ValueTask<string> ConvertMarkdownToHtml(string markdown)
 	{
-		return _jsModule.InvokeAsync<string>("convertHtmlToMarkdown", html);
+		return _jsModule.InvokeAsync<string>("convertMarkdownToHtml", markdown);
 	}
 
-	private ExportViewModel ViewModel { get; set; }
+	private ImportViewModel ViewModel { get; set; }
 }

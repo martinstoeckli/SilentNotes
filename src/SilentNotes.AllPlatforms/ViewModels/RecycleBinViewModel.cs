@@ -129,7 +129,7 @@ namespace SilentNotes.ViewModels
                 if (note.InRecyclingBin)
                 {
                     // Register the note as deleted and remove the note from the list
-                    Model.DeletedNotes.Add(note.Id);
+                    Model.DeletedNotes.AddIdOrRefreshDeletedAt(note.Id);
                     Model.Notes.Remove(note);
                 }
             }
@@ -165,7 +165,7 @@ namespace SilentNotes.ViewModels
             if (viewModel != null)
             {
                 // Register the note as deleted and remove the note from the list
-                Model.DeletedNotes.Add(noteId);
+                Model.DeletedNotes.AddIdOrRefreshDeletedAt(noteId);
                 Model.Notes.Remove(viewModel.Model);
                 RecycledNotes.Remove(viewModel);
             }

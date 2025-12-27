@@ -92,7 +92,8 @@
 			<MudMenuItem OnClick="@(() => ViewModel.NewChecklistCommand.Execute(null))" Icon="@IconService.GetSvgLink(IconNames.OrderBoolAscendingVariant)">@LanguageService["checklist_create_new"]</MudMenuItem>
 			<MudMenuItem OnClick="@(() => Navigation.NavigateTo(RouteNames.RecycleBin))" Icon="@IconService[IconNames.DeleteEmpty]">@LanguageService["show_recyclebin"]</MudMenuItem>
 
-			<MudMenu Label="@LanguageService["show_export"]">
+			<MudMenu Label="@LanguageService["import_export"]">
+				<MudMenuItem OnClick="@(() => Navigation.NavigateTo(RouteNames.Import))" Icon="@IconService[IconNames.Import]">@LanguageService["show_import"]</MudMenuItem>
 				<MudMenuItem OnClick="@(() => Navigation.NavigateTo(RouteNames.Export))" Icon="@IconService[IconNames.Export]">@LanguageService["show_export"]</MudMenuItem>
 				<MudDivider />
 				<MudMenuItem OnClick="@(() => ViewModel.CreateBackupCommand.Execute(null))" Icon="@IconService[IconNames.Save]">@LanguageService["backup_create"]</MudMenuItem>

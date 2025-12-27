@@ -58,7 +58,7 @@ namespace SilentNotesTest.ViewModels
             model.Notes.Add(new NoteModel { Id = new Guid("08e28535-88a8-4fc0-b6bb-3a5651cc594c") });
 
             // Deleted note
-            model.DeletedNotes.Add(new Guid("c84e7eb9-f671-4b9f-a7e7-a013a5e1cef7"));
+            model.DeletedNotes.Add(new DeletedNoteModel(new Guid("c84e7eb9-f671-4b9f-a7e7-a013a5e1cef7")));
             return model;
         }
     }

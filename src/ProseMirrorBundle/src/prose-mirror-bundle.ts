@@ -7,6 +7,7 @@ import CodeBlock from '@tiptap/extension-code-block'
 import Document from '@tiptap/extension-document'
 import HardBreak from '@tiptap/extension-hard-break'
 import History from '@tiptap/extension-history'
+import HorizontalRule from '@tiptap/extension-horizontal-rule'
 import Italic from '@tiptap/extension-italic'
 import Paragraph from '@tiptap/extension-paragraph'
 import Strike from '@tiptap/extension-strike'
@@ -22,6 +23,7 @@ import { CheckableParagraph, registerIsShoppingModeActive as checklistRegisterIs
 import { ScrollTo } from './scroll-to-extension'
 import { TabHandler } from './tab-handler-extension'
 export { exportAsPlainText, exportChecklistAsPlainText } from './tiptap-plain-text-exporter'
+export { TiptapMarkdownConverter } from './tiptap-markdown-converter'
 
 /**
  * This method will be exported and can be called from the HTML document with the "prose_mirror_bundle"
@@ -54,6 +56,7 @@ export function initializeEditor(editorElement: HTMLElement): any {
         History.configure({
           depth: 200,
         }),        
+        HorizontalRule,
         Italic,
         CustomLink.configure({
           autolink: false,
@@ -153,6 +156,15 @@ export function toggleFormat(editor: Editor, formatName: string, formatParameter
     default:
       editor.chain().focus().toggleMark(formatName).run(); break;
   }
+}
+
+/**
+ * Inserts a horizontal rule at the current position.
+ * @param {Editor}  editor - A TipTap editor instance.
+ */
+export function insertHorizontalRule(editor: Editor): void {
+  // editor.chain().focus().setHorizontalRule();
+  editor.commands.setHorizontalRule();
 }
 
 /**

@@ -58,18 +58,18 @@ namespace SilentNotesTest.Workers
             serverRepo.Notes.Add(note2);
             serverRepo.Notes.Add(note3);
             NoteRepositoryModel clientRepo = new NoteRepositoryModel();
-            clientRepo.DeletedNotes.Add(note2.Id);
-            clientRepo.DeletedNotes.Add(note1.Id);
-            clientRepo.DeletedNotes.Add(note3.Id);
+            clientRepo.DeletedNotes.Add(new DeletedNoteModel(note2.Id));
+            clientRepo.DeletedNotes.Add(new DeletedNoteModel(note1.Id));
+            clientRepo.DeletedNotes.Add(new DeletedNoteModel(note3.Id));
 
             NoteRepositoryMerger merger = new NoteRepositoryMerger();
             NoteRepositoryModel result = merger.Merge(clientRepo, serverRepo);
 
             Assert.AreEqual(0, result.Notes.Count);
             Assert.AreEqual(3, result.DeletedNotes.Count);
-            Assert.IsTrue(result.DeletedNotes.Contains(note1.Id));
-            Assert.IsTrue(result.DeletedNotes.Contains(note2.Id));
-            Assert.IsTrue(result.DeletedNotes.Contains(note3.Id));
+            Assert.IsTrue(result.DeletedNotes.Exists(item => item.Id == note1.Id));
+            Assert.IsTrue(result.DeletedNotes.Exists(item => item.Id == note2.Id));
+            Assert.IsTrue(result.DeletedNotes.Exists(item => item.Id == note3.Id));
         }
 
         [TestMethod]
@@ -79,14 +79,14 @@ namespace SilentNotesTest.Workers
             NoteModel note = new NoteModel();
             clientRepo.Notes.Add(note);
             NoteRepositoryModel serverRepo = new NoteRepositoryModel();
-            serverRepo.DeletedNotes.Add(note.Id);
+            serverRepo.DeletedNotes.Add(new DeletedNoteModel(note.Id));
 
             NoteRepositoryMerger merger = new NoteRepositoryMerger();
             NoteRepositoryModel result = merger.Merge(clientRepo, serverRepo);
 
             Assert.AreEqual(0, result.Notes.Count);
             Assert.AreEqual(1, result.DeletedNotes.Count);
-            Assert.IsTrue(result.DeletedNotes.Contains(note.Id));
+            Assert.IsTrue(result.DeletedNotes.Exists(item => item.Id == note.Id));
         }
 
         [TestMethod]
@@ -97,20 +97,86 @@ namespace SilentNotesTest.Workers
             Guid note3Id = new Guid("30000000000000000000000000000000");
 
             NoteRepositoryModel serverRepo = new NoteRepositoryModel();
-            serverRepo.DeletedNotes.Add(note1Id);
-            serverRepo.DeletedNotes.Add(note2Id);
-            serverRepo.DeletedNotes.Add(note3Id);
+            serverRepo.DeletedNotes.Add(new DeletedNoteModel(note1Id));
+            serverRepo.DeletedNotes.Add(new DeletedNoteModel(note2Id));
+            serverRepo.DeletedNotes.Add(new DeletedNoteModel(note3Id));
             NoteRepositoryModel clientRepo = new NoteRepositoryModel();
-            clientRepo.DeletedNotes.Add(note2Id); // deleted in both repos
+            clientRepo.DeletedNotes.Add(new DeletedNoteModel(note2Id)); // deleted in both repos
             clientRepo.Notes.Add(new NoteModel { Id = note3Id }); // not yet deleted
 
             NoteRepositoryMerger merger = new NoteRepositoryMerger();
             NoteRepositoryModel result = merger.Merge(clientRepo, serverRepo);
 
             Assert.AreEqual(3, result.DeletedNotes.Count);
-            Assert.IsTrue(result.DeletedNotes.Contains(note1Id));
-            Assert.IsTrue(result.DeletedNotes.Contains(note2Id));
-            Assert.IsTrue(result.DeletedNotes.Contains(note3Id));
+            Assert.IsTrue(result.DeletedNotes.Exists(item => item.Id == note1Id));
+            Assert.IsTrue(result.DeletedNotes.Exists(item => item.Id == note2Id));
+            Assert.IsTrue(result.DeletedNotes.Exists(item => item.Id == note3Id));
+        }
+
+        [TestMethod]
+        public void KeepResurrectedServerNote()
+        {
+            Guid note1Id = new Guid("10000000000000000000000000000000");
+            Guid note2Id = new Guid("20000000000000000000000000000000");
+
+            NoteRepositoryModel serverRepo = new NoteRepositoryModel();
+            serverRepo.DeletedNotes.Add(new DeletedNoteModel
+            {
+                Id = note1Id,
+                DeletedAt = new DateTime(1999, 01, 22)
+            });
+            serverRepo.Notes.Add(new NoteModel
+            {
+                Id = note1Id,
+                CreatedAt = new DateTime(2001, 01, 22) // Creation date newer than deletion date -> note was imported again
+            });
+            NoteRepositoryModel clientRepo = new NoteRepositoryModel();
+            clientRepo.DeletedNotes.Add(new DeletedNoteModel
+            {
+                Id = note1Id,
+                DeletedAt = new DateTime(2000, 01, 22)
+            });
+
+            NoteRepositoryMerger merger = new NoteRepositoryMerger();
+            NoteRepositoryModel result = merger.Merge(clientRepo, serverRepo);
+
+            Assert.AreEqual(1, result.Notes.Count);
+            Assert.AreEqual(new DateTime(2001, 01, 22), result.Notes[0].CreatedAt);
+            Assert.AreEqual(1, result.DeletedNotes.Count);
+            Assert.AreEqual(new DateTime(2000, 01, 22), result.DeletedNotes[0].DeletedAt); // The newer deletion date of both
+        }
+
+        [TestMethod]
+        public void KeepResurrectedClientNote()
+        {
+            Guid note1Id = new Guid("10000000000000000000000000000000");
+            Guid note2Id = new Guid("20000000000000000000000000000000");
+
+            NoteRepositoryModel serverRepo = new NoteRepositoryModel();
+            serverRepo.DeletedNotes.Add(new DeletedNoteModel
+            {
+                Id = note1Id,
+                DeletedAt = new DateTime(1999, 01, 22)
+            });
+            NoteRepositoryModel clientRepo = new NoteRepositoryModel();
+            clientRepo.DeletedNotes.Add(new DeletedNoteModel
+            {
+                Id = note1Id,
+                DeletedAt = new DateTime(2000, 01, 22)
+            });
+            clientRepo.Notes.Add(new NoteModel
+            {
+                Id = note1Id,
+                CreatedAt = new DateTime(2001, 01, 22) // Creation date newer than deletion date -> note was imported again
+            });
+
+            NoteRepositoryMerger merger = new NoteRepositoryMerger();
+            NoteRepositoryModel result = merger.Merge(clientRepo, serverRepo);
+
+            Assert.AreEqual(1, result.Notes.Count);
+            Assert.AreEqual(new DateTime(2001, 01, 22), result.Notes[0].CreatedAt);
+            Assert.AreEqual(1, result.DeletedNotes.Count);
+            Assert.AreEqual(new DateTime(2000, 01, 22), result.DeletedNotes[0].DeletedAt); // The newer deletion date of both
         }
 
         [TestMethod]

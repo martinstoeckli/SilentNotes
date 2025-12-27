@@ -56,7 +56,8 @@ namespace SilentNotes.Workers
         /// backup was loaded successfully or the user canceled loading of the backup.</returns>
         public static async Task<bool> TryRestoreBackup(IFilePickerService filePickerService, IRepositoryStorageService repositoryService)
         {
-            if (await filePickerService.PickFile())
+            string[] extensions = new[] { Path.GetExtension(NoteRepositoryModel.BackupFileMask) };
+            if (await filePickerService.PickFile(extensions))
             {
                 try
                 {

@@ -54,7 +54,7 @@ namespace SilentNotes.Models
 
         private Guid _id;
         private NoteListModel _notes;
-        private List<Guid> _deletedNotes;
+        private DeletedNoteListModel _deletedNotes;
         private SafeListModel _safes;
 
         /// <summary>
@@ -111,9 +111,9 @@ namespace SilentNotes.Models
         /// </summary>
         [XmlArray("deleted_notes")]
         [XmlArrayItem("deleted_note")]
-        public List<Guid> DeletedNotes
+        public DeletedNoteListModel DeletedNotes
         {
-            get { return _deletedNotes ?? (_deletedNotes = new List<Guid>()); }
+            get { return _deletedNotes ?? (_deletedNotes = new DeletedNoteListModel()); }
             set { _deletedNotes = value; }
         }
 
@@ -177,9 +177,9 @@ namespace SilentNotes.Models
                     hashCodes.Add(note.MetaModifiedAt.GetHashCode());
                 hashCodes.Add(note.InRecyclingBin.GetHashCode());
             }
-            foreach (Guid deletedNote in DeletedNotes)
+            foreach (DeletedNoteModel deletedNote in DeletedNotes)
             {
-                hashCodes.Add(deletedNote.GetHashCode());
+                hashCodes.Add(deletedNote.Id.GetHashCode());
             }
             foreach (SafeModel safe in Safes)
             {

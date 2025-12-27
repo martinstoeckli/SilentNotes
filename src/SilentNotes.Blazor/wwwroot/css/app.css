@@ -188,6 +188,7 @@ td { word-wrap: anywhere; } /* table should not exceed device width */
 }
 .note-viewer a { text-decoration: none !important; }
 .note-viewer a:hover { text-decoration: underline !important; }
+.note-viewer hr { margin-top: 1em; margin-bottom: 1em }
 
 /* Checklist in overview. The svg content: url() is set in view with the IconService. */
 

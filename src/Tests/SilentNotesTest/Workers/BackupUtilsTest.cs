@@ -35,7 +35,7 @@ namespace SilentNotesTest.Workers
         {
             var filePickerService = new Mock<IFilePickerService>();
             filePickerService
-                .Setup(m => m.PickFile())
+                .Setup(m => m.PickFile(It.IsAny<IEnumerable<string>>()))
                 .ReturnsAsync(() => false); // Canceled by user
             NoteRepositoryModel repository = CreateTestRepository();
             var repositoryService = CommonMocksAndStubs.RepositoryStorageServiceMock(repository);
@@ -53,7 +53,7 @@ namespace SilentNotesTest.Workers
 
             var filePickerService = new Mock<IFilePickerService>();
             filePickerService
-                .Setup(m => m.PickFile())
+                .Setup(m => m.PickFile(It.IsAny<IEnumerable<string>>()))
                 .ReturnsAsync(() => true);
             filePickerService
                 .Setup(m => m.ReadPickedFile())
@@ -75,7 +75,7 @@ namespace SilentNotesTest.Workers
 
             var filePickerService = new Mock<IFilePickerService>();
             filePickerService
-                .Setup(m => m.PickFile())
+                .Setup(m => m.PickFile(It.IsAny<IEnumerable<string>>()))
                 .ReturnsAsync(() => true);
             filePickerService
                 .Setup(m => m.ReadPickedFile())
@@ -96,7 +96,7 @@ namespace SilentNotesTest.Workers
 
             var filePickerService = new Mock<IFilePickerService>();
             filePickerService
-                .Setup(m => m.PickFile())
+                .Setup(m => m.PickFile(It.IsAny<IEnumerable<string>>()))
                 .ReturnsAsync(() => true);
             filePickerService
                 .Setup(m => m.ReadPickedFile())

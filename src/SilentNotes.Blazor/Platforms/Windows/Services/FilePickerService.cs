@@ -20,12 +20,20 @@ namespace SilentNotes.Platforms.Services
         private Windows.Storage.IStorageFile _pickedFile;
 
         /// <inheritdoc/>
-        public async Task<bool> PickFile()
+        public async Task<bool> PickFile(IEnumerable<string> extensions = null)
         {
             FileOpenPicker filePicker = new FileOpenPicker();
             filePicker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.Desktop;
             filePicker.SettingsIdentifier = "oiwurei223i4u";
-            filePicker.FileTypeFilter.Add("*");
+            if (extensions != null)
+            {
+                foreach (string extension in extensions)
+                    filePicker.FileTypeFilter.Add(extension);
+            }
+            else
+            {
+                filePicker.FileTypeFilter.Add("*");
+            }
 
             WinRT.Interop.InitializeWithWindow.Initialize(filePicker, GetMainWindowHandle());
 

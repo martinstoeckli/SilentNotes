@@ -44,6 +44,12 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="TestResources\joplintest.jex">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
   <Import Project="..\..\SilentNotes.AllPlatforms\SilentNotes.AllPlatforms.projitems" Label="Shared" />
 
   <Import Project="..\..\VanillaCloudStorageClient\VanillaCloudStorageClient.projitems" Label="Shared" />

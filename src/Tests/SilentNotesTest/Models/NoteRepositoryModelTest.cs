@@ -54,8 +54,8 @@ namespace SilentNotesTest.Models
         {
             NoteRepositoryModel model1 = CreateNoteRepositoryModel();
             NoteRepositoryModel model2 = CreateNoteRepositoryModel();
-            model1.DeletedNotes.Add(new Guid("db73989f-5d88-43f9-bae3-bdc1b9607479"));
-            model2.DeletedNotes.Add(new Guid("0152d7da-397c-43ba-b586-e5ea6f8e7c4e"));
+            model1.DeletedNotes.Add(new DeletedNoteModel(new Guid("db73989f-5d88-43f9-bae3-bdc1b9607479")));
+            model2.DeletedNotes.Add(new DeletedNoteModel(new Guid("0152d7da-397c-43ba-b586-e5ea6f8e7c4e")));
 
             Assert.AreNotEqual(model1.GetModificationFingerprint(), model2.GetModificationFingerprint());
         }
@@ -140,7 +140,7 @@ namespace SilentNotesTest.Models
             model.Revision = 2;
             model.OrderModifiedAt = new DateTime(2018, 02, 21);
             model.Notes.Add(new NoteModel { ModifiedAt = new DateTime(2018, 02, 22) });
-            model.DeletedNotes.Add(new Guid("c84e7eb9-f671-4b9f-a7e7-a013a5e1cef7"));
+            model.DeletedNotes.Add(new DeletedNoteModel(new Guid("c84e7eb9-f671-4b9f-a7e7-a013a5e1cef7")));
             return model;
         }
     }

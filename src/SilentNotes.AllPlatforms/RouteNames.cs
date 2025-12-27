@@ -22,6 +22,7 @@ namespace SilentNotes
         public const string CloudStorageChoice = "/cloudstoragechoice";
         public const string CloudStorageOauthWaiting = "/cloudstorageoauthwaiting";
         public const string Export = "/export";
+        public const string Import = "/import";
         public const string FirstTimeSync = "/firsttimesync";
         public const string Info = "/info";
         public const string MergeChoice = "/mergechoice";
