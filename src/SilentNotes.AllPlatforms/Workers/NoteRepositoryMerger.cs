@@ -72,29 +72,26 @@ namespace SilentNotes.Workers
             result.AddRange(remoteRepository.DeletedNotes.Select(item => item.Clone()));
 
             // Add note ids from the local repository whose notes exist in the remote repository.
-            // If they are not part of the remote repository, they existed only locally, were
-            // deleted, and we can forget about them.
             foreach (var locallyDeletedNote in localRepository.DeletedNotes)
             {
-                bool noteExistsInRemoteRepo = remoteRepository.Notes.ContainsById(locallyDeletedNote.Id);
-                if (!noteExistsInRemoteRepo)
-                    continue;
-
-                DeletedNoteModel resultNote = result.FindById(locallyDeletedNote.Id);
-                if (resultNote != null)
+                DeletedNoteModel resultDeletedNote = result.FindById(locallyDeletedNote.Id);
+                if (resultDeletedNote != null)
                 {
                     // Take the more current deletion date
-                    if (locallyDeletedNote.DeletedAt > resultNote.DeletedAt)
-                        resultNote.DeletedAt = locallyDeletedNote.DeletedAt;
+                    if (locallyDeletedNote.DeletedAt > resultDeletedNote.DeletedAt)
+                        resultDeletedNote.DeletedAt = locallyDeletedNote.DeletedAt;
                 }
                 else
                 {
-                    result.Add(locallyDeletedNote.Clone());
+                    // If the note does not exist in the remote repository (and no deletion info),
+                    // it was created and deleted only locally and the deletion entry can be ignored.
+                    bool noteExistsInRemoteRepo = remoteRepository.Notes.ContainsById(locallyDeletedNote.Id);
+                    if (noteExistsInRemoteRepo)
+                        result.Add(locallyDeletedNote.Clone());
                 }
             }
 
-            var comparer = new DeletedNoteModelIdComparer();
-            result.Sort(comparer);
+            result.Sort(new DeletedNoteModelIdComparer());
             return result;
         }
 

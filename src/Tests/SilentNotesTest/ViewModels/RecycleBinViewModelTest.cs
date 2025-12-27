@@ -55,6 +55,8 @@ namespace SilentNotesTest.ViewModels
 
             Assert.AreEqual(0, viewModel.RecycledNotes.Count); // recycle bin is empty now
             Assert.AreEqual(2, model.DeletedNotes.Count); // 2 notes moved from recycle bin to deleted
+            Assert.IsTrue(TestExtensions.IsNearlyUtcNow(model.DeletedNotes[0].DeletedAt));
+            Assert.IsTrue(TestExtensions.IsNearlyUtcNow(model.DeletedNotes[1].DeletedAt));
             Assert.AreEqual(1, model.Notes.Count); // 1 note remains because it was not in recycle bin
         }
 
@@ -84,6 +86,7 @@ namespace SilentNotesTest.ViewModels
             Assert.AreEqual(1, viewModel.RecycledNotes.Count); // one note is still in recycle bin
             Assert.AreEqual(1, model.DeletedNotes.Count); // 1 note moved from recycle bin to deleted
             Assert.AreEqual(idToDelete, model.DeletedNotes[0].Id);
+            Assert.IsTrue(TestExtensions.IsNearlyUtcNow(model.DeletedNotes[0].DeletedAt));
             Assert.AreEqual(2, model.Notes.Count);
         }
 

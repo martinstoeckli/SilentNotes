@@ -42,7 +42,7 @@ namespace SilentNotesTest.Models
 
             notes.AddIdOrRefreshDeletedAt(id1);
             Assert.AreEqual(1, notes.Count); // no new note was added
-            Assert.IsTrue(DateTime.UtcNow - notes.FindById(id1).DeletedAt < TimeSpan.FromSeconds(1)); // timestamp is now
+            Assert.IsTrue(TestExtensions.IsNearlyUtcNow(notes.FindById(id1).DeletedAt));
         }
     }
 }

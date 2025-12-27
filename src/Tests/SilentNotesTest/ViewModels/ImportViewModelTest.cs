@@ -58,7 +58,7 @@ namespace SilentNotesTest.ViewModels
             });
             ImportViewModel.LoadNotesFromImportedNoteList(repository, importNotes, ImportStrategy.OverwriteExisting);
 
-            Assert.IsTrue((DateTime.UtcNow - repository.Notes[0].ModifiedAt) < TimeSpan.FromSeconds(1));
+            Assert.IsTrue(TestExtensions.IsNearlyUtcNow(repository.Notes[0].ModifiedAt));
         }
     }
 }

@@ -114,6 +114,72 @@ namespace SilentNotesTest.Workers
         }
 
         [TestMethod]
+        public void KeepResurrectedServerNote()
+        {
+            Guid note1Id = new Guid("10000000000000000000000000000000");
+            Guid note2Id = new Guid("20000000000000000000000000000000");
+
+            NoteRepositoryModel serverRepo = new NoteRepositoryModel();
+            serverRepo.DeletedNotes.Add(new DeletedNoteModel
+            {
+                Id = note1Id,
+                DeletedAt = new DateTime(1999, 01, 22)
+            });
+            serverRepo.Notes.Add(new NoteModel
+            {
+                Id = note1Id,
+                CreatedAt = new DateTime(2001, 01, 22) // Creation date newer than deletion date -> note was imported again
+            });
+            NoteRepositoryModel clientRepo = new NoteRepositoryModel();
+            clientRepo.DeletedNotes.Add(new DeletedNoteModel
+            {
+                Id = note1Id,
+                DeletedAt = new DateTime(2000, 01, 22)
+            });
+
+            NoteRepositoryMerger merger = new NoteRepositoryMerger();
+            NoteRepositoryModel result = merger.Merge(clientRepo, serverRepo);
+
+            Assert.AreEqual(1, result.Notes.Count);
+            Assert.AreEqual(new DateTime(2001, 01, 22), result.Notes[0].CreatedAt);
+            Assert.AreEqual(1, result.DeletedNotes.Count);
+            Assert.AreEqual(new DateTime(2000, 01, 22), result.DeletedNotes[0].DeletedAt); // The newer deletion date of both
+        }
+
+        [TestMethod]
+        public void KeepResurrectedClientNote()
+        {
+            Guid note1Id = new Guid("10000000000000000000000000000000");
+            Guid note2Id = new Guid("20000000000000000000000000000000");
+
+            NoteRepositoryModel serverRepo = new NoteRepositoryModel();
+            serverRepo.DeletedNotes.Add(new DeletedNoteModel
+            {
+                Id = note1Id,
+                DeletedAt = new DateTime(1999, 01, 22)
+            });
+            NoteRepositoryModel clientRepo = new NoteRepositoryModel();
+            clientRepo.DeletedNotes.Add(new DeletedNoteModel
+            {
+                Id = note1Id,
+                DeletedAt = new DateTime(2000, 01, 22)
+            });
+            clientRepo.Notes.Add(new NoteModel
+            {
+                Id = note1Id,
+                CreatedAt = new DateTime(2001, 01, 22) // Creation date newer than deletion date -> note was imported again
+            });
+
+            NoteRepositoryMerger merger = new NoteRepositoryMerger();
+            NoteRepositoryModel result = merger.Merge(clientRepo, serverRepo);
+
+            Assert.AreEqual(1, result.Notes.Count);
+            Assert.AreEqual(new DateTime(2001, 01, 22), result.Notes[0].CreatedAt);
+            Assert.AreEqual(1, result.DeletedNotes.Count);
+            Assert.AreEqual(new DateTime(2000, 01, 22), result.DeletedNotes[0].DeletedAt); // The newer deletion date of both
+        }
+
+        [TestMethod]
         public void AlwaysCreateNewestRevision()
         {
             NoteRepositoryModel repo1 = new NoteRepositoryModel();
