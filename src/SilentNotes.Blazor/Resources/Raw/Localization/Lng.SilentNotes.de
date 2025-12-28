@@ -57,7 +57,7 @@ tag_add = Schlagwort hinzufügen
 feedback_note_to_recycle = Die Notiz ist in den Papierkorb verschoben worden und kann von dort wieder hergestellt werden.
 note_pin = Notiz anheften
 note_open_link = Link öffnen
-note_horizontal_rule = Horizontale Linie einfügen
+note_horizontal_rule = Horizontale Linie
 note_show_info = Notizinformationen
 note_share_subject = Notiz von SilentNotes
 
@@ -156,8 +156,6 @@ cloud_first_synchronization_text = Dies ist die erste Synchronisation, darum wer
 cloud_service_choice = Online-Speicher wählen
 cloud_service_credentials = Online-Speicher Zugangsdaten
 cloud_service_undefined = Es ist noch kein Online-Speicher bestimmt
-cloud_ftp_example = ftp://ftp.example.org/silentnote/
-cloud_webdav_example = https://webdav.example.org/
 
 sync = Synchronisation
 sync_auto = Automatische Synchronisation

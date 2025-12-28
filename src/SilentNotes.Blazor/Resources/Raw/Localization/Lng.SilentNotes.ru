@@ -57,7 +57,7 @@ tag_add = Ярлык
 feedback_note_to_recycle = Заметка перемещена в корзину и может быть восстановлена оттуда.
 note_pin = Закрепить заметку
 note_open_link = Открыть ссылку
-note_horizontal_rule = Insert horizontal rule
+note_horizontal_rule = Horizontal rule
 note_show_info = Информация о заметке
 note_share_subject = Note from SilentNotes
 
@@ -156,8 +156,6 @@ cloud_first_synchronization_text = Это ваша первая синхрони
 cloud_service_choice = Выбор сетевого хранилища
 cloud_service_credentials = Учетные данные сетевого хранилища
 cloud_service_undefined = Сетевое хранилище не выбрано
-cloud_ftp_example = ftp://ftp.example.org/silentnote/
-cloud_webdav_example = https://webdav.example.org/
 
 sync = Синхронизация
 sync_auto = Автоматическая синхронизация

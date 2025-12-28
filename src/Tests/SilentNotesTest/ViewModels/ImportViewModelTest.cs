@@ -16,10 +16,10 @@ namespace SilentNotesTest.ViewModels
         public void LoadNotesFromImportedNoteList_WithStrategyIgnore_IgnoresNoteWithSameId()
         {
             NoteRepositoryModel repository = new NoteRepositoryModel();
-            repository.Notes.Add(new NoteModel { Id = new Guid("4c85ba38aea8400982b74e53f37e27db"), HtmlContent = "content1" });
+            repository.Notes.Add(new NoteModel { Id = new Guid("4c85ba38aea8400982b74e53f37e27db"), HtmlContent = "content1", CreatedAt = new DateTime(1999, 01, 02) });
 
             var importNotes = new NoteListModel();
-            importNotes.Add(new NoteModel { Id = new Guid("4c85ba38aea8400982b74e53f37e27db"), HtmlContent = "content2" });
+            importNotes.Add(new NoteModel { Id = new Guid("4c85ba38aea8400982b74e53f37e27db"), HtmlContent = "content2", CreatedAt = new DateTime(1999, 01, 02) });
             ImportViewModel.LoadNotesFromImportedNoteList(repository, importNotes, ImportStrategy.IgnoreExisting);
 
             Assert.AreEqual(1, repository.Notes.Count);
@@ -30,10 +30,10 @@ namespace SilentNotesTest.ViewModels
         public void LoadNotesFromImportedNoteList_WithStrategyOverwrite_OverwritesNoteWithSameId()
         {
             NoteRepositoryModel repository = new NoteRepositoryModel();
-            repository.Notes.Add(new NoteModel { Id = new Guid("4c85ba38aea8400982b74e53f37e27db"), HtmlContent = "content1" });
+            repository.Notes.Add(new NoteModel { Id = new Guid("4c85ba38aea8400982b74e53f37e27db"), HtmlContent = "content1", CreatedAt = new DateTime(1999, 01, 02) });
 
             var importNotes = new NoteListModel();
-            importNotes.Add(new NoteModel { Id = new Guid("4c85ba38aea8400982b74e53f37e27db"), HtmlContent = "content2" });
+            importNotes.Add(new NoteModel { Id = new Guid("4c85ba38aea8400982b74e53f37e27db"), HtmlContent = "content2", CreatedAt = new DateTime(1999, 01, 02) });
             ImportViewModel.LoadNotesFromImportedNoteList(repository, importNotes, ImportStrategy.OverwriteExisting);
 
             Assert.AreEqual(1, repository.Notes.Count);
@@ -58,6 +58,7 @@ namespace SilentNotesTest.ViewModels
             });
             ImportViewModel.LoadNotesFromImportedNoteList(repository, importNotes, ImportStrategy.OverwriteExisting);
 
+            Assert.IsTrue(TestExtensions.IsNearlyUtcNow(repository.Notes[0].CreatedAt));
             Assert.IsTrue(TestExtensions.IsNearlyUtcNow(repository.Notes[0].ModifiedAt));
         }
     }

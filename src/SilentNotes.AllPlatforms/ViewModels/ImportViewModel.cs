@@ -136,12 +136,10 @@ namespace SilentNotes.ViewModels
                 if ((existingNotePos >= 0) && (strategy == ImportStrategy.IgnoreExisting))
                     continue;
 
-                // The modification date should be the most recent, so a synchronization
-                // won't the imported note afterwards.
-                importNote.RefreshModifiedAt();
-
-                // todo: handle DeletedNotes list
-                // repository.DeletedNotes
+                // The creation date has to be updated, so that a note can still be imported, even
+                // if it was deleted before and has an entry in the deleted notes list.
+                importNote.CreatedAt = DateTime.UtcNow;
+                importNote.ModifiedAt = importNote.CreatedAt;
 
                 if (existingNotePos >= 0)
                     repository.Notes[existingNotePos] = importNote;

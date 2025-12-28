@@ -57,7 +57,7 @@ tag_add = Aggiungi etichetta
 feedback_note_to_recycle = L'appunto è stato spostato nel Cestino e può essere recuperato da lì.
 note_pin = Appunto in evidenza
 note_open_link = Apri collegamenti
-note_horizontal_rule = Insert horizontal rule
+note_horizontal_rule = Horizontal rule
 note_show_info = Informazioni sull'appunto
 note_share_subject = Appunto da SilentNotes
 
@@ -156,8 +156,6 @@ cloud_first_synchronization_text = Questa è la tua prima sincronizzazione, sono
 cloud_service_choice = Selezione memorizzazione online
 cloud_service_credentials = Credenziali della memorizzazione online
 cloud_service_undefined = Non è stata definita alcuna memorizzazione online
-cloud_ftp_example = ftp://ftp.esempio.org/silentnote/
-cloud_webdav_example = https://webdav.esempio.org/
 
 sync = Sincronizzazione
 sync_auto = Sincronizzazione automatica

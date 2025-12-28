@@ -57,7 +57,7 @@ tag_add = 添加标签
 feedback_note_to_recycle = 笔记已移至回收站，可以从那里恢复。
 note_pin = 置顶笔记
 note_open_link = 打开链接
-note_horizontal_rule = Insert horizontal rule
+note_horizontal_rule = Horizontal rule
 note_show_info = 笔记信息
 note_share_subject = 来自 SilentNotes 的笔记
 
@@ -156,8 +156,6 @@ cloud_first_synchronization_text = 这是您的第一次同步，现在已收集
 cloud_service_choice = 在线存储选择
 cloud_service_credentials = 在线存储凭证
 cloud_service_undefined = 尚未定义在线存储
-cloud_ftp_example = ftp://ftp.example.org/silentnote/
-cloud_webdav_example = https://webdav.example.org/
 
 sync = 同步
 sync_auto = 自动同步
