@@ -283,6 +283,7 @@ div.ProseMirror:focus {
 }
 
 .mud-appbar .mud-icon-size-medium { font-size: 1.75rem; } /* bigger toolbar icons */
+.mud-appbar .mud-icon-button { flex: 0 1 auto; } /* buttons can shrink on very small devices */
 .mud-list-item-icon { min-width: 38px; } /* smaller gap between icon and menuitem */
 
 .dialog { max-width: 92vw; }
