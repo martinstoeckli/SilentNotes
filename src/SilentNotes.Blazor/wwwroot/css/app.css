@@ -36,6 +36,7 @@ td { word-wrap: anywhere; } /* table should not exceed device width */
 	margin: 0;
 	padding: 24px 24px 0 4px;
 }
+.overflow-menu { max-height: 80%; overflow: auto }
 
 .fab-position {
 	position: fixed;
