@@ -24,16 +24,13 @@ namespace SilentNotes.Models
         /// <summary>The current revision which is used to store a repository. This revision is
         /// increased whenever deserialization of the model becomes incompatible with previous
         /// versions.</summary>
-        public const int CurrentSavingRevision = 8;
+        public const int CurrentSavingRevision = 9;
 
         /// <summary>The highest revision of the repository which can be handled by this application.
         /// This revision can be higher than <see cref="CurrentSavingRevision"/>, so we can make
         /// the app ready for a new feature, but delay the introduction to a later version. Multiple
         /// installations across platforms will then already be ready for this feature.</summary>
-        /// <remarks>
-        /// - Version 8 is reserved for the future Argon2 implementation.
-        /// </remarks>
-        public const int NewestSupportedRevision = 8;
+        public const int NewestSupportedRevision = 9;
 
 #if (DEBUG)
         public readonly string InstanceId = Guid.NewGuid().ToString();
