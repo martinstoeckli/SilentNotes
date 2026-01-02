@@ -59,7 +59,7 @@
 
 	<MudSpacer />
 
-	<MudMenu @ref="_overflowMenu" Dense="true" AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight" PopoverClass="overflow-menu" @bind-Open="_isOverflowMenuOpen">
+	<MudMenu Dense="true" AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight" PopoverClass="overflow-menu" @bind-Open="_isOverflowMenuOpen">
 		<ActivatorContent>
 			<MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" />
 		</ActivatorContent>
@@ -336,8 +336,7 @@
 </MudMainContent>
 
 @code {
-	private MudMenu _overflowMenu;
-	private bool _isOverflowMenuOpen; // Workaround: without this unused binding, the _menu.Open property is always false.
+	private bool _isOverflowMenuOpen;
 	private MudColorPicker _clpSolidTheme;
 	private MudColorPicker _clpAllNotesInDarkMode;
 	private MudColorPicker _clpDefaultNoteColor;
@@ -372,12 +371,17 @@
 	{
 		base.OnCloseMenuOrDialog();
 		bool result = false;
+		bool refreshNeeded = false;
 
-		if (_overflowMenu.Open)
+		if (_isOverflowMenuOpen)
 		{
-			_ = _overflowMenu.CloseMenuAsync();
+			_isOverflowMenuOpen = false;
 			result = true;
+			refreshNeeded = true;
 		}
+
+		if (refreshNeeded)
+			StateHasChanged();
 		return result;
 	}
 

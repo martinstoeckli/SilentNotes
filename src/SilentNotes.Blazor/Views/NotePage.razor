@@ -104,7 +104,7 @@
 		title="@LanguageService["search"]" Edge="Edge.End" />
 
 	@* Overflow menu *@
-	<MudMenu @ref="_overflowMenu" Dense="true" AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight" PopoverClass="overflow-menu" @bind-Open="_isOverflowMenuOpen">
+	<MudMenu Dense="true" AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight" PopoverClass="overflow-menu" @bind-Open="_isOverflowMenuOpen">
 		<ActivatorContent>
 			<MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" />
 		</ActivatorContent>
@@ -306,8 +306,7 @@
 
 @code {
 	///////////////////////////////////////////////////////////////////////////////////////////////
-	private MudMenu _overflowMenu;
-	private bool _isOverflowMenuOpen; // Workaround: without this unused binding, the _menu.Open property is always false.
+	private bool _isOverflowMenuOpen;
 	private MudAutocomplete<string> _tagAutocomplete;
 	private ElementReference _editorContainer;
 	private IJSObjectReference _jsModule;
@@ -464,10 +463,11 @@
 		bool result = false;
 		bool refreshNeeded = false;
 
-		if (_overflowMenu.Open)
+		if (_isOverflowMenuOpen)
 		{
-			_ = _overflowMenu.CloseMenuAsync();
+			_isOverflowMenuOpen = false;
 			result = true;
+			refreshNeeded = true;
 		}
 		if (SearchToolbarOpen)
 		{

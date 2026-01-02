@@ -1,10 +1,10 @@
-﻿using System.Diagnostics;
-using System.Text;
+﻿using System.Text;
 using Android.App;
 using Android.Content;
 using Android.Content.PM;
 using Android.OS;
 using Android.Views;
+using AndroidX.Activity;
 using SilentNotes.Platforms;
 using SilentNotes.Services;
 using static Android.Views.ViewTreeObserver;
@@ -24,6 +24,7 @@ namespace SilentNotes
         public Guid Id { get; } = Guid.NewGuid();
         private Android.Views.View _contentView;
         private bool _splashScreenCanBeClosed = false;
+        private BackPressedHandler _backPressedHandler;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -38,6 +39,9 @@ namespace SilentNotes
             _contentView.ViewTreeObserver.AddOnPreDrawListener(this);
 
             _applicationEventHandler.OnCreate(this);
+
+            _backPressedHandler = new BackPressedHandler(this);
+            OnBackPressedDispatcher.AddCallback(this, _backPressedHandler);
         }
 
         protected override void OnNewIntent(Intent intent)
@@ -99,19 +103,34 @@ namespace SilentNotes
             return false;
         }
 
-        /// <inheritdoc/>
-        public override bool DispatchKeyEvent(KeyEvent e)
+        /// <summary>
+        /// Implements Androids <see cref="OnBackPressedCallback"/>.
+        /// Handles the back button press event by closing open menus or dialogs, navigating to
+        /// a previous page if available, or exiting the application.
+        /// </summary>
+        private class BackPressedHandler : OnBackPressedCallback
         {
-            // Workaround: Unfortunately the back button will automatically navigate back whenever
-            // possible, there is no way to intercept it in MainPage.OnBackButtonPressed().
-            if ((e.KeyCode == Keycode.Back) && (e.Action == KeyEventActions.Down))
+            private readonly MainActivity _activity;
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="BackPressedHandler"/> class.
+            /// </summary>
+            /// <param name="activity">The owner activity.</param>
+            public BackPressedHandler(MainActivity activity)
+                : base(true)
+            {
+                _activity = activity;
+            }
+
+            /// <inheritdoc/>
+            public override void HandleOnBackPressed()
             {
                 // Ask the page to close currently open menus and dialogs.
                 var message = new BackButtonPressedMessage { Handled = false };
                 var messenger = Ioc.Instance.GetService<IMessengerService>();
                 messenger.Send(message);
                 if (message.Handled)
-                    return true;
+                    return;
 
                 // Navigate backwards to the page which is defined by the current page. If the
                 // back route is null, the application will be closed.
@@ -119,10 +138,14 @@ namespace SilentNotes
                 {
                     var navigation = Ioc.Instance.GetService<INavigationService>();
                     navigation.NavigateTo(message.BackRoute);
-                    return true;
+                    return;
                 }
+
+                // Default action, close the app
+                Enabled = false;
+                _activity.OnBackPressedDispatcher.OnBackPressed();
+                Enabled = true;
             }
-            return base.DispatchKeyEvent(e);
         }
     }
 }

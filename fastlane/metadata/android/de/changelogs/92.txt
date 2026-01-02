@@ -3,6 +3,6 @@ SilentNotes version 8.7.0
 * Import und Export von Joplin (*.jex) Dateien implementiert.
 * Unterstützung von horizontalen Linien in einer Notiz hinzugefügt.
 * UI Verbesserungen für kleine Displays und grosse Systemschrift.
-* Workaround zum schliessen des Menus mit dem Zurück-Button implementiert.
+* Verwenden des Android OnBackPressedDispatcher um das Menus mit dem Zurück-Button zu schliessen.
 * Update auf .NET10 targeting Android 16.
 * Update auf TipTap 3.14.

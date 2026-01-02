@@ -83,7 +83,7 @@
 	}
 
 	@* Overflow menu *@
-	<MudMenu @ref="_overflowMenu" Dense="true" AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight" PopoverClass="overflow-menu" @bind-Open="_isOverflowMenuOpen">
+	<MudMenu Dense="true" AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight" PopoverClass="overflow-menu" @bind-Open="_isOverflowMenuOpen">
 		<ActivatorContent>
 			<MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" />
 		</ActivatorContent>
@@ -216,7 +216,7 @@
 </MudPopover>
 
 @* The FAB for adding a new note *@
-<MudMenu @ref="_fabMenu" Class="fab-position" AnchorOrigin="Origin.TopRight" TransformOrigin="Origin.BottomRight" @bind-Open="_isFabMenuOpen">
+<MudMenu Class="fab-position" AnchorOrigin="Origin.TopRight" TransformOrigin="Origin.BottomRight" @bind-Open="_isFabMenuOpen">
 	<ActivatorContent>
 		<MudFab Class="mt-4" Color="Color.Primary" StartIcon="@IconService[IconNames.Plus]" />
 	</ActivatorContent>
@@ -255,10 +255,8 @@
 @code {
 	///////////////////////////////////////////////////////////////////////////////////////////////
 	private MudInput<string> _filterInput;
-	private MudMenu _overflowMenu;
-	private bool _isOverflowMenuOpen; // Workaround: without this unused binding, the _menu.Open property is always false.
-	private MudMenu _fabMenu;
-	private bool _isFabMenuOpen; // Workaround: without this unused binding, the _menu.Open property is always false.
+	private bool _isOverflowMenuOpen;
+	private bool _isFabMenuOpen;
 	private MudDrawer _sideDrawer;
 	private MudIconButton _tagsButton;
 	private MudBaseButton _syncButton;
@@ -389,17 +387,23 @@
 	{
 		base.OnCloseMenuOrDialog();
 		bool result = false;
+		bool refreshNeeded = false;
 
-		if (_overflowMenu.Open)
+		if (_isOverflowMenuOpen)
 		{
-			_ = _overflowMenu.CloseMenuAsync();
+			_isOverflowMenuOpen = false;
 			result = true;
+			refreshNeeded = true;
 		}
-		if (_fabMenu.Open)
+		if (_isFabMenuOpen)
 		{
-			_ = _fabMenu.CloseMenuAsync();
+			_isFabMenuOpen = false;
 			result = true;
+			refreshNeeded = true;
 		}
+
+		if (refreshNeeded)
+			StateHasChanged();
 		return result;
 	}
 
