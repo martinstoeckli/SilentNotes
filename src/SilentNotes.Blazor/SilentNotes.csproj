@@ -54,7 +54,6 @@
 
     <!-- Android all -->
     <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
-	  <PublishSelfContained>true</PublishSelfContained>
       <PublishTrimmed>True</PublishTrimmed>
 	  <PublishAot>true</PublishAot>
 	  <StripSymbols>true</StripSymbols>
