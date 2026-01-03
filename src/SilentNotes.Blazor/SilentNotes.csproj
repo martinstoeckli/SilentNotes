@@ -54,10 +54,9 @@
 
     <!-- Android all -->
     <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
-      <PublishTrimmed>True</PublishTrimmed>
+	  <PublishAot>true</PublishAot>
       <TrimMode>partial</TrimMode>
       <EnableTrimAnalyzer>True</EnableTrimAnalyzer>
-      <RunAOTCompilation>False</RunAOTCompilation>
     </PropertyGroup>
 
     <!-- Release Android all -->
@@ -69,6 +68,12 @@
     <!-- Debug Android runs in x64 emulator only -->
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net10.0-android|x64'">
       <RuntimeIdentifiers>android-x64</RuntimeIdentifiers>
+      <RunAOTCompilation>True</RunAOTCompilation>
+      <EnableLLVM>True</EnableLLVM>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0-android|x64'">
+      <RunAOTCompilation>True</RunAOTCompilation>
+      <EnableLLVM>True</EnableLLVM>
     </PropertyGroup>
 
     <ItemGroup>
