@@ -54,9 +54,10 @@
 
     <!-- Android all -->
     <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
+	  <PublishSelfContained>true</PublishSelfContained>
       <PublishTrimmed>True</PublishTrimmed>
-      <TrimMode>partial</TrimMode>
-      <EnableTrimAnalyzer>True</EnableTrimAnalyzer>
+	  <PublishAot>true</PublishAot>
+	  <StripSymbols>true</StripSymbols>
     </PropertyGroup>
 
     <!-- Release Android all -->
