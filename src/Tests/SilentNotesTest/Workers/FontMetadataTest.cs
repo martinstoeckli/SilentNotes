@@ -22,10 +22,10 @@ namespace SilentNotesTest.Workers
             DirectoryInfo fontDirectoryInfo = new DirectoryInfo(fontDirectory);
             foreach (FileInfo fileInfo in fontDirectoryInfo.EnumerateFiles())
             {
-                FontMetadata metadata = await parser.Parse(fileInfo.FullName);
-                if (metadata != null)
-                    fontMetadatas.Add(metadata);
+                fontMetadatas.AddRange(await parser.Parse(fileInfo.FullName));
             }
+            var fontFamilies = fontMetadatas.Select(item => item.FontFamily).Distinct().Order().ToList();
+
             Assert.IsTrue(fontMetadatas.Count > 0);
             FontMetadata consolas = fontMetadatas.Find(item => item.FontFamily == "Consolas");
             Assert.IsNotNull(consolas);

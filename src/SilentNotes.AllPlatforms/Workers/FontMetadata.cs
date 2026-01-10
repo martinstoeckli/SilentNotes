@@ -34,13 +34,15 @@ namespace SilentNotes.Workers
     }
 
     /// <summary>
-    /// Parses font files like (*.ttf) and extracts its metadata information. This is a lightweight
-    /// fast parser which reads only as much file content as necessary.
+    /// Parses font files and extracts their metadata information. This is a lightweight fast
+    /// parser which reads only as much file content as necessary. Currently supported formats
+    /// are [*.ttf, *.otf, *.ttc].
     /// </summary>
     /// <remarks>
-    /// This class was written to build a list of available fontfamilies. It does not to extract
-    /// a complete set of data, but is written generic so that other information can be added as
+    /// This class was written to build a list of available font-families. It does not extract a
+    /// complete set of data, but is written generic so that other information can be added as
     /// needed.
+    /// See also <see cref="https://learn.microsoft.com/de-de/typography/opentype/spec/otff"/>.
     /// </remarks>
     public class FontMetadataParser
     {
@@ -58,8 +60,9 @@ namespace SilentNotes.Workers
         /// <param name="fontFilePath">The absolute path to a font file.</param>
         /// <exception cref="ArgumentException">Thrown if the font file is not readable.</exception>
         /// <exception cref="Exception">Thrown if the font file is invalid.</exception>
-        /// <returns>Returns the extracted font metadata, or null if the font type is not supported.</returns>
-        public async ValueTask<FontMetadata> Parse(string fontFilePath)
+        /// <returns>Returns the extracted font metadata, or an empty list if no supported font
+        /// type could be found.</returns>
+        public async ValueTask<List<FontMetadata>> Parse(string fontFilePath)
         {
             using (Stream fontFile = new FileStream(fontFilePath, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, true))
             {
@@ -68,17 +71,19 @@ namespace SilentNotes.Workers
         }
 
         /// <summary>
-        /// Parses a font file (like *.ttf).
+        /// Parses a font file (like *.ttf, *.otf or *.ttc).
         /// </summary>
         /// <param name="fontFile">The open stream of the font file.</param>
         /// <exception cref="ArgumentException">Thrown if the font file is not readable.</exception>
         /// <exception cref="Exception">Thrown if the font file is invalid.</exception>
-        /// <returns>Returns the extracted font metadata, or null if the font type is not supported.</returns>
-        public async ValueTask<FontMetadata> Parse(Stream fontFile)
+        /// <returns>Returns the extracted font metadata, or an empty list if no supported font
+        /// type could be found.</returns>
+        public async ValueTask<List<FontMetadata>> Parse(Stream fontFile)
         {
             if ((fontFile == null) || (!fontFile.CanRead) || (!fontFile.CanSeek))
                 throw new ArgumentException("Cannot read from the stream.", nameof(fontFile));
 
+            var result = new List<FontMetadata>();
             long originalPos = fontFile.Position;
             try
             {
@@ -87,15 +92,20 @@ namespace SilentNotes.Workers
                 {
                     case FontType.TTF:
                     case FontType.OTF:
-                        return await ParseOtf(fontFile);
-                    default:
-                        return null;
+                        var metadata = await ParseOtf(fontFile);
+                        if (metadata != null)
+                            result.Add(metadata);
+                        break;
+                    case FontType.TTC:
+                        result.AddRange(await ParseTtc(fontFile));
+                        break;
                 }
             }
             finally
             {
                 fontFile.Position = originalPos;
             }
+            return result;
         }
 
         private async ValueTask<FontType> DetectFontType(Stream fontFile)
@@ -114,27 +124,26 @@ namespace SilentNotes.Workers
                 return FontType.OTF;
             else if (signature.SequenceEqual(TagToBytes("ttcf")))
                 return FontType.TTC;
-            else if (signature.SequenceEqual(TagToBytes("wOFF")))
-                return FontType.WOFF;
-            else if (signature.SequenceEqual(TagToBytes("wOF2")))
-                return FontType.WOF2;
             else
+                // The signatures "wOFF" and "wOF2" are not yet supported
                 return FontType.Unknown;
         }
 
         /// <summary>
         /// Parses a *.ttf or a *.otf file for metadata.
-        /// See also <see cref="https://learn.microsoft.com/de-de/typography/opentype/spec/name"/>.
         /// </summary>
         /// <param name="fontFile">The open stream of the font file.</param>
+        /// <param name="startPos">The position in the stream from the beginning of the file, where
+        /// the font starts. For *.oft files this is at the beginning, for *.ttc files with
+        /// multiple fonts this depends on the table-directory offset.</param>
         /// <returns>Returns the extracted font metadata, or null if the font type is not supported.</returns>
-        private async ValueTask<FontMetadata> ParseOtf(Stream fontFile)
+        private async ValueTask<FontMetadata> ParseOtf(Stream fontFile, long startPos = 0)
         {
             FontMetadata result = new FontMetadata();
-            Memory<byte> reusableBuffer = new byte[4096];
+            Memory<byte> reusableBuffer = new byte[1024];
 
-            // Place after sfnt version
-            fontFile.Seek(4, SeekOrigin.Begin);
+            // Place after sfnt version (4 bytes)
+            fontFile.Seek(startPos + 4, SeekOrigin.Begin);
 
             // Determine number of table-records in table-directory
             UInt16 tableCount = await ReadUInt16(fontFile, reusableBuffer);
@@ -205,6 +214,40 @@ namespace SilentNotes.Workers
                             result.FullFontName = await ReadNameString(fontFile, reusableBuffer, nameRecord, storageBase);
                         break;
                 }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Parses a *.ttc font collection file for metadata.
+        /// </summary>
+        /// <param name="fontFile">The open stream of the font file.</param>
+        /// <returns>Returns the extracted font metadata, or an empty list if no supported font
+        /// type could be found.</returns>
+        private async ValueTask<List<FontMetadata>> ParseTtc(Stream fontFile)
+        {
+            var result = new List<FontMetadata>();
+            Memory<byte> reusableBuffer = new byte[16];
+
+            // Place after sfnt version
+            fontFile.Seek(4, SeekOrigin.Begin);
+
+            // Determine number of table-directories
+            UInt16 majorVersion = await ReadUInt16(fontFile, reusableBuffer);
+            UInt16 minorVersion = await ReadUInt16(fontFile, reusableBuffer);
+            UInt32 fontCount = await ReadUInt32(fontFile, reusableBuffer);
+
+            // List the table-directory offsets
+            var tableDirectoryOffsets = new UInt32[fontCount];
+            for (int indexTableDirectory = 0; indexTableDirectory < fontCount; indexTableDirectory++)
+                tableDirectoryOffsets[indexTableDirectory] = await ReadUInt32(fontFile, reusableBuffer);
+
+            // Parse each font of the collection
+            foreach (var tableDirectoryOffset in tableDirectoryOffsets)
+            {
+                FontMetadata metadata = await ParseOtf(fontFile, tableDirectoryOffset);
+                if (metadata != null)
+                    result.Add(metadata);
             }
             return result;
         }
@@ -330,7 +373,7 @@ namespace SilentNotes.Workers
             return result;
         }
 
-        [DebuggerDisplay("NameId:{NameId} • Platform:{PlatformId} • Encoding:{EncodingId}")]
+        [DebuggerDisplay("Tag:{Tag} • Offset:{Offset} • Length:{Length}")]
         private class TableRecord
         {
             /// <summary>The tag contains 4 characters, sometimes with trailing blanks.</summary>
@@ -367,12 +410,6 @@ namespace SilentNotes.Workers
 
             /// <summary>Open type font collection</summary>
             TTC,
-
-            /// <summary>Web Open Font Format</summary>
-            WOFF,
-
-            /// <summary>Web Open Font Format 2</summary>
-            WOF2,
         }
     }
 }
