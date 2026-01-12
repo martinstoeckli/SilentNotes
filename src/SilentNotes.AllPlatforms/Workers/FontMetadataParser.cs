@@ -1,7 +1,7 @@
-﻿// Copyright © 2025 Martin Stoeckli.
-// This Source Code Form is subject to the terms of the Mozilla Public
-// License, v. 2.0. If a copy of the MPL was not distributed with this
-// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+﻿// Copyright © 2026 Martin Stoeckli.
+// This Source Code Form is subject to the terms of the MIT License.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://opensource.org/licenses/MIT.
 
 using System;
 using System.Buffers.Binary;
@@ -12,8 +12,9 @@ using System.Text;
 namespace SilentNotes.Workers
 {
     /// <summary>
-    /// Holds metadata information about a single font file. Use the <see cref="FontMetadataParser"/>
-    /// to extract the metadata from a font file.
+    /// Contains metadata information about a single font file.
+    /// Use the <see cref="FontMetadataParser"/> to extract the metadata from a font file.
+    /// Currently supported formats are [*.ttf, *.otf, *.ttc].
     /// </summary>
     [DebuggerDisplay("Family:{FontFamily} • SubFamily:{FontSubFamily}")]
     public class FontMetadata
@@ -40,8 +41,8 @@ namespace SilentNotes.Workers
     /// </summary>
     /// <remarks>
     /// This class was written to build a list of available font-families. It does not extract a
-    /// complete set of data, but is written generic so that other information can be added as
-    /// needed.
+    /// complete set of data, but is written in a generic way so that other information can be
+    /// added as needed.
     /// See also <see cref="https://learn.microsoft.com/de-de/typography/opentype/spec/otff"/>.
     /// </remarks>
     public class FontMetadataParser
@@ -125,7 +126,7 @@ namespace SilentNotes.Workers
             else if (signature.SequenceEqual(TagToBytes("ttcf")))
                 return FontType.TTC;
             else
-                // The signatures "wOFF" and "wOF2" are not yet supported
+                // The signatures "wOFF" and "wOF2" are not supported
                 return FontType.Unknown;
         }
 

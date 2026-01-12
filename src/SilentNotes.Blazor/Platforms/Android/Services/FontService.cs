@@ -4,12 +4,13 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System.Collections.Generic;
+using SilentNotes.Services;
 using SkiaSharp;
 
-namespace SilentNotes.Services
+namespace SilentNotes.Platforms.Services
 {
     /// <summary>
-    /// Implementation of the <see cref="IFontService"/> interface.
+    /// Implementation of the <see cref="IFontService"/> interface for the Android platform.
     /// </summary>
     public class FontService : IFontService
     {

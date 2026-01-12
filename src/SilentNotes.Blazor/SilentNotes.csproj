@@ -102,7 +102,6 @@
         <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
         <PackageReference Include="Microsoft.AspNetCore.Components.WebView.Maui" Version="$(MauiVersion)" />
         <PackageReference Include="MudBlazor" Version="8.15.0" />
-        <PackageReference Include="SkiaSharp" Version="3.119.1" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net10.0-android'">
@@ -112,6 +111,11 @@
       <PackageReference Include="Xamarin.AndroidX.Work.Runtime">
         <Version>2.10.3</Version>
       </PackageReference>
+      <PackageReference Include="SkiaSharp" Version="3.119.1" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' == 'net10.0-windows10.0.19041.0'">
+      <PackageReference Include="System.Drawing.Common" Version="10.0.1" />
     </ItemGroup>
 
     <Import Project="..\SilentNotes.AllPlatforms\SilentNotes.AllPlatforms.projitems" Label="Shared" />
