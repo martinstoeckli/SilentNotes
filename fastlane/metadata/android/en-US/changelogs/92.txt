@@ -6,3 +6,4 @@ SilentNotes version 8.7.0
 * Using the Android OnBackPressedDispatcher for closing the overflow menu with the back button.
 * Update to .NET10 targeting Android 16.
 * Update to TipTap 3.14.
+* Improved startup time by eliminating external libraries.

@@ -6,3 +6,4 @@ SilentNotes version 8.7.0
 * Verwenden des Android OnBackPressedDispatcher um das Menus mit dem Zurück-Button zu schliessen.
 * Update auf .NET10 targeting Android 16.
 * Update auf TipTap 3.14.
+* Ladezeit verbessert, durch verzichten auf externe Bibliotheken.
