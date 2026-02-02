@@ -1,4 +1,4 @@
-import { initializeEditor, toggleFormat, isFormatActive, searchAndHighlight, selectNextWhileTyping, selectNext, selectPrevious, selectWordAtCurrentPosition, exportAsPlainText, insertHorizontalRule } from '../prose-mirror-bundle.js';
+import { initializeEditor, TiptapHelper, searchAndHighlight, selectNextWhileTyping, selectNext, selectPrevious, selectWordAtCurrentPosition, exportAsPlainText } from '../prose-mirror-bundle.js';
 
 var _page;
 
@@ -55,31 +55,31 @@ export function setEditable(editable) {
 export function toggleFormatAndRefresh(formatName, formatParameter) {
     if (!IsInitialized()) return;
 
-    toggleFormat(_page.editor, formatName, formatParameter);
+    TiptapHelper.toggleFormat(_page.editor, formatName, formatParameter);
     onActiveFormatStateChanged();
 }
 
 export function callInsertHorizontalRule() {
     if (!IsInitialized()) return;
 
-    insertHorizontalRule(_page.editor);
+    TiptapHelper.insertHorizontalRule(_page.editor);
 }
 
 function onActiveFormatStateChanged() {
     if (!IsInitialized()) return;
 
     var states = [
-        isFormatActive(_page.editor, 'heading', { level: 1 }),
-        isFormatActive(_page.editor, 'heading', { level: 2 }),
-        isFormatActive(_page.editor, 'heading', { level: 3 }),
-        isFormatActive(_page.editor, 'bold'),
-        isFormatActive(_page.editor, 'italic'),
-        isFormatActive(_page.editor, 'underline'),
-        isFormatActive(_page.editor, 'strike'),
-        isFormatActive(_page.editor, 'codeblock'),
-        isFormatActive(_page.editor, 'blockquote'),
-        isFormatActive(_page.editor, 'bulletlist'),
-        isFormatActive(_page.editor, 'orderedlist')
+        TiptapHelper.isFormatActive(_page.editor, 'heading', { level: 1 }),
+        TiptapHelper.isFormatActive(_page.editor, 'heading', { level: 2 }),
+        TiptapHelper.isFormatActive(_page.editor, 'heading', { level: 3 }),
+        TiptapHelper.isFormatActive(_page.editor, 'bold'),
+        TiptapHelper.isFormatActive(_page.editor, 'italic'),
+        TiptapHelper.isFormatActive(_page.editor, 'underline'),
+        TiptapHelper.isFormatActive(_page.editor, 'strike'),
+        TiptapHelper.isFormatActive(_page.editor, 'codeblock'),
+        TiptapHelper.isFormatActive(_page.editor, 'blockquote'),
+        TiptapHelper.isFormatActive(_page.editor, 'bulletlist'),
+        TiptapHelper.isFormatActive(_page.editor, 'orderedlist')
     ];
     _page.invokeMethodAsync('RefreshActiveFormatState', states);
 }

@@ -1,4 +1,4 @@
-﻿import { initializeChecklist, registerIsShoppingModeActive, toggleFormat, isFormatActive, searchAndHighlight, selectNextWhileTyping, selectNext, selectPrevious, moveChecklist, sortChecklistPendingToTop, sortChecklistAlphabetical, setCheckStateForAllToTodo, setCheckStateForAllToDone, setCheckStateForAllToDisabled, exportChecklistAsPlainText } from '../prose-mirror-bundle.js';
+﻿import { initializeChecklist, TiptapHelper, registerIsShoppingModeActive, searchAndHighlight, selectNextWhileTyping, selectNext, selectPrevious, moveChecklist, sortChecklistPendingToTop, sortChecklistAlphabetical, setCheckStateForAllToTodo, setCheckStateForAllToDone, setCheckStateForAllToDisabled, exportChecklistAsPlainText } from '../prose-mirror-bundle.js';
 
 var _page;
 
@@ -60,7 +60,7 @@ export function setShoppingModeActive(shoppingModeActive) {
 export function toggleFormatAndRefresh(formatName, formatParameter) {
     if (!IsInitialized()) return;
 
-    toggleFormat(_page.editor, formatName, formatParameter);
+    TiptapHelper.toggleFormat(_page.editor, formatName, formatParameter);
     onActiveFormatStateChanged();
 }
 
@@ -68,17 +68,17 @@ function onActiveFormatStateChanged() {
     if (!IsInitialized()) return;
 
     var states = [
-        isFormatActive(_page.editor, 'heading', { level: 1 }),
-        isFormatActive(_page.editor, 'heading', { level: 2 }),
-        isFormatActive(_page.editor, 'heading', { level: 3 }),
-        isFormatActive(_page.editor, 'bold'),
-        isFormatActive(_page.editor, 'italic'),
-        isFormatActive(_page.editor, 'underline'),
-        isFormatActive(_page.editor, 'strike'),
-        isFormatActive(_page.editor, 'codeblock'),
-        isFormatActive(_page.editor, 'blockquote'),
-        isFormatActive(_page.editor, 'bulletlist'),
-        isFormatActive(_page.editor, 'orderedlist')
+        TiptapHelper.isFormatActive(_page.editor, 'heading', { level: 1 }),
+        TiptapHelper.isFormatActive(_page.editor, 'heading', { level: 2 }),
+        TiptapHelper.isFormatActive(_page.editor, 'heading', { level: 3 }),
+        TiptapHelper.isFormatActive(_page.editor, 'bold'),
+        TiptapHelper.isFormatActive(_page.editor, 'italic'),
+        TiptapHelper.isFormatActive(_page.editor, 'underline'),
+        TiptapHelper.isFormatActive(_page.editor, 'strike'),
+        TiptapHelper.isFormatActive(_page.editor, 'codeblock'),
+        TiptapHelper.isFormatActive(_page.editor, 'blockquote'),
+        TiptapHelper.isFormatActive(_page.editor, 'bulletlist'),
+        TiptapHelper.isFormatActive(_page.editor, 'orderedlist')
     ];
     _page.invokeMethodAsync('RefreshActiveFormatState', states);
 }

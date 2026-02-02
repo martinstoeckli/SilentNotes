@@ -22,7 +22,9 @@ import { SearchNReplace } from './search-n-replace'
 import { CheckableParagraph, registerIsShoppingModeActive as checklistRegisterIsShoppingModeActive, moveChecklistUp, moveChecklistDown, sortPendingToTop, setCheckStateForAll, sortAlphabetical } from "./checkable-paragraph-extension";
 import { ScrollTo } from './scroll-to-extension'
 import { TabHandler } from './tab-handler-extension'
+import { TiptapHelper } from "./tiptap-helper";
 export { exportAsPlainText, exportChecklistAsPlainText } from './tiptap-plain-text-exporter'
+export { TiptapHelper } from './tiptap-helper'
 export { TiptapMarkdownConverter } from './tiptap-markdown-converter'
 
 /**
@@ -134,67 +136,6 @@ export function registerIsShoppingModeActive(delegate: () => boolean) {
 }
 
 /**
- * Toggles a given format like heading, bold or italic.
- * @param {Editor}  editor - A TipTap editor instance.
- * @param {string}  formatName - Name of the format to toggle, one of those:
- *   (heading, bold, italic, underline, strike, codeblock, blockquote, bulletlist, orderedlist).
- * @param {string}  formatParameter - Optional parameter for the heading format.
-*/
-export function toggleFormat(editor: Editor, formatName: string, formatParameter: any): void {
-  let lowerFormatName: string = formatName.toLowerCase();
-  switch (lowerFormatName) {
-    case 'heading':
-      editor.chain().focus().toggleHeading({ level: formatParameter }).run(); break;
-    case 'codeblock':
-      editor.chain().focus().toggleCodeBlock().run(); break;
-    case 'blockquote':
-      editor.chain().focus().toggleBlockquote().run(); break;
-    case 'bulletlist':
-      editor.chain().focus().toggleBulletList().run(); break;
-    case 'orderedlist':
-      editor.chain().focus().toggleOrderedList().run(); break;
-    default:
-      editor.chain().focus().toggleMark(formatName).run(); break;
-  }
-}
-
-/**
- * Inserts a horizontal rule at the current position.
- * @param {Editor}  editor - A TipTap editor instance.
- */
-export function insertHorizontalRule(editor: Editor): void {
-  // editor.chain().focus().setHorizontalRule();
-  editor.commands.setHorizontalRule();
-}
-
-/**
- * Checks whether a given format is active at the current position.
- * @param {Editor}  editor - A TipTap editor instance.
- * @param {string}  formatName - Name of the format to toggle, one of those:
- *   (heading, bold, italic, underline, strike, codeblock, blockquote, bulletlist, orderedlist).
- * @param {string}  formatParameter - Optional parameter for the heading format.
- * @returns {bool} Returns true if the format is active, false otherwise.
-*/
-export function isFormatActive(editor: Editor, formatName: string, formatParameter: any): boolean {
-  formatName = getCaseSensitiveFormat(formatName);
-  return editor.isActive(formatName, formatParameter);
-}
-
-function getCaseSensitiveFormat(formatName: string): string {
-  let lowerFormatName: string = formatName.toLowerCase();
-  switch (lowerFormatName) {
-    case 'codeblock':
-      return 'codeBlock'; break;
-    case 'bulletlist':
-      return 'bulletList'; break;
-    case 'orderedlist':
-      return 'orderedList'; break;
-    default:
-      return lowerFormatName; break;
-  }
-}
-
-/**
  * Searches for all occurences of a given text in the note and highlights the findings.
  * @param {Editor}  editor - A TipTap editor instance.
  * @param {string}  needle - The text to search for.
@@ -213,7 +154,7 @@ export function searchAndHighlight(editor: Editor, needle: string, minLength: nu
 */
 export function selectNextWhileTyping(editor: Editor): void {
   editor.chain().selectNext(true, true).run();
-  scrollToSelection(editor);
+  TiptapHelper.scrollToSelection(editor);
 }
 
 /**
@@ -222,7 +163,7 @@ export function selectNextWhileTyping(editor: Editor): void {
 */
 export function selectNext(editor: Editor): void {
   editor.chain().focus().selectNext(false, false).run();
-  scrollToSelection(editor);
+  TiptapHelper.scrollToSelection(editor);
 }
 
 /**
@@ -231,33 +172,7 @@ export function selectNext(editor: Editor): void {
 */
 export function selectPrevious(editor: Editor): void {
   editor.chain().focus().selectPrevious().run();
-  scrollToSelection(editor);
-}
-
-/**
- * Scrolls to the current position/selection of the document. It does the same as scrollIntoView()
- * but without requiring the focus on the editor, thus it can be called from the search box while
- * typing or in shopping mode when the editor is disabled.
- * @param {Editor}  editor - A TipTap editor instance.
-*/
-function scrollToSelection(editor: Editor): void {
-  const { node } = editor.view.domAtPos(editor.state.selection.anchor);
-  if (node) {
-      (node as any).scrollIntoView?.(false);
-  }
-}
-
-/**
- * Gets the selected text.
- * @param {Editor}  editor - A TipTap editor instance.
- * @returns { string } The selected text, or null if the selection is empty.
-*/
-export function getSelectedText(editor: Editor): string {
-  const { from, to, empty } = editor.state.selection;
-  if (empty) {
-    return null;
-  }
-  return editor.state.doc.textBetween(from, to, ' ');
+  TiptapHelper.scrollToSelection(editor);
 }
 
 /**
