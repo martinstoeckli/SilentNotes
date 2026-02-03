@@ -1,0 +1,4 @@
+SilentNotes version 8.7.1
+
+* Fixed potential problem with overflow menu after inserting horizontal rule.
+* Fixed missing content-type for WebDav 'propfind' requests, to become more compatible with WebDav servers.
