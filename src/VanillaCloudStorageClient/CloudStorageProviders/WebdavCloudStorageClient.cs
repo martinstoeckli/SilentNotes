@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -123,6 +124,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
                         .Request(url)
                         .WithBasicAuthOrAnonymous(credentials.Username, credentials.UnprotectedPassword)
                         .WithHeader("Depth", "1")
+                        .WithHeader("Content-Type", "application/xml")
                         .WithTimeout(20)
                         .SendAsync(new HttpMethod("PROPFIND"), content)
                         .ReceiveStream())
@@ -155,7 +157,8 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
                         using (HttpRequestMessage msg = new HttpRequestMessage(new HttpMethod("PROPFIND"), url))
                         {
                             msg.Content = content;
-                            msg.Content.Headers.TryAddWithoutValidation("Depth", "1");
+                            msg.Headers.TryAddWithoutValidation("Depth", "1");
+                            msg.Content.Headers.ContentType = new MediaTypeHeaderValue("application/xml");
                             using (HttpResponseMessage response = await httpClient.SendAsync(msg, new HttpCompletionOption()))
                             {
                                 response.EnsureSuccessStatusCode();

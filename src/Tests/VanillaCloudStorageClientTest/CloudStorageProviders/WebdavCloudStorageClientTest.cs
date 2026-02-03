@@ -176,6 +176,14 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
         }
 
         [TestMethod]
+        public void ParseLighttpdWebdavResponseCorrectly()
+        {
+            List<string> fileNames = WebdavCloudStorageClient.ParseWebdavResponseForFileNames(GetLighttpdServerResponse());
+            Assert.AreEqual(1, fileNames.Count);
+            Assert.AreEqual("silentnotes_repository.silentnotes", fileNames[0]);
+        }
+
+        [TestMethod]
         public void ParseMailboxOrgWebdavResponseCorrectly()
         {
             List<string> fileNames = WebdavCloudStorageClient.ParseWebdavResponseForFileNames(GetMailboxOrgResponse());
@@ -483,6 +491,33 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
             </g0:propstat>
           </g0:response>
         </ns0:multistatus>";
+            using (TextReader rextReader = new StringReader(response))
+            {
+                return XDocument.Load(rextReader);
+            }
+        }
+
+        private XDocument GetLighttpdServerResponse()
+        {
+            string response = @"<?xml version='1.0' encoding='utf-8'?>
+<D:multistatus xmlns:D='DAV:' xmlns:ns0='urn:uuid:c2f41010-65b3-11d1-a29f-00aa00c14882/'>
+<D:response>
+<D:href>/</D:href>
+<D:propstat>
+<D:prop>
+<D:resourcetype><D:collection/></D:resourcetype></D:prop>
+<D:status>HTTP/1.1 200 OK</D:status>
+</D:propstat>
+</D:response>
+<D:response>
+<D:href>/silentnotes_repository.silentnotes</D:href>
+<D:propstat>
+<D:prop>
+<D:resourcetype/></D:prop>
+<D:status>HTTP/1.1 200 OK</D:status>
+</D:propstat>
+</D:response>
+</D:multistatus>";
             using (TextReader rextReader = new StringReader(response))
             {
                 return XDocument.Load(rextReader);
