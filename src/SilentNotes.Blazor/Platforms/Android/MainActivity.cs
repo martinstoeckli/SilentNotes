@@ -29,6 +29,7 @@ namespace SilentNotes
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
+            AndroidX.Activity.EdgeToEdge.Enable(this);
 
             // Delay closing of splash screen until app is ready:
             // https://developer.android.com/develop/ui/views/launch/splash-screen#suspend-drawing
