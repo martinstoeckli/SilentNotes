@@ -36,7 +36,7 @@ namespace SilentNotes.Platforms
                 // Workaround: Android soft keyboard hides the lower part of the content,
                 // see https://learn.microsoft.com/en-us/dotnet/maui/android/platform-specifics/soft-keyboard-input-mode
                 // Seems that from Android 15 onwards this won't be required anymore, because it is handled
-                // correctly by the 'SafeAreaEdges' attrbitute.
+                // correctly by the 'SafeAreaEdges' attribute.
                 Microsoft.Maui.Controls.PlatformConfiguration.AndroidSpecific.Application.UseWindowSoftInputModeAdjust(
                     Microsoft.Maui.Controls.Application.Current.On<Microsoft.Maui.Controls.PlatformConfiguration.Android>(),
                     Microsoft.Maui.Controls.PlatformConfiguration.AndroidSpecific.WindowSoftInputModeAdjust.Resize);
