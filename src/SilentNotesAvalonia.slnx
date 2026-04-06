@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="Directory.Packages.props" />
+  </Folder>
+  <Project Path="SilentNotesAvalonia.Android/SilentNotesAvalonia.Android.csproj" />
+  <Project Path="SilentNotesAvalonia.Browser/SilentNotesAvalonia.Browser.csproj" />
+  <Project Path="SilentNotesAvalonia.Desktop/SilentNotesAvalonia.Desktop.csproj" />
+  <Project Path="SilentNotesAvalonia/SilentNotesAvalonia.csproj" />
+</Solution>
