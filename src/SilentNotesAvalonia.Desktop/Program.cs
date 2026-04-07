@@ -1,6 +1,7 @@
 ﻿using System;
 using Avalonia;
 using AvaloniaCrossTest.Services;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.DependencyInjection;
 using SilentNotes.Services;
 using SilentNotesAvalonia.Desktop.Services;
@@ -34,6 +35,11 @@ sealed class Program
         services.AddSingleton<IMainWindowProvider, MainWindowProvider>();
         services.AddSingleton<IFeedbackService>((services) =>
             new FeedbackService(services.GetRequiredService<IMainWindowProvider>()));
+
+        // todo: stom use keystore on linux?
+        services.AddDataProtection(); // todo: .ProtectKeysWithCertificate("thumbprint")
+        services.AddSingleton<IDataProtectionService>((services) =>
+            new DataProtectionService(services.GetRequiredService<IDataProtectionProvider>()));
         return services.BuildServiceProvider();
     }
 }

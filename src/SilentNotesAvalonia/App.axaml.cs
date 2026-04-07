@@ -49,7 +49,8 @@ public partial class App : Application
             mainWindowProvider.MainWindow = mainWindow;
 
             var mainViewModel = new MainViewModel(
-                Services.GetRequiredService<IFeedbackService>());
+                Services.GetRequiredService<IFeedbackService>(),
+                Services.GetRequiredService<IDataProtectionService>());
             mainWindow.DataContext = mainViewModel;
             desktop.MainWindow = mainWindow;
         }
@@ -57,7 +58,8 @@ public partial class App : Application
         {
             var mainView = new MainView();
             var mainViewModel = new MainViewModel(
-                Services.GetRequiredService<IFeedbackService>());
+                Services.GetRequiredService<IFeedbackService>(),
+                Services.GetRequiredService<IDataProtectionService>());
             mainView.DataContext = mainViewModel;
             singleViewPlatform.MainView = mainView;
         }

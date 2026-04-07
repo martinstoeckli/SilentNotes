@@ -4,6 +4,7 @@ using Android.Content.PM;
 using Avalonia;
 using Avalonia.Android;
 using AvaloniaCrossTest.Services;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.DependencyInjection;
 using SilentNotes.Services;
 using SilentNotesAvalonia.Android.Services;
@@ -39,6 +40,9 @@ public class MainActivity : AvaloniaMainActivity<App>
     {
         var services = new ServiceCollection();
         services.AddSingleton<IFeedbackService>((services) => new FeedbackService());
+        services.AddDataProtection();
+        services.AddSingleton<IDataProtectionService>((services) =>
+            new DataProtectionService(services.GetRequiredService<IDataProtectionProvider>()));
         return services.BuildServiceProvider();
     }
 }

@@ -8,14 +8,22 @@ namespace SilentNotesAvalonia.ViewModels;
 public partial class MainViewModel : ViewModelBase
 {
     private readonly IFeedbackService _feedbackService;
+    private readonly IDataProtectionService _dataProtectionService;
 
     [ObservableProperty]
     private string _greeting = "Welcome to Avalonia!";
 
-    public MainViewModel(IFeedbackService feedbackService)
+    [ObservableProperty]
+    private string _protectedData;
+
+    public MainViewModel(
+        IFeedbackService feedbackService,
+        IDataProtectionService dataProtectionService)
     {
         _feedbackService = feedbackService;
+        _dataProtectionService = dataProtectionService;
         ShowToastCommand = new RelayCommand(ShowToast);
+        ProtectDataCommand = new RelayCommand(ProtectData);
     }
 
     public ICommand ShowToastCommand { get; }
@@ -23,5 +31,15 @@ public partial class MainViewModel : ViewModelBase
     private void ShowToast()
     {
         _feedbackService.ShowToast("Sugus toast");
+    }
+
+    public ICommand ProtectDataCommand { get; }
+
+    private void ProtectData()
+    {
+        byte[] data = new byte[] { 25, 26, 27 };
+        string protectedData = _dataProtectionService.Protect(data);
+        ProtectedData = protectedData;
+        byte[] unprotectedData = _dataProtectionService.Unprotect(protectedData);
     }
 }

@@ -14,6 +14,10 @@
 
   <StackPanel>
     <Button Command="{Binding ShowToastCommand}">Toast</Button>
+    <StackPanel Orientation="Horizontal">
+      <Button Command="{Binding ProtectDataCommand}">Data protection</Button>
+      <TextBlock Text="{Binding ProtectedData}" />
+    </StackPanel>
     <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
   </StackPanel>
 </UserControl>
