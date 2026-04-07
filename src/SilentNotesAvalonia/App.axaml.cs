@@ -6,6 +6,7 @@ using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
 using AvaloniaCrossTest.Services;
 using Microsoft.Extensions.DependencyInjection;
+using SilentNotes.Services;
 using SilentNotesAvalonia.ViewModels;
 using SilentNotesAvalonia.Views;
 
@@ -47,14 +48,16 @@ public partial class App : Application
             var mainWindowProvider = Services.GetRequiredService<IMainWindowProvider>();
             mainWindowProvider.MainWindow = mainWindow;
 
-            var mainViewModel = new MainViewModel();
+            var mainViewModel = new MainViewModel(
+                Services.GetRequiredService<IFeedbackService>());
             mainWindow.DataContext = mainViewModel;
             desktop.MainWindow = mainWindow;
         }
         else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform)
         {
             var mainView = new MainView();
-            var mainViewModel = new MainViewModel();
+            var mainViewModel = new MainViewModel(
+                Services.GetRequiredService<IFeedbackService>());
             mainView.DataContext = mainViewModel;
             singleViewPlatform.MainView = mainView;
         }

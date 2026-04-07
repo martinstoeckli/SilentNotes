@@ -2,6 +2,8 @@
 using Avalonia;
 using AvaloniaCrossTest.Services;
 using Microsoft.Extensions.DependencyInjection;
+using SilentNotes.Services;
+using SilentNotesAvalonia.Desktop.Services;
 
 namespace SilentNotesAvalonia.Desktop;
 
@@ -30,6 +32,8 @@ sealed class Program
     {
         var services = new ServiceCollection();
         services.AddSingleton<IMainWindowProvider, MainWindowProvider>();
+        services.AddSingleton<IFeedbackService>((services) =>
+            new FeedbackService(services.GetRequiredService<IMainWindowProvider>()));
         return services.BuildServiceProvider();
     }
 }

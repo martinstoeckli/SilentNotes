@@ -7,17 +7,21 @@ namespace SilentNotesAvalonia.ViewModels;
 
 public partial class MainViewModel : ViewModelBase
 {
+    private readonly IFeedbackService _feedbackService;
+
     [ObservableProperty]
     private string _greeting = "Welcome to Avalonia!";
 
-    public MainViewModel()
+    public MainViewModel(IFeedbackService feedbackService)
     {
-        SugusCommand = new RelayCommand(Sugus);
+        _feedbackService = feedbackService;
+        ShowToastCommand = new RelayCommand(ShowToast);
     }
 
-    public ICommand SugusCommand { get; }
+    public ICommand ShowToastCommand { get; }
 
-    private void Sugus()
+    private void ShowToast()
     {
+        _feedbackService.ShowToast("Sugus toast");
     }
 }

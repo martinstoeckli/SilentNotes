@@ -5,6 +5,8 @@ using Avalonia;
 using Avalonia.Android;
 using AvaloniaCrossTest.Services;
 using Microsoft.Extensions.DependencyInjection;
+using SilentNotes.Services;
+using SilentNotesAvalonia.Android.Services;
 
 namespace SilentNotesAvalonia.Android;
 
@@ -36,6 +38,7 @@ public class MainActivity : AvaloniaMainActivity<App>
     private static IServiceProvider CreateServiceProvider()
     {
         var services = new ServiceCollection();
+        services.AddSingleton<IFeedbackService>((services) => new FeedbackService());
         return services.BuildServiceProvider();
     }
 }

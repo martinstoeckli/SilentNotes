@@ -13,7 +13,7 @@
   </Design.DataContext>
 
   <StackPanel>
-    <Button Command="{Binding SugusCommand}">Sugus</Button>
+    <Button Command="{Binding ShowToastCommand}">Toast</Button>
     <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
   </StackPanel>
 </UserControl>

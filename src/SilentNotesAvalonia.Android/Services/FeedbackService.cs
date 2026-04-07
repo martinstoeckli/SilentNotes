@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using MudBlazor;
 using SilentNotes.Services;
 
-namespace SilentNotesAvalonia.Services
+namespace SilentNotesAvalonia.Android.Services
 {
-    public class FeedbackService : IFeedbackService
+    internal class FeedbackService : IFeedbackService
     {
         public Task<MessageBoxResult> ShowMessageAsync(string message, string title, MessageBoxButtons buttons, bool conservativeDefault)
         {
