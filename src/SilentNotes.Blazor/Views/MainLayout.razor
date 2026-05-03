@@ -1,5 +1,6 @@
 ﻿@inherits LayoutComponentBase
 
+@using SilentNotes.Models
 @using SilentNotes.ViewModels
 @using SilentNotes.Services
 @using SilentNotes.Workers
@@ -15,6 +16,8 @@
 @inject IMessengerService MessengerService
 @inject ISynchronizationService SynchronizationService
 @inject ISynchronizationState SynchronizationState
+@inject ISettingsService SettingsService
+@inject ILanguageService LanguageService
 
 @implements IDisposable
 
@@ -83,6 +86,10 @@
 		// Give other services a way to redraw the GUI of the whole app.
 		MessengerService.Register<RedrawMainPageMessage>(
 			this, (recipient, message) => InvokeAsync(StateHasChanged));
+
+		SettingsModel settings = SettingsService.LoadSettingsOrDefault();
+		if (settings.AlwaysEnglish)
+			(LanguageService as ILanguageTestService)?.SetAlwaysEnglish(true);
 
 		// Workaround: Scoped services are always correct when injected, but when adding them to
 		// Ioc as scoped services, it seems they get lost, and when demanded the next time the Ioc

@@ -205,4 +205,5 @@ gui_note_insertion_top = Insert new notes at the top
 gui_note_insertion_bottom = Append new notes at the bottom
 gui_remember_last_tag_filter = Remember search tag for next launch
 gui_hide_closed_safe_notes = Hide notes of closed safe
+gui_always_english = Always display in English
 gui_localization_test = Test new language file

@@ -2,6 +2,7 @@
 using System.IO;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using SilentNotes.Services;
 
 namespace SilentNotesTest.Services
@@ -127,6 +128,56 @@ namespace SilentNotesTest.Services
             Assert.AreEqual("===", resDictionary["key6"]);
             Assert.AreEqual("Please no", resDictionary["key 7"]);
             Assert.AreEqual(string.Empty, resDictionary["key8"]);
+        }
+
+        [TestMethod]
+        public void LoadText_UsesLazyLoading()
+        {
+            List<string> resFile = new List<string>()
+            {
+                "key1=First text",
+            };
+
+            using (Stream stream = CreateStreamFromLines(resFile))
+            {
+                Mock<ILanguageServiceResourceReader> reader = new Mock<ILanguageServiceResourceReader>();
+                reader
+                    .Setup(m => m.TryOpenResourceStream(It.IsAny<string>(), It.IsAny<string>()))
+                    .ReturnsAsync(stream);
+
+                LanguageService languages = new LanguageService(reader.Object, string.Empty, "de");
+                reader.Verify(m => m.TryOpenResourceStream(It.IsAny<string>(), It.Is<string>(v => v == "de")), Times.Never);
+
+                // First time language resource is loaded, read the stream
+                string localizedText = languages.LoadText("key1");
+                reader.Verify(m => m.TryOpenResourceStream(It.IsAny<string>(), It.Is<string>(v => v == "de")), Times.Once);
+                Assert.AreEqual("First text", localizedText);
+            }
+        }
+
+        [TestMethod]
+        public void SetsAlwaysEnglish_ResetsLazyLoading()
+        {
+            List<string> resFile = new List<string>()
+            {
+                "key1=First text",
+            };
+
+            Mock<ILanguageServiceResourceReader> reader = new Mock<ILanguageServiceResourceReader>();
+            reader
+                .Setup(m => m.TryOpenResourceStream(It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync(() => CreateStreamFromLines(resFile));
+
+            LanguageService languages = new LanguageService(reader.Object, string.Empty, "de");
+            languages.LoadText("key1");
+            languages.LoadText("key1");
+
+            // Should read the resources again
+            (languages as ILanguageTestService).SetAlwaysEnglish(true);
+            languages.LoadText("key1");
+
+            reader.Verify(m => m.TryOpenResourceStream(It.IsAny<string>(), It.Is<string>(v => v == "de")), Times.Once);
+            reader.Verify(m => m.TryOpenResourceStream(It.IsAny<string>(), It.Is<string>(v => v == "en")), Times.Once);
         }
 
         private Stream CreateStreamFromLines(List<string> lines)

@@ -24,5 +24,12 @@ namespace SilentNotes.Services
         /// </summary>
         /// <param name="customResourceFile">The content of a user written language resource file.</param>
         void OverrideWithTestResourceFile(byte[] customResourceFile);
+
+        /// <summary>
+        /// Sets a value indicating whether the application should always use English for the GUI.
+        /// </summary>
+        /// <param name="alwaysEnglish">Pass true to force the application to use English regardless
+        /// of the OS language, false to allow localization.</param>
+        void SetAlwaysEnglish(bool alwaysEnglish);
     }
 }

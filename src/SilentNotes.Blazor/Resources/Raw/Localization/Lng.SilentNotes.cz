@@ -205,4 +205,5 @@ gui_note_insertion_top = Vkládat nové poznámky na začátek
 gui_note_insertion_bottom = Vkládat nové poznámky na konec
 gui_remember_last_tag_filter = Zapamatovat vyhledávání pro další spuštění
 gui_hide_closed_safe_notes = Skrýt poznámky uzamčeného trezoru
+gui_always_english = Always display in English
 gui_localization_test = Vyzkoušet soubor s překladem

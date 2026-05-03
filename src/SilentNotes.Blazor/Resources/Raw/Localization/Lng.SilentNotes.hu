@@ -205,4 +205,5 @@ gui_note_insertion_top = Új jegyzetek beszúrása felül
 gui_note_insertion_bottom = Új jegyzetek hozzáadása alul
 gui_remember_last_tag_filter = Keresési címke megjegyzése a következő indításhoz
 gui_hide_closed_safe_notes = A bezárt széf jegyzeteinek elrejtése
+gui_always_english = Always display in English
 gui_localization_test = Új nyelvi fájl tesztelése

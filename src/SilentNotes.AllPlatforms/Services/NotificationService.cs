@@ -39,7 +39,7 @@ namespace SilentNotes.Services
                 new Notification
                 {
                     Id = TransferCodeNotificationId,
-                    Message = _languageService.LoadTextFmt("transfer_code_notification", _languageService.LoadText("show_transfer_code")),
+                    GetMessage = () => _languageService.LoadTextFmt("transfer_code_notification", _languageService.LoadText("show_transfer_code")),
                     QueueTime = TimeSpan.FromDays(5),
                 }
             };
@@ -65,7 +65,7 @@ namespace SilentNotes.Services
                 {
                     trigger.ShownAt = now;
                     _settingsService.TrySaveSettingsToLocalDevice(settings);
-                    await _feedbackService.ShowMessageAsync(notification.Message, string.Empty, MessageBoxButtons.Ok, true);
+                    await _feedbackService.ShowMessageAsync(notification.GetMessage(), string.Empty, MessageBoxButtons.Ok, true);
                     break; // Show only one notification per startup
                 }
             }
@@ -96,8 +96,13 @@ namespace SilentNotes.Services
             /// <summary>Gets or sets the id of the notification.</summary>
             public Guid Id { get; set; }
 
-            /// <summary>Gets or sets the already translated message which of the notification.</summary>
-            public string Message { get; set; }
+            /// <summary>
+            /// Gets a delegate which returns the translated message of the notification.
+            /// </summary>
+            /// <remarks>
+            /// Using a getter we can delay lazy loading of the language resources.
+            /// </remarks>
+            public Func<string> GetMessage { get; set; }
 
             /// <summary>
             /// Gets or sets the timespan to wait until the notification is shown to the

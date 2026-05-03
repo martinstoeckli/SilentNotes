@@ -24,6 +24,7 @@ namespace SilentNotes.Services
         private readonly string _languageCode;
         private readonly string _fallbackLanguageCode;
         private Dictionary<string, string> _textResources;
+        private bool _alwaysEnglish;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LanguageService"/> class.
@@ -47,6 +48,7 @@ namespace SilentNotes.Services
             _domain = domain;
             _languageCode = languageCode;
             _fallbackLanguageCode = fallbackLanguageCode;
+            _alwaysEnglish = false;
         }
 
         /// <inheritdoc/>
@@ -121,6 +123,9 @@ namespace SilentNotes.Services
         private Dictionary<string, string> LoadTextResources(string domain, string languageCode)
         {
             Dictionary<string, string> result = null;
+
+            if (_alwaysEnglish)
+                languageCode = "en";
 
             Stream resourceStream = Task.Run(async () => await _resourceReader.TryOpenResourceStream(domain, languageCode)).Result;
             if (resourceStream != null)
@@ -235,6 +240,16 @@ namespace SilentNotes.Services
                         }
                     }
                 }
+            }
+        }
+
+        /// <inheritdoc/>
+        public void SetAlwaysEnglish(bool alwaysEnglish)
+        {
+            if (alwaysEnglish != _alwaysEnglish)
+            {
+                _alwaysEnglish = alwaysEnglish;
+                _textResources = null;
             }
         }
     }
