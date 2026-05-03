@@ -54,6 +54,7 @@ namespace SilentNotes.Models
             KeepScreenUpDuration = 15;
             UseWallpaper = true;
             RememberLastTagFilter = false;
+            AlwaysEnglish = false;
         }
 
         /// <summary>
@@ -292,6 +293,13 @@ namespace SilentNotes.Models
         /// </summary>
         [XmlElement("prevent_screenshots")]
         public bool PreventScreenshots { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the OS language should be ignored and the
+        /// english preferred if the GUI.
+        /// </summary>
+        [XmlElement("always_english")]
+        public bool AlwaysEnglish {  get; set; }
 
         /// <summary>
         /// Gets a value indicating whether a cloud storage is set.

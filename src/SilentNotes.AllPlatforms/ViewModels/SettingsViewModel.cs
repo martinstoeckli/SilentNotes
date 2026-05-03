@@ -126,6 +126,7 @@ namespace SilentNotes.ViewModels
                 string.GetHashCode(settings.SelectedKdfAlgorithm),
                 settings.AutoSyncMode.GetHashCode(),
                 settings.PreventScreenshots.GetHashCode(),
+                settings.AlwaysEnglish.GetHashCode(),
                 (settings.Credentials == null).GetHashCode(),
             });
         }
@@ -443,6 +444,23 @@ namespace SilentNotes.ViewModels
                 {
                     if (_environmentService.Screenshots != null)
                         _environmentService.Screenshots.PreventScreenshots = value;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether taking screenshots should be forbidden or allowed.
+        /// </summary>
+        public bool AlwaysEnglish
+        {
+            get { return Model.AlwaysEnglish; }
+
+            set
+            {
+                if (SetProperty(Model.AlwaysEnglish, value, (v) => Model.AlwaysEnglish = v))
+                {
+                    (Language as ILanguageTestService)?.SetAlwaysEnglish(Model.AlwaysEnglish);
+                    _messengerService.Send(new RedrawMainPageMessage());
                 }
             }
         }

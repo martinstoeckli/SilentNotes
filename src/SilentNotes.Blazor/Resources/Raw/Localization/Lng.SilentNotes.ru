@@ -205,4 +205,5 @@ gui_note_insertion_top = Вставлять новые заметки вверх
 gui_note_insertion_bottom = Добавлять новые заметки внизу
 gui_remember_last_tag_filter = Remember search tag for next launch
 gui_hide_closed_safe_notes = Скрыть заметки закрытого сейфа
+gui_always_english = Always display in English
 gui_localization_test = Тестировать новый языковой файл

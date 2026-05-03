@@ -205,4 +205,5 @@ gui_note_insertion_top = Yeni notları en üste yerleştir
 gui_note_insertion_bottom = Yeni notları en alta yerleştir
 gui_remember_last_tag_filter = Uygulamayı bir sonraki başlatışımda arama etiketini hatırla
 gui_hide_closed_safe_notes = Kasa kilitlenince korunan notları gizle
+gui_always_english = Always display in English
 gui_localization_test = Yeni bir dil dosyasını dene

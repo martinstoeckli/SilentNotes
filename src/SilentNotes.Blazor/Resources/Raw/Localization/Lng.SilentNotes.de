@@ -205,4 +205,5 @@ gui_note_insertion_top = Neue Notiz oben einfügen
 gui_note_insertion_bottom = Neue Notiz unten anfügen
 gui_remember_last_tag_filter = Schlagwortsuche für nächsten Start merken
 gui_hide_closed_safe_notes = Notizen von geschlossenem Tresor ausblenden
+gui_always_english = Immer auf Englisch anzeigen
 gui_localization_test = Neue Sprachdatei testen

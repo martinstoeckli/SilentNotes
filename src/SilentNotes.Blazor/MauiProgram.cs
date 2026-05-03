@@ -94,7 +94,8 @@ public static class MauiProgram
 
         services.AddSingleton<IMessengerService>((serviceProvider) => new MessengerService());
         services.AddSingleton<ISvgIconService>((serviceProvider) => new SvgIconService());
-        services.AddSingleton<ILanguageService>((serviceProvider) => new LanguageService(new LanguageServiceResourceReader(), "SilentNotes", GetLanguageCode()));
+        services.AddSingleton<ILanguageService>((serviceProvider) => new LanguageService(
+            new LanguageServiceResourceReader(), "SilentNotes", new LanguageCodeService().GetSystemLanguageCode()));
         services.AddSingleton<INoteRepositoryUpdater>((serviceProvider) => new NoteRepositoryUpdater());
         services.AddSingleton<IThemeService>((serviceProvider) => new ThemeService(
             serviceProvider.GetService<ISettingsService>(),
@@ -186,13 +187,4 @@ public static class MauiProgram
     }
 
 #endif
-
-    private static string GetLanguageCode()
-    {
-        string languageCode = new LanguageCodeService().GetSystemLanguageCode();
-#if (DEBUG && FORCE_LANG_EN)
-        languageCode = "en";
-#endif
-        return languageCode;
-    }
 }
