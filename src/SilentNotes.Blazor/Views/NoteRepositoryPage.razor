@@ -187,7 +187,10 @@
 							<div class="pin">@IconService.EmbedSvgLink(IconNames.Pin, 22)</div>
 						}
 						<div class="note-handle note-handle-top @Css.BuildClass(new CssClassIf("bluish-highlighted", note == ViewModel.SelectedOrderNote))" @onmousedown="() => ViewModel.SelectOrderNote(note)" @onclick:stopPropagation="true">@IconService.EmbedSvgLink(IconNames.ArrowAll, 22)</div>
-						<div class="note-handle note-handle-bottom" @onclick="() => ViewModel.DeleteNoteCommand.Execute(note.Id)" @onclick:stopPropagation="true">@IconService.EmbedSvgLink(IconNames.Delete, 19)</div>
+						@if(!note.IsLocked)
+						{
+							<div class="note-handle note-handle-bottom" @onclick="() => ViewModel.DeleteNoteCommand.Execute(note.Id)" @onclick:stopPropagation="true">@IconService.EmbedSvgLink(IconNames.Delete, 19)</div>
+						}
 						@if (ViewModel.IsAnySafeOpen && !note.IsLocked)
 						{
 							@if (note.IsInSafe)
