@@ -1,0 +1,6 @@
+SilentNotes version 8.8.0
+
+* Added switch to always show the English GUI.
+* Removed the delete button for locked notes.
+* When pasting from MS Word, individual formatting will be removed.
+* Update TipTap v3.23.1.

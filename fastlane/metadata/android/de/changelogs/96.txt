@@ -1,0 +1,6 @@
+SilentNotes version 8.8.0
+
+* Option zum anzeigen einer Englischen Benutzeroberfläche hinzugefügt.
+* Button zum löschen bei verschlüsselten Notizen entfernt.
+* Beim einfügen von Text aus MS Word wird die individuelle Formatierung entfernt.
+* Update TipTap v3.23.1.
