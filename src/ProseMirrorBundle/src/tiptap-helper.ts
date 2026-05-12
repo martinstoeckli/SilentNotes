@@ -92,4 +92,40 @@ export class TiptapHelper {
     public static insertHorizontalRule(editor: Editor): void {
         editor.chain().focus().setHorizontalRule().run();
     }
+
+    /**
+     * Formatted text pasted from other applications (like MS Word) often contains styles, this
+     * function strips away those unwanted formattings.
+     * Credits to: https://www.linkedin.com/pulse/struggling-pasting-tiptap-editor-heres-how-fix-khoshbayan-m-sc--lnale
+     * @param html The pasted html content.
+     * @returns Cleaned html string.
+     */
+    public static cleanPastedHTML(html: string): string {
+        try {
+            // Create a document fragment
+            const tempContainer = document.createElement('div');
+            tempContainer.innerHTML = html;
+
+            // Remove all style attributes
+            const elementsWithStyle = tempContainer.querySelectorAll('*[style]');
+            elementsWithStyle.forEach(el => el.removeAttribute('style'));
+
+            // Remove all class attributes
+            const elementsWithClass = tempContainer.querySelectorAll('*[class]');
+            elementsWithClass.forEach(el => el.removeAttribute('class'));
+
+            // Remove data attributes (often used for hidden content)
+            const elementsWithDataAttrs  = tempContainer.querySelectorAll('*');
+            elementsWithDataAttrs.forEach(el => {
+                Array.from(el.attributes)
+                .filter(attr => attr.name.startsWith('data-'))
+                .forEach(attr => el.removeAttribute(attr.name));
+            });
+
+            const result = tempContainer.innerHTML;
+            return result;
+        } catch (error) {
+            return html; // Fallback to original
+        }
+    }
 }
