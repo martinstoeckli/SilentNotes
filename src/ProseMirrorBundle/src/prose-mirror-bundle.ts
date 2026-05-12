@@ -79,6 +79,11 @@ export function initializeEditor(editorElement: HTMLElement): any {
         ScrollTo,
         TabHandler,
       ],
+      editorProps: {
+        transformPastedHTML(html) {
+          return TiptapHelper.cleanPastedHTML(html);
+        },
+      },
       editable: false,
     });
   } 
@@ -123,6 +128,11 @@ export function initializeEditor(editorElement: HTMLElement): any {
         }),
         ScrollTo,
       ],
+      editorProps: {
+        transformPastedHTML(html) {
+          return TiptapHelper.cleanPastedHTML(html);
+        },
+      },
       editable: false,
     });
   } 
