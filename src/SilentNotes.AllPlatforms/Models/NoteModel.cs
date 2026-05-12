@@ -71,6 +71,7 @@ namespace SilentNotes.Models
             target.SafeId = this.SafeId;
             target.ShoppingModeActive = this.ShoppingModeActive;
             target.IsPinned = this.IsPinned;
+            target.AttachementKey = this.AttachementKey;
         }
 
         /// <summary>
@@ -203,6 +204,18 @@ namespace SilentNotes.Models
         {
             MetaModifiedAt = DateTime.UtcNow;
         }
+
+        /// <summary>
+        /// Gets or sets an individual key used for decrypting attachements belonging to this note.
+        /// </summary>
+        /// <remarks>
+        /// Like the note content, this key is encrypted with the user password, if the note is
+        /// part of a safe.
+        /// </remarks>
+        [XmlElement(ElementName = "attachement_key")]
+        public string AttachementKey { get; set; }
+
+        public bool AttachementKeySpecified { get { return !string.IsNullOrEmpty(AttachementKey); } }
 
         /// <summary>
         /// Makes a deep copy of the note.

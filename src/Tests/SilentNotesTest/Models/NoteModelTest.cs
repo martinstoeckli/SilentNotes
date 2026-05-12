@@ -35,6 +35,7 @@ namespace SilentNotesTest.Models
                 MetaModifiedAt = new DateTime(2001, 10, 23, 18, 55, 30),
                 SafeId = new Guid("10000000000000000000000000000000"),
                 Tags = new List<string>() { "Aa", "Bb" },
+                AttachementKey = "attachementKey1",
             };
             NoteModel note2 = note1.Clone();
 
@@ -50,6 +51,7 @@ namespace SilentNotesTest.Models
             Assert.AreEqual(note1.Tags.Count, note2.Tags.Count);
             Assert.AreEqual(note1.Tags[0], note2.Tags[0]);
             Assert.AreEqual(note1.Tags[1], note2.Tags[1]);
+            Assert.AreEqual(note1.AttachementKey, note2.AttachementKey);
 
             // Serialized notes must be identical
             string note1Xml = XmlUtils.SerializeToString(note1);

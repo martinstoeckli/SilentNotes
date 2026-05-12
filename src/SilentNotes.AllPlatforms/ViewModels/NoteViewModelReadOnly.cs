@@ -95,7 +95,7 @@ namespace SilentNotes.ViewModels
         }
 
         /// <summary>
-        /// Gets or sets the Html content of the note.
+        /// Gets the Html content of the note.
         /// </summary>
         public string UnlockedHtmlContent
         {
