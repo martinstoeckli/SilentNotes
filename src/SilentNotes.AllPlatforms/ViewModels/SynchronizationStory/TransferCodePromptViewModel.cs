@@ -58,7 +58,7 @@ namespace SilentNotes.ViewModels
             }
             else
             {
-                _feedbackService.ShowToast(_languageService["sync_error_transfercode"]);
+                _feedbackService.ShowToast(_languageService["sync_error_transfercode"], FeedbackSeverity.Error);
             }
         }
 

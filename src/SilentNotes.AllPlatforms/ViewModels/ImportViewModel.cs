@@ -107,7 +107,7 @@ namespace SilentNotes.ViewModels
                 }
                 else
                 {
-                    _feedbackService.ShowToast(Language.LoadText("import_error"));
+                    _feedbackService.ShowToast(Language.LoadText("import_error"), FeedbackSeverity.Error);
                 }
             }
         }

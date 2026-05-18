@@ -30,9 +30,26 @@ namespace SilentNotes.Services
         }
 
         /// <inheritdoc/>
-        public void ShowToast(string message, Severity severity = Severity.Normal)
+        public void ShowToast(string message, FeedbackSeverity severity = FeedbackSeverity.Unknown)
         {
-            _snackbar.Add(message, severity, config => { config.HideIcon = true; });
+            _snackbar.Add(message, ToSeverity(severity), config => { config.HideIcon = true; });
+        }
+
+        /// <summary>
+        /// Converts the feedback severity to its MudBlazor counterpart.
+        /// </summary>
+        /// <param name="severity">Feedback severity.</param>
+        /// <returns>MudBlazor severity.</returns>
+        protected static Severity ToSeverity(FeedbackSeverity severity)
+        {
+            switch (severity)
+            {
+                case FeedbackSeverity.Info: return Severity.Info;
+                case FeedbackSeverity.Warning: return Severity.Warning;
+                case FeedbackSeverity.Error: return Severity.Error;
+                default:
+                    return Severity.Normal;
+            }
         }
 
         /// <inheritdoc/>

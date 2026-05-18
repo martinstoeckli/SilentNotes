@@ -104,7 +104,7 @@ namespace SilentNotes.ViewModels
                 }
                 else
                 {
-                    _feedbackService.ShowToast(Language.LoadText("export_error"));
+                    _feedbackService.ShowToast(Language.LoadText("export_error"), FeedbackSeverity.Error);
                 }
             }
         }

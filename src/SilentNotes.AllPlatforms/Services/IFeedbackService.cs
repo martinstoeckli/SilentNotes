@@ -5,7 +5,6 @@
 
 using System.ComponentModel;
 using System.Threading.Tasks;
-using MudBlazor;
 
 namespace SilentNotes.Services
 {
@@ -26,7 +25,7 @@ namespace SilentNotes.Services
         /// </remarks>
         /// <param name="message">Message to display.</param>
         /// <param name="severity">The severity defines the color and the icon of the toast.</param>
-        void ShowToast(string message, Severity severity = Severity.Normal);
+        void ShowToast(string message, FeedbackSeverity severity = FeedbackSeverity.Unknown);
 
         /// <summary>
         /// Displays information to the user.
@@ -37,6 +36,17 @@ namespace SilentNotes.Services
         /// <param name="conservativeDefault">Sets the non destructive cancel button as default.</param>
         /// <returns>The pressed button.</returns>
         Task<MessageBoxResult> ShowMessageAsync(string message, string title, MessageBoxButtons buttons, bool conservativeDefault);
+    }
+
+    /// <summary>
+    /// Enumeration of all available severity types of a feedback.
+    /// </summary>
+    public enum FeedbackSeverity
+    {
+        Unknown,
+        Info,
+        Warning,
+        Error
     }
 
     /// <summary>

@@ -10,7 +10,6 @@ using System.Linq;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.DependencyInjection;
-using MudBlazor;
 using SilentNotes.Crypto;
 using SilentNotes.Models;
 using SilentNotes.Services;
@@ -436,7 +435,7 @@ namespace SilentNotes.ViewModels
             FilteredNotes.RemoveAt(selectedIndex);
             await InitializeTagTree();
 
-            _feedbackService.ShowToast(Language.LoadText("feedback_note_to_recycle"), Severity.Info);
+            _feedbackService.ShowToast(Language.LoadText("feedback_note_to_recycle"), FeedbackSeverity.Info);
         }
 
         /// <summary>

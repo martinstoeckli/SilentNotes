@@ -87,7 +87,7 @@ namespace SilentNotes.Stories
             {
                 string errorMessage = TranslateException(stepResult.Error, serviceProvider);
                 if (!string.IsNullOrEmpty(errorMessage))
-                    feedbackService.ShowToast(errorMessage);
+                    feedbackService.ShowToast(errorMessage, FeedbackSeverity.Error);
                 return;
             }
 
