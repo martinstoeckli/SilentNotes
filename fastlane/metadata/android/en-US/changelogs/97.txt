@@ -1,0 +1,4 @@
+SilentNotes version 8.8.1
+
+* Fixed an issue where changes weren't saved when closing the vault, after moving notes in or out of it.
+* Keep the app open when closing it until synchronization is complete (Windows only).

@@ -1,0 +1,4 @@
+SilentNotes version 8.8.1
+
+* Fehlendes speichern beim schliessen des Tresors behoben, wenn Notizen in/aus dem Tresor bewegt wurden.
+* Anwendung beim schliessen offen halten, bis die Synchronisation abgeschlossen ist (nur Windows).
