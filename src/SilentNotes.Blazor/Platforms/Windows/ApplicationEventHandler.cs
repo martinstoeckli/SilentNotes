@@ -5,6 +5,7 @@
 
 using System.Runtime.InteropServices;
 using Microsoft.Maui.Platform;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.Windows.AppLifecycle;
 using SilentNotes.Services;
@@ -20,10 +21,46 @@ namespace SilentNotes.Platforms
     /// </summary>
     internal class ApplicationEventHandler
     {
+        private Microsoft.UI.Xaml.Window _window;
+        private bool _isClosing;
+
         internal void OnWindowCreated(Microsoft.UI.Xaml.Window window)
         {
+            _window = window;
             AdjustWindowSizeInDemoMode(window);
             window.VisibilityChanged += OnVisibilityChanged;
+            window.AppWindow.Closing += OnClosing;
+        }
+
+        private async void OnClosing(AppWindow sender, AppWindowClosingEventArgs args)
+        {
+            System.Diagnostics.Debug.WriteLine("*** ApplicationEventHandler.OnClosing()");
+
+            // Prevent closing to do a last synchronization (Maui cannot await OnClosing)
+            args.Cancel = true;
+
+            // If app is already closing and syncing, ignore user clicks to close the app
+            if (_isClosing)
+                return;
+            _isClosing = true;
+            sender.Closing -= OnClosing;
+
+            try
+            {
+                var messenger = Ioc.Instance.GetService<IMessengerService>();
+                messenger.Send(new StoreUnsavedDataMessage(MessageSender.ApplicationEventHandler));
+
+                // We need to wait for the end of the synchronization, otherwise the app exits before
+                // the work is done.
+                var synchronizationService = Ioc.Instance.GetService<ISynchronizationService>();
+                var syncTask = synchronizationService.AutoSynchronizeAtShutdown(Ioc.Instance);
+                await syncTask.WaitAsync(TimeSpan.FromSeconds(6));
+            }
+            finally
+            {
+                // Now close the window, the OnClosing event is unsubscribed now and won't cancel the closing
+                _window.Close();
+            }
         }
 
         private void OnVisibilityChanged(object sender, WindowVisibilityChangedEventArgs args)
@@ -40,13 +77,6 @@ namespace SilentNotes.Platforms
         {
             System.Diagnostics.Debug.WriteLine("*** ApplicationEventHandler.OnClosed()");
             window.VisibilityChanged -= OnVisibilityChanged;
-            var messenger = Ioc.Instance.GetService<IMessengerService>();
-            messenger.Send(new StoreUnsavedDataMessage(MessageSender.ApplicationEventHandler));
-
-            // We need to wait for the end of the synchronization, otherwise the app exits before
-            // the work is done.
-            var synchronizationService = Ioc.Instance.GetService<ISynchronizationService>();
-            Task.Run(() => synchronizationService.AutoSynchronizeAtShutdown(Ioc.Instance)).Wait();
         }
 
         /// <summary>
