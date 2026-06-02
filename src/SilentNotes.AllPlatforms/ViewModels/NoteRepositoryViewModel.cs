@@ -473,7 +473,7 @@ namespace SilentNotes.ViewModels
 
             // A NavigationReload() won't call for storing of unsaved data, but it is the only way
             // to refresh the page without recreating the scoped services, see NavigationService.ForceLoadNever
-            //OnStoringUnsavedData();
+            OnStoringUnsavedData();
             _navigationService.NavigateReload();
         }
 
