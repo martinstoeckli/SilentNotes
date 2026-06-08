@@ -101,3 +101,12 @@ export function customPasteHandler(options: CustomPasteHandlerOptions): Plugin {
     },
   })
 }
+
+function isValidUrl(text: string): boolean {
+  try {
+      new URL(text);
+      return true;
+  } catch {
+      return false;
+  }
+}

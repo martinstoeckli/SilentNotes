@@ -76,7 +76,7 @@ export class TiptapHelper {
      * @param editor - A TipTap editor instance.
      * @returns The selected text, or null if the selection is empty.
      */
-    private static getSelectedText(editor: Editor): string {
+    private static getSelectedText(editor: Editor): string | null {
         const { from, to, empty } = editor.state.selection;
         if (empty) {
             return null;
@@ -91,6 +91,78 @@ export class TiptapHelper {
      */
     public static insertHorizontalRule(editor: Editor): void {
         editor.chain().focus().setHorizontalRule().run();
+    }
+
+    /**
+     * Searches for all occurences of a given text in the note and highlights the findings.
+     * @param {Editor}  editor - A TipTap editor instance.
+     * @param {string}  needle - The text to search for.
+    */
+    public static searchAndHighlight(editor: Editor, needle: string, minLength: number = 2): void {
+        if ((needle === null) || (needle.length < minLength))
+            needle = '';
+        editor.commands.setSearchTerm(needle);
+    }
+
+    /**
+     * Searches for the next occurence of a given text in the note and selects the finding.
+     * If the current selection matches, it is kept. The focus is not set to the editor, so the
+     * search input field does not loose the focus.
+     * @param {Editor}  editor - A TipTap editor instance.
+    */
+    public static selectNextWhileTyping(editor: Editor): void {
+        editor.chain().selectNext(true, true).run();
+        this.scrollToSelection(editor);
+    }
+
+    /**
+     * Searches for the next occurence of a given text in the note and selects the finding.
+     * @param {Editor}  editor - A TipTap editor instance.
+    */
+    public static selectNext(editor: Editor): void {
+        editor.chain().focus().selectNext(false, false).run();
+        this.scrollToSelection(editor);
+    }
+
+    /**
+     * Searches for the next occurence of a given text in the note and selects the finding.
+     * @param {Editor}  editor - A TipTap editor instance.
+    */
+    public static selectPrevious(editor: Editor): void {
+        editor.chain().focus().selectPrevious().run();
+        this.scrollToSelection(editor);
+    }
+
+    /**
+     * Searches for word boundaries around the current cursor position and selects the word.
+     * @param {Editor}  editor - A TipTap editor instance.
+     * @returns {string} The text content of the new selection.
+    */
+    public static selectWordAtCurrentPosition(editor: Editor): string {
+        let selection = editor.view.state.selection;
+        let text = selection.$from.parent.textContent;
+
+        let textFromPos = selection.$from.parentOffset;
+        let toLeft = 0;
+        while ((textFromPos - toLeft - 1 >= 0) && !this.isWhitespace(text[textFromPos - toLeft - 1])) {
+            toLeft++;
+        }
+
+        let textToPos = selection.$to.parentOffset;
+        let toRight = 0;
+        if (textFromPos != textToPos)
+            toRight--; // for the case that the selection includes a trailing whitespace (after a double click)
+        while ((textToPos + toRight < text.length) && !this.isWhitespace(text[textToPos + toRight])) {
+            toRight++;
+        }
+
+        editor.commands.setTextSelection({ from: selection.$from.pos - toLeft, to: selection.$to.pos + toRight });
+        return text.substring(textFromPos - toLeft, textToPos + toRight);
+    }
+
+    private static isWhitespace(char: string): boolean {
+        let regex = /[\s]/;
+        return regex.test(char);
     }
 
     /**

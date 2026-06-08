@@ -1,4 +1,4 @@
-﻿import { initializeChecklist, TiptapHelper, registerIsShoppingModeActive, searchAndHighlight, selectNextWhileTyping, selectNext, selectPrevious, moveChecklist, sortChecklistPendingToTop, sortChecklistAlphabetical, setCheckStateForAllToTodo, setCheckStateForAllToDone, setCheckStateForAllToDisabled, exportChecklistAsPlainText } from '../prose-mirror-bundle.js';
+﻿import { initializeChecklist, TiptapHelper, registerIsShoppingModeActive, CheckableParagraphHelper, exportChecklistAsPlainText } from '../prose-mirror-bundle.js';
 
 var _page;
 
@@ -129,54 +129,54 @@ export function redo() {
 export function search(searchPattern) {
     if (!IsInitialized()) return;
 
-    searchAndHighlight(_page.editor, searchPattern);
-    selectNextWhileTyping(_page.editor);
+    TiptapHelper.searchAndHighlight(_page.editor, searchPattern);
+    TiptapHelper.selectNextWhileTyping(_page.editor);
 }
 
 export function findNext() {
     if (!IsInitialized()) return;
 
-    selectNext(_page.editor);
+    TiptapHelper.selectNext(_page.editor);
 }
 
 export function findPrevious() {
     if (!IsInitialized()) return;
 
-    selectPrevious(_page.editor);
+    TiptapHelper.selectPrevious(_page.editor);
 }
 
 export function moveChecklistItem(upwards, singleStep) {
     if (!IsInitialized()) return;
 
-    moveChecklist(_page.editor, upwards, singleStep);
+    CheckableParagraphHelper.moveChecklist(_page.editor, upwards, singleStep);
 }
 
 export function sortPendingToTop() {
     if (!IsInitialized()) return;
 
-    bundleNoteContentChanged(function () { sortChecklistPendingToTop(_page.editor); });
+    bundleNoteContentChanged(function () { CheckableParagraphHelper.sortPendingToTop(_page.editor); });
 }
 
 export function sortAlphabetical() {
     if (!IsInitialized()) return;
 
-    bundleNoteContentChanged(function () { sortChecklistAlphabetical(_page.editor); });
+    bundleNoteContentChanged(function () { CheckableParagraphHelper.sortAlphabetical(_page.editor); });
 }
 
 export function setForAllToTodo() {
     if (!IsInitialized()) return;
 
-    bundleNoteContentChanged(function () { setCheckStateForAllToTodo(_page.editor); });
+    bundleNoteContentChanged(function () { CheckableParagraphHelper.setCheckStateForAllToTodo(_page.editor); });
 }
 
 export function setForAllToDone() {
     if (!IsInitialized()) return;
 
-    bundleNoteContentChanged(function () { setCheckStateForAllToDone(_page.editor); });
+    bundleNoteContentChanged(function () { CheckableParagraphHelper.setCheckStateForAllToDone(_page.editor); });
 }
 
 export function setForAllToDisabled() {
     if (!IsInitialized()) return;
 
-    bundleNoteContentChanged(function () { setCheckStateForAllToDisabled(_page.editor); });
+    bundleNoteContentChanged(function () { CheckableParagraphHelper.setCheckStateForAllToDisabled(_page.editor); });
 }

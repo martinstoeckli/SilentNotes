@@ -1,4 +1,4 @@
-import { initializeEditor, TiptapHelper, searchAndHighlight, selectNextWhileTyping, selectNext, selectPrevious, selectWordAtCurrentPosition, exportAsPlainText } from '../prose-mirror-bundle.js';
+import { initializeEditor, TiptapHelper, exportAsPlainText } from '../prose-mirror-bundle.js';
 
 var _page;
 
@@ -114,20 +114,20 @@ export function redo() {
 export function search(searchPattern) {
     if (!IsInitialized()) return;
 
-    searchAndHighlight(_page.editor, searchPattern);
-    selectNextWhileTyping(_page.editor);
+    TiptapHelper.searchAndHighlight(_page.editor, searchPattern);
+    TiptapHelper.selectNextWhileTyping(_page.editor);
 }
 
 export function findNext() {
     if (!IsInitialized()) return;
 
-    selectNext(_page.editor);
+    TiptapHelper.selectNext(_page.editor);
 }
 
 export function findPrevious() {
     if (!IsInitialized()) return;
 
-    selectPrevious(_page.editor);
+    TiptapHelper.selectPrevious(_page.editor);
 }
 
 export function prepareLinkDialog() {
@@ -137,14 +137,14 @@ export function prepareLinkDialog() {
     var selectedUrl = _page.editor.getAttributes('link').href;
     if (selectedUrl) {
         _page.editor.commands.extendMarkRange('link');
-        var text = selectWordAtCurrentPosition(_page.editor);
+        var text = TiptapHelper.selectWordAtCurrentPosition(_page.editor);
         return [
             selectedUrl,
             text,
         ];
     }
     else {
-        var text = selectWordAtCurrentPosition(_page.editor);
+        var text = TiptapHelper.selectWordAtCurrentPosition(_page.editor);
         return [
             '',
             text,

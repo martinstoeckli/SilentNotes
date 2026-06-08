@@ -18,11 +18,12 @@ import { BulletList, OrderedList, ListItem } from '@tiptap/extension-list'
 import { Markdown } from '@tiptap/markdown'
 
 export class TiptapMarkdownConverter {
-  private _editor: Editor;
+  // Lazy created and cached editor
+  private _editor: Editor | null = null;
 
   /*
-  * Converts the Markdown content to HTML text.
-  * @param {html} string - The Html text to convert.
+  * Converts the HTML content to Markdown text.
+  * @param {htmlContent} string - The Html text to convert.
   * @returns Markdown text.
   */
   public convertHtmlToMarkdown(htmlContent: string): string {
@@ -32,6 +33,11 @@ export class TiptapMarkdownConverter {
     return result;
   }
 
+  /*
+  * Converts the Markdown content to HTML text.
+  * @param {markdownContent} string - The Markdown text to convert.
+  * @returns Html text.
+  */
   public convertMarkdownToHtml(markdownContent: string): string {
     let editor: Editor = this.getOrCreateEditor();
     editor.commands.setContent(markdownContent, { contentType: 'markdown' })

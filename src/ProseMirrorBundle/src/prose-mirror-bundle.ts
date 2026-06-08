@@ -19,11 +19,13 @@ import { BulletList, OrderedList, ListItem } from '@tiptap/extension-list'
 import { CustomHeading } from "./custom-heading-extension";
 import { CustomLink } from "./custom-link-extension";
 import { SearchNReplace } from './search-n-replace'
-import { CheckableParagraph, registerIsShoppingModeActive as checklistRegisterIsShoppingModeActive, moveChecklistUp, moveChecklistDown, sortPendingToTop, setCheckStateForAll, sortAlphabetical } from "./checkable-paragraph-extension";
+import { CheckableParagraph, registerIsShoppingModeActive as checklistRegisterIsShoppingModeActive } from "./checkable-paragraph-extension";
 import { ScrollTo } from './scroll-to-extension'
 import { TabHandler } from './tab-handler-extension'
 import { TiptapHelper } from "./tiptap-helper";
+
 export { exportAsPlainText, exportChecklistAsPlainText } from './tiptap-plain-text-exporter'
+export { CheckableParagraphHelper } from './checkable-paragraph-extension'
 export { TiptapHelper } from './tiptap-helper'
 export { TiptapMarkdownConverter } from './tiptap-markdown-converter'
 
@@ -143,129 +145,4 @@ export function initializeEditor(editorElement: HTMLElement): any {
 
 export function registerIsShoppingModeActive(delegate: () => boolean) {
   checklistRegisterIsShoppingModeActive(delegate);
-}
-
-/**
- * Searches for all occurences of a given text in the note and highlights the findings.
- * @param {Editor}  editor - A TipTap editor instance.
- * @param {string}  needle - The text to search for.
-*/
-export function searchAndHighlight(editor: Editor, needle: string, minLength: number = 2): void {
-  if ((needle === null) || (needle.length < minLength))
-    needle = '';
-  editor.commands.setSearchTerm(needle);
-}
-
-/**
- * Searches for the next occurence of a given text in the note and selects the finding.
- * If the current selection matches, it is kept. The focus is not set to the editor, so the
- * search input field does not loose the focus.
- * @param {Editor}  editor - A TipTap editor instance.
-*/
-export function selectNextWhileTyping(editor: Editor): void {
-  editor.chain().selectNext(true, true).run();
-  TiptapHelper.scrollToSelection(editor);
-}
-
-/**
- * Searches for the next occurence of a given text in the note and selects the finding.
- * @param {Editor}  editor - A TipTap editor instance.
-*/
-export function selectNext(editor: Editor): void {
-  editor.chain().focus().selectNext(false, false).run();
-  TiptapHelper.scrollToSelection(editor);
-}
-
-/**
- * Searches for the next occurence of a given text in the note and selects the finding.
- * @param {Editor}  editor - A TipTap editor instance.
-*/
-export function selectPrevious(editor: Editor): void {
-  editor.chain().focus().selectPrevious().run();
-  TiptapHelper.scrollToSelection(editor);
-}
-
-/**
- * Searches for word boundaries around the current cursor position and selects the word.
- * @param {Editor}  editor - A TipTap editor instance.
- * @returns {string} The text content of the new selection.
-*/
-export function selectWordAtCurrentPosition(editor: Editor): string {
-  let selection = editor.view.state.selection;
-  let text = selection.$from.parent.textContent;
-
-  let textFromPos = selection.$from.parentOffset;
-  let toLeft = 0;
-  while ((textFromPos - toLeft - 1 >= 0) && !isWhitespace(text[textFromPos - toLeft - 1])) {
-      toLeft++;
-  }
-
-  let textToPos = selection.$to.parentOffset;
-  let toRight = 0;
-  if (textFromPos != textToPos)
-    toRight--; // for the case that the selection includes a trailing whitespace (after a double click)
-  while ((textToPos + toRight < text.length) && !isWhitespace(text[textToPos + toRight])) {
-      toRight++;
-  }
-
-  editor.commands.setTextSelection({ from: selection.$from.pos - toLeft, to: selection.$to.pos + toRight });
-  return text.substring(textFromPos - toLeft, textToPos + toRight);
-}
-
-/*
- * Searches for all checklist items (paragraphs) and sets their html class attribute
- * to the new check state "todo".
- * @param {Editor}  editor - A TipTap editor instance.
-*/
-export function setCheckStateForAllToTodo(editor: Editor): void {
-  setCheckStateForAll(editor, '');
-}
-
-/*
- * Searches for all checklist items (paragraphs) and sets their html class attribute
- * to the new check state "done".
- * @param {Editor}  editor - A TipTap editor instance.
-*/
-export function setCheckStateForAllToDone(editor: Editor): void {
-  setCheckStateForAll(editor, 'done');
-}
-
-/*
- * Searches for all checklist items (paragraphs) and sets their html class attribute
- * to the new check state "disabled".
- * @param {Editor}  editor - A TipTap editor instance.
-*/
-export function setCheckStateForAllToDisabled(editor: Editor): void {
-  setCheckStateForAll(editor, 'disabled');
-}
-
-export function moveChecklist(editor: Editor, upwards: boolean, singleStep: boolean): void {
-  if (upwards) {
-    moveChecklistUp(editor, singleStep);
-  }
-  else {
-    moveChecklistDown(editor, singleStep);
-  }
-}
-
-export function sortChecklistPendingToTop(editor: Editor): void {
-  sortPendingToTop(editor);
-}
-
-export function sortChecklistAlphabetical(editor: Editor): void {
-  sortAlphabetical(editor);
-}
-
-function isValidUrl(text: string): boolean {
-  try {
-      new URL(text);
-      return true;
-  } catch {
-      return false;
-  }
-}
-
-function isWhitespace(char: string): boolean {
-  let regex = /[\s]/;
-  return regex.test(char);
 }
