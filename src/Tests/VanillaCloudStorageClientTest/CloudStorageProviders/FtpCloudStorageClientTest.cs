@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using Moq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using VanillaCloudStorageClient;
 using VanillaCloudStorageClient.CloudStorageProviders;
 
@@ -52,7 +53,7 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
                     Returns(".\r\n..\r\nXyz\r\nunittest.dat\r\nb.txt\r\nc.txt\r\n");
                 fakeResponse = fakeResponseMock.Object;
             }
-            List<string> res = Task.Run(async () => await ListFileNamesWorksAsync(GetCredentials(), fakeResponse)).Result;
+            List<string> res = await ListFileNamesWorksAsync(GetCredentials(), fakeResponse);
             Assert.IsTrue(res.Count >= 1);
             Assert.IsTrue(res.Contains("unittest.dat"));
 
@@ -61,11 +62,11 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
             {
                 Mock<IFtpFakeResponse> fakeResponseMock = new Mock<IFtpFakeResponse>();
                 fakeResponseMock.
-                    Setup(m => m.GetFakeServerExistsFile(It.Is<string>(r => r == AuthorizationUrl))).
+                    Setup(m => m.GetFakeServerExistsFile(It.Is<string>(r => r.Trim('/') == fileName))).
                     Returns(true);
                 fakeResponse = fakeResponseMock.Object;
             }
-            bool exists = Task.Run(async () => await FileExistsWorksAsync(fileName, GetCredentials(), fakeResponse)).Result;
+            bool exists = await FileExistsWorksAsync(fileName, GetCredentials(), fakeResponse);
             Assert.IsTrue(exists);
 
             // 4) Test download
@@ -77,8 +78,8 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
                     .Returns(fileContent);
                 fakeResponse = fakeResponseMock.Object;
             }
-            Byte[] downloadedContent = Task.Run(async () => await DownloadFileWorksAsync(fileName, GetCredentials(), fakeResponse)).Result;
-            Assert.AreEqual(fileContent, downloadedContent);
+            Byte[] downloadedContent = await DownloadFileWorksAsync(fileName, GetCredentials(), fakeResponse);
+            Assert.IsTrue(fileContent.SequenceEqual(downloadedContent));
 
             // 5) Test delete
             if (!DoRealWebRequests)
@@ -97,7 +98,7 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
                     Returns(false);
                 fakeResponse = fakeResponseMock.Object;
             }
-            exists = Task.Run(async () => await FileExistsWorksAsync(fileName, GetCredentials(), fakeResponse)).Result;
+            exists = await FileExistsWorksAsync(fileName, GetCredentials(), fakeResponse);
             Assert.IsFalse(exists);
         }
 

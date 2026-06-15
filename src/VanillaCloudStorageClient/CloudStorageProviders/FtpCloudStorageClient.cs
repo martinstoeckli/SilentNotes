@@ -20,6 +20,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
     /// </summary>
     public class FtpCloudStorageClient : CloudStorageClientBase, ICloudStorageClient
     {
+        private const int DefaultTimeoutSeconds = 15;
         private const int UploadTimeoutSeconds = 40;
         private const int DownloadTimeoutSeconds = 30;
         private readonly IFtpFakeResponse _fakeResponse;
@@ -51,21 +52,20 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
         }
 
         /// <inheritdoc/>
-        public override Task UploadFileAsync(string filename, byte[] fileContent, CloudStorageCredentials credentials)
+        public override async Task UploadFileAsync(string filename, byte[] fileContent, CloudStorageCredentials credentials)
         {
             credentials.ThrowIfInvalid(CredentialsRequirements, true);
 
             try
             {
                 Url fileUrl = new Url(credentials.Url).AppendPathSegment(filename);
-                using (var ftp = new FtpClient(fileUrl.Host, new NetworkCredential(credentials.Username, credentials.Password)))
+                using (var ftp = new AsyncFtpClient(fileUrl.Host, new NetworkCredential(credentials.Username, credentials.Password)))
                 {
-                    ftp.Config.ValidateAnyCertificate = credentials.AcceptInvalidCertificate;
-                    ftp.Config.ReadTimeout = UploadTimeoutSeconds * 1000;
+                    ConfigureFtpClient(ftp, credentials, UploadTimeoutSeconds * 1000);
                     if (!IsInTestMode)
                     {
-                        _lastConnectionProfile = ConnectOrAutoConnect(ftp, _lastConnectionProfile);
-                        ftp.UploadBytes(fileContent, fileUrl.Path);
+                        _lastConnectionProfile = await ConnectOrAutoConnect(ftp, _lastConnectionProfile);
+                        await ftp.UploadBytes(fileContent, fileUrl.Path);
                     }
                 }
             }
@@ -73,11 +73,10 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
             {
                 throw ConvertToCloudStorageException(ex);
             }
-            return Task.CompletedTask;
         }
 
         /// <inheritdoc/>
-        public override Task<byte[]> DownloadFileAsync(string filename, CloudStorageCredentials credentials)
+        public override async Task<byte[]> DownloadFileAsync(string filename, CloudStorageCredentials credentials)
         {
             credentials.ThrowIfInvalid(CredentialsRequirements, true);
 
@@ -85,21 +84,20 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
             {
                 Url fileUrl = new Url(credentials.Url).AppendPathSegment(filename);
                 byte[] responseData;
-                using (var ftp = new FtpClient(fileUrl.Host, new NetworkCredential(credentials.Username, credentials.Password)))
+                using (var ftp = new AsyncFtpClient(fileUrl.Host, new NetworkCredential(credentials.Username, credentials.Password)))
                 {
-                    ftp.Config.ValidateAnyCertificate = credentials.AcceptInvalidCertificate;
-                    ftp.Config.ReadTimeout = DownloadTimeoutSeconds * 1000;
+                    ConfigureFtpClient(ftp, credentials, DownloadTimeoutSeconds * 1000);
                     if (IsInTestMode)
                     {
                         responseData = _fakeResponse.GetFakeServerResponseBytes(new Url(credentials.Url).AppendPathSegment(filename));
                     }
                     else
                     {
-                        _lastConnectionProfile = ConnectOrAutoConnect(ftp, _lastConnectionProfile);
-                        ftp.DownloadBytes(out responseData, fileUrl.Path, 0);
+                        _lastConnectionProfile = await ConnectOrAutoConnect(ftp, _lastConnectionProfile);
+                        responseData = await ftp.DownloadBytes(fileUrl.Path, 0);
                     }
                 }
-                return Task.FromResult(responseData);
+                return responseData;
             }
             catch (Exception ex)
             {
@@ -108,20 +106,20 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
         }
 
         /// <inheritdoc/>
-        public override Task DeleteFileAsync(string filename, CloudStorageCredentials credentials)
+        public override async Task DeleteFileAsync(string filename, CloudStorageCredentials credentials)
         {
             credentials.ThrowIfInvalid(CredentialsRequirements, true);
 
             try
             {
                 Url fileUrl = new Url(credentials.Url).AppendPathSegment(filename);
-                using (var ftp = new FtpClient(fileUrl.Host, new NetworkCredential(credentials.Username, credentials.Password)))
+                using (var ftp = new AsyncFtpClient(fileUrl.Host, new NetworkCredential(credentials.Username, credentials.Password)))
                 {
-                    ftp.Config.ValidateAnyCertificate = credentials.AcceptInvalidCertificate;
+                    ConfigureFtpClient(ftp, credentials);
                     if (!IsInTestMode)
                     {
-                        _lastConnectionProfile = ConnectOrAutoConnect(ftp, _lastConnectionProfile);
-                        ftp.DeleteFile(fileUrl.Path);
+                        _lastConnectionProfile = await ConnectOrAutoConnect(ftp, _lastConnectionProfile);
+                        await ftp.DeleteFile(fileUrl.Path);
                     }
                 }
             }
@@ -129,10 +127,9 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
             {
                 throw ConvertToCloudStorageException(ex);
             }
-            return Task.CompletedTask;
         }
 
-        public override Task<bool> ExistsFileAsync(string filename, CloudStorageCredentials credentials)
+        public override async Task<bool> ExistsFileAsync(string filename, CloudStorageCredentials credentials)
         {
             credentials.ThrowIfInvalid(CredentialsRequirements, true);
 
@@ -140,21 +137,21 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
             {
                 Url fileUrl = new Url(credentials.Url).AppendPathSegment(filename);
                 bool result;
-                using (var ftp = new FtpClient(fileUrl.Host, new NetworkCredential(credentials.Username, credentials.Password)))
+                using (var ftp = new AsyncFtpClient(fileUrl.Host, new NetworkCredential(credentials.Username, credentials.Password)))
                 {
-                    ftp.Config.ValidateAnyCertificate = credentials.AcceptInvalidCertificate;
+                    ConfigureFtpClient(ftp, credentials);
                     if (IsInTestMode)
                     {
-                        result = _fakeResponse.GetFakeServerExistsFile(credentials.Url);
+                        result = _fakeResponse.GetFakeServerExistsFile(fileUrl.Path);
                     }
                     else
                     {
-                        _lastConnectionProfile = ConnectOrAutoConnect(ftp, _lastConnectionProfile);
-                        result = ftp.FileExists(fileUrl.Path);
+                        _lastConnectionProfile = await ConnectOrAutoConnect(ftp, _lastConnectionProfile);
+                        result = await ftp.FileExists(fileUrl.Path);
                     }
                 }
 
-                return Task.FromResult(result);
+                return result;
             }
             catch (Exception ex)
             {
@@ -163,7 +160,7 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
         }
 
         /// <inheritdoc/>
-        public override Task<List<string>> ListFileNamesAsync(CloudStorageCredentials credentials)
+        public override async Task<List<string>> ListFileNamesAsync(CloudStorageCredentials credentials)
         {
             credentials.ThrowIfInvalid(CredentialsRequirements, true);
 
@@ -171,9 +168,9 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
             {
                 Url directoryUrl = new Url(credentials.Url);
                 string[] fileNames = null;
-                using (var ftp = new FtpClient(directoryUrl.Host, new NetworkCredential(credentials.Username, credentials.Password)))
+                using (var ftp = new AsyncFtpClient(directoryUrl.Host, new NetworkCredential(credentials.Username, credentials.Password)))
                 {
-                    ftp.Config.ValidateAnyCertificate = credentials.AcceptInvalidCertificate;
+                    ConfigureFtpClient(ftp, credentials);
                     if (IsInTestMode)
                     {
                         string responseData = _fakeResponse.GetFakeServerResponseString(credentials.Url);
@@ -184,15 +181,15 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
                     }
                     else
                     {
-                        _lastConnectionProfile = ConnectOrAutoConnect(ftp, _lastConnectionProfile);
-                        fileNames = ftp.GetNameListing(directoryUrl.Path?.TrimEnd('/'));
+                        _lastConnectionProfile = await ConnectOrAutoConnect(ftp, _lastConnectionProfile);
+                        fileNames = await ftp.GetNameListing(directoryUrl.Path?.TrimEnd('/'));
                     }
                 }
 
                 List<string> result = fileNames.Select(fileName => Path.GetFileName(fileName)).ToList();
                 result.Remove("..");
                 result.Remove(".");
-                return Task.FromResult(result);
+                return result;
             }
             catch (Exception ex)
             {
@@ -200,21 +197,29 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
             }
         }
 
-        private static FtpProfile ConnectOrAutoConnect(FtpClient ftpClient, FtpProfile lastProfile)
+        private static async Task<FtpProfile> ConnectOrAutoConnect(AsyncFtpClient ftpClient, FtpProfile lastProfile)
         {
             bool canReuseLastProfile = (lastProfile != null) && (string.Equals(ftpClient.Host, lastProfile.Host));
             if (canReuseLastProfile)
             {
-                ftpClient.Connect(lastProfile);
+                await ftpClient.Connect(lastProfile);
                 return lastProfile;
             }
             else
             {
-                FtpProfile connectionProfile = ftpClient.AutoConnect();
+                FtpProfile connectionProfile = await ftpClient.AutoConnect();
                 if (connectionProfile == null)
                     throw new ConnectionFailedException();
                 return connectionProfile;
             }
+        }
+
+        private static void ConfigureFtpClient(AsyncFtpClient ftp, CloudStorageCredentials credentials, int timeoutSecondsMs = DefaultTimeoutSeconds * 1000)
+        {
+            ftp.Config.ValidateAnyCertificate = credentials.AcceptInvalidCertificate;
+            ftp.Config.EncryptionMode = credentials.Secure ? FtpEncryptionMode.Explicit : FtpEncryptionMode.Auto;
+            ftp.Config.DataConnectionEncryption = credentials.Secure;
+            ftp.Config.ReadTimeout = timeoutSecondsMs;
         }
 
         private bool IsInTestMode
