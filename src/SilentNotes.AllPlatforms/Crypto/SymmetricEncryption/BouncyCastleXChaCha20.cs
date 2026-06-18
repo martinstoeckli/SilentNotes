@@ -64,6 +64,7 @@ namespace SilentNotes.Crypto.SymmetricEncryption
             byte[] result = new byte[chaCha20Poly1305.GetOutputSize(data.Length)];
             int len = chaCha20Poly1305.ProcessBytes(data, 0, data.Length, result, 0);
             chaCha20Poly1305.DoFinal(result, len);
+            CryptoUtils.CleanArray(subkey);
             return result;
         }
 

@@ -53,7 +53,7 @@ namespace SilentNotes.Crypto
             if (string.IsNullOrWhiteSpace(encryptorName))
                 encryptorName = BouncyCastleXChaCha20.CryptoAlgorithmName;
             if (string.IsNullOrWhiteSpace(kdfName))
-                encryptorName = Pbkdf2.CryptoKdfName;
+                kdfName = Pbkdf2.CryptoKdfName;
             ISymmetricEncryptionAlgorithm encryptor = new SymmetricEncryptionAlgorithmFactory().CreateAlgorithm(encryptorName);
             IKeyDerivationFunction kdf = new KeyDerivationFactory().CreateKdf(kdfName);
 
