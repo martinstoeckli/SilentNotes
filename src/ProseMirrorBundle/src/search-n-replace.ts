@@ -42,7 +42,6 @@ interface Result {
 interface SearchOptions {
   searchResultClass: string;
   caseSensitive: boolean;
-  disableRegex: boolean;
 }
 
 interface TextNodesWithPosition {
@@ -50,8 +49,10 @@ interface TextNodesWithPosition {
   pos: number;
 }
 
-const regex = (s: string, disableRegex: boolean, caseSensitive: boolean): RegExp => {
-  return RegExp(disableRegex ? s.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&') : s, caseSensitive ? 'gu' : 'gui')
+function escapeRegex(needle: string, caseSensitive: boolean): RegExp {
+  return RegExp(
+    needle.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
+    caseSensitive ? 'gu' : 'gui') // 
 }
 
 function processSearches(doc: ProsemirrorNode, searchTerm: RegExp, searchResultClass: string): { decorationsToReturn: DecorationSet, results: Result[] } {
@@ -165,7 +166,6 @@ export const SearchNReplace = Extension.create<SearchOptions>({
     return {
       searchResultClass: 'search-result',
       caseSensitive: false,
-      disableRegex: false,
     }
   },
 
@@ -209,14 +209,14 @@ export const SearchNReplace = Extension.create<SearchOptions>({
             return DecorationSet.empty
           },
           apply(tr) {
-            const { searchResultClass, disableRegex, caseSensitive } = thisExtension.options
+            const { searchResultClass, caseSensitive } = thisExtension.options
             const editor: any = thisExtension.editor;
             const searchTerm = editor['snr-SearchTerm'];
 
             if (searchTerm) {
               const { decorationsToReturn, results } = processSearches(
                 tr.doc,
-                regex(searchTerm, disableRegex, caseSensitive),
+                escapeRegex(searchTerm, caseSensitive),
                 searchResultClass)
 
               editor['snr-SearchResult'] = results;
