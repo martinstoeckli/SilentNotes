@@ -1,0 +1,5 @@
+SilentNotes version 8.8.3
+
+* Fixed problem of in-notes search with special characters.
+* Using async functions of FluentFtp.
+* Clearing memory after encryption with XChaCha20.
