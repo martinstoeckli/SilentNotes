@@ -76,7 +76,6 @@ export function initializeEditor(editorElement: HTMLElement): any {
         SearchNReplace.configure({
           searchResultClass: "search-result", // css class to give to found items. default 'search-result'
           caseSensitive: false,
-          disableRegex: true,
         }),
         ScrollTo,
         TabHandler,
@@ -126,7 +125,6 @@ export function initializeEditor(editorElement: HTMLElement): any {
         SearchNReplace.configure({
           searchResultClass: "search-result", // css class to give to found items. default 'search-result'
           caseSensitive: false,
-          disableRegex: true,
         }),
         ScrollTo,
       ],
