@@ -3,12 +3,10 @@
 @attribute [Route(RouteNames.NoteRepository + "/bringtoview/{BringToViewNoteId}")]
 @inherits PageBase
 
-@using System.ComponentModel
-@using System.Windows.Input;
-@using MudBlazor.Services;
+@using MudBlazor
 @using SilentNotes.Models
-@using SilentNotes.ViewModels
 @using SilentNotes.Services
+@using SilentNotes.ViewModels
 
 @inject ILanguageService LanguageService
 @inject ISvgIconService IconService
@@ -85,7 +83,7 @@
 	@* Overflow menu *@
 	<MudMenu Dense="true" AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight" PopoverClass="overflow-menu" @bind-Open="_isOverflowMenuOpen">
 		<ActivatorContent>
-			<MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" />
+			<MudIconButton OnClick="@context.ToggleAsync" Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" />
 		</ActivatorContent>
 		<ChildContent>
 			<MudMenuItem OnClick="@(() => ViewModel.NewNoteCommand.Execute(null))" Icon="@IconService.GetSvgLink(IconNames.NoteTextOutline)">@LanguageService["note_create_new"]</MudMenuItem>
@@ -139,9 +137,8 @@
 		</MudDrawerHeader>
 		<MudDivider Class="my-2" />
 		<MudDrawerContainer Style="height: 100%; overflow: auto;">
-			<MudTreeView T="ITreeItemViewModel" id="tagTree"
+			<MudTreeView id="tagTree"
 				Items="@_tagsRootNode.Children"
-				ServerData="@LoadServerData"
 				Color="Color.Tertiary">
 				<ItemTemplate>
 					<MudTreeViewItem
@@ -221,7 +218,7 @@
 @* The FAB for adding a new note *@
 <MudMenu Class="fab-position" AnchorOrigin="Origin.TopRight" TransformOrigin="Origin.BottomRight" @bind-Open="_isFabMenuOpen">
 	<ActivatorContent>
-		<MudFab Class="mt-4" Color="Color.Primary" StartIcon="@IconService[IconNames.Plus]" />
+		<MudFab Class="mt-4" OnClick="@context.ToggleAsync" Color="Color.Primary" StartIcon="@IconService[IconNames.Plus]" />
 	</ActivatorContent>
 	<ChildContent>
 		<MudNavLink OnClick="() => ViewModel.NewNoteCommand.Execute(null)" Icon="@IconService.GetSvgLink(IconNames.NoteTextOutline)">@LanguageService["note_create_new"]</MudNavLink>
@@ -433,7 +430,7 @@
 		await ScrollManager.ScrollIntoViewAsync(selector, scrollBehavior);
 	}
 
-	private string GetTagIcon(TreeItemData<ITreeItemViewModel> tagTreeNode)
+	private string GetTagIcon(ITreeItemData<ITreeItemViewModel> tagTreeNode)
 	{
 		if (tagTreeNode.Value is NoTagTreeItemViewModel)
 			return IconService.GetSvgLink(IconNames.TagOffOutline);
@@ -443,24 +440,14 @@
 			: IconService.GetSvgLink(IconNames.TagPlusOutline, 22);
 	}
 
-	private Color GetTagIconColor(TreeItemData<ITreeItemViewModel> tagTreeNode)
+	private Color GetTagIconColor(ITreeItemData<ITreeItemViewModel> tagTreeNode)
 	{
 		return ((MudTreeItemWrapper)tagTreeNode).Selected
 			? Color.Tertiary
 			: Color.Default;
 	}
 
-	public async Task<IReadOnlyCollection<TreeItemData<ITreeItemViewModel>>> LoadServerData(ITreeItemViewModel node)
-	{
-		MudTreeItemWrapper nodeWrapper = _tagsRootNode.FindChildByValue(node, true);
-
-		// Workaround: Just returning a new list does not seem to update the view, so we add the
-		// items to the existing list and return this existing list.
-		await nodeWrapper.LazyLoadChildren();
-		return nodeWrapper.Children;
-	}
-
-	public void OnTagClicked(TreeItemData<ITreeItemViewModel> tagTreeNode)
+	public void OnTagClicked(ITreeItemData<ITreeItemViewModel> tagTreeNode)
 	{
 		MudTreeItemWrapper nodeWrapper = ((MudTreeItemWrapper)tagTreeNode);
 		ViewModel.SelectTagNodeCommand.Execute(nodeWrapper.Value);

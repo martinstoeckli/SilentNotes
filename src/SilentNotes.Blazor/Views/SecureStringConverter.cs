@@ -17,15 +17,18 @@ namespace SilentNotes.Views
     /// so we cannot entirely avoid the conversion. We do the second best and get the string from
     /// the input control and store it in a disposable SecureString.
     /// </remarks>
-    public class SecureStringConverter : MudBlazor.Converter<SecureString, string>
+    public class SecureStringConverter : MudBlazor.IReversibleConverter<SecureString, string>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SecureStringConverter"/> class.
-        /// </summary>
-        public SecureStringConverter()
+        /// <inheritdoc/>
+        public string Convert(SecureString input)
         {
-            SetFunc = SecureStringExtensions.SecureStringToString;
-            GetFunc = SecureStringExtensions.StringToSecureString;
+            return SecureStringExtensions.SecureStringToString(input);
+        }
+
+        /// <inheritdoc/>
+        public SecureString ConvertBack(string input)
+        {
+            return SecureStringExtensions.StringToSecureString(input);
         }
     }
 }

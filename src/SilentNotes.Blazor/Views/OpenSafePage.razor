@@ -2,13 +2,12 @@
 @attribute [Route(RouteNames.OpenSafe + "/target/{TargetRouteBase64}")]
 @inherits PageBase
 
-@using System.ComponentModel;
 @using System.Security
+@using MudBlazor
 @using SilentNotes.Crypto
-@using SilentNotes.Models
+@using SilentNotes.Services
 @using SilentNotes.ViewModels
 @using SilentNotes.Views
-@using SilentNotes.Services
 
 @inject ILanguageService LanguageService
 @inject ISvgIconService IconService
@@ -32,7 +31,7 @@
 	@* Overflow menu *@
 	<MudMenu Dense="true" AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight" PopoverClass="overflow-menu" @bind-Open="_isOverflowMenuOpen">
 		<ActivatorContent>
-			<MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" />
+			<MudIconButton OnClick="@context.ToggleAsync" Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" />
 		</ActivatorContent>
 		<ChildContent>
 			<MudMenuItem OnClick="@(() => ViewModel.ResetSafeCommand.Execute(null))"
