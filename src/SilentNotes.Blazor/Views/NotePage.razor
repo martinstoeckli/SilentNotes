@@ -269,7 +269,7 @@
 		</MudCardContent>
 		<MudCardActions Class="justify-end gap-x-2">
 			<MudButton OnClick="@(() => _linkState.IsDialogOpen = false)" Variant="Variant.Text" Color="Color.Default">@LanguageService["cancel"]</MudButton>
-			<MudButton OnClick="@(() => ViewModel.OpenLinkCommand.Execute(_linkState.LinkUrl))" Variant="Variant.Text" Color="Color.Default" EndIcon="@Icons.Material.Filled.OpenInNew">@LanguageService["note_open_link"]</MudButton>
+			<MudButton OnClick="@(() => LinkDialogOpenLinkPressed(_linkState.LinkUrl))" Variant="Variant.Text" Color="Color.Default" EndIcon="@Icons.Material.Filled.OpenInNew">@LanguageService["note_open_link"]</MudButton>
 			<MudButton OnClick="@(() => LinkDialogOkPressed())" Variant="Variant.Text" Color="Color.Primary">@LanguageService["ok"]</MudButton>
 		</MudCardActions>
 	</MudCard>
@@ -583,6 +583,12 @@
 
 		_linkState.IsDialogOpen = true;
 		StateHasChanged();
+	}
+
+	public void LinkDialogOpenLinkPressed(string linkUrl)
+	{
+		ViewModel.OpenLinkCommand.Execute(_linkState.LinkUrl);
+		_linkState.IsDialogOpen = false;
 	}
 
 	public async Task LinkDialogOkPressed()

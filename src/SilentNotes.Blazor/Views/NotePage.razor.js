@@ -1,6 +1,6 @@
 import { initializeEditor, TiptapHelper, exportAsPlainText } from '../prose-mirror-bundle.js';
 
-var _page;
+let _page;
 
 // Initializes the prosemirror editor
 export function initialize(dotnetPage, editorContainer, shoppingModeActive) {
@@ -68,7 +68,7 @@ export function callInsertHorizontalRule() {
 function onActiveFormatStateChanged() {
     if (!IsInitialized()) return;
 
-    var states = [
+    let states = [
         TiptapHelper.isFormatActive(_page.editor, 'heading', { level: 1 }),
         TiptapHelper.isFormatActive(_page.editor, 'heading', { level: 2 }),
         TiptapHelper.isFormatActive(_page.editor, 'heading', { level: 3 }),
@@ -95,7 +95,7 @@ function onUpdate(params) {
 function onNoteContentChanged(editor) {
     if (!IsInitialized()) return;
 
-    var noteContent = editor.getHTML();
+    const noteContent = editor.getHTML();
     _page.invokeMethodAsync('SetNoteContent', noteContent);
 }
 
@@ -134,17 +134,17 @@ export function prepareLinkDialog() {
     if (!IsInitialized()) return;
 
     _page.editor.chain().focus().run();
-    var selectedUrl = _page.editor.getAttributes('link').href;
+    const selectedUrl = _page.editor.getAttributes('link').href;
     if (selectedUrl) {
         _page.editor.commands.extendMarkRange('link');
-        var text = TiptapHelper.selectWordAtCurrentPosition(_page.editor);
+        const text = TiptapHelper.selectWordAtCurrentPosition(_page.editor);
         return [
             selectedUrl,
             text,
         ];
     }
     else {
-        var text = TiptapHelper.selectWordAtCurrentPosition(_page.editor);
+        const text = TiptapHelper.selectWordAtCurrentPosition(_page.editor);
         return [
             '',
             text,
@@ -155,19 +155,19 @@ export function prepareLinkDialog() {
 export function linkDialogOkPressed(oldLinkUrl, newLinkUrl, oldLinkTitle, newLinkTitle) {
     if (!IsInitialized()) return;
 
-    var newLinkIsEmpty = !newLinkUrl;
-    var urlChanged = newLinkUrl != oldLinkUrl;
-    var titleChanged = newLinkTitle != oldLinkTitle;
+    const newLinkIsEmpty = !newLinkUrl;
+    const urlChanged = newLinkUrl != oldLinkUrl;
+    const titleChanged = newLinkTitle != oldLinkTitle;
     if (!urlChanged && !titleChanged)
         return;
 
-    var commandChain = _page.editor.chain().focus().extendMarkRange('link');
+    let commandChain = _page.editor.chain().focus().extendMarkRange('link');
 
     if (newLinkIsEmpty) {
         commandChain = commandChain.unsetLink();
     }
     else if (titleChanged) {
-        var selection = _page.editor.view.state.selection;
+        const selection = _page.editor.view.state.selection;
         commandChain = commandChain.command(({ tr }) => {
             tr.insertText(newLinkTitle);
             return true;

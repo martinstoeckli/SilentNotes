@@ -1,6 +1,6 @@
 ﻿import { initializeChecklist, TiptapHelper, registerIsShoppingModeActive, CheckableParagraphHelper, exportChecklistAsPlainText } from '../prose-mirror-bundle.js';
 
-var _page;
+let _page;
 
 // Initializes the prosemirror editor
 export function initialize(dotnetPage, editorContainer, shoppingModeActive) {
@@ -67,7 +67,7 @@ export function toggleFormatAndRefresh(formatName, formatParameter) {
 function onActiveFormatStateChanged() {
     if (!IsInitialized()) return;
 
-    var states = [
+    const states = [
         TiptapHelper.isFormatActive(_page.editor, 'heading', { level: 1 }),
         TiptapHelper.isFormatActive(_page.editor, 'heading', { level: 2 }),
         TiptapHelper.isFormatActive(_page.editor, 'heading', { level: 3 }),
@@ -95,7 +95,7 @@ function onNoteContentChanged(editor) {
     if (!IsInitialized()) return;
 
     if (!_page.isBundlingNoteContentChanges) {
-        var noteContent = editor.getHTML();
+        const noteContent = editor.getHTML();
         _page.invokeMethodAsync('SetNoteContent', noteContent);
     }
 }
