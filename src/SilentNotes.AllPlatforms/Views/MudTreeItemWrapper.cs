@@ -42,7 +42,7 @@ namespace SilentNotes.Views
         public MudTreeItemWrapper Parent { get; }
 
         /// <inheritdoc/>
-        public override IReadOnlyCollection<ITreeItemData<ITreeItemViewModel>> Children
+        public override List<TreeItemData<ITreeItemViewModel>> Children
         {
             get { return base.Children ?? (base.Children = new List<TreeItemData<ITreeItemViewModel>>()); }
             set { base.Children = value; }
@@ -83,13 +83,13 @@ namespace SilentNotes.Views
                 return null;
 
             // Search in direct children
-            ITreeItemData<ITreeItemViewModel> foundChild = Children.FirstOrDefault(child => Object.ReferenceEquals(child.Value, value));
+            TreeItemData<ITreeItemViewModel> foundChild = Children.Find(child => Object.ReferenceEquals(child.Value, value));
 
             // Search recursive
             int childIndex = 0;
             while ((foundChild == null) && recursive && (childIndex < Children.Count))
             {
-                var child = (MudTreeItemWrapper)Children.ElementAt(childIndex);
+                var child = (MudTreeItemWrapper)Children[childIndex];
                 foundChild = child.FindChildByValue(value, recursive);
                 childIndex++;
             }
@@ -108,11 +108,25 @@ namespace SilentNotes.Views
         }
 
         /// <summary>
-        /// Mirrors the child list with the child list of the wrapped object.
+        /// Mirrors the child list with the child list of the wrapped object. Already existing
+        /// items are kept, new ones are added and missing ones are removed.
         /// </summary>
         public void MirrorChildren()
         {
-            Children = Value.Children.Select(child => new MudTreeItemWrapper(child, this)).ToList();
+            // Remove items which do not exist anymore in the wrapped list.
+            List<ITreeItemViewModel> wrappedChildren = Value.Children;
+            Children.RemoveAll(item => !wrappedChildren.Contains(item.Value));
+
+            // Add not yet existing items
+            List<ITreeItemViewModel> wrapperChildren = Children.Select(item => item.Value).ToList();
+            foreach (ITreeItemViewModel wrappedChild in wrappedChildren)
+            {
+                if (!wrapperChildren.Contains(wrappedChild))
+                {
+                    wrapperChildren.Add(wrappedChild);
+                    Children.Add(new MudTreeItemWrapper(wrappedChild, this));
+                }
+            }
         }
     }
 }

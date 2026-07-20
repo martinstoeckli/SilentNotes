@@ -1,11 +1,11 @@
 ﻿@attribute [Route(RouteNames.Settings)]
 @inherits PageBase
 
-@using MudBlazor
+@using System.ComponentModel
 @using MudBlazor.Utilities;
 @using SilentNotes.Models
-@using SilentNotes.Services
 @using SilentNotes.ViewModels
+@using SilentNotes.Services
 
 @inject ILanguageService LanguageService
 @inject ISvgIconService IconService
@@ -61,7 +61,7 @@
 
 	<MudMenu Dense="true" AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight" PopoverClass="overflow-menu" @bind-Open="_isOverflowMenuOpen">
 		<ActivatorContent>
-			<MudIconButton OnClick="@context.ToggleAsync" Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" />
+			<MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" />
 		</ActivatorContent>
 		<ChildContent>
 			<MudMenuItem OnClick="@(() => ViewModel.AlwaysEnglish = !ViewModel.AlwaysEnglish)"
