@@ -1,0 +1,6 @@
+SilentNotes version 8.8.4
+
+* Schliesst Link-Dialog automatisch nach öffnen eines Links im Browser.
+* Auf die in BouncyCastle 2.7 neu vorhandene, native Implementierung von XChaCha20-Poly1305 gewechselt.
+* Grösseres Update auf MudBlazor 9
+* Update auf TipTap v3.27 und esbuild.

@@ -43,7 +43,7 @@ If the contribution affects the Android app, please test with the minimum versio
 
 Install a current version of VisualStudio and make sure the mobile development and the Maui package is selected. Make a rebuild of the whole application.
 
-You can build a side by side installation with the real SilentNotes version by altering the ApplicationId name in the SilentNotes.csproj (e.g. to `dev.martinstoeckli.silentnotes`) and in the Windows project options by clicking the `Package Manifest...` button and opening the `Packaging` tab.
+You can build a side by side installation with the real SilentNotes version by altering the ApplicationId name in the SilentNotes.csproj (e.g. to `dev.martinstoeckli.silentnotes`) and in the Windows project options by clicking the `Package Manifest...` button and opening the `Packaging` tab. You can find two PowerShell scripts (StartDevMode.ps1 and StopDevMode.ps1) in the root directory, which do exactly this.
 
 When compiling in Debug mode, SilentNotes will read and write to an alternative repository and leaves the original repository intact. In the `Directory.Build.props` file one can append some constants as explained in the comments, e.g. to set a fixed localization or to load the demo repository.
 
