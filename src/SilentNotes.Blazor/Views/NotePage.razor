@@ -1,14 +1,13 @@
 ﻿@attribute [Route(RouteNames.Note + "/{NoteId}")]
 @inherits PageBase
 
-@using System.ComponentModel
+@using MudBlazor
 @using MudBlazor.Utilities;
 @using SilentNotes.Crypto;
 @using SilentNotes.Models
-@using SilentNotes.ViewModels
 @using SilentNotes.Services
+@using SilentNotes.ViewModels
 @using SilentNotes.Workers
-@using System.Runtime.InteropServices.JavaScript;
 
 @inject IJSRuntime JSRuntime
 @inject ILanguageService LanguageService
@@ -106,7 +105,7 @@
 	@* Overflow menu *@
 	<MudMenu Dense="true" AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight" PopoverClass="overflow-menu" @bind-Open="_isOverflowMenuOpen">
 		<ActivatorContent>
-			<MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" />
+			<MudIconButton OnClick="@context.ToggleAsync" Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" />
 		</ActivatorContent>
 		<ChildContent>
 			<MudMenuItem OnClick="@(() => ToggleFormatState("heading", 1))"
