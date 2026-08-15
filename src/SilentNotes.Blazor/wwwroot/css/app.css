@@ -32,9 +32,8 @@ td { word-wrap: anywhere; } /* table should not exceed device width */
 }
 
 .secondary-app-bar {
-	z-index: calc(var(--mud-zindex-appbar) - 1) !important; /* Force it behind the appbar */
 	margin: 0;
-	padding: 24px 24px 0 4px;
+	padding: 0 20px 0 4px;
 }
 .overflow-menu { max-height: 80%; overflow: auto }
 

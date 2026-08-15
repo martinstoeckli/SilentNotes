@@ -201,6 +201,18 @@
 			}
 		</ChildContent>
 	</MudMenu>
+
+	@* Search toolbar *@
+	<MudPopover Open="@SearchToolbarOpen" Class="secondary-app-bar" AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight">
+		<MudStack Row="true" Class="align-center pl-1" Spacing="0">
+			<MudPaper Class="pl-2 pr-0 py-0" Elevation="0">
+				<MudInput @ref="_searchInput" @bind-Value="SearchPattern" Class="filter-input" Immediate="true" Clearable="true" />
+			</MudPaper>
+			<MudIconButton OnClick="@(async () => await FindNext())" Icon="@Icons.Material.Filled.KeyboardArrowDown" Color="Color.Inherit" Edge="Edge.End" />
+			<MudIconButton OnClick="@(async () => await FindPrevious())" Icon="@Icons.Material.Filled.KeyboardArrowUp" Color="Color.Inherit" Edge="Edge.False" />
+			<MudIconButton OnClick="() => SearchToolbarOpen = false" Icon="@IconService.GetSvgLink(IconNames.Close)" Color="Color.Inherit" Edge="Edge.End" Size="Size.Small" />
+		</MudStack>
+	</MudPopover>
 </MudAppBar>
 
 @* body *@
@@ -229,17 +241,6 @@
 	</div>
 </MudMainContent>
 
-@* Search toolbar *@
-<MudPopover Open="@SearchToolbarOpen" Class="secondary-app-bar" AnchorOrigin="Origin.TopRight" TransformOrigin="Origin.TopRight">
-	<MudStack Row="true" Class="align-center pl-1" Spacing="0">
-		<MudPaper Class="pl-2 pr-0 py-0" Elevation="0">
-			<MudInput @ref="_searchInput" @bind-Value="SearchPattern" Class="filter-input" Immediate="true" Clearable="true" />
-		</MudPaper>
-		<MudIconButton OnClick="@(async () => await FindNext())" Icon="@Icons.Material.Filled.KeyboardArrowDown" Color="Color.Inherit" Edge="Edge.End" />
-		<MudIconButton OnClick="@(async () => await FindPrevious())" Icon="@Icons.Material.Filled.KeyboardArrowUp" Color="Color.Inherit" Edge="Edge.False" />
-		<MudIconButton OnClick="() => SearchToolbarOpen = false" Icon="@IconService.GetSvgLink(IconNames.Close)" Color="Color.Inherit" Edge="Edge.End" Size="Size.Small" />
-	</MudStack>
-</MudPopover>
 
 @* Color palette *@
 <MudOverlay @bind-Visible="_colorPaletteOpen" AutoClose="true">
