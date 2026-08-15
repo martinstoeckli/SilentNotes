@@ -116,6 +116,15 @@
 			<MudMenuItem OnClick="@(() => Navigation.NavigateTo(RouteNames.Info))" ForceLoad="false" Icon="@Icons.Material.Filled.Info">@LanguageService["show_info"]</MudMenuItem>
 		</ChildContent>
 	</MudMenu>
+
+	@* Note ordering toolbar *@
+	<MudPopover Open="@ViewModel.OrderToolbarVisible" Class="secondary-app-bar" AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight">
+		<MudIconButton OnClick="() => ViewModel.MoveSelectedOrderNote(true, false)" Icon="@IconService[IconNames.ArrowCollapseUp]" Color="Color.Inherit" title="order" Edge="Edge.End" />
+		<MudIconButton OnClick="() => ViewModel.MoveSelectedOrderNote(true, true)" Icon="@IconService[IconNames.ArrowUp]" Color="Color.Inherit" title="order" Edge="Edge.End" />
+		<MudIconButton OnClick="() => ViewModel.MoveSelectedOrderNote(false, true)" Icon="@IconService[IconNames.ArrowDown]" Color="Color.Inherit" title="order" Edge="Edge.End" />
+		<MudIconButton OnClick="() => ViewModel.MoveSelectedOrderNote(false, false)" Icon="@IconService[IconNames.ArrowCollapseDown]" Color="Color.Inherit" title="order" Edge="Edge.False" />
+		<MudIconButton OnClick="() => ViewModel.SelectOrderNote(null)" Icon="@IconService.GetSvgLink(IconNames.Close)" Color="Color.Inherit" Size="Size.Small" Edge="Edge.End" />
+	</MudPopover>
 </MudAppBar>
 
 @* Sidebar with tags *@
@@ -205,15 +214,6 @@
 		</ul>
 	</div>
 </MudMainContent>
-
-@* Note ordering toolbar *@
-<MudPopover Open="@ViewModel.OrderToolbarVisible" Class="secondary-app-bar" AnchorOrigin="Origin.TopRight" TransformOrigin="Origin.TopRight">
-	<MudIconButton OnClick="() => ViewModel.MoveSelectedOrderNote(true, false)" Icon="@IconService[IconNames.ArrowCollapseUp]" Color="Color.Inherit" title="order" Edge="Edge.End" />
-	<MudIconButton OnClick="() => ViewModel.MoveSelectedOrderNote(true, true)" Icon="@IconService[IconNames.ArrowUp]" Color="Color.Inherit" title="order" Edge="Edge.End" />
-	<MudIconButton OnClick="() => ViewModel.MoveSelectedOrderNote(false, true)" Icon="@IconService[IconNames.ArrowDown]" Color="Color.Inherit" title="order" Edge="Edge.End" />
-	<MudIconButton OnClick="() => ViewModel.MoveSelectedOrderNote(false, false)" Icon="@IconService[IconNames.ArrowCollapseDown]" Color="Color.Inherit" title="order" Edge="Edge.False" />
-	<MudIconButton OnClick="() => ViewModel.SelectOrderNote(null)" Icon="@IconService.GetSvgLink(IconNames.Close)" Color="Color.Inherit" Size="Size.Small" Edge="Edge.End" />
-</MudPopover>
 
 @* The FAB for adding a new note *@
 <MudMenu Class="fab-position" AnchorOrigin="Origin.TopRight" TransformOrigin="Origin.BottomRight" @bind-Open="_isFabMenuOpen">
@@ -392,6 +392,12 @@
 		if (_isOverflowMenuOpen)
 		{
 			_isOverflowMenuOpen = false;
+			result = true;
+			refreshNeeded = true;
+		}
+		if (ViewModel.OrderToolbarVisible)
+		{
+			ViewModel.SelectOrderNote(null);
 			result = true;
 			refreshNeeded = true;
 		}
