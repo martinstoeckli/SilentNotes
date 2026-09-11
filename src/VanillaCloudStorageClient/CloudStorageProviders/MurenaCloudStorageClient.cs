@@ -58,13 +58,10 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
         {
             if (credentials != null)
             {
-                string usernameWithoutEmailPart = credentials.Username;
-                int emailPartIndex = usernameWithoutEmailPart.IndexOf("@");
-                if (emailPartIndex >= 0)
-                    usernameWithoutEmailPart = usernameWithoutEmailPart.Remove(emailPartIndex);
-
-                credentials.Url = string.Format("https://murena.io/remote.php/dav/files/{0}%40e.email", usernameWithoutEmailPart);
-                credentials.Username = usernameWithoutEmailPart + "@e.email";
+                // Older Murena accounts use an E-Mail like 'myname@e.email' as username, while newer
+                // acounts just have a name like 'myname'. If available, the @ should be escaped.
+                string escapedUserName = credentials.Username.Replace("@", "%40");
+                credentials.Url = string.Format("https://murena.io/remote.php/dav/files/{0}", escapedUserName);
             }
             return credentials;
         }
