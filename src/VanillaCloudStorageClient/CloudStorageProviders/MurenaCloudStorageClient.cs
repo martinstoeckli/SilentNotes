@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading.Tasks;
 
 namespace VanillaCloudStorageClient.CloudStorageProviders
@@ -60,7 +61,9 @@ namespace VanillaCloudStorageClient.CloudStorageProviders
             {
                 // Older Murena accounts use an E-Mail like 'myname@e.email' as username, while newer
                 // acounts just have a name like 'myname'. If available, the @ should be escaped.
-                string escapedUserName = credentials.Username.Replace("@", "%40");
+                string escapedUserName = credentials.Username
+                    .ToLower(CultureInfo.InvariantCulture)
+                    .Replace("@", "%40");
                 credentials.Url = string.Format("https://murena.io/remote.php/dav/files/{0}", escapedUserName);
             }
             return credentials;
