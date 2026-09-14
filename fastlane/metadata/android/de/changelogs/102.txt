@@ -1,0 +1,4 @@
+SilentNotes version 8.8.6
+
+* Verbessertes Login für Murena, so dass auch murena.io Benutzernamen unterstützt werden.
+* Stellt ES2019 kompatible Bibliotheken für MudBlazor zur Verfügung, um ältere Android Versionen zu unterstützen.
