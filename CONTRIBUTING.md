@@ -60,3 +60,9 @@ If you are working with the ProseMirror editor, one has to build the code in `sr
 call npm install
 call npm run build
 ```
+
+### Building ES2019 compatible libraries
+
+SilentNotes supports Android versions as far back as 7/8, so we cannot assume that the WebView supports all of the JavaScript syntax used by current JavaScript libraries. Although the WebView can be updated independently as a separate app, only the version that is included with the Android installation is guaranteed.
+
+👉 Therefore, whenever the libraries are updated, we extract them from the NuGet package and transpile them with the script [ES2019Compatibility\build.bat](src\ES2019Compatibility\build.bat). Currently this is done for the MudBlazor library. To minimize the risk of transpiling errors, we conditionally load the ES2019 version only when necessary, depending on the the WebView version, see an example in [mudblazor-loader.js](src\SilentNotes.Blazor\wwwroot\mudblazor-loader.js).
