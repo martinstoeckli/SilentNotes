@@ -380,6 +380,7 @@
 				await _jsModule.InvokeVoidAsync("initialize", DotNetModule, _editorContainer, ViewModel.ShoppingModeActive);
 				string content = ViewModel.UnlockedHtmlContent;
 				await _jsModule.InvokeVoidAsync("setNoteContent", content);
+				await _jsModule.InvokeVoidAsync("sessionLoadScrollTop", ViewModel.Id, _editorContainer);
 				await _jsModule.InvokeVoidAsync("setEditable", !ViewModel.ShoppingModeActive && !SynchronizationState.IsSynchronizationRunning);
 				bool isNewNote = ViewModel.SearchableContent.Trim().Length == 0;
 				if (isNewNote)
@@ -415,6 +416,7 @@
 		MessengerService.Unregister<KeepScreenOnChangedMessage>(this);
 		if (_jsModule != null)
 		{
+			await _jsModule.InvokeVoidAsync("sessionSaveScrollTop", ViewModel.Id, _editorContainer);
 			await _jsModule.InvokeVoidAsync("finalize");
 			await _jsModule.DisposeAsync();
 		}
