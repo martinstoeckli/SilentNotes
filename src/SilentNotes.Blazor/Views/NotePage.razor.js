@@ -35,7 +35,7 @@ export function setNoteContent(text) {
     if (!IsInitialized()) return;
 
     try {
-        _page.editor.chain().setMeta('addToHistory', false).setContent(text).scrollToTop().run();
+        _page.editor.chain().setMeta('addToHistory', false).setContent(text).run();
     }
     catch (ex) {
         _page.editor.setEditable(false);
@@ -44,6 +44,16 @@ export function setNoteContent(text) {
 
 export function getAsPlainText() {
     return exportAsPlainText(_page.editor);
+}
+
+export function sessionSaveScrollTop(sessionId, editorContainer) {
+    if (!IsInitialized()) return;
+    TiptapHelper.sessionSaveScrollTop(sessionId, editorContainer);
+}
+
+export function sessionLoadScrollTop(sessionId, editorContainer) {
+    if (!IsInitialized()) return;
+    TiptapHelper.sessionLoadScrollTop(sessionId, editorContainer);
 }
 
 export function setEditable(editable) {

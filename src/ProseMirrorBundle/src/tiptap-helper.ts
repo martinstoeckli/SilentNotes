@@ -71,6 +71,43 @@ export class TiptapHelper {
         }
     }
 
+    private static findScrollableAncestor(element: Element | null): HTMLElement | null {
+        let parent = element?.parentElement;
+        while (parent) {
+            const style = getComputedStyle(parent);
+            if (style.overflowY === 'auto' || style.overflowY === 'scroll')
+                return parent;
+            parent = parent.parentElement;
+        }
+        return null;
+    }
+
+    /**
+     * Gets the scrollTop position from the visible editor text and stores it in the session storage,
+     * so it can be restored at the same position later as long as the app is running.
+     * @param sessionId Identifies the top position, e.g. the id of a note.
+     * @param editorContainer The container element of the TipTap editor.
+     */
+    public static sessionSaveScrollTop(sessionId: string, editorContainer: Element) {
+        const scrollParent = TiptapHelper.findScrollableAncestor(editorContainer);
+        if (scrollParent !== null)
+            sessionStorage.setItem("tiptap-scroll-top-" + sessionId, scrollParent.scrollTop.toString());
+    }
+
+    /**
+     * Loads the scrollTop position from the session storage and applies it to the editor text.
+     * If no position is stored, it scrolls to the top.
+     * @param sessionId Identifies the top position, e.g. the id of a note.
+     * @param editorContainer The container element of the TipTap editor.
+     */
+    public static sessionLoadScrollTop(sessionId: string, editorContainer: Element) {
+        const scrollTopText = sessionStorage.getItem("tiptap-scroll-top-" + sessionId);
+        const scrollTop = scrollTopText !== null ? parseFloat(scrollTopText) : 0.0;
+        const scrollParent = TiptapHelper.findScrollableAncestor(editorContainer);
+        if (scrollParent !== null)
+            scrollParent.scrollTop = scrollTop;
+    }
+
     /**
      * Gets the selected text.
      * @param editor - A TipTap editor instance.
