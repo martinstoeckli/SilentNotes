@@ -1,0 +1,4 @@
+SilentNotes version 8.8.7
+
+* Editor behält Scrollposition nach wechseln der App bei.
+* Update auf TipTap v3.31 und aktuelle Node Module.

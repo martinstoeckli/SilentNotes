@@ -1,0 +1,4 @@
+SilentNotes version 8.8.7
+
+* Editor remembers scroll position after switching to other app.
+* Updated to TipTap v3.31 and latest Node modules.
