@@ -86,7 +86,7 @@ jobs:
         dotnet-version: ${{ env.Dotnet_Version }}
 
     - name: Install MAUI
-      run: dotnet workload install maui-android --ignore-failed-sources
+      run: dotnet workload install maui-android --ignore-failed-sources --version 10.0.401
 
     # Log DotNet version for reproducible builds
     - name: Log used DotNet versions
@@ -169,7 +169,7 @@ jobs:
     - name: Install MAUI
       run: |
         dotnet nuget locals all --clear
-        dotnet workload install maui
+        dotnet workload install maui --version 10.0.401
 
     # Log DotNet version for reproducable builds
     - name: Log used DotNet versions
