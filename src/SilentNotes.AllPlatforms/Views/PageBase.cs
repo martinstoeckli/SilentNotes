@@ -141,7 +141,7 @@ namespace SilentNotes.Views
 
         private void TriggerOnAfterResume(AfterResumeMessage message)
         {
-            OnAfterResume(message.LastPauseTime, message.SafesClosed);
+            OnAfterResume(message.NewNoteShared, message.SafesClosed);
         }
 
         /// <summary>
@@ -149,9 +149,10 @@ namespace SilentNotes.Views
         /// Some pages have to check whether the content has changed between, e.g. because of a
         /// synchronization.
         /// </summary>
-        /// <param name="lastPauseTime">UTC timestamp of the pause event.</param>
+        /// <param name="newNoteShared">A value indicating whether another app shared text with
+        /// SilentNotes, to create a new note.</param>
         /// <param name="safesClosed">Is true when at least one safe was closed in the mean time.</param>
-        protected virtual void OnAfterResume(DateTime lastPauseTime, bool safesClosed)
+        protected virtual void OnAfterResume(bool newNoteShared, bool safesClosed)
         {
             Debug.WriteLine(string.Format("*** {0}.OnAfterResume {1}", GetType().Name, Id));
         }

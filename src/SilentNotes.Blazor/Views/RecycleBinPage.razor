@@ -122,9 +122,9 @@
 	}
 
 	/// <inheritdoc/>
-	protected override void OnAfterResume(DateTime lastPauseTime, bool safesClosed)
+	protected override void OnAfterResume(bool newNoteShared, bool safesClosed)
 	{
-		base.OnAfterResume(lastPauseTime, safesClosed);
+		base.OnAfterResume(newNoteShared, safesClosed);
 		bool reload = safesClosed;
 		if (!reload)
 		{

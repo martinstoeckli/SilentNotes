@@ -103,9 +103,10 @@ namespace SilentNotes
     public class AfterResumeMessage
     {
         /// <summary>
-        /// Gets or sets the time when app was going into pause mode.
+        /// Gets or sets a value indicating whether another app shared text with SilentNotes, to
+        /// create a new note.
         /// </summary>
-        public DateTime LastPauseTime { get; set; }
+        public bool NewNoteShared { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the safe was closed because of the pause timeout.

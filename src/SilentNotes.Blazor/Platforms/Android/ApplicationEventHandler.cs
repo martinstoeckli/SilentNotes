@@ -101,6 +101,9 @@ namespace SilentNotes.Platforms
                 // A text was shared with the app.
                 _newNoteFromActionSend = CreateNewNoteFromSendParameter(Ioc.Instance, _actionSendParameter);
                 _actionSendParameter = null; // create the note only once
+                bool safesClosed = CloseSafesWhenTimeoutReached();
+                var messenger = Ioc.Instance.GetService<IMessengerService>();
+                messenger.Send(new AfterResumeMessage { NewNoteShared = true, SafesClosed = safesClosed });
             }
             else if (IsStartedByOAuthRedirectIndent(synchronizationService))
             {
@@ -116,7 +119,7 @@ namespace SilentNotes.Platforms
                 {
                     bool safesClosed = CloseSafesWhenTimeoutReached();
                     var messenger = Ioc.Instance.GetService<IMessengerService>();
-                    messenger.Send(new AfterResumeMessage { LastPauseTime = _lastPauseTime.Value, SafesClosed = safesClosed });
+                    messenger.Send(new AfterResumeMessage { SafesClosed = safesClosed });
                 }
             }
         }

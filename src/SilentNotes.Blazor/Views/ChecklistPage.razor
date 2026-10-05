@@ -378,9 +378,9 @@ div.note-dark .detail-view.checklist .ProseMirror p::after { content: @(IconServ
 	}
 
 	/// <inheritdoc/>
-	protected override void OnAfterResume(DateTime lastPauseTime, bool safesClosed)
+	protected override void OnAfterResume(bool newNoteShared, bool safesClosed)
 	{
-		base.OnAfterResume(lastPauseTime, safesClosed);
+		base.OnAfterResume(newNoteShared, safesClosed);
 		if ((ViewModel == null) || (ViewModel.Model == NoteModel.NotFound))
 			return;
 
