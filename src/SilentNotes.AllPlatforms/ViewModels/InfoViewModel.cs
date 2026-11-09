@@ -71,7 +71,7 @@ namespace SilentNotes.ViewModels
                 result.Append("<tr>");
                 result.Append("<th>Repository location</th>");
                 result.Append("<td>");
-                result.Append((_repositoryStorageService as RepositoryStorageServiceBase).GetLocation());
+                result.Append(_repositoryStorageService.GetLocation());
                 result.Append("</td>");
                 result.Append("</tr>");
 

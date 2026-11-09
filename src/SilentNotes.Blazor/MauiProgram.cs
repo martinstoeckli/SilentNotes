@@ -106,6 +106,10 @@ public static class MauiProgram
         services.AddSingleton<IInternetStateService>((serviceProvider) => new InternetStateService());
         services.AddSingleton<ISafeKeyService>((serviceProvider) => new SafeKeyService());
         services.AddSingleton<IFontService>((serviceProvider) => new FontService());
+        services.AddSingleton<IRepositoryStorageService>((serviceProvider) => new RepositoryStorageService(
+            serviceProvider.GetService<IXmlFileService>(),
+            serviceProvider.GetService<ILanguageService>(),
+            serviceProvider.GetService<IEnvironmentService>().GetAppDataDirectory()));
 
         // Scoped services (some Blazor services like NavigationManager or IJSRuntime are scoped)
         // Workaround: It seems that scoped services are recreated when gotten from Ioc, therefore
@@ -128,9 +132,6 @@ public static class MauiProgram
         services.AddSingleton<IDataProtectionService>((serviceProvider) => new DataProtectionService());
         services.AddSingleton<IXmlFileService>((serviceProvider) => new XmlFileService());
         services.AddSingleton<IEnvironmentService>((serviceProvider) => new EnvironmentService());
-        services.AddSingleton<IRepositoryStorageService>((serviceProvider) => new RepositoryStorageService(
-            serviceProvider.GetService<IXmlFileService>(),
-            serviceProvider.GetService<ILanguageService>()));
         services.AddSingleton<ISettingsService>((serviceProvider) => new SettingsService(
             serviceProvider.GetService<IXmlFileService>(),
             serviceProvider.GetService<IDataProtectionService>()));
@@ -158,10 +159,6 @@ public static class MauiProgram
         services.AddSingleton<IEnvironmentService>((serviceProvider) => new EnvironmentService(
             serviceProvider.GetService<IAppContextService>(),
             serviceProvider.GetService<IMessengerService>()));
-        services.AddSingleton<IRepositoryStorageService>((serviceProvider) => new RepositoryStorageService(
-            serviceProvider.GetService<IAppContextService>(),
-            serviceProvider.GetService<IXmlFileService>(),
-            serviceProvider.GetService<ILanguageService>()));
         services.AddSingleton<ISettingsService>((serviceProvider) => new SettingsService(
             serviceProvider.GetService<IAppContextService>(),
             serviceProvider.GetService<IXmlFileService>(),

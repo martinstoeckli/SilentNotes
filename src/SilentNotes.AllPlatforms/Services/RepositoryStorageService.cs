@@ -13,13 +13,14 @@ using SilentNotes.Workers;
 namespace SilentNotes.Services
 {
     /// <summary>
-    /// Abstract base implementation of the <see cref="IRepositoryStorageService"/> interface.
+    /// Implementation of the <see cref="IRepositoryStorageService"/> interface.
     /// </summary>
-    public abstract class RepositoryStorageServiceBase : IRepositoryStorageService
+    public class RepositoryStorageService : IRepositoryStorageService
     {
 #if (DEBUG)
         public readonly string InstanceId = Guid.NewGuid().ToString();
 #endif
+        private string _appDataDirectory;
 
         /// <summary>Gets the injected dependency to an xml file service.</summary>
         protected readonly IXmlFileService _xmlFileService;
@@ -33,12 +34,16 @@ namespace SilentNotes.Services
         private NoteRepositoryModel _cachedRepository;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RepositoryStorageServiceBase"/> class.
+        /// Initializes a new instance of the <see cref="RepositoryStorageService"/> class.
         /// </summary>
-        public RepositoryStorageServiceBase(IXmlFileService xmlFileService, ILanguageService languageService)
+        /// <param name="xmlFileService">Service to read xml files.</param>
+        /// <param name="languageService">Service to get localized string from.</param>
+        /// <param name="appDataDirectory">Directory where the application can write its data to.</param>
+        public RepositoryStorageService(IXmlFileService xmlFileService, ILanguageService languageService, string appDataDirectory)
         {
             _xmlFileService = xmlFileService;
             _languageService = languageService;
+            _appDataDirectory = appDataDirectory;
             _updater = new NoteRepositoryUpdater();
 
 #if (DEBUG && FORCE_REPO_DEMO)
@@ -201,7 +206,10 @@ namespace SilentNotes.Services
         /// Sub classes should override this method to change the directory, where the config is stored.
         /// </summary>
         /// <returns>The full directory path for storing the config.</returns>
-        public abstract string GetLocation();
+        public string GetLocation()
+        {
+            return _appDataDirectory;
+        }
 
         private void AddWelcomeNote(NoteRepositoryModel repositoryModel)
         {

@@ -31,6 +31,12 @@ namespace SilentNotes.Platforms.Services
         public bool InDarkMode { get; }
 
         /// <inheritdoc/>
+        public string GetAppDataDirectory()
+        {
+            return FileSystem.Current.AppDataDirectory;
+        }
+
+        /// <inheritdoc/>
         public IKeepScreenOn KeepScreenOn
         {
             get { return null; }

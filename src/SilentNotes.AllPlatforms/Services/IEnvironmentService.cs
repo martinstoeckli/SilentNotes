@@ -25,6 +25,13 @@ namespace SilentNotes.Services
         bool InDarkMode { get; }
 
         /// <summary>
+        /// Gets the path to the applications data directory, where it has the necessary privileges
+        /// to store its data.
+        /// </summary>
+        /// <returns>Data storage location, depending on the OS.</returns>
+        string GetAppDataDirectory();
+
+        /// <summary>
         /// Gets an interface which can be used to keep the screen on, or prevents that an app is
         /// going to sleep. This property can be null, if the OS doesn't support/need this
         /// functionality.

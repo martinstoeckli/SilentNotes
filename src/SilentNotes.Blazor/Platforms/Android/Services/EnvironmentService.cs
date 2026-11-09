@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Android.Content.Res;
 using Android.Views;
+using AndroidX.Core.Content;
 using SilentNotes.Services;
 
 namespace SilentNotes.Platforms.Services
@@ -44,6 +45,12 @@ namespace SilentNotes.Platforms.Services
                 UiMode nightModeFlags = _appContext.Context.Resources.Configuration.UiMode & UiMode.NightMask;
                 return nightModeFlags == UiMode.NightYes;
             }
+        }
+
+        /// <inheritdoc/>
+        public string GetAppDataDirectory()
+        {
+            return ContextCompat.GetNoBackupFilesDir(_appContext.Context).AbsolutePath;
         }
 
         /// <inheritdoc/>

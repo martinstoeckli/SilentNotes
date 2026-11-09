@@ -87,7 +87,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\LanguageService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\NavigationService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\NotificationService.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\RepositoryStorageServiceBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\RepositoryStorageService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\SafeKeyService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ServiceFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\SettingsServiceBase.cs" />

@@ -24,7 +24,7 @@ namespace SilentNotesTest.Services
                 Setup(m => m.Exists(It.IsAny<string>())).
                 Returns(true);
 
-            RepositoryStorageServiceBase service = new TestableService(fileService.Object);
+            RepositoryStorageService service = new RepositoryStorageService(fileService.Object, new Mock<ILanguageService>().Object, string.Empty);
             RepositoryStorageLoadResult result = service.LoadRepositoryOrDefault(out NoteRepositoryModel repository);
 
             // Loaded existing settings and did not store it
@@ -46,7 +46,7 @@ namespace SilentNotesTest.Services
                 Setup(m => m.Exists(It.IsAny<string>())).
                 Returns(true);
 
-            RepositoryStorageServiceBase service = new TestableService(fileService.Object);
+            RepositoryStorageService service = new RepositoryStorageService(fileService.Object, new Mock<ILanguageService>().Object, string.Empty);
             RepositoryStorageLoadResult result = service.LoadRepositoryOrDefault(out NoteRepositoryModel repository);
 
             // Loaded existing settings and did not store it
@@ -60,7 +60,7 @@ namespace SilentNotesTest.Services
         {
             Mock<IXmlFileService> fileService = new Mock<IXmlFileService>();
 
-            RepositoryStorageServiceBase service = new TestableService(fileService.Object);
+            RepositoryStorageService service = new RepositoryStorageService(fileService.Object, new Mock<ILanguageService>().Object, string.Empty);
             bool res = service.TrySaveRepository(NoteRepositoryModel.InvalidRepository);
 
             // Did not try to save the file.
@@ -76,7 +76,7 @@ namespace SilentNotesTest.Services
                 Setup(m => m.Exists(It.IsAny<string>())).
                 Returns(false);
 
-            RepositoryStorageServiceBase service = new TestableService(fileService.Object);
+            RepositoryStorageService service = new RepositoryStorageService(fileService.Object, new Mock<ILanguageService>().Object, string.Empty);
             RepositoryStorageLoadResult result = service.LoadRepositoryOrDefault(out NoteRepositoryModel repository);
 
             // Created new settings and stored it
@@ -97,29 +97,13 @@ namespace SilentNotesTest.Services
                 Setup(m => m.Exists(It.IsAny<string>())).
                 Returns(true);
 
-            RepositoryStorageServiceBase service = new TestableService(fileService.Object);
+            RepositoryStorageService service = new RepositoryStorageService(fileService.Object, new Mock<ILanguageService>().Object, string.Empty);
             RepositoryStorageLoadResult result = service.LoadRepositoryOrDefault(out NoteRepositoryModel repository);
 
             Assert.AreEqual(RepositoryStorageLoadResult.SuccessfullyLoaded, result);
             Assert.IsNotNull(repository);
             Assert.AreEqual(NoteRepositoryModel.CurrentSavingRevision, repository.Revision);
             fileService.Verify(m => m.TrySerializeAndSave(It.IsAny<string>(), It.IsAny<NoteRepositoryModel>()), Times.Once);
-        }
-
-        /// <summary>
-        /// Make abstract class testable
-        /// </summary>
-        private class TestableService : RepositoryStorageServiceBase
-        {
-            public TestableService(IXmlFileService xmlFileService)
-                : base(xmlFileService, new Mock<ILanguageService>().Object)
-            {
-            }
-
-            public override string GetLocation()
-            {
-                return string.Empty;
-            }
         }
 
         private const string Version1Repository =
