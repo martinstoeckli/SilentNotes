@@ -11,6 +11,7 @@ using Microsoft.JSInterop;
 using Microsoft.Maui.LifecycleEvents;
 using MudBlazor;
 using MudBlazor.Services;
+using SilentNotes.Crypto;
 using SilentNotes.Models;
 using SilentNotes.Platforms;
 using SilentNotes.Platforms.Services;
@@ -106,10 +107,15 @@ public static class MauiProgram
         services.AddSingleton<IInternetStateService>((serviceProvider) => new InternetStateService());
         services.AddSingleton<ISafeKeyService>((serviceProvider) => new SafeKeyService());
         services.AddSingleton<IFontService>((serviceProvider) => new FontService());
+        services.AddSingleton<IFileService>((serviceProvider) => new FileService());
         services.AddSingleton<IRepositoryStorageService>((serviceProvider) => new RepositoryStorageService(
             serviceProvider.GetService<IXmlFileService>(),
             serviceProvider.GetService<ILanguageService>(),
             serviceProvider.GetService<IEnvironmentService>().GetAppDataDirectory()));
+        services.AddSingleton<IAttachementService>((serviceProvider) => new AttachementService(
+            serviceProvider.GetService<IEnvironmentService>().GetAppDataDirectory(),
+            serviceProvider.GetService<IFileService>(),
+            new Cryptor("SilentAttachement", serviceProvider.GetService<ICryptoRandomService>())));
 
         // Scoped services (some Blazor services like NavigationManager or IJSRuntime are scoped)
         // Workaround: It seems that scoped services are recreated when gotten from Ioc, therefore

@@ -49,10 +49,13 @@
     <Compile Include="$(MSBuildThisFileDirectory)Models\ThemeMode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\WallpaperModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RouteNames.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\AttachementService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\CloudStorageClientFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DummyFeedbackService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DummyNavigationService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\FeedbackServiceBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\FileService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\IAttachementService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\IClipboardService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ICloudStorageClientFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IMarkdownConverter.cs" />
@@ -61,6 +64,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\IEnvironmentService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\IFeedbackService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\IFilePickerService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\IFileService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\IFolderPickerService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\IFontService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\IInternetStateService.cs" />

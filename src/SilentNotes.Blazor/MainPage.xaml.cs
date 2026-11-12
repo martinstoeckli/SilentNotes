@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components.WebView;
+using SilentNotes.Services;
 using SilentNotes.Workers;
 
 namespace SilentNotes;
@@ -13,6 +14,7 @@ public partial class MainPage : ContentPage
         blazorWebView.StartPath = StartRoute;
         blazorWebView.BlazorWebViewInitializing += WebViewInitializingEventHandler;
         blazorWebView.BlazorWebViewInitialized += WebViewInitializedEventHandler;
+        blazorWebView.WebResourceRequested += WebResourceRequestedEventHandler;
     }
 
     /// <summary>
@@ -72,5 +74,20 @@ public partial class MainPage : ContentPage
         //webSettings.TextZoom = 100; // Ignores system font size, so the app controls the font size
         //webSettings.SaveFormData = false;
 #endif
+    }
+
+    /// <summary>
+    /// Intercept loading of resources, so that encrypted attachements like images can be decrypted
+    /// before they are displayed.
+    /// </summary>
+    private void WebResourceRequestedEventHandler(object sender, WebViewWebResourceRequestedEventArgs e)
+    {
+        if (AttachementService.IsAttachementUri(e.Uri))
+        {
+            e.Handled = true;
+            var attachementService = Ioc.Instance.GetRequiredService<IAttachementService>();
+            var response = attachementService.LoadAttachement(e.Uri, e.QueryParameters);
+            e.SetResponse(response.StatusCode, response.ReasonPhrase, response.MimeType, response.AttachementLoader);
+        }
     }
 }

@@ -23,7 +23,7 @@ namespace SilentNotes.Crypto.SymmetricEncryption
         public const string CryptoAlgorithmName = "xchacha20_poly1305";
 
         private const int NonceSizeBytes = 24; // 192 bits
-        private const int KeySizeBytes = 32; // 256 bits
+        public const int KeySizeBytes = 32; // 256 bits
         private const int MacSizeBytes = 16; // 128 bits
 
         /// <inheritdoc />
