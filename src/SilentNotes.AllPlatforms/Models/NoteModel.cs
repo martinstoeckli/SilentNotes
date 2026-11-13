@@ -30,6 +30,7 @@ namespace SilentNotes.Models
         private Guid _id;
         private string _htmlContent;
         private DateTime? _metaModifiedAt;
+        private List<Guid> _attachements;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NoteModel"/> class.
@@ -71,7 +72,8 @@ namespace SilentNotes.Models
             target.SafeId = this.SafeId;
             target.ShoppingModeActive = this.ShoppingModeActive;
             target.IsPinned = this.IsPinned;
-            target.AttachementKey = this.AttachementKey;
+            target.Attachements.Clear();
+            target.Attachements.AddRange(this.Attachements);
         }
 
         /// <summary>
@@ -112,6 +114,21 @@ namespace SilentNotes.Models
         [XmlArray("tags")]
         [XmlArrayItem("tag")]
         public List<string> Tags { get; set; }
+
+        public bool TagsSpecified { get { return Tags != null && Tags.Count > 0; } } // Serialize only when not empty
+
+        /// <summary>
+        /// Gets or sets a list of ids of attachements, which belong to this note.
+        /// </summary>
+        [XmlArray("attachements")]
+        [XmlArrayItem("attachement")]
+        public List<Guid> Attachements
+        {
+            get { return _attachements ?? (_attachements = new List<Guid>()); }
+            set { _attachements = value; }
+        }
+
+        public bool AttachementsSpecified { get { return _attachements != null && _attachements.Count > 0; } } // Serialize only when not empty
 
         /// <summary>
         /// Gets or sets the background color of the note as hex string, e.g. #ff0000
@@ -204,18 +221,6 @@ namespace SilentNotes.Models
         {
             MetaModifiedAt = DateTime.UtcNow;
         }
-
-        /// <summary>
-        /// Gets or sets an individual key used for decrypting attachements belonging to this note.
-        /// </summary>
-        /// <remarks>
-        /// Like the note content, this key is encrypted with the user password, if the note is
-        /// part of a safe.
-        /// </remarks>
-        [XmlElement(ElementName = "attachement_key")]
-        public string AttachementKey { get; set; }
-
-        public bool AttachementKeySpecified { get { return !string.IsNullOrEmpty(AttachementKey); } }
 
         /// <summary>
         /// Makes a deep copy of the note.
