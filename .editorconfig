@@ -2,13 +2,15 @@
 # You can modify the rules from these initially generated values to suit your own policies
 # You can learn more about editorconfig here: https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference
 
+[*]
+max_line_length = 100
+
 [*.{css,razor}]
 indent_style=tab
 indent_size=tab
 tab_width=4
 
 [*.cs]
-
 
 #Core editorconfig formatting - indentation
 
