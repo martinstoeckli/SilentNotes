@@ -26,7 +26,8 @@ namespace SilentNotes.Models
 
         /// <summary>
         /// Creates and adds a new deleted note, or updates the deletion date if an item with this
-        /// id already exists.
+        /// id already exists. See <see cref="DeletedNoteModel.DeletedAt"/> for an explanation why
+        /// this is necessary.
         /// </summary>
         /// <param name="id">The id of the note to add to the list.</param>
         public void AddIdOrRefreshDeletedAt(Guid id)

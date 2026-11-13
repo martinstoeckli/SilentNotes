@@ -212,6 +212,9 @@ td { word-wrap: anywhere; } /* table should not exceed device width */
 .note-viewer.over-view.checklist p.disabled::before {
 	opacity: .2;
 }
+.note-viewer img {
+	box-shadow: 0 1px 2px 0 rgba(0,0,0,.12);
+}
 
 /* Checklist in editor. The content: url() is set in view to avoid external resource and to configure the color. */
 
