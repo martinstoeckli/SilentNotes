@@ -348,7 +348,7 @@ namespace SilentNotesTest.Crypto
             byte[] binaryMessage = new byte[] { 88 };
             SecureString password = CryptoUtils.StringToSecureString("unittestpwd");
 
-            Assert.ThrowsException<CryptoException>(delegate
+            Assert.Throws<CryptoException>(delegate
             {
                 byte[] cipher = encryptor.Encrypt(
                     binaryMessage,
@@ -358,7 +358,7 @@ namespace SilentNotesTest.Crypto
                     Pbkdf2.CryptoKdfName);
             });
 
-            Assert.ThrowsException<CryptoException>(delegate
+            Assert.Throws<CryptoException>(delegate
             {
                 byte[] cipher = encryptor.Encrypt(
                     binaryMessage,

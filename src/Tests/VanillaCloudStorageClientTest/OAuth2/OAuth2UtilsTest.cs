@@ -49,7 +49,7 @@ namespace VanillaCloudStorageClientTest.OAuth2
                 ClientId = "a",
                 RedirectUrl = null, // Must exist for token workflow
             };
-            Assert.ThrowsException<InvalidParameterException>(() => OAuth2Utils.BuildAuthorizationRequestUrl(config, "state", null));
+            Assert.Throws<InvalidParameterException>(() => OAuth2Utils.BuildAuthorizationRequestUrl(config, "state", null));
         }
 
         [TestMethod]

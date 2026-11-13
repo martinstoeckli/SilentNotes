@@ -62,13 +62,13 @@ namespace VanillaCloudStorageClientTest
         public void ValidateRejectsInvalidCredentials()
         {
             CloudStorageCredentials credentials = new CloudStorageCredentials();
-            Assert.ThrowsException<InvalidParameterException>(() => credentials.ThrowIfInvalid(CloudStorageCredentialsRequirements.Token));
-            Assert.ThrowsException<InvalidParameterException>(() => credentials.ThrowIfInvalid(CloudStorageCredentialsRequirements.Username | CloudStorageCredentialsRequirements.Password));
-            Assert.ThrowsException<InvalidParameterException>(() => credentials.ThrowIfInvalid(CloudStorageCredentialsRequirements.Username | CloudStorageCredentialsRequirements.Password | CloudStorageCredentialsRequirements.Url));
-            Assert.ThrowsException<InvalidParameterException>(() => credentials.ThrowIfInvalid(CloudStorageCredentialsRequirements.Username | CloudStorageCredentialsRequirements.Password | CloudStorageCredentialsRequirements.Url | CloudStorageCredentialsRequirements.Secure | CloudStorageCredentialsRequirements.AcceptUnsafeCertificate));
+            Assert.Throws<InvalidParameterException>(() => credentials.ThrowIfInvalid(CloudStorageCredentialsRequirements.Token));
+            Assert.Throws<InvalidParameterException>(() => credentials.ThrowIfInvalid(CloudStorageCredentialsRequirements.Username | CloudStorageCredentialsRequirements.Password));
+            Assert.Throws<InvalidParameterException>(() => credentials.ThrowIfInvalid(CloudStorageCredentialsRequirements.Username | CloudStorageCredentialsRequirements.Password | CloudStorageCredentialsRequirements.Url));
+            Assert.Throws<InvalidParameterException>(() => credentials.ThrowIfInvalid(CloudStorageCredentialsRequirements.Username | CloudStorageCredentialsRequirements.Password | CloudStorageCredentialsRequirements.Url | CloudStorageCredentialsRequirements.Secure | CloudStorageCredentialsRequirements.AcceptUnsafeCertificate));
 
             credentials = null;
-            Assert.ThrowsException<InvalidParameterException>(() => credentials.ThrowIfInvalid(CloudStorageCredentialsRequirements.Token));
+            Assert.Throws<InvalidParameterException>(() => credentials.ThrowIfInvalid(CloudStorageCredentialsRequirements.Token));
         }
 
         [TestMethod]

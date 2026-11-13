@@ -43,7 +43,7 @@ namespace SilentNotes.Workers
     /// This class was written to build a list of available font-families. It does not extract a
     /// complete set of data, but is written in a generic way so that other information can be
     /// added as needed.
-    /// See also <see cref="https://learn.microsoft.com/de-de/typography/opentype/spec/otff"/>.
+    /// See also https://learn.microsoft.com/de-de/typography/opentype/spec/otff />.
     /// </remarks>
     public class FontMetadataParser
     {

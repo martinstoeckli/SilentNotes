@@ -168,7 +168,7 @@ namespace SilentNotesTest.Workers
 
             writer = new AtomicFileWriter();
             var newerContent = new byte[] { 99 };
-            Assert.ThrowsException<UnfinishedAtomicFileWritingException>(() => writer.Write(filePath, stream => stream.Write(newerContent)));
+            Assert.Throws<UnfinishedAtomicFileWritingException>(() => writer.Write(filePath, stream => stream.Write(newerContent)));
 
             // The ready state and the content of the first writing must still be intact, so it can
             // be completed later on.

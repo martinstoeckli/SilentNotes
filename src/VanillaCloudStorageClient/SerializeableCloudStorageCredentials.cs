@@ -81,6 +81,7 @@ namespace VanillaCloudStorageClient
         /// </summary>
         [XmlElement("access_token")]
         [JsonPropertyName("access_token")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         [DataMember(EmitDefaultValue = false, Name = "access_token")]
         public string SerializeableAccessToken { get; set; }
         [JsonIgnore]
@@ -91,6 +92,7 @@ namespace VanillaCloudStorageClient
         /// </summary>
         [XmlElement("token_expiry_date")]
         [JsonPropertyName("token_expiry_date")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         [DataMember(EmitDefaultValue = false, Name = "token_expiry_date")]
         public DateTime? SerializeableExpiryDate { get; set; }
         [JsonIgnore]
@@ -101,6 +103,7 @@ namespace VanillaCloudStorageClient
         /// </summary>
         [XmlElement("refresh_token")]
         [JsonPropertyName("refresh_token")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         [DataMember(EmitDefaultValue = false, Name = "refresh_token")]
         public string SerializeableRefreshToken { get; set; }
         [JsonIgnore]
@@ -111,6 +114,7 @@ namespace VanillaCloudStorageClient
         /// </summary>
         [XmlElement("username")]
         [JsonPropertyName("username")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         [DataMember(EmitDefaultValue = false, Name = "username")]
         public string SerializeableUsername { get; set; }
         [JsonIgnore]
@@ -121,6 +125,7 @@ namespace VanillaCloudStorageClient
         /// </summary>
         [XmlElement("password")]
         [JsonPropertyName("password")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         [DataMember(EmitDefaultValue = false, Name = "password")]
         public string SerializeablePassword { get; set; }
         [JsonIgnore]
@@ -131,6 +136,7 @@ namespace VanillaCloudStorageClient
         /// </summary>
         [XmlElement("url")]
         [JsonPropertyName("url")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         [DataMember(EmitDefaultValue = false, Name = "url")]
         public string SerializeableUrl { get; set; }
         [JsonIgnore]
@@ -142,6 +148,7 @@ namespace VanillaCloudStorageClient
         /// </summary>
         [XmlElement("secure")]
         [JsonPropertyName("secure")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         [DataMember(EmitDefaultValue = false, Name = "secure")]
         public bool SerializeableSecure { get; set; }
         [JsonIgnore]
@@ -154,6 +161,7 @@ namespace VanillaCloudStorageClient
         /// </summary>
         [XmlElement("accept_invalid_certificate")]
         [JsonPropertyName("accept_invalid_certificate")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         [DataMember(EmitDefaultValue = false, Name = "accept_invalid_certificate")]
         public bool SerializeableAcceptInvalidCertificate { get; set; }
         [JsonIgnore]

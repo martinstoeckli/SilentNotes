@@ -2,9 +2,9 @@
 using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Text.Json;
 using System.Xml;
 using System.Xml.Serialization;
-using Newtonsoft.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using VanillaCloudStorageClient;
 
@@ -131,7 +131,7 @@ namespace VanillaCloudStorageClientTest
             SerializeableCloudStorageCredentials credentials = CreateExampleCredentials();
             credentials.EncryptBeforeSerialization(PseudoEncrypt);
 
-            string json = JsonConvert.SerializeObject(credentials);
+            string json = JsonSerializer.Serialize(credentials);
             Assert.IsFalse(json.Contains("atk"));
             Assert.IsFalse(json.Contains("rtk"));
             Assert.IsFalse(json.Contains("usr"));
@@ -144,7 +144,7 @@ namespace VanillaCloudStorageClientTest
             var credentials = new SerializeableCloudStorageCredentials();
             credentials.EncryptBeforeSerialization(PseudoEncrypt);
 
-            string json = JsonConvert.SerializeObject(credentials);
+            string json = JsonSerializer.Serialize(credentials);
             Assert.IsFalse(json.Contains("access_token"));
             Assert.IsFalse(json.Contains("refresh_token"));
             Assert.IsFalse(json.Contains("username"));
@@ -158,9 +158,9 @@ namespace VanillaCloudStorageClientTest
         {
             SerializeableCloudStorageCredentials credentials = CreateExampleCredentials();
             credentials.EncryptBeforeSerialization(PseudoEncrypt);
-            string xml = JsonConvert.SerializeObject(credentials);
+            string xml = JsonSerializer.Serialize(credentials);
 
-            var credentials2 = JsonConvert.DeserializeObject<SerializeableCloudStorageCredentials>(xml);
+            var credentials2 = JsonSerializer.Deserialize<SerializeableCloudStorageCredentials>(xml);
             credentials2.DecryptAfterDeserialization(PseudoDecrypt);
 
             Assert.IsTrue(credentials.AreEqualOrNull(credentials2));
