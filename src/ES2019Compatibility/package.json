@@ -11,8 +11,8 @@
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
-    "@babel/cli": "^8.0.5",
-    "@babel/core": "^8.0.5",
-    "@babel/preset-env": "^8.0.5"
+    "@babel/cli": "latest",
+    "@babel/core": "latest",
+    "@babel/preset-env": "latest"
   }
 }
