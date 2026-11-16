@@ -20,7 +20,8 @@ on:
 env:
   Project_Path: src\SilentNotes.Blazor\SilentNotes.csproj
   WinManifest_Path: src\SilentNotes.Blazor\Platforms\Windows\Package.appxmanifest
-  Dotnet_Version: 11.0.x
+  Dotnet_Version: 11.0.100
+  Maui_Version: 11.0.0
   Target_Framework_Android: net11.0-android
   Target_Framework_Windows: net11.0-windows10.0.19041.0
 
@@ -88,7 +89,7 @@ jobs:
     - name: Install MAUI
       run: |
         dotnet nuget locals all --clear
-        dotnet workload install maui
+        dotnet workload install maui --version ${{ env.Maui_Version }}
 
     # Log DotNet version for reproducible builds
     - name: Log used DotNet versions
@@ -171,7 +172,7 @@ jobs:
     - name: Install MAUI
       run: |
         dotnet nuget locals all --clear
-        dotnet workload install maui
+        dotnet workload install maui --version ${{ env.Maui_Version }}
 
     # Log DotNet version for reproducable builds
     - name: Log used DotNet versions
