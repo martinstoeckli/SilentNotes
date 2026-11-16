@@ -80,22 +80,27 @@ jobs:
       with:
         fetch-depth: 0
 
-    # Install the .NET Core workload
-    - name: Install .NET Core
+    # Install the .NET
+    - name: Install .NET
       uses: actions/setup-dotnet@v6
       with:
         dotnet-version: ${{ env.Dotnet_Version }}
+
+    # Log DotNet version for reproducible builds
+    - name: Log used dotnet version
+      run: |
+        echo "DotNet version: ${{ env.Dotnet_Version }}"
+        dotnet --version
 
     - name: Install MAUI
       run: |
         dotnet nuget locals all --clear
         dotnet workload install maui --version ${{ env.Maui_Version }}
 
-    # Log DotNet version for reproducible builds
-    - name: Log used DotNet versions
+    # Log workload version for reproducible builds
+    - name: Log used maui version
       run: |
-        echo "DotNet version: ${{ env.Dotnet_Version }}"
-        dotnet --version
+        echo "MauiVersion: ${{ env.Maui_Version }}"
         dotnet workload list
 
     # Decode the base 64 encoded pfx and save the Signing_Certificate
@@ -162,23 +167,28 @@ jobs:
         ManifestPath: ${{ env.WinManifest_Path }}
         ManifestVersion: "${{needs.job_version.outputs.formatted_version}}.0"
 
-    # Install the .NET Core workload
+    # Install .NET
     - name: Install .NET
       id: id_setup_dotnet
       uses: actions/setup-dotnet@v6
       with:
         dotnet-version: ${{ env.Dotnet_Version }}
 
+    # Log DotNet version for reproducible builds
+    - name: Log used dotnet version
+      run: |
+        echo "DotNet version: ${{ env.Dotnet_Version }}"
+        dotnet --version
+
     - name: Install MAUI
       run: |
         dotnet nuget locals all --clear
         dotnet workload install maui --version ${{ env.Maui_Version }}
 
-    # Log DotNet version for reproducable builds
-    - name: Log used DotNet versions
+    # Log workload version for reproducible builds
+    - name: Log used maui version
       run: |
-        echo "DotNet version: ${{ steps.id_setup_dotnet.outputs.dotnet-version }}"
-        dotnet --version
+        echo "MauiVersion: ${{ env.Maui_Version }}"
         dotnet workload list
       
     # Decode the base 64 encoded pfx and save the Signing_Certificate
