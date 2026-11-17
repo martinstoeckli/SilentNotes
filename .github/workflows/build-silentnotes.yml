@@ -93,7 +93,6 @@ jobs:
 
     - name: Install MAUI
       run: |
-        dotnet nuget locals all --clear
         dotnet workload install maui-android
 
     # Log workload version for reproducible builds
@@ -180,8 +179,7 @@ jobs:
 
     - name: Install MAUI
       run: |
-        dotnet nuget locals all --clear
-        dotnet workload install maui-android
+        dotnet workload install maui
 
     # Log workload version for reproducible builds
     - name: Log used maui version
