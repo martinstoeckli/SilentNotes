@@ -115,7 +115,7 @@ jobs:
     # Build application
     # The keystore location seems to be relative to the csproj file, so we placed it in the same directory and pass only the filename
     - name: Build application
-      run: dotnet publish "${{ env.Project_Path }}" -c Release -f ${{ env.Target_Framework_Android }} -o ".\bin" -p:AndroidPackageFormats=apk -p:AndroidKeyStore=True -p:AndroidSigningKeyStore=silentnotes.keystore -p:AndroidSigningKeyAlias=androidmartinstoeckli -p:AndroidSigningKeyPass=${{ env.KeystorePassword }} -p:AndroidSigningStorePass=${{ env.KeystorePassword }}
+      run: dotnet publish "${{ env.Project_Path }}" -c Release -f ${{ env.Target_Framework_Android }} -o ".\bin" -p:AndroidPackageFormats=apk -p:AndroidKeyStore=True -p:AndroidSigningKeyStore=silentnotes.keystore -p:AndroidSigningKeyAlias=androidmartinstoeckli -p:AndroidSigningKeyPass=${{ env.KeystorePassword }} -p:AndroidSigningStorePass=${{ env.KeystorePassword }} -p:nodeReuse:false
       env:
         KeystorePassword: ${{ secrets.SILENTNOTESANDROIDKEYSTOREPASSWORD }}
         
@@ -181,7 +181,7 @@ jobs:
     - name: Install MAUI
       run: |
         dotnet nuget locals all --clear
-        dotnet workload install maui-android
+        dotnet workload install maui
 
     # Log workload version for reproducible builds
     - name: Log used maui version
@@ -209,7 +209,6 @@ jobs:
       env:
         Platform: ${{ matrix.platform }}
         RuntimeIdentifier: win-${{ matrix.platform }}
-        Profile: MSIX-win10-${{ matrix.platform }}
         
     # Remove the pfx
     - name: Remove the pfx
