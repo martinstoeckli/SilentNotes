@@ -21,7 +21,6 @@ env:
   Project_Path: src\SilentNotes.Blazor\SilentNotes.csproj
   WinManifest_Path: src\SilentNotes.Blazor\Platforms\Windows\Package.appxmanifest
   Dotnet_Version: 11.0.100
-  Maui_Version: 11.0.100
   Target_Framework_Android: net11.0-android
   Target_Framework_Windows: net11.0-windows10.0.19041.0
 
@@ -89,18 +88,17 @@ jobs:
     # Log DotNet version for reproducible builds
     - name: Log used dotnet version
       run: |
-        echo "DotNet version: ${{ env.Dotnet_Version }}"
+        echo "DotNet constant: ${{ env.Dotnet_Version }}"
         dotnet --version
 
     - name: Install MAUI
       run: |
         dotnet nuget locals all --clear
-        dotnet workload install maui@${{ env.Maui_Version }}
+        dotnet workload install maui-android
 
     # Log workload version for reproducible builds
     - name: Log used maui version
       run: |
-        echo "MauiVersion: ${{ env.Maui_Version }}"
         dotnet workload list
 
     # Decode the base 64 encoded pfx and save the Signing_Certificate
@@ -177,18 +175,17 @@ jobs:
     # Log DotNet version for reproducible builds
     - name: Log used dotnet version
       run: |
-        echo "DotNet version: ${{ env.Dotnet_Version }}"
+        echo "DotNet constant: ${{ env.Dotnet_Version }}"
         dotnet --version
 
     - name: Install MAUI
       run: |
         dotnet nuget locals all --clear
-        dotnet workload install maui@${{ env.Maui_Version }}
+        dotnet workload install maui-android
 
     # Log workload version for reproducible builds
     - name: Log used maui version
       run: |
-        echo "MauiVersion: ${{ env.Maui_Version }}"
         dotnet workload list
       
     # Decode the base 64 encoded pfx and save the Signing_Certificate

@@ -98,14 +98,14 @@
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
         <PackageReference Include="FluentFTP" Version="55.1.0" />
         <PackageReference Include="Flurl.Http" Version="4.0.2" />
-        <PackageReference Include="Microsoft.Maui.Controls" Version="11.0.10" />
-        <PackageReference Include="Microsoft.AspNetCore.Components.WebView.Maui" Version="11.0.10" />
+        <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebView.Maui" Version="$(MauiVersion)" />
         <PackageReference Include="MudBlazor" Version="9.8.0" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net11.0-android'">
       <PackageReference Include="Xamarin.AndroidX.DocumentFile" Version="1.1.0.4" />
-      <PackageReference Include="Xamarin.AndroidX.Work.Runtime" Version="2.12.0" />
+      <PackageReference Include="Xamarin.AndroidX.Work.Runtime" Version="2.11.2.1" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net11.0-windows10.0.19041.0'">
