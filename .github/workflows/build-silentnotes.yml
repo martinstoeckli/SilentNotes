@@ -81,11 +81,11 @@ jobs:
         fetch-depth: 0
 
     # Install Java
-    - name: Install Java
-      uses: actions/setup-java@v6
-      with:
-        distribution: 'microsoft'
-        java-version: 'latest'
+    #- name: Install Java
+    #  uses: actions/setup-java@v6
+    #  with:
+    #    distribution: 'microsoft'
+    #    java-version: 'latest'
 
     # Install the .NET
     - name: Install .NET
