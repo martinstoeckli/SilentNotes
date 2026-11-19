@@ -62,7 +62,6 @@
     <!-- Release Android all -->
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)'=='Release|net11.0-android'">
       <RuntimeIdentifiers>android-arm64;android-x64</RuntimeIdentifiers>
-      <AndroidLinkTool>r8</AndroidLinkTool>
     </PropertyGroup>
 
     <!-- Debug Android runs in x64 emulator only -->
