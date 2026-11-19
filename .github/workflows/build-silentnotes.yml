@@ -101,7 +101,7 @@ jobs:
 
     - name: Install MAUI
       run: |
-        dotnet workload install maui-android@${{ env.Maui_Version }}
+        dotnet workload install maui@${{ env.Maui_Version }}
 
     # Log workload version for reproducible builds
     - name: Log used maui version
