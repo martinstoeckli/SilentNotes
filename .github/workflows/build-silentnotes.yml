@@ -86,6 +86,12 @@ jobs:
       with:
         dotnet-version: ${{ env.Dotnet_Version }}
 
+    - name: Install Java
+      uses: actions/setup-java@v6
+      with:
+        distribution: 'microsoft'
+        java-version: '25'
+
     # Log DotNet version for reproducible builds
     - name: Log used dotnet version
       run: |
