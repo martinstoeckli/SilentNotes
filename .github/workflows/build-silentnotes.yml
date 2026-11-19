@@ -80,17 +80,18 @@ jobs:
       with:
         fetch-depth: 0
 
+    # Install Java
+    - name: Install Java
+      uses: actions/setup-java@v6
+      with:
+        distribution: 'microsoft'
+        java-version: 'latest'
+
     # Install the .NET
     - name: Install .NET
       uses: actions/setup-dotnet@v6
       with:
         dotnet-version: ${{ env.Dotnet_Version }}
-
-    - name: Install Java
-      uses: actions/setup-java@v6
-      with:
-        distribution: 'microsoft'
-        java-version: '25'
 
     # Log DotNet version for reproducible builds
     - name: Log used dotnet version
@@ -122,7 +123,7 @@ jobs:
     # Build application
     # The keystore location seems to be relative to the csproj file, so we placed it in the same directory and pass only the filename
     - name: Build application
-      run: dotnet publish "${{ env.Project_Path }}" -c Release -f ${{ env.Target_Framework_Android }} -o ".\bin" -p:AndroidPackageFormats=apk -p:AndroidKeyStore=True -p:AndroidSigningKeyStore=silentnotes.keystore -p:AndroidSigningKeyAlias=androidmartinstoeckli -p:AndroidSigningKeyPass=${{ env.KeystorePassword }} -p:AndroidSigningStorePass=${{ env.KeystorePassword }} -p:nodeReuse=false
+      run: dotnet publish "${{ env.Project_Path }}" -c Release -f ${{ env.Target_Framework_Android }} -o ".\bin" -p:AndroidPackageFormats=apk -p:AndroidKeyStore=True -p:AndroidSigningKeyStore=silentnotes.keystore -p:AndroidSigningKeyAlias=androidmartinstoeckli -p:AndroidSigningKeyPass=${{ env.KeystorePassword }} -p:AndroidSigningStorePass=${{ env.KeystorePassword }}
       env:
         KeystorePassword: ${{ secrets.SILENTNOTESANDROIDKEYSTOREPASSWORD }}
         
