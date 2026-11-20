@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
     <PropertyGroup>
-        <TargetFrameworks>net10.0-android</TargetFrameworks>
-        <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net10.0-windows10.0.19041.0</TargetFrameworks>
+        <TargetFrameworks>net11.0-android</TargetFrameworks>
+        <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net11.0-windows10.0.19041.0</TargetFrameworks>
 
         <OutputType>Exe</OutputType>
         <RootNamespace>SilentNotes</RootNamespace>
@@ -28,7 +28,7 @@
         <!-- Workaround: for https://github.com/dotnet/maui/issues/12859 -->
         <Version>$(ApplicationDisplayVersion)</Version>
 
-        <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">24.0</SupportedOSPlatformVersion>
+        <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">26.0</SupportedOSPlatformVersion>
         <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
         <TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
         <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
@@ -48,7 +48,7 @@
     </PropertyGroup>
 
     <!-- Release Windows all -->
-    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)'=='Release|net10.0-windows10.0.19041.0'">
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)'=='Release|net11.0-windows10.0.19041.0'">
         <SelfContained>true</SelfContained>
     </PropertyGroup>
 
@@ -57,17 +57,16 @@
       <PublishTrimmed>True</PublishTrimmed>
       <TrimMode>partial</TrimMode>
       <EnableTrimAnalyzer>True</EnableTrimAnalyzer>
-      <RunAOTCompilation>False</RunAOTCompilation>
     </PropertyGroup>
 
     <!-- Release Android all -->
-    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)'=='Release|net10.0-android'">
-      <RuntimeIdentifiers>android-arm;android-arm64;android-x64</RuntimeIdentifiers>
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)'=='Release|net11.0-android'">
+      <RuntimeIdentifiers>android-arm64;android-x64</RuntimeIdentifiers>
       <AndroidLinkTool>r8</AndroidLinkTool>
     </PropertyGroup>
 
     <!-- Debug Android runs in x64 emulator only -->
-    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net10.0-android|x64'">
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net11.0-android|x64'">
       <RuntimeIdentifiers>android-x64</RuntimeIdentifiers>
     </PropertyGroup>
 
@@ -97,24 +96,23 @@
     <ItemGroup>
         <PackageReference Include="BouncyCastle.Cryptography" Version="2.7.0" />
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
-        <PackageReference Include="FluentFTP" Version="55.0.0" />
+        <PackageReference Include="FluentFTP" Version="55.1.0" />
         <PackageReference Include="Flurl.Http" Version="4.0.2" />
         <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
         <PackageReference Include="Microsoft.AspNetCore.Components.WebView.Maui" Version="$(MauiVersion)" />
-        <PackageReference Include="MudBlazor" Version="9.8.0" />
+        <PackageReference Include="MudBlazor" Version="9.14.0" />
     </ItemGroup>
 
-    <ItemGroup Condition="'$(TargetFramework)' == 'net10.0-android'">
-      <PackageReference Include="Xamarin.AndroidX.DocumentFile">
-        <Version>1.1.0.1</Version>
-      </PackageReference>
-      <PackageReference Include="Xamarin.AndroidX.Work.Runtime">
-        <Version>2.10.3</Version>
-      </PackageReference>
+    <!-- Workaround: Xamarin.AndroidX.Core* are included to avoid version conflicts when building on GitHub -->
+    <ItemGroup Condition="'$(TargetFramework)' == 'net11.0-android'">
+      <PackageReference Include="Xamarin.AndroidX.Core" Version="1.19.1" />
+      <PackageReference Include="Xamarin.AndroidX.Core.Core.Ktx" Version="1.19.1" />
+      <PackageReference Include="Xamarin.AndroidX.DocumentFile" Version="1.1.0.4" />
+      <PackageReference Include="Xamarin.AndroidX.Work.Runtime" Version="2.12.0" />
     </ItemGroup>
 
-    <ItemGroup Condition="'$(TargetFramework)' == 'net10.0-windows10.0.19041.0'">
-      <PackageReference Include="System.Drawing.Common" Version="10.0.1" />
+    <ItemGroup Condition="'$(TargetFramework)' == 'net11.0-windows10.0.19041.0'">
+      <PackageReference Include="System.Drawing.Common" Version="11.0.0" />
     </ItemGroup>
 
     <Import Project="..\SilentNotes.AllPlatforms\SilentNotes.AllPlatforms.projitems" Label="Shared" />

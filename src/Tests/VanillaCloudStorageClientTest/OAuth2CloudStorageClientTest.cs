@@ -85,7 +85,7 @@ namespace VanillaCloudStorageClientTest
 
             // Fetch token
             IOAuth2CloudStorageClient client = new TestClient(GetGoogleConfig());
-            Assert.ThrowsExceptionAsync<CloudStorageException>(async () => await FetchTokenAsync(client, redirectedUrl));
+            Assert.ThrowsAsync<CloudStorageException>(async () => await FetchTokenAsync(client, redirectedUrl));
         }
 
         [TestMethod]
@@ -150,7 +150,7 @@ namespace VanillaCloudStorageClientTest
             };
 
             IOAuth2CloudStorageClient client = new TestClient(GetGoogleConfig());
-            Assert.ThrowsExceptionAsync<RefreshTokenExpiredException>(() => RefreshTokenAsync(client, oldToken));
+            Assert.ThrowsAsync<RefreshTokenExpiredException>(() => RefreshTokenAsync(client, oldToken));
         }
 
         private async Task<CloudStorageToken> RefreshTokenAsync(IOAuth2CloudStorageClient client, CloudStorageToken token)

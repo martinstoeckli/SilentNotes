@@ -52,7 +52,7 @@ namespace SilentNotesTest.Services
             var factory = new ServiceFactory<string, Candidate>(true);
             factory.Add("id1", () => new Candidate { Id = 1 });
 
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => factory.GetByKey("id2"));
+            Assert.Throws<ArgumentOutOfRangeException>(() => factory.GetByKey("id2"));
         }
 
         private class Candidate

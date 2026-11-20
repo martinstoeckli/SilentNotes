@@ -537,7 +537,7 @@
 	/// Toggles the shopping mode and enables/disables the editor.
 	/// </summary>
 	/// <returns>Task for async call.</returns>
-	private async ValueTask ToggleShoppingMode()
+	private async Task ToggleShoppingMode()
 	{
 		ViewModel.ShoppingModeActive = !ViewModel.ShoppingModeActive;
 		await _jsModule.InvokeVoidAsync("setEditable", !ViewModel.ShoppingModeActive);

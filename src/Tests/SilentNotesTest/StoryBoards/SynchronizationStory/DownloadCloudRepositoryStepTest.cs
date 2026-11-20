@@ -41,7 +41,7 @@ namespace SilentNotesTest.Stories.SynchronizationStory
             var result = await step.RunStep(model, serviceCollection.BuildServiceProvider(), model.StoryMode);
 
             // Repository was stored in session
-            Assert.AreEqual(repository, model.BinaryCloudRepository);
+            Assert.IsTrue(repository.SequenceEqual(model.BinaryCloudRepository));
 
             // Next step is called
             Assert.IsInstanceOfType<ExistsTransferCodeStep>(result.NextStep);

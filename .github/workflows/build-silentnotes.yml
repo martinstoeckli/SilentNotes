@@ -20,9 +20,10 @@ on:
 env:
   Project_Path: src\SilentNotes.Blazor\SilentNotes.csproj
   WinManifest_Path: src\SilentNotes.Blazor\Platforms\Windows\Package.appxmanifest
-  Dotnet_Version: 10.0.x
-  Target_Framework_Android: net10.0-android
-  Target_Framework_Windows: net10.0-windows10.0.19041.0
+  Dotnet_Version: 11.0.x
+  Maui_Version: 11.0.10
+  Target_Framework_Android: net11.0-android
+  Target_Framework_Windows: net11.0-windows10.0.19041.0
 
 jobs:
   ##############################################################################
@@ -37,14 +38,14 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v7
       with:
         fetch-depth: 0
 
     # Read version from csproj
     - name: Read version from csproj
       id: formatted_version
-      uses: mavrosxristoforos/get-xml-info@1.2.1
+      uses: mavrosxristoforos/get-xml-info@2.2.1
       with:
         xml-file: "${{ env.Project_Path }}"
         xpath: //PropertyGroup/ApplicationDisplayVersion
@@ -54,7 +55,7 @@ jobs:
     # Read increasing android version
     - name: Read version for android
       id: integer_version
-      uses: mavrosxristoforos/get-xml-info@1.2.1
+      uses: mavrosxristoforos/get-xml-info@2.2.1
       with:
         xml-file: "${{ env.Project_Path }}"
         xpath: //PropertyGroup/ApplicationVersion
@@ -75,24 +76,38 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v7
       with:
         fetch-depth: 0
 
-    # Install the .NET Core workload
-    - name: Install .NET Core
-      uses: actions/setup-dotnet@v4
+    # Install Java
+    #- name: Install Java
+    #  uses: actions/setup-java@v6
+    #  with:
+    #    distribution: 'microsoft'
+    #    java-version: 'latest'
+
+    # Install the .NET
+    - name: Install .NET
+      uses: actions/setup-dotnet@v6
       with:
         dotnet-version: ${{ env.Dotnet_Version }}
 
-    - name: Install MAUI
-      run: dotnet workload install maui-android --ignore-failed-sources --version 10.0.401
-
     # Log DotNet version for reproducible builds
-    - name: Log used DotNet versions
+    - name: Log used dotnet version
       run: |
-        echo "DotNet version: ${{ env.Dotnet_Version }}"
+        echo "Dotnet_Version constant: ${{ env.Dotnet_Version }}"
         dotnet --version
+
+    - name: Install MAUI
+      run: |
+        dotnet workload clean
+        dotnet workload install maui@${{ env.Maui_Version }}
+
+    # Log workload version for reproducible builds
+    - name: Log used maui version
+      run: |
+        echo "Maui_Version constant: ${{ env.Maui_Version }}"
         dotnet workload list
 
     # Decode the base 64 encoded pfx and save the Signing_Certificate
@@ -102,9 +117,6 @@ jobs:
         gpg -d --quiet --batch --yes --passphrase="${{ env.KeystoreGpgPassword }}" --output "${{ env.Keystore_Path }}" "${{ env.Keystore_Path }}.asc"
       env:
         KeystoreGpgPassword: ${{ secrets.SILENTNOTESANDROIDKEYSTOREGPGPASSWORD }}
-
-    - name: Restore NuGet packages
-      run: dotnet restore
 
     # Build application
     # The keystore location seems to be relative to the csproj file, so we placed it in the same directory and pass only the filename
@@ -126,7 +138,7 @@ jobs:
 
     # Upload artifacts
     - name: Upload build artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: silentnotes_android
         path: .\artifacts
@@ -139,13 +151,13 @@ jobs:
     if: ${{ inputs.build-windows }}
     strategy:
       matrix:
-        platform: [x64,x86]
+        platform: [x64]
   
     runs-on: windows-latest
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v7
       with:
         fetch-depth: 0
 
@@ -159,25 +171,30 @@ jobs:
         ManifestPath: ${{ env.WinManifest_Path }}
         ManifestVersion: "${{needs.job_version.outputs.formatted_version}}.0"
 
-    # Install the .NET Core workload
+    # Install .NET
     - name: Install .NET
       id: id_setup_dotnet
-      uses: actions/setup-dotnet@v4
+      uses: actions/setup-dotnet@v6
       with:
         dotnet-version: ${{ env.Dotnet_Version }}
 
+    # Log DotNet version for reproducible builds
+    - name: Log used dotnet version
+      run: |
+        echo "DotNet constant: ${{ env.Dotnet_Version }}"
+        dotnet --version
+
     - name: Install MAUI
       run: |
-        dotnet nuget locals all --clear
-        dotnet workload install maui --version 10.0.401
+        dotnet workload clean
+        dotnet workload install maui@${{ env.Maui_Version }}
 
-    # Log DotNet version for reproducable builds
-    - name: Log used DotNet versions
+    # Log workload version for reproducible builds
+    - name: Log used maui version
       run: |
-        echo "DotNet version: ${{ steps.id_setup_dotnet.outputs.dotnet-version }}"
-        dotnet --version
+        echo "Maui_Version constant: ${{ env.Maui_Version }}"
         dotnet workload list
-      
+
     # Decode the base 64 encoded pfx and save the Signing_Certificate
     - name: Decode the pfx
       run: |
@@ -188,18 +205,13 @@ jobs:
     - name: Add cert to store
       run: certutil -user -q -p ${{ secrets.SILENTNOTESPFXPASSWORD }} -importpfx SilentNotes.pfx NoRoot
 
-    # Restore the application to populate the obj folder with RuntimeIdentifiers
-    - name: Restore Dependencies
-      run: dotnet restore "${{ env.Project_Path }}"
-
     # Build application
     # declare the -r parameter and also the -p:Platform paramter to mitigate error:  The platform 'AnyCPU' is not supported for Self Contained mode
     - name: Build application
-      run: dotnet publish "${{ env.Project_Path }}" -c Release -f ${{ env.Target_Framework_Windows }} -p:Platform=${{ env.Platform }} -p:RuntimeIdentifierOverride${{ env.RuntimeIdentifier }} -p:AppxPackageSigningEnabled=true -p:PackageCertificateThumbprint="${{ secrets.SILENTNOTESPFXTHUMBPRINT }}"
+      run: dotnet publish "${{ env.Project_Path }}" -c Release -f ${{ env.Target_Framework_Windows }} -p:Platform=${{ env.Platform }} -p:RuntimeIdentifierOverride=${{ env.RuntimeIdentifier }} -p:AppxPackageSigningEnabled=true -p:PackageCertificateThumbprint="${{ secrets.SILENTNOTESPFXTHUMBPRINT }}"
       env:
         Platform: ${{ matrix.platform }}
         RuntimeIdentifier: win-${{ matrix.platform }}
-        Profile: MSIX-win10-${{ matrix.platform }}
         
     # Remove the pfx
     - name: Remove the pfx
@@ -208,7 +220,7 @@ jobs:
     # Collect files for upload
     - name: Collect msix files
       run: |
-        $files = Get-ChildItem -Path "" -Filter SilentNotes*.msix -Recurse -File
+        $files = Get-ChildItem -Path "." -Filter SilentNotes*.msix -Recurse -File
         New-Item -Path ".\windows" -ItemType "directory"
         Move-Item -Path $files[0].FullName -Destination ".\windows\silentnotes_${{ env.Platform }}.msix"
       env:
@@ -216,7 +228,7 @@ jobs:
 
     # Upload artifacts
     - name: Upload build artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: silentnotes_windows_${{ matrix.platform }}
         path: .\windows
@@ -232,12 +244,12 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v7
       with:
         fetch-depth: 0
 
     - name: Download msix files
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
         path: downloaddirectory
         pattern: silentnotes_windows_*
@@ -258,14 +270,14 @@ jobs:
       
     # Upload artifacts
     - name: Upload build artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: silentnotes_windows
         path: .\**\*.msixbundle
 
     # Cleanup temporary artifacts
     - name: Cleanup temporary build artifacts
-      uses: geekyeggo/delete-artifact@v5
+      uses: geekyeggo/delete-artifact@v6
       with:
           name: silentnotes_windows_*
 
@@ -285,12 +297,12 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v7
       with:
         fetch-depth: 0
 
     - name: Download files for publishing
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
         path: downloaddirectory
         pattern: silentnotes_android*
@@ -302,7 +314,7 @@ jobs:
         Move-Item -Path .\downloaddirectory\*.apk -Destination .\publish
 
     - name: release
-      uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@v3
       id: create_release
       with:
         draft: false

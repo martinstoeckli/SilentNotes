@@ -137,7 +137,7 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
 
             CloudStorageCredentials credentials = GetCredentials();
             credentials.Username = "youdontknowme";
-            Assert.ThrowsExceptionAsync<AccessDeniedException>(() => DownloadFileWorksAsync("a.txt", credentials));
+            Assert.ThrowsAsync<AccessDeniedException>(() => DownloadFileWorksAsync("a.txt", credentials));
         }
 
         [TestMethod]
@@ -148,7 +148,7 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
 
             CloudStorageCredentials credentials = GetCredentials();
             credentials.Url = "https://www.example.com/youdontknowme";
-            Assert.ThrowsExceptionAsync<ConnectionFailedException>(() => DownloadFileWorksAsync("a.txt", credentials));
+            Assert.ThrowsAsync<ConnectionFailedException>(() => DownloadFileWorksAsync("a.txt", credentials));
         }
 
         [TestMethod]

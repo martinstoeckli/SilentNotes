@@ -53,7 +53,7 @@ namespace SilentNotesTest.Workers
         {
             byte[] haystack = null;
             byte[] needle = null;
-            Assert.ThrowsException<ArgumentNullException>(delegate { ByteArrayExtensions.ContainsAt(haystack, needle, 0); });
+            Assert.Throws<ArgumentNullException>(delegate { ByteArrayExtensions.ContainsAt(haystack, needle, 0); });
 
             // Works the same way as string.StartsWith
             bool expectedResult = string.Empty.StartsWith(string.Empty);

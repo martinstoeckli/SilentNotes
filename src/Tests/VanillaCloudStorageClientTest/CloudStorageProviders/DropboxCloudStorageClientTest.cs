@@ -197,7 +197,7 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
 
             // Make token invalid by changing the last character (to keep the structure of the token)
             string invalidAccessToken = IncreaseLastChar(DropboxAccessToken);
-            Assert.ThrowsExceptionAsync<AccessDeniedException>(() => DownloadFileWorksAsync("a.txt", invalidAccessToken));
+            Assert.ThrowsAsync<AccessDeniedException>(() => DownloadFileWorksAsync("a.txt", invalidAccessToken));
         }
 
         private string GetDropboxFileListResponse()

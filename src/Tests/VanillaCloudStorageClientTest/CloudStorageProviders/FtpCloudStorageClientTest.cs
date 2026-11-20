@@ -146,7 +146,7 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
             {
                 var credentials = GetCredentials();
                 credentials.Username = "youdontknowme";
-                Assert.ThrowsExceptionAsync<AccessDeniedException>(() => DownloadFileWorksAsync("a.txt", credentials, null));
+                Assert.ThrowsAsync<AccessDeniedException>(() => DownloadFileWorksAsync("a.txt", credentials, null));
             }
         }
 
@@ -160,7 +160,7 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
             {
                 var credentials = GetCredentials();
                 credentials.UnprotectedPassword = "youdontknowme";
-                Assert.ThrowsExceptionAsync<AccessDeniedException>(() => DownloadFileWorksAsync("a.txt", credentials, null));
+                Assert.ThrowsAsync<AccessDeniedException>(() => DownloadFileWorksAsync("a.txt", credentials, null));
             }
         }
 
@@ -174,7 +174,7 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
             {
                 var credentials = GetCredentials();
                 string nonExistingFile = "nonexisting.non";
-                Assert.ThrowsExceptionAsync<ConnectionFailedException>(() => DownloadFileWorksAsync(nonExistingFile, credentials, null));
+                Assert.ThrowsAsync<ConnectionFailedException>(() => DownloadFileWorksAsync(nonExistingFile, credentials, null));
             }
         }
 
@@ -189,7 +189,7 @@ namespace VanillaCloudStorageClientTest.CloudStorageProviders
                 var credentials = GetCredentials();
                 credentials.Url = "ftp://sl287.web.hostpoint.c";
                 string nonExistingFile = "nonexisting.non";
-                Assert.ThrowsExceptionAsync<ConnectionFailedException>(() => DownloadFileWorksAsync(nonExistingFile, credentials, null));
+                Assert.ThrowsAsync<ConnectionFailedException>(() => DownloadFileWorksAsync(nonExistingFile, credentials, null));
             }
         }
 
