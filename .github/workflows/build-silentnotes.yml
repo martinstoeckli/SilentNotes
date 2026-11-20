@@ -192,8 +192,9 @@ jobs:
     # Log workload version for reproducible builds
     - name: Log used maui version
       run: |
+        echo "Maui_Version constant: ${{ env.Maui_Version }}"
         dotnet workload list
-      
+
     # Decode the base 64 encoded pfx and save the Signing_Certificate
     - name: Decode the pfx
       run: |
