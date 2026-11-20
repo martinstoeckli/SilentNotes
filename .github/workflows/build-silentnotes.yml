@@ -101,6 +101,7 @@ jobs:
 
     - name: Install MAUI
       run: |
+        dotnet workload clean
         dotnet workload install maui@${{ env.Maui_Version }}
 
     # Log workload version for reproducible builds
@@ -185,6 +186,7 @@ jobs:
 
     - name: Install MAUI
       run: |
+        dotnet workload clean
         dotnet workload install maui@${{ env.Maui_Version }}
 
     # Log workload version for reproducible builds
