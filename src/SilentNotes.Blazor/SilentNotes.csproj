@@ -3,6 +3,7 @@
     <PropertyGroup>
         <TargetFrameworks>net11.0-android</TargetFrameworks>
         <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net11.0-windows10.0.19041.0</TargetFrameworks>
+        <MauiVersion>11.0.10</MauiVersion>
 
         <OutputType>Exe</OutputType>
         <RootNamespace>SilentNotes</RootNamespace>
@@ -13,6 +14,7 @@
         <EnableDefaultCssItems>false</EnableDefaultCssItems>
         <DefaultLanguage>en</DefaultLanguage>
         <BaseOutputPath>..\..\bin</BaseOutputPath>
+        <Features>runtime-async=on</Features>
 
         <!-- Display name -->
         <ApplicationTitle>SilentNotes</ApplicationTitle>
