@@ -208,7 +208,7 @@ jobs:
     # Build application
     # declare the -r parameter and also the -p:Platform paramter to mitigate error:  The platform 'AnyCPU' is not supported for Self Contained mode
     - name: Build application
-      run: dotnet publish "${{ env.Project_Path }}" -c Release -f ${{ env.Target_Framework_Windows }} -p:Platform=${{ env.Platform }} -p:RuntimeIdentifierOverride=${{ env.RuntimeIdentifier }} -p:AppxPackageSigningEnabled=true -p:PackageCertificateThumbprint="${{ secrets.SILENTNOTESPFXTHUMBPRINT }}"
+      run: dotnet publish "${{ env.Project_Path }}" -c Release -f ${{ env.Target_Framework_Windows }} -p:Platform=${{ env.Platform }} -p:RuntimeIdentifierOverride=${{ env.RuntimeIdentifier }} -p:WindowsPackageType=MSIX -p:AppxPackageSigningEnabled=true -p:GenerateAppxPackageOnBuild=true -p:PackageCertificateThumbprint="${{ secrets.SILENTNOTESPFXTHUMBPRINT }}"
       env:
         Platform: ${{ matrix.platform }}
         RuntimeIdentifier: win-${{ matrix.platform }}
@@ -220,7 +220,8 @@ jobs:
     # Collect files for upload
     - name: Collect msix files
       run: |
-        $files = Get-ChildItem -Path "." -Filter SilentNotes*.msix -Recurse -File
+        $files = Get-ChildItem -Path "bin" -Filter SilentNotes*${{ env.Platform }}.msix -Recurse -File
+        echo "Collected files: $files"
         New-Item -Path ".\windows" -ItemType "directory"
         Move-Item -Path $files[0].FullName -Destination ".\windows\silentnotes_${{ env.Platform }}.msix"
       env:
