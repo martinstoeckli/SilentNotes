@@ -220,6 +220,12 @@ jobs:
     # Collect files for upload
     - name: Collect msix files
       run: |
+        $files = Get-ChildItem -Path "." -Filter SilentNotes*.* -Recurse -File
+        echo "foundfiles: $files"
+
+    # Collect files for upload
+    - name: Collect msix files
+      run: |
         $files = Get-ChildItem -Path "." -Filter SilentNotes*.msix -Recurse -File
         New-Item -Path ".\windows" -ItemType "directory"
         Move-Item -Path $files[0].FullName -Destination ".\windows\silentnotes_${{ env.Platform }}.msix"
