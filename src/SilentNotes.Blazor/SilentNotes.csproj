@@ -6,6 +6,7 @@
         <MauiVersion>11.0.10</MauiVersion>
 
         <OutputType>Exe</OutputType>
+        <OutputType>Exe</OutputType>
         <RootNamespace>SilentNotes</RootNamespace>
         <UseMaui>true</UseMaui>
         <MauiEnableXamlCBindingWithSourceCompilation>true</MauiEnableXamlCBindingWithSourceCompilation>
@@ -20,7 +21,7 @@
         <ApplicationTitle>SilentNotes</ApplicationTitle>
 
         <!-- App Identifier -->
-        <ApplicationId>ch.martinstoeckli.silentnotes</ApplicationId>
+        <ApplicationId>dev.martinstoeckli.silentnotes</ApplicationId>
         <ApplicationIdGuid>11EC9146-7F8B-417D-B616-3CF75D22866E</ApplicationIdGuid>
 
         <!-- Versions -->
@@ -57,7 +58,8 @@
     <!-- Android all -->
     <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
       <PublishTrimmed>True</PublishTrimmed>
-      <TrimMode>partial</TrimMode>
+	  <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+      <TrimMode>full</TrimMode>
       <EnableTrimAnalyzer>True</EnableTrimAnalyzer>
     </PropertyGroup>
 
