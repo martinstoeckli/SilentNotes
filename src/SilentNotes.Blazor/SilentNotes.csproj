@@ -52,7 +52,7 @@
     <!-- Release Windows all -->
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)'=='Release|net11.0-windows10.0.19041.0'">
         <SelfContained>true</SelfContained>
-        <WindowsPackageType>Package</WindowsPackageType>
+        <WindowsPackageType>MSIX</WindowsPackageType>
     </PropertyGroup>
 
     <!-- Android all -->
